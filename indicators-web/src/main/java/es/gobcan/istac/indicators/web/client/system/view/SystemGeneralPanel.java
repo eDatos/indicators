@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;

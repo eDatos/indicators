@@ -1,10 +1,12 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
+import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.DIMENSION;
+import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.INDICATOR;
+import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.ROOT;
+
 import java.util.List;
 
 import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.events.ShowContextMenuEvent;
-import com.smartgwt.client.widgets.events.ShowContextMenuHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
@@ -18,14 +20,12 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-import es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNode;
-import es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNodeType;
+import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNode;
+import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType;
 import es.gobcan.istac.indicators.web.shared.db.AnalysisDimension;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorInstance;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
-
-import static es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNodeType.*;
 
 public class SystemStructurePanel extends VLayout {
 

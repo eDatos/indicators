@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.shared.EventBus;

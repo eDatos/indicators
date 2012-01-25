@@ -5,19 +5,15 @@ import java.util.List;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
-import com.smartgwt.client.widgets.tab.events.HasTabSelectedHandlers;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
@@ -36,9 +32,9 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	private SystemGeneralPanel generalPanel;
 	
 	@Inject
-	public SystemViewImpl(SystemStructurePanel structPanel, SystemGeneralPanel genPanel) {
-		this.structurePanel = structPanel;
-		this.generalPanel = genPanel;
+	public SystemViewImpl() {
+		this.structurePanel = new SystemStructurePanel();
+		this.generalPanel = new SystemGeneralPanel();
 		panel = new VLayout();
 		tabSet = new TabSet();
 		
