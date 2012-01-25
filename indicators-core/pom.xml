@@ -93,6 +93,11 @@
 			<groupId>org.fornax.cartridges</groupId>
 			<artifactId>fornax-cartridges-sculptor-generator</artifactId>
 		</dependency>		
+		<dependency>
+			<groupId>org.fornax.cartridges</groupId>
+			<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+			<classifier>without-ejb</classifier>
+		</dependency>
 		
 		<!-- COMMONS -->
 		<dependency>
