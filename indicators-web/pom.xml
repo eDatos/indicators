@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>es.gobcan.istac.indicadores</groupId>
-		<artifactId>indicadores-parent</artifactId>
+		<groupId>es.gobcan.istac.indicators</groupId>
+		<artifactId>indicators-parent</artifactId>
 		<version>0.0.1</version>
-		<relativePath>../indicadores-parent/pom.xml</relativePath>
+		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
-	<groupId>es.gobcan.istac.indicadores</groupId>
-	<artifactId>indicadores-web</artifactId>
-	<name>INDICADORES :: WEB</name>
+	<groupId>es.gobcan.istac.indicators</groupId>
+	<artifactId>indicators-web</artifactId>
+	<name>INDICATORS :: WEB</name>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
