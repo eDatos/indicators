@@ -15,6 +15,7 @@
 
     <modules>
         <module>indicators-parent</module>
+        <module>indicators-core</module>
         <module>indicators-web</module>
     </modules>
 

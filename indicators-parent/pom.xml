@@ -41,6 +41,8 @@
 		<logback.version>0.9.29</logback.version>  
 		
 		<!-- MISCELLANEOUS -->
+		<jsr250-api.version>1.0</jsr250-api.version>
+		<aopalliance.version>1.0</aopalliance.version>
 		<joda-time.version>1.6.2</joda-time.version>
 		<joda-time-hibernate.version>1.2</joda-time-hibernate.version>
 				
@@ -61,6 +63,17 @@
   	
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>jsr250-api</artifactId>
+				<version>${jsr250-api.version}</version>
+				<scope>provided</scope>
+			</dependency>		
+			<dependency>
+				<groupId>aopalliance</groupId>
+				<artifactId>aopalliance</artifactId>
+				<version>${aopalliance.version}</version>
+			</dependency>		
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
