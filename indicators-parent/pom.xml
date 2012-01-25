@@ -7,17 +7,439 @@
   	<version>0.0.1</version>
   
   	<properties>
-  		<gwt-maven-plugin.version>2.3.0-1</gwt-maven-plugin.version>
+  		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		  	
+		<!-- PLUGINS -->
   		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
   		
-  		<spring.version>3.0.5.RELEASE</spring.version>
-  		<junit.version>4.6</junit.version>
-  		
+		<!-- SPRING -->
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<aspectj.version>1.5.4</aspectj.version>
+
+		<!-- PERSISTENCE -->
+		<jpa.version>1.0</jpa.version>
+		<hibernate-core.version>3.3.2.GA</hibernate-core.version>
+		<hibernate-annotations.version>3.4.0.GA</hibernate-annotations.version>
+		<hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
+		<hibernate-validator.version>3.1.0.GA</hibernate-validator.version>
+		<ehcache.version>2.4.3</ehcache.version>
+		<oracle.version>10.2.0.1.0</oracle.version>
+		
+		<!-- SCULPTOR -->
+		<sculptor.version>2.0.0</sculptor.version>		   
+
+		<!-- COMMONS -->
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-beanutils.version>1.8.3</commons-beanutils.version>
+		<commons-pool.version>1.5.6</commons-pool.version>
+		<commons-configuration.version>1.6</commons-configuration.version>
+		<commons-io.version>1.4</commons-io.version>
+		
+		<!-- LOGGING -->
+		<slf4j.version>1.6.1</slf4j.version>
+		<logback.version>0.9.29</logback.version>  
+		
+		<!-- MISCELLANEOUS -->
+		<joda-time.version>1.6.2</joda-time.version>
+		<joda-time-hibernate.version>1.2</joda-time-hibernate.version>
+				
+		<!-- WEB -->
+  		<gwt-maven-plugin.version>2.3.0-1</gwt-maven-plugin.version>
   		<icu4j.version>4.2.1</icu4j.version>
        	<gin.version>1.5.0</gin.version>
        	<guice.version>3.0</guice.version>
   		<gwt.version>2.3.0</gwt.version>
        	<smartgwt.version>2.5</smartgwt.version>
        	<gwtp.version>0.6</gwtp.version>
+       			
+		<!-- TEST -->
+		<junit.version>4.8.2</junit.version>
+		<dbunit.version>2.4.8</dbunit.version>
+		<mockito.version>1.8.1</mockito.version>		  	
   	</properties>
+  	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+		  		<groupId>org.slf4j</groupId>
+		  		<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+	    	</dependency>    
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-lang.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>${commons-collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-pool</groupId>
+				<artifactId>commons-pool</artifactId>
+				<version>${commons-pool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${commons-configuration.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.persistence</groupId>
+				<artifactId>persistence-api</artifactId>
+				<version>${jpa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate-core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-annotations</artifactId>
+				<version>${hibernate-annotations.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate-entitymanager.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>${ehcache.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda-time.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time-hibernate</artifactId>
+				<version>${joda-time-hibernate.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+	        <dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>oracle</artifactId>			
+				<version>${oracle.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.transaction</groupId>
+						<artifactId>jta</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+			
+			<!-- Tests -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>${dbunit.version}</version>
+				<scope>test</scope>
+			</dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-generator</artifactId>
+				<version>${sculptor.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+				<version>${sculptor.version}</version>
+				<classifier>without-ejb</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
+				<version>${sculptor.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.fornax.cartridges</groupId>
+						<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.ibm.icu</groupId>
+				<artifactId>icu4j</artifactId>
+				<version>${icu4j.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<inherited>true</inherited>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-source</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+					</links>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<!-- <version>2.9</version> -->
+				<version>2.3</version>
+				<configuration>
+					<forkMode>once</forkMode>
+					<argLine>-Xms32m -Xm1024m</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- TO avoid ERROR: Plugin execution not covered by lifecycle configuration: 
+					org.fornax.toolsupport:fornax-oaw-m2-plugin:3.2.3:run-workflow (execution: 
+					default, phase: generate-sources) SEE: http://wiki.eclipse.org/M2E_plugin_execution_not_covered -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.fornax.toolsupport</groupId>
+										<artifactId>fornax-oaw-m2-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>run-workflow</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.fornax.toolsupport</groupId>
+										<artifactId>fornax-checksum-m2-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.fornax.toolsupport</groupId>
+										<artifactId>fornax-graphviz-m2-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-antrun-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
