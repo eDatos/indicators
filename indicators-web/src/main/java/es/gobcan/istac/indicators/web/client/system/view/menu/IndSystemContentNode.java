@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.view.menu;
+package es.gobcan.istac.indicators.web.client.system.view.menu;
 
 import com.smartgwt.client.widgets.tree.TreeNode;
 

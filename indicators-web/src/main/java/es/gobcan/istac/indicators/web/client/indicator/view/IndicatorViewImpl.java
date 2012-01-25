@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.indicator.view;
+package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -10,8 +10,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-import es.gobcan.istac.indicadores.web.client.indicator.presenter.IndicatorPresenter;
-import es.gobcan.istac.indicadores.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
+import es.gobcan.istac.indicators.web.shared.db.Indicator;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 

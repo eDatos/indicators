@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets.form;
+package es.gobcan.istac.indicators.web.client.widgets.form;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionType;

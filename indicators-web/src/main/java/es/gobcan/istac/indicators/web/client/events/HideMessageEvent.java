@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.events;
+package es.gobcan.istac.indicators.web.client.events;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

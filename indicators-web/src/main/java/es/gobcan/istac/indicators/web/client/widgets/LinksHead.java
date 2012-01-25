@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets;
+package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.toolbar.ToolStripSeparator;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.NameTokens;
 
 public class LinksHead extends HLayout {
 	private ToolStripButton indSysBut;

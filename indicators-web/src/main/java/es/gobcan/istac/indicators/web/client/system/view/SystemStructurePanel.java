@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.view;
+package es.gobcan.istac.indicators.web.client.system.view;
 
 import java.util.List;
 
@@ -18,14 +18,14 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-import es.gobcan.istac.indicadores.web.client.system.view.menu.IndSystemContentNode;
-import es.gobcan.istac.indicadores.web.client.system.view.menu.IndSystemContentNodeType;
-import es.gobcan.istac.indicadores.web.shared.db.AnalysisDimension;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorInstance;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystemContent;
+import es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNode;
+import es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNodeType;
+import es.gobcan.istac.indicators.web.shared.db.AnalysisDimension;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorInstance;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
-import static es.gobcan.istac.indicadores.web.client.system.view.menu.IndSystemContentNodeType.*;
+import static es.gobcan.istac.indicators.web.client.system.view.menu.IndSystemContentNodeType.*;
 
 public class SystemStructurePanel extends VLayout {
 
@@ -62,8 +62,8 @@ public class SystemStructurePanel extends VLayout {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Menu menu = buildContextMenu("Toma!");
-				menu.showContextMenu();
+				/*Menu menu = buildContextMenu("Toma!");
+				menu.showContextMenu();*/
 			}
 			
 		});
@@ -138,8 +138,8 @@ public class SystemStructurePanel extends VLayout {
 	
 	private Menu buildContextMenuLeaf(IndSystemContentNode node) {
 		Menu menu = new Menu();
-		MenuItem item1 = new MenuItem(text);
-		menu.addItem(item1);
+		/*MenuItem item1 = new MenuItem(text);
+		menu.addItem(item1);*/
 		return menu;
 	}
 	

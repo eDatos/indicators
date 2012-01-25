@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.gin;
+package es.gobcan.istac.indicators.web.client.gin;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

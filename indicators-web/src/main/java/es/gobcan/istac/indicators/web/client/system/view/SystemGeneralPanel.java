@@ -1,14 +1,14 @@
-package es.gobcan.istac.indicadores.web.client.system.view;
+package es.gobcan.istac.indicators.web.client.system.view;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicadores.web.client.widgets.form.GroupDynamicForm;
-import es.gobcan.istac.indicadores.web.client.widgets.form.MainFormLayout;
-import es.gobcan.istac.indicadores.web.client.widgets.form.fields.ViewTextItem;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.client.widgets.form.GroupDynamicForm;
+import es.gobcan.istac.indicators.web.client.widgets.form.MainFormLayout;
+import es.gobcan.istac.indicators.web.client.widgets.form.fields.ViewTextItem;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 
 public class SystemGeneralPanel extends VLayout {
 

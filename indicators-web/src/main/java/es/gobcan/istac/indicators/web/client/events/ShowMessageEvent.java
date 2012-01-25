@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.events;
+package es.gobcan.istac.indicators.web.client.events;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 
 public class ShowMessageEvent extends GwtEvent<ShowMessageEvent.ShowMessageHandler> {
 

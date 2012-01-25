@@ -1,12 +1,12 @@
-package es.gobcan.istac.indicadores.web.server.handlers;
+package es.gobcan.istac.indicators.web.server.handlers;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemStructureAction;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemStructureResult;
-import es.gobcan.istac.indicadores.web.shared.db.IndDatabase;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureResult;
+import es.gobcan.istac.indicators.web.shared.db.IndDatabase;
 
 public class GetIndicatorSystemStructureHandler extends AbstractActionHandler<GetIndicatorSystemStructureAction, GetIndicatorSystemStructureResult>{
 

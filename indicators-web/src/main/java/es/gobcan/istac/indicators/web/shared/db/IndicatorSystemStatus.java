@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.shared.db;
+package es.gobcan.istac.indicators.web.shared.db;
 
 public enum IndicatorSystemStatus {
 

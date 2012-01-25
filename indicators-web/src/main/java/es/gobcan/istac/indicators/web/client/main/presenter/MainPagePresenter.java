@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.main.presenter;
+package es.gobcan.istac.indicators.web.client.main.presenter;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicadores.web.client.events.HideMessageEvent;
-import es.gobcan.istac.indicadores.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicadores.web.client.events.HideMessageEvent.HideMessageHandler;
-import es.gobcan.istac.indicadores.web.client.events.ShowMessageEvent.ShowMessageHandler;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.events.HideMessageEvent;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.web.client.events.HideMessageEvent.HideMessageHandler;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent.ShowMessageHandler;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler {
 	

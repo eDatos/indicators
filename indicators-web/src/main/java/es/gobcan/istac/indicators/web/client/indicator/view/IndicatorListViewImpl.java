@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.indicator.view;
+package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import java.util.List;
 
@@ -24,12 +24,12 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicadores.web.client.indicator.presenter.IndicatorListPresenter;
-import es.gobcan.istac.indicadores.web.client.indicator.presenter.IndicatorListUiHandler;
-import es.gobcan.istac.indicadores.web.client.model.IndicatorRecord;
-import es.gobcan.istac.indicadores.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
+import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
+import es.gobcan.istac.indicators.web.shared.db.Indicator;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 

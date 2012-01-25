@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets.form.fields;
+package es.gobcan.istac.indicators.web.client.widgets.form.fields;
 
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 

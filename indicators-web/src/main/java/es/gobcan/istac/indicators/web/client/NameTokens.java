@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client;
+package es.gobcan.istac.indicators.web.client;
 
 public class NameTokens {
 

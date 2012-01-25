@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.server;
+package es.gobcan.istac.indicators.web.server;
 
 import com.google.inject.servlet.ServletModule;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;

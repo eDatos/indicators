@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.enums;
+package es.gobcan.istac.indicators.web.client.enums;
 
 import com.smartgwt.client.types.ValueEnum;
 

@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.presenter;
+package es.gobcan.istac.indicators.web.client.system.presenter;
 
 import java.util.List;
 
@@ -21,19 +21,19 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.smartgwt.client.widgets.tab.events.HasTabSelectedHandlers;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicadores.web.client.events.SelectIndicatorSystemEvent;
-import es.gobcan.istac.indicadores.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicadores.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicadores.web.client.utils.ErrorUtils;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemAction;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemResult;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemStructureAction;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemStructureResult;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystemContent;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.events.SelectIndicatorSystemEvent;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureResult;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler {
 	

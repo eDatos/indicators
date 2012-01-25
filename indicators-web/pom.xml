@@ -143,10 +143,10 @@
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
 				<configuration>
-					<runTarget>IndicadoresWeb.html</runTarget>
+					<runTarget>IndicatorsWeb.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<inplace>true</inplace>
-					<i18nMessagesBundle>es.gobcan.istac.indicadores.web.client.IndicadoresWebMessages</i18nMessagesBundle>
+					<i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
 				</configuration>
 			</plugin>
 
@@ -201,7 +201,7 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>${basedir}/src/main/webapp/IndicadoresWeb</directory>
+							<directory>${basedir}/src/main/webapp/IndicatorsWeb</directory>
 						</fileset>
 					</filesets>
 				</configuration>

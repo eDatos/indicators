@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.indicator.presenter;
+package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,15 +13,15 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicadores.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicadores.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicadores.web.client.utils.ErrorUtils;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorAction;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorResult;
-import es.gobcan.istac.indicadores.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.db.Indicator;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy>{
 	private DispatchAsync dispatcher;

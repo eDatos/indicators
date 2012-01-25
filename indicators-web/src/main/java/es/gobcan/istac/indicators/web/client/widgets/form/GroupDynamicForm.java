@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets.form;
+package es.gobcan.istac.indicators.web.client.widgets.form;
 
 
 public class GroupDynamicForm extends CustomDynamicForm {

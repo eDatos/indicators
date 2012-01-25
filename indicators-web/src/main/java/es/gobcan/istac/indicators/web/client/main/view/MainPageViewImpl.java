@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.main.view;
+package es.gobcan.istac.indicators.web.client.main.view;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicadores.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicadores.web.client.widgets.ErrorMessagePanel;
-import es.gobcan.istac.indicadores.web.client.widgets.LinksHead;
-import es.gobcan.istac.indicadores.web.client.widgets.MasterHead;
-import es.gobcan.istac.indicadores.web.client.widgets.SuccessMessagePanel;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.widgets.ErrorMessagePanel;
+import es.gobcan.istac.indicators.web.client.widgets.LinksHead;
+import es.gobcan.istac.indicators.web.client.widgets.MasterHead;
+import es.gobcan.istac.indicators.web.client.widgets.SuccessMessagePanel;
 
 public class MainPageViewImpl extends ViewImpl implements MainPagePresenter.MainView {
 	

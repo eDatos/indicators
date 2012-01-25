@@ -1,13 +1,13 @@
-package es.gobcan.istac.indicadores.web.server.handlers;
+package es.gobcan.istac.indicators.web.server.handlers;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicadores.web.shared.SaveIndicatorSystemAction;
-import es.gobcan.istac.indicadores.web.shared.SaveIndicatorSystemResult;
-import es.gobcan.istac.indicadores.web.shared.db.IndDatabase;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemAction;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemResult;
+import es.gobcan.istac.indicators.web.shared.db.IndDatabase;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 
 public class SaveIndicatorSystemHandler extends AbstractActionHandler<SaveIndicatorSystemAction, SaveIndicatorSystemResult>{
 	

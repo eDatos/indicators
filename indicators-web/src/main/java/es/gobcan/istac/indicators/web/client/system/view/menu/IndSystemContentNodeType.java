@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.view.menu;
+package es.gobcan.istac.indicators.web.client.system.view.menu;
 
 public enum IndSystemContentNodeType {
 	ROOT,

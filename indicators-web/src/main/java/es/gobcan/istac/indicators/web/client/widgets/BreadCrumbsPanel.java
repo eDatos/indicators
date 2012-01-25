@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets;
+package es.gobcan.istac.indicators.web.client.widgets;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;

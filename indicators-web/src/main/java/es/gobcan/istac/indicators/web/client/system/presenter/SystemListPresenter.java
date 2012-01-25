@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.presenter;
+package es.gobcan.istac.indicators.web.client.system.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +18,17 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicadores.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicadores.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicadores.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicadores.web.client.utils.ErrorUtils;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemListAction;
-import es.gobcan.istac.indicadores.web.shared.GetIndicatorSystemListResult;
-import es.gobcan.istac.indicadores.web.shared.SaveIndicatorSystemAction;
-import es.gobcan.istac.indicadores.web.shared.SaveIndicatorSystemResult;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemListResult;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemAction;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemResult;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 	

@@ -15,14 +15,14 @@
 	</filter-mapping>
 
 	<listener>
-		<listener-class>es.gobcan.istac.indicadores.web.server.IndicadoresWebGuiceServletContextListener</listener-class>
+		<listener-class>es.gobcan.istac.indicators.web.server.IndicatorsWebGuiceServletContextListener</listener-class>
 	</listener>
 
 	<!-- Servlets -->
 
 	<!-- Default page to serve -->
 	<welcome-file-list>
-		<welcome-file>IndicadoresWeb.html</welcome-file>
+		<welcome-file>IndicatorsWeb.html</welcome-file>
 	</welcome-file-list>
 
 </web-app>

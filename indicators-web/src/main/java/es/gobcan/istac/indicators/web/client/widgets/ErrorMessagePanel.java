@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.widgets;
+package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicadores.web.client.model.MessageRecord;
+import es.gobcan.istac.indicators.web.client.model.MessageRecord;
 
 public class ErrorMessagePanel extends VLayout {
 

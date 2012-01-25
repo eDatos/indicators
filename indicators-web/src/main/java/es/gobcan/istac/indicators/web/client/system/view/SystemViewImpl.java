@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.view;
+package es.gobcan.istac.indicators.web.client.system.view;
 
 import java.util.List;
 
@@ -17,11 +17,11 @@ import com.smartgwt.client.widgets.tab.events.HasTabSelectedHandlers;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-import es.gobcan.istac.indicadores.web.client.NameTokens;
-import es.gobcan.istac.indicadores.web.client.system.presenter.SystemPresenter;
-import es.gobcan.istac.indicadores.web.client.system.presenter.SystemUiHandler;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystemContent;
+import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
 	private SystemUiHandler uiHandler;

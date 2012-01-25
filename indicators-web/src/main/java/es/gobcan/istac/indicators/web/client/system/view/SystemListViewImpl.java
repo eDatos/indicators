@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.system.view;
+package es.gobcan.istac.indicators.web.client.system.view;
 
 import java.util.List;
 
@@ -22,13 +22,13 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicadores.web.client.IndicadoresWeb;
-import es.gobcan.istac.indicadores.web.client.model.IndicatorSystemRecord;
-import es.gobcan.istac.indicadores.web.client.system.presenter.SystemListPresenter;
-import es.gobcan.istac.indicadores.web.client.system.presenter.SystemListUiHandler;
-import es.gobcan.istac.indicadores.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
+import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
+import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 
-public class SystemListViewImpl extends ViewImpl implements SystemListPresenter.SystemListView {
+public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
 	private SystemListUiHandler uiHandler;
 	
@@ -46,7 +46,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListPresenter.
 	@Inject
 	public SystemListViewImpl() {
 		//ToolStrip
-		newIndSystemActor = new ToolStripButton(IndicadoresWeb.getMessages().newItem(),"new_listgrid.png");
+		newIndSystemActor = new ToolStripButton(IndicatorsWeb.getMessages().newItem(),"new_listgrid.png");
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		toolStrip.addButton(newIndSystemActor);

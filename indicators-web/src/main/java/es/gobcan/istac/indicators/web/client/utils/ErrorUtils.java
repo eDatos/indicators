@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.utils;
+package es.gobcan.istac.indicators.web.client.utils;
 
 import java.util.ArrayList;
 import java.util.List;

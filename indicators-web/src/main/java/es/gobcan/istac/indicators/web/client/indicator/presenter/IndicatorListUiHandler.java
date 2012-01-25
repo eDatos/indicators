@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.indicator.presenter;
+package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 

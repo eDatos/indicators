@@ -1,13 +1,11 @@
-package es.gobcan.istac.indicadores.web.client.widgets;
-
-
+package es.gobcan.istac.indicators.web.client.widgets;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 
-import es.gobcan.istac.indicadores.web.client.IndicadoresWeb;
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 
 //TODO: Usar la master head de web-common?
 public class MasterHead extends HLayout {
@@ -35,7 +33,7 @@ public class MasterHead extends HLayout {
 		// Name label
 		titleLabel = new Label();
 		titleLabel.setStyleName("titleHeaderPanel");
-		titleLabel.setContents(IndicadoresWeb.getMessages().appTitle());
+		titleLabel.setContents(IndicatorsWeb.getMessages().appTitle());
 		titleLabel.setWidth(600);
 
 		// West layout container

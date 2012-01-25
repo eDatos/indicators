@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicadores.web.client.model;
+package es.gobcan.istac.indicators.web.client.model;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
