@@ -1,0 +1,16 @@
+Application Indicators {
+    basePackage=es.gobcan.istac.indicators
+    
+    Module core {
+		
+    	Service IndicatorsSystemService {
+	    	createIndicatorSystem() throws ApplicationException;
+    	}
+    	
+    	Service IndicatorsSystemServiceFacade {
+	    	> @IndicatorsSystemService
+	    	
+	    	String createIndicatorSystem() throws ApplicationException;
+    	}
+    }
+}

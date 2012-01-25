@@ -223,6 +223,57 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.fornax.toolsupport</groupId>
+				<artifactId>fornax-oaw-m2-plugin</artifactId>
+				<version>${fornax-oaw-m2.version}</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run-workflow</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<workflowEngine>mwe2</workflowEngine>
+					<workflowDescriptor>file://${basedir}/src/main/resources/generator/Workflow.mwe2</workflowDescriptor>
+					<checkFilesets>
+						<checkFileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>src/main/resources/*.btdesign</include>
+							</includes>
+						</checkFileset>
+					</checkFilesets>
+<!-- 					<properties> -->
+<!-- 						<modelFile>src/main/resources/model.btdesign</modelFile> -->
+<!-- 						<appProject>${project.artifactId}</appProject> -->
+<!-- 					</properties> -->
+					<jvmSettings>
+						<copySysProperties>true</copySysProperties>
+						<jvmArgs>
+							<jvmArg>-client</jvmArg>
+							<jvmArg>-Xms256m</jvmArg>
+							<jvmArg>-Xmx512m</jvmArg>
+							<jvmArg>-Dlogback.configurationFile=generator/logback-sculptor.xml</jvmArg>
+						</jvmArgs>
+					</jvmSettings>
+				</configuration>
+			</plugin>			
+			<plugin>
+				<groupId>org.fornax.toolsupport</groupId>
+				<artifactId>fornax-graphviz-m2-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>			
 		</plugins>
 	</build>
 
