@@ -6,7 +6,7 @@ Application Indicators {
 		
 		"Provides access to indicators systems"
     	Service IndicatorSystemService {
-	    	createIndicatorSystem() throws ApplicationException;
+	    	createIndicatorSystem() throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -14,17 +14,17 @@ Application Indicators {
 	    	> @IndicatorSystemService
 	    	
 	    	"Create a indicator system in draft"
-	    	String createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	String createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Create a version on draft of a published indicator system"
-	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Update metadata of an indicator system. This version can not be published or archived"
-	    	String updateIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	String updateIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"xxx"
-	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Retrieve an indicator system"
-	    	@IndicatorSystemDto retrieveIndicatorSystem(String uri) throws ApplicationException;
+	    	@IndicatorSystemDto retrieveIndicatorSystem(String uri) throws MetamacException;
 	    	"Delete an indicator system. Version to remove must be not published nor archived"
-	    	deleteIndicatorSystem(String uri) throws ApplicationException;
+	    	deleteIndicatorSystem(String uri) throws MetamacException;
     	}    	
     
 	    // ----------------------------------------------------------------
