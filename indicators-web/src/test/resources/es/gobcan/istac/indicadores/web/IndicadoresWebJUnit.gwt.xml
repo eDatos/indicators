@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='es.gobcan.istac.indicadores.web.IndicadoresWeb' />
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/IndicadoresWeb/greet" class="es.gobcan.istac.indicadores.web.server.GreetingServiceImpl" />
+
+</module>
