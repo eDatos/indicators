@@ -2,7 +2,7 @@ module generator.Workflow
 
 Workflow {
 	component = @workflow.Sculptorworkflow {
-		modelFile = "classpath:/btdesign/indicators-core.btdesign"
+		modelFile = "classpath:/btdesign/indicators-core-model.btdesign"
 		// For org.eclipse.xtext.mwe.Reader:
 		// modelFile = "."
 

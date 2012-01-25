@@ -286,7 +286,30 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>						
+			</plugin>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version><!--$NO-MVN-MAN-VER$-->
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<move todir="${basedir}/src/main/generated" overwrite="true" verbose="true" includeEmptyDirs="false" failonerror="true">
+									<fileset dir="${basedir}/src/generated" />
+								</move>
+								<delete includeEmptyDirs="true" quiet="true" verbose="true">
+									<fileset dir="${basedir}/src/generated" />
+								</delete>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
