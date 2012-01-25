@@ -2,7 +2,7 @@ Application Indicators {
     basePackage=es.gobcan.istac.indicators
     
     Module core {
-		basePackage=es.gobcan.istac.indicators
+		basePackage=es.gobcan.istac.indicators.core
 		
 		"Provides access to indicators systems"
     	Service IndicatorSystemService {

@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.serviceimpl;
+package es.gobcan.istac.indicators.core.serviceimpl;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;

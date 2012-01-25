@@ -1,11 +1,11 @@
-package es.gobcan.istac.indicators.serviceimpl;
+package es.gobcan.istac.indicators.core.serviceimpl;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.serviceapi.IndicatorSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
 
 /**
  * Implementation of IndicatorSystemServiceFacade.
