@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.service.impl;
+package es.gobcan.istac.indicators.serviceimpl;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -6,11 +6,11 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of IndicatorsSystemService.
+ * Implementation of IndicatorSystemService.
  */
-@Service("indicatorsSystemService")
-public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase {
-    public IndicatorsSystemServiceImpl() {
+@Service("indicatorSystemService")
+public class IndicatorSystemServiceImpl extends IndicatorSystemServiceImplBase {
+    public IndicatorSystemServiceImpl() {
     }
 
     public void createIndicatorSystem(ServiceContext ctx)

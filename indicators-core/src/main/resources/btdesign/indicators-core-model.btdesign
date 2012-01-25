@@ -2,15 +2,59 @@ Application Indicators {
     basePackage=es.gobcan.istac.indicators
     
     Module core {
+		basePackage=es.gobcan.istac.indicators
 		
-    	Service IndicatorsSystemService {
+		"Provides access to indicators systems"
+    	Service IndicatorSystemService {
 	    	createIndicatorSystem() throws ApplicationException;
     	}
     	
-    	Service IndicatorsSystemServiceFacade {
-	    	> @IndicatorsSystemService
+    	"Provides access to indicators systems"
+    	Service IndicatorSystemServiceFacade {
+	    	> @IndicatorSystemService
 	    	
-	    	String createIndicatorSystem() throws ApplicationException;
+	    	"Create a indicator system in draft"
+	    	String createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	"Create a version on draft of a published indicator system"
+	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	"Update metadata of an indicator system. This version can not be published or archived"
+	    	String updateIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	"xxx"
+	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws ApplicationException;
+	    	"Retrieve an indicator system"
+	    	@IndicatorSystemDto retrieveIndicatorSystem(String uri) throws ApplicationException;
+	    	"Delete an indicator system. Version to remove must be not published nor archived"
+	    	deleteIndicatorSystem(String uri) throws ApplicationException;
+    	}    	
+    
+	    // ----------------------------------------------------------------
+		// 							DTO
+		// ----------------------------------------------------------------        	
+		"Dto for indicator system"
+	   	DataTransferObject IndicatorSystemDto extends @AuditableDto {
+			String uri;	
+			Integer version;
+			- @IndicatorSystemStateEnum state;
+	    }
+	    
+	    "Dto for audit"
+    	DataTransferObject AuditableDto {
+       		DateTime createdDate;
+       		String createdBy;
+       		DateTime lastUpdated;
+       		String lastUpdatedBy;
     	}
+	        
+		// ----------------------------------------------------------------
+		// 							ENUMS
+		// ----------------------------------------------------------------
+		"States of indicator system"
+    	enum IndicatorSystemStateEnum {
+    		DRAFT,
+    		PRODUCTION_VALIDATION,
+    		PUBLISH_VALIDATION,
+    		PUBLISHED,
+    		ARCHIVED
+    	}      	
     }
 }

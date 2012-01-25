@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.service;
+package es.gobcan.istac.indicators.serviceapi;
 
 import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import static org.junit.Assert.fail;
@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Spring based transactional test with DbUnit support.
  */
-public class IndicatorsSystemServiceTest extends AbstractDbUnitJpaTests
-    implements IndicatorsSystemServiceTestBase {
+public class IndicatorSystemServiceTest extends AbstractDbUnitJpaTests
+    implements IndicatorSystemServiceTestBase {
     @Autowired
-    protected IndicatorsSystemService indicatorsSystemService;
+    protected IndicatorSystemService indicatorSystemService;
 
     @Test
     public void testCreateIndicatorSystem() throws Exception {
