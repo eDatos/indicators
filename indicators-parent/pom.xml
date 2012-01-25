@@ -11,6 +11,7 @@
 		  	
 		<!-- PLUGINS -->
   		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+  		<fornax-oaw-m2.version>3.3.0</fornax-oaw-m2.version>
   		
 		<!-- SPRING -->
 		<spring.version>3.0.5.RELEASE</spring.version>
