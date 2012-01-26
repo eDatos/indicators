@@ -14,7 +14,7 @@
   		<fornax-oaw-m2.version>3.3.0</fornax-oaw-m2.version>
   		
 		<!-- SPRING -->
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.1.0.RELEASE</spring.version>
 		<aspectj.version>1.5.4</aspectj.version>
 
 		<!-- PERSISTENCE -->
