@@ -40,7 +40,7 @@
 		<!-- LOGGING -->
 		<slf4j.version>1.6.1</slf4j.version>
 		<logback.version>0.9.29</logback.version>  
-		
+	
 		<!-- MISCELLANEOUS -->
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<aopalliance.version>1.0</aopalliance.version>
@@ -59,7 +59,10 @@
 		<!-- TEST -->
 		<junit.version>4.8.2</junit.version>
 		<dbunit.version>2.4.8</dbunit.version>
-		<mockito.version>1.8.1</mockito.version>		  	
+		<mockito.version>1.8.1</mockito.version>
+		
+		<!-- METAMAC -->
+		<metamac-core-common.version>1.0-SNAPSHOT</metamac-core-common.version>				  	
   	</properties>
   	
 	<dependencyManagement>
@@ -135,6 +138,10 @@
 					<exclusion>
 						<groupId>commons-logging</groupId>
 						<artifactId>commons-logging</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>commons-beanutils</groupId>
+						<artifactId>commons-beanutils</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
@@ -320,6 +327,21 @@
 				<groupId>com.ibm.icu</groupId>
 				<artifactId>icu4j</artifactId>
 				<version>${icu4j.version}</version>
+			</dependency>
+			
+			<!-- METAMAC -->
+			<dependency>
+				<groupId>org.siemac.metamac</groupId>
+				<artifactId>metamac-core-common</artifactId>
+				<classifier>client</classifier>
+				<version>${metamac-core-common.version}</version>
+				<!-- Exclude all dependencies of this dependency. Indicators project will manage dependencies manually -->
+				<exclusions>
+			        <exclusion>
+			            <groupId>*</groupId>
+			            <artifactId>*</artifactId>
+			        </exclusion>
+			    </exclusions>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
