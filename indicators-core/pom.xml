@@ -179,6 +179,7 @@
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
 			<artifactId>metamac-core-common</artifactId>
+			<classifier>client</classifier>
 		</dependency>
 	</dependencies>
 
