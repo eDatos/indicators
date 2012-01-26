@@ -11,5 +11,9 @@ Workflow {
 		transformationAdvice = "generator::SpecialCases"
 		//    templates, Xpand 'src/main/resources/generator/SpecialCases.xpt'
 		templateAdvice = "generator::SpecialCases"
+		
+		// change output directories
+		outlet.src.dir = "src/main/generated/java"
+		outlet.res.dir = "src/main/generated/resources"
 	}
 }
