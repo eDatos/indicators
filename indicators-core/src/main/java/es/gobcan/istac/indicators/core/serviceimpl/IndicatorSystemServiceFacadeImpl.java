@@ -44,7 +44,6 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         IndicatorSystem indicatorSystem = new IndicatorSystem();
         indicatorSystem.setPublishedVersion(null);
         dto2DoMapper.indicatorSystemDtoToDo(indicatorSystemDto, indicatorSystem, ctx);
-        
         // Draft version
         IndicatorSystemVersion draftVersion = dto2DoMapper.indicatorSystemDtoToDo(indicatorSystemDto, ctx);
         draftVersion.setState(IndicatorSystemStateEnum.DRAFT);

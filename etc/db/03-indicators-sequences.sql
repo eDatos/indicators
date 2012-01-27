@@ -1,0 +1,1 @@
+drop sequence hibernate_sequence;

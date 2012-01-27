@@ -100,9 +100,9 @@ Application Indicators {
         BasicType IndicatorSystemVersionInformation {
         	gap
         	"Id into database of IndicatorSystemVersion"
-    		Long idIndicatorSystemVersion nullable;
+    		Long idIndicatorSystemVersion nullable databaseColumn="IS_ID";
     		"Version number of IndicatorSystemVersion"
-    		Long versionNumber nullable;
+    		Long versionNumber nullable databaseColumn="IS_VERSION_NUMBER";
     	}		
     
 	    // ----------------------------------------------------------------
