@@ -57,6 +57,22 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         
         return indicatorSystemDto;
     }
+    
+    public IndicatorSystemDto retrieveIndicatorSystem(ServiceContext ctx, String uuid, Long version) throws MetamacException {
+        
+        // Retrieve version requested or last version
+        IndicatorSystemVersion indicatorSystemVersion = null;
+        if (version == null) {
+            // Retrieve last version TODO retrieve published?
+            IndicatorSystem indicatorSystem = retrieveIndicatorSystemByUuid(ctx, uuid);
+            version = indicatorSystem.getDraftVersion() != null ? indicatorSystem.getDraftVersion().getVersionNumber() : indicatorSystem.getPublishedVersion().getVersionNumber();
+        }
+        indicatorSystemVersion = getIndicatorSystemService().retrieveIndicatorSystemVersion(ctx, uuid, version);
+
+        // Transform to Dto
+        IndicatorSystemDto indicatorSystemDto = do2DtoMapper.indicatorSystemDoToDto(indicatorSystemVersion); 
+        return indicatorSystemDto;
+    }
 
     public String makeDraftIndicatorSystem(ServiceContext ctx, IndicatorSystemDto indicatorSystemDto) throws MetamacException {
 
@@ -79,18 +95,14 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
 
     }
 
-    public IndicatorSystemDto retrieveIndicatorSystem(ServiceContext ctx, String uri) throws MetamacException {
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveIndicatorSystem not implemented");
-
-    }
-
     public void deleteIndicatorSystem(ServiceContext ctx, String uri) throws MetamacException {
 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("deleteIndicatorSystem not implemented");
-
+    }
+    
+    private IndicatorSystem retrieveIndicatorSystemByUuid(ServiceContext ctx, String uuid) throws MetamacException {
+        return getIndicatorSystemService().retrieveIndicatorSystem(ctx, uuid);
     }
     
     private IndicatorSystemVersion retrieveIndicatorSystemDraft(ServiceContext ctx, String uuid) throws MetamacException {
@@ -100,9 +112,5 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         }
         IndicatorSystemVersion indicatorSystemVersionDraft = getIndicatorSystemService().retrieveIndicatorSystemVersion(ctx, uuid, indicatorSystem.getDraftVersion().getVersionNumber());
         return indicatorSystemVersionDraft;
-    }
-    
-    private IndicatorSystem retrieveIndicatorSystemByUuid(ServiceContext ctx, String uuid) throws MetamacException {
-        return getIndicatorSystemService().retrieveIndicatorSystem(ctx, uuid);
     }
 }

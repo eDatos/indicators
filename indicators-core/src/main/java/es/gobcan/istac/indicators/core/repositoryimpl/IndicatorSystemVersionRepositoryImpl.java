@@ -22,7 +22,7 @@ public class IndicatorSystemVersionRepositoryImpl extends IndicatorSystemVersion
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
         parameters.put("versionNumber", versionNumber);
-        List<IndicatorSystemVersion> result = findByQuery("from IndicatorSystemVersion isv where isv.indicatorSystem.uuid = :uuid and isv.versionNumber = :version", parameters);
+        List<IndicatorSystemVersion> result = findByQuery("from IndicatorSystemVersion isv where isv.indicatorSystem.uuid = :uuid and isv.versionNumber = :versionNumber", parameters);
         if (result == null || result.isEmpty()) {
             return null;
         } else {

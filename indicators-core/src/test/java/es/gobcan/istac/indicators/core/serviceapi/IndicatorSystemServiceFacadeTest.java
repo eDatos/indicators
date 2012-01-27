@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,8 +45,7 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
         assertNotNull(indicatorSystemDtoCreated);
         assertNotNull(indicatorSystemDtoCreated.getUuid());
         assertNotNull(indicatorSystemDtoCreated.getVersionNumber());
-        // TODO el retrieve recibirá también la versión, opcional
-        IndicatorSystemDto indicatorSystemDtoRetrieved = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), indicatorSystemDtoCreated.getUuid());
+        IndicatorSystemDto indicatorSystemDtoRetrieved = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), indicatorSystemDtoCreated.getUuid(), indicatorSystemDtoCreated.getVersionNumber());
         IndicatorsAsserts.assertEqualsIndicatorSystem(indicatorSystemDto, indicatorSystemDtoRetrieved);
         
         // Audit

@@ -20,7 +20,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         IndicatorSystemDto target = new IndicatorSystemDto();
 
-        target.setUuid(source.getUuid());
+        target.setUuid(source.getIndicatorSystem().getUuid());
         target.setVersionNumber(source.getVersionNumber());
         target.setCode(source.getIndicatorSystem().getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));

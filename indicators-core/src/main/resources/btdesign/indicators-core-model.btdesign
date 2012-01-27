@@ -34,7 +34,7 @@ Application Indicators {
 	    	"xxx"
 	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Retrieve an indicator system"
-	    	@IndicatorSystemDto retrieveIndicatorSystem(String uri) throws MetamacException;
+	    	@IndicatorSystemDto retrieveIndicatorSystem(String uuid, Long versionNumber) throws MetamacException;
 	    	"Delete an indicator system. Version to remove must be not published nor archived"
 	    	deleteIndicatorSystem(String uri) throws MetamacException;
     	}    	
