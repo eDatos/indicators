@@ -93,6 +93,10 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
     @Override
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
+        tables.add("TBL_LOCALISED_STRINGS");
+        tables.add("TBL_INDICATOR_SYSTEM_VERS");
+        tables.add("TBL_INDICATORS_SYSTEMS");
+        tables.add("TBL_INTERNATIONAL_STRINGS");
         return tables;
     }
 }
