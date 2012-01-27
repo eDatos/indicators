@@ -19,16 +19,21 @@ public class IndicatorSystemServiceImpl extends IndicatorSystemServiceImplBase {
     }
 
     @Override
-    public IndicatorSystemVersion createIndicatorSystem(ServiceContext ctx, IndicatorSystemVersion indicatorSystemDraft) throws MetamacException {
-        
-        // Save draft version
-        IndicatorSystemVersion indicatorSystemVersion = getIndicatorSystemVersionRepository().save(indicatorSystemDraft);
+    public IndicatorSystemVersion createIndicatorSystem(ServiceContext ctx, IndicatorSystem indicatorSystem, IndicatorSystemVersion indicatorSystemDraft) throws MetamacException {
         
         // Save indicator
-        indicatorSystemDraft.getIndicatorSystem().setDraftVersion(new IndicatorSystemVersionInformation(indicatorSystemVersion.getId(), indicatorSystemVersion.getVersionNumber()));
+        indicatorSystem = getIndicatorSystemRepository().save(indicatorSystem);
+        
+        // Save draft version
+        indicatorSystemDraft.setIndicatorSystem(indicatorSystem);
+        indicatorSystemDraft = getIndicatorSystemVersionRepository().save(indicatorSystemDraft);
+        
+        // Update indicator with draft version
+        indicatorSystem.setDraftVersion(new IndicatorSystemVersionInformation(indicatorSystemDraft.getId(), indicatorSystemDraft.getVersionNumber()));
+        indicatorSystem.getVersions().add(indicatorSystemDraft);
         getIndicatorSystemRepository().save(indicatorSystemDraft.getIndicatorSystem());
         
-        return indicatorSystemVersion;
+        return indicatorSystemDraft;
     }
 
     @Override

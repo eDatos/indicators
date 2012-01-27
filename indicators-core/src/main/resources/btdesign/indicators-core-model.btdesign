@@ -16,7 +16,7 @@ Application Indicators {
     		> @IndicatorSystemRepository
     		> @IndicatorSystemVersionRepository
     		
-    		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
+    		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystem indicatorSystem, @IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
 	    	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	@IndicatorSystem retrieveIndicatorSystem(String uuid) throws MetamacException;
     	}
@@ -53,9 +53,11 @@ Application Indicators {
 		
 			// Can not do an OneToOne relation with IndicatorSystemVersion because this produces a CyclicDependency with IndicatorSystem
 			"Draft version"
-            - @IndicatorSystemVersionInformation draftVersion nullable;
+            - @IndicatorSystemVersionInformation draftVersion nullable databaseColumn="DRAFT";
             "Published version"
-            - @IndicatorSystemVersionInformation publishedVersion nullable;
+            - @IndicatorSystemVersionInformation publishedVersion nullable databaseColumn="PUBLISHED";
+			"All versions"
+			- Bag<@IndicatorSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorSystem orderby="versionNumber asc";
 			
 			
 			Repository IndicatorSystemRepository {
@@ -88,7 +90,7 @@ Application Indicators {
 			DateTimeTZ publishingDate nullable;
 		
 			"Indicator system"
-			- @IndicatorSystem indicatorSystem not nullable cascade="none" databaseColumn="INDICATOR_SYTEM_FK";            
+			- @IndicatorSystem indicatorSystem not nullable cascade="none" databaseColumn="INDICATOR_SYTEM_FK" <-> versions;
 		
 			Repository IndicatorSystemVersionRepository {
 				@IndicatorSystemVersion save(@IndicatorSystemVersion entity);
@@ -100,9 +102,9 @@ Application Indicators {
         BasicType IndicatorSystemVersionInformation {
         	gap
         	"Id into database of IndicatorSystemVersion"
-    		Long idIndicatorSystemVersion nullable databaseColumn="IS_ID";
+    		Long idIndicatorSystemVersion nullable databaseColumn="ID";
     		"Version number of IndicatorSystemVersion"
-    		Long versionNumber nullable databaseColumn="IS_VERSION_NUMBER";
+    		Long versionNumber nullable databaseColumn="VERSION_NUMBER";
     	}		
     
 	    // ----------------------------------------------------------------

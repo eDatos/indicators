@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.IndicatorSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorSystemStateEnum;
 import es.gobcan.istac.indicators.core.domain.IndicatorSystemVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorSystemVersionInformation;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
@@ -49,10 +48,9 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         draftVersion.setState(IndicatorSystemStateEnum.DRAFT);
         draftVersion.setVersionNumber(Long.valueOf(1));
         draftVersion.setPublishingDate(null);
-        draftVersion.setIndicatorSystem(indicatorSystem);
         
         // Create
-        IndicatorSystemVersion indicatorSystemVersionCreated = getIndicatorSystemService().createIndicatorSystem(ctx, draftVersion);
+        IndicatorSystemVersion indicatorSystemVersionCreated = getIndicatorSystemService().createIndicatorSystem(ctx, indicatorSystem, draftVersion);
         
         // Transform to Dto
         indicatorSystemDto = do2DtoMapper.indicatorSystemDoToDto(indicatorSystemVersionCreated); 
