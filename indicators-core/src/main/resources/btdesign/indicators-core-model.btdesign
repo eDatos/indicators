@@ -1,12 +1,24 @@
+import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+
 Application Indicators {
     basePackage=es.gobcan.istac.indicators
     
     Module core {
 		basePackage=es.gobcan.istac.indicators.core
 		
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------     
+		
 		"Provides access to indicators systems"
     	Service IndicatorSystemService {
-	    	createIndicatorSystem() throws MetamacException;
+    		> @IndicatorSystemRepository
+    		> @IndicatorSystemVersionRepository
+    		
+    		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
+	    	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
+	    	@IndicatorSystem retrieveIndicatorSystem(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -14,7 +26,7 @@ Application Indicators {
 	    	> @IndicatorSystemService
 	    	
 	    	"Create a indicator system in draft"
-	    	String createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
+	    	@IndicatorSystemDto createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Create a version on draft of a published indicator system"
 	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"Update metadata of an indicator system. This version can not be published or archived"
@@ -26,24 +38,98 @@ Application Indicators {
 	    	"Delete an indicator system. Version to remove must be not published nor archived"
 	    	deleteIndicatorSystem(String uri) throws MetamacException;
     	}    	
+
+	    // ----------------------------------------------------------------
+		// 							ENTITIES
+		// ----------------------------------------------------------------        	
+		"Indicator system entity"
+		Entity IndicatorSystem {
+			databaseTable="TBL_INDICATORS_SYSTEMS"
+			hint="idSequence=INDICATORS_SYSTEMS"
+			gap
+			
+			"Semantic identifier of statistic operation. Non modifiable"
+       		String code required;
+		
+			// Can not do an OneToOne relation with IndicatorSystemVersion because this produces a CyclicDependency with IndicatorSystem
+			"Draft version"
+            - @IndicatorSystemVersionInformation draftVersion nullable;
+            "Published version"
+            - @IndicatorSystemVersionInformation publishedVersion nullable;
+			
+			
+			Repository IndicatorSystemRepository {
+		   		@IndicatorSystem save(@IndicatorSystem entity);
+            	protected List<@IndicatorSystem> findByQuery;
+            	@IndicatorSystem retrieveIndicatorSystem(String uuid);
+			}
+		} 
+		
+		"Version of indicator system entity"
+		Entity IndicatorSystemVersion {
+			databaseTable="TBL_INDICATOR_SYSTEM_VERS"
+			hint="idSequence=INDICATOR_SYSTEM_VERS"
+			gap
+			
+			"State"
+			- @IndicatorSystemStateEnum state required;
+			Long versionNumber required;
+       		"Uri of statistic operation"
+       		String uri nullable;
+       		"Title of statistic operation"
+       		- @InternationalString title cascade="all" databaseColumn="TITLE_FK";
+       		"Acronym of statistic operation"
+       		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
+       		"Objetive of statistic operation"
+       		- @InternationalString objetive cascade="all" nullable databaseColumn="OBJETIVE_FK";
+       		"Description of statistic operation"
+       		- @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
+			"Publishing date"
+			DateTimeTZ publishingDate nullable;
+		
+			"Indicator system"
+			- @IndicatorSystem indicatorSystem not nullable cascade="none" databaseColumn="INDICATOR_SYTEM_FK";            
+		
+			Repository IndicatorSystemVersionRepository {
+				@IndicatorSystemVersion save(@IndicatorSystemVersion entity);
+            	protected List<@IndicatorSystemVersion> findByQuery;
+            	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber);
+			}
+		} 
+		
+        BasicType IndicatorSystemVersionInformation {
+        	gap
+        	"Id into database of IndicatorSystemVersion"
+    		Long idIndicatorSystemVersion nullable;
+    		"Version number of IndicatorSystemVersion"
+    		Long versionNumber nullable;
+    	}		
     
 	    // ----------------------------------------------------------------
-		// 							DTO
+		// 							DTOS
 		// ----------------------------------------------------------------        	
 		"Dto for indicator system"
 	   	DataTransferObject IndicatorSystemDto extends @AuditableDto {
-			String uri;	
-			Integer version;
+			
+			"Unique uuid"
+			String uuid;
+			"Version number of this indicator system version"	
+			Long versionNumber;
+			"State"
 			- @IndicatorSystemStateEnum state;
+			"Semantic identifier of statistic operation"
+       		String code;
+       		"Uri of statistic operation"
+       		String uri;
+       		"Title of statistic operation"
+       		- @InternationalStringDto title;
+       		"Acronym of statistic operation"
+       		- @InternationalStringDto acronym;
+       		"Description of statistic operation"
+       		- @InternationalStringDto description;
+       		"Objetive of statistic operation"
+       		- @InternationalStringDto objetive;			
 	    }
-	    
-	    "Dto for audit"
-    	DataTransferObject AuditableDto {
-       		DateTime createdDate;
-       		String createdBy;
-       		DateTime lastUpdated;
-       		String lastUpdatedBy;
-    	}
 	        
 		// ----------------------------------------------------------------
 		// 							ENUMS

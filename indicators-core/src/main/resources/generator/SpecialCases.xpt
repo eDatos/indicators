@@ -65,3 +65,25 @@ NOT NULL«ENDIF»,
     	«targetDef.proceed()»
     «ENDIF»
 «ENDAROUND»
+
+«AROUND templates::domain::DomainObject::dataTransferObjectHook FOR DataTransferObject-»
+    /**
+     * ToString
+     */
+    @Override
+    public String toString() {
+        try {
+			org.apache.commons.lang.builder.ReflectionToStringBuilder builder = new org.apache.commons.lang.builder.ReflectionToStringBuilder(this, toStringStyle());	        
+            builder.setAppendStatics(false);
+            builder.setAppendTransients(true);
+            return builder.toString();
+        } catch (RuntimeException e) {
+            // toString is only used for debug purpose and eventual exceptions should not be "ignored"
+            return "RuntimeException in " + getClass().getName() + ".toString():" + e.getMessage();
+        }
+    }	
+    
+	protected org.apache.commons.lang.builder.ToStringStyle toStringStyle() {
+		return org.apache.commons.lang.builder.ToStringStyle.MULTI_LINE_STYLE;
+	}
+«ENDAROUND»
