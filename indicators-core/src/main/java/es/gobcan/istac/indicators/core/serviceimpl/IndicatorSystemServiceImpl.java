@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.util.List;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
@@ -52,5 +54,10 @@ public class IndicatorSystemServiceImpl extends IndicatorSystemServiceImplBase {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid, versionNumber);
         }
         return indicatorSystemVersion;
+    }
+
+    @Override
+    public List<IndicatorSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
+        return getIndicatorSystemRepository().findIndicatorsSystems(code);
     }
 }

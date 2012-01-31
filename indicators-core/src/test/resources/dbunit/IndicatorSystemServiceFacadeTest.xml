@@ -1,3 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<dataset></dataset>
+<dataset>
+
+	<!-- ************************************************************************************ -->
+	<!--                                INDICATORS SYSTEM 1		                              -->
+	<!-- ************************************************************************************ -->
+	<TBL_INDICATORS_SYSTEMS
+		ID="1"
+		UUID="IS-1"
+		CODE="CODE-1"
+		DRAFT_ID="1"
+		DRAFT_VERSION_NUMBER="1"
+		PUBLISHED_ID="[null]"
+		PUBLISHED_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2012-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2012-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+		<TBL_INDICATOR_SYSTEM_VERS
+			ID="1"
+			UUID="IS1-V1"
+			VERSION_NUMBER="1"
+			TITLE_FK="1"
+			ACRONYM_FK="2"
+  			OBJETIVE_FK="3"
+  			DESCRIPTION_FK="4"
+  			INDICATOR_SYTEM_FK="1"
+  			STATE="DRAFT"
+			URI="http://indicators-sytems/1"
+			PUBLISHING_DATE="[null]"
+			PUBLISHING_DATE_TZ="[null]"
+			
+			VERSION="1"
+			CREATED_BY="user1"
+			CREATED_DATE="2012-01-01 01:02:03"
+			CREATED_DATE_TZ="Europe/London"
+			LAST_UPDATED_BY="user2"
+			LAST_UPDATED="2012-01-22 01:02:03"
+			LAST_UPDATED_TZ="Europe/London"
+		/>
+
+  
+	<!-- ************************************************************************************ -->
+	<!--                                 INTERNATIONAL STRINGS                                -->
+	<!-- ************************************************************************************ -->
+	<TBL_INTERNATIONAL_STRINGS
+		ID="1"
+		UUID="IS-1"
+		VERSION="1"
+	/>	
+	<TBL_LOCALISED_STRINGS
+		ID="1"
+		LABEL="Título 1"
+		LOCALE="es"
+		UUID="IS-1-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="1"
+	/>	
+	<TBL_LOCALISED_STRINGS
+		ID="2"
+		LABEL="Title 1"
+		LOCALE="en"
+		UUID="IS-1-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="1"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="2"
+		UUID="IS-2"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="3"
+		LABEL="Acrónimo 2"
+		LOCALE="es"
+		UUID="IS-2-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="2"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="4"
+		LABEL="Acronym 2"
+		LOCALE="en"
+		UUID="IS-2-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="2"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="3"
+		UUID="IS-3"
+		VERSION="1"
+	/>
+		
+	<TBL_LOCALISED_STRINGS
+		ID="5"
+		LABEL="Objetivo 3"
+		LOCALE="es"
+		UUID="IS-3-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="3"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="6"
+		LABEL="Objetive 3"
+		LOCALE="en"
+		UUID="IS-3-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="3"
+	/>  
+		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="4"
+		UUID="IS-4"
+		VERSION="1"
+	/>	
+	
+	<TBL_LOCALISED_STRINGS
+		ID="7"
+		LABEL="Descripción 4"
+		LOCALE="es"
+		UUID="IS-4-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="4"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="8"
+		LABEL="Description 4"
+		LOCALE="en"
+		UUID="IS-4-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="4"
+	/>  
+	
+</dataset>

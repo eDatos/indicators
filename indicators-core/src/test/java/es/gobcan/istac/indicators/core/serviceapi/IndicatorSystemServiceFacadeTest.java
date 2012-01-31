@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -11,10 +11,12 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
@@ -23,7 +25,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring/applicationContext-test.xml" })
-public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*implements IndicatorSystemServiceFacadeTestBase */{
+public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*implements IndicatorSystemServiceFacadeTestBase */{ // TODO descomentar implements
 
     @Autowired
     protected IndicatorSystemServiceFacade indicatorSystemServiceFacade;
@@ -54,6 +56,44 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
         assertTrue(DateUtils.isSameDay(new Date(), indicatorSystemDtoCreated.getLastUpdated()));
         assertEquals(getServiceContext().getUserId(), indicatorSystemDtoCreated.getLastUpdatedBy());
     }
+    
+    @Test
+    public void testCreateIndicatorSystemCodeRequired() throws Exception {
+        
+        IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
+        indicatorSystemDto.setCode(null);
+        indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        try {
+            indicatorSystemServiceFacade.createIndicatorSystem(getServiceContext(), indicatorSystemDto);
+            fail("code required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    // TODO REVISAR LOS metadatos no repetibles y obligatorios
+    @Test
+    public void testCreateIndicatorSystemCodeDuplicated() throws Exception {
+        
+        IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
+        indicatorSystemDto.setCode("CODE-1");
+        indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        try {
+            indicatorSystemServiceFacade.createIndicatorSystem(getServiceContext(), indicatorSystemDto);
+            fail("code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
 
 //    @Test
 //    public void testMakeDraftIndicatorSystem() throws Exception {

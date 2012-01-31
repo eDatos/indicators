@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.util.List;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
 
         // Validation
         InvocationValidator.checkCreateIndicatorSystem(indicatorSystemDto);
+        validateCodeUnique(ctx, indicatorSystemDto.getCode(), null);
         
         // Transform
         IndicatorSystem indicatorSystem = new IndicatorSystem();
@@ -108,9 +111,19 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
     private IndicatorSystemVersion retrieveIndicatorSystemDraft(ServiceContext ctx, String uuid) throws MetamacException {
         IndicatorSystem indicatorSystem = retrieveIndicatorSystemByUuid(ctx, uuid);
         if (indicatorSystem.getDraftVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid, null);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
         }
         IndicatorSystemVersion indicatorSystemVersionDraft = getIndicatorSystemService().retrieveIndicatorSystemVersion(ctx, uuid, indicatorSystem.getDraftVersion().getVersionNumber());
         return indicatorSystemVersionDraft;
+    }
+    
+    /**
+     * Check not exists another indicator system with same code. Checks system retrieved not is actual system.
+     */
+    private void validateCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
+        List<IndicatorSystem> indicatorsSystems = getIndicatorSystemService().findIndicatorsSystems(ctx, code);
+        if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getMessageForReasonType(), code);
+        }
     }
 }

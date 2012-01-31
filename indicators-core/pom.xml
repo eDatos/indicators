@@ -57,15 +57,31 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 		</dependency>		
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+        </dependency>
 	
 		<!-- PERSISTENCE -->
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
@@ -76,6 +92,17 @@
 			<artifactId>oracle</artifactId>
 		</dependency>			
 		
+		<!-- SCULPTOR -->		
+		<dependency>
+			<groupId>org.fornax.cartridges</groupId>
+			<artifactId>fornax-cartridges-sculptor-generator</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.fornax.cartridges</groupId>
+			<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+			<classifier>without-ejb</classifier>
+		</dependency>
+		
 		<!-- COMMONS -->
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -84,6 +111,10 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-pool</groupId>
@@ -96,6 +127,18 @@
 		
 		<!-- LOGGING -->
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
@@ -104,6 +147,10 @@
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -127,6 +174,10 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.fornax.cartridges</groupId>
+			<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
+		</dependency>	
 		
 		<!-- METAMAC -->
 		<dependency>

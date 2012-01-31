@@ -76,16 +76,16 @@ public abstract class IndicatorsBaseTests {
         setUpDatabaseTester(getClass(), getJdbcTemplate().getDataSource(), getDataSetFile());
     }
     
-    private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String dataSetFileName) throws Exception {
+    private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String datasetFileName) throws Exception {
 
         // Setup database tester
         if (databaseTester == null) {
             databaseTester = new OracleDataSourceDatabaseTester(dataSource);
-            databaseTester.setSchema("INDICATORS_TEST");
+            databaseTester.setSchema(dataSource.getConnection().getMetaData().getUserName()); // TODO poner explícitamente el nombre del esquema en fichero de propiedades
         }
         
         // Create dataset
-        ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(clazz.getClassLoader().getResource(dataSetFileName)));
+        ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(clazz.getClassLoader().getResource(datasetFileName)));
         dataSetReplacement.addReplacementObject("[NULL]", null);
         dataSetReplacement.addReplacementObject("[null]", null);
         dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
@@ -111,7 +111,7 @@ public abstract class IndicatorsBaseTests {
     public void tearDownDatabaseTester() throws Exception {
         if (databaseTester != null) {
             removeDatabaseContent(databaseTester.getConnection().getConnection());
-//            databaseTester.onTearDown(); // removed because there is a bug with oracle driver. Fail when it does isAutoIncrement = resultSet.getString(23);
+            databaseTester.onTearDown();
         }
     }
     

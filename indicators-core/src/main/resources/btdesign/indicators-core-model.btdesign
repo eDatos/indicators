@@ -19,6 +19,7 @@ Application Indicators {
     		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystem indicatorSystem, @IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
 	    	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	@IndicatorSystem retrieveIndicatorSystem(String uuid) throws MetamacException;
+	    	List<@IndicatorSystem> findIndicatorsSystems(String code) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -64,6 +65,7 @@ Application Indicators {
 		   		@IndicatorSystem save(@IndicatorSystem entity);
             	protected List<@IndicatorSystem> findByQuery;
             	@IndicatorSystem retrieveIndicatorSystem(String uuid);
+            	List<@IndicatorSystem> findIndicatorsSystems(String code);
 			}
 		} 
 		
