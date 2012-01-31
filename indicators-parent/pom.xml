@@ -17,11 +17,14 @@
 		<!-- SPRING -->
 		<spring.version>3.1.0.RELEASE</spring.version>
 		<aspectj.version>1.5.4</aspectj.version>
+		<cglib-nodep.version>2.2</cglib-nodep.version>
 
 		<!-- PERSISTENCE -->
 		<jpa.version>1.0</jpa.version>
 		<hibernate-core.version>3.3.2.GA</hibernate-core.version>
+		<hibernate-annotations.version>3.4.0.GA</hibernate-annotations.version>
 		<hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
+		<hibernate-validator.version>3.1.0.GA</hibernate-validator.version>
 		<ehcache.version>2.4.3</ehcache.version>
 		<oracle.version>10.2.0.1.0</oracle.version>
 
@@ -31,6 +34,7 @@
 		<!-- COMMONS -->
 		<commons-lang.version>2.6</commons-lang.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-beanutils.version>1.8.3</commons-beanutils.version>
 		<commons-pool.version>1.5.6</commons-pool.version>
 		<commons-configuration.version>1.6</commons-configuration.version>
 		<commons-io.version>1.4</commons-io.version>
@@ -42,6 +46,7 @@
 
 		<!-- MISCELLANEOUS -->
 		<jsr250-api.version>1.0</jsr250-api.version>
+		<aopalliance.version>1.0</aopalliance.version>
 		<joda-time.version>1.6.2</joda-time.version>
 		<joda-time-hibernate.version>1.2</joda-time-hibernate.version>
 
@@ -73,6 +78,26 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+				<groupId>aopalliance</groupId>
+				<artifactId>aopalliance</artifactId>
+				<version>${aopalliance.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
@@ -92,6 +117,17 @@
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>${commons-collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>commons-pool</groupId>
@@ -124,6 +160,12 @@
 				<version>${commons-dbcp.version}</version>
 				<scope>test</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>javax.persistence</groupId>
+				<artifactId>persistence-api</artifactId>
+				<version>${jpa.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
@@ -131,8 +173,18 @@
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-annotations</artifactId>
+				<version>${hibernate-annotations.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
 				<version>${hibernate-entitymanager.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
@@ -230,6 +282,11 @@
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-nodep</artifactId>
+				<version>${cglib-nodep.version}</version>
+			</dependency>
 
 			<!-- Tests -->
 			<dependency>
@@ -255,6 +312,31 @@
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
 				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-generator</artifactId>
+				<version>${sculptor.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+				<version>${sculptor.version}</version>
+				<classifier>without-ejb</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.fornax.cartridges</groupId>
+				<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
+				<version>${sculptor.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.fornax.cartridges</groupId>
+						<artifactId>fornax-cartridges-sculptor-framework</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
