@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>es.gobcan.istac.indicators</groupId>
 		<artifactId>indicators-parent</artifactId>
 		<version>0.0.1</version>
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
-	
+
 	<artifactId>indicators-core</artifactId>
 	<packaging>jar</packaging>
 	<name>INDICATORS :: CORE</name>
 
 	<dependencies>
-	
+
 		<!-- SPRING -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -56,12 +57,12 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-		</dependency>		
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-        </dependency>
-	
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+		</dependency>
+
 		<!-- PERSISTENCE -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -90,19 +91,19 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>oracle</artifactId>
-		</dependency>			
-		
-		<!-- SCULPTOR -->		
+		</dependency>
+
+		<!-- SCULPTOR -->
 		<dependency>
 			<groupId>org.fornax.cartridges</groupId>
 			<artifactId>fornax-cartridges-sculptor-generator</artifactId>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.fornax.cartridges</groupId>
 			<artifactId>fornax-cartridges-sculptor-framework</artifactId>
 			<classifier>without-ejb</classifier>
 		</dependency>
-		
+
 		<!-- COMMONS -->
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -122,9 +123,9 @@
 		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-        </dependency>
-		
+			<artifactId>commons-configuration</artifactId>
+		</dependency>
+
 		<!-- LOGGING -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -142,7 +143,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-		
+
 		<!-- MISCELLANEOUS -->
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -177,8 +178,8 @@
 		<dependency>
 			<groupId>org.fornax.cartridges</groupId>
 			<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
-		</dependency>	
-		
+		</dependency>
+
 		<!-- METAMAC -->
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
@@ -198,7 +199,7 @@
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.4.1</version>
-			</plugin>		
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -281,11 +282,11 @@
 							</includes>
 						</checkFileset>
 					</checkFilesets>
-						<!-- ignored. model is specified in Workflow.mwe2 -->
-<!-- 					<properties> -->
-<!-- 						<modelFile>src/main/resources/indicators-core-model.btdesign</modelFile> -->
-<!-- 						<appProject>${project.artifactId}</appProject> -->
-<!-- 					</properties> -->
+					<!-- ignored. model is specified in Workflow.mwe2 -->
+					<!-- <properties> -->
+					<!-- <modelFile>src/main/resources/indicators-core-model.btdesign</modelFile> -->
+					<!-- <appProject>${project.artifactId}</appProject> -->
+					<!-- </properties> -->
 					<jvmSettings>
 						<copySysProperties>true</copySysProperties>
 						<jvmArgs>
@@ -313,7 +314,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.6</version><!--$NO-MVN-MAN-VER$-->
+				<version>1.6</version><!--$NO-MVN-MAN-VER$ -->
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -323,15 +324,20 @@
 						<configuration>
 							<target>
 								<!-- Delete wrong configuration files -->
-								<delete file="${basedir}/src/test/resources/more-test.xml" verbose="true" />
-								<delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" verbose="true" />
-								<delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" verbose="true" />
+								<delete file="${basedir}/src/test/resources/more-test.xml"
+									verbose="true" />
+								<delete
+									file="${basedir}/src/test/generated/resources/applicationContext-test.xml"
+									verbose="true" />
+								<delete
+									file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml"
+									verbose="true" />
 							</target>
 						</configuration>
-	
+
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
 </project>
