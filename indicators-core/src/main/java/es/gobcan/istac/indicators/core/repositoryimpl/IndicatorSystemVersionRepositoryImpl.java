@@ -29,4 +29,12 @@ public class IndicatorSystemVersionRepositoryImpl extends IndicatorSystemVersion
             return result.get(0);
         }
     }
+
+    @Override
+    public List<IndicatorSystemVersion> findIndicatorSystemVersions(String uri) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("uri", uri);
+        List<IndicatorSystemVersion> result = findByQuery("from IndicatorSystemVersion isv where isv.uri = :uri", parameters);
+        return result;
+    }
 }

@@ -1,8 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.domain.IndicatorSystemStateEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -49,6 +51,7 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
         assertNotNull(indicatorSystemDtoCreated.getUuid());
         assertNotNull(indicatorSystemDtoCreated.getVersionNumber());
         IndicatorSystemDto indicatorSystemDtoRetrieved = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), indicatorSystemDtoCreated.getUuid(), indicatorSystemDtoCreated.getVersionNumber());
+        assertEquals(IndicatorSystemStateEnum.DRAFT, indicatorSystemDtoCreated.getState());
         IndicatorsAsserts.assertEqualsIndicatorSystem(indicatorSystemDto, indicatorSystemDtoRetrieved);
         
         // Validate audit
@@ -109,6 +112,25 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
             assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateIndicatorSystemUriDuplicated() throws Exception {
+        
+        IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
+        indicatorSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorSystemDto.setUri("http://indicators-sytems/1");
+        
+        try {
+            indicatorSystemServiceFacade.createIndicatorSystem(getServiceContext(), indicatorSystemDto);
+            fail("uri duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorSystemDto.getUri(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
     

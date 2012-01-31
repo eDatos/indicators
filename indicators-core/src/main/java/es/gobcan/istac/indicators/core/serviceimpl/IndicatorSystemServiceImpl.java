@@ -60,4 +60,9 @@ public class IndicatorSystemServiceImpl extends IndicatorSystemServiceImplBase {
     public List<IndicatorSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorSystemRepository().findIndicatorsSystems(code);
     }
+
+    @Override
+    public List<IndicatorSystemVersion> findIndicatorSystemVersions(ServiceContext ctx, String uri) throws MetamacException {
+        return getIndicatorSystemVersionRepository().findIndicatorSystemVersions(uri);
+    }
 }

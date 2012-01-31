@@ -21,7 +21,8 @@ public enum ServiceExceptionType {
     SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY("0405"),
 
     SERVICE_INDICATORY_SYSTEM_NOT_FOUND("0501"),
-    SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED("0502");
+    SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED("0502"),
+    SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_URI_DUPLICATED("0503");
 
     private String errorCode;
 
@@ -45,6 +46,7 @@ public enum ServiceExceptionType {
         // Indicators systems
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND, "exception.service.validation.indicator_system.not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, "exception.service.validation.indicator_system.already_exists.code_duplicated");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_URI_DUPLICATED, "exception.service.validation.indicator_system.already_exists.uri_duplicated");
 
         for (ServiceExceptionType s : EnumSet.allOf(ServiceExceptionType.class)) {
             LOOKUP.put(s.getErrorCode(), s);

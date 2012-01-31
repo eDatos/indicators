@@ -34,13 +34,14 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
 
     /**
      * TODO Devolver una uri, en lugar del uuid (ojo! uris rests?)
-     * TODO Revisar los metadatos no repetibles y obligatorios
+     * 
      */
     public IndicatorSystemDto createIndicatorSystem(ServiceContext ctx, IndicatorSystemDto indicatorSystemDto) throws MetamacException {
 
         // Validation
         InvocationValidator.checkCreateIndicatorSystem(indicatorSystemDto);
         validateCodeUnique(ctx, indicatorSystemDto.getCode(), null);
+        validateUriUnique(ctx, indicatorSystemDto.getUri(), null);
         
         // Transform
         IndicatorSystem indicatorSystem = new IndicatorSystem();
@@ -124,6 +125,20 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         List<IndicatorSystem> indicatorsSystems = getIndicatorSystemService().findIndicatorsSystems(ctx, code);
         if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getMessageForReasonType(), code);
+        }
+    }
+    
+    /**
+     * Check not exists another indicator system with same uri. Checks system retrieved not is actual system.
+     */
+    private void validateUriUnique(ServiceContext ctx, String uri, String actualUuid) throws MetamacException {
+        List<IndicatorSystemVersion> indicatorSystemVersions = getIndicatorSystemService().findIndicatorSystemVersions(ctx, uri);
+        if (indicatorSystemVersions != null && indicatorSystemVersions.size() != 0) {
+            for (IndicatorSystemVersion indicatorSystemVersion : indicatorSystemVersions) {
+                if (!indicatorSystemVersion.getIndicatorSystem().getUuid().equals(actualUuid)) {
+                    throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getMessageForReasonType(), uri);    
+                }
+            }
         }
     }
 }
