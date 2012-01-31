@@ -39,7 +39,7 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
     public IndicatorSystemDto createIndicatorSystem(ServiceContext ctx, IndicatorSystemDto indicatorSystemDto) throws MetamacException {
 
         // Validation
-        InvocationValidator.checkCreateIndicatorSystem(indicatorSystemDto);
+        InvocationValidator.checkCreateIndicatorSystem(indicatorSystemDto, null);
         validateCodeUnique(ctx, indicatorSystemDto.getCode(), null);
         validateUriUnique(ctx, indicatorSystemDto.getUri(), null);
         
@@ -64,10 +64,13 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
     
     public IndicatorSystemDto retrieveIndicatorSystem(ServiceContext ctx, String uuid, Long version) throws MetamacException {
         
+        // Validation
+        InvocationValidator.checkRetrieveIndicatorSystem(uuid, version, null);
+        
         // Retrieve version requested or last version
         IndicatorSystemVersion indicatorSystemVersion = null;
         if (version == null) {
-            // Retrieve last version TODO retrieve published?
+            // Retrieve last version
             IndicatorSystem indicatorSystem = retrieveIndicatorSystemByUuid(ctx, uuid);
             version = indicatorSystem.getDraftVersion() != null ? indicatorSystem.getDraftVersion().getVersionNumber() : indicatorSystem.getPublishedVersion().getVersionNumber();
         }
@@ -75,6 +78,20 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
 
         // Transform to Dto
         IndicatorSystemDto indicatorSystemDto = do2DtoMapper.indicatorSystemDoToDto(indicatorSystemVersion); 
+        return indicatorSystemDto;
+    }
+    
+    @Override
+    public IndicatorSystemDto retrieveIndicatorSystemPublished(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        // Validation
+        InvocationValidator.checkRetrieveIndicatorSystemPublished(uuid, null);
+
+        // Retrieve published version
+        IndicatorSystemVersion publishedIndicatorSystemVersion = retrieveIndicatorSystemStatePublished(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorSystemDto indicatorSystemDto = do2DtoMapper.indicatorSystemDoToDto(publishedIndicatorSystemVersion); 
         return indicatorSystemDto;
     }
 
@@ -109,17 +126,20 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         return getIndicatorSystemService().retrieveIndicatorSystem(ctx, uuid);
     }
     
-    private IndicatorSystemVersion retrieveIndicatorSystemDraft(ServiceContext ctx, String uuid) throws MetamacException {
+    /**
+     * Retrieves version published of an indicators system
+     */
+    private IndicatorSystemVersion retrieveIndicatorSystemStatePublished(ServiceContext ctx, String uuid) throws MetamacException {
         IndicatorSystem indicatorSystem = retrieveIndicatorSystemByUuid(ctx, uuid);
-        if (indicatorSystem.getDraftVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
+        if (indicatorSystem.getPublishedVersion() == null) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_STATE.getMessageForReasonType(), uuid, IndicatorSystemStateEnum.PUBLISHED);
         }
-        IndicatorSystemVersion indicatorSystemVersionDraft = getIndicatorSystemService().retrieveIndicatorSystemVersion(ctx, uuid, indicatorSystem.getDraftVersion().getVersionNumber());
-        return indicatorSystemVersionDraft;
+        IndicatorSystemVersion indicatorSystemVersionPublished = getIndicatorSystemService().retrieveIndicatorSystemVersion(ctx, uuid, indicatorSystem.getPublishedVersion().getVersionNumber());
+        return indicatorSystemVersionPublished;
     }
     
     /**
-     * Check not exists another indicator system with same code. Checks system retrieved not is actual system.
+     * Checks not exists another indicator system with same code. Checks system retrieved not is actual system.
      */
     private void validateCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
         List<IndicatorSystem> indicatorsSystems = getIndicatorSystemService().findIndicatorsSystems(ctx, code);
@@ -129,7 +149,7 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
     }
     
     /**
-     * Check not exists another indicator system with same uri. Checks system retrieved not is actual system.
+     * Checks not exists another indicator system with same uri. Checks system retrieved not is actual system.
      */
     private void validateUriUnique(ServiceContext ctx, String uri, String actualUuid) throws MetamacException {
         List<IndicatorSystemVersion> indicatorSystemVersions = getIndicatorSystemService().findIndicatorSystemVersions(ctx, uri);

@@ -29,7 +29,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setObjetive(internationalStringToDto(source.getObjetive()));
         target.setDescription(internationalStringToDto(source.getDescription()));
         target.setState(source.getState());
-        
+        target.setDraftVersion(source.getIndicatorSystem().getDraftVersion() != null ? source.getIndicatorSystem().getDraftVersion().getVersionNumber() : null);
+        target.setPublishedVersion(source.getIndicatorSystem().getPublishedVersion() != null ? source.getIndicatorSystem().getPublishedVersion().getVersionNumber() : null);
+        target.setPublishingDate(source.getPublishingDate() != null ? source.getPublishingDate().toDate() : null);
+        target.setUnpublishingDate(source.getUnpublishingDate() != null ? source.getUnpublishingDate().toDate() : null);
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(source.getCreatedDate().toDate());
         target.setLastUpdatedBy(source.getLastUpdatedBy());

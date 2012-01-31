@@ -12,15 +12,8 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
 
 public class InvocationValidator {
-        
-    public static void checkCreateIndicatorSystem(IndicatorSystemDto indicatorSystemDto) throws MetamacException {
-        checkCreateIndicatorSystem(indicatorSystemDto, null);
-    }
     
-    /**
-     * Check indicatorSystem mandatory metadata for create it
-     */
-    private static void checkCreateIndicatorSystem(IndicatorSystemDto indicatorSystemDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicatorSystem(IndicatorSystemDto indicatorSystemDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -30,9 +23,28 @@ public class InvocationValidator {
         checkMetadataRequired(indicatorSystemDto.getCode(), "CODE", exceptions);
         checkMetadataRequired(indicatorSystemDto.getTitle(), "TITLE", exceptions);
         
-        if (!exceptions.isEmpty()) {
-            throw new MetamacException(exceptions);
+        throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveIndicatorSystem(String uuid, Long version, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
         }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        // version is optional
+        
+        throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveIndicatorSystemPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        
+        throwIfException(exceptions);
     }
     
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -49,6 +61,12 @@ public class InvocationValidator {
                    (List.class.isInstance(parameter) && ((List) parameter).size() == 0) ||
                    (Set.class.isInstance(parameter) && ((Set) parameter).size() == 0)) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getMessageForReasonType(), parameterName));
+        }
+    }
+    
+    private static void throwIfException(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions != null && !exceptions.isEmpty()) {
+            throw new MetamacException(exceptions);
         }
     }
 }

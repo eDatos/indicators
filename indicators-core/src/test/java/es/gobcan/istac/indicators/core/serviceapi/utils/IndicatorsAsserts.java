@@ -33,4 +33,17 @@ public class IndicatorsAsserts {
             assertEquals(localisedStringDtoExpected.getLabel(), actual.getLocalisedLabel(localisedStringDtoExpected.getLocale()));
         }
     }
+    
+    public static void assertEqualsInternationalString(InternationalStringDto internationalStringDto, String locale1, String label1, String locale2, String label2) {
+        int count = 0;
+        if (locale1 != null) {
+            assertEquals(label1, internationalStringDto.getLocalisedLabel(locale1));
+            count++;
+        } 
+        if (locale2 != null) {
+            assertEquals(label2, internationalStringDto.getLocalisedLabel(locale2));
+            count++;
+        }
+        assertEquals(count, internationalStringDto.getTexts().size());
+    }
 }

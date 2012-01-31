@@ -27,17 +27,19 @@ Application Indicators {
     	Service IndicatorSystemServiceFacade {
 	    	> @IndicatorSystemService
 	    	
-	    	"Create a indicator system in draft"
+	    	"Creates a indicator system in draft"
 	    	@IndicatorSystemDto createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
-	    	"Create a version on draft of a published indicator system"
+	    	"Creates a version on draft of a published indicator system"
 	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
-	    	"Update metadata of an indicator system. This version can not be published or archived"
+	    	"Updates metadata of an indicator system. This version can not be published or archived"
 	    	String updateIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
 	    	"xxx"
 	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
-	    	"Retrieve an indicator system"
+	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorSystemDto retrieveIndicatorSystem(String uuid, Long versionNumber) throws MetamacException;
-	    	"Delete an indicator system. Version to remove must be not published nor archived"
+	    	"Retrieves an indicator system published"
+	    	@IndicatorSystemDto retrieveIndicatorSystemPublished(String uuid) throws MetamacException;
+	    	"Deletes an indicator system. Version to remove must be not published nor archived"
 	    	deleteIndicatorSystem(String uri) throws MetamacException;
     	}    	
 
@@ -91,7 +93,9 @@ Application Indicators {
        		- @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
 			"Publishing date"
 			DateTimeTZ publishingDate nullable;
-		
+			"Unpublishing date"
+			DateTimeTZ unpublishingDate nullable;
+					
 			"Indicator system"
 			- @IndicatorSystem indicatorSystem not nullable cascade="none" databaseColumn="INDICATOR_SYTEM_FK" <-> versions;
 		
@@ -135,6 +139,14 @@ Application Indicators {
        		- @InternationalStringDto description;
        		"Objetive of statistic operation"
        		- @InternationalStringDto objetive;			
+       		"Version number of draft"
+       		Long draftVersion;
+       		"Version number of published"       		
+			Long publishedVersion;
+			"Publishing date of this version"
+			JAVADATE publishingDate; 
+			"Unpublishing date of this version"
+			JAVADATE unpublishingDate;            
 	    }
 	        
 		// ----------------------------------------------------------------
