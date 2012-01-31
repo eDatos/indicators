@@ -34,7 +34,7 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
 
     /**
      * TODO Devolver una uri, en lugar del uuid (ojo! uris rests?)
-     * TODO validación de code, title, acronym, uri (únicos)
+     * TODO Revisar los metadatos no repetibles y obligatorios
      */
     public IndicatorSystemDto createIndicatorSystem(ServiceContext ctx, IndicatorSystemDto indicatorSystemDto) throws MetamacException {
 

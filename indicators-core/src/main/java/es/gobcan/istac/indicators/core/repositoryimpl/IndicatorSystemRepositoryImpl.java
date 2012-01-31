@@ -32,7 +32,7 @@ public class IndicatorSystemRepositoryImpl extends IndicatorSystemRepositoryBase
     public List<IndicatorSystem> findIndicatorsSystems(String code) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("code", code);
-        List<IndicatorSystem> result = findByQuery("from IndicatorSystem i where i.code = :code", parameters);
+        List<IndicatorSystem> result = findByQuery("from IndicatorSystem i where upper(i.code) = upper(:code)", parameters);
         return result;
     }
 }

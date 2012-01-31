@@ -32,6 +32,7 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
     
     @Test
     public void testCreateIndicatorSystem() throws Exception {
+        
         IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
         indicatorSystemDto.setCode(IndicatorsMocks.mockString(10));
         indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -50,7 +51,7 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
         IndicatorSystemDto indicatorSystemDtoRetrieved = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), indicatorSystemDtoCreated.getUuid(), indicatorSystemDtoCreated.getVersionNumber());
         IndicatorsAsserts.assertEqualsIndicatorSystem(indicatorSystemDto, indicatorSystemDtoRetrieved);
         
-        // Audit
+        // Validate audit
         assertEquals(getServiceContext().getUserId(), indicatorSystemDtoCreated.getCreatedBy());
         assertTrue(DateUtils.isSameDay(new Date(), indicatorSystemDtoCreated.getCreatedDate()));
         assertTrue(DateUtils.isSameDay(new Date(), indicatorSystemDtoCreated.getLastUpdated()));
@@ -75,12 +76,47 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /*impl
         }
     }
     
-    // TODO REVISAR LOS metadatos no repetibles y obligatorios
+    @Test
+    public void testCreateIndicatorSystemTitleRequired() throws Exception {
+        
+        IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
+        indicatorSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorSystemDto.setTitle(null);
+        
+        try {
+            indicatorSystemServiceFacade.createIndicatorSystem(getServiceContext(), indicatorSystemDto);
+            fail("title required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
     @Test
     public void testCreateIndicatorSystemCodeDuplicated() throws Exception {
         
         IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
         indicatorSystemDto.setCode("CODE-1");
+        indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        try {
+            indicatorSystemServiceFacade.createIndicatorSystem(getServiceContext(), indicatorSystemDto);
+            fail("code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateIndicatorSystemCodeDuplicatedInsensitive() throws Exception {
+        
+        IndicatorSystemDto indicatorSystemDto = new IndicatorSystemDto();
+        indicatorSystemDto.setCode("CoDe-1");
         indicatorSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
         
         try {
