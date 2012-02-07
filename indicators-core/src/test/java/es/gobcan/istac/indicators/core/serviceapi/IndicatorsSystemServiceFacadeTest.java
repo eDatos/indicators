@@ -41,6 +41,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     private static String                   INDICATORS_SYSTEM_5          = "IndSys-5";
     private static String                   INDICATORS_SYSTEM_6          = "IndSys-6";
     private static String                   INDICATORS_SYSTEM_7          = "IndSys-7";
+    private static String                   INDICATORS_SYSTEM_8          = "IndSys-8";
     private static String                   INDICATORS_SYSTEM_NOT_EXISTS = "IndSys-not-exists";
 
     @Test
@@ -1077,26 +1078,26 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
     @Test
     public void testArchiveIndicatorsSystemErrorWrongStateDiffusion() throws Exception {
-        // TODO
-//        String uuid = INDICATORS_SYSTEM_8;
-//
-//        {
-//            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
-//            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
-//            assertEquals(null, indicatorsSystemDto.getProductionVersion());
-//            assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
-//        }
-//        
-//        try {
-//            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
-//            fail("Indicators system is not published");
-//        } catch (MetamacException e) {
-//            assertEquals(1, e.getExceptionItems().size());
-//            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-//            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-//            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-//            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
-//        }  
+
+        String uuid = INDICATORS_SYSTEM_8;
+
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
+            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
+            assertEquals(null, indicatorsSystemDto.getProductionVersion());
+            assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
+        }
+        
+        try {
+            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+            fail("Indicators system is not published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }  
     }
 
     @Override

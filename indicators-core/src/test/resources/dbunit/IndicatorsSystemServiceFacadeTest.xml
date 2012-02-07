@@ -408,7 +408,54 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>								
+			/>			
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 8											                      	-->
+	<!--		- Version 1: archived															-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS_SYSTEMS
+		ID="8"
+		UUID="IndSys-8"
+		CODE="CODE-8"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="11"
+				UUID="IndSys-8-v1"
+				VERSION_NUMBER="1"
+				TITLE_FK="17"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="8"
+	  			STATE="ARCHIVED"
+				URI="http://indicators-sytems/8"
+				PUBLISHING_DATE="2011-01-22 01:02:03"
+				PUBLISHING_DATE_TZ="Europe/London"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>									
 			  			
 			  
 	<!-- ************************************************************************************ -->
@@ -795,5 +842,29 @@
 		UUID="IS-16-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="16"
-	/>					
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="17"
+		UUID="IS-17"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="29"
+		LABEL="Título IndSys-8-v1"
+		LOCALE="es"
+		UUID="IS-17-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="17"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="30"
+		LABEL="Title IndSys-8-v1"
+		LOCALE="en"
+		UUID="IS-17-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="17"
+	/>						
 </dataset>
