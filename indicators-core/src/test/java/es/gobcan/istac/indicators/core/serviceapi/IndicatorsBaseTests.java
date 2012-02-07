@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import java.io.StringWriter;
+import java.io.StringWriter; 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -98,6 +98,12 @@ public abstract class IndicatorsBaseTests {
         // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
         removeDatabaseContent(databaseTester.getConnection().getConnection());
 
+//        // Initialize sequences
+//        restartSequence(databaseTester.getConnection(), "SEQ_I18NSTRS");
+//        restartSequence(databaseTester.getConnection(), "SEQ_L10NSTRS");
+//        restartSequence(databaseTester.getConnection(), "SEQ_INDIC_SYSTEMS_VERSIONS");
+//        restartSequence(databaseTester.getConnection(), "SEQ_INDICATORS_SYSTEMS");        
+        
         databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
         databaseTester.setTearDownOperation(new OrderedDeleteAllOperation());
         databaseTester.setDataSet(dataset);
@@ -161,7 +167,7 @@ public abstract class IndicatorsBaseTests {
      * Start the id sequence from a high value to avoid conflicts with test
      * data. You can define the sequence name with {@link #getSequenceName}.
      */
-    public static void restartSequence(IDatabaseConnection dbConnection, String sequenceName) {
+    public static void restartSequence(IDatabaseConnection dbConnection, String sequenceName) throws SQLException {
         if (sequenceName == null) {
             return;
         }
@@ -170,28 +176,12 @@ public abstract class IndicatorsBaseTests {
         try {
             connection = dbConnection.getConnection();
             stmt = connection.createStatement();
-            stmt.execute("ALTER SEQUENCE " + sequenceName + " RESTART WITH 10000");
-        } catch (Exception e) {
-            try {
-                stmt.close();
-            } catch (SQLException ignore) {
-            }
-            try {
-                stmt = connection.createStatement();
-                stmt.execute("UPDATE SEQUENCE SET SEQ_COUNT = 10000 WHERE SEQ_NAME = '" + sequenceName + "'");
-            } catch (Exception e2) {
-                throw new RuntimeException("Couldn't restart sequence: " + sequenceName + " : " + e.getMessage(), e);
-            }
+            stmt.execute("DROP SEQUENCE " + sequenceName);
+            stmt.execute("CREATE SEQUENCE " + sequenceName + " START WITH 10000");
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (SQLException ignore) {
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
                 } catch (SQLException ignore) {
                 }
             }
