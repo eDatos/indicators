@@ -80,8 +80,7 @@ public abstract class IndicatorsBaseTests {
 
         // Setup database tester
         if (databaseTester == null) {
-            databaseTester = new OracleDataSourceDatabaseTester(dataSource);
-            databaseTester.setSchema(dataSource.getConnection().getMetaData().getUserName()); // TODO poner explícitamente el nombre del esquema en fichero de propiedades
+            databaseTester = new OracleDataSourceDatabaseTester(dataSource, dataSource.getConnection().getMetaData().getUserName()); // TODO poner explícitamente el nombre del esquema en fichero de propiedades
         }
         
         // Create dataset
@@ -192,8 +191,8 @@ public abstract class IndicatorsBaseTests {
      * DatasourceTester with support for Oracle data types.
      */
     private class OracleDataSourceDatabaseTester extends DataSourceDatabaseTester {
-        public OracleDataSourceDatabaseTester(DataSource dataSource) {
-            super(dataSource);
+        public OracleDataSourceDatabaseTester(DataSource dataSource, String schema) {
+            super(dataSource, schema);
         }
 
         @Override

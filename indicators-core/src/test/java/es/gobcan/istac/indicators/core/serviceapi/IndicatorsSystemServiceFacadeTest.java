@@ -312,7 +312,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
 
         String uuid = INDICATORS_SYSTEM_2;
 
-        // Delete indicators system
+        // Delete indicators system only in draft
         indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
