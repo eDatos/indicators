@@ -154,6 +154,19 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
     @Override
     public void sendIndicatorSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkSendIndicatorSystemToDiffusionValidation(uuid, null);
+        
+        // Retrieve version in production validation
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
+        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), uuid, IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
+        }
+        
+        // Update state
+        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
+        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     @Override

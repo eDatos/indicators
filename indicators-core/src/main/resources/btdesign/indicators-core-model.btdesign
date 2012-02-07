@@ -195,7 +195,7 @@ Application Indicators {
     	enum IndicatorsSystemStateEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
-    		PUBLISH_VALIDATION,
+    		DIFFUSION_VALIDATION,
     		PUBLISHED,
     		ARCHIVED
     	}      
@@ -203,7 +203,7 @@ Application Indicators {
     	enum IndicatorStateEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
-    		PUBLISH_VALIDATION,
+    		DIFFUSION_VALIDATION,
     		PUBLISHED,
     		ARCHIVED
     	}        		
