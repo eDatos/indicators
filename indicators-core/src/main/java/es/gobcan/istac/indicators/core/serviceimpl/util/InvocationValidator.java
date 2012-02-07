@@ -93,6 +93,17 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
+    public static void checkRefuseIndicatorSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        
+        throwIfException(exceptions);        
+    }
+    
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter != null) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY.getMessageForReasonType(), parameterName));            

@@ -216,6 +216,54 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 5											                      	-->
+	<!--		- Version 1: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS_SYSTEMS
+		ID="5"
+		UUID="IndSys-5"
+		CODE="CODE-5"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="6"
+				UUID="IndSys-5-v1"
+				VERSION_NUMBER="1"
+				TITLE_FK="12"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="5"
+	  			STATE="DIFFUSION_VALIDATION"
+				URI="http://indicators-sytems/5"
+				PUBLISHING_DATE="[null]"
+				PUBLISHING_DATE_TZ="[null]"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			  			
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -478,8 +526,32 @@
 		ID="22"
 		LABEL="Title IndSys-4-v1"
 		LOCALE="en"
-		UUID="IS-12-LS-2"
+		UUID="IS-11-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="11"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="12"
+		UUID="IS-12"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Título IndSys-5-v1"
+		LOCALE="es"
+		UUID="IS-12-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="12"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Title IndSys-5-v1"
+		LOCALE="en"
+		UUID="IS-12-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="12"
 	/>			
 </dataset>
