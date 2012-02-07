@@ -298,6 +298,31 @@
 					</jvmSettings>
 				</configuration>
 			</plugin>
+      		<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<executions>
+					<execution>
+						<id>${project.artifactId}-client</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<classifier>client</classifier>
+							<includes>
+								<include>**/*.gwt.xml</include>
+								<include>**/*.class</include>
+								<include>**/i18n/*.properties</include>
+								<include>**/*.xml</include>
+							</includes>
+							<excludes>
+								<exclude>generator/*.*</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 			<plugin>
 				<groupId>org.fornax.toolsupport</groupId>
 				<artifactId>fornax-graphviz-m2-plugin</artifactId>
