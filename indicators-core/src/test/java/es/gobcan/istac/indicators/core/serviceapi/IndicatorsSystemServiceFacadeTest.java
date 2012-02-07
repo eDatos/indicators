@@ -428,7 +428,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
         tables.add("TBL_LOCALISED_STRINGS");
-        tables.add("TBL_INDICATORS_SYSTEMS_V");
+        tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
         tables.add("TBL_INDICATORS_SYSTEMS");
         tables.add("TBL_INTERNATIONAL_STRINGS");
         return tables;

@@ -101,7 +101,7 @@ Application Indicators {
 			DateTimeTZ unpublishingDate nullable;
 					
 			"Indicator system"
-			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYTEM_FK" <-> versions;
+			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEMS_FK" <-> versions;
 		
 			Repository IndicatorsSystemVersionRepository {
 				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
