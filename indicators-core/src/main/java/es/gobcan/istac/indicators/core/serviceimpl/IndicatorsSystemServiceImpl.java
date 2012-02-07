@@ -31,7 +31,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
         indicatorsSystemDraft = getIndicatorsSystemVersionRepository().save(indicatorsSystemDraft);
         
         // Update indicator with draft version
-        indicatorsSystem.setDraftVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
+        indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
         indicatorsSystem.getVersions().add(indicatorsSystemDraft);
         getIndicatorsSystemRepository().save(indicatorsSystemDraft.getIndicatorsSystem());
         
@@ -60,10 +60,14 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
         return indicatorsSystemVersion;
     }
     
-
     @Override
     public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem) throws MetamacException {
         getIndicatorsSystemRepository().save(indicatorsSystem);
+    }
+    
+    @Override
+    public void updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
     }
     
     @Override

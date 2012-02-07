@@ -169,8 +169,8 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         assertNotNull(indicatorsSystemDto);
         assertEquals(uuid, indicatorsSystemDto.getUuid());
         assertEquals(versionNumber, indicatorsSystemDto.getVersionNumber());
-        assertEquals(Long.valueOf(1), indicatorsSystemDto.getPublishedVersion());
-        assertEquals(Long.valueOf(2), indicatorsSystemDto.getDraftVersion());
+        assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
+        assertEquals(Long.valueOf(2), indicatorsSystemDto.getProductionVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
         assertEquals("http://indicators-sytems/1", indicatorsSystemDto.getUri());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
@@ -187,34 +187,34 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
     public void testRetrieveIndicatorsSystemWithAndWithoutVersion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
-        Long versionNumberDraft = Long.valueOf(2);
-        Long versionNumberPublished = Long.valueOf(1);
+        Long versionNumberProduction = Long.valueOf(2);
+        Long versionNumberDiffusion = Long.valueOf(1);
 
         // Without version (retrieve last)
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
-            assertEquals(versionNumberDraft, indicatorsSystemDto.getVersionNumber());
-            assertEquals(versionNumberPublished, indicatorsSystemDto.getPublishedVersion());
-            assertEquals(versionNumberDraft, indicatorsSystemDto.getDraftVersion());
+            assertEquals(versionNumberProduction, indicatorsSystemDto.getVersionNumber());
+            assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(versionNumberProduction, indicatorsSystemDto.getProductionVersion());
         }
 
         // With version 1
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberPublished);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberDiffusion);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
-            assertEquals(versionNumberPublished, indicatorsSystemDto.getVersionNumber());
-            assertEquals(versionNumberPublished, indicatorsSystemDto.getPublishedVersion());
-            assertEquals(versionNumberDraft, indicatorsSystemDto.getDraftVersion());
+            assertEquals(versionNumberDiffusion, indicatorsSystemDto.getVersionNumber());
+            assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(versionNumberProduction, indicatorsSystemDto.getProductionVersion());
         }
 
         // With version 2
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberDraft);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberProduction);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
-            assertEquals(versionNumberDraft, indicatorsSystemDto.getVersionNumber());
-            assertEquals(versionNumberPublished, indicatorsSystemDto.getPublishedVersion());
-            assertEquals(versionNumberDraft, indicatorsSystemDto.getDraftVersion());
+            assertEquals(versionNumberProduction, indicatorsSystemDto.getVersionNumber());
+            assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(versionNumberProduction, indicatorsSystemDto.getProductionVersion());
         }
     }
 
@@ -230,7 +230,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
     }
 
     @Test
-    public void testRetrieveIndicatorsSystemPublishedWhenSystemHasVersionDraft() throws Exception {
+    public void testRetrieveIndicatorsSystemPublishedWhenSystemHasVersionProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
 
@@ -241,7 +241,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
     }
 
     @Test
-    public void testRetrieveIndicatorsSystemPublishedErrorOnlyDraft() throws Exception {
+    public void testRetrieveIndicatorsSystemPublishedErrorOnlyProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
@@ -250,10 +250,9 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
             fail("No published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
 
@@ -332,13 +331,13 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
 
         String uuid = INDICATORS_SYSTEM_1;
 
-        // Retrieve: version 1 is published; version 2 is in draft
+        // Retrieve: version 1 is diffusion; version 2 is in production
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getVersionNumber());
-            assertEquals(Long.valueOf(1), indicatorsSystemDto.getPublishedVersion());
-            assertEquals(Long.valueOf(2), indicatorsSystemDto.getDraftVersion());
+            assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(Long.valueOf(2), indicatorsSystemDto.getProductionVersion());
         }
 
         // Delete indicators system
@@ -350,8 +349,8 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getVersionNumber());
-            assertEquals(Long.valueOf(1), indicatorsSystemDto.getPublishedVersion());
-            assertEquals(null, indicatorsSystemDto.getDraftVersion());
+            assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(null, indicatorsSystemDto.getProductionVersion());
         }
         // Version 2 not exists
         try {
@@ -367,7 +366,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
     }
 
     @Test
-    public void testDeleteIndicatorsSystemErrorOnlyWithPublished() throws Exception {
+    public void testDeleteIndicatorsSystemErrorInDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
@@ -377,10 +376,9 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
             fail("Indicator system is not in draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
 

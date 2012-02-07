@@ -16,10 +16,11 @@ Application Indicators {
     		> @IndicatorsSystemRepository
     		> @IndicatorsSystemVersionRepository
     		
-    		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException;
+    		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
 	    	updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
+	    	updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	deleteIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
@@ -35,7 +36,7 @@ Application Indicators {
 	    	"Creates a version on draft of a published indicator system"
 	    	String makeDraftIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
-	    	String updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
+	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"xxx"
 	    	String publishIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
@@ -59,10 +60,10 @@ Application Indicators {
        		String code required;
 		
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
-			"Draft version"
-            - @IndicatorsSystemVersionInformation draftVersion nullable databaseColumn="DRAFT";
-            "Published version"
-            - @IndicatorsSystemVersionInformation publishedVersion nullable databaseColumn="PUBLISHED";
+			"Version in production"
+            - @IndicatorsSystemVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
+            "Version in difussion"
+            - @IndicatorsSystemVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
 			"All versions"
 			- Bag<@IndicatorsSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorsSystem orderby="versionNumber asc";
 			
@@ -144,10 +145,10 @@ Application Indicators {
        		- @InternationalStringDto description;
        		"Objetive of statistic operation"
        		- @InternationalStringDto objetive;			
-       		"Version number of draft"
-       		Long draftVersion;
-       		"Version number of published"       		
-			Long publishedVersion;
+       		"Number of version in production"
+       		Long productionVersion;
+       		"Number of version in diffusion"   		
+			Long diffusionVersion;
 			"Publishing date of this version"
 			JAVADATE publishingDate; 
 			"Unpublishing date of this version"
