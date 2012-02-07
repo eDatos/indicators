@@ -1,3 +1,11 @@
+-- ###########################################
+-- # Create
+-- ###########################################
+-- Create pk sequence
+    
+create sequence hibernate_sequence;
+
+
 -- Create normal entities
     
 CREATE TABLE TBL_INDICATORS_SYSTEMS (
@@ -11,10 +19,10 @@ CREATE TABLE TBL_INDICATORS_SYSTEMS (
   LAST_UPDATED TIMESTAMP,
   LAST_UPDATED_BY VARCHAR2(50),
   VERSION NUMBER(19) NOT NULL,
-  DRAFT_ID NUMBER(19),
-  DRAFT_VERSION_NUMBER NUMBER(19),
-  PUBLISHED_ID NUMBER(19),
-  PUBLISHED_VERSION_NUMBER NUMBER(19)
+  PRODUCTION_ID NUMBER(19),
+  PRODUCTION_VERSION_NUMBER NUMBER(19),
+  DIFFUSION_ID NUMBER(19),
+  DIFFUSION_VERSION_NUMBER NUMBER(19)
 );
 
 
