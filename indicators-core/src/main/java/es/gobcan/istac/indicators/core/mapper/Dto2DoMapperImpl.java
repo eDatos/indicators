@@ -13,10 +13,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.domain.IndicatorSystem;
-import es.gobcan.istac.indicators.core.domain.IndicatorSystemVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 
 @Component
 public class Dto2DoMapperImpl implements Dto2DoMapper {
@@ -25,19 +25,19 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private InternationalStringRepository internationalStringRepository;
 
     @Override
-    public IndicatorSystem indicatorSystemDtoToDo(IndicatorSystemDto source, IndicatorSystem target, ServiceContext ctx) throws MetamacException {
+    public IndicatorsSystem indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystem target, ServiceContext ctx) throws MetamacException {
         target.setCode(source.getCode()); // non modifiable after creation
         return target;
     }
 
     @Override
-    public IndicatorSystemVersion indicatorSystemDtoToDo(IndicatorSystemDto source, ServiceContext ctx) throws MetamacException {
-        IndicatorSystemVersion target = new IndicatorSystemVersion();
-        return indicatorSystemDtoToDo(source, target, ctx);
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, ServiceContext ctx) throws MetamacException {
+        IndicatorsSystemVersion target = new IndicatorsSystemVersion();
+        return indicatorsSystemDtoToDo(source, target, ctx);
     }
 
     @Override
-    public IndicatorSystemVersion indicatorSystemDtoToDo(IndicatorSystemDto source, IndicatorSystemVersion target, ServiceContext ctx) throws MetamacException {
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystemVersion target, ServiceContext ctx) throws MetamacException {
 
         if (source == null) {
             return null;

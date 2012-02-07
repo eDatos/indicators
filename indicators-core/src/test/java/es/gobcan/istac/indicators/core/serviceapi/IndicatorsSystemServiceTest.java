@@ -6,12 +6,12 @@ import org.junit.Test;
 /**
  * No tests
  */
-public class IndicatorSystemServiceTest {
+public class IndicatorsSystemServiceTest {
 
     @Test
     @Ignore
     public void noTest() {
-        // Test are in IndicatorSystemServiceFacadeTest
+        // Test are in IndicatorsSystemServiceFacadeTest
     }
 
 }

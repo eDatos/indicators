@@ -12,45 +12,45 @@ Application Indicators {
 		// ----------------------------------------------------------------     
 		
 		"Provides access to indicators systems"
-    	Service IndicatorSystemService {
-    		> @IndicatorSystemRepository
-    		> @IndicatorSystemVersionRepository
+    	Service IndicatorsSystemService {
+    		> @IndicatorsSystemRepository
+    		> @IndicatorsSystemVersionRepository
     		
-    		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystem indicatorSystem, @IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
-	    	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
-	    	@IndicatorSystem retrieveIndicatorSystem(String uuid) throws MetamacException;
-	    	updateIndicatorSystem(@IndicatorSystem indicatorSystem) throws MetamacException;
-	    	deleteIndicatorSystem(String uuid) throws MetamacException;
-	    	deleteIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
-	    	List<@IndicatorSystem> findIndicatorsSystems(String code) throws MetamacException;
-	    	List<@IndicatorSystemVersion> findIndicatorSystemVersions(String uuid) throws MetamacException;
+    		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
+	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
+	    	updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
+	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
+	    	deleteIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
+	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
-    	Service IndicatorSystemServiceFacade {
-	    	> @IndicatorSystemService
+    	Service IndicatorsSystemServiceFacade {
+	    	> @IndicatorsSystemService
 	    	
 	    	"Creates a indicator system in draft"
-	    	@IndicatorSystemDto createIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
+	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Creates a version on draft of a published indicator system"
-	    	String makeDraftIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
+	    	String makeDraftIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
-	    	String updateIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
+	    	String updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"xxx"
-	    	String publishIndicatorSystem(@IndicatorSystemDto indicatorSystemDto) throws MetamacException;
+	    	String publishIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
-	    	@IndicatorSystemDto retrieveIndicatorSystem(String uuid, Long versionNumber) throws MetamacException;
+	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, Long versionNumber) throws MetamacException;
 	    	"Retrieves an indicator system published"
-	    	@IndicatorSystemDto retrieveIndicatorSystemPublished(String uuid) throws MetamacException;
+	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
-	    	deleteIndicatorSystem(String uuid) throws MetamacException;
+	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
     	}    	
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
 		// ----------------------------------------------------------------        	
 		"Indicator system entity"
-		Entity IndicatorSystem {
+		Entity IndicatorsSystem {
 			databaseTable="TBL_INDICATORS_SYSTEMS"
 			hint="idSequence=INDICATORS_SYSTEMS"
 			gap
@@ -58,32 +58,32 @@ Application Indicators {
 			"Semantic identifier of statistic operation. Non modifiable"
        		String code required;
 		
-			// Can not do an OneToOne relation with IndicatorSystemVersion because this produces a CyclicDependency with IndicatorSystem
+			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
 			"Draft version"
-            - @IndicatorSystemVersionInformation draftVersion nullable databaseColumn="DRAFT";
+            - @IndicatorsSystemVersionInformation draftVersion nullable databaseColumn="DRAFT";
             "Published version"
-            - @IndicatorSystemVersionInformation publishedVersion nullable databaseColumn="PUBLISHED";
+            - @IndicatorsSystemVersionInformation publishedVersion nullable databaseColumn="PUBLISHED";
 			"All versions"
-			- Bag<@IndicatorSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorSystem orderby="versionNumber asc";
+			- Bag<@IndicatorsSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorsSystem orderby="versionNumber asc";
 			
 			
-			Repository IndicatorSystemRepository {
-		   		@IndicatorSystem save(@IndicatorSystem entity);
+			Repository IndicatorsSystemRepository {
+		   		@IndicatorsSystem save(@IndicatorsSystem entity);
 		   		delete;
-            	protected List<@IndicatorSystem> findByQuery;
-            	@IndicatorSystem retrieveIndicatorSystem(String uuid);
-            	List<@IndicatorSystem> findIndicatorsSystems(String code);
+            	protected List<@IndicatorsSystem> findByQuery;
+            	@IndicatorsSystem retrieveIndicatorsSystem(String uuid);
+            	List<@IndicatorsSystem> findIndicatorsSystems(String code);
 			}
 		} 
 		
 		"Version of indicator system entity"
-		Entity IndicatorSystemVersion {
-			databaseTable="TBL_INDICATOR_SYSTEM_VERS"
-			hint="idSequence=INDICATOR_SYSTEM_VERS"
+		Entity IndicatorsSystemVersion {
+			databaseTable="TBL_INDIC_SYSTEMS_VERSIONS"
+			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
 			gap
 			
 			"State"
-			- @IndicatorSystemStateEnum state required;
+			- @IndicatorsSystemStateEnum state required;
 			Long versionNumber required;
        		"Uri of statistic operation"
        		String uri nullable;
@@ -101,37 +101,37 @@ Application Indicators {
 			DateTimeTZ unpublishingDate nullable;
 					
 			"Indicator system"
-			- @IndicatorSystem indicatorSystem not nullable cascade="none" databaseColumn="INDICATOR_SYTEM_FK" <-> versions;
+			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYTEM_FK" <-> versions;
 		
-			Repository IndicatorSystemVersionRepository {
-				@IndicatorSystemVersion save(@IndicatorSystemVersion entity);
+			Repository IndicatorsSystemVersionRepository {
+				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
 				delete;
-            	protected List<@IndicatorSystemVersion> findByQuery;
-            	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber);
-            	List<@IndicatorSystemVersion> findIndicatorSystemVersions(String uri);
+            	protected List<@IndicatorsSystemVersion> findByQuery;
+            	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber);
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri);
 			}
 		} 
 		
-        BasicType IndicatorSystemVersionInformation {
+        BasicType IndicatorsSystemVersionInformation {
         	gap
-        	"Id into database of IndicatorSystemVersion"
-    		Long idIndicatorSystemVersion nullable databaseColumn="ID";
-    		"Version number of IndicatorSystemVersion"
+        	"Id into database of IndicatorsSystemVersion"
+    		Long idIndicatorsSystemVersion nullable databaseColumn="ID";
+    		"Version number of IndicatorsSystemVersion"
     		Long versionNumber nullable databaseColumn="VERSION_NUMBER";
     	}		
     
 	    // ----------------------------------------------------------------
 		// 							DTOS
 		// ----------------------------------------------------------------        	
-		"Dto for indicator system"
-	   	DataTransferObject IndicatorSystemDto extends @AuditableDto {
+		"Dto for indicators system"
+	   	DataTransferObject IndicatorsSystemDto extends @AuditableDto {
 			
 			"Unique uuid"
 			String uuid;
 			"Version number of this indicator system version"	
 			Long versionNumber;
 			"State"
-			- @IndicatorSystemStateEnum state;
+			- @IndicatorsSystemStateEnum state;
 			"Semantic identifier of statistic operation"
        		String code;
        		"Uri of statistic operation"
@@ -183,7 +183,7 @@ Application Indicators {
 		// 							ENUMS
 		// ----------------------------------------------------------------
 		"States of indicator system"
-    	enum IndicatorSystemStateEnum {
+    	enum IndicatorsSystemStateEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		PUBLISH_VALIDATION,

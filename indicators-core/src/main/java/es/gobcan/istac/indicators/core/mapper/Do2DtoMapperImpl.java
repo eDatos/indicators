@@ -9,28 +9,28 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.domain.IndicatorSystemVersion;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
 
     @Override
-    public IndicatorSystemDto indicatorSystemDoToDto(IndicatorSystemVersion source) {
+    public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
 
-        IndicatorSystemDto target = new IndicatorSystemDto();
+        IndicatorsSystemDto target = new IndicatorsSystemDto();
 
-        target.setUuid(source.getIndicatorSystem().getUuid());
+        target.setUuid(source.getIndicatorsSystem().getUuid());
         target.setVersionNumber(source.getVersionNumber());
-        target.setCode(source.getIndicatorSystem().getCode());
+        target.setCode(source.getIndicatorsSystem().getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
         target.setUri(source.getUri());
         target.setObjetive(internationalStringToDto(source.getObjetive()));
         target.setDescription(internationalStringToDto(source.getDescription()));
         target.setState(source.getState());
-        target.setDraftVersion(source.getIndicatorSystem().getDraftVersion() != null ? source.getIndicatorSystem().getDraftVersion().getVersionNumber() : null);
-        target.setPublishedVersion(source.getIndicatorSystem().getPublishedVersion() != null ? source.getIndicatorSystem().getPublishedVersion().getVersionNumber() : null);
+        target.setDraftVersion(source.getIndicatorsSystem().getDraftVersion() != null ? source.getIndicatorsSystem().getDraftVersion().getVersionNumber() : null);
+        target.setPublishedVersion(source.getIndicatorsSystem().getPublishedVersion() != null ? source.getIndicatorsSystem().getPublishedVersion().getVersionNumber() : null);
         target.setPublishingDate(source.getPublishingDate() != null ? source.getPublishingDate().toDate() : null);
         target.setUnpublishingDate(source.getUnpublishingDate() != null ? source.getUnpublishingDate().toDate() : null);
         target.setCreatedBy(source.getCreatedBy());

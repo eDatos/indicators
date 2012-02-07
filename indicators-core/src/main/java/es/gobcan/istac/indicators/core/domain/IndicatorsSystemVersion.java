@@ -7,10 +7,10 @@ import javax.persistence.Table;
  * Version of indicator system entity
  */
 @Entity
-@Table(name = "TBL_INDICATOR_SYSTEM_VERS")
-public class IndicatorSystemVersion extends IndicatorSystemVersionBase {
+@Table(name = "TBL_INDIC_SYSTEMS_VERSIONS")
+public class IndicatorsSystemVersion extends IndicatorsSystemVersionBase {
     private static final long serialVersionUID = 1L;
 
-    public IndicatorSystemVersion() {
+    public IndicatorsSystemVersion() {
     }
 }

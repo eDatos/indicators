@@ -9,13 +9,13 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "TBL_INDICATORS_SYSTEMS", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
-public class IndicatorSystem extends IndicatorSystemBase {
+public class IndicatorsSystem extends IndicatorsSystemBase {
     private static final long serialVersionUID = 1L;
 
-    public IndicatorSystem() {
+    public IndicatorsSystem() {
     }
 
-    public IndicatorSystem(String code) {
+    public IndicatorsSystem(String code) {
         super(code);
     }
 }

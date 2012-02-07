@@ -6,14 +6,14 @@ import static org.junit.Assert.fail;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 
 /**
  * Asserts to tests
  */
 public class IndicatorsAsserts {
     
-    public static void assertEqualsIndicatorSystem(IndicatorSystemDto expected, IndicatorSystemDto actual) {
+    public static void assertEqualsIndicatorsSystem(IndicatorsSystemDto expected, IndicatorsSystemDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());

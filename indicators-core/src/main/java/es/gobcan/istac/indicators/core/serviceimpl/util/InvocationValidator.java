@@ -9,24 +9,24 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 
 public class InvocationValidator {
     
-    public static void checkCreateIndicatorSystem(IndicatorSystemDto indicatorSystemDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataEmpty(indicatorSystemDto.getUuid(), "UUID", exceptions);
-        checkMetadataEmpty(indicatorSystemDto.getVersionNumber(), "VERSION_NUMBER", exceptions);
-        checkMetadataRequired(indicatorSystemDto.getCode(), "CODE", exceptions);
-        checkMetadataRequired(indicatorSystemDto.getTitle(), "TITLE", exceptions);
+        checkMetadataEmpty(indicatorsSystemDto.getUuid(), "UUID", exceptions);
+        checkMetadataEmpty(indicatorsSystemDto.getVersionNumber(), "VERSION_NUMBER", exceptions);
+        checkMetadataRequired(indicatorsSystemDto.getCode(), "CODE", exceptions);
+        checkMetadataRequired(indicatorsSystemDto.getTitle(), "TITLE", exceptions);
         
         throwIfException(exceptions);
     }
     
-    public static void checkRetrieveIndicatorSystem(String uuid, Long version, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveIndicatorsSystem(String uuid, Long version, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -37,7 +37,7 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
-    public static void checkRetrieveIndicatorSystemPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveIndicatorsSystemPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -47,7 +47,7 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
-    public static void checkDeleteIndicatorSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkDeleteIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();

@@ -12,9 +12,9 @@
 		UUID="IndSys-1"
 		CODE="CODE-1"
 		DRAFT_ID="2"
-		DRAFT_VERSION_NUMBER="2"
+		DRAFT_VION_NUMBER="2"
 		PUBLISHED_ID="1"
-		PUBLISHED_VERSION_NUMBER="1"
+		PUBLISHED_VION_NUMBER="1"
 		
 		VERSION="1"
 		CREATED_BY="user1"
@@ -25,7 +25,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_SYSTEM_VERS
+			<TBL_INDICATORS_SYSTEM_V
 				ID="1"
 				UUID="IndSys-1-v1"
 				VERSION_NUMBER="1"
@@ -33,7 +33,7 @@
 				ACRONYM_FK="2"
 	  			OBJETIVE_FK="3"
 	  			DESCRIPTION_FK="4"
-	  			INDICATOR_SYTEM_FK="1"
+	  			INDICATORS_SYSTEMS_FK="1"
 	  			STATE="PUBLISHED"
 				URI="http://indicators-sytems/1"
 				PUBLISHING_DATE="2012-01-02 02:02:02"
@@ -50,7 +50,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-			<TBL_INDICATOR_SYSTEM_VERS
+			<TBL_INDICATORS_SYSTEM_V
 				ID="2"
 				UUID="IndSys-1-v2"
 				VERSION_NUMBER="2"
@@ -58,7 +58,7 @@
 				ACRONYM_FK="6"
 	  			OBJETIVE_FK="7"
 	  			DESCRIPTION_FK="8"
-	  			INDICATOR_SYTEM_FK="1"
+	  			INDICATORS_SYSTEMS_FK="1"
 	  			STATE="DRAFT"
 				URI="http://indicators-sytems/1"
 				PUBLISHING_DATE="[null]"
@@ -85,9 +85,9 @@
 		UUID="IndSys-2"
 		CODE="CODE-2"
 		DRAFT_ID="1"
-		DRAFT_VERSION_NUMBER="1"
+		DRAFT_VION_NUMBER="1"
 		PUBLISHED_ID="[null]"
-		PUBLISHED_VERSION_NUMBER="[null]"
+		PUBLISHED_VION_NUMBER="[null]"
 		
 		VERSION="1"
 		CREATED_BY="user1"
@@ -98,7 +98,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_SYSTEM_VERS
+			<TBL_INDICATORS_SYSTEM_V
 				ID="3"
 				UUID="IndSys-2-v1"
 				VERSION_NUMBER="1"
@@ -106,7 +106,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATOR_SYTEM_FK="2"
+	  			INDICATORS_SYSTEMS_FK="2"
 	  			STATE="DRAFT"
 				URI="http://indicators-sytems/2"
 				PUBLISHING_DATE="[null]"
@@ -132,9 +132,9 @@
 		UUID="IndSys-3"
 		CODE="CODE-3"
 		DRAFT_ID="[null]"
-		DRAFT_VERSION_NUMBER="[null]"
+		DRAFT_VION_NUMBER="[null]"
 		PUBLISHED_ID="1"
-		PUBLISHED_VERSION_NUMBER="1"
+		PUBLISHED_VION_NUMBER="1"
 		
 		VERSION="1"
 		CREATED_BY="user1"
@@ -145,7 +145,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_SYSTEM_VERS
+			<TBL_INDICATORS_SYSTEM_V
 				ID="4"
 				UUID="IndSys-3-v1"
 				VERSION_NUMBER="1"
@@ -153,7 +153,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATOR_SYTEM_FK="3"
+	  			INDICATORS_SYSTEMS_FK="3"
 	  			STATE="PUBLISHED"
 				URI="http://indicators-sytems/3"
 				PUBLISHING_DATE="2012-01-22 01:02:03"
