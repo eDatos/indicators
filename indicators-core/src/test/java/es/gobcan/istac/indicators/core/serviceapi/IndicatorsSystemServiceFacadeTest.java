@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -28,7 +29,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* implements IndicatorsSystemServiceFacadeTestBase */{ // TODO descomentar implements
+public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests implements IndicatorsSystemServiceFacadeTestBase {
 
     @Autowired
     protected IndicatorsSystemServiceFacade indicatorsSystemServiceFacade;
@@ -317,7 +318,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         // Validation
         try {
             indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
-            fail("Indicator system deleted");
+            fail("Indicators system deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -355,7 +356,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         // Version 2 not exists
         try {
             indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(2));
-            fail("Indicator system version deleted");
+            fail("Indicators system version deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -373,7 +374,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         // Validation
         try {
             indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
-            fail("Indicator system is not in draft");
+            fail("Indicators system is not in draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -390,7 +391,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         // Validation
         try {
             indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
-            fail("Indicator system not exists");
+            fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -444,7 +445,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
 
         try {
             indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("Indicator system not exists");
+            fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -463,7 +464,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
 
         try {
             indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("Indicator system not in production");
+            fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -485,7 +486,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
             fail("Version 1 not is in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(versionNumber, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -511,19 +512,100 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+    
+    @Override
+    @Test
+    public void testSendIndicatorSystemToProductionValidation() throws Exception {
+        
+        String uuid = INDICATORS_SYSTEM_1;
 
+        {
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(2));
+            assertEquals(Long.valueOf(1), indicatorsSystemDtoV1.getDiffusionVersion());
+            assertEquals(Long.valueOf(2), indicatorsSystemDtoV2.getProductionVersion());
+            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
+            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoV2.getState());
+        }
+
+        // Sends to production validation
+        indicatorsSystemServiceFacade.sendIndicatorSystemToProductionValidation(getServiceContext(), uuid);
+        
+        // Validation
+        {
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(2));
+            assertEquals(Long.valueOf(1), indicatorsSystemDtoV1.getDiffusionVersion());
+            assertEquals(Long.valueOf(2), indicatorsSystemDtoV2.getProductionVersion());
+            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
+            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoV2.getState());
+        }
     }
 
-    // @Test
-    // public void testMakeDraftIndicatorsSystem() throws Exception {
-    // // TODO Auto-generated method stub
-    // // fail("testMakeDraftIndicatorsSystem not implemented");
-    // }
-    // @Test
-    // public void testPublishIndicatorsSystem() throws Exception {
-    // // TODO Auto-generated method stub
-    // // fail("testPublishIndicatorsSystem not implemented");
-    // }
+    @Test
+    public void testSendIndicatorSystemToProductionValidationErrorNotExists() throws Exception {
+
+        try {
+            indicatorsSystemServiceFacade.sendIndicatorSystemToProductionValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }        
+    }
+    
+    @Test
+    public void testSendIndicatorSystemToProductionValidationErrorWrongState() throws Exception {
+        
+        String uuid = INDICATORS_SYSTEM_3;
+
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
+            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertNull(indicatorsSystemDto.getProductionVersion());
+        }
+        
+        try {
+            indicatorsSystemServiceFacade.sendIndicatorSystemToProductionValidation(getServiceContext(), uuid);
+            fail("Indicators system is not draft");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemStateEnum.DRAFT, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }  
+    }
+
+    @Override
+    @Test
+    public void testSendIndicatorSystemToDiffusionValidation() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    @Test
+    public void testRefuseIndicatorSystemValidation() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    @Test
+    public void testPublishIndicatorSystem() throws Exception {
+        // TODO si había una publicada o archivada, eliminarla
+        
+    }
+
+    @Override
+    public void testArchiveIndicatorSystem() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     protected String getDataSetFile() {

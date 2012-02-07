@@ -70,6 +70,17 @@ public class InvocationValidator {
         
         throwIfException(exceptions);
     }
+
+    public static void checkSendIndicatorSystemToProductionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        
+        throwIfException(exceptions);        
+    }
     
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter != null) {

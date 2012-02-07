@@ -33,19 +33,27 @@ Application Indicators {
 	    	
 	    	"Creates a indicator system in draft"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-	    	"Creates a version on draft of a published indicator system"
-	    	String makeDraftIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
+//	    	"Creates a version on draft of a published indicator system"
+//	    	String makeDraftIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
 	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-	    	"xxx"
-	    	String publishIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, Long versionNumber) throws MetamacException;
 	    	"Retrieves an indicator system published"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
-    	}    	
+	    	"Sends indicators system to production validation"
+	    	sendIndicatorSystemToProductionValidation(String uuid) throws MetamacException;
+	    	"Sends indicators system to diffusion validation"
+	    	sendIndicatorSystemToDiffusionValidation(String uuid) throws MetamacException;
+	    	"Refuses validation of indicators system"
+	    	refuseIndicatorSystemValidation(String uuid) throws MetamacException;
+	    	"Publishes indicators system"
+	    	publishIndicatorSystem(String uuid) throws MetamacException;	    		    	
+	    	"Archives indicators system"
+	    	archiveIndicatorSystem(String uuid) throws MetamacException;	    		    	
+	    }    	
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
