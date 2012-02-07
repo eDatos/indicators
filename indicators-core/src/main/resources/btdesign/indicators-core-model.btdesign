@@ -153,6 +153,31 @@ Application Indicators {
 			"Unpublishing date of this version"
 			JAVADATE unpublishingDate;            
 	    }
+	    
+	    "Dto for indicator"
+	   	DataTransferObject IndicatorDto extends @AuditableDto {
+			
+			"Unique uuid"
+			String uuid;
+			"Version number of this indicator version"	
+			Long versionNumber;
+			"Code"
+			String code;
+			"State"
+			- @IndicatorStateEnum state;
+       		"Name"
+       		- @InternationalStringDto name;
+       		"Acronym"
+       		- @InternationalStringDto acronym;
+       		"Subject code"
+			String subjectCode;
+			"Comment"
+       		- @InternationalStringDto comment;
+			"Notes"
+       		- @InternationalStringDto notes;
+       		"Note url"
+       		String noteUrl;            
+	    }
 	        
 		// ----------------------------------------------------------------
 		// 							ENUMS
@@ -164,6 +189,14 @@ Application Indicators {
     		PUBLISH_VALIDATION,
     		PUBLISHED,
     		ARCHIVED
-    	}      	
+    	}      
+		"States of indicator"
+    	enum IndicatorStateEnum {
+    		DRAFT,
+    		PRODUCTION_VALIDATION,
+    		PUBLISH_VALIDATION,
+    		PUBLISHED,
+    		ARCHIVED
+    	}        		
     }
 }
