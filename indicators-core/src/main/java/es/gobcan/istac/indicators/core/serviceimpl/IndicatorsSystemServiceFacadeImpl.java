@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
@@ -135,6 +136,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     // TODO validación: El indicador debe tener al menos un origen de datos asociado.
+    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void sendIndicatorSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -152,6 +154,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
+    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void sendIndicatorSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
         
@@ -169,6 +172,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
+    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void refuseIndicatorSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -186,10 +190,33 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
+    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void publishIndicatorSystem(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkPublishIndicatorSystem(uuid, null);
+        
+        // Retrieve version in diffusion validation
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
+        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), uuid, IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
+        }
+        
+        // Update state and remove possible last version in diffusion
+        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
+        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        
+        IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
+        if (indicatorsSystem.getDiffusionVersion() != null) {
+            getIndicatorsSystemService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
+        }
+        indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemInProduction.getId(), indicatorsSystemInProduction.getVersionNumber()));
+        indicatorsSystem.setProductionVersion(null);
+        getIndicatorsSystemService().updateIndicatorsSystem(ctx, indicatorsSystem);
     }
 
+    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void archiveIndicatorSystem(ServiceContext ctx, String uuid) throws MetamacException {
     }

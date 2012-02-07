@@ -262,7 +262,153 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>			
+			/>	
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 6											                      	-->
+	<!--		- Version 1: published															-->
+	<!--		- Version 2: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS_SYSTEMS
+		ID="6"
+		UUID="IndSys-6"
+		CODE="CODE-6"
+		PRODUCTION_ID="2"
+		PRODUCTION_VERSION_NUMBER="2"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="7"
+				UUID="IndSys-6-v1"
+				VERSION_NUMBER="1"
+				TITLE_FK="13"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="6"
+	  			STATE="PUBLISHED"
+				URI="http://indicators-sytems/6"
+				PUBLISHING_DATE="2011-01-02 02:02:02"
+				PUBLISHING_DATE_TZ="Europe/London"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="8"
+				UUID="IndSys-6-v2"
+				VERSION_NUMBER="2"
+				TITLE_FK="14"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="6"
+	  			STATE="DIFFUSION_VALIDATION"
+				URI="http://indicators-sytems/6"
+				PUBLISHING_DATE="[null]"
+				PUBLISHING_DATE_TZ="[null]"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 7											                      	-->
+	<!--		- Version 1: archived															-->
+	<!--		- Version 2: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS_SYSTEMS
+		ID="7"
+		UUID="IndSys-7"
+		CODE="CODE-7"
+		PRODUCTION_ID="2"
+		PRODUCTION_VERSION_NUMBER="2"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="9"
+				UUID="IndSys-7-v1"
+				VERSION_NUMBER="1"
+				TITLE_FK="15"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="7"
+	  			STATE="ARCHIVED"
+				URI="http://indicators-sytems/7"
+				PUBLISHING_DATE="2011-01-02 02:02:02"
+				PUBLISHING_DATE_TZ="Europe/London"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="10"
+				UUID="IndSys-7-v2"
+				VERSION_NUMBER="2"
+				TITLE_FK="16"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="7"
+	  			STATE="DIFFUSION_VALIDATION"
+				URI="http://indicators-sytems/7"
+				PUBLISHING_DATE="[null]"
+				PUBLISHING_DATE_TZ="[null]"
+				UNPUBLISHING_DATE="[null]"
+				UNPUBLISHING_DATE_TZ="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>								
 			  			
 			  
 	<!-- ************************************************************************************ -->
@@ -554,4 +700,100 @@
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="12"
 	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="13"
+		UUID="IS-13"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Título IndSys-6-v1"
+		LOCALE="es"
+		UUID="IS-13-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="13"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Title IndSys-6-v1"
+		LOCALE="en"
+		UUID="IS-13-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="13"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="14"
+		UUID="IS-14"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Título IndSys-6-v1"
+		LOCALE="es"
+		UUID="IS-14-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="14"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Title IndSys-6-v1"
+		LOCALE="en"
+		UUID="IS-14-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="14"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="15"
+		UUID="IS-15"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="25"
+		LABEL="Título IndSys-7-v1"
+		LOCALE="es"
+		UUID="IS-15-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="15"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="26"
+		LABEL="Title IndSys-7-v1"
+		LOCALE="en"
+		UUID="IS-15-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="15"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="16"
+		UUID="IS-16"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="27"
+		LABEL="Título IndSys-7-v1"
+		LOCALE="es"
+		UUID="IS-16-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="16"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="28"
+		LABEL="Title IndSys-7-v1"
+		LOCALE="en"
+		UUID="IS-16-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="16"
+	/>					
 </dataset>

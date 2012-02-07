@@ -31,7 +31,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
         indicatorsSystemDraft = getIndicatorsSystemVersionRepository().save(indicatorsSystemDraft);
         
         // Update indicator with draft version
-        indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
+        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
         indicatorsSystem.getVersions().add(indicatorsSystemDraft);
         getIndicatorsSystemRepository().save(indicatorsSystemDraft.getIndicatorsSystem());
         
