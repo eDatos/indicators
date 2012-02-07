@@ -19,8 +19,11 @@ Application Indicators {
     		@IndicatorSystemVersion createIndicatorSystem(@IndicatorSystem indicatorSystem, @IndicatorSystemVersion indicatorSystemDraft) throws MetamacException;
 	    	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	@IndicatorSystem retrieveIndicatorSystem(String uuid) throws MetamacException;
+	    	updateIndicatorSystem(@IndicatorSystem indicatorSystem) throws MetamacException;
+	    	deleteIndicatorSystem(String uuid) throws MetamacException;
+	    	deleteIndicatorSystemVersion(String uuid, Long versionNumber) throws MetamacException;
 	    	List<@IndicatorSystem> findIndicatorsSystems(String code) throws MetamacException;
-	    	List<@IndicatorSystemVersion> findIndicatorSystemVersions(String uri) throws MetamacException;
+	    	List<@IndicatorSystemVersion> findIndicatorSystemVersions(String uuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -39,8 +42,8 @@ Application Indicators {
 	    	@IndicatorSystemDto retrieveIndicatorSystem(String uuid, Long versionNumber) throws MetamacException;
 	    	"Retrieves an indicator system published"
 	    	@IndicatorSystemDto retrieveIndicatorSystemPublished(String uuid) throws MetamacException;
-	    	"Deletes an indicator system. Version to remove must be not published nor archived"
-	    	deleteIndicatorSystem(String uri) throws MetamacException;
+	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
+	    	deleteIndicatorSystem(String uuid) throws MetamacException;
     	}    	
 
 	    // ----------------------------------------------------------------
@@ -66,6 +69,7 @@ Application Indicators {
 			
 			Repository IndicatorSystemRepository {
 		   		@IndicatorSystem save(@IndicatorSystem entity);
+		   		delete;
             	protected List<@IndicatorSystem> findByQuery;
             	@IndicatorSystem retrieveIndicatorSystem(String uuid);
             	List<@IndicatorSystem> findIndicatorsSystems(String code);
@@ -101,6 +105,7 @@ Application Indicators {
 		
 			Repository IndicatorSystemVersionRepository {
 				@IndicatorSystemVersion save(@IndicatorSystemVersion entity);
+				delete;
             	protected List<@IndicatorSystemVersion> findByQuery;
             	@IndicatorSystemVersion retrieveIndicatorSystemVersion(String uuid, Long versionNumber);
             	List<@IndicatorSystemVersion> findIndicatorSystemVersions(String uri);

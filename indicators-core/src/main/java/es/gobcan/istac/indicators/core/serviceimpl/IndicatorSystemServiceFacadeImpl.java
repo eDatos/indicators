@@ -27,7 +27,8 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
     
     @Autowired
     private Dto2DoMapper dto2DoMapper;
-
+    
+    private static final Long VERSION_INITIAL = Long.valueOf(1);
     
     public IndicatorSystemServiceFacadeImpl() {
     }
@@ -50,7 +51,7 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         // Draft version
         IndicatorSystemVersion draftVersion = dto2DoMapper.indicatorSystemDtoToDo(indicatorSystemDto, ctx);
         draftVersion.setState(IndicatorSystemStateEnum.DRAFT);
-        draftVersion.setVersionNumber(Long.valueOf(1));
+        draftVersion.setVersionNumber(VERSION_INITIAL);
         draftVersion.setPublishingDate(null);
         
         // Create
@@ -94,6 +95,28 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         IndicatorSystemDto indicatorSystemDto = do2DtoMapper.indicatorSystemDoToDto(publishedIndicatorSystemVersion); 
         return indicatorSystemDto;
     }
+    
+    public void deleteIndicatorSystem(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation
+        InvocationValidator.checkDeleteIndicatorSystem(uuid, null);
+        
+        // Retrieve
+        IndicatorSystem indicatorSystem = retrieveIndicatorSystemByUuid(ctx, uuid);
+        if (indicatorSystem.getDraftVersion() == null) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_STATE.getMessageForReasonType(), uuid, IndicatorSystemStateEnum.DRAFT);       
+        }
+        
+        // Delete whole indicators system or only last version
+        if (VERSION_INITIAL.equals(indicatorSystem.getDraftVersion().getVersionNumber())) {
+            // If indicator system is not published or archived, delete whole indicators system
+            getIndicatorSystemService().deleteIndicatorSystem(ctx, uuid);
+        } else {
+            getIndicatorSystemService().deleteIndicatorSystemVersion(ctx, uuid, indicatorSystem.getDraftVersion().getVersionNumber());
+            indicatorSystem.setDraftVersion(null);
+            getIndicatorSystemService().updateIndicatorSystem(ctx, indicatorSystem);
+        }
+    }
 
     public String makeDraftIndicatorSystem(ServiceContext ctx, IndicatorSystemDto indicatorSystemDto) throws MetamacException {
 
@@ -114,12 +137,6 @@ public class IndicatorSystemServiceFacadeImpl extends IndicatorSystemServiceFaca
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("publishIndicatorSystem not implemented");
 
-    }
-
-    public void deleteIndicatorSystem(ServiceContext ctx, String uri) throws MetamacException {
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("deleteIndicatorSystem not implemented");
     }
     
     private IndicatorSystem retrieveIndicatorSystemByUuid(ServiceContext ctx, String uuid) throws MetamacException {

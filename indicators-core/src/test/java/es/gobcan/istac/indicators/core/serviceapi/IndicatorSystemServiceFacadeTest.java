@@ -259,9 +259,9 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /* imp
 
     @Test
     public void testRetrieveIndicatorSystemErrorNotExists() throws Exception {
-        
+
         String uuid = INDICATOR_SYSTEM_NOT_EXISTS;
-        
+
         try {
             indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, null);
             fail("No exists");
@@ -272,33 +272,127 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /* imp
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testRetrieveIndicatorSystemErrorVersionNotExists() throws Exception {
-        
+
         String uuid = INDICATOR_SYSTEM_2;
         Long versionNotExists = Long.valueOf(99);
-        
+
         try {
             indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, versionNotExists);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(versionNotExists, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testRetrieveIndicatorSystemPublishedErrorNotExists() throws Exception {
-        
+
         String uuid = INDICATOR_SYSTEM_NOT_EXISTS;
-        
+
         try {
             indicatorSystemServiceFacade.retrieveIndicatorSystemPublished(getServiceContext(), uuid);
             fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testDeleteIndicatorSystem() throws Exception {
+
+        String uuid = INDICATOR_SYSTEM_2;
+
+        // Delete indicators system
+        indicatorSystemServiceFacade.deleteIndicatorSystem(getServiceContext(), uuid);
+
+        // Validation
+        try {
+            indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, null);
+            fail("Indicator system deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testDeleteIndicatorSystemWithPublishedAndDraft() throws Exception {
+
+        String uuid = INDICATOR_SYSTEM_1;
+
+        // Retrieve: version 1 is published; version 2 is in draft
+        {
+            IndicatorSystemDto indicatorSystemDto = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, Long.valueOf(1));
+            assertEquals(uuid, indicatorSystemDto.getUuid());
+            assertEquals(Long.valueOf(1), indicatorSystemDto.getVersionNumber());
+            assertEquals(Long.valueOf(1), indicatorSystemDto.getPublishedVersion());
+            assertEquals(Long.valueOf(2), indicatorSystemDto.getDraftVersion());
+        }
+        
+        // Delete indicators system
+        indicatorSystemServiceFacade.deleteIndicatorSystem(getServiceContext(), uuid);
+
+        // Validation
+        // Version 1 exists
+        {
+            IndicatorSystemDto indicatorSystemDto = indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, Long.valueOf(1));
+            assertEquals(uuid, indicatorSystemDto.getUuid());
+            assertEquals(Long.valueOf(1), indicatorSystemDto.getVersionNumber());
+            assertEquals(Long.valueOf(1), indicatorSystemDto.getPublishedVersion());
+            assertEquals(null, indicatorSystemDto.getDraftVersion());
+        }
+        // Version 2 not exists
+        try {
+            indicatorSystemServiceFacade.retrieveIndicatorSystem(getServiceContext(), uuid, Long.valueOf(2));
+            fail("Indicator system version deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(Long.valueOf(2), e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    public void testDeleteIndicatorSystemErrorOnlyWithPublished() throws Exception {
+        
+        String uuid = INDICATOR_SYSTEM_3;
+        
+        // Validation
+        try {
+            indicatorSystemServiceFacade.deleteIndicatorSystem(getServiceContext(), uuid);
+            fail("Indicator system is not in draft");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorSystemStateEnum.DRAFT, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    public void testDeleteIndicatorSystemErrorNotExists() throws Exception {
+        
+        String uuid = INDICATOR_SYSTEM_NOT_EXISTS;
+        
+        // Validation
+        try {
+            indicatorSystemServiceFacade.deleteIndicatorSystem(getServiceContext(), uuid);
+            fail("Indicator system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -323,13 +417,6 @@ public class IndicatorSystemServiceFacadeTest extends IndicatorsBaseTests /* imp
     // public void testPublishIndicatorSystem() throws Exception {
     // // TODO Auto-generated method stub
     // // fail("testPublishIndicatorSystem not implemented");
-    // }
-
-    //
-    // @Test
-    // public void testDeleteIndicatorSystem() throws Exception {
-    // // TODO Auto-generated method stub
-    // // fail("testDeleteIndicatorSystem not implemented");
     // }
 
     @Override

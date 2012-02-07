@@ -51,11 +51,38 @@ public class IndicatorSystemServiceImpl extends IndicatorSystemServiceImplBase {
     public IndicatorSystemVersion retrieveIndicatorSystemVersion(ServiceContext ctx, String uuid, Long versionNumber) throws MetamacException {
         IndicatorSystemVersion indicatorSystemVersion = getIndicatorSystemVersionRepository().retrieveIndicatorSystemVersion(uuid, versionNumber);
         if (indicatorSystemVersion == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid, versionNumber);
+            if (versionNumber == null) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
+            } else {
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORY_SYSTEM_NOT_FOUND_IN_VERSION.getMessageForReasonType(), uuid, versionNumber);
+            }
         }
         return indicatorSystemVersion;
     }
+    
 
+    @Override
+    public void updateIndicatorSystem(ServiceContext ctx, IndicatorSystem indicatorSystem) throws MetamacException {
+        getIndicatorSystemRepository().save(indicatorSystem);
+    }
+    
+    @Override
+    public void deleteIndicatorSystem(ServiceContext ctx, String uuid) throws MetamacException {
+        IndicatorSystem indicatorSystem = retrieveIndicatorSystem(ctx, uuid);
+        getIndicatorSystemRepository().delete(indicatorSystem);
+    }
+
+    @Override
+    public void deleteIndicatorSystemVersion(ServiceContext ctx, String uuid, Long versionNumber) throws MetamacException {
+        IndicatorSystemVersion indicatorSystemVersion = retrieveIndicatorSystemVersion(ctx, uuid, versionNumber);
+        IndicatorSystem indicatorSystem = indicatorSystemVersion.getIndicatorSystem();
+        indicatorSystem.getVersions().remove(indicatorSystemVersion);
+        
+        // Update
+        getIndicatorSystemRepository().save(indicatorSystem);
+        getIndicatorSystemVersionRepository().delete(indicatorSystemVersion);
+    }
+    
     @Override
     public List<IndicatorSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorSystemRepository().findIndicatorsSystems(code);
