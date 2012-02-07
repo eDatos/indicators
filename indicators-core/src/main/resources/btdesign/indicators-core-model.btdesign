@@ -44,15 +44,15 @@ Application Indicators {
 	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Sends indicators system to production validation"
-	    	sendIndicatorSystemToProductionValidation(String uuid) throws MetamacException;
+	    	sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
 	    	"Sends indicators system to diffusion validation"
-	    	sendIndicatorSystemToDiffusionValidation(String uuid) throws MetamacException;
+	    	sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	"Refuses validation of indicators system"
-	    	refuseIndicatorSystemValidation(String uuid) throws MetamacException;
+	    	refuseIndicatorsSystemValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
-	    	publishIndicatorSystem(String uuid) throws MetamacException;	    		    	
+	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
-	    	archiveIndicatorSystem(String uuid) throws MetamacException;	    		    	
+	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -187,10 +187,15 @@ Application Indicators {
        		"Note url"
        		String noteUrl;            
 	    }
-	        
-		// ----------------------------------------------------------------
-		// 							ENUMS
-		// ----------------------------------------------------------------
+	}
+	
+	// ----------------------------------------------------------------
+	// 							ENUMS
+	// ----------------------------------------------------------------
+	
+	Module enums {    	
+		basePackage=es.gobcan.istac.indicators.core.enume
+
 		"States of indicator system"
     	enum IndicatorsSystemStateEnum {
     		DRAFT,
@@ -206,6 +211,6 @@ Application Indicators {
     		DIFFUSION_VALIDATION,
     		PUBLISHED,
     		ARCHIVED
-    	}        		
-    }
+    	}	
+	}
 }

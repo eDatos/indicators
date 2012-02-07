@@ -71,7 +71,7 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
 
-    public static void checkSendIndicatorSystemToProductionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkSendIndicatorsSystemToProductionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -82,7 +82,7 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-    public static void checkSendIndicatorSystemToDiffusionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkSendIndicatorsSystemToDiffusionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -93,7 +93,7 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-    public static void checkRefuseIndicatorSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRefuseIndicatorsSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -104,7 +104,18 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-    public static void checkPublishIndicatorSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkPublishIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        
+        throwIfException(exceptions);        
+    }
+    
+    public static void checkArchiveIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
