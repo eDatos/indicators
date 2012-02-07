@@ -117,21 +117,21 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     
     public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
 
-//        // Retrieve version and check it is not published or archived
-//        retrieveIndicatorsSystemStatePublished(ctx, uuid)
-//        DatasetVersionEntity draftEntity = retrieveDatasetVersionByUri(datasetBasicDto.getUri());
-//        if (!DatasetStateEnum.DRAFT.equals(draftEntity.getState())) {
-//            throw new ApplicationException(DsdExceptionCodeEnum.DATASET_INCORRECT_STATUS.getName(), "Dataset is not DRAFT with uri " + datasetBasicDto.getUri());
-//        }
-//        
-//        // Validation
-//        DatasetEntity datasetEntity = retrieveDatasetByUri(datasetBasicDto.getUri());
-//        InvocationValidator.validateUpdateDataset(datasetBasicDto, datasetEntity);
-//        
-//        // Transform and update
-//        dto2DoMapper.datasetDtoToDo(datasetBasicDto, draftEntity);
-//        dto2DoMapper.datasetDtoToDo(datasetBasicDto, draftEntity.getDataset()); // TODO qué atributos de DatasetEntity son actualizables? afectará a todas las versiones!
-//        getDatasetVersionRepository().save(draftEntity);    
+        // Retrieve version in production
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemDto.getUuid());
+        if (!indicatorsSystemInProduction.getVersionNumber().equals(indicatorsSystemDto.getVersionNumber())) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), indicatorsSystemDto.getUuid(), indicatorsSystemDto.getVersionNumber());
+        }
+        
+        // Validation
+        InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemDto, indicatorsSystemInProduction, null);
+        
+        // Transform
+        // TODO atributos de IndicatorsSystem actualizables? ej: code
+        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction, ctx);
+        
+        // Update
+        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     public String makeDraftIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {

@@ -178,8 +178,8 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getAcronym(), "es", "Acrónimo IndSys-1-v1", "en", "Acronym IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getDescription(), "es", "Descripción IndSys-1-v1", "en", "Description IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getObjetive(), "es", "Objetivo IndSys-1-v1", "en", "Objetive IndSys-1-v1");
-        assertEquals("2012-01-01T01:02:04.000Z", (new DateTime(indicatorsSystemDto.getCreatedDate())).toString());
-        assertEquals("2012-01-02T02:02:02.000Z", (new DateTime(indicatorsSystemDto.getPublishingDate())).toString());
+        assertEquals("2011-01-01T01:02:04.000Z", (new DateTime(indicatorsSystemDto.getCreatedDate())).toString());
+        assertEquals("2011-01-02T02:02:02.000Z", (new DateTime(indicatorsSystemDto.getPublishingDate())).toString());
 
     }
 
@@ -399,18 +399,126 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests /* im
         }
     }
 
+    @Test
+    public void testUpdateIndicatorsSystem() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_1;
+        Long versionNumber = Long.valueOf(2);
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setUri("newUri");
+
+        // Update
+        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+
+        // Validation
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
+        assertTrue(indicatorsSystemDtoUpdated.getLastUpdated().after(indicatorsSystemDtoUpdated.getCreatedDate()));
+    }
+
+    @Test
+    public void testUpdateIndicatorsSystemReusingLocalisedStrings() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_1;
+        Long versionNumber = Long.valueOf(2);
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        indicatorsSystemDto.getTitle().getTexts().iterator().next().setLabel("NewLabel");
+
+        // Update
+        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+
+        // Validation
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
+    }
+
+    @Test
+    public void testUpdateIndicatorsSystemErrorNotExists() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_1, Long.valueOf(2));
+        indicatorsSystemDto.setUuid(INDICATORS_SYSTEM_NOT_EXISTS);
+
+        try {
+            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("Indicator system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorsSystemErrorNotInProduction() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_3;
+        Long versionNumber = Long.valueOf(1);
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+
+        try {
+            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("Indicator system not in production");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorsSystemErrorWrongVersion() throws Exception {
+        
+        String uuid = INDICATORS_SYSTEM_1;
+        Long versionNumber = Long.valueOf(1);
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+
+        try {
+            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("Version 1 not is in production");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(versionNumber, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
+    @Test
+    public void testUpdateIndicatorsErrorCodeNonModifiable() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_1;
+        Long versionNumber = Long.valueOf(2);
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        indicatorsSystemDto.setCode("newCode");
+
+        // Update
+        try {
+            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("Code is unmodifiable");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+
+    }
+
     // @Test
     // public void testMakeDraftIndicatorsSystem() throws Exception {
     // // TODO Auto-generated method stub
     // // fail("testMakeDraftIndicatorsSystem not implemented");
     // }
-    //
-    // @Test
-    // public void testUpdateIndicatorsSystem() throws Exception {
-    // // TODO Auto-generated method stub
-    // // fail("testUpdateIndicatorsSystem not implemented");
-    // }
-    //
     // @Test
     // public void testPublishIndicatorsSystem() throws Exception {
     // // TODO Auto-generated method stub
