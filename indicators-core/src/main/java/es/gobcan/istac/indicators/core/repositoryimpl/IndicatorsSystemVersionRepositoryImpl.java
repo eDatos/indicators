@@ -18,7 +18,7 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
     }
 
     @Override
-    public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber) {
+    public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
         parameters.put("versionNumber", versionNumber);

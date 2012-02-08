@@ -16,13 +16,13 @@ Application Indicators {
     		> @IndicatorsSystemRepository
     		> @IndicatorsSystemVersionRepository
     		
-    		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
-	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
+    		@IndicatorsSystemVersion createIndicatorsSystemVersion(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
 	    	updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
 	    	updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
-	    	deleteIndicatorsSystemVersion(String uuid, Long versionNumber) throws MetamacException;
+	    	deleteIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uuid) throws MetamacException;
     	}
@@ -36,7 +36,7 @@ Application Indicators {
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
 	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
-	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, Long versionNumber) throws MetamacException;
+	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves an indicator system published"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
@@ -51,8 +51,8 @@ Application Indicators {
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
-	    	"Creates a version on draft of an indicator system in diffusion. Returns new version created"
-	    	@IndicatorsSystemDto makeIndicatorsSystemInProduction(@IndicatorsSystemDto indicatorsSystemDto, @IndicatorsSystemVersionEnum versionType) throws MetamacException;
+	    	"Creates a version on draft of an indicator system in production. Returns new version created"
+	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @IndicatorsSystemVersionEnum versionType) throws MetamacException;
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -93,7 +93,7 @@ Application Indicators {
 			
 			"State"
 			- @IndicatorsSystemStateEnum state required;
-			Long versionNumber required;
+			String versionNumber required length="10";
        		"Uri of statistic operation"
        		String uri nullable;
        		"Title of statistic operation"
@@ -129,7 +129,7 @@ Application Indicators {
 				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
 				delete;
             	protected List<@IndicatorsSystemVersion> findByQuery;
-            	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, Long versionNumber);
+            	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
             	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri);
 			}
 		} 
@@ -139,7 +139,7 @@ Application Indicators {
         	"Id into database of IndicatorsSystemVersion"
     		Long idIndicatorsSystemVersion nullable databaseColumn="ID";
     		"Version number of IndicatorsSystemVersion"
-    		Long versionNumber nullable databaseColumn="VERSION_NUMBER";
+    		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
     	}	
 	}
 	
@@ -156,7 +156,7 @@ Application Indicators {
 			"Unique uuid"
 			String uuid;
 			"Version number of this indicator system version"	
-			Long versionNumber;
+			String versionNumber;
 			"State"
 			- @IndicatorsSystemStateEnum state;
 			"Semantic identifier of statistic operation"
@@ -172,9 +172,9 @@ Application Indicators {
        		"Objetive of statistic operation"
        		- @InternationalStringDto objetive;			
        		"Number of version in production"
-       		Long productionVersion;
+       		String productionVersion;
        		"Number of version in diffusion"   		
-			Long diffusionVersion;			
+			String diffusionVersion;			
 			
 			"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;
@@ -200,7 +200,7 @@ Application Indicators {
 			"Unique uuid"
 			String uuid;
 			"Version number of this indicator version"	
-			Long versionNumber;
+			String versionNumber;
 			"Code"
 			String code;
 			"State"
@@ -245,7 +245,7 @@ Application Indicators {
     	}	
     	"Type of version of the change"
     	enum IndicatorsSystemVersionEnum {
-    		MAYOR,
+    		MAJOR,
     		MINOR
     	}	
 	}

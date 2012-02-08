@@ -95,7 +95,7 @@ public abstract class IndicatorsBaseTests {
         IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
 
         // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
-        initializeDatabaseContent(databaseTester.getConnection().getConnection());
+        initializeDatabase(databaseTester.getConnection().getConnection());
         
         databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
         databaseTester.setTearDownOperation(new OrderedDeleteAllOperation());
@@ -109,7 +109,7 @@ public abstract class IndicatorsBaseTests {
     @After
     public void tearDownDatabaseTester() throws Exception {
         if (databaseTester != null) {
-            initializeDatabaseContent(databaseTester.getConnection().getConnection());
+            initializeDatabase(databaseTester.getConnection().getConnection());
             databaseTester.onTearDown();
         }
     }
@@ -146,7 +146,7 @@ public abstract class IndicatorsBaseTests {
         }
     }
 
-    private void initializeDatabaseContent(Connection connection) throws Exception {
+    private void initializeDatabase(Connection connection) throws Exception {
         // Remove tables content
         List<String> tableNamesToRemove = getTablesToRemoveContent();
         if (tableNamesToRemove != null) {

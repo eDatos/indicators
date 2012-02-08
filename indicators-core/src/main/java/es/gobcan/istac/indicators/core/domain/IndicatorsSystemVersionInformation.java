@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.core.domain;
 
 import javax.persistence.Embeddable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * BasicType representing IndicatorsSystemVersionInformation.
  * <p>
@@ -16,11 +18,11 @@ public class IndicatorsSystemVersionInformation extends IndicatorsSystemVersionI
     public IndicatorsSystemVersionInformation() {
     }
 
-    public IndicatorsSystemVersionInformation(Long idIndicatorsSystemVersion, Long versionNumber) {
+    public IndicatorsSystemVersionInformation(Long idIndicatorsSystemVersion, String versionNumber) {
         super(idIndicatorsSystemVersion, versionNumber);
         if (idIndicatorsSystemVersion == null) {
             throw new IllegalArgumentException("'idIndicatorsSystemVersion' can not be null");
-        } else if (versionNumber == null) {
+        } else if (StringUtils.isBlank(versionNumber)) {
             throw new IllegalArgumentException("'versionNumber' can not be null");
         }
     }

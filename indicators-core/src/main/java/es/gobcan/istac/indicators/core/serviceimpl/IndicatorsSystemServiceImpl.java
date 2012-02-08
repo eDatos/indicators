@@ -21,7 +21,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     }
 
     @Override
-    public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException {
+    public IndicatorsSystemVersion createIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException {
         
         // Save indicator
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
@@ -48,7 +48,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     }
     
     @Override
-    public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(ServiceContext ctx, String uuid, Long versionNumber) throws MetamacException {
+    public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(uuid, versionNumber);
         if (indicatorsSystemVersion == null) {
             if (versionNumber == null) {
@@ -77,7 +77,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     }
 
     @Override
-    public void deleteIndicatorsSystemVersion(ServiceContext ctx, String uuid, Long versionNumber) throws MetamacException {
+    public void deleteIndicatorsSystemVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, uuid, versionNumber);
         IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
         indicatorsSystem.getVersions().remove(indicatorsSystemVersion);

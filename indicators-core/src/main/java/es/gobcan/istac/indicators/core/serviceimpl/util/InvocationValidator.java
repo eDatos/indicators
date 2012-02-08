@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class InvocationValidator {
@@ -39,7 +40,7 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
-    public static void checkRetrieveIndicatorsSystem(String uuid, Long version, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveIndicatorsSystem(String uuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -122,6 +123,18 @@ public class InvocationValidator {
         }
         
         checkMetadataRequired(uuid, "UUID", exceptions);
+        
+        throwIfException(exceptions);        
+    }
+    
+    public static void checkVersioningIndicatorsSystem(String uuid, IndicatorsSystemVersionEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkMetadataRequired(versionType, "VERSION_TYPE", exceptions);
         
         throwIfException(exceptions);        
     }
