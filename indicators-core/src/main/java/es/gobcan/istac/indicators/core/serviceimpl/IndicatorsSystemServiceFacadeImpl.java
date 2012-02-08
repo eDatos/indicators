@@ -246,6 +246,12 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
     }
+    
+    @Override
+    public IndicatorsSystemDto makeIndicatorsSystemInProduction(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorsSystemVersionEnum versionType) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     /**
      * Retrieves version of an indicators system in production
