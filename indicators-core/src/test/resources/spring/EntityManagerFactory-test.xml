@@ -10,13 +10,22 @@
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="false" />
-				<property name="generateDdl" value="true" />
 				<property name="databasePlatform" value="${jpaVendorAdapter.databasePlatform}" />
 			</bean>
 		</property>
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceXmlLocation" value="META-INF/persistence-test.xml" />
+ 		<property name="jpaProperties">
+		    <props>
+		    	<!-- These properties override persistence-test.xml -->
+		       <prop key="hibernate.show_sql">true</prop>
+	           <prop key="hibernate.hbm2ddl.auto">validate</prop>  
+		       <prop key="hibernate.ejb.cfgfile">hibernate.cfg.xml</prop>  
+		       <prop key="query.substitutions">true 1, false 0</prop>  
+		       <prop key="hibernate.cache.use_query_cache">true</prop>  
+		       <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>  
+	        </props>
+	     </property> 
 	</bean>
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
