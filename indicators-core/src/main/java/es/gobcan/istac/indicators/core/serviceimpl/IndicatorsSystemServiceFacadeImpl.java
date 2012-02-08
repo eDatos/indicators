@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import java.util.List;
+import java.util.List; 
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 
 /**

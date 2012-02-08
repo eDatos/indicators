@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.mapper;
 
-import java.util.HashSet;
+import java.util.HashSet; 
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
 
 @Component
 public class Dto2DoMapperImpl implements Dto2DoMapper {

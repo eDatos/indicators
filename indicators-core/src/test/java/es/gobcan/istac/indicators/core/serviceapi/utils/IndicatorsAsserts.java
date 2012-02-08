@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 /**
  * Asserts to tests

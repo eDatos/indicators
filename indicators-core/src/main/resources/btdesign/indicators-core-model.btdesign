@@ -51,6 +51,8 @@ Application Indicators {
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
+	    	"Creates a version on draft of an indicator system in diffusion. Returns new version created"
+	    	@IndicatorsSystemDto makeIndicatorsSystemInProduction(@IndicatorsSystemDto indicatorsSystemDto, @IndicatorsSystemVersionEnum versionType) throws MetamacException;
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -240,6 +242,11 @@ Application Indicators {
     		DIFFUSION_VALIDATION,
     		PUBLISHED,
     		ARCHIVED
-    	}		
+    	}	
+    	"Type of version of the change"
+    	enum IndicatorsSystemVersionEnum {
+    		MAYOR,
+    		MINOR
+    	}	
 	}
 }
