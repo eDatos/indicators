@@ -35,6 +35,8 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     private Dto2DoMapper        dto2DoMapper;
 
     private static final String VERSION_NUMBER_INITIAL = "1.000";
+    private final NumberFormat formatterMajor = new DecimalFormat("0");
+    private final NumberFormat formatterMinor = new DecimalFormat("000");
 
     public IndicatorsSystemServiceFacadeImpl() {
     }
@@ -276,7 +278,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
         indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
         indicatorsSystemNewVersion.setVersionNumber(getVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
-        
+
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
 
@@ -286,28 +288,25 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     public String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
-        
+
         if (actualVersionNumber == null) {
             return VERSION_NUMBER_INITIAL;
         }
         
-        // TODO variable global?
-        NumberFormat formatterMayor = new DecimalFormat("0");
-        NumberFormat formatterMenor = new DecimalFormat("000");
-
         String[] versionNumberSplited = actualVersionNumber.split("\\.");
         Integer versionNumberMajor = Integer.valueOf(versionNumberSplited[0]);
         Integer versionNumberMinor = Integer.valueOf(versionNumberSplited[1]);
 
         if (IndicatorsSystemVersionEnum.MAJOR.equals(versionType)) {
             versionNumberMajor++;
-            return formatterMayor.format(versionNumberMajor) + formatterMenor.format(0);
+            versionNumberMinor = 0;
         } else if (IndicatorsSystemVersionEnum.MINOR.equals(versionType)) {
             versionNumberMinor++;
-            return formatterMayor.format(versionNumberMajor) + "." + formatterMenor.format(versionNumberMinor);
+        } else {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getErrorCode(), ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getMessageForReasonType(),
+                    versionType, IndicatorsSystemVersionEnum.class);
         }
-        throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getErrorCode(), ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getMessageForReasonType(),
-                versionType, IndicatorsSystemVersionEnum.class);
+        return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
     }
 
     /**
