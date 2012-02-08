@@ -862,7 +862,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-            assertEquals(Long.valueOf(1), indicatorsSystemDto.getProductionVersion());
+            assertEquals(versionNumber, indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
         }
@@ -874,7 +874,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
-            assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(versionNumber, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
 
             IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto.getProductionValidationDate());
