@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -68,6 +67,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoRetrieved.getState());
         assertEquals(Long.valueOf(1), indicatorsSystemDtoRetrieved.getProductionVersion());
         assertNull(indicatorsSystemDtoRetrieved.getDiffusionVersion());
+        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getPublicationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getPublicationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getArchiveDate());
+        assertNull(indicatorsSystemDtoRetrieved.getArchiveUser());
+        
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoRetrieved);
 
         // Validate audit
@@ -187,8 +195,11 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getAcronym(), "es", "Acrónimo IndSys-1-v1", "en", "Acronym IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getDescription(), "es", "Descripción IndSys-1-v1", "en", "Description IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getObjetive(), "es", "Objetivo IndSys-1-v1", "en", "Objetive IndSys-1-v1");
-        assertEquals("2011-01-01T01:02:04.000Z", (new DateTime(indicatorsSystemDto.getCreatedDate())).toString());
-        assertEquals("2011-01-02T02:02:02.000Z", (new DateTime(indicatorsSystemDto.getPublishingDate())).toString());
+        IndicatorsAsserts.assertEqualsDate("2011-01-01 01:02:04", indicatorsSystemDto.getCreatedDate());
+        IndicatorsAsserts.assertEqualsDate("2011-01-02 02:02:04", indicatorsSystemDto.getProductionValidationDate());
+        IndicatorsAsserts.assertEqualsDate("2011-01-03 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
+        IndicatorsAsserts.assertEqualsDate("2011-01-04 04:02:04", indicatorsSystemDto.getPublicationDate());
+        assertNull(indicatorsSystemDto.getArchiveDate());
 
     }
 
@@ -549,27 +560,38 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     public void testSendIndicatorsSystemToProductionValidation() throws Exception {
         
         String uuid = INDICATORS_SYSTEM_1;
+        Long diffusionVersion = Long.valueOf(1);
+        Long productionVersion = Long.valueOf(2);
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(2));
-            assertEquals(Long.valueOf(1), indicatorsSystemDtoV1.getDiffusionVersion());
-            assertEquals(Long.valueOf(2), indicatorsSystemDtoV2.getProductionVersion());
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
+            assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoV2.getState());
         }
 
         // Sends to production validation
-        indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), uuid);
+        indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
         
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(1));
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, Long.valueOf(2));
-            assertEquals(Long.valueOf(1), indicatorsSystemDtoV1.getDiffusionVersion());
-            assertEquals(Long.valueOf(2), indicatorsSystemDtoV2.getProductionVersion());
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
+            assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoV2.getState());
+            
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoV2.getProductionValidationDate()));
+            assertEquals(getServiceContext2().getUserId(), indicatorsSystemDtoV2.getProductionValidationUser());
+            assertNull(indicatorsSystemDtoV2.getDiffusionValidationDate());
+            assertNull(indicatorsSystemDtoV2.getDiffusionValidationUser());
+            assertNull(indicatorsSystemDtoV2.getPublicationDate());
+            assertNull(indicatorsSystemDtoV2.getPublicationUser());
+            assertNull(indicatorsSystemDtoV2.getArchiveDate());
+            assertNull(indicatorsSystemDtoV2.getArchiveUser());
         }
     }
 
@@ -633,6 +655,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+            
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorsSystemDto.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto.getDiffusionValidationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDto.getDiffusionValidationUser());
+            assertNull(indicatorsSystemDto.getPublicationDate());
+            assertNull(indicatorsSystemDto.getPublicationUser());
+            assertNull(indicatorsSystemDto.getArchiveDate());
+            assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
 
@@ -721,6 +752,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            
+            assertNull(indicatorsSystemDto.getProductionValidationDate());
+            assertNull(indicatorsSystemDto.getProductionValidationUser());
+            assertNull(indicatorsSystemDto.getDiffusionValidationDate());
+            assertNull(indicatorsSystemDto.getDiffusionValidationUser());
+            assertNull(indicatorsSystemDto.getPublicationDate());
+            assertNull(indicatorsSystemDto.getPublicationUser());
+            assertNull(indicatorsSystemDto.getArchiveDate());
+            assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
     
@@ -836,6 +876,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+
+            IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDto.getDiffusionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto.getPublicationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDto.getPublicationUser());
+            assertNull(indicatorsSystemDto.getArchiveDate());
+            assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
     
@@ -1007,6 +1056,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(Long.valueOf(1), indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
+
+            IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorsSystemDto.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDto.getDiffusionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-05-05 04:02:04", indicatorsSystemDto.getPublicationDate());
+            assertEquals("user3", indicatorsSystemDto.getPublicationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto.getArchiveDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDto.getArchiveUser());
         }
     }
     
@@ -1113,5 +1171,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         tables.add("TBL_INDICATORS_SYSTEMS");
         tables.add("TBL_INTERNATIONAL_STRINGS");
         return tables;
+    }
+    
+    @Override
+    protected List<String> getSequencesToRestart() {
+        List<String> sequences = new ArrayList<String>();
+        sequences.add("SEQ_I18NSTRS");
+        sequences.add("SEQ_L10NSTRS");
+        sequences.add("SEQ_INDIC_SYSTEMS_VERSIONS");
+        sequences.add("SEQ_INDICATORS_SYSTEMS");
+        return sequences;
     }
 }

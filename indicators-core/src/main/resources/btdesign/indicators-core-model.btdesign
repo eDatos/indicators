@@ -104,10 +104,23 @@ Application Indicators {
        		- @InternationalString objetive cascade="all" nullable databaseColumn="OBJETIVE_FK";
        		"Description of statistic operation"
        		- @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
-			"Publishing date"
-			DateTimeTZ publishingDate nullable;
-			"Unpublishing date"
-			DateTimeTZ unpublishingDate nullable;
+       		
+			"Date when the indicators system was sended to production validation"
+			DateTimeTZ productionValidationDate nullable;
+			"User who sended to production validation"
+			String productionValidationUser nullable;
+			"Date when the indicators system was sended to diffusion validation"
+			DateTimeTZ diffusionValidationDate nullable;
+			"User who sended to diffusion validation"
+			String diffusionValidationUser nullable;
+			"Date when the indicators system was published"
+			DateTimeTZ publicationDate nullable;
+			"User who published"
+			String publicationUser nullable;
+			"Date when the indicators system was archived"
+			DateTimeTZ archiveDate nullable;
+			"User who archived"
+			String archiveUser nullable;
 					
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEMS_FK" <-> versions;
@@ -156,11 +169,24 @@ Application Indicators {
        		"Number of version in production"
        		Long productionVersion;
        		"Number of version in diffusion"   		
-			Long diffusionVersion;
-			"Publishing date of this version"
-			JAVADATE publishingDate; 
-			"Unpublishing date of this version"
-			JAVADATE unpublishingDate;            
+			Long diffusionVersion;			
+			
+			"Date when the indicators system was sended to production validation"
+			JAVADATE productionValidationDate;
+			"User who sended to production validation"
+			String productionValidationUser;
+			"Date when the indicators system was sended to diffusion validation"
+			JAVADATE diffusionValidationDate;
+			"User who sended to diffusion validation"
+			String diffusionValidationUser;
+			"Date when the indicators system was published"
+			JAVADATE publicationDate;
+			"User who published"
+			String publicationUser;
+			"Date when the indicators system was archived"
+			JAVADATE archiveDate;
+			"User who archived"
+			String archiveUser;
 	    }
 	    
 	    "Dto for indicator"

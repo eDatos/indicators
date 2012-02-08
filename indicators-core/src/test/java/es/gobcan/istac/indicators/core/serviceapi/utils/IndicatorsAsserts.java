@@ -3,6 +3,9 @@ package es.gobcan.istac.indicators.core.serviceapi.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Date;
+
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
@@ -45,5 +48,9 @@ public class IndicatorsAsserts {
             count++;
         }
         assertEquals(count, internationalStringDto.getTexts().size());
+    }
+    
+    public static void assertEqualsDate(String expected, Date actual) {
+        assertEquals(expected, (new DateTime(actual)).toString("yyyy-MM-dd HH:mm:ss"));
     }
 }

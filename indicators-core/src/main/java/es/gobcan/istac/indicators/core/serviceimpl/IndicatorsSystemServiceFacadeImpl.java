@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,6 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, ctx);
         draftVersion.setState(IndicatorsSystemStateEnum.DRAFT);
         draftVersion.setVersionNumber(VERSION_INITIAL);
-        draftVersion.setPublishingDate(null);
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemService().createIndicatorsSystem(ctx, indicatorsSystem, draftVersion);
@@ -139,7 +139,6 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     // TODO validación: El indicador debe tener al menos un origen de datos asociado.
-    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -154,10 +153,11 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
+        indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
+        indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
-    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
         
@@ -172,10 +172,11 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
+        indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
+        indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
-    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void refuseIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -190,10 +191,13 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemInProduction.setProductionValidationDate(null);
+        indicatorsSystemInProduction.setProductionValidationUser(null);
+        indicatorsSystemInProduction.setDiffusionValidationDate(null);
+        indicatorsSystemInProduction.setDiffusionValidationUser(null);
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
-    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
         
@@ -206,20 +210,23 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), uuid, IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
         }
         
-        // Update state and remove possible last version in diffusion
+        // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
+        indicatorsSystemInProduction.setPublicationDate(new DateTime());
+        indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
         
         IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
+        // Remove possible last version in diffusion
         if (indicatorsSystem.getDiffusionVersion() != null) {
             getIndicatorsSystemService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
         }
         indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemInProduction.getId(), indicatorsSystemInProduction.getVersionNumber()));
         indicatorsSystem.setProductionVersion(null);
+
         getIndicatorsSystemService().updateIndicatorsSystem(ctx, indicatorsSystem);
     }
 
-    // TODO almacenar fecha de cambio de estado en un metadato específico y el usuario que realiza el cambio
     @Override
     public void archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
         
@@ -234,6 +241,8 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         
         // Update state
         indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
+        indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
+        indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
     }
 

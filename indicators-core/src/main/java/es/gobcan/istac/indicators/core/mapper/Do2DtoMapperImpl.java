@@ -1,8 +1,10 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -31,8 +33,16 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setState(source.getState());
         target.setProductionVersion(source.getIndicatorsSystem().getProductionVersion() != null ? source.getIndicatorsSystem().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicatorsSystem().getDiffusionVersion() != null ? source.getIndicatorsSystem().getDiffusionVersion().getVersionNumber() : null);
-        target.setPublishingDate(source.getPublishingDate() != null ? source.getPublishingDate().toDate() : null);
-        target.setUnpublishingDate(source.getUnpublishingDate() != null ? source.getUnpublishingDate().toDate() : null);
+
+        target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
+        target.setProductionValidationUser(source.getProductionValidationUser());
+        target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));
+        target.setDiffusionValidationUser(source.getDiffusionValidationUser());
+        target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+        target.setPublicationUser(source.getPublicationUser());
+        target.setArchiveDate(dateDoToDto(source.getArchiveDate()));
+        target.setArchiveUser(source.getArchiveUser());
+        
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(source.getCreatedDate().toDate());
         target.setLastUpdatedBy(source.getLastUpdatedBy());
@@ -59,5 +69,12 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
             targets.add(target);
         }
         return targets;
+    }
+    
+    private Date dateDoToDto(DateTime source) {
+        if (source == null) {
+            return null;
+        }
+        return source.toDate();
     }
 }

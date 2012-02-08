@@ -95,13 +95,7 @@ public abstract class IndicatorsBaseTests {
         IDataSet dataset = new FilteredDataSet(filter, dataSetReplacement);
 
         // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
-        removeDatabaseContent(databaseTester.getConnection().getConnection());
-
-//        // Initialize sequences
-//        restartSequence(databaseTester.getConnection(), "SEQ_I18NSTRS");
-//        restartSequence(databaseTester.getConnection(), "SEQ_L10NSTRS");
-//        restartSequence(databaseTester.getConnection(), "SEQ_INDIC_SYSTEMS_VERSIONS");
-//        restartSequence(databaseTester.getConnection(), "SEQ_INDICATORS_SYSTEMS");        
+        initializeDatabaseContent(databaseTester.getConnection().getConnection());
         
         databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
         databaseTester.setTearDownOperation(new OrderedDeleteAllOperation());
@@ -115,7 +109,7 @@ public abstract class IndicatorsBaseTests {
     @After
     public void tearDownDatabaseTester() throws Exception {
         if (databaseTester != null) {
-            removeDatabaseContent(databaseTester.getConnection().getConnection());
+            initializeDatabaseContent(databaseTester.getConnection().getConnection());
             databaseTester.onTearDown();
         }
     }
@@ -152,12 +146,20 @@ public abstract class IndicatorsBaseTests {
         }
     }
 
-    private void removeDatabaseContent(Connection connection) throws Exception {
+    private void initializeDatabaseContent(Connection connection) throws Exception {
         // Remove tables content
         List<String> tableNamesToRemove = getTablesToRemoveContent();
         if (tableNamesToRemove != null) {
             for (String tableNameToRemove : tableNamesToRemove) {
                 connection.prepareStatement("DELETE FROM " + tableNameToRemove).execute();        
+            }
+        }
+        
+        // Restart sequences
+        List<String> sequences = getSequencesToRestart();
+        if (sequences != null) {
+            for (String sequence : sequences) {
+                restartSequence(databaseTester.getConnection(), sequence);        
             }
         }
     }
@@ -212,5 +214,9 @@ public abstract class IndicatorsBaseTests {
     /**
      * Get table names to remove content when tear down database
      */
-    protected abstract List<String> getTablesToRemoveContent();
+    protected abstract List<String> getTablesToRemoveContent();    
+    /**
+     * Get sequences names to restart to avoid duplicated id
+     */
+    protected abstract List<String> getSequencesToRestart();
 }
