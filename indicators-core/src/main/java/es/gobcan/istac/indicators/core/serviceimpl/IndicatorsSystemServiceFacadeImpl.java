@@ -348,6 +348,17 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         Dimension dimension = dto2DoMapper.dimensionDtoToDo(dimensionDto);
         dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
         dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+        
+        // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
+        Dimension dimensionParent = null;
+        if (dimensionDto.getParentDimensionUuid() != null) {
+            dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
+            if (!dimensionParent.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
+            }
+            dimensionParent.addSubdimension(dimension);
+            getIndicatorsSystemService().updateDimension(ctx, dimensionParent);
+        }
 
         // Update indicators system adding dimension
         indicatorsSystemVersion.addDimension(dimension);

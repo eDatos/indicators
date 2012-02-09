@@ -28,7 +28,11 @@ public enum ServiceExceptionType {
     SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND("0505"),
     SERVICE_INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND("0506"),
     SERVICE_INDICATORS_SYSTEM_WRONG_STATE("0507"),
-    SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE("0508");
+    SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE("0508"),
+    
+    SERVICE_DIMENSION_NOT_FOUND("0601"),
+    SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM("0602");
+
 
     private String errorCode;
 
@@ -59,6 +63,10 @@ public enum ServiceExceptionType {
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND, "exception.service.validation.indicators_system.diffusion_not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE, "exception.service.validation.indicators_system.wrong_state");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE, "exception.service.validation.indicators_system.version_wrong_state");
+        
+        // Dimensions
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND, "exception.service.validation.dimension.not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, "exception.service.validation.dimension.not_found_in_indicators_system");
 
         for (ServiceExceptionType s : EnumSet.allOf(ServiceExceptionType.class)) {
             LOOKUP.put(s.getErrorCode(), s);

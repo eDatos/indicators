@@ -22,7 +22,7 @@ public class IndicatorsSystemRepositoryImpl extends IndicatorsSystemRepositoryBa
     public IndicatorsSystem retrieveIndicatorsSystem(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
-        List<IndicatorsSystem> result = findByQuery("from IndicatorsSystem i where i.uuid = :uuid", parameters);
+        List<IndicatorsSystem> result = findByQuery("from IndicatorsSystem i where i.uuid = :uuid", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
         } else {

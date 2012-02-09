@@ -104,4 +104,20 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     public Dimension createDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
         return getDimensionRepository().save(dimension);
     }
+
+    @Override
+    public Dimension retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
+        Dimension dimension = getDimensionRepository().findDimension(uuid);
+        if (dimension == null) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getMessageForReasonType(), uuid);
+        }
+        return dimension;
+    }
+    
+    @Override
+    public Dimension updateDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
+        return getDimensionRepository().save(dimension);
+    }
+    
+
 }

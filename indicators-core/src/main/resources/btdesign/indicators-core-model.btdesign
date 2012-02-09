@@ -30,6 +30,8 @@ Application Indicators {
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(@Dimension dimension) throws MetamacException;
+	    	@Dimension updateDimension(@Dimension dimension) throws MetamacException;
+	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
 	    	
     	}
     	
@@ -95,6 +97,7 @@ Application Indicators {
 		   		@IndicatorsSystem save(@IndicatorsSystem entity);
 		   		delete;
             	protected List<@IndicatorsSystem> findByQuery;
+            	protected List<@IndicatorsSystem> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystem retrieveIndicatorsSystem(String uuid);
             	List<@IndicatorsSystem> findIndicatorsSystems(String code);
 			}
@@ -148,6 +151,7 @@ Application Indicators {
 				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
 				delete;
             	protected List<@IndicatorsSystemVersion> findByQuery;
+            	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
             	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state);
 			}
@@ -172,8 +176,8 @@ Application Indicators {
             Repository DimensionRepository {
             	@Dimension save(@Dimension entity);
             	// delete;
-            	// protected List<@Dimension> findByQuery;
-            	// @Dimension findDimensionByUuid(String uuid);
+            	protected List<@Dimension> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@Dimension findDimension(String uuid);
             }
         }  		
 		
@@ -269,6 +273,8 @@ Application Indicators {
 			String uuid;
 			"Title"
 			- @InternationalStringDto title;
+			"Parent dimension"
+			String parentDimensionUuid;
        		"Subdimensions"
        		- List<@DimensionDto> subdimensions;            
 	    }

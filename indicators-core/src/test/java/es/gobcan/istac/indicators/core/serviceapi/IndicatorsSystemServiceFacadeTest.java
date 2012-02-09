@@ -37,16 +37,20 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     @Autowired
     protected IndicatorsSystemServiceFacade indicatorsSystemServiceFacade;
 
-    private static String                   INDICATORS_SYSTEM_1          = "IndSys-1";
-    private static String                   INDICATORS_SYSTEM_2          = "IndSys-2";
-    private static String                   INDICATORS_SYSTEM_3          = "IndSys-3";
-    private static String                   INDICATORS_SYSTEM_3_VERSION  = "11.033";
-    private static String                   INDICATORS_SYSTEM_4          = "IndSys-4";
-    private static String                   INDICATORS_SYSTEM_5          = "IndSys-5";
-    private static String                   INDICATORS_SYSTEM_6          = "IndSys-6";
-    private static String                   INDICATORS_SYSTEM_7          = "IndSys-7";
-    private static String                   INDICATORS_SYSTEM_8          = "IndSys-8";
-    private static String                   INDICATORS_SYSTEM_NOT_EXISTS = "IndSys-not-exists";
+    private static String                   INDICATORS_SYSTEM_1             = "IndSys-1";
+    private static String                   INDICATORS_SYSTEM_2             = "IndSys-2";
+    private static String                   INDICATORS_SYSTEM_3             = "IndSys-3";
+    private static String                   INDICATORS_SYSTEM_3_VERSION     = "11.033";
+    private static String                   INDICATORS_SYSTEM_4             = "IndSys-4";
+    private static String                   INDICATORS_SYSTEM_5             = "IndSys-5";
+    private static String                   INDICATORS_SYSTEM_6             = "IndSys-6";
+    private static String                   INDICATORS_SYSTEM_7             = "IndSys-7";
+    private static String                   INDICATORS_SYSTEM_8             = "IndSys-8";
+    private static String                   INDICATORS_SYSTEM_NOT_EXISTS    = "IndSys-not-exists";
+
+    // Dimensions
+    private static String                   DIMENSION_NOT_EXISTS            = "Dim-not-exists";
+    private static String                   INDICATORS_SYSTEM_1_DIMENSION_1 = "IndSys-1-v2-Dimension-1";
 
     @Test
     public void testCreateIndicatorsSystem() throws Exception {
@@ -1236,7 +1240,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getDiffusionVersion());
         }
     }
-    
+
     @Test
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
@@ -1250,12 +1254,12 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testVersioningIndicatorsSystemErrorAlreadyExistsProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
-        
+
         try {
             indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
             fail("Indicators system already exists in production");
@@ -1272,7 +1276,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     @Override
     @Test
     public void testFindIndicatorsSystems() throws Exception {
-        
+
         // Retrieve last versions...
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystems(getServiceContext());
         assertEquals(8, indicatorsSystemsDto.size());
@@ -1289,48 +1293,76 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     @Override
     @Test
     public void testFindIndicatorsSystemsPublished() throws Exception {
-        
+
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
         assertEquals(3, indicatorsSystemsDto.size());
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
     }
-    
 
     @Override
     @Test
     public void testCreateDimension() throws Exception {
-        
+
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
-        
+        dimensionDto.setParentDimensionUuid(null);
+
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
-//        // Retrieve and validate TODO
-//        DimensionDto dimensionRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
-//        assertEqualsDimension(dimensionDto, dimensionRetrieved);
-//        // Validate audit
-//        assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getCreatedBy());
-//        assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getCreatedDate()));
-//        assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getLastUpdated()));
-//        assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getLastUpdatedBy());
-//        
-//        // Retrieve all dimensions (indicators version had one dimension before; now has two dimensions)
-//        List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
-//        assertEquals(2, dimensionsDtoSize1.size());
-//        assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
+        // // Retrieve and validate TODO
+        // DimensionDto dimensionRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        // assertEqualsDimension(dimensionDto, dimensionRetrieved);
+        // // Validate audit
+        // assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getCreatedBy());
+        // assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getCreatedDate()));
+        // assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getLastUpdated()));
+        // assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getLastUpdatedBy());
+        //
+        // // Retrieve all dimensions (indicators version had one dimension before; now has two dimensions)
+        // List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
+        // assertEquals(2, dimensionsDtoSize1.size());
+        // assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
     }
-    
+
     @Test
-    public void testCreateDimensionErrorTitleRequired() throws Exception  {
-        
+    public void testCreateDimensionSubdimension() throws Exception {
+
+        // Create dimension
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setParentDimensionUuid(INDICATORS_SYSTEM_1_DIMENSION_1);
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        assertNotNull(dimensionDtoCreated.getUuid());
+
+        // TODO obtener padre y comprobar que añade la subdimensión
+
+        // // Retrieve and validate TODO
+        // DimensionDto dimensionRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        // assertEqualsDimension(dimensionDto, dimensionRetrieved);
+        // // Validate audit
+        // assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getCreatedBy());
+        // assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getCreatedDate()));
+        // assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getLastUpdated()));
+        // assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getLastUpdatedBy());
+        //
+        // // Retrieve all dimensions (indicators version had one dimension before; now has two dimensions)
+        // List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
+        // assertEquals(2, dimensionsDtoSize1.size());
+        // assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
+    }
+
+    @Test
+    public void testCreateDimensionErrorTitleRequired() throws Exception {
+
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(null);
-        
+
         try {
             indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("title required");
@@ -1341,10 +1373,10 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals("DIMENSION.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
-    public void testCreateDimensionErrorSubdimensionsNotEmpty() throws Exception  {
-        
+    public void testCreateDimensionErrorSubdimensionsNotEmpty() throws Exception {
+
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
 
@@ -1362,10 +1394,10 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals("DIMENSION.SUBDIMENSIONS", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
-    public void testCreateDimensionErrorIndicatorsSystemNotExists() throws Exception  {
-        
+    public void testCreateDimensionErrorIndicatorsSystemNotExists() throws Exception {
+
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         try {
@@ -1378,9 +1410,9 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
-    public void testCreateDimensionErrorIndicatorsSystemHasNotVersionInProduction() throws Exception  {
+    public void testCreateDimensionErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
 
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         DimensionDto dimensionDto = new DimensionDto();
@@ -1394,9 +1426,46 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }  
+        }
     }
 
+    @Test
+    public void testCreateDimensionSubdimensionErrorDimensionNotExists() throws Exception {
+
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(DIMENSION_NOT_EXISTS);
+
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            fail("dimension id not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(DIMENSION_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateDimensionSubdimensionErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
+
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(INDICATORS_SYSTEM_1_DIMENSION_1);
+
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_2, dimensionDto);
+            fail("dimension id not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_1_DIMENSION_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsSystemServiceFacadeTest.xml";

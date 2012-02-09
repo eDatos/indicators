@@ -92,6 +92,22 @@
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+			
+				<TBL_DIMENSIONS
+					ID="1"
+					UUID="IndSys-1-v2-Dimension-1"
+					TITLE_FK="18"
+					PARENT_FK="[null]"
+					VERSION="1"
+					INDICATORS_SYSTEM_VERSION_FK="2"
+					
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 
   
 	<!-- **************************************************************************************	-->
@@ -965,5 +981,29 @@
 		UUID="IS-17-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="17"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="18"
+		UUID="IS-18"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="31"
+		LABEL="Título"
+		LOCALE="es"
+		UUID="IS-18-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="18"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="32"
+		LABEL="Title"
+		LOCALE="en"
+		UUID="IS-18-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="18"
 	/>						
 </dataset>
