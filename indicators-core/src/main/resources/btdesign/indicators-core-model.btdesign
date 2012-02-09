@@ -289,17 +289,22 @@ Application Indicators {
 
 		"States of indicator system"
     	enum IndicatorsSystemStateEnum {
+    		"In draft"
     		DRAFT,
+    		"Pending of production validation"
     		PRODUCTION_VALIDATION,
+    		"Pending of diffusion validation"
     		DIFFUSION_VALIDATION,
+    		"Published"
     		PUBLISHED,
+    		"Archived"
     		ARCHIVED
     	}      
 		"States of indicator"
     	enum IndicatorStateEnum {
     		DRAFT,
-    		PENDING_PRODUCTION_VALIDATION,
-    		PENDING_DIFFUSION_VALIDATION,
+    		PRODUCTION_VALIDATION,
+    		DIFFUSION_VALIDATION,
     		VALIDATION_REFUSED,
     		PUBLISHED,
     		ARCHIVED
