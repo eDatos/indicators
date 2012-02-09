@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -32,30 +34,24 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, IndicatorsSystemStateEnum state) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        
+        // Criteria
+        org.hibernate.Session session = (org.hibernate.Session)getEntityManager().getDelegate();
+        Criteria criteria = session.createCriteria(IndicatorsSystemVersion.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         if (uri != null) {
-            parameters.put("uri", uri);
+            criteria.add(Restrictions.eq("uri", uri));
         }
         if (state != null) {
-            parameters.put("state", state);
+            criteria.add(Restrictions.eq("state", state));
         }
-        StringBuilder query = new StringBuilder("from IndicatorsSystemVersion isv ");
-        StringBuilder queryWhere = new StringBuilder(" where ");
-        if (uri != null) {
-            queryWhere.append(" isv.uri = :uri");
-            queryWhere.append(" and ");
-        }
-        if (state != null) {
-            queryWhere.append(" isv.state = :state ");
-            queryWhere.append(" and ");
-        }
-        if (!queryWhere.toString().equals(" where ")) {
-            query.append(StringUtils.removeEnd(queryWhere.toString(), " and "));
-        }
-        query.append("order by isv.id asc");
-        List<IndicatorsSystemVersion> result = findByQuery(query.toString(), parameters);
-        return result;
+        criteria.addOrder(Order.asc("id"));
+        
+        // Find
+        List<IndicatorsSystemVersion> result = criteria.list();
+        return result;        
     }
 }

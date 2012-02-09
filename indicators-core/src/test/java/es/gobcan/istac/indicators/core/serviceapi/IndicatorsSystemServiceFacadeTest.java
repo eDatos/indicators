@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
  * Spring based transactional test with DbUnit support.
+ * TODO extender de MetamacBaseTests
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
@@ -128,7 +129,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     public void testCreateIndicatorsSystemCodeDuplicated() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode("CODE-1");
+        indicatorsSystemDto.setCode("CoDe-1");
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {

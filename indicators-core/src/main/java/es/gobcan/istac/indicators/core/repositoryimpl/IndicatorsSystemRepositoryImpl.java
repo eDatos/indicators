@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
@@ -28,22 +31,21 @@ public class IndicatorsSystemRepositoryImpl extends IndicatorsSystemRepositoryBa
     }
 
     // TODO paginación
+    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorsSystem> findIndicatorsSystems(String code) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        
+        // Criteria
+        org.hibernate.Session session = (org.hibernate.Session)getEntityManager().getDelegate();
+        Criteria criteria = session.createCriteria(IndicatorsSystem.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         if (code != null) {
-            parameters.put("code", code);
+            criteria.add(Restrictions.eq("code", code).ignoreCase());
         }
-        StringBuilder query = new StringBuilder("from IndicatorsSystem i ");
-        StringBuilder queryWhere = new StringBuilder(" where ");
-        if (code != null) {
-            queryWhere.append(" upper(i.code) = upper(:code) ");
-        }
-        if (!queryWhere.toString().equals(" where ")) {
-            query.append(queryWhere);
-        }
-        query.append("order by i.id asc");
-        List<IndicatorsSystem> result = findByQuery(query.toString(), parameters);
+        criteria.addOrder(Order.asc("id"));
+        
+        // Find
+        List<IndicatorsSystem> result = criteria.list();
         return result;        
     }
 }
