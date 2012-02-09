@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -286,8 +287,52 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
         return indicatorsSystemDto;
     }
+    
+    // TODO paginación
+    // TODO criteria    
+    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
+    @Override
+    public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystems(null);
+        
+        // Find
+        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemService().findIndicatorsSystems(ctx, null);
+        
+        // Transform
+        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
+        for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
+            // Last version
+            IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
+            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
+            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemLastVersion));
+        }
 
-    public String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
+        return indicatorsSystemsDto;
+    }
+
+    // TODO paginación
+    // TODO criteria    
+    @Override
+    public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystemsPublished(null);
+
+        // Retrieve published
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
+        
+        // Transform
+        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
+        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
+            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
+        }
+
+        return indicatorsSystemsDto;
+    }
+
+    private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
 
         if (actualVersionNumber == null) {
             return VERSION_NUMBER_INITIAL;
@@ -360,7 +405,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      * Checks not exists another indicator system with same uri. Checks system retrieved not is actual system.
      */
     private void validateUriUnique(ServiceContext ctx, String uri, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, uri);
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, uri, null);
         if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
                 if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {

@@ -31,8 +31,19 @@ public class IndicatorsSystemRepositoryImpl extends IndicatorsSystemRepositoryBa
     @Override
     public List<IndicatorsSystem> findIndicatorsSystems(String code) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("code", code);
-        List<IndicatorsSystem> result = findByQuery("from IndicatorsSystem i where upper(i.code) = upper(:code)", parameters);
-        return result;
+        if (code != null) {
+            parameters.put("code", code);
+        }
+        StringBuilder query = new StringBuilder("from IndicatorsSystem i ");
+        StringBuilder queryWhere = new StringBuilder(" where ");
+        if (code != null) {
+            queryWhere.append(" upper(i.code) = upper(:code) ");
+        }
+        if (!queryWhere.toString().equals(" where ")) {
+            query.append(queryWhere);
+        }
+        query.append("order by i.id asc");
+        List<IndicatorsSystem> result = findByQuery(query.toString(), parameters);
+        return result;        
     }
 }

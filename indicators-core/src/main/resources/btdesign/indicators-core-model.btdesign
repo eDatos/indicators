@@ -24,7 +24,7 @@ Application Indicators {
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	deleteIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uuid) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -53,6 +53,10 @@ Application Indicators {
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator system in production. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @IndicatorsSystemVersionEnum versionType) throws MetamacException;
+	    	"Finds indicators systems. Retrieves last versions"
+	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
+	    	"Finds published indicators systems"
+	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished() throws MetamacException;
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -130,7 +134,7 @@ Application Indicators {
 				delete;
             	protected List<@IndicatorsSystemVersion> findByQuery;
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri);
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state);
 			}
 		} 
 		

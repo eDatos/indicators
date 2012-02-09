@@ -1249,7 +1249,6 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         }
     }
     
-    
     @Test
     public void testVersioningIndicatorsSystemErrorAlreadyExistsProduction() throws Exception {
 
@@ -1266,6 +1265,34 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
+    }
+
+    @Override
+    @Test
+    public void testFindIndicatorsSystems() throws Exception {
+        
+        // Retrieve last versions...
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystems(getServiceContext());
+        assertEquals(8, indicatorsSystemsDto.size());
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals(INDICATORS_SYSTEM_2, indicatorsSystemsDto.get(1).getUuid());
+        assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(2).getUuid());
+        assertEquals(INDICATORS_SYSTEM_4, indicatorsSystemsDto.get(3).getUuid());
+        assertEquals(INDICATORS_SYSTEM_5, indicatorsSystemsDto.get(4).getUuid());
+        assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(5).getUuid());
+        assertEquals(INDICATORS_SYSTEM_7, indicatorsSystemsDto.get(6).getUuid());
+        assertEquals(INDICATORS_SYSTEM_8, indicatorsSystemsDto.get(7).getUuid());
+    }
+
+    @Override
+    @Test
+    public void testFindIndicatorsSystemsPublished() throws Exception {
+        
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
+        assertEquals(3, indicatorsSystemsDto.size());
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
+        assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
     }
 
     @Override

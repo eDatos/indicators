@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
@@ -92,8 +93,9 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
         return getIndicatorsSystemRepository().findIndicatorsSystems(code);
     }
 
+    // TODO criteria
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uri) throws MetamacException {
-        return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uri);
+    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uri, IndicatorsSystemStateEnum state) throws MetamacException {
+        return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uri, state);
     }
 }
