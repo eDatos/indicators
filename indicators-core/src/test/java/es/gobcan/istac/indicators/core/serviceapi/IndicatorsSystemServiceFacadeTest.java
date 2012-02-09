@@ -1323,115 +1323,79 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 //        List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
 //        assertEquals(2, dimensionsDtoSize1.size());
 //        assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
-        
     }
-//    
-//    @Test
-//    public void testCreateDimensionErrorDatasetPutVersionPublishedNotVersionInDraft() throws Exception {
-//        
-//        // Create dimension
-//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
-//        String datasetUri = DATASET_1_PROVIDER_4;
-//        DatasetDto datasetDtoDraft = dsdService.retrieveDataset(getServiceContext(), datasetUri + ":2");
-//        assertEquals(DatasetStateEnum.DRAFT, datasetDtoDraft.getState());
-//        datasetUri = datasetUri + ":1"; // put published version
-//        
-//        try {
-//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
-//            fail("Dataset published");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.DATASET_INCORRECT_STATUS.getName(), e.getErrorCode());
-//        }   
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorNameRequired() throws Exception  {
-//        
-//        DimensionDto dimensionDto1 = new DimensionDto();
-//        dimensionDto1.setName(null);
-//        
-//        try {
-//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_4, dimensionDto1);
-//            fail("name required");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.REQUIRED_ATTRIBUTE.getName(), e.getErrorCode());
-//            assertTrue(e.getMessage().contains("name"));
-//        }    
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorLabelRequired() throws Exception  {
-//        
-//        DimensionDto dimensionDto1 = new DimensionDto();
-//        dimensionDto1.setName(getName("Dimension 1"));
-//        dimensionDto1.getName().getTexts().get(0).setLabel(null);
-//        
-//        try {
-//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_4, dimensionDto1);
-//            fail("label required");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.REQUIRED_ATTRIBUTE.getName(), e.getErrorCode());
-//            assertTrue(e.getMessage().contains("label"));
-//        }    
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorDatasetNotExists() throws Exception  {
-//        try {
-//            DimensionDto dimensionDto1 = new DimensionDto();
-//            dimensionDto1.setName(getName("Dimension name 1"));
-//            dsdService.createDimension(getServiceContext(), DATASET_NOT_EXISTS, dimensionDto1);
-//            fail("Dataset not exists");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.DATASET_NOT_EXISTS.getName(), e.getErrorCode());
-//        }     
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorDatasetPublished() throws Exception  {
-//        try {
-//            DimensionDto dimensionDto1 = new DimensionDto();
-//            dimensionDto1.setName(getName("Dimension name 1"));
-//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_1, dimensionDto1);
-//            fail("Dataset published");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.DATASET_INCORRECT_STATUS.getName(), e.getErrorCode());
-//        }   
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorValueDuplicated() throws Exception  {
-//        
-//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
-//        dimensionDto1.getValues().get(0).setCode("Code1111");
-//        dimensionDto1.getValues().get(1).setCode("Code1111");
-//        String datasetUri = DATASET_1_PROVIDER_4;
-//
-//        try {
-//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
-//            fail("Value duplicated");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.ILLEGAL_ARGUMENT.getName(), e.getErrorCode());
-//            assertTrue(e.getMessage().contains("Code1111"));
-//        }   
-//    }
-//    
-//    @Test
-//    public void testCreateDimensionErrorValueChildrenDuplicated() throws Exception  {
-//        
-//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
-//        dimensionDto1.getValues().get(0).getChildren().get(0).setCode("Code1111");
-//        dimensionDto1.getValues().get(0).getChildren().get(1).setCode("Code1111");
-//        String datasetUri = DATASET_1_PROVIDER_4;
-//
-//        try {
-//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
-//            fail("Value duplicated");
-//        } catch (ApplicationException e) {
-//            assertEquals(DsdExceptionCodeEnum.ILLEGAL_ARGUMENT.getName(), e.getErrorCode());
-//            assertTrue(e.getMessage().contains("Code1111"));
-//        }   
-//    }
+    
+    @Test
+    public void testCreateDimensionErrorTitleRequired() throws Exception  {
+        
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(null);
+        
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            fail("title required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DIMENSION.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateDimensionErrorSubdimensionsNotEmpty() throws Exception  {
+        
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        DimensionDto subdimensionDto = new DimensionDto();
+        subdimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.addSubdimension(subdimensionDto);
+
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            fail("subdimensions must be empty");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DIMENSION.SUBDIMENSIONS", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateDimensionErrorIndicatorsSystemNotExists() throws Exception  {
+        
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS, dimensionDto);
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateDimensionErrorIndicatorsSystemHasNotVersionInProduction() throws Exception  {
+
+        String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        try {
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), indicatorsSystemUuid, dimensionDto);
+            fail("Indicators system not in production");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }  
+    }
 
     @Override
     protected String getDataSetFile() {
