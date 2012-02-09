@@ -13,8 +13,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -57,6 +59,19 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setUri(source.getUri());
 
         return target;
+    }
+    
+    @Override
+    public Dimension dimensionDtoToDo(DimensionDto source) {
+        Dimension target = new Dimension();
+        dimensionDtoToDo(source, target);
+        return target;
+    }
+
+    @Override
+    public void dimensionDtoToDo(DimensionDto source, Dimension target) {
+        target.setTitle(internationalStringToDo(source.getTitle(), target.getTitle()));
+        // Update action never updates dimensions children
     }
 
     private InternationalString internationalStringToDo(InternationalStringDto source, InternationalString target) {

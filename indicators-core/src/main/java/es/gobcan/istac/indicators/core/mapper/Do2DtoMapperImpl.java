@@ -11,7 +11,9 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @Component
@@ -42,19 +44,30 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setPublicationUser(source.getPublicationUser());
         target.setArchiveDate(dateDoToDto(source.getArchiveDate()));
         target.setArchiveUser(source.getArchiveUser());
-        
+
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(source.getCreatedDate().toDate());
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(source.getLastUpdated().toDate());
-        
+
         return target;
     }
-    
+
+    @Override
+    public DimensionDto dimensionDoToDto(Dimension source) {
+        DimensionDto target = new DimensionDto();
+        target.setUuid(source.getUuid());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        for (Dimension dimensionChildren : source.getSubdimensions()) {
+            target.getSubdimensions().add(dimensionDoToDto(dimensionChildren));
+        }
+        return target;
+    }
+
     private InternationalStringDto internationalStringToDto(InternationalString source) {
         if (source == null) {
             return null;
-        }        
+        }
         InternationalStringDto target = new InternationalStringDto();
         target.getTexts().addAll(localisedStringDoToDto(source.getTexts()));
         return target;
@@ -70,7 +83,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return targets;
     }
-    
+
     private Date dateDoToDto(DateTime source) {
         if (source == null) {
             return null;

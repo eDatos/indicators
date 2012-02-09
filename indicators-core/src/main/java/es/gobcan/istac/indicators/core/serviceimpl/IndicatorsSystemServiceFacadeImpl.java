@@ -11,9 +11,11 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
@@ -67,7 +69,6 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Transform to Dto
         indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
-
         return indicatorsSystemDto;
     }
 
@@ -332,6 +333,29 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         }
 
         return indicatorsSystemsDto;
+    }
+    
+    @Override
+    public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimensionDto, null);
+        
+        // Retrieve indicators system version and check it is in production
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
+
+        // Transform
+        Dimension dimension = dto2DoMapper.dimensionDtoToDo(dimensionDto);
+        dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
+        dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+
+        // Update indicators system adding dimension
+        indicatorsSystemVersion.addDimension(dimension);
+        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+        
+        // Transform to Dto to return
+        dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
+        return dimensionDto;
     }
 
     private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {

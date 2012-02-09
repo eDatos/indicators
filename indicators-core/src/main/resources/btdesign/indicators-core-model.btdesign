@@ -15,7 +15,9 @@ Application Indicators {
     	Service IndicatorsSystemService {
     		> @IndicatorsSystemRepository
     		> @IndicatorsSystemVersionRepository
+    		> @DimensionRepository
     		
+    		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystemVersion(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
@@ -25,12 +27,17 @@ Application Indicators {
 	    	deleteIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state) throws MetamacException;
+	    	
+	    	// Dimensions
+	    	@Dimension createDimension(@Dimension dimension) throws MetamacException;
+	    	
     	}
     	
     	"Provides access to indicators systems"
     	Service IndicatorsSystemServiceFacade {
 	    	> @IndicatorsSystemService
 	    	
+	    	// INDICATORS SYSTEMS
 	    	"Creates a indicator system in draft"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
@@ -57,6 +64,10 @@ Application Indicators {
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
 	    	"Finds published indicators systems"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished() throws MetamacException;
+	    	
+	    	// DIMENSIONS
+	    	"Creates a dimension"
+	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -126,8 +137,12 @@ Application Indicators {
 			"User who archived"
 			String archiveUser nullable;
 					
+			// Relations
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEMS_FK" <-> versions;
+			"Dimensions"
+			- Bag<@Dimension> dimensions cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorsSystemVersion;
+			
 		
 			Repository IndicatorsSystemVersionRepository {
 				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
@@ -137,6 +152,30 @@ Application Indicators {
             	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state);
 			}
 		} 
+		
+        "Dimension of indicators system"
+        Entity Dimension {
+        	databaseTable = "TBL_DIMENSIONS"
+        	hint="idSequence=DIMENSIONS"
+        	
+            "Title"
+            - @InternationalString title not nullable cascade="all" databaseColumn="TITLE_FK";
+
+			// Relations
+			"Subdimensions"
+			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="id asc";
+            "Indicators system version"
+			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> dimensions;
+            
+            
+			"Provides access to Dimension"
+            Repository DimensionRepository {
+            	@Dimension save(@Dimension entity);
+            	// delete;
+            	// protected List<@Dimension> findByQuery;
+            	// @Dimension findDimensionByUuid(String uuid);
+            }
+        }  		
 		
         BasicType IndicatorsSystemVersionInformation {
         	gap
@@ -222,6 +261,17 @@ Application Indicators {
        		"Note url"
        		String noteUrl;            
 	    }
+	    
+	    "Dto for dimension"
+	   	DataTransferObject DimensionDto extends @AuditableDto {
+			
+			"Unique uuid"
+			String uuid;
+			"Title"
+			- @InternationalStringDto title;
+       		"Subdimensions"
+       		- List<@DimensionDto> subdimensions;            
+	    }
 	}
 	
 	// ----------------------------------------------------------------
@@ -242,8 +292,9 @@ Application Indicators {
 		"States of indicator"
     	enum IndicatorStateEnum {
     		DRAFT,
-    		PRODUCTION_VALIDATION,
-    		DIFFUSION_VALIDATION,
+    		PENDING_PRODUCTION_VALIDATION,
+    		PENDING_DIFFUSION_VALIDATION,
+    		VALIDATION_REFUSED,
     		PUBLISHED,
     		ARCHIVED
     	}	

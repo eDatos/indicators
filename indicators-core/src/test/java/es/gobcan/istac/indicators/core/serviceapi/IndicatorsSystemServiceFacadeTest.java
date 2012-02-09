@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
@@ -103,7 +104,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -121,7 +122,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1295,6 +1296,142 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
     }
+    
+
+    @Override
+    @Test
+    public void testCreateDimension() throws Exception {
+        
+        // Create dimension
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        assertNotNull(dimensionDtoCreated.getUuid());
+
+//        // Retrieve and validate TODO
+//        DimensionDto dimensionRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+//        assertEqualsDimension(dimensionDto, dimensionRetrieved);
+//        // Validate audit
+//        assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getCreatedBy());
+//        assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getCreatedDate()));
+//        assertTrue(DateUtils.isSameDay(new Date(), dimensionRetrieved.getLastUpdated()));
+//        assertEquals(getServiceContext().getUserId(), dimensionRetrieved.getLastUpdatedBy());
+//        
+//        // Retrieve all dimensions (indicators version had one dimension before; now has two dimensions)
+//        List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
+//        assertEquals(2, dimensionsDtoSize1.size());
+//        assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
+        
+    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorDatasetPutVersionPublishedNotVersionInDraft() throws Exception {
+//        
+//        // Create dimension
+//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
+//        String datasetUri = DATASET_1_PROVIDER_4;
+//        DatasetDto datasetDtoDraft = dsdService.retrieveDataset(getServiceContext(), datasetUri + ":2");
+//        assertEquals(DatasetStateEnum.DRAFT, datasetDtoDraft.getState());
+//        datasetUri = datasetUri + ":1"; // put published version
+//        
+//        try {
+//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
+//            fail("Dataset published");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.DATASET_INCORRECT_STATUS.getName(), e.getErrorCode());
+//        }   
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorNameRequired() throws Exception  {
+//        
+//        DimensionDto dimensionDto1 = new DimensionDto();
+//        dimensionDto1.setName(null);
+//        
+//        try {
+//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_4, dimensionDto1);
+//            fail("name required");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.REQUIRED_ATTRIBUTE.getName(), e.getErrorCode());
+//            assertTrue(e.getMessage().contains("name"));
+//        }    
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorLabelRequired() throws Exception  {
+//        
+//        DimensionDto dimensionDto1 = new DimensionDto();
+//        dimensionDto1.setName(getName("Dimension 1"));
+//        dimensionDto1.getName().getTexts().get(0).setLabel(null);
+//        
+//        try {
+//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_4, dimensionDto1);
+//            fail("label required");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.REQUIRED_ATTRIBUTE.getName(), e.getErrorCode());
+//            assertTrue(e.getMessage().contains("label"));
+//        }    
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorDatasetNotExists() throws Exception  {
+//        try {
+//            DimensionDto dimensionDto1 = new DimensionDto();
+//            dimensionDto1.setName(getName("Dimension name 1"));
+//            dsdService.createDimension(getServiceContext(), DATASET_NOT_EXISTS, dimensionDto1);
+//            fail("Dataset not exists");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.DATASET_NOT_EXISTS.getName(), e.getErrorCode());
+//        }     
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorDatasetPublished() throws Exception  {
+//        try {
+//            DimensionDto dimensionDto1 = new DimensionDto();
+//            dimensionDto1.setName(getName("Dimension name 1"));
+//            dsdService.createDimension(getServiceContext(), DATASET_1_PROVIDER_1, dimensionDto1);
+//            fail("Dataset published");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.DATASET_INCORRECT_STATUS.getName(), e.getErrorCode());
+//        }   
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorValueDuplicated() throws Exception  {
+//        
+//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
+//        dimensionDto1.getValues().get(0).setCode("Code1111");
+//        dimensionDto1.getValues().get(1).setCode("Code1111");
+//        String datasetUri = DATASET_1_PROVIDER_4;
+//
+//        try {
+//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
+//            fail("Value duplicated");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.ILLEGAL_ARGUMENT.getName(), e.getErrorCode());
+//            assertTrue(e.getMessage().contains("Code1111"));
+//        }   
+//    }
+//    
+//    @Test
+//    public void testCreateDimensionErrorValueChildrenDuplicated() throws Exception  {
+//        
+//        DimensionDto dimensionDto1 = mockDimensionDto("Dimension 1", true);
+//        dimensionDto1.getValues().get(0).getChildren().get(0).setCode("Code1111");
+//        dimensionDto1.getValues().get(0).getChildren().get(1).setCode("Code1111");
+//        String datasetUri = DATASET_1_PROVIDER_4;
+//
+//        try {
+//            dsdService.createDimension(getServiceContext(), datasetUri, dimensionDto1);
+//            fail("Value duplicated");
+//        } catch (ApplicationException e) {
+//            assertEquals(DsdExceptionCodeEnum.ILLEGAL_ARGUMENT.getName(), e.getErrorCode());
+//            assertTrue(e.getMessage().contains("Code1111"));
+//        }   
+//    }
 
     @Override
     protected String getDataSetFile() {
@@ -1305,6 +1442,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
         tables.add("TBL_LOCALISED_STRINGS");
+        tables.add("TBL_DIMENSIONS");
         tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
         tables.add("TBL_INDICATORS_SYSTEMS");
         tables.add("TBL_INTERNATIONAL_STRINGS");
@@ -1318,6 +1456,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         sequences.add("SEQ_L10NSTRS");
         sequences.add("SEQ_INDIC_SYSTEMS_VERSIONS");
         sequences.add("SEQ_INDICATORS_SYSTEMS");
+        sequences.add("SEQ_DIMENSIONS");
         return sequences;
     }
 }

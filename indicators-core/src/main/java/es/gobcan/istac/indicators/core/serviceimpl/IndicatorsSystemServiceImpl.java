@@ -6,6 +6,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
@@ -23,7 +24,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
 
     @Override
     public IndicatorsSystemVersion createIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException {
-        
+       
         // Save indicator
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
         
@@ -97,5 +98,10 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     @Override
     public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uri, IndicatorsSystemStateEnum state) throws MetamacException {
         return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uri, state);
+    }
+
+    @Override
+    public Dimension createDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
+        return getDimensionRepository().save(dimension);
     }
 }
