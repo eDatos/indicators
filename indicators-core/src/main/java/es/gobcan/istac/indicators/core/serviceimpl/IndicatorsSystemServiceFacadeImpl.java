@@ -44,6 +44,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
     /**
      * TODO Devolver una uri, en lugar del uuid (ojo! uris rests?)
+     * TODO qué datos se almacenarán? Los sistemas de indicadores se obtienen desde Gopestat, y aquí se almacenan como "referencias" a ellas
      */
     public IndicatorsSystemDto createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
 
@@ -107,6 +108,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         return indicatorsSystemDto;
     }
 
+    // TODO comprobar que borra dimensiones, instancias de indicadores. No borra indicadores asociados mediante instancias de indicadores
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
