@@ -46,9 +46,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setArchiveUser(source.getArchiveUser());
 
         target.setCreatedBy(source.getCreatedBy());
-        target.setCreatedDate(source.getCreatedDate().toDate());
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
         target.setLastUpdatedBy(source.getLastUpdatedBy());
-        target.setLastUpdated(source.getLastUpdated().toDate());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         return target;
     }
