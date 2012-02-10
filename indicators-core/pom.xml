@@ -192,6 +192,10 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.siemac.metamac</groupId>
+			<artifactId>metamac-common-test</artifactId>
+		</dependency>		
 	</dependencies>
 
 	<build>

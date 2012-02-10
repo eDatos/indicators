@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.MetamacBaseTests;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,11 +29,10 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
  * Spring based transactional test with DbUnit support.
- * TODO extender de MetamacBaseTests
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests implements IndicatorsSystemServiceFacadeTestBase {
+public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implements IndicatorsSystemServiceFacadeTestBase {
 
     @Autowired
     protected IndicatorsSystemServiceFacade indicatorsSystemServiceFacade;
