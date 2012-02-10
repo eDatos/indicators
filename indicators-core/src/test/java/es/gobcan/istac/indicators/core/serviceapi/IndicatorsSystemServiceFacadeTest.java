@@ -54,139 +54,6 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     private static String                   INDICATORS_SYSTEM_1_DIMENSION_1 = "IndSys-1-v2-Dimension-1";
 
     @Test
-    public void testCreateIndicatorsSystem() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUri(IndicatorsMocks.mockString(100));
-        indicatorsSystemDto.setObjetive(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalString());
-
-        // Create
-        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-
-        // Validate
-        assertNotNull(indicatorsSystemDtoCreated);
-        assertNotNull(indicatorsSystemDtoCreated.getUuid());
-        assertNotNull(indicatorsSystemDtoCreated.getVersionNumber());
-        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), indicatorsSystemDtoCreated.getUuid(),
-                indicatorsSystemDtoCreated.getVersionNumber());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoCreated.getState());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoRetrieved.getState());
-        assertEquals("1.000", indicatorsSystemDtoRetrieved.getProductionVersion());
-        assertNull(indicatorsSystemDtoRetrieved.getDiffusionVersion());
-        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationDate());
-        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationUser());
-        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationDate());
-        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationUser());
-        assertNull(indicatorsSystemDtoRetrieved.getPublicationDate());
-        assertNull(indicatorsSystemDtoRetrieved.getPublicationUser());
-        assertNull(indicatorsSystemDtoRetrieved.getArchiveDate());
-        assertNull(indicatorsSystemDtoRetrieved.getArchiveUser());
-
-        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoRetrieved);
-
-        // Validate audit
-        assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getCreatedBy());
-        assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getCreatedDate()));
-        assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getLastUpdated()));
-        assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getLastUpdatedBy());
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemCodeRequired() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(null);
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-
-        try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("code required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemTitleRequired() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(null);
-
-        try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("title required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemCodeDuplicated() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode("CoDe-1");
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-
-        try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("code duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemUriDuplicated() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUri("http://indicators-sytems/1");
-
-        try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("uri duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemDto.getUri(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemCodeDuplicatedInsensitive() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode("CoDe-1");
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-
-        try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("code duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -338,6 +205,139 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     }
 
     @Test
+    public void testCreateIndicatorsSystem() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setUri(IndicatorsMocks.mockString(100));
+        indicatorsSystemDto.setObjetive(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalString());
+
+        // Create
+        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+
+        // Validate
+        assertNotNull(indicatorsSystemDtoCreated);
+        assertNotNull(indicatorsSystemDtoCreated.getUuid());
+        assertNotNull(indicatorsSystemDtoCreated.getVersionNumber());
+        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), indicatorsSystemDtoCreated.getUuid(),
+                indicatorsSystemDtoCreated.getVersionNumber());
+        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoCreated.getState());
+        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoRetrieved.getState());
+        assertEquals("1.000", indicatorsSystemDtoRetrieved.getProductionVersion());
+        assertNull(indicatorsSystemDtoRetrieved.getDiffusionVersion());
+        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getProductionValidationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getDiffusionValidationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getPublicationDate());
+        assertNull(indicatorsSystemDtoRetrieved.getPublicationUser());
+        assertNull(indicatorsSystemDtoRetrieved.getArchiveDate());
+        assertNull(indicatorsSystemDtoRetrieved.getArchiveUser());
+
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoRetrieved);
+
+        // Validate audit
+        assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getCreatedBy());
+        assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getCreatedDate()));
+        assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getLastUpdated()));
+        assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getLastUpdatedBy());
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemCodeRequired() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(null);
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        try {
+            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("code required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemTitleRequired() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setTitle(null);
+
+        try {
+            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("title required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemCodeDuplicated() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode("CoDe-1");
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        try {
+            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorsSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemUriDuplicated() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setUri("http://indicators-sytems/1");
+
+        try {
+            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("uri duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorsSystemDto.getUri(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemCodeDuplicatedInsensitive() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode("CoDe-1");
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        try {
+            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorsSystemDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testDeleteIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -451,7 +451,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
         assertTrue(indicatorsSystemDtoUpdated.getLastUpdated().after(indicatorsSystemDtoUpdated.getCreatedDate()));
     }
-    
+
     @Test
     public void testUpdateIndicatorsSystemInRejectedValidation() throws Exception {
 
@@ -471,7 +471,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
-    
+
     @Test
     public void testUpdateIndicatorsSystemInProductionValidation() throws Exception {
 
@@ -490,7 +490,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
-    }    
+    }
 
     @Test
     public void testUpdateIndicatorsSystemInDiffusionValidation() throws Exception {
@@ -645,7 +645,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertNull(indicatorsSystemDtoV2.getArchiveUser());
         }
     }
-    
+
     @Test
     public void testSendIndicatorsSystemToProductionValidationInStateRejected() throws Exception {
 
@@ -1349,31 +1349,31 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Retrieve last versions...
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystems(getServiceContext());
         assertEquals(9, indicatorsSystemsDto.size());
-        
+
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(0).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_2, indicatorsSystemsDto.get(1).getUuid());
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(1).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_4, indicatorsSystemsDto.get(3).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemsDto.get(3).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_5, indicatorsSystemsDto.get(4).getUuid());
         assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(4).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(5).getUuid());
         assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(5).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_7, indicatorsSystemsDto.get(6).getUuid());
         assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(6).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_8, indicatorsSystemsDto.get(7).getUuid());
         assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemsDto.get(7).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(8).getUuid());
         assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getState());
     }
@@ -1384,13 +1384,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
         assertEquals(3, indicatorsSystemsDto.size());
-        
+
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(0).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(1).getState());
-        
+
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
     }
@@ -1540,7 +1540,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(DIMENSION_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateDimensionSubdimensionErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
 
@@ -1559,7 +1559,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsSystemServiceFacadeTest.xml";
