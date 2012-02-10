@@ -114,7 +114,57 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(versionNumberProduction, indicatorsSystemDto.getProductionVersion());
         }
     }
+    
+    @Test
+    public void testRetrieveIndicatorsSystemErrorParameterRequired() throws Exception {
 
+        String uuid = null;
+
+        try {
+            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }    
+
+    @Test
+    public void testRetrieveIndicatorsSystemErrorNotExists() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_NOT_EXISTS;
+
+        try {
+            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveIndicatorsSystemErrorVersionNotExists() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_2;
+        String versionNotExists = String.valueOf(99);
+
+        try {
+            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNotExists);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(versionNotExists, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
     @Test
     public void testRetrieveIndicatorsSystemPublished() throws Exception {
 
@@ -153,38 +203,20 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-
+    
     @Test
-    public void testRetrieveIndicatorsSystemErrorNotExists() throws Exception {
+    public void testRetrieveIndicatorsSystemPublishedErrorParameterRequired() throws Exception {
 
-        String uuid = INDICATORS_SYSTEM_NOT_EXISTS;
+        String uuid = null;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
-            fail("No exists");
+            indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+            fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorsSystemErrorVersionNotExists() throws Exception {
-
-        String uuid = INDICATORS_SYSTEM_2;
-        String versionNotExists = String.valueOf(99);
-
-        try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNotExists);
-            fail("No exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
-            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(versionNotExists, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1394,6 +1426,50 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
     }
+    
+    @Override
+    @Test
+    public void testRetrieveDimension() throws Exception {
+        
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), INDICATORS_SYSTEM_1_DIMENSION_1);
+        
+        assertNotNull(dimensionDto);
+        assertEquals(INDICATORS_SYSTEM_1_DIMENSION_1, dimensionDto.getUuid());
+        assertNull(dimensionDto.getParentDimensionUuid());
+        IndicatorsAsserts.assertEqualsInternationalString(dimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1", "en", "Title IndSys-1-v2-Dimension-1");
+        
+        // Subdimensions  
+        assertEquals(2, dimensionDto.getSubdimensions().size());
+        
+        {
+            DimensionDto subdimensionDto = dimensionDto.getSubdimensions().get(0);
+            assertEquals("IndSys-1-v2-Dimension-1A", subdimensionDto.getUuid());
+            assertEquals("IndSys-1-v2-Dimension-1", subdimensionDto.getParentDimensionUuid());
+            IndicatorsAsserts.assertEqualsInternationalString(subdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1A", "en", "Title IndSys-1-v2-Dimension-1A");
+            assertEquals(0, subdimensionDto.getSubdimensions().size());
+        }
+        {
+            DimensionDto subdimensionDto = dimensionDto.getSubdimensions().get(1);
+            assertEquals("IndSys-1-v2-Dimension-1B", subdimensionDto.getUuid());
+            assertEquals("IndSys-1-v2-Dimension-1", subdimensionDto.getParentDimensionUuid());
+            IndicatorsAsserts.assertEqualsInternationalString(subdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1B", "en", "Title IndSys-1-v2-Dimension-1B");
+            assertEquals(1, subdimensionDto.getSubdimensions().size());
+            
+            // Subdimensions
+            {
+                DimensionDto subsubdimensionDto = subdimensionDto.getSubdimensions().get(0);
+                assertEquals("IndSys-1-v2-Dimension-1BA", subsubdimensionDto.getUuid());
+                assertEquals("IndSys-1-v2-Dimension-1B", subsubdimensionDto.getParentDimensionUuid());
+                IndicatorsAsserts.assertEqualsInternationalString(subsubdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1BA", "en", "Title IndSys-1-v2-Dimension-1BA");
+                assertEquals(0, subsubdimensionDto.getSubdimensions().size());
+            }               
+        }
+    }
+    
+    @Test
+    public void testRetrieveDimensionErrorNotExists() throws Exception {
+        fail("pendiente");
+    }
 
     @Override
     @Test
@@ -1449,6 +1525,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // List<DimensionDto> dimensionsDtoSize1 = dsdService.retrieveDimensions(getServiceContext(), datasetUri);
         // assertEquals(2, dimensionsDtoSize1.size());
         // assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
+    }
+    
+    @Test
+    public void testCreateDimensionSubSubdimension() throws Exception {
+        fail("pendiente");
     }
 
     @Test

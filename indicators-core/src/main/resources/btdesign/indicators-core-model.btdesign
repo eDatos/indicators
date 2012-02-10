@@ -40,7 +40,7 @@ Application Indicators {
 	    	> @IndicatorsSystemService
 	    	
 	    	// INDICATORS SYSTEMS
-	    	"Creates a indicator system in draft"
+	    	"Creates an indicator system in draft"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
 	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
@@ -70,6 +70,8 @@ Application Indicators {
 	    	// DIMENSIONS
 	    	"Creates a dimension"
 	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
+	    	"Retrieves dimension"
+	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    }    	
 
 	    // ----------------------------------------------------------------
@@ -166,11 +168,12 @@ Application Indicators {
             - @InternationalString title not nullable cascade="all" databaseColumn="TITLE_FK";
 
 			// Relations
+            "Parent dimension"
+            - @Dimension parent cascade="none" databaseColumn="PARENT_FK" nullable;
 			"Subdimensions"
-			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="id asc";
+			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="id asc" ;
             "Indicators system version"
-			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> dimensions;
-            
+			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> dimensions;
             
 			"Provides access to Dimension"
             Repository DimensionRepository {

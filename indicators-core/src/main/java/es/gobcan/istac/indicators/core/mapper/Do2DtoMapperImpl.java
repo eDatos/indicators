@@ -57,6 +57,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public DimensionDto dimensionDoToDto(Dimension source) {
         DimensionDto target = new DimensionDto();
         target.setUuid(source.getUuid());
+        target.setParentDimensionUuid(source.getParent() != null ? source.getParent().getUuid() : null);
         target.setTitle(internationalStringToDto(source.getTitle()));
         for (Dimension dimensionChildren : source.getSubdimensions()) {
             target.getSubdimensions().add(dimensionDoToDto(dimensionChildren));

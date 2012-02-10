@@ -98,9 +98,9 @@
 					UUID="IndSys-1-v2-Dimension-1"
 					TITLE_FK="20"
 					PARENT_FK="[null]"
-					VERSION="1"
 					INDICATORS_SYSTEM_VERSION_FK="2"
 					
+					VERSION="1"
 					CREATED_BY="user1"
 					CREATED_DATE="2011-03-03 01:02:04"
 					CREATED_DATE_TZ="Europe/London"
@@ -108,6 +108,70 @@
 					LAST_UPDATED="2011-03-3 01:02:04"
 					LAST_UPDATED_TZ="Europe/London"
 				/>
+				
+						<TBL_DIMENSIONS
+							ID="2"
+							UUID="IndSys-1-v2-Dimension-1A"
+							TITLE_FK="21"
+							PARENT_FK="1"
+							INDICATORS_SYSTEM_VERSION_FK="[null]"
+							
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-03-03 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-03-3 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>		
+						
+						<TBL_DIMENSIONS
+							ID="3"
+							UUID="IndSys-1-v2-Dimension-1B"
+							TITLE_FK="22"
+							PARENT_FK="1"
+							INDICATORS_SYSTEM_VERSION_FK="[null]"
+							
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-03-03 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-03-3 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"						
+						/>			
+						
+								<TBL_DIMENSIONS
+									ID="4"
+									UUID="IndSys-1-v2-Dimension-1BA"
+									TITLE_FK="23"
+									PARENT_FK="3"
+									INDICATORS_SYSTEM_VERSION_FK="[null]"
+									
+									VERSION="1"
+									CREATED_BY="user1"
+									CREATED_DATE="2011-03-03 01:02:04"
+									CREATED_DATE_TZ="Europe/London"
+									LAST_UPDATED_BY="user2"
+									LAST_UPDATED="2011-03-3 01:02:04"
+									LAST_UPDATED_TZ="Europe/London"
+								/>							
+				
+				<TBL_DIMENSIONS
+					ID="5"
+					UUID="IndSys-1-v2-Dimension-2"
+					TITLE_FK="24"
+					PARENT_FK="[null]"
+					INDICATORS_SYSTEM_VERSION_FK="2"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>	
 
   
 	<!-- **************************************************************************************	-->
@@ -1095,7 +1159,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="35"
-		LABEL="Título"
+		LABEL="Título IndSys-1-v2-Dimension-1"
 		LOCALE="es"
 		UUID="IS-20-LS-1"
 		VERSION="1"
@@ -1104,11 +1168,107 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="36"
-		LABEL="Title"
+		LABEL="Title IndSys-1-v2-Dimension-1"
 		LOCALE="en"
 		UUID="IS-20-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="20"
-	/>				
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="21"
+		UUID="IS-21"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="37"
+		LABEL="Título IndSys-1-v2-Dimension-1A"
+		LOCALE="es"
+		UUID="IS-21-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="21"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="38"
+		LABEL="Title IndSys-1-v2-Dimension-1A"
+		LOCALE="en"
+		UUID="IS-21-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="21"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="22"
+		UUID="IS-22"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="39"
+		LABEL="Título IndSys-1-v2-Dimension-1B"
+		LOCALE="es"
+		UUID="IS-22-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="22"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="40"
+		LABEL="Title IndSys-1-v2-Dimension-1B"
+		LOCALE="en"
+		UUID="IS-22-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="22"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="23"
+		UUID="IS-23"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="41"
+		LABEL="Título IndSys-1-v2-Dimension-1BA"
+		LOCALE="es"
+		UUID="IS-23-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="23"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="42"
+		LABEL="Title IndSys-1-v2-Dimension-1BA"
+		LOCALE="en"
+		UUID="IS-23-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="23"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="24"
+		UUID="IS-24"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="43"
+		LABEL="Título IndSys-1-v2-Dimension-2"
+		LOCALE="es"
+		UUID="IS-24-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="24"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="44"
+		LABEL="Title IndSys-1-v2-Dimension-2"
+		LOCALE="en"
+		UUID="IS-24-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="24"
+	/>							
 					
 </dataset>

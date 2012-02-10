@@ -22,8 +22,8 @@ public class InvocationValidator {
         }
         
         checkIndicatorsSystem(indicatorsSystemDto, exceptions);
-        checkMetadataEmpty(indicatorsSystemDto.getUuid(), "UUID", exceptions);
-        checkMetadataEmpty(indicatorsSystemDto.getVersionNumber(), "VERSION_NUMBER", exceptions);
+        checkMetadataEmpty(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions);
+        checkMetadataEmpty(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
         
         throwIfException(exceptions);
     }
@@ -34,9 +34,9 @@ public class InvocationValidator {
         }
         
         checkIndicatorsSystem(indicatorsSystemDto, exceptions);
-        checkMetadataRequired(indicatorsSystemDto.getUuid(), "UUID", exceptions);
-        checkMetadataRequired(indicatorsSystemDto.getVersionNumber(), "VERSION_NUMBER", exceptions);
-        checkMetadataUnmodifiable(indicatorsSystemInProduction.getIndicatorsSystem().getCode(), indicatorsSystemDto.getCode(), "CODE", exceptions);
+        checkMetadataRequired(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions);
+        checkMetadataRequired(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
+        checkMetadataUnmodifiable(indicatorsSystemInProduction.getIndicatorsSystem().getCode(), indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
         
         throwIfException(exceptions);
     }
@@ -46,7 +46,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         // version is optional
         
         throwIfException(exceptions);
@@ -57,7 +57,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);
     }
@@ -68,7 +68,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);
     }
@@ -79,7 +79,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -90,7 +90,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -101,7 +101,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -112,7 +112,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -123,7 +123,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -134,8 +134,8 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(uuid, "UUID", exceptions);
-        checkMetadataRequired(versionType, "VERSION_TYPE", exceptions);
+        checkParameterRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(versionType, "VERSION_TYPE", exceptions);
         
         throwIfException(exceptions);        
     }
@@ -162,22 +162,31 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-
-
     public static void checkCreateDimension(String indicatorsSystemUuid, DimensionDto dimensionDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
-        checkMetadataRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
+        checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
         checkDimension(dimensionDto, exceptions);
         checkMetadataEmpty(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
         checkMetadataEmpty(dimensionDto.getSubdimensions(), "DIMENSION.SUBDIMENSIONS", exceptions);
 
         throwIfException(exceptions);
+    }
+
+    public static void checkRetrieveDimension(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(uuid, "UUID", exceptions);
+
+        throwIfException(exceptions);
     }
     
+    @SuppressWarnings("rawtypes")
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter == null) {
             return;
@@ -188,22 +197,25 @@ public class InvocationValidator {
     }
     
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
+        checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
         checkMetadataRequired(indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
         checkMetadataRequired(indicatorsSystemDto.getTitle(), "INDICATORS_SYSTEM.TITLE", exceptions);
     }
 
     private static void checkDimension(DimensionDto dimensionDto, List<MetamacExceptionItem> exceptions) {
+        checkParameterRequired(dimensionDto, "DIMENSION", exceptions);
         checkMetadataRequired(dimensionDto.getTitle(), "DIMENSION.TITLE", exceptions);
     }
     
-    @SuppressWarnings("rawtypes")
+    private static void checkParameterRequired(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if (isEmpty(parameter)) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getMessageForReasonType(), parameterName));            
+        }
+    }
+    
     private static void checkMetadataRequired(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
-        if (parameter == null) {
+        if (isEmpty(parameter)) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getMessageForReasonType(), parameterName));            
-        } else if ((String.class.isInstance(parameter) && StringUtils.isBlank((String) parameter)) ||
-                   (List.class.isInstance(parameter) && ((List) parameter).size() == 0) ||
-                   (Set.class.isInstance(parameter) && ((Set) parameter).size() == 0)) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getMessageForReasonType(), parameterName));
         }
     }
 
@@ -218,5 +230,17 @@ public class InvocationValidator {
         if (exceptions != null && !exceptions.isEmpty()) {
             throw new MetamacException(exceptions);
         }
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private static Boolean isEmpty(Object parameter) {
+        if (parameter == null) {
+            return Boolean.TRUE;
+        } else if ((String.class.isInstance(parameter) && StringUtils.isBlank((String) parameter)) ||
+                   (List.class.isInstance(parameter) && ((List) parameter).size() == 0) ||
+                   (Set.class.isInstance(parameter) && ((Set) parameter).size() == 0)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 }

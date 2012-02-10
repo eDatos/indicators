@@ -368,7 +368,21 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
     }
+    
+    @Override
+    public DimensionDto retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
+        // Validation of parameters
+        InvocationValidator.checkRetrieveDimension(uuid, null);
+
+        // Retrieve
+        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
+        return dimensionDto;   
+    }
+
+    // TODO updateDimension: no permitir cambiar de dimensión padre ni el orden
+    
     private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
 
         if (actualVersionNumber == null) {
