@@ -336,7 +336,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
     
     @Override
-    public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
+    public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto, String parentDimensionUuid) throws MetamacException {
         
         // Validation of parameters
         InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimensionDto, null);
@@ -351,10 +351,11 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         
         // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
         Dimension dimensionParent = null;
-        if (dimensionDto.getParentDimensionUuid() != null) {
-            dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
-            if (!dimensionParent.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
+        if (parentDimensionUuid != null) {
+            dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, parentDimensionUuid);
+            // TODO cómo comprobar que pertenece al sistema de indicadores cuando se engancha a una subdimensión. Añadir columna con uuid de indicatorSystemUuid de la version ?
+            if (dimensionParent.getIndicatorsSystemVersion() != null && !dimensionParent.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), parentDimensionUuid, indicatorsSystemUuid);
             }
             dimensionParent.addSubdimension(dimension);
             getIndicatorsSystemService().updateDimension(ctx, dimensionParent);

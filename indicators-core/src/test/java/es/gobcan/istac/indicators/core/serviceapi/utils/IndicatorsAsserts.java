@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 /**
@@ -23,6 +24,12 @@ public class IndicatorsAsserts {
         assertEquals(expected.getUri(), actual.getUri());
         assertEqualsInternationalString(expected.getObjetive(), actual.getObjetive());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+    }
+    
+
+
+    public static void assertEqualsDimension(DimensionDto expected, DimensionDto actual) {
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());        
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {

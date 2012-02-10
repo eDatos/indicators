@@ -69,7 +69,7 @@ Application Indicators {
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"
-	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
+	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto, String parentDimensionUuid) throws MetamacException;
 	    	"Retrieves dimension"
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    }    	
@@ -159,6 +159,8 @@ Application Indicators {
 			}
 		} 
 		
+		// Note: We not put relation @Dimension parent because Sculptor generates a wrong constraint when this is combined with Bag<@Dimension> subdimensions
+		// If it is necesary, obtain parent with a query
         "Dimension of indicators system"
         Entity Dimension {
         	databaseTable = "TBL_DIMENSIONS"
@@ -168,8 +170,6 @@ Application Indicators {
             - @InternationalString title not nullable cascade="all" databaseColumn="TITLE_FK";
 
 			// Relations
-            "Parent dimension"
-            - @Dimension parent cascade="none" databaseColumn="PARENT_FK" nullable;
 			"Subdimensions"
 			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="id asc" ;
             "Indicators system version"
@@ -276,8 +276,6 @@ Application Indicators {
 			String uuid;
 			"Title"
 			- @InternationalStringDto title;
-			"Parent dimension"
-			String parentDimensionUuid;
        		"Subdimensions"
        		- List<@DimensionDto> subdimensions;            
 	    }
