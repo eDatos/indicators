@@ -54,8 +54,8 @@ Application Indicators {
 	    	sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
 	    	"Sends indicators system to diffusion validation"
 	    	sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
-	    	"Refuses validation of indicators system"
-	    	refuseIndicatorsSystemValidation(String uuid) throws MetamacException;
+	    	"Rejects validation of indicators system"
+	    	rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
@@ -295,6 +295,8 @@ Application Indicators {
     		PRODUCTION_VALIDATION,
     		"Pending of diffusion validation"
     		DIFFUSION_VALIDATION,
+    		"Validation rejected"
+    		VALIDATION_REJECTED,
     		"Published"
     		PUBLISHED,
     		"Archived"
@@ -305,7 +307,7 @@ Application Indicators {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
-    		VALIDATION_REFUSED,
+    		VALIDATION_REJECTED,
     		PUBLISHED,
     		ARCHIVED
     	}	

@@ -158,9 +158,9 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Retrieve version in draft
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState())) {
+        if (indicatorsSystemInProduction == null || (!IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getState()))) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(),
-                    uuid, IndicatorsSystemStateEnum.DRAFT);
+                    uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DRAFT, IndicatorsSystemStateEnum.VALIDATION_REJECTED});
         }
 
         // Update state
@@ -191,10 +191,10 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     @Override
-    public void refuseIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public void rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRefuseIndicatorsSystemValidation(uuid, null);
+        InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
 
         // Retrieve version in production (state can be production or diffusion validation)
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
@@ -206,7 +206,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         }
 
         // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.VALIDATION_REJECTED);
         indicatorsSystemInProduction.setProductionValidationDate(null);
         indicatorsSystemInProduction.setProductionValidationUser(null);
         indicatorsSystemInProduction.setDiffusionValidationDate(null);

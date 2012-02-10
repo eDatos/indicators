@@ -46,6 +46,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     private static String                   INDICATORS_SYSTEM_6             = "IndSys-6";
     private static String                   INDICATORS_SYSTEM_7             = "IndSys-7";
     private static String                   INDICATORS_SYSTEM_8             = "IndSys-8";
+    private static String                   INDICATORS_SYSTEM_9             = "IndSys-9";
     private static String                   INDICATORS_SYSTEM_NOT_EXISTS    = "IndSys-not-exists";
 
     // Dimensions
@@ -450,7 +451,27 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
         assertTrue(indicatorsSystemDtoUpdated.getLastUpdated().after(indicatorsSystemDtoUpdated.getCreatedDate()));
     }
+    
+    @Test
+    public void testUpdateIndicatorsSystemInRejectedValidation() throws Exception {
 
+        String uuid = INDICATORS_SYSTEM_9;
+        String versionNumber = "1.000";
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        // Update
+        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+
+        // Validation
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDtoUpdated.getState());
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
+    }
+    
     @Test
     public void testUpdateIndicatorsSystemInProductionValidation() throws Exception {
 
@@ -467,6 +488,27 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
         // Validation
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoUpdated.getState());
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
+    }    
+
+    @Test
+    public void testUpdateIndicatorsSystemInDiffusionValidation() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_5;
+        String versionNumber = "1.000";
+
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        // Update
+        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+
+        // Validation
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
@@ -603,6 +645,31 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertNull(indicatorsSystemDtoV2.getArchiveUser());
         }
     }
+    
+    @Test
+    public void testSendIndicatorsSystemToProductionValidationInStateRejected() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_9;
+        String productionVersion = "1.000";
+
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
+            assertNull(indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+        }
+
+        // Sends to production validation
+        indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
+
+        // Validation
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
+            assertNull(indicatorsSystemDto.getDiffusionVersion());
+            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
+        }
+    }
 
     @Test
     public void testSendIndicatorsSystemToProductionValidationErrorNotExists() throws Exception {
@@ -637,7 +704,9 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+
         }
     }
 
@@ -740,7 +809,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
     @Override
     @Test
-    public void testRefuseIndicatorsSystemValidation() throws Exception {
+    public void testRejectIndicatorsSystemValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_4;
         String versionNumber = "1.000";
@@ -752,15 +821,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
         }
 
-        // Refuses validation
-        indicatorsSystemServiceFacade.refuseIndicatorsSystemValidation(getServiceContext(), uuid);
+        // Rejects validation
+        indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
 
         // Validation
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
 
             assertNull(indicatorsSystemDto.getProductionValidationDate());
             assertNull(indicatorsSystemDto.getProductionValidationUser());
@@ -774,7 +843,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     }
 
     @Test
-    public void testRefuseIndicatorsSystemValidationInDiffusionValidation() throws Exception {
+    public void testRejectIndicatorsSystemValidationInDiffusionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_5;
         String versionNumber = "1.000";
@@ -786,23 +855,23 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
         }
 
-        // Refuses validation
-        indicatorsSystemServiceFacade.refuseIndicatorsSystemValidation(getServiceContext(), uuid);
+        // Rejects validation
+        indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
 
         // Validation
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
         }
     }
 
     @Test
-    public void testRefuseIndicatorsSystemValidationErrorNotExists() throws Exception {
+    public void testRejectIndicatorsSystemValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.refuseIndicatorsSystemValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -813,7 +882,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     }
 
     @Test
-    public void testRefuseIndicatorsSystemValidationErrorWrongStateProduction() throws Exception {
+    public void testRejectIndicatorsSystemValidationErrorWrongStateProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
@@ -825,7 +894,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         }
 
         try {
-            indicatorsSystemServiceFacade.refuseIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -838,7 +907,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
     }
 
     @Test
-    public void testRefuseIndicatorsSystemValidationErrorWrongStateDiffusion() throws Exception {
+    public void testRejectIndicatorsSystemValidationErrorWrongStateDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
@@ -850,7 +919,7 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
         }
 
         try {
-            indicatorsSystemServiceFacade.refuseIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1279,15 +1348,34 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
         // Retrieve last versions...
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystems(getServiceContext());
-        assertEquals(8, indicatorsSystemsDto.size());
+        assertEquals(9, indicatorsSystemsDto.size());
+        
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(0).getState());
+        
         assertEquals(INDICATORS_SYSTEM_2, indicatorsSystemsDto.get(1).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(1).getState());
+        
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(2).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
+        
         assertEquals(INDICATORS_SYSTEM_4, indicatorsSystemsDto.get(3).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemsDto.get(3).getState());
+        
         assertEquals(INDICATORS_SYSTEM_5, indicatorsSystemsDto.get(4).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(4).getState());
+        
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(5).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(5).getState());
+        
         assertEquals(INDICATORS_SYSTEM_7, indicatorsSystemsDto.get(6).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(6).getState());
+        
         assertEquals(INDICATORS_SYSTEM_8, indicatorsSystemsDto.get(7).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemsDto.get(7).getState());
+        
+        assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(8).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getState());
     }
 
     @Override
@@ -1296,9 +1384,15 @@ public class IndicatorsSystemServiceFacadeTest extends IndicatorsBaseTests imple
 
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
         assertEquals(3, indicatorsSystemsDto.size());
+        
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(0).getState());
+        
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(1).getState());
+        
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
+        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
     }
 
     @Override

@@ -95,7 +95,7 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-    public static void checkRefuseIndicatorsSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRejectIndicatorsSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();

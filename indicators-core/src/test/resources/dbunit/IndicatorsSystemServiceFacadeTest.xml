@@ -96,7 +96,7 @@
 				<TBL_DIMENSIONS
 					ID="1"
 					UUID="IndSys-1-v2-Dimension-1"
-					TITLE_FK="18"
+					TITLE_FK="20"
 					PARENT_FK="[null]"
 					VERSION="1"
 					INDICATORS_SYSTEM_VERSION_FK="2"
@@ -570,7 +570,63 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>									
+			/>	
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATORS SYSTEM 9											                      	-->
+	<!--		- Version 1: validation rejected												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS_SYSTEMS
+		ID="9"
+		UUID="IndSys-9"
+		CODE="CODE-9"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDIC_SYSTEMS_VERSIONS
+				ID="12"
+				UUID="IndSys-9-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="18"
+				ACRONYM_FK="[null]"
+	  			OBJETIVE_FK="[null]"
+	  			DESCRIPTION_FK="[null]"
+	  			INDICATORS_SYSTEMS_FK="9"
+	  			STATE="VALIDATION_REJECTED"
+				URI="http://indicators-sytems/9"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>												
 			  			
 			  
 	<!-- ************************************************************************************ -->
@@ -1005,5 +1061,54 @@
 		UUID="IS-18-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="18"
-	/>						
+	/>		
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="19"
+		UUID="IS-19"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="33"
+		LABEL="Título"
+		LOCALE="es"
+		UUID="IS-19-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="19"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="34"
+		LABEL="Title"
+		LOCALE="en"
+		UUID="IS-19-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="19"
+	/>			
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="20"
+		UUID="IS-20"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="35"
+		LABEL="Título"
+		LOCALE="es"
+		UUID="IS-20-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="20"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="36"
+		LABEL="Title"
+		LOCALE="en"
+		UUID="IS-20-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="20"
+	/>				
+					
 </dataset>
