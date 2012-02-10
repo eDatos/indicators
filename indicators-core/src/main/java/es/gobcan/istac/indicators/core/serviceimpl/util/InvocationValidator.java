@@ -185,6 +185,17 @@ public class InvocationValidator {
 
         throwIfException(exceptions);
     }
+
+    public static void checkDeleteDimension(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(uuid, "UUID", exceptions);
+
+        throwIfException(exceptions);
+    }
     
     @SuppressWarnings("rawtypes")
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {

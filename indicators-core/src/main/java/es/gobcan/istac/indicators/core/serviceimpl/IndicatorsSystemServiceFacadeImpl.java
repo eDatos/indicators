@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 
 /**
  * Implementation of IndicatorsSystemServiceFacade.
+ * TODO no extender los DTO de auditableDto, porque tienen el Id
  */
 @Service("indicatorsSystemServiceFacade")
 public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFacadeImplBase {
@@ -38,8 +39,8 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     private Dto2DoMapper        dto2DoMapper;
 
     private static final String VERSION_NUMBER_INITIAL = "1.000";
-    private final NumberFormat formatterMajor = new DecimalFormat("0");
-    private final NumberFormat formatterMinor = new DecimalFormat("000");
+    private final NumberFormat  formatterMajor         = new DecimalFormat("0");
+    private final NumberFormat  formatterMinor         = new DecimalFormat("000");
 
     public IndicatorsSystemServiceFacadeImpl() {
     }
@@ -158,7 +159,8 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Retrieve version in draft
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || (!IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getState()))) {
+        if (indicatorsSystemInProduction == null
+                || (!IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getState()))) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(),
                     uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DRAFT, IndicatorsSystemStateEnum.VALIDATION_REJECTED});
         }
@@ -290,19 +292,19 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
         return indicatorsSystemDto;
     }
-    
+
     // TODO paginación
-    // TODO criteria    
+    // TODO criteria
     // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkFindIndicatorsSystems(null);
-        
+
         // Find
         List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemService().findIndicatorsSystems(ctx, null);
-        
+
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
         for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
@@ -316,16 +318,16 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     // TODO paginación
-    // TODO criteria    
+    // TODO criteria
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkFindIndicatorsSystemsPublished(null);
 
         // Retrieve published
         List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
-        
+
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
         for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
@@ -334,13 +336,13 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         return indicatorsSystemsDto;
     }
-    
+
     @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimensionDto, null);
-        
+
         // Retrieve indicators system version and check it is in production
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
 
@@ -348,41 +350,39 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         Dimension dimension = dto2DoMapper.dimensionDtoToDo(dimensionDto);
         dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
         dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
-        
+
         // Create dimension, adding to indicators system or to parent dimension
         if (dimensionDto.getParentDimensionUuid() == null) {
             // Create dimension
             dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
- 
+
             // Update indicators system adding dimension
             indicatorsSystemVersion.addDimension(dimension);
             getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-            
+
         } else {
             // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
             Dimension dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
             // Check dimension parent belogs to indicators system provided
-            Dimension dimensionParentToCheckIndicatorsSystem = dimensionParent;
-            while (dimensionParentToCheckIndicatorsSystem.getIndicatorsSystemVersion() == null) {
-                dimensionParentToCheckIndicatorsSystem = dimensionParentToCheckIndicatorsSystem.getParent();
-            }
-            if (!dimensionParentToCheckIndicatorsSystem.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
+            IndicatorsSystemVersion indicatorsSystemVersionOfDimensionParent = retrieveIndicatorSystemVersionOfDimension(dimensionParent);
+            if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(),
+                        ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
             }
             // Create subdimension
             dimension.setParent(dimensionParent);
             dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
-            
+
             // Add subdimension to parent dimension
             dimensionParent.addSubdimension(dimension);
             getIndicatorsSystemService().updateDimension(ctx, dimensionParent);
-        }       
-        
+        }
+
         // Transform to Dto to return
         dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
     }
-    
+
     @Override
     public DimensionDto retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -392,23 +392,32 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Retrieve
         Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
         DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
-        return dimensionDto;   
+        return dimensionDto;
     }
-    
+
     @Override
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
-        // TODO Auto-generated method stub
+
+        // Validation of parameters
+        InvocationValidator.checkDeleteDimension(uuid, null);
+
+        // Check indicators system state
+        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorSystemVersionOfDimension(dimension);
+        checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
         
+        // Delete
+        getIndicatorsSystemService().deleteDimension(ctx, dimension);
     }
 
     // TODO updateDimension: no permitir cambiar de dimensión padre ni el orden
-    
+
     private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
 
         if (actualVersionNumber == null) {
             return VERSION_NUMBER_INITIAL;
         }
-        
+
         String[] versionNumberSplited = actualVersionNumber.split("\\.");
         Integer versionNumberMajor = Integer.valueOf(versionNumberSplited[0]);
         Integer versionNumberMinor = Integer.valueOf(versionNumberSplited[1]);
@@ -486,4 +495,23 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             }
         }
     }
+
+    private IndicatorsSystemVersion retrieveIndicatorSystemVersionOfDimension(Dimension dimension) {
+        while (dimension.getIndicatorsSystemVersion() == null) {
+            dimension = dimension.getParent();
+        }
+        return dimension.getIndicatorsSystemVersion();
+    }
+
+    private void checkIndicatorSystemVersionInProduction(IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        IndicatorsSystemStateEnum state = indicatorsSystemVersion.getState();
+        boolean inProduction = IndicatorsSystemStateEnum.DRAFT.equals(state) || IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(state)
+                || IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(state);
+        if (!inProduction) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(),
+                    ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsSystemVersion.getVersionNumber());
+
+        }
+    }
+
 }

@@ -120,7 +120,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     }
 
     @Override
-    public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
-        //getDimensionRepository().
+    public void deleteDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
+        getDimensionRepository().delete(dimension);
     }
 }

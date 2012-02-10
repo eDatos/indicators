@@ -32,7 +32,7 @@ Application Indicators {
 	    	@Dimension createDimension(@Dimension dimension) throws MetamacException;
 	    	@Dimension updateDimension(@Dimension dimension) throws MetamacException;
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
-	    	deleteDimension(String uuid) throws MetamacException;
+	    	deleteDimension(@Dimension dimension) throws MetamacException;
 	    	
     	}
     	
@@ -181,7 +181,7 @@ Application Indicators {
 			"Provides access to Dimension"
             Repository DimensionRepository {
             	@Dimension save(@Dimension entity);
-            	// delete;
+            	delete;
             	protected List<@Dimension> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Dimension findDimension(String uuid);
             }

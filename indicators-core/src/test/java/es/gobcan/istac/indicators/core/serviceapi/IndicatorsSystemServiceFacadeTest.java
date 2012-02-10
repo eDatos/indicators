@@ -55,6 +55,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     private static String                   DIMENSION_NOT_EXISTS             = "Dim-not-exists";
     private static String                   DIMENSION_1_INDICATORS_SYSTEM_1  = "IndSys-1-v2-Dimension-1";
     private static String                   DIMENSION_1A_INDICATORS_SYSTEM_1 = "IndSys-1-v2-Dimension-1A";
+    private static String                   DIMENSION_1B_INDICATORS_SYSTEM_1 = "IndSys-1-v2-Dimension-1B";
+    private static String                   DIMENSION_1BA_INDICATORS_SYSTEM_1 = "IndSys-1-v2-Dimension-1BA";
+    private static String                   DIMENSION_2_INDICATORS_SYSTEM_1  = "IndSys-1-v2-Dimension-2";
+    private static String                   DIMENSION_1_INDICATORS_SYSTEM_3 = "IndSys-3-v1-Dimension-1";
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -406,6 +410,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
         }
 
+        // Retrieve dimensions to check will be deleted
+        List<String> dimensionsUuid = new ArrayList<String>();
+        dimensionsUuid.add(DIMENSION_1_INDICATORS_SYSTEM_1);
+        dimensionsUuid.add(DIMENSION_1A_INDICATORS_SYSTEM_1);
+        dimensionsUuid.add(DIMENSION_1B_INDICATORS_SYSTEM_1);
+        dimensionsUuid.add(DIMENSION_1BA_INDICATORS_SYSTEM_1);
+        dimensionsUuid.add(DIMENSION_2_INDICATORS_SYSTEM_1);
+        for (String dimensionUuid : dimensionsUuid) {
+            DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
+            assertNotNull(dimensionDto);
+        }
+        
         // Delete indicators system
         indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
 
@@ -428,6 +444,19 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("2.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+        
+        // Check dimensions deleted
+        for (String dimensionUuid : dimensionsUuid) {
+            try {
+                indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
+                fail("dimension deleted");
+            } catch (MetamacException e) {
+                assertEquals(1, e.getExceptionItems().size());
+                assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+                assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+                assertEquals(dimensionUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            }
         }
     }
 
@@ -1524,11 +1553,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testCreateDimensionSubdimension() throws Exception {
 
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1;
-        
+
         // Retrieve dimension parent
         DimensionDto dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(2, dimensionDtoParent.getSubdimensions().size());
-        
+
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -1536,7 +1565,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
-        
+
         // Retrieve dimension
         DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
@@ -1560,11 +1589,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testCreateDimensionSubSubdimension() throws Exception {
 
         String parentUuid = DIMENSION_1A_INDICATORS_SYSTEM_1;
-        
+
         // Retrieve dimension parent
         DimensionDto dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(0, dimensionDtoParent.getSubdimensions().size());
-        
+
         // Create subdimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -1572,12 +1601,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
-        
+
         // Validate
         DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDtoCreated, dimensionDtoRetrieved);
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
-        
+
         // Retrieve dimension parent
         dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(1, dimensionDtoParent.getSubdimensions().size());
@@ -1691,15 +1720,74 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testDeleteDimension() throws Exception {
-        fail("pendiente");
+
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1;
+
+        // Retrieve
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(2, dimensionDto.getSubdimensions().size());
+        
+        // Delete dimension
+        indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), uuid);
+
+        // Validation
+        try {
+            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            fail("Dimension deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+        
+        // Check subdimensions deleted
+        for (DimensionDto subdDimensionDto : dimensionDto.getSubdimensions()) {
+            try {
+                indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), subdDimensionDto.getUuid());
+                fail("Subimension deleted");
+            } catch (MetamacException e) {
+                assertEquals(1, e.getExceptionItems().size());
+                assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+                assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+                assertEquals(subdDimensionDto.getUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            }
+        }
     }
     
     @Test
-    public void testDeleteDimensionErrorIndicatorsSystemPublished() throws Exception {
-        fail("pendiente");
+    public void testDeleteDimensionErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
+
+        try {
+            indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_3);
+            fail("Indicators system not in production");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("11.033", e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
+    @Test
+    public void testDeleteDimensionErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), uuid);
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Override
