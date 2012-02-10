@@ -37,6 +37,9 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Autowired
     protected IndicatorsSystemServiceFacade indicatorsSystemServiceFacade;
 
+    private static String                   NOT_EXISTS                      = "not-exists";
+
+    // Indicators systems
     private static String                   INDICATORS_SYSTEM_1             = "IndSys-1";
     private static String                   INDICATORS_SYSTEM_2             = "IndSys-2";
     private static String                   INDICATORS_SYSTEM_3             = "IndSys-3";
@@ -47,7 +50,6 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     private static String                   INDICATORS_SYSTEM_7             = "IndSys-7";
     private static String                   INDICATORS_SYSTEM_8             = "IndSys-8";
     private static String                   INDICATORS_SYSTEM_9             = "IndSys-9";
-    private static String                   INDICATORS_SYSTEM_NOT_EXISTS    = "IndSys-not-exists";
 
     // Dimensions
     private static String                   DIMENSION_NOT_EXISTS            = "Dim-not-exists";
@@ -114,7 +116,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(versionNumberProduction, indicatorsSystemDto.getProductionVersion());
         }
     }
-    
+
     @Test
     public void testRetrieveIndicatorsSystemErrorParameterRequired() throws Exception {
 
@@ -129,12 +131,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
-    }    
+    }
 
     @Test
     public void testRetrieveIndicatorsSystemErrorNotExists() throws Exception {
 
-        String uuid = INDICATORS_SYSTEM_NOT_EXISTS;
+        String uuid = NOT_EXISTS;
 
         try {
             indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
@@ -164,7 +166,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(versionNotExists, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testRetrieveIndicatorsSystemPublished() throws Exception {
 
@@ -203,7 +205,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testRetrieveIndicatorsSystemPublishedErrorParameterRequired() throws Exception {
 
@@ -223,7 +225,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testRetrieveIndicatorsSystemPublishedErrorNotExists() throws Exception {
 
-        String uuid = INDICATORS_SYSTEM_NOT_EXISTS;
+        String uuid = NOT_EXISTS;
 
         try {
             indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
@@ -448,7 +450,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testDeleteIndicatorsSystemErrorNotExists() throws Exception {
 
-        String uuid = INDICATORS_SYSTEM_NOT_EXISTS;
+        String uuid = NOT_EXISTS;
 
         // Validation
         try {
@@ -565,7 +567,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testUpdateIndicatorsSystemErrorNotExists() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
-        indicatorsSystemDto.setUuid(INDICATORS_SYSTEM_NOT_EXISTS);
+        indicatorsSystemDto.setUuid(NOT_EXISTS);
 
         try {
             indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -574,7 +576,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -707,13 +709,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testSendIndicatorsSystemToProductionValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -781,13 +783,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testSendIndicatorsSystemToDiffusionValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -903,13 +905,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testRejectIndicatorsSystemValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1084,13 +1086,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testPublishIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1209,13 +1211,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testArchiveIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS);
+            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1346,13 +1348,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS, IndicatorsSystemVersionEnum.MINOR);
+            indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, IndicatorsSystemVersionEnum.MINOR);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1426,21 +1428,21 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
     }
-    
+
     @Override
     @Test
     public void testRetrieveDimension() throws Exception {
-        
+
         DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), INDICATORS_SYSTEM_1_DIMENSION_1);
-        
+
         assertNotNull(dimensionDto);
         assertEquals(INDICATORS_SYSTEM_1_DIMENSION_1, dimensionDto.getUuid());
         assertNull(dimensionDto.getParentDimensionUuid());
         IndicatorsAsserts.assertEqualsInternationalString(dimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1", "en", "Title IndSys-1-v2-Dimension-1");
-        
-        // Subdimensions  
+
+        // Subdimensions
         assertEquals(2, dimensionDto.getSubdimensions().size());
-        
+
         {
             DimensionDto subdimensionDto = dimensionDto.getSubdimensions().get(0);
             assertEquals("IndSys-1-v2-Dimension-1A", subdimensionDto.getUuid());
@@ -1454,7 +1456,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals("IndSys-1-v2-Dimension-1", subdimensionDto.getParentDimensionUuid());
             IndicatorsAsserts.assertEqualsInternationalString(subdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1B", "en", "Title IndSys-1-v2-Dimension-1B");
             assertEquals(1, subdimensionDto.getSubdimensions().size());
-            
+
             // Subdimensions
             {
                 DimensionDto subsubdimensionDto = subdimensionDto.getSubdimensions().get(0);
@@ -1462,13 +1464,40 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
                 assertEquals("IndSys-1-v2-Dimension-1B", subsubdimensionDto.getParentDimensionUuid());
                 IndicatorsAsserts.assertEqualsInternationalString(subsubdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1BA", "en", "Title IndSys-1-v2-Dimension-1BA");
                 assertEquals(0, subsubdimensionDto.getSubdimensions().size());
-            }               
+            }
         }
     }
-    
+
+    @Test
+    public void testRetrieveDimensionErrorParameterRequired() throws Exception {
+
+        String uuid = null;
+
+        try {
+            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
     @Test
     public void testRetrieveDimensionErrorNotExists() throws Exception {
-        fail("pendiente");
+
+        String uuid = NOT_EXISTS;
+
+        try {
+            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Override
@@ -1526,7 +1555,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // assertEquals(2, dimensionsDtoSize1.size());
         // assertEqualsDimension(dimensionDto1, dimensionsDtoSize1.get(1));
     }
-    
+
     @Test
     public void testCreateDimensionSubSubdimension() throws Exception {
         fail("pendiente");
@@ -1576,13 +1605,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_NOT_EXISTS, dimensionDto);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), NOT_EXISTS, dimensionDto);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(INDICATORS_SYSTEM_NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
