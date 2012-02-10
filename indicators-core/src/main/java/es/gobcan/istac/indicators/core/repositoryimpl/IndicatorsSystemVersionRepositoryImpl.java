@@ -36,14 +36,14 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, IndicatorsSystemStateEnum state) {
+    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, IndicatorsSystemStateEnum state) {
         
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session)getEntityManager().getDelegate();
         Criteria criteria = session.createCriteria(IndicatorsSystemVersion.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (uri != null) {
-            criteria.add(Restrictions.eq("uri", uri));
+        if (uriGopestat != null) {
+            criteria.add(Restrictions.eq("uriGopestat", uriGopestat));
         }
         if (state != null) {
             criteria.add(Restrictions.eq("state", state));

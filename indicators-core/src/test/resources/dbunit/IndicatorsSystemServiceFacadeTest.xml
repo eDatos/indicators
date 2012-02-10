@@ -35,7 +35,7 @@
 	  			DESCRIPTION_FK="4"
 	  			INDICATORS_SYSTEMS_FK="1"
 	  			STATE="PUBLISHED"
-				URI="http://indicators-sytems/1"
+				URI_GOPESTAT="http://indicators-sytems/1"
 				
 				PRODUCTION_VALIDATION_DATE="2011-01-02 02:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -69,7 +69,7 @@
 	  			DESCRIPTION_FK="8"
 	  			INDICATORS_SYSTEMS_FK="1"
 	  			STATE="DRAFT"
-				URI="http://indicators-sytems/1"
+				URI_GOPESTAT="http://indicators-sytems/1"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -206,7 +206,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="2"
 	  			STATE="DRAFT"
-				URI="http://indicators-sytems/2"
+				URI_GOPESTAT="http://indicators-sytems/2"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -262,7 +262,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="3"
 	  			STATE="PUBLISHED"
-				URI="http://indicators-sytems/3"
+				URI_GOPESTAT="http://indicators-sytems/3"
 				
 				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -318,7 +318,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="4"
 	  			STATE="PRODUCTION_VALIDATION"
-				URI="http://indicators-sytems/4"
+				URI_GOPESTAT="http://indicators-sytems/4"
 
 				PRODUCTION_VALIDATION_DATE="2011-04-04 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -374,7 +374,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="5"
 	  			STATE="DIFFUSION_VALIDATION"
-				URI="http://indicators-sytems/5"
+				URI_GOPESTAT="http://indicators-sytems/5"
 				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -431,7 +431,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="6"
 	  			STATE="PUBLISHED"
-				URI="http://indicators-sytems/6"
+				URI_GOPESTAT="http://indicators-sytems/6"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -465,7 +465,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="6"
 	  			STATE="DIFFUSION_VALIDATION"
-				URI="http://indicators-sytems/6"
+				URI_GOPESTAT="http://indicators-sytems/6"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -522,7 +522,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="7"
 	  			STATE="ARCHIVED"
-				URI="http://indicators-sytems/7"
+				URI_GOPESTAT="http://indicators-sytems/7"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -556,7 +556,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="7"
 	  			STATE="DIFFUSION_VALIDATION"
-				URI="http://indicators-sytems/7"
+				URI_GOPESTAT="http://indicators-sytems/7"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -612,7 +612,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="8"
 	  			STATE="ARCHIVED"
-				URI="http://indicators-sytems/8"
+				URI_GOPESTAT="http://indicators-sytems/8"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -668,7 +668,7 @@
 	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEMS_FK="9"
 	  			STATE="VALIDATION_REJECTED"
-				URI="http://indicators-sytems/9"
+				URI_GOPESTAT="http://indicators-sytems/9"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"

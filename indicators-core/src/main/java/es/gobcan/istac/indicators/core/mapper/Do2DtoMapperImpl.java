@@ -29,7 +29,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(source.getIndicatorsSystem().getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
-        target.setUri(source.getUri());
+        target.setUriGopestat(source.getUriGopestat());
         target.setObjetive(internationalStringToDto(source.getObjetive()));
         target.setDescription(internationalStringToDto(source.getDescription()));
         target.setState(source.getState());

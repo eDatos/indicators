@@ -26,7 +26,7 @@ Application Indicators {
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	deleteIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state) throws MetamacException;
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(@Dimension dimension) throws MetamacException;
@@ -117,8 +117,8 @@ Application Indicators {
 			"State"
 			- @IndicatorsSystemStateEnum state required;
 			String versionNumber required length="10";
-       		"Uri of statistic operation"
-       		String uri nullable;
+       		"Uri of statistic operation in Gopestat"
+       		String uriGopestat nullable;
        		"Title of statistic operation"
        		- @InternationalString title cascade="all" databaseColumn="TITLE_FK";
        		"Acronym of statistic operation"
@@ -158,7 +158,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery;
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uri, @IndicatorsSystemStateEnum state);
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state);
 			}
 		} 
 		
@@ -214,8 +214,8 @@ Application Indicators {
 			- @IndicatorsSystemStateEnum state;
 			"Semantic identifier of statistic operation"
        		String code;
-       		"Uri of statistic operation"
-       		String uri;
+       		"Uri of statistic operation in Gopestat"
+       		String uriGopestat;
        		"Title of statistic operation"
        		- @InternationalStringDto title;
        		"Acronym of statistic operation"

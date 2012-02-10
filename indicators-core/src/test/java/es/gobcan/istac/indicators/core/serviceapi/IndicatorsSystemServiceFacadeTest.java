@@ -69,7 +69,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
         assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
-        assertEquals("http://indicators-sytems/1", indicatorsSystemDto.getUri());
+        assertEquals("http://indicators-sytems/1", indicatorsSystemDto.getUriGopestat());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getTitle(), "es", "Título IndSys-1-v1", "en", "Title IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getAcronym(), "es", "Acrónimo IndSys-1-v1", "en", "Acronym IndSys-1-v1");
@@ -246,7 +246,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUri(IndicatorsMocks.mockString(100));
+        indicatorsSystemDto.setUriGopestat(IndicatorsMocks.mockString(100));
         indicatorsSystemDto.setObjetive(IndicatorsMocks.mockInternationalString());
         indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalString());
 
@@ -341,16 +341,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUri("http://indicators-sytems/1");
+        indicatorsSystemDto.setUriGopestat("http://indicators-sytems/1");
 
         try {
             indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("uri duplicated");
+            fail("uri gopestat duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemDto.getUri(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(indicatorsSystemDto.getUriGopestat(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -476,7 +476,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUri("newUri");
+        indicatorsSystemDto.setUriGopestat("newUri");
 
         // Update
         indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);

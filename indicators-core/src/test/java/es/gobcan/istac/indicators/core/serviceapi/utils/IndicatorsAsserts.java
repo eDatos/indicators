@@ -21,7 +21,7 @@ public class IndicatorsAsserts {
         assertEquals(expected.getCode(), actual.getCode());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
-        assertEquals(expected.getUri(), actual.getUri());
+        assertEquals(expected.getUriGopestat(), actual.getUriGopestat());
         assertEqualsInternationalString(expected.getObjetive(), actual.getObjetive());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }

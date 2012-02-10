@@ -53,7 +53,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Validation of parameters
         InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystemDto, null);
         validateCodeUnique(ctx, indicatorsSystemDto.getCode(), null);
-        validateUriUnique(ctx, indicatorsSystemDto.getUri(), null);
+        validateUriGopestatUnique(ctx, indicatorsSystemDto.getUriGopestat(), null);
 
         // Transform
         IndicatorsSystem indicatorsSystem = new IndicatorsSystem();
@@ -473,15 +473,15 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
 
     /**
-     * Checks not exists another indicator system with same uri. Checks system retrieved not is actual system.
+     * Checks not exists another indicator system with same uri in Gopestat. Checks system retrieved not is actual system.
      */
-    private void validateUriUnique(ServiceContext ctx, String uri, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, uri, null);
+    private void validateUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, uriGopestat, null);
         if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
                 if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
-                    throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getErrorCode(),
-                            ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_DUPLICATED.getMessageForReasonType(), uri);
+                    throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED.getErrorCode(),
+                            ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED.getMessageForReasonType(), uriGopestat);
                 }
             }
         }

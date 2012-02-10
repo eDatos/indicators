@@ -56,7 +56,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setAcronym(internationalStringToDo(source.getAcronym(), target.getAcronym()));
         target.setDescription(internationalStringToDo(source.getDescription(), target.getDescription()));
         target.setObjetive(internationalStringToDo(source.getObjetive(), target.getObjetive()));
-        target.setUri(source.getUri());
+        target.setUriGopestat(source.getUriGopestat());
 
         return target;
     }
