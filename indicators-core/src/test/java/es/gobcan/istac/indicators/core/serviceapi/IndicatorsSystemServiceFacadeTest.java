@@ -1439,6 +1439,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertNotNull(dimensionDto);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1, dimensionDto.getUuid());
         IndicatorsAsserts.assertEqualsInternationalString(dimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1", "en", "Title IndSys-1-v2-Dimension-1");
+        assertNull(dimensionDto.getParentDimensionUuid());
 
         // Subdimensions
         assertEquals(2, dimensionDto.getSubdimensions().size());
@@ -1446,12 +1447,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         {
             DimensionDto subdimensionDto = dimensionDto.getSubdimensions().get(0);
             assertEquals("IndSys-1-v2-Dimension-1A", subdimensionDto.getUuid());
+            assertEquals(dimensionDto.getUuid(), subdimensionDto.getParentDimensionUuid());
             IndicatorsAsserts.assertEqualsInternationalString(subdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1A", "en", "Title IndSys-1-v2-Dimension-1A");
             assertEquals(0, subdimensionDto.getSubdimensions().size());
         }
         {
             DimensionDto subdimensionDto = dimensionDto.getSubdimensions().get(1);
             assertEquals("IndSys-1-v2-Dimension-1B", subdimensionDto.getUuid());
+            assertEquals(dimensionDto.getUuid(), subdimensionDto.getParentDimensionUuid());
             IndicatorsAsserts.assertEqualsInternationalString(subdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1B", "en", "Title IndSys-1-v2-Dimension-1B");
             assertEquals(1, subdimensionDto.getSubdimensions().size());
 
@@ -1459,6 +1462,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             {
                 DimensionDto subsubdimensionDto = subdimensionDto.getSubdimensions().get(0);
                 assertEquals("IndSys-1-v2-Dimension-1BA", subsubdimensionDto.getUuid());
+                assertEquals(subdimensionDto.getUuid(), subsubdimensionDto.getParentDimensionUuid());
                 IndicatorsAsserts.assertEqualsInternationalString(subsubdimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1BA", "en", "Title IndSys-1-v2-Dimension-1BA");
                 assertEquals(0, subsubdimensionDto.getSubdimensions().size());
             }
@@ -1504,9 +1508,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(null);
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto, null);
+        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Retrieve dimension
@@ -1527,13 +1532,15 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(DIMENSION_1_INDICATORS_SYSTEM_1);
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto, DIMENSION_1_INDICATORS_SYSTEM_1);
+        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
         
         // Retrieve dimension
         DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
+        assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
         assertEquals(0, dimensionDtoRetrieved.getSubdimensions().size());
 
         // Retrieve dimension parent (indicators system version had two dimensions before; now has three dimensions)
@@ -1561,14 +1568,19 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Create subdimension
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(parentUuid);
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto, parentUuid);
+        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
+        
+        // Validate
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsDimension(dimensionDtoCreated, dimensionDtoRetrieved);
+        assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
         
         // Retrieve dimension parent
         dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(1, dimensionDtoParent.getSubdimensions().size());
-        
     }
 
     @Test
@@ -1576,9 +1588,9 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(null);
-
+        dimensionDto.setParentDimensionUuid(null);
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto, null);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("title required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1599,7 +1611,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.addSubdimension(subdimensionDto);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto, null);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("subdimensions must be empty");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1615,7 +1627,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), NOT_EXISTS, dimensionDto, null);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), NOT_EXISTS, dimensionDto);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1633,7 +1645,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), indicatorsSystemUuid, dimensionDto, null);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), indicatorsSystemUuid, dimensionDto);
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1648,9 +1660,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(DIMENSION_NOT_EXISTS);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto, DIMENSION_NOT_EXISTS);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("dimension id not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1665,9 +1678,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentDimensionUuid(DIMENSION_1_INDICATORS_SYSTEM_1);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_2, dimensionDto, DIMENSION_1_INDICATORS_SYSTEM_1);
+            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_2, dimensionDto);
             fail("dimension id not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1676,6 +1690,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
+    }
+    
+    @Test
+    public void testDeleteDimension() throws Exception {
+        fail("pendiente");
+    }
+    
+    @Test
+    public void testDeleteDimensionErrorIndicatorsSystemPublished() throws Exception {
+        fail("pendiente");
     }
 
     @Override

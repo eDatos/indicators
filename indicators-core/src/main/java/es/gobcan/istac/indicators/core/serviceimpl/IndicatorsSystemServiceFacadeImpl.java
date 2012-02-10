@@ -336,7 +336,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     }
     
     @Override
-    public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto, String parentDimensionUuid) throws MetamacException {
+    public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
         
         // Validation of parameters
         InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimensionDto, null);
@@ -349,21 +349,34 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
         dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
         
-        // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
-        Dimension dimensionParent = null;
-        if (parentDimensionUuid != null) {
-            dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, parentDimensionUuid);
-            // TODO cómo comprobar que pertenece al sistema de indicadores cuando se engancha a una subdimensión. Añadir columna con uuid de indicatorSystemUuid de la version ?
-            if (dimensionParent.getIndicatorsSystemVersion() != null && !dimensionParent.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), parentDimensionUuid, indicatorsSystemUuid);
+        // Create dimension, adding to indicators system or to parent dimension
+        if (dimensionDto.getParentDimensionUuid() == null) {
+            // Create dimension
+            dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+ 
+            // Update indicators system adding dimension
+            indicatorsSystemVersion.addDimension(dimension);
+            getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+            
+        } else {
+            // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
+            Dimension dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
+            // Check dimension parent belogs to indicators system provided
+            Dimension dimensionParentToCheckIndicatorsSystem = dimensionParent;
+            while (dimensionParentToCheckIndicatorsSystem.getIndicatorsSystemVersion() == null) {
+                dimensionParentToCheckIndicatorsSystem = dimensionParentToCheckIndicatorsSystem.getParent();
             }
+            if (!dimensionParentToCheckIndicatorsSystem.getIndicatorsSystemVersion().getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
+            }
+            // Create subdimension
+            dimension.setParent(dimensionParent);
+            dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+            
+            // Add subdimension to parent dimension
             dimensionParent.addSubdimension(dimension);
             getIndicatorsSystemService().updateDimension(ctx, dimensionParent);
-        }
-
-        // Update indicators system adding dimension
-        indicatorsSystemVersion.addDimension(dimension);
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+        }       
         
         // Transform to Dto to return
         dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
@@ -380,6 +393,12 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
         DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;   
+    }
+    
+    @Override
+    public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
+        // TODO Auto-generated method stub
+        
     }
 
     // TODO updateDimension: no permitir cambiar de dimensión padre ni el orden

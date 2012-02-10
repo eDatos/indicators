@@ -9,20 +9,15 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
-import es.gobcan.istac.indicators.core.domain.DimensionRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
-
-    @Autowired
-    private DimensionRepository dimensionRepository;
     
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
@@ -64,7 +59,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public DimensionDto dimensionDoToDto(Dimension source) {
         DimensionDto target = new DimensionDto();
         target.setUuid(source.getUuid());
-        
+        target.setParentDimensionUuid(source.getParent() != null ? source.getParent().getUuid() : null);
         target.setTitle(internationalStringToDto(source.getTitle()));
         for (Dimension dimensionChildren : source.getSubdimensions()) {
             target.getSubdimensions().add(dimensionDoToDto(dimensionChildren));

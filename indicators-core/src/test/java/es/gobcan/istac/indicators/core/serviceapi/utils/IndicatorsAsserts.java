@@ -29,7 +29,8 @@ public class IndicatorsAsserts {
 
 
     public static void assertEqualsDimension(DimensionDto expected, DimensionDto actual) {
-        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());        
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getParentDimensionUuid(), actual.getParentDimensionUuid());
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {
