@@ -123,4 +123,10 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
     public void deleteDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
         getDimensionRepository().delete(dimension);
     }
+
+    @Override
+    public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
+        return indicatorsSystemVersion.getDimensions();
+    }
 }

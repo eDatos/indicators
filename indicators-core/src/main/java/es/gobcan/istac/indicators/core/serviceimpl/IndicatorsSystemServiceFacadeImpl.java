@@ -409,6 +409,22 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Delete
         getIndicatorsSystemService().deleteDimension(ctx, dimension);
     }
+    
+    @Override
+    public List<DimensionDto> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkFindDimensions(indicatorsSystemUuid, indicatorsSystemVersion, null);
+        
+        // Retrieve dimensions and transform
+        List<Dimension> dimensions = getIndicatorsSystemService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
+        for (Dimension dimension : dimensions) {
+            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
+        }
+
+        return dimensionsDto;
+    }
 
     // TODO updateDimension: no permitir cambiar de dimensión padre ni el orden
 
@@ -513,5 +529,4 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         }
     }
-
 }

@@ -33,7 +33,7 @@ Application Indicators {
 	    	@Dimension updateDimension(@Dimension dimension) throws MetamacException;
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
 	    	deleteDimension(@Dimension dimension) throws MetamacException;
-	    	
+	    	List<@Dimension> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;	    	
     	}
     	
     	"Provides access to indicators systems"
@@ -75,6 +75,8 @@ Application Indicators {
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"
 	    	deleteDimension(String uuid) throws MetamacException;
+	    	"Find dimensions"
+	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;	    	
 	    }    	
 
 	    // ----------------------------------------------------------------

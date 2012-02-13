@@ -197,6 +197,19 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
+
+
+    public static void checkFindDimensions(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
+        checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
+
+        throwIfException(exceptions);        
+    }
+    
     @SuppressWarnings("rawtypes")
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter == null) {

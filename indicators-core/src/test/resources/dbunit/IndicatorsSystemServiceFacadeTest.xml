@@ -58,6 +58,22 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+				
+				<TBL_DIMENSIONS
+						ID="10"
+						UUID="IndSys-1-v1-Dimension-1"
+						TITLE_FK="26"
+						PARENT_FK="[null]"
+						INDICATORS_SYSTEM_VERSION_FK="1"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
 			
 			<TBL_INDIC_SYSTEMS_VERSIONS
 				ID="2"
@@ -94,7 +110,7 @@
 			/>
 			
 				<TBL_DIMENSIONS
-					ID="1"
+					ID="20"
 					UUID="IndSys-1-v2-Dimension-1"
 					TITLE_FK="20"
 					PARENT_FK="[null]"
@@ -110,10 +126,10 @@
 				/>
 				
 						<TBL_DIMENSIONS
-							ID="2"
+							ID="30"
 							UUID="IndSys-1-v2-Dimension-1A"
 							TITLE_FK="21"
-							PARENT_FK="1"
+							PARENT_FK="20"
 							INDICATORS_SYSTEM_VERSION_FK="[null]"
 							
 							VERSION="1"
@@ -126,10 +142,10 @@
 						/>		
 						
 						<TBL_DIMENSIONS
-							ID="3"
+							ID="40"
 							UUID="IndSys-1-v2-Dimension-1B"
 							TITLE_FK="22"
-							PARENT_FK="1"
+							PARENT_FK="20"
 							INDICATORS_SYSTEM_VERSION_FK="[null]"
 							
 							VERSION="1"
@@ -142,10 +158,10 @@
 						/>			
 						
 								<TBL_DIMENSIONS
-									ID="4"
+									ID="50"
 									UUID="IndSys-1-v2-Dimension-1BA"
 									TITLE_FK="23"
-									PARENT_FK="3"
+									PARENT_FK="40"
 									INDICATORS_SYSTEM_VERSION_FK="[null]"
 									
 									VERSION="1"
@@ -158,7 +174,7 @@
 								/>							
 				
 				<TBL_DIMENSIONS
-					ID="5"
+					ID="60"
 					UUID="IndSys-1-v2-Dimension-2"
 					TITLE_FK="24"
 					PARENT_FK="[null]"
@@ -287,7 +303,7 @@
 			/>			
 			
 				<TBL_DIMENSIONS
-						ID="6"
+						ID="70"
 						UUID="IndSys-3-v1-Dimension-1"
 						TITLE_FK="25"
 						PARENT_FK="[null]"
@@ -1308,6 +1324,30 @@
 		UUID="IS-25-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="25"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="26"
+		UUID="IS-26"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="47"
+		LABEL="Título"
+		LOCALE="es"
+		UUID="IS-26-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="26"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="28"
+		LABEL="Title"
+		LOCALE="en"
+		UUID="IS-26-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="26"
 	/>								
 					
 </dataset>
