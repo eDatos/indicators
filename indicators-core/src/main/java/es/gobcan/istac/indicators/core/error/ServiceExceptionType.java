@@ -22,7 +22,7 @@ public enum ServiceExceptionType {
     SERVICE_VALIDATION_METADATA_UNMODIFIABLE("0406"),
 
     SERVICE_INDICATORS_SYSTEM_NOT_FOUND("0501"),
-    SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION("0502"),
+    SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND("0502"),
     SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED("0503"),
     SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED("0504"),
     SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND("0505"),
@@ -56,7 +56,7 @@ public enum ServiceExceptionType {
 
         // Indicators systems
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, "exception.service.validation.indicators_system.not_found");
-        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION, "exception.service.validation.indicators_system.not_found_in_version");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND, "exception.service.validation.indicators_system.vesion_not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, "exception.service.validation.indicators_system.already_exists.code_duplicated");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, "exception.service.validation.indicators_system.already_exists.uri_gopestat_duplicated");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND, "exception.service.validation.indicators_system.production_not_found");

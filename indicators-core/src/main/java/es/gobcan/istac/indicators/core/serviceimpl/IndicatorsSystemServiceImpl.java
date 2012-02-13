@@ -56,7 +56,7 @@ public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase
             if (versionNumber == null) {
                 throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
             } else {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND_IN_VERSION.getMessageForReasonType(), uuid, versionNumber);
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND.getMessageForReasonType(), uuid, versionNumber);
             }
         }
         return indicatorsSystemVersion;

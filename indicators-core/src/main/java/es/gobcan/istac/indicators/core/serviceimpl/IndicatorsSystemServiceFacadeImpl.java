@@ -425,8 +425,25 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         return dimensionsDto;
     }
+ 
+    @Override
+    public void updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
 
-    // TODO updateDimension: no permitir cambiar de dimensión padre ni el orden
+        // Retrieve
+        // TODO comprobar parámetros antes?
+        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getUuid());
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateDimension(dimensionDto, dimension, null);
+        
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorSystemVersionOfDimension(dimension);
+        checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
+        
+        // Transform and update
+        dto2DoMapper.dimensionDtoToDo(dimensionDto, dimension);
+        getIndicatorsSystemService().updateDimension(ctx, dimension); 
+    }
 
     private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
 
@@ -524,8 +541,8 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         boolean inProduction = IndicatorsSystemStateEnum.DRAFT.equals(state) || IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(state)
                 || IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(state);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(),
-                    ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(), indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsSystemVersion.getVersionNumber());
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE.getErrorCode(),
+                    ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsSystemVersion.getVersionNumber());
 
         }
     }

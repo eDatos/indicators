@@ -71,6 +71,8 @@ Application Indicators {
 	    	// DIMENSIONS
 	    	"Creates a dimension"
 	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
+	    	"Updates metadata of dimension"
+	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
 	    	"Retrieves dimension"
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"

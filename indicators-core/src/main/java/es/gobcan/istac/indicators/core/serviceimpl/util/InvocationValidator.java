@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
+import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -196,8 +197,6 @@ public class InvocationValidator {
 
         throwIfException(exceptions);
     }
-    
-
 
     public static void checkFindDimensions(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
@@ -208,6 +207,19 @@ public class InvocationValidator {
         checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
 
         throwIfException(exceptions);        
+    }
+
+    public static void checkUpdateDimension(DimensionDto dimensionDto, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkDimension(dimensionDto, exceptions);
+        checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
+        checkMetadataUnmodifiable(dimensionDto.getParentDimensionUuid(), dimension.getParent() != null ? dimension.getParent().getUuid() : null, "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
+        // TODO order
+        
+        throwIfException(exceptions); 
     }
     
     @SuppressWarnings("rawtypes")
