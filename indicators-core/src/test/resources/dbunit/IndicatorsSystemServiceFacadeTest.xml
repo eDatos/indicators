@@ -324,6 +324,23 @@
 						LAST_UPDATED="2011-03-3 01:02:04"
 						LAST_UPDATED_TZ="Europe/London"
 					/>
+					
+					<TBL_DIMENSIONS
+						ID="80"
+						UUID="IndSys-3-v1-Dimension-1A"
+						TITLE_FK="27"
+						PARENT_FK="70"
+						ORDER_IN_LEVEL="1"
+						INDICATORS_SYSTEM_VERSION_FK="[null]"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 4											                      	-->
 	<!--		- Version 1: production validation												-->
@@ -1317,7 +1334,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="45"
-		LABEL="Título IndSys-2-v1-Dimension-1"
+		LABEL="Título IndSys-3-v1-Dimension-1"
 		LOCALE="es"
 		UUID="IS-25-LS-1"
 		VERSION="1"
@@ -1326,7 +1343,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="46"
-		LABEL="Title IndSys-2-v1-Dimension-1"
+		LABEL="Title IndSys-3-v1-Dimension-1"
 		LOCALE="en"
 		UUID="IS-25-LS-2"
 		VERSION="1"
@@ -1355,6 +1372,30 @@
 		UUID="IS-26-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="26"
-	/>								
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="27"
+		UUID="IS-27"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="48"
+		LABEL="Título IndSys-3-v1-Dimension-1A"
+		LOCALE="es"
+		UUID="IS-27-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="27"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="49"
+		LABEL="Title IndSys-3-v1-Dimension-1A"
+		LOCALE="en"
+		UUID="IS-27-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="27"
+	/>									
 					
 </dataset>

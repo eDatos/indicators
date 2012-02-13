@@ -1330,6 +1330,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getVersionNumber());
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoProduction.getDiffusionVersion());
+            // Dimensions
+            List<DimensionDto> dimensions = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), indicatorsSystemDtoProduction.getUuid(), indicatorsSystemDtoProduction.getProductionVersion());
+            assertEquals(1, dimensions.size());
+            IndicatorsAsserts.assertEqualsInternationalString(dimensions.get(0).getTitle(), "es", "Título IndSys-3-v1-Dimension-1", "en", "Title IndSys-3-v1-Dimension-1");
+            assertEquals(1, dimensions.get(0).getSubdimensions().size());
+            IndicatorsAsserts.assertEqualsInternationalString(dimensions.get(0).getSubdimensions().get(0).getTitle(), "es", "Título IndSys-3-v1-Dimension-1A", "en", "Title IndSys-3-v1-Dimension-1A");
 
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getState());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getVersionNumber());
