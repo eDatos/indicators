@@ -55,7 +55,7 @@
 		<gin.version>1.5.0</gin.version>
 		<guice.version>3.0</guice.version>
 		<gwt.version>2.3.0</gwt.version>
-		<smartgwt.version>2.5</smartgwt.version>
+		<smartgwt.version>3.0</smartgwt.version>
 		<gwtp.version>0.6</gwtp.version>
 
 		<!-- TEST -->
@@ -67,6 +67,10 @@
 		<metamac-core-common.version>1.0-SNAPSHOT</metamac-core-common.version>
 		<metamac-common-test.version>1.0-SNAPSHOT</metamac-common-test.version>
 		<metamac-web-common.version>1.0-SNAPSHOT</metamac-web-common.version>
+		
+		<!-- INDICATORS -->
+		<indicators.version>0.0.1-SNAPSHOT</indicators.version>
+		
 	</properties>
 
 	<dependencyManagement>
@@ -532,6 +536,14 @@
 				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-assistedinject</artifactId>
 				<version>${guice.version}</version>
+			</dependency>
+			
+			<!-- INDICATORS -->
+			<dependency>
+				<groupId>es.gobcan.istac.indicators</groupId>
+				<artifactId>indicators-core</artifactId>
+				<version>${indicators.version}</version>
+				<classifier>client</classifier>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
