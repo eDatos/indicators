@@ -71,6 +71,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     @Override
     public void dimensionDtoToDo(DimensionDto source, Dimension target) {
         target.setTitle(internationalStringToDo(source.getTitle(), target.getTitle()));
+        target.setOrderInLevel(source.getOrderInLevel());
         // Update action never updates dimensions children
     }
 

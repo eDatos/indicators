@@ -64,6 +64,7 @@
 						UUID="IndSys-1-v1-Dimension-1"
 						TITLE_FK="26"
 						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
 						INDICATORS_SYSTEM_VERSION_FK="1"
 						
 						VERSION="1"
@@ -114,6 +115,7 @@
 					UUID="IndSys-1-v2-Dimension-1"
 					TITLE_FK="20"
 					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
 					INDICATORS_SYSTEM_VERSION_FK="2"
 					
 					VERSION="1"
@@ -130,6 +132,7 @@
 							UUID="IndSys-1-v2-Dimension-1A"
 							TITLE_FK="21"
 							PARENT_FK="20"
+							ORDER_IN_LEVEL="1"
 							INDICATORS_SYSTEM_VERSION_FK="[null]"
 							
 							VERSION="1"
@@ -146,6 +149,7 @@
 							UUID="IndSys-1-v2-Dimension-1B"
 							TITLE_FK="22"
 							PARENT_FK="20"
+							ORDER_IN_LEVEL="2"
 							INDICATORS_SYSTEM_VERSION_FK="[null]"
 							
 							VERSION="1"
@@ -162,6 +166,7 @@
 									UUID="IndSys-1-v2-Dimension-1BA"
 									TITLE_FK="23"
 									PARENT_FK="40"
+									ORDER_IN_LEVEL="1"
 									INDICATORS_SYSTEM_VERSION_FK="[null]"
 									
 									VERSION="1"
@@ -178,6 +183,7 @@
 					UUID="IndSys-1-v2-Dimension-2"
 					TITLE_FK="24"
 					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
 					INDICATORS_SYSTEM_VERSION_FK="2"
 					
 					VERSION="1"
@@ -307,6 +313,7 @@
 						UUID="IndSys-3-v1-Dimension-1"
 						TITLE_FK="25"
 						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
 						INDICATORS_SYSTEM_VERSION_FK="4"
 						
 						VERSION="1"

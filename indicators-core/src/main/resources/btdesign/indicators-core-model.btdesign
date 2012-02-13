@@ -73,6 +73,8 @@ Application Indicators {
 	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
 	    	"Updates metadata of dimension"
 	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
+	    	"Updates the location of dimension"
+	    	updateDimensionLocation(String uuid, String parentUuid, Long order) throws MetamacException;
 	    	"Retrieves dimension"
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"
@@ -153,7 +155,7 @@ Application Indicators {
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEMS_FK" <-> versions;
 			"Dimensions"
-			- Bag<@Dimension> dimensions cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorsSystemVersion;
+			- Bag<@Dimension> dimensions cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
 			
 		
 			Repository IndicatorsSystemVersionRepository {
@@ -173,12 +175,14 @@ Application Indicators {
         	
             "Title"
             - @InternationalString title not nullable cascade="all" databaseColumn="TITLE_FK";
-
+            "Order in level"
+			Long orderInLevel not nullable;
+			
 			// Relations
             "Parent dimension"
             - @Dimension parent cascade="none" databaseColumn="PARENT_FK" nullable;
 			"Subdimensions"
-			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="id asc" ;
+			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="orderInLevel asc";
             "Indicators system version"
 			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> dimensions;
             
@@ -283,6 +287,8 @@ Application Indicators {
 			String uuid;
 			"Title"
 			- @InternationalStringDto title;
+            "Order in level"
+			Long orderInLevel not nullable;
 			"Parent dimension"
 			String parentDimensionUuid;			
        		"Subdimensions"

@@ -20,6 +20,7 @@ public enum ServiceExceptionType {
     SERVICE_VALIDATION_METADATA_REQUIRED("0404"),
     SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY("0405"),
     SERVICE_VALIDATION_METADATA_UNMODIFIABLE("0406"),
+    SERVICE_VALIDATION_METADATA_INCORRECT("0407"),
 
     SERVICE_INDICATORS_SYSTEM_NOT_FOUND("0501"),
     SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND("0502"),
@@ -53,6 +54,7 @@ public enum ServiceExceptionType {
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED, "exception.service.validation.metadata.required");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY, "exception.service.validation.metadata.must_be_empty");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE, "exception.service.validation.metadata.unmodifiable");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT, "exception.service.validation.metadata.incorrect_value");
 
         // Indicators systems
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, "exception.service.validation.indicators_system.not_found");

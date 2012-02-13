@@ -217,6 +217,7 @@ public class InvocationValidator {
         checkDimension(dimensionDto, exceptions);
         checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
         checkMetadataUnmodifiable(dimensionDto.getParentDimensionUuid(), dimension.getParent() != null ? dimension.getParent().getUuid() : null, "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
+        checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
         // TODO order
         
         throwIfException(exceptions); 
@@ -241,6 +242,10 @@ public class InvocationValidator {
     private static void checkDimension(DimensionDto dimensionDto, List<MetamacExceptionItem> exceptions) {
         checkParameterRequired(dimensionDto, "DIMENSION", exceptions);
         checkMetadataRequired(dimensionDto.getTitle(), "DIMENSION.TITLE", exceptions);
+        checkMetadataRequired(dimensionDto.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
+        if (dimensionDto.getOrderInLevel() != null && dimensionDto.getOrderInLevel() < 0) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getMessageForReasonType(), "DIMENSION.ORDER_IN_LEVEL"));
+        }
     }
     
     private static void checkParameterRequired(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
@@ -262,6 +267,15 @@ public class InvocationValidator {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getMessageForReasonType(), parameterName));
         }
     }
+    
+    private static void checkMetadataUnmodifiable(Long original, Long actual, String parameterName, List<MetamacExceptionItem> exceptions) {
+        if ((original == null && actual != null) || 
+            (original != null && actual == null) ||
+            (original != null && !original.equals(actual))) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getMessageForReasonType(), parameterName));
+        }
+    }
+    
     private static void throwIfException(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions != null && !exceptions.isEmpty()) {
             throw new MetamacException(exceptions);
