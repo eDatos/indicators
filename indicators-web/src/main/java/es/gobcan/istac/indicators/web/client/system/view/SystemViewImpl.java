@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
 import java.util.List;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -14,9 +17,9 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
@@ -44,10 +47,10 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 		indSysLabel.setHeight(40);
 		indSysLabel.setStyleName("sectionTitle");
 		
-		generalTab = new Tab("General");
+		generalTab = new Tab(getConstants().systemDetailGeneral());
 		generalTab.setPane(generalPanel);
 		
-		structureTab = new Tab("Estructura");
+		structureTab = new Tab(getConstants().systemDetailStructure());
 		structureTab.setPane(structurePanel);
 		
 		tabSet.addTab(generalTab);
@@ -61,7 +64,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	
 	@Override
 	public void init() {
-		tabSet.setSelectedTab(0);
+		tabSet.selectTab(0);
 	}
 	
 	@Override
@@ -79,14 +82,14 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	}
 	
 	@Override
-	public void setIndicatorSystem(IndicatorSystem indSystem) {
-		indSysLabel.setContents(indSystem.getName());
-		structurePanel.setIndicatorSystem(indSystem);
-		generalPanel.setIndicatorSystem(indSystem);
+	public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
+		indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
+		structurePanel.setIndicatorsSystem(indSystem);
+		generalPanel.setIndicatorsSystem(indSystem);
 	}
 	
 	@Override
-	public void setIndicatorSystemStructure(List<IndicatorSystemContent> content) {
+	public void setIndicatorsSystemStructure(List<IndicatorSystemContent> content) {
 		structurePanel.setIndicatorSystemStructure(content);
 	}
 	

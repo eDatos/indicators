@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.List;
 
 import com.google.gwt.event.shared.EventBus;
@@ -20,17 +22,17 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemResult;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemStructureResult;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler {
@@ -44,12 +46,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	private DispatchAsync dispatcher;
 	
 	/* Models*/
-	private IndicatorSystem indSystem;
+	private IndicatorsSystemDto indSystem;
 	private Long lastStructureID;
 
 	public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
-		void setIndicatorSystem(IndicatorSystem indicatorSystem);
-		void setIndicatorSystemStructure(List<IndicatorSystemContent> content);
+		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
+		void setIndicatorsSystemStructure(List<IndicatorSystemContent> content);
 		void init();
 	}
 	
@@ -99,17 +101,16 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	private void retrieveIndSystem(Long indSystemId) {
-		dispatcher.execute(new GetIndicatorSystemAction(indSystemId), new AsyncCallback<GetIndicatorSystemResult>() {
+		dispatcher.execute(new GetIndicatorsSystemAction(indSystemId), new AsyncCallback<GetIndicatorsSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(caught, "Error al obtener el Sistema de Indicadores"), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
 
 			@Override
-			public void onSuccess(GetIndicatorSystemResult result) {
-				SystemPresenter.this.indSystem = result.getIndicatorSystem();
-				getView().setIndicatorSystem(result.getIndicatorSystem());
-				//SelectIndicatorSystemEvent.fire(SystemPresenter.this, result.getIndicatorSystem());
+			public void onSuccess(GetIndicatorsSystemResult result) {
+				SystemPresenter.this.indSystem = result.getIndicatorsSystem();
+				getView().setIndicatorsSystem(result.getIndicatorsSystem());
 			}
 		});
 	}
@@ -137,15 +138,15 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	public void retrieveSystemStructure() {
 		if (indSystem != null && !indSystem.getId().equals(lastStructureID)) {
 			lastStructureID = indSystem.getId();
-			dispatcher.execute(new GetIndicatorSystemStructureAction(indSystem.getId()), new AsyncCallback<GetIndicatorSystemStructureResult>() {
+			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getId()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					//TODO: mensaje error
 				}
 	
 				@Override
-				public void onSuccess(GetIndicatorSystemStructureResult result) {
-					getView().setIndicatorSystemStructure(result.getListContent());
+				public void onSuccess(GetIndicatorsSystemStructureResult result) {
+					getView().setIndicatorsSystemStructure(result.getListContent());
 				}
 				
 			});

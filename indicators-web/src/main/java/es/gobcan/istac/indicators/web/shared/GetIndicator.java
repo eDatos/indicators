@@ -4,14 +4,14 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 
 @GenDispatch(isSecure=false)
 public class GetIndicator {
 
 	@In(1)
-	Long indicatorId;
+	String uuid;
 	
 	@Out(1)
-	Indicator indicator;
+	IndicatorDto indicator;
 }

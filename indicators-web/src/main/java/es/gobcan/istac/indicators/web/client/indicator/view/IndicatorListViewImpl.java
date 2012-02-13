@@ -1,18 +1,29 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
 import java.util.List;
+
+import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDtoBase;
+import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.smartgwt.client.data.Record;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -24,12 +35,13 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsDS;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 
@@ -58,13 +70,19 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		
-		newIndicatorActor = new ToolStripButton("Nuevo", "new_listgrid.png");
+		newIndicatorActor = new ToolStripButton(getConstants().indicNew(), RESOURCE.newListGrid().getURL());
 		toolStrip.addButton(newIndicatorActor);
 		
 		indicatorList = new ListGrid();
-		ListGridField fieldId = new ListGridField(IndicatorRecord.IDENTIFIER, "Identificador");
-		ListGridField fieldName = new ListGridField(IndicatorRecord.NAME, "Nombre");
-		indicatorList.setFields(fieldId,fieldName);
+		IndicatorsDS indicatorsDS = new IndicatorsDS();
+		indicatorList.setDataSource(indicatorsDS);
+		indicatorList.setLeaveScrollbarGap(false);
+		indicatorList.setUseAllDataSourceFields(false);
+		
+		ListGridField fieldCode = new ListGridField(IndicatorsDS.FIELD_CODE, getConstants().indicListHeaderIdentifier());
+		fieldCode.setAlign(Alignment.LEFT);
+		ListGridField fieldName = new ListGridField(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicListHeaderName());
+		indicatorList.setFields(fieldCode, fieldName);
 		
 		panel = new VLayout();
 		panel.addMember(toolStrip);
@@ -77,10 +95,10 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         newIndForm.setPadding(5);
         newIndForm.setLayoutAlign(VerticalAlignment.BOTTOM);
 		
-		nameInd = new TextItem("name-new-dsd", "Nombre");
+		nameInd = new TextItem("name-new-dsd", getConstants().indicNewName());
 		nameInd.setRequired(true);
         nameInd.setWidth(200);
-        createIndButton = new ButtonItem("create-new-dsd", "Crear");
+        createIndButton = new ButtonItem("create-new-dsd", getConstants().indicNewCreate());
         createIndButton.setWidth(100);
         
         newIndForm.setFields(nameInd,createIndButton);
@@ -95,15 +113,16 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 				newModal = new Window();
 				newModal.setWidth(380);
 	            newModal.setHeight(100);
-	            newModal.setTitle("Nuevo Indicador");
+	            newModal.setTitle(getConstants().indicNewTitle());
 	            newModal.setShowMinimizeButton(false);
 	            newModal.setIsModal(true);
 	            newModal.setShowModalMask(true);
 	            newModal.centerInPage();
 				newModal.addCloseClickHandler(new CloseClickHandler() {
-					public void onCloseClick(CloseClientEvent event) {
-						newModal.destroy();
-					}
+                    @Override
+                    public void onCloseClick(CloseClickEvent event) {
+                        newModal.destroy();
+                    }
 				});
 				newModal.addItem(newIndForm);
 				newModal.show(); 
@@ -113,7 +132,9 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		createIndButton.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				uiHandler.createIndicator(nameInd.getValueAsString());
+			    IndicatorDto indicator = new IndicatorDto();
+			    indicator.setName(createDefaultIntString(nameInd.getValueAsString()));
+				uiHandler.createIndicator(indicator);
 				newModal.hide();
 				newModal.destroy();
 			}
@@ -122,8 +143,9 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		indicatorList.addRecordClickHandler(new RecordClickHandler() {
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
-				String id = event.getRecord().getAttribute(IndicatorRecord.IDENTIFIER);
-				PlaceRequest indicatorDetailRequest = new PlaceRequest(NameTokens.indicatorPage).with(PlaceRequestParams.indicatorParam, id);
+			    Record record = event.getRecord();
+			    String uuid = record.getAttribute(IndicatorsDS.FIELD_UUID);
+				PlaceRequest indicatorDetailRequest = new PlaceRequest(NameTokens.indicatorPage).with(PlaceRequestParams.indicatorParam, uuid);
 				placeManager.revealPlace(indicatorDetailRequest);
 			}
 		});
@@ -135,11 +157,11 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	}
 	
 	@Override
-	public void setIndicatorList(List<Indicator> indicators) {
+	public void setIndicatorList(List<IndicatorDto> indicators) {
 		IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
 		int index = 0;
-		for (Indicator ind : indicators) {
-			records[index++] = new IndicatorRecord(ind.getId(), ind.getName());
+		for (IndicatorDto ind : indicators) {
+			records[index++] = new IndicatorRecord(ind.getUuid(), ind.getCode(), getLocalisedString(ind.getName()));
 		}
 		indicatorList.setData(records);
 	}
@@ -148,5 +170,14 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	public void setUiHandlers(IndicatorListPresenter uiHandlers) {
 		this.uiHandler = uiHandlers;
 	}
+	
 
+	private InternationalStringDto createDefaultIntString(String text) {
+	    InternationalStringDto intString = new InternationalStringDto();
+	    LocalisedStringDto locString = new LocalisedStringDto();
+	    locString.setLocale(InternationalStringUtils.getCurrentLocale());
+	    locString.setLabel(text);
+	    intString.addText(locString);
+	    return intString;
+	}
 }

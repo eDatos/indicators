@@ -1,45 +1,81 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
+import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.InternationalTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.web.client.widgets.form.GroupDynamicForm;
-import es.gobcan.istac.indicators.web.client.widgets.form.MainFormLayout;
-import es.gobcan.istac.indicators.web.client.widgets.form.fields.ViewTextItem;
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsDS;
 
 public class IndicatorGeneralPanel extends VLayout {
 	
-	private MainFormLayout mainFormLayout;
+    /* Data */
+    private IndicatorDto indicator;
+    
+    /* UiHandlers */
+    private IndicatorUiHandler uiHandlers;
+    
+	private InternationalMainFormLayout mainFormLayout;
 	
 	/* View Form */
-	private ViewTextItem staticIdLogic;
-	private ViewTextItem staticVersion;
+	private ViewTextItem staticNameItem;
+	private InternationalTextItem staticInternationalName;
+	private GroupDynamicForm generalForm; 
+	GroupDynamicForm identifiersForm;
 	
 	/* Edit Form*/
-	private ViewTextItem editIdLogic;
-	private ViewTextItem editVersion;
+	private ViewTextItem idLogicItem;
+	private ViewTextItem versionItem;
+	private RequiredTextItem nameItem;
+	private InternationalTextItem internationalName;
+	GroupDynamicForm generalEditionForm;
 	
+	private boolean translationsShowed;
 	
 	public IndicatorGeneralPanel() {
 		super();
 		
-		mainFormLayout = new MainFormLayout();
-		mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				/*setTranslationsShowed(mainFormLayout.getTranslateToolStripButton().isSelected());
-				generalForm.markForRedraw();
-				generalEditionForm.markForRedraw();*/
-			}
-		});
-		
+		mainFormLayout = new InternationalMainFormLayout();
+
 		createViewForm();
 		createEditionForm();
 		
 		this.addMember(mainFormLayout);
+		bindEvents();
+	}
+	
+	private void bindEvents() {
+	    mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+	        @Override
+            public void onClick(ClickEvent event) {
+                setTranslationsShowed(mainFormLayout.getTranslateToolStripButton().isSelected());
+                identifiersForm.setCanEdit(false);
+                identifiersForm.redraw();
+            }
+        });
+        
+        mainFormLayout.getSave().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                saveIndicator();
+            }
+        });
+
 	}
 	
 	/**
@@ -48,49 +84,83 @@ public class IndicatorGeneralPanel extends VLayout {
 	 * @return
 	 */
 	private void createViewForm() {
-		staticIdLogic = new ViewTextItem("id-ind-view", "Identificador");
-		staticVersion = new ViewTextItem("version-ind-view", "Versión");
+	    ViewTextItem staticCode = new ViewTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
+	    ViewTextItem staticUuid = new ViewTextItem(IndicatorsDS.FIELD_UUID, getConstants().indicDetailUuid());
+	    ViewTextItem staticVersion = new ViewTextItem(IndicatorDS.FIELD_VERSION, getConstants().indicDetailVersion());
+		
 		// Identifiers Form
-		GroupDynamicForm identifiersForm = new GroupDynamicForm("Identificadores del Indicador");
-		identifiersForm.setFields(staticIdLogic, staticVersion);
+		identifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+		identifiersForm.setFields(staticCode, staticUuid, staticVersion);
 
+		staticNameItem = new ViewTextItem("name-ind-view", getConstants().indicDetailName());
+		staticNameItem.setShowIfCondition(new FormItemIfFunction() {
+		    @Override
+		    public boolean execute(FormItem item, Object value, DynamicForm form) {
+		        return !translationsShowed;
+		    }
+		});
+		
+		staticInternationalName = new InternationalTextItem("nameint-ind-view", getConstants().indicDetailName(), true, true);
+		staticInternationalName.setShowIfCondition(new FormItemIfFunction() {
+		    @Override
+		    public boolean execute(FormItem item, Object value, DynamicForm form) {
+		        return translationsShowed;
+		    }
+		});
 		// General Form
-		GroupDynamicForm generalForm = new GroupDynamicForm("Detalles del Indicador");
-//		generalForm.setFields(staticInternationalName, staticNameItem, staticInternationalDescription, staticDescriptionItem, staticAgency);
+		generalForm = new GroupDynamicForm(getConstants().indicDetailDetails());
+		generalForm.setFields(staticNameItem, staticInternationalName);
 
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm("Estado del Indicador");
+		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
 //		statusForm.setRedrawOnResize(true);
 //		statusForm.setFields(staticFinalItem, staticStartDateItem, staticEndDateItem);
 		
-		mainFormLayout.addViewForm(identifiersForm);
-		mainFormLayout.addViewForm(generalForm);
-		mainFormLayout.addViewForm(statusForm);
+		mainFormLayout.addViewCanvas(identifiersForm);
+		mainFormLayout.addViewCanvas(generalForm);
+		mainFormLayout.addViewCanvas(statusForm);
 	}
 	
 	
 	private void createEditionForm() {
-		editIdLogic = new ViewTextItem("id-ind-edit", "Identificador");
-		editVersion = new ViewTextItem("version-ind-edit", "Versión");
+		idLogicItem = new ViewTextItem("id-ind-edit", getConstants().indicDetailIdentifier());
+		versionItem = new ViewTextItem("version-ind-edit", getConstants().indicDetailVersion());
 		
 		// Identifiers Form
-		GroupDynamicForm identifiersEditionForm = new GroupDynamicForm("Identificadores del Indicador");
-		identifiersEditionForm.setFields(editIdLogic, editVersion);
+		GroupDynamicForm identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+		identifiersEditionForm.setFields(idLogicItem, versionItem);
 		
+		
+		nameItem = new RequiredTextItem("name-ind-edit", getConstants().indicDetailName());
+        nameItem.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !translationsShowed;
+            }
+        });
+        
+        internationalName = new InternationalTextItem("nameint-ind-edit", getConstants().indicDetailName(), false, true);
+        internationalName.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return translationsShowed;
+            }
+        });
 		// General Form
-		GroupDynamicForm generalEditionForm = new GroupDynamicForm("Detalles del Indicador");
-		//generalEditionForm.setFields(internationalName, nameItem, internationalDescription, descriptionItem, staticAgencyEdit);
+		generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
+		generalEditionForm.setFields(internationalName, nameItem);
 				
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm("Estado del Indicador");
+		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
 		//statusForm.setFields(staticFinalItemEdit, staticStartDateItemEdit, staticEndDateItemEdit);
 		
-		mainFormLayout.addEditionForm(identifiersEditionForm);
-		mainFormLayout.addEditionForm(generalEditionForm);
-		mainFormLayout.addEditionForm(statusForm);
+		mainFormLayout.addEditionCanvas(identifiersEditionForm);
+		mainFormLayout.addEditionCanvas(generalEditionForm);
+		mainFormLayout.addEditionCanvas(statusForm);
 	}
 	
-	public void setIndicator(Indicator indicator) {
+	public void setIndicator(IndicatorDto indicator) {
+	    this.indicator = indicator;
 		mainFormLayout.setViewMode();
 		
 		setIndicatorSystemViewMode(indicator);
@@ -101,16 +171,45 @@ public class IndicatorGeneralPanel extends VLayout {
 		generalEditionForm.clearErrors(true);*/
 	}
 	
-	private void setIndicatorSystemViewMode(Indicator indicator) {
+	private void setIndicatorSystemViewMode(IndicatorDto indicator) {
 		/*Actualizamos campos con solo informacion estatica */
-		staticIdLogic.setValue(indicator.getId());
-		staticVersion.setValue(indicator.getVersion());
+   		/*staticIdLogic.setValue(indicator.getId());
+		staticVersion.setValue(indicator.getVersionNumber());*/
+	    identifiersForm.setValue(IndicatorsDS.FIELD_CODE, indicator.getId());
+	    identifiersForm.setValue(IndicatorsDS.FIELD_UUID, indicator.getUuid());
+	    identifiersForm.setValue(IndicatorsDS.FIELD_VERSION, indicator.getVersionNumber());
+		staticNameItem.setValue(getLocalisedString(indicator.getName()));
+		staticInternationalName.setValue(indicator.getName());
 	}
 	
 	
-	private void setIndicatorSystemEditionMode(Indicator indicator) {
+	private void setIndicatorSystemEditionMode(IndicatorDto indicator) {
 		/*Actualizamos campos de edicion*/
-		editIdLogic.setValue(indicator.getId());
-		editVersion.setValue(indicator.getVersion());
+		idLogicItem.setValue(indicator.getId());
+		versionItem.setValue(indicator.getVersionNumber());
+	    nameItem.setValue(getLocalisedString(indicator.getName()));
+	    internationalName.setValue(indicator.getName());
 	}
+	
+    public void setTranslationsShowed(boolean translationsShowed) {
+        this.translationsShowed = translationsShowed;
+        // If forms are marked for redraw after show/hide translations in annotations panel, the annotations are not showed properly ¿?
+       generalForm.markForRedraw();
+       generalEditionForm.markForRedraw();
+/*        generalEditionForm.markForRedraw();
+        viewAnnotationsPanel.setTranslationsShowed(translationsShowed);
+        editionAnnotationsPanel.setTranslationsShowed(translationsShowed);*/
+    }
+    
+    private void saveIndicator() {
+        if (generalEditionForm.validate()) {
+            //TODO: solo si se muestra
+            indicator.setName(internationalName.getValue(indicator.getName()));
+            uiHandlers.saveIndicator(indicator);
+        }
+    }
+    
+    public void setUiHandlers(IndicatorUiHandler uiHandlers) {
+        this.uiHandlers = uiHandlers;
+    }
 }

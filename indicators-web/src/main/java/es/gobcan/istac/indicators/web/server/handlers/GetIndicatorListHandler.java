@@ -4,9 +4,9 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.web.server.model.IndDatabase;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
-import es.gobcan.istac.indicators.web.shared.db.IndDatabase;
 
 public class GetIndicatorListHandler extends AbstractActionHandler<GetIndicatorListAction, GetIndicatorListResult>{
 

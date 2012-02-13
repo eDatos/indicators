@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
 import java.util.List;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -9,8 +13,8 @@ import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -22,11 +26,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
 
 public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
@@ -46,14 +49,14 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 	@Inject
 	public SystemListViewImpl() {
 		//ToolStrip
-		newIndSystemActor = new ToolStripButton(IndicatorsWeb.getMessages().newItem(),"new_listgrid.png");
+		newIndSystemActor = new ToolStripButton(getConstants().systemNew(),RESOURCE.newListGrid().getURL());
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		toolStrip.addButton(newIndSystemActor);
 		
 		//List
-		ListGridField field1 = new ListGridField(IndicatorSystemRecord.IDENTIFIER,"Identificador");
-		ListGridField field2 = new ListGridField(IndicatorSystemRecord.NAME,"Nombre");
+		ListGridField field1 = new ListGridField(IndicatorSystemRecord.IDENTIFIER,getConstants().systemListHeaderIdentifier());
+		ListGridField field2 = new ListGridField(IndicatorSystemRecord.NAME,getConstants().systemListHeaderName());
 		
 		indSystemListGrid = new ListGrid();
 		indSystemListGrid.setFields(field1,field2);
@@ -74,10 +77,10 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
         newIndSysForm.setPadding(5);
         newIndSysForm.setLayoutAlign(VerticalAlignment.BOTTOM);
 		
-		nameIndSys = new TextItem("name-new-dsd", "Nombre");
+		nameIndSys = new TextItem("name-new-dsd", getConstants().systemNewName());
 		nameIndSys.setRequired(true);
         nameIndSys.setWidth(200);
-        createIndSysButton = new ButtonItem("create-new-dsd", "Crear");
+        createIndSysButton = new ButtonItem("create-new-dsd", getConstants().systemNewName());
         createIndSysButton.setWidth(100);
         
         newIndSysForm.setFields(nameIndSys,createIndSysButton);
@@ -92,15 +95,16 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 				newModal = new Window();
                 newModal.setWidth(380);
                 newModal.setHeight(100);
-                newModal.setTitle("Nuevo Sistema de Indicadores");
+                newModal.setTitle(getConstants().systemNewTitle());
                 newModal.setShowMinimizeButton(false);
                 newModal.setIsModal(true);
                 newModal.setShowModalMask(true);
                 newModal.centerInPage();
 				newModal.addCloseClickHandler(new CloseClickHandler() {
-					public void onCloseClick(CloseClientEvent event) {
-						newModal.destroy();
-					}
+                    @Override
+                    public void onCloseClick(CloseClickEvent event) {
+                        newModal.destroy();
+                    }
 				});
 				newModal.addItem(newIndSysForm);
 				newModal.show(); 
@@ -126,11 +130,11 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 	}
 	
 	@Override
-	public void setIndSystemList(List<IndicatorSystem> indSysList) {
-		IndicatorSystemRecord[] records = new IndicatorSystemRecord[indSysList.size()];
+	public void setIndSystemList(List<IndicatorsSystemDto> indicatorsSystemList) {
+		IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
 		int index = 0;
-		for (IndicatorSystem indSys : indSysList) {
-			records[index++] = new IndicatorSystemRecord(indSys.getId(), indSys.getName());
+		for (IndicatorsSystemDto indSys : indicatorsSystemList) {
+			records[index++] = new IndicatorSystemRecord(indSys.getId(), getLocalisedString(indSys.getTitle()));
 		}
 		indSystemListGrid.setData(records);
 	}

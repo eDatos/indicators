@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.List;
 
 import com.google.gwt.event.shared.EventBus;
@@ -15,6 +17,7 @@ import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
@@ -24,14 +27,13 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.SaveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.SaveIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 	
 	private DispatchAsync dispatcher;
 	
 	public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
-		void setIndicatorList(List<Indicator> indicatorList);
+		void setIndicatorList(List<IndicatorDto> indicatorList);
 	}
 	
 	@ProxyCodeSplit
@@ -60,7 +62,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 		dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(caught, "Error al obtener el listado de Indicadores"), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
 			}
 			@Override
 			public void onSuccess(GetIndicatorListResult result) {
@@ -71,18 +73,16 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	
 	//Manejo de eventos
 	@Override
-	public void createIndicator(String name) {
-		Indicator ind = new Indicator();
-		ind.setName(name);
-		dispatcher.execute(new SaveIndicatorAction(ind), new AsyncCallback<SaveIndicatorResult>() {
+	public void createIndicator(IndicatorDto indicator) {
+		dispatcher.execute(new SaveIndicatorAction(indicator), new AsyncCallback<SaveIndicatorResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(caught, "Error al obtener el listado de Indicadores"), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorCreate()), MessageTypeEnum.ERROR);
 			}
 			@Override
 			public void onSuccess(SaveIndicatorResult result) {
 				retrieveIndicatorList(); 
-				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList("Se ha creado el Indicador"), MessageTypeEnum.SUCCESS);
+				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicCreated()), MessageTypeEnum.SUCCESS);
 			}
 		});
 	}

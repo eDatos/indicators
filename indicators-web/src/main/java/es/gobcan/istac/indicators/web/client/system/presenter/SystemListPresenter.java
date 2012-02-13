@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.List;
 
 import com.google.gwt.event.shared.EventBus;
@@ -17,22 +19,21 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorSystemListResult;
-import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemAction;
-import es.gobcan.istac.indicators.web.shared.SaveIndicatorSystemResult;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 	
 	public interface SystemListView extends View, HasUiHandlers<SystemListUiHandler> {
-		void setIndSystemList(List<IndicatorSystem> indSysList);
+		void setIndSystemList(List<IndicatorsSystemDto> indSysList);
 	}
 	
 	@ProxyCodeSplit
@@ -68,19 +69,19 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 	 */
 	@Override
 	public void createIndicatorSystem(String name) {
-		IndicatorSystem system = new IndicatorSystem();
+		/*IndicatorSystemDto system = new IndicatorSystem();
 		system.setName(name);
 		dispatcher.execute(new SaveIndicatorSystemAction(system), new AsyncCallback<SaveIndicatorSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(caught, "Error al crear Sistema de Indicadores"), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorCreate()), MessageTypeEnum.ERROR);
 			}
 			@Override
 			public void onSuccess(SaveIndicatorSystemResult result) {
 				retrieveIndicatorSystemList();
-				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList("Se ha creado el Sistema de Indicadores"), MessageTypeEnum.SUCCESS);
+				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemCreated()), MessageTypeEnum.SUCCESS);
 			}
-		});
+		});*/
 	}
 	
 	@Override
@@ -99,14 +100,15 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 	 */
 
 	private void retrieveIndicatorSystemList() {
-		dispatcher.execute(new GetIndicatorSystemListAction(), new AsyncCallback<GetIndicatorSystemListResult> () {
+		dispatcher.execute(new GetIndicatorsSystemListAction(), new AsyncCallback<GetIndicatorsSystemListResult> () {
 			@Override
 			public void onFailure(Throwable caught) {
+			    ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorRetrieveList()), MessageTypeEnum.ERROR);
 			}
 
 			@Override
-			public void onSuccess(GetIndicatorSystemListResult result) {
-				getView().setIndSystemList(result.getIndSysList());
+			public void onSuccess(GetIndicatorsSystemListResult result) {
+				getView().setIndSystemList(result.getIndicatorsSystemList());
 			}
 		});
 	}

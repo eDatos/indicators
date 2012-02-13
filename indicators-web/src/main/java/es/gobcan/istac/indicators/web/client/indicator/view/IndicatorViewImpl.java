@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -10,8 +13,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
@@ -31,7 +35,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 		indicatorLabel.setHeight(40);
 		indicatorLabel.setStyleName("sectionTitle");
 		
-		Tab generalTab = new Tab("General");
+		Tab generalTab = new Tab(getConstants().indicDetailGeneral());
 		generalTab.setPane(generalPanel);
 		
 		tabset = new TabSet();
@@ -46,10 +50,15 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 	public Widget asWidget() {
 		return panel;
 	}
+	
+	@Override
+	public void setUiHandlers(IndicatorPresenter uiHandlers) {
+	    generalPanel.setUiHandlers(uiHandlers);
+	}
 
 	@Override
-	public void setIndicator(Indicator indicator) {
-		this.indicatorLabel.setContents(indicator.getName());
+	public void setIndicator(IndicatorDto indicator) {
+		this.indicatorLabel.setContents(getLocalisedString(indicator.getName()));
 		this.generalPanel.setIndicator(indicator);
 	}
 

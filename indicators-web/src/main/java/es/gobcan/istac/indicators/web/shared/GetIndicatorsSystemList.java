@@ -5,11 +5,11 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @GenDispatch(isSecure=false)
-public class GetIndicatorSystemList {
+public class GetIndicatorsSystemList {
 	
 	@Out(1)
-	List<IndicatorSystem> indSysList;
+	List<IndicatorsSystemDto> indicatorsSystemList;
 }

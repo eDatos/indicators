@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='IndicatorsWeb'>
 	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name="com.google.gwt.resources.Resources" />
 	<inherits name='com.google.gwt.user.User' />
-
+	<inherits name="com.google.gwt.i18n.I18N"/>
 
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name="com.google.gwt.user.theme.standard.Standard" />
+	<inherits name="es.gobcan.istac.indicators.IndicatorsCore"/>
+	<inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
+<!-- 	<inherits name="org.siemac.metamac.CoreCommonApi"/> -->
+	
 	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
 	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
 	<!-- GIN for dependency injection -->
 	<inherits name="com.google.gwt.inject.Inject" />
+	
 
 
 	<!-- GwtPlatform -->
@@ -39,6 +45,8 @@
 
 	<!-- Languages -->
 	<extend-property name="locale" values="es" />
+<!-- 	<set-property-fallback name="locale" value="es"/> -->
+	
 	<!-- Generate code in compilation time only for gecko-based browsers -->
 	<set-property name="user.agent" value="gecko1_8" />
 
@@ -46,6 +54,5 @@
 	<!-- Configure GIN -->
 	<define-configuration-property name="gin.ginjector"	is-multi-valued="false" />
 	<set-configuration-property name="gin.ginjector" value="es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector" />
-
 
 </module>

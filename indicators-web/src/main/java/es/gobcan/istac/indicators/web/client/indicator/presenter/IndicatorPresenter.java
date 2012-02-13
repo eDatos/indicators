@@ -1,9 +1,12 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -13,6 +16,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
@@ -21,14 +25,15 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.db.Indicator;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorResult;
 
-public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy>{
+public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 	private DispatchAsync dispatcher;
-	private Long indicatorId;
+	private String indicatorUuid;
 	
-	public interface IndicatorView extends View {
-		void setIndicator(Indicator indicator);
+	public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
+		void setIndicator(IndicatorDto indicator);
 	}
 	
 	@ProxyCodeSplit
@@ -39,6 +44,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher) {
 		super(eventBus, view, proxy);
 		this.dispatcher = dispatcher;
+		view.setUiHandlers(this);
 	}
 	
 	@Override
@@ -49,7 +55,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		indicatorId = Long.parseLong(request.getParameter(PlaceRequestParams.indicatorParam, null));
+		indicatorUuid = request.getParameter(PlaceRequestParams.indicatorParam, null);
 	}
 	
 	@Override
@@ -59,10 +65,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	}
 	
 	private void retrieveIndicator() {
-		dispatcher.execute(new GetIndicatorAction(this.indicatorId), new AsyncCallback<GetIndicatorResult>() {
+		dispatcher.execute(new GetIndicatorAction(this.indicatorUuid), new AsyncCallback<GetIndicatorResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, "Error al cargar el Indicador"), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
 
 			@Override
@@ -71,6 +77,21 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 			}
 			
 		});
+	}
+	
+	/* UiHandlers */
+	public void saveIndicator(IndicatorDto indicator) {
+	    dispatcher.execute(new SaveIndicatorAction(indicator), new AsyncCallback<SaveIndicatorResult>() {
+	       @Override
+	        public void onFailure(Throwable caught) {
+	           ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
+	        }
+	       
+	       @Override
+	        public void onSuccess(SaveIndicatorResult result) {
+	           retrieveIndicator();
+	        }
+	    });
 	}
 
 }

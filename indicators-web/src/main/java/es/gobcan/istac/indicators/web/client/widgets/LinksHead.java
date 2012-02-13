@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,12 @@ public class LinksHead extends HLayout {
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		
-		indSysBut = new ToolStripButton("Sistemas de Indicadores");
+		indSysBut = new ToolStripButton(getConstants().appLinksSystemList());
 		toolStrip.addMember(indSysBut);
 		
 		toolStrip.addMember(new ToolStripSeparator());
 		
-		indBut = new ToolStripButton("Indicadores");
+		indBut = new ToolStripButton(getConstants().appLinksIndList());
 		toolStrip.addMember(indBut);
 		
 		this.addMember(toolStrip);

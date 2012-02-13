@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.web.client.main.view;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.widgets.ErrorMessagePanel;
+import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
+
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -13,10 +16,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicators.web.client.widgets.ErrorMessagePanel;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 import es.gobcan.istac.indicators.web.client.widgets.LinksHead;
-import es.gobcan.istac.indicators.web.client.widgets.MasterHead;
-import es.gobcan.istac.indicators.web.client.widgets.SuccessMessagePanel;
 
 public class MainPageViewImpl extends ViewImpl implements MainPagePresenter.MainView {
 	
@@ -27,14 +28,14 @@ public class MainPageViewImpl extends ViewImpl implements MainPagePresenter.Main
 	private HLayout southLayout;
 	private HLayout footerLayout;
 	
-	private final MasterHead masterHead;
+	private final IndicatorsMasterHead masterHead;
 	private final LinksHead linksHead;
 	private final SuccessMessagePanel successMessagePanel;
 	private final ErrorMessagePanel errorMessagePanel;
 		
 	
 	@Inject
-	public MainPageViewImpl(MasterHead masterHead, LinksHead linksHead, SuccessMessagePanel successMessagePanel, ErrorMessagePanel errorMessagePanel) {
+	public MainPageViewImpl(IndicatorsMasterHead masterHead, LinksHead linksHead, SuccessMessagePanel successMessagePanel, ErrorMessagePanel errorMessagePanel) {
 		this.masterHead = masterHead;
 		this.linksHead = linksHead;
 		this.successMessagePanel = successMessagePanel;
@@ -82,7 +83,6 @@ public class MainPageViewImpl extends ViewImpl implements MainPagePresenter.Main
 	public void setInSlot(Object slot, Widget content) {
 		if (slot == MainPagePresenter.CONTENT_SLOT) {
 			if (content != null) {
-				//panel.add(content, "main");
 				southLayout.removeMembers(southLayout.getMembers());
 				southLayout.addMember(content);
 			}

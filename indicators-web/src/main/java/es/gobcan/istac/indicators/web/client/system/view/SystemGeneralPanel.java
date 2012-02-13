@@ -1,17 +1,20 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+
+import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.web.client.widgets.form.GroupDynamicForm;
-import es.gobcan.istac.indicators.web.client.widgets.form.MainFormLayout;
-import es.gobcan.istac.indicators.web.client.widgets.form.fields.ViewTextItem;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystem;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 public class SystemGeneralPanel extends VLayout {
 
-	private MainFormLayout mainFormLayout;
+	private InternationalMainFormLayout mainFormLayout;
 	
 	/* VIEW FORM */
 	private ViewTextItem staticIdLogic;
@@ -24,15 +27,14 @@ public class SystemGeneralPanel extends VLayout {
 	public SystemGeneralPanel() {
 		super();
 		
-		mainFormLayout = new MainFormLayout();
+		mainFormLayout = new InternationalMainFormLayout();
+		
 		mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				/*setTranslationsShowed(mainFormLayout.getTranslateToolStripButton().isSelected());
-				generalForm.markForRedraw();
-				generalEditionForm.markForRedraw();*/
-			}
-		});
+		    @Override
+            public void onClick(ClickEvent event) {
+                setTranslationsShowed(mainFormLayout.getTranslateToolStripButton().isSelected());
+            }
+        });
 		
 		createViewForm();
 		createEditionForm();
@@ -48,25 +50,25 @@ public class SystemGeneralPanel extends VLayout {
 	 */
 	private void createViewForm() {
 		
-		staticIdLogic = new ViewTextItem("id-indSys-view", "Identificador");
-		staticVersion = new ViewTextItem("version-indSys-view", "Versión");
+		staticIdLogic = new ViewTextItem("id-indSys-view", getConstants().systemDetailIdentifier());
+		staticVersion = new ViewTextItem("version-indSys-view", getConstants().systemDetailVersion());
 
 		// Identifiers Form
-		GroupDynamicForm identifiersForm = new GroupDynamicForm("Identificadores del Sistema");
+		GroupDynamicForm identifiersForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
 		identifiersForm.setFields(staticIdLogic, staticVersion);
 
 		// General Form
-		GroupDynamicForm generalForm = new GroupDynamicForm("Detalles del Sistema");
+		GroupDynamicForm generalForm = new GroupDynamicForm(getConstants().systemDetailDetails());
 //		generalForm.setFields(staticInternationalName, staticNameItem, staticInternationalDescription, staticDescriptionItem, staticAgency);
 
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm("Estado del Sistema");
+		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().systemDetailStatus());
 //		statusForm.setRedrawOnResize(true);
 //		statusForm.setFields(staticFinalItem, staticStartDateItem, staticEndDateItem);
 		
-		mainFormLayout.addViewForm(identifiersForm);
-		mainFormLayout.addViewForm(generalForm);
-		mainFormLayout.addViewForm(statusForm);
+		mainFormLayout.addViewCanvas(identifiersForm);
+		mainFormLayout.addViewCanvas(generalForm);
+		mainFormLayout.addViewCanvas(statusForm);
 	}
 	
 	
@@ -77,48 +79,51 @@ public class SystemGeneralPanel extends VLayout {
 	 */
 	private void createEditionForm() {
 		
-		editIdLogic = new ViewTextItem("id-indSys-edit", "Identificador");
-		editVersion = new ViewTextItem("version-indSys-edit", "Versión");
+		editIdLogic = new ViewTextItem("id-indSys-edit", getConstants().systemDetailIdentifier());
+		editVersion = new ViewTextItem("version-indSys-edit", getConstants().systemDetailVersion());
 
 		// Identifiers Form
-		GroupDynamicForm identifiersEditionForm = new GroupDynamicForm("Identificadores del Sistema");
+		GroupDynamicForm identifiersEditionForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
 		identifiersEditionForm.setFields(editIdLogic, editVersion);
 		
 		// General Form
-		GroupDynamicForm generalEditionForm = new GroupDynamicForm("Detalles del Sistema");
+		GroupDynamicForm generalEditionForm = new GroupDynamicForm(getConstants().systemDetailDetails());
 		//generalEditionForm.setFields(internationalName, nameItem, internationalDescription, descriptionItem, staticAgencyEdit);
 				
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm("Estado del Sistema");
+		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().systemDetailStatus());
 		//statusForm.setFields(staticFinalItemEdit, staticStartDateItemEdit, staticEndDateItemEdit);
 		
-		mainFormLayout.addEditionForm(identifiersEditionForm);
-		mainFormLayout.addEditionForm(generalEditionForm);
-		mainFormLayout.addEditionForm(statusForm);
+		mainFormLayout.addEditionCanvas(identifiersEditionForm);
+		mainFormLayout.addEditionCanvas(generalEditionForm);
+		mainFormLayout.addEditionCanvas(statusForm);
 	}
 	
-	public void setIndicatorSystem(IndicatorSystem indSystem) {
+	public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
 		mainFormLayout.setViewMode();
 		
-		setIndicatorSystemViewMode(indSystem);
-		setIndicatorSystemEditionMode(indSystem);
+		setIndicatorsSystemViewMode(indSystem); 
+		setIndicatorsSystemEditionMode(indSystem);
 		
 		// Clear errors
 		/*identifiersEditionForm.clearErrors(true);
 		generalEditionForm.clearErrors(true);*/
 	}
 	
-	private void setIndicatorSystemViewMode(IndicatorSystem indicatorSystem) {
+	private void setIndicatorsSystemViewMode(IndicatorsSystemDto indicatorSystem) {
 		/*Actualizamos campos con solo informacion estatica */
 		staticIdLogic.setValue(indicatorSystem.getId());
 		staticVersion.setValue(indicatorSystem.getVersion());
 	}
 	
 	
-	private void setIndicatorSystemEditionMode(IndicatorSystem indicatorSystem) {
+	private void setIndicatorsSystemEditionMode(IndicatorsSystemDto indicatorSystem) {
 		/*Actualizamos campos de edicion*/
 		editIdLogic.setValue(indicatorSystem.getId());
 		editVersion.setValue(indicatorSystem.getVersion());
 	}
+	
+	public void setTranslationsShowed(boolean translationsShowed) {
+    }
 
 }

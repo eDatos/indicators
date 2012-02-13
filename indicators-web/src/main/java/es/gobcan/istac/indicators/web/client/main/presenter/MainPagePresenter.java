@@ -18,8 +18,8 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.HideMessageEvent;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.events.HideMessageEvent.HideMessageHandler;
+import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent.ShowMessageHandler;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler {

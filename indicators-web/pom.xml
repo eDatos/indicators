@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>es.gobcan.istac.indicators</groupId>
 		<artifactId>indicators-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
 	<groupId>es.gobcan.istac.indicators</groupId>
 	<artifactId>indicators-web</artifactId>
 	<name>INDICATORS :: WEB</name>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 
@@ -90,66 +90,24 @@
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
 		</dependency>
+
 		<!-- METAMAC -->
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
 			<artifactId>metamac-web-common</artifactId>
 		</dependency>
-
+		
+		<!-- INDICADORES-CORE -->
 		<dependency>
-			<groupId>org.siemac.metamac</groupId>
-			<artifactId>metamac-core-common</artifactId>
+			<groupId>es.gobcan.istac.indicators</groupId>
+			<artifactId>indicators-core</artifactId>
 			<classifier>client</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.persistence</groupId>
-					<artifactId>persistence-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.hibernate</groupId>
-					<artifactId>hibernate-annotations</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.hibernate</groupId>
-					<artifactId>hibernate-validator</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>jcl-over-slf4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>log4j-over-slf4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>aopalliance</groupId>
-					<artifactId>aopalliance</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-beanutils</groupId>
-					<artifactId>commons-beanutils</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.fornax.cartridges</groupId>
-					<artifactId>fornax-cartridges-sculptor-generator</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.fornax.cartridges</groupId>
-					<artifactId>fornax-cartridges-sculptor-framework</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.fornax.cartridges</groupId>
-					<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>cglib</groupId>
-					<artifactId>cglib-nodep</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -185,6 +143,7 @@
 					<i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
 					<compileSourcesArtifacts>
 						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
+						<artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
 					</compileSourcesArtifacts>
 				</configuration>
 			</plugin>

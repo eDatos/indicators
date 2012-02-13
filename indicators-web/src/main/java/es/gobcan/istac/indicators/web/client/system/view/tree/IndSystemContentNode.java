@@ -17,14 +17,24 @@ public class IndSystemContentNode extends TreeNode {
 		this.setAttribute(ATTR_PARENT,parent);
 		this.setAttribute(ATTR_TYPE,type);
 		this.setAttribute(ATTR_SOURCE,source);
+		if (IndSystemContentNodeType.INDICATOR.equals(type)) {
+		    this.setIsFolder(false);
+		} else {
+		    this.setIsFolder(true);
+		}
+		
 	}
 	
 	public String getId() {
 		return this.getAttribute(ATTR_ID);
 	}
 	
+	public void setName(String name) {
+		this.setAttribute(ATTR_NAME,name);
+	}
+	
 	public String getName() {
-		return this.getAttribute(ATTR_NAME);
+	    return this.getAttribute(ATTR_NAME);
 	}
 	
 	public IndSystemContentNodeType getType() {
