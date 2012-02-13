@@ -218,9 +218,19 @@ public class InvocationValidator {
         checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
         checkMetadataUnmodifiable(dimensionDto.getParentDimensionUuid(), dimension.getParent() != null ? dimension.getParent().getUuid() : null, "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
         checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
-        // TODO order
         
         throwIfException(exceptions); 
+    }
+    
+    public static void checkUpdateDimensionLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(uuid, "UUID", exceptions);
+        checkParameterRequired(orderInLevel, "ORDER_IN_LEVEL", exceptions);
+        
+        throwIfException(exceptions);
     }
     
     @SuppressWarnings("rawtypes")

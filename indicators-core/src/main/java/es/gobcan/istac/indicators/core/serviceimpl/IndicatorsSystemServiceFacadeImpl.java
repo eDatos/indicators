@@ -337,6 +337,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         return indicatorsSystemsDto;
     }
 
+    // TODO al modificar el orden de los otros elementos del nivel tener en cuenta tb las instancias de indicadores
     @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
 
@@ -354,25 +355,25 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         if (dimensionDto.getParentDimensionUuid() == null) {
 
             // Check order is correct
-            checkDimensionsOrder(indicatorsSystemVersion.getDimensions(), dimension);
+            checkDimensionsOrder(indicatorsSystemVersion.getDimensions(), Boolean.FALSE, dimension.getOrderInLevel());
 
             // Create dimension
             dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
+            dimension.setParent(null);
             dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
-
-            // Update order of other dimensions in this level
-            updateDimensionsOrders(ctx, indicatorsSystemVersion.getDimensions(), dimension);
 
             // Update indicators system adding dimension
             indicatorsSystemVersion.addDimension(dimension);
             getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-
+            
+            // Check order and update order of other dimensions in this level
+            updateDimensionsOrdersAddingDimension(ctx, indicatorsSystemVersion.getDimensions(), dimension);
         } else {
             // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
             Dimension dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
             
             // Check order is correct
-            checkDimensionsOrder(dimensionParent.getSubdimensions(), dimension);
+            checkDimensionsOrder(dimensionParent.getSubdimensions(), Boolean.FALSE, dimension.getOrderInLevel());
 
             // Check dimension parent belogs to indicators system provided
             IndicatorsSystemVersion indicatorsSystemVersionOfDimensionParent = retrieveIndicatorSystemVersionOfDimension(dimensionParent);
@@ -381,11 +382,12 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
                         ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getMessageForReasonType(), dimensionDto.getParentDimensionUuid(), indicatorsSystemUuid);
             }
             // Create subdimension
+            dimension.setIndicatorsSystemVersion(null);
             dimension.setParent(dimensionParent);
             dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
 
             // Update order of other dimensions in this level
-            updateDimensionsOrders(ctx, dimensionParent.getSubdimensions(), dimension);
+            updateDimensionsOrdersAddingDimension(ctx, dimensionParent.getSubdimensions(), dimension);
 
             // Add subdimension to parent dimension
             dimensionParent.addSubdimension(dimension);
@@ -395,22 +397,6 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Transform to Dto to return
         dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
-    }
-
-    private void checkDimensionsOrder(List<Dimension> dimensionsInLevel, Dimension dimension) throws MetamacException {
-        if (dimension.getOrderInLevel() > dimensionsInLevel.size() + 1) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(),
-                    ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getMessageForReasonType(), "DIMENSION.ORDER_IN_LEVEL");
-        }
-    }
-
-    private void updateDimensionsOrders(ServiceContext ctx, List<Dimension> dimensionsInLevel, Dimension dimension) throws MetamacException {
-        for (Dimension dimensionInLevel : dimensionsInLevel) {
-            if (dimensionInLevel.getOrderInLevel() >= dimension.getOrderInLevel()) {
-                dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() + 1);
-                getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
-            }
-        }
     }
 
     @Override
@@ -475,11 +461,82 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         getIndicatorsSystemService().updateDimension(ctx, dimension);
     }
 
-    // TODO al cambiar el orden de una dimensión, tb tener en cuenta instancias de indicadores
+    // TODO al cambiar el orden de una dimensión tener en cuenta tb las instancias de indicadores
     @Override
-    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentUuid, Long order) throws MetamacException {
-        // TODO Auto-generated method stub
+    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkUpdateDimensionLocation(uuid, parentTargetUuid, orderInLevel, null);
+        
+        // Retrieve and transform
+        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        Long orderInLevelBefore = dimension.getOrderInLevel();
+        dimension.setOrderInLevel(orderInLevel);
 
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorSystemVersionOfDimension(dimension);
+        checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
+
+        // Check target parent is not children of this dimension
+        if (parentTargetUuid != null) {
+            checkDimensionIsNotChildren(ctx, dimension, parentTargetUuid);
+        }
+        
+        // Update parent and/or order
+        String parentUuidActual = dimension.getParent() != null ? dimension.getParent().getUuid() : null;
+        if ((parentUuidActual == null && parentTargetUuid != null) ||
+            (parentUuidActual != null && parentTargetUuid == null) ||
+            (parentUuidActual != null && parentTargetUuid != null && !parentTargetUuid.equals(parentUuidActual))) {
+
+            Dimension dimensionParentActual = dimension.getParent();
+            Dimension dimensionParentTarget = parentTargetUuid != null ? getIndicatorsSystemService().retrieveDimension(ctx, parentTargetUuid) : null;
+            
+            // Update target parent, adding dimension
+            List<Dimension> dimensionsInLevel = null;
+            if (dimensionParentTarget == null) {
+                indicatorsSystemVersion.addDimension(dimension);
+                getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                dimensionsInLevel = indicatorsSystemVersion.getDimensions();
+            } else {
+                dimensionParentTarget.addSubdimension(dimension);
+                getIndicatorsSystemService().updateDimension(ctx, dimensionParentTarget);
+                dimensionsInLevel = dimensionParentTarget.getSubdimensions();
+            }            
+            // Check order is correct and update orders
+            checkDimensionsOrder(dimensionsInLevel, Boolean.TRUE, dimension.getOrderInLevel());
+            updateDimensionsOrdersAddingDimension(ctx, dimensionsInLevel, dimension);
+
+             // Update dimension, changing parent
+            if (dimensionParentTarget == null) {
+                dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
+                dimension.setParent(null);
+            } else {
+                dimension.setIndicatorsSystemVersion(null);
+                dimension.setParent(dimensionParentTarget);
+            }
+            getIndicatorsSystemService().updateDimension(ctx, dimension);
+            
+            // Update actual parent dimension or indicators system version, removing dimension
+            if (dimensionParentActual != null) {
+                dimensionParentActual.getSubdimensions().remove(dimension);
+                getIndicatorsSystemService().updateDimension(ctx, dimensionParentActual);
+                // Update order of other dimensions
+                updateDimensionsOrdersRemovingDimension(ctx, dimensionParentActual.getSubdimensions(), orderInLevelBefore);
+            } else {
+                indicatorsSystemVersion.getDimensions().remove(dimension);
+                getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                // Update order of other dimensions
+                updateDimensionsOrdersRemovingDimension(ctx, indicatorsSystemVersion.getDimensions(), orderInLevelBefore);
+            }
+
+        } else {
+            // Same parent, only changes order
+            // Check order is correct and update orders
+            List<Dimension> dimensionsInLevel = dimension.getParent() != null ? dimension.getParent().getSubdimensions() : dimension.getIndicatorsSystemVersion().getDimensions();
+            checkDimensionsOrder(dimensionsInLevel, Boolean.TRUE, dimension.getOrderInLevel());
+            updateDimensionsOrdersChangingOrder(ctx, dimensionsInLevel, dimension.getUuid(), orderInLevelBefore, dimension.getOrderInLevel());
+            getIndicatorsSystemService().updateDimension(ctx, dimension);
+        }
     }
 
     private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
@@ -583,5 +640,69 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
                     indicatorsSystemVersion.getVersionNumber());
 
         }
+    }
+
+    private void checkDimensionsOrder(List<Dimension> dimensionsInLevel, Boolean dimensionAlreadyAdded, Long orderInLevel) throws MetamacException {
+        Long orderMaximum = !dimensionAlreadyAdded ? Long.valueOf(dimensionsInLevel.size() + 1) : Long.valueOf(dimensionsInLevel.size());
+        if (orderInLevel > orderMaximum) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(),
+                    ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getMessageForReasonType(), "ORDER_IN_LEVEL");
+        }
+    }
+
+    private void updateDimensionsOrdersAddingDimension(ServiceContext ctx, List<Dimension> dimensionsInLevel, Dimension dimension) throws MetamacException {
+        for (Dimension dimensionInLevel : dimensionsInLevel) {
+            if (dimensionInLevel.getUuid().equals(dimension.getUuid())) {
+                continue; // it is possible dimension is already added to parent
+            }
+            if (dimensionInLevel.getOrderInLevel() >= dimension.getOrderInLevel()) {
+                dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() + 1);
+                getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+            }
+        }
+    }
+    
+    private void updateDimensionsOrdersRemovingDimension(ServiceContext ctx, List<Dimension> dimensionsInLevel, Long orderBeforeUpdate) throws MetamacException {
+        for (Dimension dimensionInLevel : dimensionsInLevel) {
+            if (dimensionInLevel.getOrderInLevel() > orderBeforeUpdate) {
+                dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() - 1);
+                getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+            }
+        }
+    }
+    
+    private void updateDimensionsOrdersChangingOrder(ServiceContext ctx, List<Dimension> dimensionsInLevel, String dimensionUuid, Long orderBeforeUpdate, Long orderAfterUpdate) throws MetamacException {
+        for (Dimension dimensionInLevel : dimensionsInLevel) {
+            if (dimensionInLevel.getUuid().equals(dimensionUuid)) {
+                continue;
+            }
+            if (orderAfterUpdate < orderBeforeUpdate) {
+                if (dimensionInLevel.getOrderInLevel() >= orderAfterUpdate && dimensionInLevel.getOrderInLevel() < orderBeforeUpdate) {
+                    dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() + 1);
+                    getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                }
+            } else if (orderAfterUpdate > orderBeforeUpdate) {
+                if (dimensionInLevel.getOrderInLevel() > orderBeforeUpdate && dimensionInLevel.getOrderInLevel() <= orderAfterUpdate) {
+                    dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() - 1);
+                    getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                }
+            }
+        }
+    }
+    
+    /**
+     * We can not move a dimension to its child
+     */
+    private void checkDimensionIsNotChildren(ServiceContext ctx, Dimension dimension, String parentTargetUuid) throws MetamacException {
+        
+        Dimension dimensionTarget = getIndicatorsSystemService().retrieveDimension(ctx, parentTargetUuid);
+        Dimension dimensionParent = dimensionTarget.getParent();
+        while (dimensionParent != null) {
+            if (dimensionParent.getUuid().equals(dimension.getUuid())) {
+                throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(),
+                        ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getMessageForReasonType(), "PARENT_TARGET_UUID");
+            }
+            dimensionParent = dimensionParent.getParent();
+        }        
     }
 }

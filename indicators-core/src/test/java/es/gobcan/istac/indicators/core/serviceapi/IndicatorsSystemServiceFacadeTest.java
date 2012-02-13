@@ -486,7 +486,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Validation
         try {
             indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
-            fail("Indicators system not exists");
+            fail("Dimension not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
@@ -1742,9 +1742,9 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
     
@@ -2054,7 +2054,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         
         DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V1);
         
-        // Validation
+
         try {
             indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Indicators system published");
@@ -2074,7 +2074,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setUuid(NOT_EXISTS);
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
-        // Validation
+
         try {
             indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Indicators system not exists");
@@ -2087,8 +2087,211 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     }
     
     @Override
+    @Test
     public void testUpdateDimensionLocation() throws Exception {
-        fail("pendiente");
+        // In other test testUpdateDimensionLocation*
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationActualWithoutParentTargetWithParent() throws Exception {
+        
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = DIMENSION_2_INDICATORS_SYSTEM_1_V2;
+        
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertNull(dimensionDto.getParentDimensionUuid());
+        
+        // Update location
+        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+
+        // Validate source
+        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(1, dimensionsDto.size());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
+
+        // Validate target
+        DimensionDto dimensionParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
+        assertEquals(1, dimensionParentDto.getSubdimensions().size());
+        assertEquals(uuid, dimensionParentDto.getSubdimensions().get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionParentDto.getSubdimensions().get(0).getOrderInLevel());
+        
+        // Validate dimension
+        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, dimensionDtoChanged.getParentDimensionUuid());
+        assertEquals(2, dimensionDtoChanged.getSubdimensions().size());
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationActualWithParentTargetWithoutParent() throws Exception {
+
+        String uuid = DIMENSION_1A_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = null;
+        String parentBeforeUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        
+        // Retrieve actual
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentBeforeUuid, dimensionDto.getParentDimensionUuid());
+        DimensionDto dimensionLastParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        assertEquals(2, dimensionLastParentDto.getSubdimensions().size());
+        
+        // Update location
+        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(2));
+
+        // Validate source
+        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        assertEquals(1, dimensionLastParentDtoAfterUpdate.getSubdimensions().size());
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
+
+        // Validate dimension
+        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertNull(dimensionDtoChanged.getParentDimensionUuid());
+        
+        // Validate target (indicators system)
+        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(3, dimensionsDto.size());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
+        assertEquals(uuid, dimensionsDto.get(1).getUuid());
+        assertEquals(Long.valueOf(2), dimensionsDto.get(1).getOrderInLevel());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(2).getUuid());
+        assertEquals(Long.valueOf(3), dimensionsDto.get(2).getOrderInLevel());
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationActualChangingParent() throws Exception {
+        
+        String uuid = DIMENSION_1A_INDICATORS_SYSTEM_1_V2;
+        String parentBeforeUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+        
+        // Retrieve actual
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentBeforeUuid, dimensionDto.getParentDimensionUuid());
+        DimensionDto dimensionLastParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        assertEquals(2, dimensionLastParentDto.getSubdimensions().size());
+        
+        // Update location
+        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+
+        // Validate source
+        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        assertEquals(1, dimensionLastParentDtoAfterUpdate.getSubdimensions().size());
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
+
+        // Validate dimension
+        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, dimensionDtoChanged.getParentDimensionUuid());
+        
+        // Validate target
+        DimensionDto dimensionParentDtoTarget = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
+        assertEquals(2, dimensionParentDtoTarget.getSubdimensions().size());
+        assertEquals(uuid, dimensionParentDtoTarget.getSubdimensions().get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionParentDtoTarget.getSubdimensions().get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, dimensionParentDtoTarget.getSubdimensions().get(1).getUuid());
+        assertEquals(Long.valueOf(2), dimensionParentDtoTarget.getSubdimensions().get(1).getOrderInLevel());
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationActualSameParentOnlyChangeOrderWithoutParent() throws Exception {
+        
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        
+        // Retrieve actual
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertNull(dimensionDto.getParentDimensionUuid());
+        assertEquals(Long.valueOf(1), dimensionDto.getOrderInLevel());
+        
+        // Update location
+        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(2));
+
+        // Validate source and target
+        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(2, dimensionsDto.size());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(1).getUuid());
+        assertEquals(Long.valueOf(2), dimensionsDto.get(1).getOrderInLevel());
+
+        // Validate dimension
+        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertNull(dimensionDtoChanged.getParentDimensionUuid());
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationActualSameParentOnlyChangeOrderWithParent() throws Exception {
+
+        String uuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+        
+        // Retrieve actual
+        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getParentDimensionUuid());
+        assertEquals(Long.valueOf(2), dimensionDto.getOrderInLevel());
+        
+        // Update location
+        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(1));
+
+        // Validate source and target
+        DimensionDto dimensionDtoParentAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        assertEquals(2, dimensionDtoParentAfterUpdate.getSubdimensions().size());
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionDtoParentAfterUpdate.getSubdimensions().get(0).getUuid());
+        assertEquals(Long.valueOf(1), dimensionDtoParentAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1A_INDICATORS_SYSTEM_1_V2, dimensionDtoParentAfterUpdate.getSubdimensions().get(1).getUuid());
+        assertEquals(Long.valueOf(2), dimensionDtoParentAfterUpdate.getSubdimensions().get(1).getOrderInLevel());
+
+        // Validate dimension
+        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDtoChanged.getParentDimensionUuid());
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationErrorParentIsChild() throws Exception {
+        
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = DIMENSION_1BA_INDICATORS_SYSTEM_1_V2;
+        
+        try {
+            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+            fail("It is child");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("PARENT_TARGET_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testUpdateDimensionLocationErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, null, Long.valueOf(1));
+            fail("Dimension not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testUpdateDimensionErrorOrderIncorrect() throws Exception {
+
+        try {
+            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2, null, Long.MAX_VALUE);
+            fail("order incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Override

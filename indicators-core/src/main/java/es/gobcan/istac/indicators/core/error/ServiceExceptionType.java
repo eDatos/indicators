@@ -13,6 +13,7 @@ public enum ServiceExceptionType {
     SERVICE_INVALID_PARAMETER_UNEXPECTED("0202"),
     SERVICE_INVALID_PARAMETER_REQUIRED("0203"),
     SERVICE_INVALID_NOT_FOUND("0204"),
+    SERVICE_INVALID_PARAMETER_INCORRECT("0205"),
 
     SERVICE_VALIDATION_CONSTRAINT_ENUMERATED("0401"),
     SERVICE_VALIDATION_CONSTRAINT_CARDINALITY_MAX("0402"),
@@ -46,6 +47,7 @@ public enum ServiceExceptionType {
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED, "exception.service.invalid.parameter.unexpected");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED, "exception.service.invalid.parameter.required");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INVALID_NOT_FOUND, "exception.service.invalid.parameter.not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT, "exception.service.invalid.parameter.incorrect");
 
         // Constraints
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_VALIDATION_CONSTRAINT_ENUMERATED, "exception.service.validation.constraint.enumerated");

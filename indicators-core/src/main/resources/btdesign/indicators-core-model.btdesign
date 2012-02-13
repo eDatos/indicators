@@ -74,7 +74,7 @@ Application Indicators {
 	    	"Updates metadata of dimension"
 	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
 	    	"Updates the location of dimension"
-	    	updateDimensionLocation(String uuid, String parentUuid, Long order) throws MetamacException;
+	    	updateDimensionLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	"Retrieves dimension"
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"
