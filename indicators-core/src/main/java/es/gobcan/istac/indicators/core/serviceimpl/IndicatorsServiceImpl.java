@@ -43,7 +43,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public Indicator retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
         if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND, uuid);
         }
         return indicator;
     }
@@ -53,10 +53,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(uuid, versionNumber);
         if (indicatorVersion == null) {
             if (versionNumber == null) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getMessageForReasonType(), uuid);
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND, uuid);
             } else {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getMessageForReasonType(),
-                        uuid, versionNumber);
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND, uuid, versionNumber);
             }
         }
         return indicatorVersion;

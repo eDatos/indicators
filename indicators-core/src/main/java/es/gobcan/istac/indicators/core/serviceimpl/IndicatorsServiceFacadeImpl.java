@@ -89,8 +89,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve published version
         IndicatorVersion publishedIndicatorVersion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
         if (publishedIndicatorVersion == null || !IndicatorStateEnum.PUBLISHED.equals(publishedIndicatorVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(), uuid,
-                    IndicatorStateEnum.PUBLISHED);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE, uuid, IndicatorStateEnum.PUBLISHED);
         }
 
         // Transform to Dto
@@ -122,8 +121,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve version in production
         IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, indicatorDto.getUuid(), true);
         if (!indicatorInProduction.getVersionNumber().equals(indicatorDto.getVersionNumber())) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(),
-                    indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE, indicatorDto.getUuid(), indicatorDto.getVersionNumber());
         }
 
         // Validation
@@ -148,7 +146,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
     // if (indicatorInProduction == null
     // || (!IndicatorStateEnum.DRAFT.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.VALIDATION_REJECTED.equals(indicatorInProduction.getState()))) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED});
     // }
     //
@@ -168,7 +166,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // // Retrieve version in production validation
     // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
     // if (indicatorInProduction == null || !IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState())) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, IndicatorStateEnum.PRODUCTION_VALIDATION);
     // }
     //
@@ -190,7 +188,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // if (indicatorInProduction == null
     // || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION
     // .equals(indicatorInProduction.getState()))) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
     // }
     //
@@ -213,7 +211,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // // Retrieve version in diffusion validation
     // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
     // if (indicatorInProduction == null || !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState())) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, IndicatorStateEnum.DIFFUSION_VALIDATION);
     // }
     //
@@ -243,7 +241,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // // Retrieve version published
     // IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
     // if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, IndicatorStateEnum.PUBLISHED);
     // }
     //
@@ -263,7 +261,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     //
     // Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
     // if (indicator.getProductionVersion() != null) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
     // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
     // }
     //
@@ -331,14 +329,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private IndicatorVersion retrieveIndicatorStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
         Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
         if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND, uuid);
         }
         if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
         if (indicator.getProductionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND.getErrorCode(),
-                    ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);
         }
         IndicatorVersion indicatorVersionProduction = getIndicatorsService().retrieveIndicatorVersion(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
         return indicatorVersionProduction;
@@ -353,8 +350,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             return null; // to throws an specific exception
         }
         if (indicator.getDiffusionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND.getErrorCode(),
-                    ServiceExceptionType.SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND, uuid);
         }
         IndicatorVersion indicatorVersionDiffusion = getIndicatorsService().retrieveIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
         return indicatorVersionDiffusion;
@@ -366,8 +362,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     private void validateCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
         List<Indicator> indicator = getIndicatorsService().findIndicators(ctx, code);
         if (indicator != null && indicator.size() != 0 && !indicator.get(0).getUuid().equals(actualUuid)) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(),
-                    ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getMessageForReasonType(), code);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
         }
     }
     //
@@ -376,7 +371,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state)
     // || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
     // if (!inProduction) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(),
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(),
     // ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorVersion.getIndicator().getUuid(),
     // indicatorVersion.getVersionNumber());
     //

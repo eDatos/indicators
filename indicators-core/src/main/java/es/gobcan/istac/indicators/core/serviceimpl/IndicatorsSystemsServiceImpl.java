@@ -24,19 +24,19 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public IndicatorsSystemVersion createIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException {
-       
+
         // Save indicator
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
-        
+
         // Save draft version
         indicatorsSystemDraft.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemDraft = getIndicatorsSystemVersionRepository().save(indicatorsSystemDraft);
-        
+
         // Update indicator with draft version
         indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
         indicatorsSystem.getVersions().add(indicatorsSystemDraft);
         getIndicatorsSystemRepository().save(indicatorsSystemDraft.getIndicatorsSystem());
-        
+
         return indicatorsSystemDraft;
     }
 
@@ -44,34 +44,34 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorsSystem retrieveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
         IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(uuid);
         if (indicatorsSystem == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, uuid);
         }
         return indicatorsSystem;
     }
-    
+
     @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(uuid, versionNumber);
         if (indicatorsSystemVersion == null) {
             if (versionNumber == null) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getMessageForReasonType(), uuid);
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, uuid);
             } else {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND.getMessageForReasonType(), uuid, versionNumber);
+                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND, uuid, versionNumber);
             }
         }
         return indicatorsSystemVersion;
     }
-    
+
     @Override
     public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem) throws MetamacException {
         getIndicatorsSystemRepository().save(indicatorsSystem);
     }
-    
+
     @Override
     public void updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
         getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
     }
-    
+
     @Override
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
@@ -83,12 +83,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, uuid, versionNumber);
         IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
         indicatorsSystem.getVersions().remove(indicatorsSystemVersion);
-        
+
         // Update
         getIndicatorsSystemRepository().save(indicatorsSystem);
         getIndicatorsSystemVersionRepository().delete(indicatorsSystemVersion);
     }
-    
+
     @Override
     public List<IndicatorsSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorsSystemRepository().findIndicatorsSystems(code);
@@ -109,11 +109,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public Dimension retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
         Dimension dimension = getDimensionRepository().findDimension(uuid);
         if (dimension == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND.getMessageForReasonType(), uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND, uuid);
         }
         return dimension;
     }
-    
+
     @Override
     public Dimension updateDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
         return getDimensionRepository().save(dimension);

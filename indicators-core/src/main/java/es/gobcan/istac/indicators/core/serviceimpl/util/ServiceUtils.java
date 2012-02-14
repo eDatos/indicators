@@ -30,8 +30,7 @@ public class ServiceUtils {
         } else if (VersiontTypeEnum.MINOR.equals(versionType)) {
             versionNumberMinor++;
         } else {
-            throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_UNEXPECTED.getErrorCode(), ServiceExceptionType.SERVICE_PARAMETER_UNEXPECTED.getMessageForReasonType(),
-                    versionType, VersiontTypeEnum.class);
+            throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_UNEXPECTED, versionType, VersiontTypeEnum.class);
         }
         return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
     }
