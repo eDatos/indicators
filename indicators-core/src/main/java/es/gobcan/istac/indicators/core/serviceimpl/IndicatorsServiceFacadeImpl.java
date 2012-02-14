@@ -323,7 +323,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return indicatorDto;
     }
-    
+
     @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
@@ -350,67 +350,66 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return dataSourceDto;
     }
 
-//    @Override
-//    public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkRetrieveDataSource(uuid, null);
-//
-//        // Retrieve
-//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
-//        DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
-//        return dataSourceDto;
-//    }
-//
-//    @Override
-//    public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkDeleteDataSource(uuid, null);
-//
-//        // Check indicator state
-//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
-//        IndicatorVersion indicatorVersion = retrieveIndicatorSystemVersionOfDataSource(dataSource);
-//        checkIndicatorSystemVersionInProduction(indicatorVersion);
-//
-//        // Delete
-//        getIndicatorsService().deleteDataSource(ctx, dataSource);
-//    }
-//
-//    @Override
-//    public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
-//
-//        // Retrieve dataSources and transform
-//        List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
-//        List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
-//        for (DataSource dataSource : dataSources) {
-//            dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));
-//        }
-//
-//        return dataSourcesDto;
-//    }
-//
-//    @Override
-//    public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
-//
-//        // Retrieve
-//        // TODO comprobar parámetros antes?
-//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
-//
-//        // Validation of parameters
-//        InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
-//
-//        // Check indicator state
-//        IndicatorVersion indicatorVersion = retrieveIndicatorSystemVersionOfDataSource(dataSource);
-//        checkIndicatorSystemVersionInProduction(indicatorVersion);
-//
-//        // Transform and update
-//        dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
-//        getIndicatorsService().updateDataSource(ctx, dataSource);
-//    }
+    // @Override
+    // public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkRetrieveDataSource(uuid, null);
+    //
+    // // Retrieve
+    // DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
+    // DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
+    // return dataSourceDto;
+    // }
+
+    @Override
+    public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkDeleteDataSource(uuid, null);
+
+        // Check indicator state
+        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
+        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
+
+        // Delete
+        getIndicatorsService().deleteDataSource(ctx, dataSource);
+    }
+
+    // @Override
+    // public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
+    //
+    // // Retrieve dataSources and transform
+    // List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
+    // List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
+    // for (DataSource dataSource : dataSources) {
+    // dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));
+    // }
+    //
+    // return dataSourcesDto;
+    // }
+    //
+    // @Override
+    // public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
+    //
+    // // Retrieve
+    // // TODO comprobar parámetros antes?
+    // DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
+    //
+    // // Check indicator state
+    // IndicatorVersion indicatorVersion = retrieveIndicatorVersionOfDataSource(dataSource);
+    // checkIndicatorVersionInProduction(indicatorVersion);
+    //
+    // // Transform and update
+    // dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
+    // getIndicatorsService().updateDataSource(ctx, dataSource);
+    // }
 
     /**
      * Retrieves version of an indicator in production
@@ -454,16 +453,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
         }
     }
-    //
-    // private void checkIndicatorSystemVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
-    // IndicatorStateEnum state = indicatorVersion.getState();
-    // boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state)
-    // || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
-    // if (!inProduction) {
-    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(),
-    // ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorVersion.getIndicator().getUuid(),
-    // indicatorVersion.getVersionNumber());
-    //
-    // }
-    // }
+
+    private void checkIndicatorVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
+        IndicatorStateEnum state = indicatorVersion.getState();
+        boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state)
+                || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
+        if (!inProduction) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+
+        }
+    }
 }

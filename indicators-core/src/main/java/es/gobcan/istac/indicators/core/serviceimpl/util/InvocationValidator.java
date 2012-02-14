@@ -339,17 +339,17 @@ public class InvocationValidator {
 //
 //        ExceptionUtils.throwIfException(exceptions);
 //    }
-//
-//    public static void checkDeleteDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
+
+    public static void checkDeleteDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 //
 //    public static void checkFindDataSources(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
 //        if (exceptions == null) {

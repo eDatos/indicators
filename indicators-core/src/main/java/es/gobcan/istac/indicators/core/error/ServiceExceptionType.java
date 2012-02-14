@@ -26,4 +26,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND                             = create("1205", "exception.service.indicator.diffusion_not_found");
     public static final CommonServiceExceptionType SERVICE_INDICATOR_WRONG_STATE                                        = create("1206", "exception.service.indicator.wrong_state");
     public static final CommonServiceExceptionType SERVICE_INDICATOR_VERSION_WRONG_STATE                                = create("1207", "exception.service.indicator.version_wrong_state");
+    
+    // Datasources
+    public static final CommonServiceExceptionType SERVICE_DATA_SOURCE_NOT_FOUND                                        = create("1301", "exception.service.data_source.not_found");
 }
