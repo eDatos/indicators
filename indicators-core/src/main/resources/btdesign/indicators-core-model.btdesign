@@ -50,7 +50,7 @@ Application Indicators {
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	deleteIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@Indicator> findIndicators(String code) throws MetamacException;
-//	    	List<@IndicatorVersion> findIndicatorVersions(String uriGopestat, @IndicatorStateEnum state) throws MetamacException;
+	    	List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -126,10 +126,10 @@ Application Indicators {
 //	    	archiveIndicator(String uuid) throws MetamacException;	    		    	
 //	    	"Creates a version on draft of an indicator in production. Returns new version created"
 //	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
-//	    	"Finds indicators. Retrieves last versions"
-//	    	List<@IndicatorDto> findIndicators() throws MetamacException;
-//	    	"Finds published indicators"
-//	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
+	    	"Finds indicators. Retrieves last versions"
+	    	List<@IndicatorDto> findIndicators() throws MetamacException;
+	    	"Finds published indicators"
+	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
 	    }
 
 	    // ----------------------------------------------------------------
@@ -330,7 +330,7 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
-            	//List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state);
+            	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorStateEnum state);
 			}
 		}     	
 		

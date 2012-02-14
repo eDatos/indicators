@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
@@ -279,50 +281,50 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // return indicatorDto;
     // }
     //
-    // // TODO paginación
-    // // TODO criteria
-    // // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
-    // @Override
-    // public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkFindIndicator(null);
-    //
-    // // Find
-    // List<Indicator> indicator = getIndicatorsService().findIndicator(ctx, null);
-    //
-    // // Transform
-    // List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-    // for (Indicator indicator : indicator) {
-    // // Last version
-    // IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
-    // IndicatorVersion indicatorLastVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
-    // indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorLastVersion));
-    // }
-    //
-    // return indicatorDto;
-    // }
-    //
-    // // TODO paginación
-    // // TODO criteria
-    // @Override
-    // public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkFindIndicatorPublished(null);
-    //
-    // // Retrieve published
-    // List<IndicatorVersion> indicatorVersion = getIndicatorsService().findIndicatorVersions(ctx, null, IndicatorStateEnum.PUBLISHED);
-    //
-    // // Transform
-    // List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-    // for (IndicatorVersion indicatorVersion : indicatorVersion) {
-    // indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
-    // }
-    //
-    // return indicatorDto;
-    // }
-    //
+    // TODO paginación
+    // TODO criteria
+    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
+    @Override
+    public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicators(null);
+
+        // Find
+        List<Indicator> indicators = getIndicatorsService().findIndicators(ctx, null);
+
+        // Transform
+        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
+        for (Indicator indicator : indicators) {
+            // Last version
+            IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
+            IndicatorVersion indicatorLastVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
+            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorLastVersion));
+        }
+
+        return indicatorDto;
+    }
+
+    // TODO paginación
+    // TODO criteria
+    @Override
+    public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsPublished(null);
+
+        // Retrieve published
+        List<IndicatorVersion> indicatorsVersions = getIndicatorsService().findIndicatorsVersions(ctx, null, IndicatorStateEnum.PUBLISHED);
+
+        // Transform
+        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
+        for (IndicatorVersion indicatorVersion : indicatorsVersions) {
+            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
+        }
+
+        return indicatorDto;
+    }
+
     /**
      * Retrieves version of an indicator in production
      */

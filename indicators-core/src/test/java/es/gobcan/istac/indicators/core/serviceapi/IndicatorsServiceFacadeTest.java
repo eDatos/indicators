@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
@@ -41,9 +42,9 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     private static String             INDICATOR_3_VERSION = "11.033";
     private static String             INDICATOR_4         = "Indicator-4";
     private static String             INDICATOR_5         = "Indicator-5";
-    // private static String INDICATOR_6 = "Indicator-6";
-    // private static String INDICATOR_7 = "Indicator-7";
-    // private static String INDICATOR_8 = "Indicator-8";
+    private static String             INDICATOR_6         = "Indicator-6";
+    private static String             INDICATOR_7         = "Indicator-7";
+    private static String             INDICATOR_8         = "Indicator-8";
     private static String             INDICATOR_9         = "Indicator-9";
 
     @Test
@@ -1358,59 +1359,59 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // assertEquals(IndicatorStateEnum.ARCHIVED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
     // }
     // }
-    //
-    // @Override
-    // @Test
-    // public void testFindIndicators() throws Exception {
-    //
-    // // Retrieve last versions...
-    // List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext());
-    // assertEquals(9, indicatorsDto.size());
-    //
-    // assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(0).getState());
-    //
-    // assertEquals(INDICATOR_2, indicatorsDto.get(1).getUuid());
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(1).getState());
-    //
-    // assertEquals(INDICATOR_3, indicatorsDto.get(2).getUuid());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
-    //
-    // assertEquals(INDICATOR_4, indicatorsDto.get(3).getUuid());
-    // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, indicatorsDto.get(3).getState());
-    //
-    // assertEquals(INDICATOR_5, indicatorsDto.get(4).getUuid());
-    // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(4).getState());
-    //
-    // assertEquals(INDICATOR_6, indicatorsDto.get(5).getUuid());
-    // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(5).getState());
-    //
-    // assertEquals(INDICATOR_7, indicatorsDto.get(6).getUuid());
-    // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(6).getState());
-    //
-    // assertEquals(INDICATOR_8, indicatorsDto.get(7).getUuid());
-    // assertEquals(IndicatorStateEnum.ARCHIVED, indicatorsDto.get(7).getState());
-    //
-    // assertEquals(INDICATOR_9, indicatorsDto.get(8).getUuid());
-    // assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, indicatorsDto.get(8).getState());
-    // }
-    //
-    // @Override
-    // @Test
-    // public void testFindIndicatorsPublished() throws Exception {
-    //
-    // List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext());
-    // assertEquals(3, indicatorsDto.size());
-    //
-    // assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(0).getState());
-    //
-    // assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(1).getState());
-    //
-    // assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
-    // }
+
+    @Override
+    @Test
+    public void testFindIndicators() throws Exception {
+
+        // Retrieve last versions...
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext());
+        assertEquals(9, indicatorsDto.size());
+
+        assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
+        assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(0).getState());
+
+        assertEquals(INDICATOR_2, indicatorsDto.get(1).getUuid());
+        assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(1).getState());
+
+        assertEquals(INDICATOR_3, indicatorsDto.get(2).getUuid());
+        assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
+
+        assertEquals(INDICATOR_4, indicatorsDto.get(3).getUuid());
+        assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, indicatorsDto.get(3).getState());
+
+        assertEquals(INDICATOR_5, indicatorsDto.get(4).getUuid());
+        assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(4).getState());
+
+        assertEquals(INDICATOR_6, indicatorsDto.get(5).getUuid());
+        assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(5).getState());
+
+        assertEquals(INDICATOR_7, indicatorsDto.get(6).getUuid());
+        assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorsDto.get(6).getState());
+
+        assertEquals(INDICATOR_8, indicatorsDto.get(7).getUuid());
+        assertEquals(IndicatorStateEnum.ARCHIVED, indicatorsDto.get(7).getState());
+
+        assertEquals(INDICATOR_9, indicatorsDto.get(8).getUuid());
+        assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, indicatorsDto.get(8).getState());
+    }
+
+    @Override
+    @Test
+    public void testFindIndicatorsPublished() throws Exception {
+
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext());
+        assertEquals(3, indicatorsDto.size());
+
+        assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
+        assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(0).getState());
+
+        assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
+        assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(1).getState());
+
+        assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
+        assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
+    }
 
     @Override
     protected String getDataSetFile() {

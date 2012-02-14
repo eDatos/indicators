@@ -291,6 +291,28 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
+    public static void checkFindIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        // nothing to validate
+        
+        throwIfException(exceptions);        
+    }
+    
+    public static void checkFindIndicatorsPublished(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        // nothing to validate
+        
+        throwIfException(exceptions);        
+    }
+    
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
