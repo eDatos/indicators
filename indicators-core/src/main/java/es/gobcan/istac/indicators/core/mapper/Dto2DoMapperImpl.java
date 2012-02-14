@@ -1,9 +1,8 @@
 package es.gobcan.istac.indicators.core.mapper;
 
-import java.util.HashSet; 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -14,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -27,19 +29,19 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private InternationalStringRepository internationalStringRepository;
 
     @Override
-    public IndicatorsSystem indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystem target, ServiceContext ctx) throws MetamacException {
+    public IndicatorsSystem indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystem target)  throws MetamacException {
         target.setCode(source.getCode()); // non modifiable after creation
         return target;
     }
 
     @Override
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, ServiceContext ctx) throws MetamacException {
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source) throws MetamacException {
         IndicatorsSystemVersion target = new IndicatorsSystemVersion();
-        return indicatorsSystemDtoToDo(source, target, ctx);
+        return indicatorsSystemDtoToDo(source, target);
     }
 
     @Override
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystemVersion target, ServiceContext ctx) throws MetamacException {
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException {
 
         if (source == null) {
             return null;
@@ -75,6 +77,43 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         // Update action never updates dimensions children
     }
 
+    @Override
+    public Indicator indicatorDtoToDo(IndicatorDto source, Indicator target) {
+        // nothing to transform
+        return target;
+    }
+
+    @Override
+    public IndicatorVersion indicatorDtoToDo(IndicatorDto source) throws MetamacException {
+        IndicatorVersion target = new IndicatorVersion();
+        return indicatorDtoToDo(source, target);
+    }
+
+    @Override
+    public IndicatorVersion indicatorDtoToDo(IndicatorDto source, IndicatorVersion target) throws MetamacException {
+
+        if (source == null) {
+            return null;
+        }
+        if (target == null) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getMessageForReasonType());
+        }
+
+        // TODO Non modifiables after creation: code ?
+        // Attributes non modifiables by user: states
+
+        // Attributes modifiables
+        target.setCode(source.getCode());
+        target.setName(internationalStringToDo(source.getName(), target.getName()));
+        target.setAcronym(internationalStringToDo(source.getAcronym(), target.getAcronym()));
+        target.setCommentary(internationalStringToDo(source.getCommentary(), target.getCommentary()));
+        target.setSubjectCode(source.getSubjectCode());
+        target.setNotes(internationalStringToDo(source.getNotes(), target.getNotes()));
+        target.setNoteUrl(source.getNoteUrl());
+        
+        return target;
+    }
+    
     private InternationalString internationalStringToDo(InternationalStringDto source, InternationalString target) {
         if (source == null) {
             if (target != null) {

@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -18,12 +17,13 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorsSystemServiceFacade.
@@ -37,10 +37,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
     @Autowired
     private Dto2DoMapper        dto2DoMapper;
-
-    private static final String VERSION_NUMBER_INITIAL = "1.000";
-    private final NumberFormat  formatterMajor         = new DecimalFormat("0");
-    private final NumberFormat  formatterMinor         = new DecimalFormat("000");
 
     public IndicatorsSystemsServiceFacadeImpl() {
     }
@@ -59,11 +55,11 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         // Transform
         IndicatorsSystem indicatorsSystem = new IndicatorsSystem();
         indicatorsSystem.setDiffusionVersion(null);
-        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystem, ctx);
+        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystem);
         // Version in draft
-        IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, ctx);
+        IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto);
         draftVersion.setState(IndicatorsSystemStateEnum.DRAFT);
-        draftVersion.setVersionNumber(getVersionNumber(null, IndicatorsSystemVersionEnum.MAJOR));
+        draftVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, draftVersion);
@@ -120,7 +116,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, uuid, true);
 
         // Delete whole indicators system or only last version
-        if (VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
+        if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
             // If indicator system is not published or archived, delete whole indicators system
             getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
         } else {
@@ -144,7 +140,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         // Transform
         // TODO atributos de IndicatorsSystem actualizables? ej: code
-        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction, ctx);
+        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction);
 
         // Update
         getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
@@ -269,7 +265,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
     // TODO versionar dimensiones, indicadores...
     @Override
-    public IndicatorsSystemDto versioningIndicatorsSystem(ServiceContext ctx, String uuid, IndicatorsSystemVersionEnum versionType) throws MetamacException {
+    public IndicatorsSystemDto versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
@@ -284,7 +280,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, true);
         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
         indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
-        indicatorsSystemNewVersion.setVersionNumber(getVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
+        indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
@@ -539,29 +535,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             getIndicatorsSystemsService().updateDimension(ctx, dimension);
         }
     }
-
-    private String getVersionNumber(String actualVersionNumber, IndicatorsSystemVersionEnum versionType) throws MetamacException {
-
-        if (actualVersionNumber == null) {
-            return VERSION_NUMBER_INITIAL;
-        }
-
-        String[] versionNumberSplited = actualVersionNumber.split("\\.");
-        Integer versionNumberMajor = Integer.valueOf(versionNumberSplited[0]);
-        Integer versionNumberMinor = Integer.valueOf(versionNumberSplited[1]);
-
-        if (IndicatorsSystemVersionEnum.MAJOR.equals(versionType)) {
-            versionNumberMajor++;
-            versionNumberMinor = 0;
-        } else if (IndicatorsSystemVersionEnum.MINOR.equals(versionType)) {
-            versionNumberMinor++;
-        } else {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getErrorCode(), ServiceExceptionType.SERVICE_INVALID_PARAMETER_UNEXPECTED.getMessageForReasonType(),
-                    versionType, IndicatorsSystemVersionEnum.class);
-        }
-        return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
-    }
-
+    
     /**
      * Retrieves version of an indicators system in production
      */

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset> 
+  <TBL_INTERNATIONAL_STRINGS/>  
+  <TBL_INDICATORS_SYSTEMS/>  
+  <TBL_INDIC_SYSTEMS_VERSIONS/>  
+  <TBL_DIMENSIONS/>  
+  <TBL_INDICATORS/>  
+  <TBL_INDICATOR_VERSIONS/>  
+  <TBL_LOCALISED_STRINGS/> 
+</dataset>

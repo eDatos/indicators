@@ -11,8 +11,9 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class InvocationValidator {
@@ -129,7 +130,7 @@ public class InvocationValidator {
         throwIfException(exceptions);        
     }
     
-    public static void checkVersioningIndicatorsSystem(String uuid, IndicatorsSystemVersionEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkVersioningIndicatorsSystem(String uuid, VersiontTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
         
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -233,6 +234,20 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
+
+
+    public static void checkCreateIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkIndicator(indicatorDto, exceptions);
+        checkMetadataEmpty(indicatorDto.getUuid(), "INDICATOR.UUID", exceptions);
+        checkMetadataEmpty(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
+        
+        throwIfException(exceptions);
+    }
+    
     @SuppressWarnings("rawtypes")
     private static void checkMetadataEmpty(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         if (parameter == null) {
@@ -256,6 +271,13 @@ public class InvocationValidator {
         if (dimensionDto.getOrderInLevel() != null && dimensionDto.getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getMessageForReasonType(), "DIMENSION.ORDER_IN_LEVEL"));
         }
+    }
+    
+    // TODO revisar qué metadatos son requeridos
+    private static void checkIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) {
+        checkParameterRequired(indicatorDto, "INDICATOR", exceptions);
+        checkMetadataRequired(indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
+        checkMetadataRequired(indicatorDto.getName(), "INDICATOR.NAME", exceptions);
     }
     
     private static void checkParameterRequired(Object parameter, String parameterName, List<MetamacExceptionItem> exceptions) {

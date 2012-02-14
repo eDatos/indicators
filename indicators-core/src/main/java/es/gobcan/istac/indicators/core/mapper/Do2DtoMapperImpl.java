@@ -12,8 +12,10 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @Component
@@ -53,8 +55,6 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         return target;
     }
 
-    // Note: We not put relation @Dimension parent because Sculptor generates a wrong constraint when this is combined with Bag<@Dimension> subdimensions
-    // If it is necesary, obtain parent with a query
     @Override
     public DimensionDto dimensionDoToDto(Dimension source) {
         DimensionDto target = new DimensionDto();
@@ -67,6 +67,40 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return target;
     }
+    
+    @Override
+    public IndicatorDto indicatorDoToDto(IndicatorVersion source) {
+        
+        IndicatorDto target = new IndicatorDto();
+
+        target.setUuid(source.getIndicator().getUuid());
+        target.setVersionNumber(source.getVersionNumber());
+        target.setCode(source.getCode());
+        target.setName(internationalStringToDto(source.getName()));
+        target.setAcronym(internationalStringToDto(source.getAcronym()));
+        target.setSubjectCode(source.getSubjectCode());
+        target.setCommentary(internationalStringToDto(source.getCommentary()));
+        target.setNotes(internationalStringToDto(source.getNotes()));
+        target.setNoteUrl(source.getNoteUrl());
+        target.setState(source.getState());
+        target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
+        target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
+
+        target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
+        target.setProductionValidationUser(source.getProductionValidationUser());
+        target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));
+        target.setDiffusionValidationUser(source.getDiffusionValidationUser());
+        target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+        target.setPublicationUser(source.getPublicationUser());
+        target.setArchiveDate(dateDoToDto(source.getArchiveDate()));
+        target.setArchiveUser(source.getArchiveUser());
+
+        target.setCreatedBy(source.getCreatedBy());
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+
+        return target;    }
 
     private InternationalStringDto internationalStringToDto(InternationalString source) {
         if (source == null) {

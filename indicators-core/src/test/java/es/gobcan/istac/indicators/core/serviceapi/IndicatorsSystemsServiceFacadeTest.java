@@ -13,7 +13,6 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.common.test.MetamacBaseTests;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemVersionEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -32,7 +31,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests implements IndicatorsSystemsServiceFacadeTestBase {
+public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest implements IndicatorsSystemsServiceFacadeTestBase {
 
     @Autowired
     protected IndicatorsSystemsServiceFacade indicatorsSystemsServiceFacade;
@@ -1312,7 +1311,7 @@ public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests impleme
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MAJOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1355,7 +1354,7 @@ public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests impleme
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1385,7 +1384,7 @@ public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests impleme
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, IndicatorsSystemVersionEnum.MINOR);
+            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, VersiontTypeEnum.MINOR);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1401,7 +1400,7 @@ public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests impleme
         String uuid = INDICATORS_SYSTEM_2;
 
         try {
-            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
+            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
             fail("Indicators system already exists in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2303,27 +2302,5 @@ public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests impleme
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsSystemServiceFacadeTest.xml";
-    }
-
-    @Override
-    protected List<String> getTablesToRemoveContent() {
-        List<String> tables = new ArrayList<String>();
-        tables.add("TBL_LOCALISED_STRINGS");
-        tables.add("TBL_DIMENSIONS");
-        tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
-        tables.add("TBL_INDICATORS_SYSTEMS");
-        tables.add("TBL_INTERNATIONAL_STRINGS");
-        return tables;
-    }
-
-    @Override
-    protected List<String> getSequencesToRestart() {
-        List<String> sequences = new ArrayList<String>();
-        sequences.add("SEQ_I18NSTRS");
-        sequences.add("SEQ_L10NSTRS");
-        sequences.add("SEQ_INDIC_SYSTEMS_VERSIONS");
-        sequences.add("SEQ_INDICATORS_SYSTEMS");
-        sequences.add("SEQ_DIMENSIONS");
-        return sequences;
     }
 }

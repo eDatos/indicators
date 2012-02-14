@@ -36,6 +36,15 @@ Application Indicators {
 	    	List<@Dimension> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;	    	
     	}
     	
+    	"Provides access to indicators"
+    	Service IndicatorsService {
+    		> @IndicatorRepository
+    		> @IndicatorVersionRepository
+    		
+    		// Indicator
+    		@IndicatorVersion createIndicatorVersion(@Indicator indicator, @IndicatorVersion indicatorVersion) throws MetamacException;
+    	}
+    	
     	"Provides access to indicators systems"
     	Service IndicatorsSystemsServiceFacade {
 	    	> @IndicatorsSystemsService
@@ -62,7 +71,7 @@ Application Indicators {
 	    	"Archives indicators system"
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator system in production. Returns new version created"
-	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @IndicatorsSystemVersionEnum versionType) throws MetamacException;
+	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems. Retrieves last versions"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
 	    	"Finds published indicators systems"
@@ -81,7 +90,15 @@ Application Indicators {
 	    	deleteDimension(String uuid) throws MetamacException;
 	    	"Find dimensions"
 	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;	    	
-	    }  
+	    }    	
+	    
+	    "Provides access to indicators"
+    	Service IndicatorsServiceFacade {
+	    	> @IndicatorsService
+	    	
+	    	"Creates an indicator"
+	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
+	    }
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
@@ -174,7 +191,7 @@ Application Indicators {
         	hint="idSequence=DIMENSIONS"
         	
             "Title"
-            - @InternationalString title not nullable cascade="all" databaseColumn="TITLE_FK";
+            - @InternationalString title cascade="all" not nullable  databaseColumn="TITLE_FK";
             "Order in level"
 			Long orderInLevel not nullable;
 			
@@ -203,7 +220,94 @@ Application Indicators {
     		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
     	}	
     	
-				
+		"Indicator entity"
+		Entity Indicator {
+			databaseTable="TBL_INDICATORS"
+			hint="idSequence=INDICATORS"
+			gap
+			
+			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
+			"Version in production"
+            - @IndicatorVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
+            "Version in difussion"
+            - @IndicatorVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
+			"All versions"
+			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";
+			
+			
+			Repository IndicatorRepository {
+		   		@Indicator save(@Indicator entity);
+		   		//delete;
+            	//protected List<@Indicator> findByQuery;
+            	//protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	//@Indicator retrieveIndicator(String uuid);
+            	//List<@Indicator> findIndicators(String code);
+			}
+		}
+	    
+		"Version of indicator entity"
+		Entity IndicatorVersion {
+			databaseTable="TBL_INDICATOR_VERSIONS"
+			hint="idSequence=INDICATORS_VERSIONS"
+			gap
+			
+			"State"
+			- @IndicatorStateEnum state required;
+			String versionNumber required length="10";
+			"Code"
+			String code required;
+       		"Name"
+       		- @InternationalString name cascade="all" required databaseColumn="NAME_FK";
+       		"Acronym"
+       		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
+       		"Subject code"
+			String subjectCode nullable;
+			"Commentary"
+       		- @InternationalString commentary cascade="all" nullable databaseColumn="COMMENTARY_FK";
+			"Notes"
+       		- @InternationalString notes  cascade="all" nullable databaseColumn="NOTES_FK";
+       		"Note url"
+       		String noteUrl nullable;
+       		
+			"Date when the indicator was sended to production validation"
+			DateTimeTZ productionValidationDate nullable;
+			"User who sended to production validation"
+			String productionValidationUser nullable;
+			"Date when the indicator was sended to diffusion validation"
+			DateTimeTZ diffusionValidationDate nullable;
+			"User who sended to diffusion validation"
+			String diffusionValidationUser nullable;
+			"Date when the indicator was published"
+			DateTimeTZ publicationDate nullable;
+			"User who published"
+			String publicationUser nullable;
+			"Date when the indicator was archived"
+			DateTimeTZ archiveDate nullable;
+			"User who archived"
+			String archiveUser nullable;
+					
+			// Relations
+			"Indicator"
+			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
+			
+		
+			Repository IndicatorVersionRepository {
+				@IndicatorVersion save(@IndicatorVersion entity);
+				//delete;
+            	//protected List<@IndicatorVersion> findByQuery;
+            	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	//@IndicatorVersion retrieveIndicatorsVersion(String uuid, String versionNumber);
+            	//List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state);
+			}
+		}     	
+		
+        BasicType IndicatorVersionInformation {
+        	gap
+        	"Id into database of IndicatorVersion"
+    		Long idIndicatorVersion nullable databaseColumn="ID";
+    		"Version number of IndicatorVersion"
+    		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
+    	}			
 	}
 	
 	// ----------------------------------------------------------------
@@ -274,12 +378,38 @@ Application Indicators {
        		- @InternationalStringDto acronym;
        		"Subject code"
 			String subjectCode;
-			"Comment"
-       		- @InternationalStringDto comment;
+			"Commentary"
+       		- @InternationalStringDto commentary;
 			"Notes"
        		- @InternationalStringDto notes;
        		"Note url"
-       		String noteUrl;            
+       		String noteUrl;        
+       		
+       		"Number of version in production"
+       		String productionVersion;
+       		"Number of version in diffusion"   		
+			String diffusionVersion;			
+			
+			"Date when the indicators system was sended to production validation"
+			JAVADATE productionValidationDate;
+			"User who sended to production validation"
+			String productionValidationUser;
+			"Date when the indicators system was sended to diffusion validation"
+			JAVADATE diffusionValidationDate;
+			"User who sended to diffusion validation"
+			String diffusionValidationUser;
+			"Date when publication failed"
+			JAVADATE publicationFailedDate;
+			"User who publication failed"
+			String publicationFailedUser;
+			"Date when the indicators system was published"
+			JAVADATE publicationDate;
+			"User who published"
+			String publicationUser;
+			"Date when the indicators system was archived"
+			JAVADATE archiveDate;
+			"User who archived"
+			String archiveUser;       		    
 	    }
 	    
 	    "Dto for dimension"
@@ -325,7 +455,7 @@ Application Indicators {
     		ARCHIVED
     	}	
     	"Type of version of the change"
-    	enum IndicatorsSystemVersionEnum {
+    	enum VersiontTypeEnum {
     		MAJOR,
     		MINOR
     	}	
