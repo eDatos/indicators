@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Version of indicator system entity
+ * Version of indicators system entity
  */
 @Entity
 @Table(name = "TBL_INDIC_SYSTEMS_VERSIONS")

@@ -234,8 +234,6 @@ public class InvocationValidator {
         throwIfException(exceptions);
     }
     
-
-
     public static void checkCreateIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -244,6 +242,27 @@ public class InvocationValidator {
         checkIndicator(indicatorDto, exceptions);
         checkMetadataEmpty(indicatorDto.getUuid(), "INDICATOR.UUID", exceptions);
         checkMetadataEmpty(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
+        
+        throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveIndicator(String uuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(uuid, "UUID", exceptions);
+        // version is optional
+        
+        throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveIndicatorPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        checkParameterRequired(uuid, "UUID", exceptions);
         
         throwIfException(exceptions);
     }

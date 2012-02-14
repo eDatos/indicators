@@ -43,6 +43,14 @@ Application Indicators {
     		
     		// Indicator
     		@IndicatorVersion createIndicatorVersion(@Indicator indicator, @IndicatorVersion indicatorVersion) throws MetamacException;
+	    	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
+	    	@Indicator retrieveIndicator(String uuid) throws MetamacException;
+//	    	updateIndicator(@Indicator indicator) throws MetamacException;
+//	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
+//	    	deleteIndicator(String uuid) throws MetamacException;
+//	    	deleteIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
+	    	List<@Indicator> findIndicators(String code) throws MetamacException;
+//	    	List<@IndicatorVersion> findIndicatorVersions(String uriGopestat, @IndicatorStateEnum state) throws MetamacException;
     	}
     	
     	"Provides access to indicators systems"
@@ -50,15 +58,15 @@ Application Indicators {
 	    	> @IndicatorsSystemsService
 	    	
 	    	// INDICATORS SYSTEMS
-	    	"Creates an indicator system"
+	    	"Creates an indicators system"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-	    	"Updates metadata of an indicator system. This version can not be published or archived"
+	    	"Updates metadata of an indicators system. This version can not be published or archived"
 	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-	    	"Retrieves an indicator system. If versionNumber is not provided, retrieves last version"
+	    	"Retrieves an indicators system. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
-	    	"Retrieves an indicator system published"
+	    	"Retrieves an indicators system published"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
-	    	"Deletes a version of an indicator system. Version to remove must be not published nor archived"
+	    	"Deletes a version of an indicators system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Sends indicators system to production validation"
 	    	sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
@@ -70,7 +78,7 @@ Application Indicators {
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
-	    	"Creates a version on draft of an indicator system in production. Returns new version created"
+	    	"Creates a version on draft of an indicators system in production. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems. Retrieves last versions"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
@@ -98,6 +106,10 @@ Application Indicators {
 	    	
 	    	"Creates an indicator"
 	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
+	    	"Retrieves an indicator. If versionNumber is not provided, retrieves last version"
+	    	@IndicatorDto retrieveIndicator(String uuid, String versionNumber) throws MetamacException;
+	    	"Retrieves an indicator published"
+	    	@IndicatorDto retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    }
 
 	    // ----------------------------------------------------------------
@@ -170,7 +182,7 @@ Application Indicators {
 					
 			// Relations
 			"Indicator system"
-			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEMS_FK" <-> versions;
+			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEM_FK" <-> versions;
 			"Dimensions"
 			- Bag<@Dimension> dimensions cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
 			
@@ -225,6 +237,9 @@ Application Indicators {
 			databaseTable="TBL_INDICATORS"
 			hint="idSequence=INDICATORS"
 			gap
+
+			"Code. Non modifiable"
+			String code required;
 			
 			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
 			"Version in production"
@@ -238,10 +253,10 @@ Application Indicators {
 			Repository IndicatorRepository {
 		   		@Indicator save(@Indicator entity);
 		   		//delete;
-            	//protected List<@Indicator> findByQuery;
-            	//protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	//@Indicator retrieveIndicator(String uuid);
-            	//List<@Indicator> findIndicators(String code);
+            	protected List<@Indicator> findByQuery;
+            	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@Indicator retrieveIndicator(String uuid);
+            	List<@Indicator> findIndicators(String code);
 			}
 		}
 	    
@@ -254,8 +269,6 @@ Application Indicators {
 			"State"
 			- @IndicatorStateEnum state required;
 			String versionNumber required length="10";
-			"Code"
-			String code required;
        		"Name"
        		- @InternationalString name cascade="all" required databaseColumn="NAME_FK";
        		"Acronym"
@@ -294,9 +307,9 @@ Application Indicators {
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
 				//delete;
-            	//protected List<@IndicatorVersion> findByQuery;
+            	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	//@IndicatorVersion retrieveIndicatorsVersion(String uuid, String versionNumber);
+            	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
             	//List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state);
 			}
 		}     	
@@ -322,7 +335,7 @@ Application Indicators {
 			
 			"Unique uuid"
 			String uuid;
-			"Version number of this indicator system version"	
+			"Version number of this indicators system version"	
 			String versionNumber;
 			"State"
 			- @IndicatorsSystemStateEnum state;
@@ -435,7 +448,7 @@ Application Indicators {
 	Module enums {    	
 		basePackage=es.gobcan.istac.indicators.core.enume
 
-		"States of indicator system"
+		"States of indicators system"
     	enum IndicatorsSystemStateEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,

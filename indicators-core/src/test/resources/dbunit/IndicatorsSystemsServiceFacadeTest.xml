@@ -33,7 +33,7 @@
 				ACRONYM_FK="2"
 	  			OBJETIVE_FK="3"
 	  			DESCRIPTION_FK="4"
-	  			INDICATORS_SYSTEMS_FK="1"
+	  			INDICATORS_SYSTEM_FK="1"
 	  			STATE="PUBLISHED"
 				URI_GOPESTAT="http://indicators-sytems/1"
 				
@@ -84,7 +84,7 @@
 				ACRONYM_FK="6"
 	  			OBJETIVE_FK="7"
 	  			DESCRIPTION_FK="8"
-	  			INDICATORS_SYSTEMS_FK="1"
+	  			INDICATORS_SYSTEM_FK="1"
 	  			STATE="DRAFT"
 				URI_GOPESTAT="http://indicators-sytems/1"
 
@@ -226,7 +226,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="2"
+	  			INDICATORS_SYSTEM_FK="2"
 	  			STATE="DRAFT"
 				URI_GOPESTAT="http://indicators-sytems/2"
 				
@@ -282,7 +282,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="3"
+	  			INDICATORS_SYSTEM_FK="3"
 	  			STATE="PUBLISHED"
 				URI_GOPESTAT="http://indicators-sytems/3"
 				
@@ -371,7 +371,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="4"
+	  			INDICATORS_SYSTEM_FK="4"
 	  			STATE="PRODUCTION_VALIDATION"
 				URI_GOPESTAT="http://indicators-sytems/4"
 
@@ -427,7 +427,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="5"
+	  			INDICATORS_SYSTEM_FK="5"
 	  			STATE="DIFFUSION_VALIDATION"
 				URI_GOPESTAT="http://indicators-sytems/5"
 				
@@ -484,7 +484,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="6"
+	  			INDICATORS_SYSTEM_FK="6"
 	  			STATE="PUBLISHED"
 				URI_GOPESTAT="http://indicators-sytems/6"
 
@@ -518,7 +518,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="6"
+	  			INDICATORS_SYSTEM_FK="6"
 	  			STATE="DIFFUSION_VALIDATION"
 				URI_GOPESTAT="http://indicators-sytems/6"
 
@@ -575,7 +575,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="7"
+	  			INDICATORS_SYSTEM_FK="7"
 	  			STATE="ARCHIVED"
 				URI_GOPESTAT="http://indicators-sytems/7"
 
@@ -609,7 +609,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="7"
+	  			INDICATORS_SYSTEM_FK="7"
 	  			STATE="DIFFUSION_VALIDATION"
 				URI_GOPESTAT="http://indicators-sytems/7"
 
@@ -665,7 +665,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="8"
+	  			INDICATORS_SYSTEM_FK="8"
 	  			STATE="ARCHIVED"
 				URI_GOPESTAT="http://indicators-sytems/8"
 
@@ -721,7 +721,7 @@
 				ACRONYM_FK="[null]"
 	  			OBJETIVE_FK="[null]"
 	  			DESCRIPTION_FK="[null]"
-	  			INDICATORS_SYSTEMS_FK="9"
+	  			INDICATORS_SYSTEM_FK="9"
 	  			STATE="VALIDATION_REJECTED"
 				URI_GOPESTAT="http://indicators-sytems/9"
 

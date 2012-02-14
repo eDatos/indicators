@@ -117,7 +117,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         // Delete whole indicators system or only last version
         if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
-            // If indicator system is not published or archived, delete whole indicators system
+            // If indicators system is not published or archived, delete whole indicators system
             getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
         } else {
             getIndicatorsSystemsService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystemVersion.getVersionNumber());
@@ -139,7 +139,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemDto, indicatorsSystemInProduction, null);
 
         // Transform
-        // TODO atributos de IndicatorsSystem actualizables? ej: code
+        // Note: attributes in indicatorSystem entity are non modifiables
         dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction);
 
         // Update
@@ -263,7 +263,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
     }
 
-    // TODO versionar dimensiones, indicadores...
+    // TODO versionar instancias de indicadores...
     @Override
     public IndicatorsSystemDto versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
 
@@ -334,7 +334,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsSystemsDto;
     }
 
-    // TODO al modificar el orden de los otros elementos del nivel tener en cuenta tb las instancias de indicadores
+    // TODO al cambiar el orden de una dimensión tener en cuenta tb las instancias de indicadores
     @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
 
@@ -366,7 +366,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             // Check order and update order of other dimensions in this level
             updateDimensionsOrdersAddingDimension(ctx, indicatorsSystemVersion.getDimensions(), dimension);
         } else {
-            // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
+            // If provided, retrieve dimension parent and checks belongs to indicators system version retrieved
             Dimension dimensionParent = getIndicatorsSystemsService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
             
             // Check order is correct
@@ -573,7 +573,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     }
 
     /**
-     * Checks not exists another indicator system with same code. Checks system retrieved not is actual system.
+     * Checks not exists another indicators system with same code. Checks system retrieved not is actual system.
      */
     private void validateCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
         List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
@@ -584,7 +584,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     }
 
     /**
-     * Checks not exists another indicator system with same uri in Gopestat. Checks system retrieved not is actual system.
+     * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
      */
     private void validateUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
         List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemsService().findIndicatorsSystemVersions(ctx, uriGopestat, null);

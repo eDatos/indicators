@@ -1,11 +1,1278 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<dataset> 
-  <TBL_INTERNATIONAL_STRINGS/>  
-  <TBL_INDICATORS_SYSTEMS/>  
-  <TBL_INDIC_SYSTEMS_VERSIONS/>  
-  <TBL_DIMENSIONS/>  
-  <TBL_INDICATORS/>  
-  <TBL_INDICATOR_VERSIONS/>  
-  <TBL_LOCALISED_STRINGS/> 
+<dataset>
+
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 1											                      			-->
+	<!--		- Version 1: published															-->
+	<!--		- Version 2: draft																-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="1"
+		UUID="Indicator-1"
+		CODE="CODE-1"
+		PRODUCTION_ID="2"
+		PRODUCTION_VERSION_NUMBER="2.000"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.000"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="1"
+				UUID="Indicator-1-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="1"
+				ACRONYM_FK="2"
+	  			COMMENTARY_FK="4"
+	  			NOTES_FK="3"
+				NOTE_URL="http://indicators/1"
+				SUBJECT_CODE="subjectCode1A"
+
+	  			INDICATOR_FK="1"
+	  			STATE="PUBLISHED"
+				
+				PRODUCTION_VALIDATION_DATE="2011-01-02 02:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-01-03 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-01-04 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+				
+			<TBL_INDICATOR_VERSIONS
+				ID="2"
+				UUID="Indicator-1-v2"
+				VERSION_NUMBER="2.000"
+				NAME_FK="5"
+				ACRONYM_FK="6"
+	  			NOTES_FK="7"
+	  			COMMENTARY_FK="8"
+	  			INDICATOR_FK="1"
+	  			STATE="DRAFT"
+				NOTE_URL="http://indicators/1"
+				SUBJECT_CODE="subjectCode1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+
+  
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 2											                      	-->
+	<!--		- Version 1: draft																-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="2"
+		UUID="Indicator-2"
+		CODE="CODE-2"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="3"
+				UUID="Indicator-2-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="9"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="2"
+	  			STATE="DRAFT"
+				NOTE_URL="http://indicators/2"
+				SUBJECT_CODE="subjectCode2"
+				
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+								
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 3											                      	-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="3"
+		UUID="Indicator-3"
+		CODE="CODE-3"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="11.033"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="4"
+				UUID="Indicator-3-v1"
+				VERSION_NUMBER="11.033"
+				NAME_FK="10"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="3"
+	  			STATE="PUBLISHED"
+				NOTE_URL="http://indicators/3"
+				SUBJECT_CODE="subjectCode3"
+				
+				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-04-04 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-05-05 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 4											                      	-->
+	<!--		- Version 1: production validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="4"
+		UUID="Indicator-4"
+		CODE="CODE-4"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="5"
+				UUID="Indicator-4-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="11"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="4"
+	  			STATE="PRODUCTION_VALIDATION"
+				NOTE_URL="http://indicators/4"
+				SUBJECT_CODE="subjectCode4"
+
+				PRODUCTION_VALIDATION_DATE="2011-04-04 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 5											                      	-->
+	<!--		- Version 1: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="5"
+		UUID="Indicator-5"
+		CODE="CODE-5"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="6"
+				UUID="Indicator-5-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="12"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="5"
+	  			STATE="DIFFUSION_VALIDATION"
+				NOTE_URL="http://indicators/5"
+				SUBJECT_CODE="subjectCode5"
+				
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"			
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>	
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 6											 		                     	-->
+	<!--		- Version 1: published															-->
+	<!--		- Version 2: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="6"
+		UUID="Indicator-6"
+		CODE="CODE-6"
+		PRODUCTION_ID="2"
+		PRODUCTION_VERSION_NUMBER="2.000"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.000"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="7"
+				UUID="Indicator-6-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="13"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="6"
+	  			STATE="PUBLISHED"
+				NOTE_URL="http://indicators/6"
+				SUBJECT_CODE="subjectCode6"
+
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-08-08 01:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+			<TBL_INDICATOR_VERSIONS
+				ID="8"
+				UUID="Indicator-6-v2"
+				VERSION_NUMBER="2.000"
+				NAME_FK="14"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="6"
+	  			STATE="DIFFUSION_VALIDATION"
+				NOTE_URL="http://indicators/6"
+
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 7											                    		  	-->
+	<!--		- Version 1: archived															-->
+	<!--		- Version 2: diffusion validation												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="7"
+		UUID="Indicator-7"
+		CODE="CODE-7"
+		PRODUCTION_ID="2"
+		PRODUCTION_VERSION_NUMBER="2.000"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.000"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="9"
+				UUID="Indicator-7-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="15"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="7"
+	  			STATE="ARCHIVED"
+				NOTE_URL="http://indicators/7"
+				SUBJECT_CODE="subjectCode7"
+
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-08-08 01:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="2011-09-09 01:02:04"
+				ARCHIVE_DATE_TZ="Europe/London"
+				ARCHIVE_USER="user4"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+			<TBL_INDICATOR_VERSIONS
+				ID="10"
+				UUID="Indicator-7-v2"
+				VERSION_NUMBER="2.000"
+				NAME_FK="16"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="7"
+	  			STATE="DIFFUSION_VALIDATION"
+				NOTE_URL="http://indicators/7"
+				SUBJECT_CODE="subjectCode7B"
+
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>			
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 8											                      			-->
+	<!--		- Version 1: archived															-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="8"
+		UUID="Indicator-8"
+		CODE="CODE-8"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.000"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="11"
+				UUID="Indicator-8-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="17"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="8"
+	  			STATE="ARCHIVED"
+				NOTE_URL="http://indicators/8"
+				SUBJECT_CODE="subjectCode8"
+
+				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-08-08 01:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="2011-09-09 01:02:04"
+				ARCHIVE_DATE_TZ="Europe/London"
+				ARCHIVE_USER="user4"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>	
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 9											                     		 	-->
+	<!--		- Version 1: validation rejected												-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="9"
+		UUID="Indicator-9"
+		CODE="CODE-9"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATOR_VERSIONS
+				ID="12"
+				UUID="Indicator-9-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="18"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="9"
+	  			STATE="VALIDATION_REJECTED"
+				NOTE_URL="http://indicators/9"
+				SUBJECT_CODE="subjectCode9"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>												
+			  			
+			  
+	<!-- ************************************************************************************ -->
+	<!--                                 INTERNATIONAL STRINGS                                -->
+	<!-- ************************************************************************************ -->
+	<TBL_INTERNATIONAL_STRINGS
+		ID="1"
+		UUID="IS-1"
+		VERSION="1"
+	/>	
+	
+	<TBL_LOCALISED_STRINGS
+		ID="1"
+		LABEL="Nombre Indicator-1-v1"
+		LOCALE="es"
+		UUID="IS-1-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="1"
+	/>	
+	<TBL_LOCALISED_STRINGS
+		ID="2"
+		LABEL="Name Indicator-1-v1"
+		LOCALE="en"
+		UUID="IS-1-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="1"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="2"
+		UUID="IS-2"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="3"
+		LABEL="Acrónimo Indicator-1-v1"
+		LOCALE="es"
+		UUID="IS-2-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="2"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="4"
+		LABEL="Acronym Indicator-1-v1"
+		LOCALE="en"
+		UUID="IS-2-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="2"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="3"
+		UUID="IS-3"
+		VERSION="1"
+	/>
+		
+	<TBL_LOCALISED_STRINGS
+		ID="5"
+		LABEL="Nota Indicator-1-v1"
+		LOCALE="es"
+		UUID="IS-3-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="3"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="6"
+		LABEL="Note Indicator-1-v1"
+		LOCALE="en"
+		UUID="IS-3-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="3"
+	/>  
+		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="4"
+		UUID="IS-4"
+		VERSION="1"
+	/>	
+	
+	<TBL_LOCALISED_STRINGS
+		ID="7"
+		LABEL="Comentario Indicator-1-v1"
+		LOCALE="es"
+		UUID="IS-4-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="4"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="8"
+		LABEL="Commentary Indicator-1-v1"
+		LOCALE="en"
+		UUID="IS-4-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="4"
+	/> 
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="5"
+		UUID="IS-5"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="9"
+		LABEL="Nombre Indicator-1-v2"
+		LOCALE="es"
+		UUID="IS-5-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="5"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="10"
+		LABEL="Name Indicator-1-v2"
+		LOCALE="en"
+		UUID="IS-5-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="5"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="6"
+		UUID="IS-6"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="11"
+		LABEL="Acrónimo Indicator-1-v2"
+		LOCALE="es"
+		UUID="IS-6-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="6"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="12"
+		LABEL="Acronym Indicator-1-v2"
+		LOCALE="en"
+		UUID="IS-6-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="6"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="7"
+		UUID="IS-7"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="13"
+		LABEL="Nota Indicator-1-v2"
+		LOCALE="es"
+		UUID="IS-7-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="7"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="14"
+		LABEL="Note Indicator-1-v2"
+		LOCALE="en"
+		UUID="IS-7-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="7"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="8"
+		UUID="IS-8"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="15"
+		LABEL="Comentario Indicator-1-v2"
+		LOCALE="es"
+		UUID="IS-8-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="8"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="16"
+		LABEL="Commentary Indicator-1-v2"
+		LOCALE="en"
+		UUID="IS-8-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="8"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="9"
+		UUID="IS-9"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="17"
+		LABEL="Name Indicator-2-v1"
+		LOCALE="es"
+		UUID="IS-9-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="9"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="18"
+		LABEL="Name Indicator-2-v1"
+		LOCALE="en"
+		UUID="IS-9-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="9"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="10"
+		UUID="IS-10"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="19"
+		LABEL="Nombre Indicator-3-v1"
+		LOCALE="es"
+		UUID="IS-10-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="10"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="20"
+		LABEL="Name Indicator-3-v1"
+		LOCALE="en"
+		UUID="IS-10-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="10"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="11"
+		UUID="IS-11"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="21"
+		LABEL="Nombre Indicator-4-v1"
+		LOCALE="es"
+		UUID="IS-11-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="11"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="22"
+		LABEL="Name Indicator-4-v1"
+		LOCALE="en"
+		UUID="IS-11-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="11"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="12"
+		UUID="IS-12"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Nombre Indicator-5-v1"
+		LOCALE="es"
+		UUID="IS-12-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="12"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Name Indicator-5-v1"
+		LOCALE="en"
+		UUID="IS-12-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="12"
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="13"
+		UUID="IS-13"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Nombre Indicator-6-v1"
+		LOCALE="es"
+		UUID="IS-13-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="13"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Name Indicator-6-v1"
+		LOCALE="en"
+		UUID="IS-13-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="13"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="14"
+		UUID="IS-14"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="23"
+		LABEL="Nombre Indicator-6-v1"
+		LOCALE="es"
+		UUID="IS-14-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="14"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="24"
+		LABEL="Name Indicator-6-v1"
+		LOCALE="en"
+		UUID="IS-14-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="14"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="15"
+		UUID="IS-15"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="25"
+		LABEL="Nombre Indicator-7-v1"
+		LOCALE="es"
+		UUID="IS-15-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="15"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="26"
+		LABEL="Name Indicator-7-v1"
+		LOCALE="en"
+		UUID="IS-15-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="15"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="16"
+		UUID="IS-16"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="27"
+		LABEL="Nombre Indicator-7-v1"
+		LOCALE="es"
+		UUID="IS-16-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="16"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="28"
+		LABEL="Name Indicator-7-v1"
+		LOCALE="en"
+		UUID="IS-16-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="16"
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="17"
+		UUID="IS-17"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="29"
+		LABEL="Nombre Indicator-8-v1"
+		LOCALE="es"
+		UUID="IS-17-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="17"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="30"
+		LABEL="Name Indicator-8-v1"
+		LOCALE="en"
+		UUID="IS-17-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="17"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="18"
+		UUID="IS-18"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="31"
+		LABEL="Nombre"
+		LOCALE="es"
+		UUID="IS-18-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="18"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="32"
+		LABEL="Name"
+		LOCALE="en"
+		UUID="IS-18-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="18"
+	/>		
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="19"
+		UUID="IS-19"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="33"
+		LABEL="Nombre"
+		LOCALE="es"
+		UUID="IS-19-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="19"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="34"
+		LABEL="Name"
+		LOCALE="en"
+		UUID="IS-19-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="19"
+	/>			
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="20"
+		UUID="IS-20"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="35"
+		LABEL="Nombre Indicator-1-v2-DataSource-1"
+		LOCALE="es"
+		UUID="IS-20-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="20"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="36"
+		LABEL="Name Indicator-1-v2-DataSource-1"
+		LOCALE="en"
+		UUID="IS-20-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="20"
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="21"
+		UUID="IS-21"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="37"
+		LABEL="Nombre Indicator-1-v2-DataSource-1A"
+		LOCALE="es"
+		UUID="IS-21-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="21"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="38"
+		LABEL="Name Indicator-1-v2-DataSource-1A"
+		LOCALE="en"
+		UUID="IS-21-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="21"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="22"
+		UUID="IS-22"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="39"
+		LABEL="Nombre Indicator-1-v2-DataSource-1B"
+		LOCALE="es"
+		UUID="IS-22-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="22"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="40"
+		LABEL="Name Indicator-1-v2-DataSource-1B"
+		LOCALE="en"
+		UUID="IS-22-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="22"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="23"
+		UUID="IS-23"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="41"
+		LABEL="Nombre Indicator-1-v2-DataSource-1BA"
+		LOCALE="es"
+		UUID="IS-23-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="23"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="42"
+		LABEL="Name Indicator-1-v2-DataSource-1BA"
+		LOCALE="en"
+		UUID="IS-23-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="23"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="24"
+		UUID="IS-24"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="43"
+		LABEL="Nombre Indicator-1-v2-DataSource-2"
+		LOCALE="es"
+		UUID="IS-24-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="24"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="44"
+		LABEL="Name Indicator-1-v2-DataSource-2"
+		LOCALE="en"
+		UUID="IS-24-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="24"
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="25"
+		UUID="IS-25"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="45"
+		LABEL="Nombre Indicator-3-v1-DataSource-1"
+		LOCALE="es"
+		UUID="IS-25-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="25"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="46"
+		LABEL="Name Indicator-3-v1-DataSource-1"
+		LOCALE="en"
+		UUID="IS-25-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="25"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="26"
+		UUID="IS-26"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="47"
+		LABEL="Nombre"
+		LOCALE="es"
+		UUID="IS-26-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="26"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="28"
+		LABEL="Name"
+		LOCALE="en"
+		UUID="IS-26-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="26"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="27"
+		UUID="IS-27"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="48"
+		LABEL="Nombre Indicator-3-v1-DataSource-1A"
+		LOCALE="es"
+		UUID="IS-27-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="27"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="49"
+		LABEL="Name Indicator-3-v1-DataSource-1A"
+		LOCALE="en"
+		UUID="IS-27-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="27"
+	/>									
+					
 </dataset>

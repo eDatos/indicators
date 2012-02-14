@@ -79,7 +79,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
     @Override
     public Indicator indicatorDtoToDo(IndicatorDto source, Indicator target) {
-        // nothing to transform
+        target.setCode(source.getCode()); // non modifiable after creation
         return target;
     }
 
@@ -99,11 +99,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getMessageForReasonType());
         }
 
-        // TODO Non modifiables after creation: code ?
+        // Non modifiables after creation: code
         // Attributes non modifiables by user: states
 
         // Attributes modifiables
-        target.setCode(source.getCode());
         target.setName(internationalStringToDo(source.getName(), target.getName()));
         target.setAcronym(internationalStringToDo(source.getAcronym(), target.getAcronym()));
         target.setCommentary(internationalStringToDo(source.getCommentary(), target.getCommentary()));

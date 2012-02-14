@@ -10,7 +10,9 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 
 /**
  * Asserts to tests
@@ -25,13 +27,21 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getObjetive(), actual.getObjetive());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
-    
-
 
     public static void assertEqualsDimension(DimensionDto expected, DimensionDto actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getParentDimensionUuid(), actual.getParentDimensionUuid());
         assertEquals(expected.getOrderInLevel(), actual.getOrderInLevel());
+    }
+    
+    public static void assertEqualsIndicator(IndicatorDto expected, IndicatorDto actual) {
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
+        assertEqualsInternationalString(expected.getName(), actual.getName());
+        assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
+        assertEquals(expected.getNoteUrl(), actual.getNoteUrl());
+        assertEqualsInternationalString(expected.getNotes(), actual.getNotes());
+        assertEqualsInternationalString(expected.getCommentary(), actual.getCommentary());
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {

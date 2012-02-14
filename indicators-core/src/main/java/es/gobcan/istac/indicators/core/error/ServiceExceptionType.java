@@ -33,8 +33,14 @@ public enum ServiceExceptionType {
     SERVICE_INDICATORS_SYSTEM_VERSION_WRONG_STATE("0508"),
     
     SERVICE_DIMENSION_NOT_FOUND("0601"),
-    SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM("0602");
-
+    SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM("0602"),
+    
+    SERVICE_INDICATOR_NOT_FOUND("0701"),
+    SERVICE_INDICATOR_VERSION_NOT_FOUND("0702"),
+    SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED("0703"),
+    SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND("0704"),
+    SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND("0705"),
+    SERVICE_INDICATOR_WRONG_STATE("0706");
 
     private String errorCode;
 
@@ -71,6 +77,14 @@ public enum ServiceExceptionType {
         // Dimensions
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND, "exception.service.validation.dimension.not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, "exception.service.validation.dimension.not_found_in_indicators_system");
+
+        // Indicators
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND, "exception.service.validation.indicator.not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND, "exception.service.validation.indicator.vesion_not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, "exception.service.validation.indicator.already_exists.code_duplicated");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND, "exception.service.validation.indicator.production_not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND, "exception.service.validation.indicator.diffusion_not_found");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE, "exception.service.validation.indicator.wrong_state");
 
         for (ServiceExceptionType s : EnumSet.allOf(ServiceExceptionType.class)) {
             LOOKUP.put(s.getErrorCode(), s);

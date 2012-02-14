@@ -5,7 +5,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * Indicator system entity
+ * Indicators system entity
  */
 @Entity
 @Table(name = "TBL_INDICATORS_SYSTEMS", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
