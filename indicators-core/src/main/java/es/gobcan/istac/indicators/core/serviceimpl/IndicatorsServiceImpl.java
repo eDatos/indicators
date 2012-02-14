@@ -6,6 +6,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
@@ -98,4 +99,34 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public List<IndicatorVersion> findIndicatorsVersions(ServiceContext ctx, String uriGopestat, IndicatorStateEnum state) throws MetamacException {
         return getIndicatorVersionRepository().findIndicatorsVersions(state);
     }
+    
+    @Override
+    public DataSource createDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+        return getDataSourceRepository().save(dataSource);
+    }
+
+//    @Override
+//    public DataSource retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+//        DataSource dataSource = getDataSourceRepository().findDataSource(uuid);
+//        if (dataSource == null) {
+//            throw new MetamacException(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND, uuid);
+//        }
+//        return dataSource;
+//    }
+//
+//    @Override
+//    public DataSource updateDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+//        return getDataSourceRepository().save(dataSource);
+//    }
+//
+//    @Override
+//    public void deleteDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+//        getDataSourceRepository().delete(dataSource);
+//    }
+//
+//    @Override
+//    public List<DataSource> findDataSources(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+//        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
+//        return indicatorsSystemVersion.getDataSources();
+//    }
 }

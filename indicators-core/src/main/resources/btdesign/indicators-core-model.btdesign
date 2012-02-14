@@ -40,6 +40,7 @@ Application Indicators {
     	Service IndicatorsService {
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
+    		> @DataSourceRepository
     		
     		// Indicator
     		@IndicatorVersion createIndicatorVersion(@Indicator indicator, @IndicatorVersion indicatorVersion) throws MetamacException;
@@ -51,6 +52,13 @@ Application Indicators {
 	    	deleteIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@Indicator> findIndicators(String code) throws MetamacException;
 	    	List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state) throws MetamacException;
+	    	
+	    	// Data sources
+	    	@DataSource createDataSource(@DataSource dataSource) throws MetamacException;
+//	    	@DataSource updateDataSource(@DataSource dataSource) throws MetamacException;
+//	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
+//	    	deleteDataSource(@DataSource dataSource) throws MetamacException;
+//	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
     	}
     	
     	"Provides access to indicators systems"
@@ -130,6 +138,18 @@ Application Indicators {
 	    	List<@IndicatorDto> findIndicators() throws MetamacException;
 	    	"Finds published indicators"
 	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
+	    	
+	    	// Datasources
+	    	"Creates a data source"
+	    	@DataSourceDto createDataSource(String indicatorUuid, @DataSourceDto dataSourceDto) throws MetamacException;
+//	    	"Updates metadata of data source"
+//	    	updateDataSource(@DataSourceDto dataSourceDto) throws MetamacException;
+//	    	"Retrieves data source"
+//	    	@DataSourceDto retrieveDataSource(String uuid) throws MetamacException;
+//	    	"Deletes data source"
+//	    	deleteDataSource(String uuid) throws MetamacException;
+//	    	"Find data sources"
+//	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
 	    }
 
 	    // ----------------------------------------------------------------
@@ -322,7 +342,8 @@ Application Indicators {
 			// Relations
 			"Indicator"
 			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
-			
+			"Data sources"
+			- Bag<@DataSource> dataSources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorVersion;
 		
 			Repository IndicatorVersionRepository {
 				@IndicatorVersion save(@IndicatorVersion entity);
@@ -341,6 +362,34 @@ Application Indicators {
     		"Version number of IndicatorVersion"
     		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
     	}			
+    	
+		"Data source of indicator"
+        Entity DataSource {
+        	databaseTable = "TBL_DATA_SOURCES"
+        	hint="idSequence=DATA_SOURCES"
+        	gap
+        	
+			// Query in GPE
+			String queryGpe required;
+			// Px
+			String px required;
+			// Temporary variable
+			String temporaryVariable required;
+			// Geographic variable
+			String geographicVariable required;
+			
+			// Relations
+            "Indicator version"
+			- @IndicatorVersion indicatorVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATOR_VERSION_FK" <-> dataSources;
+            
+			"Provides access to Dimension"
+            Repository DataSourceRepository {
+            	@DataSource save(@DataSource entity);
+            	delete;
+            	protected List<@DataSource> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@DataSource findDataSource(String uuid);
+            }
+        }  	    	
 	}
 	
 	// ----------------------------------------------------------------
@@ -458,6 +507,21 @@ Application Indicators {
 			String parentDimensionUuid;			
        		"Subdimensions"
        		- List<@DimensionDto> subdimensions;            
+	    }
+	    
+	    "Dto for data source"
+	   	DataTransferObject DataSourceDto extends @AuditableDto {
+			
+			"Unique uuid"
+			String uuid;
+			// Query in GPE
+			String queryGpe;
+			// Px
+			String px;
+			// Temporary variable
+			String temporaryVariable;
+			// Geographic variable
+			String geographicVariable;
 	    }
 	}
 	

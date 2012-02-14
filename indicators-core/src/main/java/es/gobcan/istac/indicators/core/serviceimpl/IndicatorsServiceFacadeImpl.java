@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
@@ -37,7 +39,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public IndicatorsServiceFacadeImpl() {
     }
 
-    // TODO la lista de fuentes de datos ha de estar vacía
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Validation of parameters
@@ -322,6 +323,94 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return indicatorDto;
     }
+    
+    @Override
+    public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkCreateDataSource(indicatorUuid, dataSourceDto, null);
+
+        // Retrieve indicator version and check it is in production
+        IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, indicatorUuid, true);
+
+        // Transform
+        DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(dataSourceDto);
+        dataSource = getIndicatorsService().createDataSource(ctx, dataSource);
+
+        // Create dataSource
+        dataSource.setIndicatorVersion(indicatorVersion);
+        dataSource = getIndicatorsService().createDataSource(ctx, dataSource);
+
+        // Update indicator adding dataSource
+        indicatorVersion.addDataSource(dataSource);
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+
+        // Transform to Dto to return
+        dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
+        return dataSourceDto;
+    }
+
+//    @Override
+//    public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+//
+//        // Validation of parameters
+//        InvocationValidator.checkRetrieveDataSource(uuid, null);
+//
+//        // Retrieve
+//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
+//        DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
+//        return dataSourceDto;
+//    }
+//
+//    @Override
+//    public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+//
+//        // Validation of parameters
+//        InvocationValidator.checkDeleteDataSource(uuid, null);
+//
+//        // Check indicator state
+//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
+//        IndicatorVersion indicatorVersion = retrieveIndicatorSystemVersionOfDataSource(dataSource);
+//        checkIndicatorSystemVersionInProduction(indicatorVersion);
+//
+//        // Delete
+//        getIndicatorsService().deleteDataSource(ctx, dataSource);
+//    }
+//
+//    @Override
+//    public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
+//
+//        // Validation of parameters
+//        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
+//
+//        // Retrieve dataSources and transform
+//        List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
+//        List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
+//        for (DataSource dataSource : dataSources) {
+//            dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));
+//        }
+//
+//        return dataSourcesDto;
+//    }
+//
+//    @Override
+//    public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
+//
+//        // Retrieve
+//        // TODO comprobar parámetros antes?
+//        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
+//
+//        // Validation of parameters
+//        InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
+//
+//        // Check indicator state
+//        IndicatorVersion indicatorVersion = retrieveIndicatorSystemVersionOfDataSource(dataSource);
+//        checkIndicatorSystemVersionInProduction(indicatorVersion);
+//
+//        // Transform and update
+//        dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
+//        getIndicatorsService().updateDataSource(ctx, dataSource);
+//    }
 
     /**
      * Retrieves version of an indicator in production

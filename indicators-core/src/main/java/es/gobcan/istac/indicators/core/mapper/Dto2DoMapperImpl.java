@@ -12,11 +12,13 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -111,6 +113,22 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setNoteUrl(source.getNoteUrl());
         
         return target;
+    }
+    
+    // TODO no se puede modificar query y px
+    @Override
+    public DataSource dataSourceDtoToDo(DataSourceDto source) {
+        DataSource target = new DataSource();
+        dataSourceDtoToDo(source, target);
+        return target;
+    }
+
+    @Override
+    public void dataSourceDtoToDo(DataSourceDto source, DataSource target) {
+        target.setQueryGpe(source.getQueryGpe());
+        target.setPx(source.getPx());
+        target.setTemporaryVariable(source.getTemporaryVariable());
+        target.setGeographicVariable(source.getGeographicVariable());
     }
     
     private InternationalString internationalStringToDo(InternationalStringDto source, InternationalString target) {

@@ -11,16 +11,18 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
-    
+
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
 
@@ -67,10 +69,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return target;
     }
-    
+
     @Override
     public IndicatorDto indicatorDoToDto(IndicatorVersion source) {
-        
+
         IndicatorDto target = new IndicatorDto();
 
         target.setUuid(source.getIndicator().getUuid());
@@ -100,7 +102,20 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
-        return target;    }
+        return target;
+    }
+
+    @Override
+    public DataSourceDto dataSourceDoToDto(DataSource source) {
+        DataSourceDto target = new DataSourceDto();
+        target.setUuid(source.getUuid());
+        target.setQueryGpe(source.getQueryGpe());
+        target.setPx(source.getPx());
+        target.setTemporaryVariable(source.getTemporaryVariable());
+        target.setGeographicVariable(source.getGeographicVariable());
+
+        return target;
+    }
 
     private InternationalStringDto internationalStringToDto(InternationalString source) {
         if (source == null) {

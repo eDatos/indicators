@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -315,6 +316,65 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkCreateDataSource(String indicatorUuid, DataSourceDto dataSourceDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+        checkDataSource(dataSourceDto, exceptions);
+        ValidationUtils.checkMetadataEmpty(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+//
+//    public static void checkRetrieveDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkDeleteDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkFindDataSources(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
+//        ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        checkDataSource(dataSourceDto, exceptions);
+//        ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
+//        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getParentDataSourceUuid(), dataSource.getParent() != null ? dataSource.getParent().getUuid() : null, "DATA_SOURCE.PARENT_DATA_SOURCE_UUID",
+//                exceptions);
+//        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getOrderInLevel(), dataSource.getOrderInLevel(), "DATA_SOURCE.ORDER_IN_LEVEL", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
@@ -336,5 +396,13 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorDto, "INDICATOR", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getName(), "INDICATOR.NAME", exceptions);
+    }
+
+    private static void checkDataSource(DataSourceDto dataSourceDto, List<MetamacExceptionItem> exceptions) {
+        ValidationUtils.checkParameterRequired(dataSourceDto, "DATA_SOURCE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSourceDto.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSourceDto.getPx(), "DATA_SOURCE.PX", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSourceDto.getTemporaryVariable(), "DATA_SOURCE.TEMPORARY_VARIABLE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSourceDto.getGeographicVariable(), "DATA_SOURCE.GEOGRAPHIC_VARIABLE", exceptions);
     }
 }
