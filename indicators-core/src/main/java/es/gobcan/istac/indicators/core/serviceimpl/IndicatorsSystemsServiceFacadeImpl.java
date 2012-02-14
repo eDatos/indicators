@@ -621,8 +621,8 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     private void checkDimensionsOrder(List<Dimension> dimensionsInLevel, Boolean dimensionAlreadyAdded, Long orderInLevel) throws MetamacException {
         Long orderMaximum = !dimensionAlreadyAdded ? Long.valueOf(dimensionsInLevel.size() + 1) : Long.valueOf(dimensionsInLevel.size());
         if (orderInLevel > orderMaximum) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(),
-                    ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getMessageForReasonType(), "ORDER_IN_LEVEL");
+            throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getErrorCode(),
+                    ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getMessageForReasonType(), "ORDER_IN_LEVEL");
         }
     }
 
@@ -675,8 +675,8 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         Dimension dimensionParent = dimensionTarget.getParent();
         while (dimensionParent != null) {
             if (dimensionParent.getUuid().equals(dimension.getUuid())) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(),
-                        ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getMessageForReasonType(), "PARENT_TARGET_UUID");
+                throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getErrorCode(),
+                        ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getMessageForReasonType(), "PARENT_TARGET_UUID");
             }
             dimensionParent = dimensionParent.getParent();
         }        

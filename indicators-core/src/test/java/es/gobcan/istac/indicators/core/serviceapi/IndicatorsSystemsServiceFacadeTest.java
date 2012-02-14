@@ -132,7 +132,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -221,7 +221,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -297,7 +297,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("code required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -315,7 +315,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("title required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -664,7 +664,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Code is unmodifiable");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1514,7 +1514,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1711,7 +1711,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("title required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1728,7 +1728,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("order required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1747,7 +1747,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1766,7 +1766,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1788,7 +1788,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("subdimensions must be empty");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_MUST_BE_EMPTY.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNEXPECTED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.SUBDIMENSIONS", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2017,7 +2017,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Parent changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.PARENT_DIMENSION_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2030,7 +2030,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Parent changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.PARENT_DIMENSION_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2048,7 +2048,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Order changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2262,7 +2262,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("It is child");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("PARENT_TARGET_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2293,7 +2293,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_INCORRECT.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -2301,6 +2301,6 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
 
     @Override
     protected String getDataSetFile() {
-        return "dbunit/IndicatorsSystemServiceFacadeTest.xml";
+        return "dbunit/IndicatorsSystemsServiceFacadeTest.xml";
     }
 }

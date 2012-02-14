@@ -254,7 +254,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
     // }
     //
-    // // TODO versionar instancias de indicadores...
+    // // TODO copiar orígenes de datos
     // @Override
     // public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
     //

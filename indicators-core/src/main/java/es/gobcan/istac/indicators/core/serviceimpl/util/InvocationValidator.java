@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
@@ -27,7 +28,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataEmpty(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions);
         ValidationUtils.checkMetadataEmpty(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkUpdateIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, IndicatorsSystemVersion indicatorsSystemInProduction, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -40,7 +41,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorsSystemInProduction.getIndicatorsSystem().getCode(), indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkRetrieveIndicatorsSystem(String uuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -51,7 +52,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         // version is optional
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkRetrieveIndicatorsSystemPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -61,7 +62,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkDeleteIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -72,7 +73,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     public static void checkSendIndicatorsSystemToProductionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -83,7 +84,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkSendIndicatorsSystemToDiffusionValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -94,7 +95,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkRejectIndicatorsSystemValidation(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -105,7 +106,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkPublishIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -116,7 +117,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkArchiveIndicatorsSystem(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -127,7 +128,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkVersioningIndicatorsSystem(String uuid, VersiontTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -139,7 +140,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         ValidationUtils.checkParameterRequired(versionType, "VERSION_TYPE", exceptions);
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkFindIndicatorsSystems(List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -150,7 +151,7 @@ public class InvocationValidator {
         
         // nothing to validate
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkFindIndicatorsSystemsPublished(List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -161,7 +162,7 @@ public class InvocationValidator {
         
         // nothing to validate
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkCreateDimension(String indicatorsSystemUuid, DimensionDto dimensionDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -174,7 +175,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataEmpty(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
         ValidationUtils.checkMetadataEmpty(dimensionDto.getSubdimensions(), "DIMENSION.SUBDIMENSIONS", exceptions);
 
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     public static void checkRetrieveDimension(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -185,7 +186,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
 
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     public static void checkDeleteDimension(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -196,7 +197,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
 
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     public static void checkFindDimensions(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -207,7 +208,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
 
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
 
     public static void checkUpdateDimension(DimensionDto dimensionDto, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -220,7 +221,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentDimensionUuid(), dimension.getParent() != null ? dimension.getParent().getUuid() : null, "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
         
-        throwIfException(exceptions); 
+        ExceptionUtils.throwIfException(exceptions); 
     }
     
     public static void checkUpdateDimensionLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -231,7 +232,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         ValidationUtils.checkParameterRequired(orderInLevel, "ORDER_IN_LEVEL", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkCreateIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -243,7 +244,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataEmpty(indicatorDto.getUuid(), "INDICATOR.UUID", exceptions);
         ValidationUtils.checkMetadataEmpty(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkUpdateIndicator(IndicatorDto indicatorDto, IndicatorVersion indicatorInProduction, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -256,7 +257,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInProduction.getIndicator().getCode(), indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkRetrieveIndicator(String uuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -267,7 +268,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         // version is optional
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkRetrieveIndicatorPublished(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -277,7 +278,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkDeleteIndicator(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -288,7 +289,7 @@ public class InvocationValidator {
         
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
         
-        throwIfException(exceptions);
+        ExceptionUtils.throwIfException(exceptions);
     }
     
     public static void checkFindIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -299,7 +300,7 @@ public class InvocationValidator {
         
         // nothing to validate
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     public static void checkFindIndicatorsPublished(List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -310,7 +311,7 @@ public class InvocationValidator {
         
         // nothing to validate
         
-        throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);        
     }
     
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
@@ -324,7 +325,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dimensionDto.getTitle(), "DIMENSION.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(dimensionDto.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
         if (dimensionDto.getOrderInLevel() != null && dimensionDto.getOrderInLevel() < 0) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getErrorCode(), ServiceExceptionType.SERVICE_VALIDATION_METADATA_INCORRECT.getMessageForReasonType(), "DIMENSION.ORDER_IN_LEVEL"));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_METADATA_INCORRECT.getErrorCode(), ServiceExceptionType.SERVICE_METADATA_INCORRECT.getMessageForReasonType(), "DIMENSION.ORDER_IN_LEVEL"));
         }
     }
     
@@ -333,11 +334,5 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorDto, "INDICATOR", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getName(), "INDICATOR.NAME", exceptions);
-    }
-    
-    private static void throwIfException(List<MetamacExceptionItem> exceptions) throws MetamacException {
-        if (exceptions != null && !exceptions.isEmpty()) {
-            throw new MetamacException(exceptions);
-        }
     }
 }

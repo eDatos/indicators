@@ -119,7 +119,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -208,7 +208,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INVALID_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -285,7 +285,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("code required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -303,7 +303,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("name required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.NAME", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -612,7 +612,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Code is unmodifiable");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_VALIDATION_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getErrorCode(), e.getExceptionItems().get(0).getErrorCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
