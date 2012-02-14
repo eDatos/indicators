@@ -32,10 +32,10 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implements IndicatorsSystemServiceFacadeTestBase {
+public class IndicatorsSystemsServiceFacadeTest extends MetamacBaseTests implements IndicatorsSystemsServiceFacadeTestBase {
 
     @Autowired
-    protected IndicatorsSystemServiceFacade indicatorsSystemServiceFacade;
+    protected IndicatorsSystemsServiceFacade indicatorsSystemsServiceFacade;
 
     private static String                   NOT_EXISTS                           = "not-exists";
 
@@ -66,7 +66,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "1.000";
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
 
         assertNotNull(indicatorsSystemDto);
         assertEquals(uuid, indicatorsSystemDto.getUuid());
@@ -97,7 +97,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Without version (retrieve last)
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals(versionNumberProduction, indicatorsSystemDto.getVersionNumber());
             assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
@@ -106,7 +106,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // With version 1
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberDiffusion);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberDiffusion);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals(versionNumberDiffusion, indicatorsSystemDto.getVersionNumber());
             assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
@@ -115,7 +115,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // With version 2
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberProduction);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumberProduction);
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals(versionNumberProduction, indicatorsSystemDto.getVersionNumber());
             assertEquals(versionNumberDiffusion, indicatorsSystemDto.getDiffusionVersion());
@@ -129,7 +129,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = null;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -145,7 +145,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = NOT_EXISTS;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -162,7 +162,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNotExists = String.valueOf(99);
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNotExists);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNotExists);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -178,7 +178,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         String uuid = INDICATORS_SYSTEM_3;
 
-        IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
         assertEquals(uuid, indicatorsSystemDtoPublished.getUuid());
         assertEquals("11.033", indicatorsSystemDtoPublished.getVersionNumber());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoPublished.getState());
@@ -189,7 +189,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         String uuid = INDICATORS_SYSTEM_1;
 
-        IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
         assertEquals(uuid, indicatorsSystemDtoPublished.getUuid());
         assertEquals("1.000", indicatorsSystemDtoPublished.getVersionNumber());
         assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoPublished.getState());
@@ -201,7 +201,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
             fail("No published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -218,7 +218,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = null;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -234,7 +234,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = NOT_EXISTS;
 
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -256,13 +256,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalString());
 
         // Create
-        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validate
         assertNotNull(indicatorsSystemDtoCreated);
         assertNotNull(indicatorsSystemDtoCreated.getUuid());
         assertNotNull(indicatorsSystemDtoCreated.getVersionNumber());
-        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), indicatorsSystemDtoCreated.getUuid(),
+        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), indicatorsSystemDtoCreated.getUuid(),
                 indicatorsSystemDtoCreated.getVersionNumber());
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoCreated.getState());
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoRetrieved.getState());
@@ -294,7 +294,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("code required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -312,7 +312,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setTitle(null);
 
         try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("title required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -330,7 +330,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("code duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -349,7 +349,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setUriGopestat("http://indicators-sytems/1");
 
         try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("uri gopestat duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -367,7 +367,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
-            indicatorsSystemServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("code duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -383,11 +383,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         // Delete indicators system only in draft
-        indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
             fail("Indicators system deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -404,7 +404,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Retrieve: version 1 is diffusion; version 2 is in production
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
             assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
@@ -419,17 +419,17 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionsUuid.add(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2);
         dimensionsUuid.add(DIMENSION_2_INDICATORS_SYSTEM_1_V2);
         for (String dimensionUuid : dimensionsUuid) {
-            DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
+            DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
             assertNotNull(dimensionDto);
         }
 
         // Delete indicators system
-        indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         // Version 1 exists
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(uuid, indicatorsSystemDto.getUuid());
             assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
             assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
@@ -437,7 +437,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         }
         // Version 2 not exists
         try {
-            indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "2.000");
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "2.000");
             fail("Indicators system version deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -450,7 +450,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Check dimensions deleted
         for (String dimensionUuid : dimensionsUuid) {
             try {
-                indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
+                indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
                 fail("dimension deleted");
             } catch (MetamacException e) {
                 assertEquals(1, e.getExceptionItems().size());
@@ -468,7 +468,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
             fail("Indicators system is not in draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -485,7 +485,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
             fail("Dimension not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -501,7 +501,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "2.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -509,10 +509,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         indicatorsSystemDto.setUriGopestat("newUri");
 
         // Update
-        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
         assertTrue(indicatorsSystemDtoUpdated.getLastUpdated().after(indicatorsSystemDtoUpdated.getCreatedDate()));
     }
@@ -523,16 +523,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_9;
         String versionNumber = "1.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
-        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
@@ -543,16 +543,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_4;
         String versionNumber = "1.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
-        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
@@ -563,16 +563,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_5;
         String versionNumber = "1.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
-        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoUpdated.getState());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
@@ -583,25 +583,25 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "2.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         indicatorsSystemDto.getTitle().getTexts().iterator().next().setLabel("NewLabel");
 
         // Update
-        indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
     @Test
     public void testUpdateIndicatorsSystemErrorNotExists() throws Exception {
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
         indicatorsSystemDto.setUuid(NOT_EXISTS);
 
         try {
-            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -617,10 +617,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
         String versionNumber = INDICATORS_SYSTEM_3_VERSION;
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
 
         try {
-            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -636,10 +636,10 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "1.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
 
         try {
-            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("Version 1 not is in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -656,12 +656,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "2.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         indicatorsSystemDto.setCode("newCode");
 
         // Update
         try {
-            indicatorsSystemServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            indicatorsSystemsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
             fail("Code is unmodifiable");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -680,8 +680,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String productionVersion = "2.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
@@ -689,12 +689,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         }
 
         // Sends to production validation
-        indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
+        indicatorsSystemsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
@@ -718,18 +718,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String productionVersion = "1.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
         }
 
         // Sends to production validation
-        indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
+        indicatorsSystemsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
@@ -740,7 +740,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testSendIndicatorsSystemToProductionValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), NOT_EXISTS);
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -756,13 +756,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
             assertNull(indicatorsSystemDto.getProductionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), uuid);
             fail("Indicators system is not draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -783,18 +783,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNumber = "1.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
         }
 
         // Sends to diffusion validation
-        indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
@@ -814,7 +814,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testSendIndicatorsSystemToDiffusionValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), NOT_EXISTS);
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -830,14 +830,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
             fail("Indicators system is not draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -854,14 +854,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
             fail("Indicators system is not production validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -880,18 +880,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNumber = "1.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
         }
 
         // Rejects validation
-        indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
@@ -914,18 +914,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNumber = "1.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
         }
 
         // Rejects validation
-        indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
@@ -936,7 +936,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testRejectIndicatorsSystemValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), NOT_EXISTS);
+            indicatorsSystemsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -952,14 +952,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -977,14 +977,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1004,18 +1004,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNumber = "1.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(versionNumber, indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
         }
 
         // Publish
-        indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(versionNumber, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
@@ -1039,8 +1039,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String productionVersionBefore = "2.000"; // will be published
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersionBefore, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
@@ -1048,13 +1048,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         }
 
         // Publish
-        indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         {
             // Version 1 already not exists
             try {
-                indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
+                indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
                 fail("Indicators system version not exists");
             } catch (MetamacException e) {
                 assertEquals(1, e.getExceptionItems().size());
@@ -1065,7 +1065,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             }
 
             // Actual version in diffusion is version 2
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("2.000", indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
@@ -1080,8 +1080,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String productionVersionBefore = "2.000"; // will be published
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersionBefore, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDtoV1.getState());
@@ -1089,13 +1089,13 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         }
 
         // Publish
-        indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         {
             // Version 1 already not exists
             try {
-                indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
+                indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersionBefore);
                 fail("Indicators system version not exists");
             } catch (MetamacException e) {
                 assertEquals(1, e.getExceptionItems().size());
@@ -1106,7 +1106,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             }
 
             // Actual version in diffusion is version 2
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("2.000", indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
@@ -1117,7 +1117,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testPublishIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), NOT_EXISTS);
+            indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1133,14 +1133,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
             fail("Indicators system is not diffusion validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1157,14 +1157,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
             fail("Indicators system is not diffusion validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1183,18 +1183,18 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String versionNumber = INDICATORS_SYSTEM_3_VERSION;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
         }
 
         // Archive
-        indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
@@ -1218,8 +1218,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String productionVersion = "2.000";
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
-            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
@@ -1227,11 +1227,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         }
 
         // Archive
-        indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertEquals(diffusionVersion, indicatorsSystemDto.getDiffusionVersion());
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
@@ -1242,7 +1242,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testArchiveIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), NOT_EXISTS);
+            indicatorsSystemsServiceFacade.archiveIndicatorsSystem(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1258,14 +1258,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
             fail("Indicators system is not published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1282,14 +1282,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_8;
 
         {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
         }
 
         try {
-            indicatorsSystemServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
             fail("Indicators system is not published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1307,12 +1307,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
         String newVersionExpected = "12.000";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getVersionNumber());
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MAJOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MAJOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1321,8 +1321,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoVersioned);
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoProduction = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersionExpected);
-            IndicatorsSystemDto indicatorsSystemDtoDiffusion = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDtoProduction = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersionExpected);
+            IndicatorsSystemDto indicatorsSystemDtoDiffusion = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
 
             IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDtoDiffusion, indicatorsSystemDtoProduction);
 
@@ -1331,7 +1331,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoProduction.getDiffusionVersion());
             // Dimensions
-            List<DimensionDto> dimensions = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), indicatorsSystemDtoProduction.getUuid(), indicatorsSystemDtoProduction.getProductionVersion());
+            List<DimensionDto> dimensions = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), indicatorsSystemDtoProduction.getUuid(), indicatorsSystemDtoProduction.getProductionVersion());
             assertEquals(1, dimensions.size());
             IndicatorsAsserts.assertEqualsInternationalString(dimensions.get(0).getTitle(), "es", "Título IndSys-3-v1-Dimension-1", "en", "Title IndSys-3-v1-Dimension-1");
             assertEquals(1, dimensions.get(0).getSubdimensions().size());
@@ -1350,12 +1350,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_3;
         String newVersionExpected = "11.034";
 
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, null);
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getVersionNumber());
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1364,8 +1364,8 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoVersioned);
 
         {
-            IndicatorsSystemDto indicatorsSystemDtoProduction = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersionExpected);
-            IndicatorsSystemDto indicatorsSystemDtoDiffusion = indicatorsSystemServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemDto indicatorsSystemDtoProduction = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersionExpected);
+            IndicatorsSystemDto indicatorsSystemDtoDiffusion = indicatorsSystemsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
 
             IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDtoDiffusion, indicatorsSystemDtoProduction);
 
@@ -1385,7 +1385,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, IndicatorsSystemVersionEnum.MINOR);
+            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, IndicatorsSystemVersionEnum.MINOR);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1401,7 +1401,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = INDICATORS_SYSTEM_2;
 
         try {
-            indicatorsSystemServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
+            indicatorsSystemsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, IndicatorsSystemVersionEnum.MINOR);
             fail("Indicators system already exists in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1418,7 +1418,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testFindIndicatorsSystems() throws Exception {
 
         // Retrieve last versions...
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystems(getServiceContext());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemsServiceFacade.findIndicatorsSystems(getServiceContext());
         assertEquals(9, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1453,7 +1453,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsSystemsServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
         assertEquals(3, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1470,7 +1470,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testRetrieveDimension() throws Exception {
 
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
 
         assertNotNull(dimensionDto);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getUuid());
@@ -1511,7 +1511,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = null;
 
         try {
-            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1527,7 +1527,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = NOT_EXISTS;
 
         try {
-            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1548,16 +1548,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.valueOf(3));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        DimensionDto dimensionDtoCreated = indicatorsSystemsServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Retrieve dimension
-        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
         assertEquals(0, dimensionDtoRetrieved.getSubdimensions().size());
         
         // Retrieves other dimensions in same level
-        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
+        List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
         assertEquals(3, dimensionsDto.size());
         
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
@@ -1578,16 +1578,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        DimensionDto dimensionDtoCreated = indicatorsSystemsServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Retrieve dimension
-        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
         assertEquals(0, dimensionDtoRetrieved.getSubdimensions().size());
         
         // Retrieves other dimensions in same level
-        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
+        List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
         assertEquals(3, dimensionsDto.size());
         
         assertEquals(dimensionDtoCreated.getUuid(), dimensionsDto.get(0).getUuid());
@@ -1604,7 +1604,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
 
         // Retrieve dimension parent
-        DimensionDto dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        DimensionDto dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(2, dimensionDtoParent.getSubdimensions().size());
 
         // Create dimension
@@ -1613,17 +1613,17 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setParentDimensionUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(3));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        DimensionDto dimensionDtoCreated = indicatorsSystemsServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Retrieve dimension
-        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
         assertEquals(0, dimensionDtoRetrieved.getSubdimensions().size());
 
         // Retrieve dimension parent (indicators system version had two dimensions before; now has three dimensions)
-        dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(3, dimensionDtoParent.getSubdimensions().size());
         
         assertEquals(DIMENSION_1A_INDICATORS_SYSTEM_1_V2, dimensionDtoParent.getSubdimensions().get(0).getUuid());
@@ -1640,7 +1640,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
 
         // Retrieve dimension parent
-        DimensionDto dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        DimensionDto dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(2, dimensionDtoParent.getSubdimensions().size());
 
         // Create dimension
@@ -1649,17 +1649,17 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setParentDimensionUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(2));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        DimensionDto dimensionDtoCreated = indicatorsSystemsServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Retrieve dimension
-        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoRetrieved);
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
         assertEquals(0, dimensionDtoRetrieved.getSubdimensions().size());
 
         // Retrieve dimension parent (indicators system version had two dimensions before; now has three dimensions)
-        dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(3, dimensionDtoParent.getSubdimensions().size());
 
         assertEquals(DIMENSION_1A_INDICATORS_SYSTEM_1_V2, dimensionDtoParent.getSubdimensions().get(0).getUuid());
@@ -1676,7 +1676,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentUuid = DIMENSION_1A_INDICATORS_SYSTEM_1_V2;
 
         // Retrieve dimension parent
-        DimensionDto dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        DimensionDto dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(0, dimensionDtoParent.getSubdimensions().size());
 
         // Create subdimension
@@ -1685,16 +1685,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setParentDimensionUuid(parentUuid);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
-        DimensionDto dimensionDtoCreated = indicatorsSystemServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
+        DimensionDto dimensionDtoCreated = indicatorsSystemsServiceFacade.createDimension(getServiceContext(), uuidIndicatorsSystem, dimensionDto);
         assertNotNull(dimensionDtoCreated.getUuid());
 
         // Validate
-        DimensionDto dimensionDtoRetrieved = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
+        DimensionDto dimensionDtoRetrieved = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsDimension(dimensionDtoCreated, dimensionDtoRetrieved);
         assertEquals(parentUuid, dimensionDtoRetrieved.getParentDimensionUuid());
 
         // Retrieve dimension parent
-        dimensionDtoParent = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
+        dimensionDtoParent = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentUuid);
         assertEquals(1, dimensionDtoParent.getSubdimensions().size());
         IndicatorsAsserts.assertEqualsDimension(dimensionDtoCreated, dimensionDtoParent.getSubdimensions().get(0));
         
@@ -1708,7 +1708,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setParentDimensionUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("title required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1725,7 +1725,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         dimensionDto.setOrderInLevel(null);
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("order required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1744,7 +1744,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.MAX_VALUE);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1763,7 +1763,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.MIN_VALUE);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1785,7 +1785,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.addSubdimension(subdimensionDto);
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("subdimensions must be empty");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1802,7 +1802,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), NOT_EXISTS, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), NOT_EXISTS, dimensionDto);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1821,7 +1821,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), indicatorsSystemUuid, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), indicatorsSystemUuid, dimensionDto);
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1840,7 +1840,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_1, dimensionDto);
             fail("dimension id not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1859,7 +1859,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
         try {
-            indicatorsSystemServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_2, dimensionDto);
+            indicatorsSystemsServiceFacade.createDimension(getServiceContext(), INDICATORS_SYSTEM_2, dimensionDto);
             fail("dimension id not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1876,15 +1876,15 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
 
         // Retrieve
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(2, dimensionDto.getSubdimensions().size());
 
         // Delete dimension
-        indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), uuid);
+        indicatorsSystemsServiceFacade.deleteDimension(getServiceContext(), uuid);
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
             fail("Dimension deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1896,7 +1896,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         // Check subdimensions deleted
         for (DimensionDto subdDimensionDto : dimensionDto.getSubdimensions()) {
             try {
-                indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), subdDimensionDto.getUuid());
+                indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), subdDimensionDto.getUuid());
                 fail("Subimension deleted");
             } catch (MetamacException e) {
                 assertEquals(1, e.getExceptionItems().size());
@@ -1911,7 +1911,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testDeleteDimensionErrorIndicatorsSystemVersionPublished() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_3);
+            indicatorsSystemsServiceFacade.deleteDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_3);
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1929,7 +1929,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.deleteDimension(getServiceContext(), uuid);
+            indicatorsSystemsServiceFacade.deleteDimension(getServiceContext(), uuid);
             fail("Dimension not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1947,14 +1947,14 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Version 1.000
         {
-            List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "1.000");
+            List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "1.000");
             assertEquals(1, dimensionsDto.size());
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V1, dimensionsDto.get(0).getUuid());
         }
 
         // Version 2.000
         {
-            List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
+            List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
             assertEquals(2, dimensionsDto.size());
 
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
@@ -1976,7 +1976,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.findDimensions(getServiceContext(), uuid, "1.000");
+            indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), uuid, "1.000");
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1992,16 +1992,16 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testUpdateDimension() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(2, dimensionDto.getSubdimensions().size());
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
         dimensionDto.getSubdimensions().clear(); // ignore changes of subdimensions
 
         // Update
-        indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+        indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
 
         // Validation
-        DimensionDto dimensionDtoUpdated = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoUpdated = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(2, dimensionDtoUpdated.getSubdimensions().size());
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoUpdated);
     }
@@ -2009,12 +2009,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testUpdateDimensionErrorChangeParentDimension() throws Exception {
 
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getParentDimensionUuid());
         dimensionDto.setParentDimensionUuid(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2);
         
         try {
-            indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Parent changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2027,7 +2027,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setParentDimensionUuid(null);
         
         try {
-            indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Parent changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2040,12 +2040,12 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testUpdateDimensionErrorChangeOrder() throws Exception {
 
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
         assertEquals(Long.valueOf(1), dimensionDto.getOrderInLevel());
         dimensionDto.setOrderInLevel(Long.valueOf(2));
         
         try {
-            indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Order changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2058,11 +2058,11 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     @Test
     public void testUpdateDimensionErrorIndicatorsSystemPublished() throws Exception {
         
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V1);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V1);
         
 
         try {
-            indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Indicators system published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2082,7 +2082,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
-            indicatorsSystemServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2104,26 +2104,26 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
         String parentTargetUuid = DIMENSION_2_INDICATORS_SYSTEM_1_V2;
         
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertNull(dimensionDto.getParentDimensionUuid());
         
         // Update location
-        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+        indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
 
         // Validate source
-        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(1, dimensionsDto.size());
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
 
         // Validate target
-        DimensionDto dimensionParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
+        DimensionDto dimensionParentDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
         assertEquals(1, dimensionParentDto.getSubdimensions().size());
         assertEquals(uuid, dimensionParentDto.getSubdimensions().get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionParentDto.getSubdimensions().get(0).getOrderInLevel());
         
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoChanged = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentTargetUuid, dimensionDtoChanged.getParentDimensionUuid());
         assertEquals(2, dimensionDtoChanged.getSubdimensions().size());
     }
@@ -2136,26 +2136,26 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentBeforeUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
         
         // Retrieve actual
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentBeforeUuid, dimensionDto.getParentDimensionUuid());
-        DimensionDto dimensionLastParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        DimensionDto dimensionLastParentDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
         assertEquals(2, dimensionLastParentDto.getSubdimensions().size());
         
         // Update location
-        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(2));
+        indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(2));
 
         // Validate source
-        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
         assertEquals(1, dimensionLastParentDtoAfterUpdate.getSubdimensions().size());
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoChanged = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertNull(dimensionDtoChanged.getParentDimensionUuid());
         
         // Validate target (indicators system)
-        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(3, dimensionsDto.size());
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
@@ -2173,26 +2173,26 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentTargetUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
         
         // Retrieve actual
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentBeforeUuid, dimensionDto.getParentDimensionUuid());
-        DimensionDto dimensionLastParentDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        DimensionDto dimensionLastParentDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
         assertEquals(2, dimensionLastParentDto.getSubdimensions().size());
         
         // Update location
-        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+        indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
 
         // Validate source
-        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
+        DimensionDto dimensionLastParentDtoAfterUpdate = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentBeforeUuid);
         assertEquals(1, dimensionLastParentDtoAfterUpdate.getSubdimensions().size());
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionLastParentDtoAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoChanged = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentTargetUuid, dimensionDtoChanged.getParentDimensionUuid());
         
         // Validate target
-        DimensionDto dimensionParentDtoTarget = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
+        DimensionDto dimensionParentDtoTarget = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), parentTargetUuid);
         assertEquals(2, dimensionParentDtoTarget.getSubdimensions().size());
         assertEquals(uuid, dimensionParentDtoTarget.getSubdimensions().get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionParentDtoTarget.getSubdimensions().get(0).getOrderInLevel());
@@ -2206,15 +2206,15 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
         
         // Retrieve actual
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertNull(dimensionDto.getParentDimensionUuid());
         assertEquals(Long.valueOf(1), dimensionDto.getOrderInLevel());
         
         // Update location
-        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(2));
+        indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(2));
 
         // Validate source and target
-        List<DimensionDto> dimensionsDto = indicatorsSystemServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        List<DimensionDto> dimensionsDto = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(2, dimensionsDto.size());
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionsDto.get(0).getOrderInLevel());
@@ -2222,7 +2222,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals(Long.valueOf(2), dimensionsDto.get(1).getOrderInLevel());
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoChanged = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertNull(dimensionDtoChanged.getParentDimensionUuid());
     }
     
@@ -2232,15 +2232,15 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String uuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
         
         // Retrieve actual
-        DimensionDto dimensionDto = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getParentDimensionUuid());
         assertEquals(Long.valueOf(2), dimensionDto.getOrderInLevel());
         
         // Update location
-        indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(1));
+        indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentDimensionUuid(), Long.valueOf(1));
 
         // Validate source and target
-        DimensionDto dimensionDtoParentAfterUpdate = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDtoParentAfterUpdate = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         assertEquals(2, dimensionDtoParentAfterUpdate.getSubdimensions().size());
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, dimensionDtoParentAfterUpdate.getSubdimensions().get(0).getUuid());
         assertEquals(Long.valueOf(1), dimensionDtoParentAfterUpdate.getSubdimensions().get(0).getOrderInLevel());
@@ -2248,7 +2248,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         assertEquals(Long.valueOf(2), dimensionDtoParentAfterUpdate.getSubdimensions().get(1).getOrderInLevel());
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsSystemServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        DimensionDto dimensionDtoChanged = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDtoChanged.getParentDimensionUuid());
     }
     
@@ -2259,7 +2259,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
         String parentTargetUuid = DIMENSION_1BA_INDICATORS_SYSTEM_1_V2;
         
         try {
-            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+            indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
             fail("It is child");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2276,7 +2276,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
 
         // Validation
         try {
-            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), uuid, null, Long.valueOf(1));
+            indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, null, Long.valueOf(1));
             fail("Dimension not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2290,7 +2290,7 @@ public class IndicatorsSystemServiceFacadeTest extends MetamacBaseTests implemen
     public void testUpdateDimensionErrorOrderIncorrect() throws Exception {
 
         try {
-            indicatorsSystemServiceFacade.updateDimensionLocation(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2, null, Long.MAX_VALUE);
+            indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2, null, Long.MAX_VALUE);
             fail("order incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

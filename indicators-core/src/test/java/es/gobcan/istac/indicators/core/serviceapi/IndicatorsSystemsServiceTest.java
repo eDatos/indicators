@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * No tests
  */
-public class IndicatorsSystemServiceTest {
+public class IndicatorsSystemsServiceTest {
 
     @Test
     @Ignore

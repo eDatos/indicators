@@ -30,7 +30,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
  * TODO no extender los DTO de auditableDto, porque tienen el Id
  */
 @Service("indicatorsSystemServiceFacade")
-public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFacadeImplBase {
+public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsServiceFacadeImplBase {
 
     @Autowired
     private Do2DtoMapper        do2DtoMapper;
@@ -42,7 +42,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
     private final NumberFormat  formatterMajor         = new DecimalFormat("0");
     private final NumberFormat  formatterMinor         = new DecimalFormat("000");
 
-    public IndicatorsSystemServiceFacadeImpl() {
+    public IndicatorsSystemsServiceFacadeImpl() {
     }
 
     /**
@@ -66,7 +66,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         draftVersion.setVersionNumber(getVersionNumber(null, IndicatorsSystemVersionEnum.MAJOR));
 
         // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemService().createIndicatorsSystemVersion(ctx, indicatorsSystem, draftVersion);
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, draftVersion);
 
         // Transform to Dto
         indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
@@ -82,10 +82,10 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         IndicatorsSystemVersion indicatorsSystemVersion = null;
         if (version == null) {
             // Retrieve last version
-            IndicatorsSystem indicatorsSystem = getIndicatorsSystemService().retrieveIndicatorsSystem(ctx, uuid);
+            IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
             version = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
         }
-        indicatorsSystemVersion = getIndicatorsSystemService().retrieveIndicatorsSystemVersion(ctx, uuid, version);
+        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, version);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -122,11 +122,11 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Delete whole indicators system or only last version
         if (VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
             // If indicator system is not published or archived, delete whole indicators system
-            getIndicatorsSystemService().deleteIndicatorsSystem(ctx, uuid);
+            getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
         } else {
-            getIndicatorsSystemService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystemVersion.getVersionNumber());
+            getIndicatorsSystemsService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystemVersion.getVersionNumber());
             indicatorsSystemVersion.getIndicatorsSystem().setProductionVersion(null);
-            getIndicatorsSystemService().updateIndicatorsSystem(ctx, indicatorsSystemVersion.getIndicatorsSystem());
+            getIndicatorsSystemsService().updateIndicatorsSystem(ctx, indicatorsSystemVersion.getIndicatorsSystem());
         }
     }
 
@@ -147,7 +147,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction, ctx);
 
         // Update
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     // TODO validación: El indicador debe tener al menos un origen de datos asociado.
@@ -169,7 +169,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
         indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
         indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
         indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
         indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInProduction.setProductionValidationUser(null);
         indicatorsSystemInProduction.setDiffusionValidationDate(null);
         indicatorsSystemInProduction.setDiffusionValidationUser(null);
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
     // TODO comprobar que todos los indicadores tienen alguna versión en difusión
@@ -234,17 +234,17 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
 
         IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
         // Remove possible last version in diffusion
         if (indicatorsSystem.getDiffusionVersion() != null) {
-            getIndicatorsSystemService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
+            getIndicatorsSystemsService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
         }
         indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemInProduction.getId(), indicatorsSystemInProduction.getVersionNumber()));
         indicatorsSystem.setProductionVersion(null);
 
-        getIndicatorsSystemService().updateIndicatorsSystem(ctx, indicatorsSystem);
+        getIndicatorsSystemsService().updateIndicatorsSystem(ctx, indicatorsSystem);
     }
 
     @Override
@@ -264,7 +264,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
-        getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
+        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
     }
 
     // TODO versionar dimensiones, indicadores...
@@ -274,7 +274,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         // Validation of parameters
         InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
 
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemService().retrieveIndicatorsSystem(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() != null) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_WRONG_STATE.getMessageForReasonType(),
                     uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED, IndicatorsSystemStateEnum.ARCHIVED});
@@ -287,7 +287,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         indicatorsSystemNewVersion.setVersionNumber(getVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
 
         // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
@@ -304,14 +304,14 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkFindIndicatorsSystems(null);
 
         // Find
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemService().findIndicatorsSystems(ctx, null);
+        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, null);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
         for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
             // Last version
             IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
-            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
+            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
             indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemLastVersion));
         }
 
@@ -327,7 +327,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkFindIndicatorsSystemsPublished(null);
 
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
@@ -350,7 +350,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Transform
         Dimension dimension = dto2DoMapper.dimensionDtoToDo(dimensionDto);
-        dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+        dimension = getIndicatorsSystemsService().createDimension(ctx, dimension);
 
         // Create dimension, adding to indicators system root level or to parent dimension
         if (dimensionDto.getParentDimensionUuid() == null) {
@@ -361,17 +361,17 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             // Create dimension
             dimension.setIndicatorsSystemVersion(indicatorsSystemVersion);
             dimension.setParent(null);
-            dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+            dimension = getIndicatorsSystemsService().createDimension(ctx, dimension);
 
             // Update indicators system adding dimension
             indicatorsSystemVersion.addDimension(dimension);
-            getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+            getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
             
             // Check order and update order of other dimensions in this level
             updateDimensionsOrdersAddingDimension(ctx, indicatorsSystemVersion.getDimensions(), dimension);
         } else {
             // If provided, retrieve dimension parent and checks belongs to indicator system version retrieved
-            Dimension dimensionParent = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
+            Dimension dimensionParent = getIndicatorsSystemsService().retrieveDimension(ctx, dimensionDto.getParentDimensionUuid());
             
             // Check order is correct
             checkDimensionsOrder(dimensionParent.getSubdimensions(), Boolean.FALSE, dimension.getOrderInLevel());
@@ -385,14 +385,14 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             // Create subdimension
             dimension.setIndicatorsSystemVersion(null);
             dimension.setParent(dimensionParent);
-            dimension = getIndicatorsSystemService().createDimension(ctx, dimension);
+            dimension = getIndicatorsSystemsService().createDimension(ctx, dimension);
 
             // Update order of other dimensions in this level
             updateDimensionsOrdersAddingDimension(ctx, dimensionParent.getSubdimensions(), dimension);
 
             // Add subdimension to parent dimension
             dimensionParent.addSubdimension(dimension);
-            getIndicatorsSystemService().updateDimension(ctx, dimensionParent);
+            getIndicatorsSystemsService().updateDimension(ctx, dimensionParent);
         }
 
         // Transform to Dto to return
@@ -407,7 +407,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkRetrieveDimension(uuid, null);
 
         // Retrieve
-        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
         DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
     }
@@ -419,12 +419,12 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkDeleteDimension(uuid, null);
 
         // Check indicators system state
-        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorSystemVersionOfDimension(dimension);
         checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
 
         // Delete
-        getIndicatorsSystemService().deleteDimension(ctx, dimension);
+        getIndicatorsSystemsService().deleteDimension(ctx, dimension);
     }
 
     @Override
@@ -434,7 +434,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkFindDimensions(indicatorsSystemUuid, indicatorsSystemVersion, null);
 
         // Retrieve dimensions and transform
-        List<Dimension> dimensions = getIndicatorsSystemService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
         for (Dimension dimension : dimensions) {
             dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
@@ -448,7 +448,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Retrieve
         // TODO comprobar parámetros antes?
-        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, dimensionDto.getUuid());
+        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, dimensionDto.getUuid());
 
         // Validation of parameters
         InvocationValidator.checkUpdateDimension(dimensionDto, dimension, null);
@@ -459,7 +459,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
 
         // Transform and update
         dto2DoMapper.dimensionDtoToDo(dimensionDto, dimension);
-        getIndicatorsSystemService().updateDimension(ctx, dimension);
+        getIndicatorsSystemsService().updateDimension(ctx, dimension);
     }
 
     // TODO al cambiar el orden de una dimensión tener en cuenta tb las instancias de indicadores
@@ -470,7 +470,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         InvocationValidator.checkUpdateDimensionLocation(uuid, parentTargetUuid, orderInLevel, null);
         
         // Retrieve and transform
-        Dimension dimension = getIndicatorsSystemService().retrieveDimension(ctx, uuid);
+        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
         Long orderInLevelBefore = dimension.getOrderInLevel();
         dimension.setOrderInLevel(orderInLevel);
 
@@ -490,17 +490,17 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             (parentUuidActual != null && parentTargetUuid != null && !parentTargetUuid.equals(parentUuidActual))) {
 
             Dimension dimensionParentActual = dimension.getParent();
-            Dimension dimensionParentTarget = parentTargetUuid != null ? getIndicatorsSystemService().retrieveDimension(ctx, parentTargetUuid) : null;
+            Dimension dimensionParentTarget = parentTargetUuid != null ? getIndicatorsSystemsService().retrieveDimension(ctx, parentTargetUuid) : null;
             
             // Update target parent, adding dimension
             List<Dimension> dimensionsInLevel = null;
             if (dimensionParentTarget == null) {
                 indicatorsSystemVersion.addDimension(dimension);
-                getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
                 dimensionsInLevel = indicatorsSystemVersion.getDimensions();
             } else {
                 dimensionParentTarget.addSubdimension(dimension);
-                getIndicatorsSystemService().updateDimension(ctx, dimensionParentTarget);
+                getIndicatorsSystemsService().updateDimension(ctx, dimensionParentTarget);
                 dimensionsInLevel = dimensionParentTarget.getSubdimensions();
             }            
             // Check order is correct and update orders
@@ -515,17 +515,17 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
                 dimension.setIndicatorsSystemVersion(null);
                 dimension.setParent(dimensionParentTarget);
             }
-            getIndicatorsSystemService().updateDimension(ctx, dimension);
+            getIndicatorsSystemsService().updateDimension(ctx, dimension);
             
             // Update actual parent dimension or indicators system version, removing dimension
             if (dimensionParentActual != null) {
                 dimensionParentActual.getSubdimensions().remove(dimension);
-                getIndicatorsSystemService().updateDimension(ctx, dimensionParentActual);
+                getIndicatorsSystemsService().updateDimension(ctx, dimensionParentActual);
                 // Update order of other dimensions
                 updateDimensionsOrdersRemovingDimension(ctx, dimensionParentActual.getSubdimensions(), orderInLevelBefore);
             } else {
                 indicatorsSystemVersion.getDimensions().remove(dimension);
-                getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
                 // Update order of other dimensions
                 updateDimensionsOrdersRemovingDimension(ctx, indicatorsSystemVersion.getDimensions(), orderInLevelBefore);
             }
@@ -536,7 +536,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             List<Dimension> dimensionsInLevel = dimension.getParent() != null ? dimension.getParent().getSubdimensions() : dimension.getIndicatorsSystemVersion().getDimensions();
             checkDimensionsOrder(dimensionsInLevel, Boolean.TRUE, dimension.getOrderInLevel());
             updateDimensionsOrdersChangingOrder(ctx, dimensionsInLevel, dimension.getUuid(), orderInLevelBefore, dimension.getOrderInLevel());
-            getIndicatorsSystemService().updateDimension(ctx, dimension);
+            getIndicatorsSystemsService().updateDimension(ctx, dimension);
         }
     }
 
@@ -566,7 +566,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      * Retrieves version of an indicators system in production
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemService().retrieveIndicatorsSystem(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem == null) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND.getMessageForReasonType(),
                     uuid);
@@ -578,7 +578,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getErrorCode(),
                     ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getMessageForReasonType(), uuid);
         }
-        IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemService().retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
+        IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
         return indicatorsSystemVersionProduction;
     }
 
@@ -586,7 +586,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      * Retrieves version of an indicators system in diffusion
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemService().retrieveIndicatorsSystem(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
@@ -594,7 +594,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND.getErrorCode(),
                     ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND.getMessageForReasonType(), uuid);
         }
-        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = getIndicatorsSystemService().retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
+        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
         return indicatorsSystemVersionDiffusion;
     }
 
@@ -602,7 +602,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      * Checks not exists another indicator system with same code. Checks system retrieved not is actual system.
      */
     private void validateCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemService().findIndicatorsSystems(ctx, code);
+        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
         if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
             throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getErrorCode(),
                     ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED.getMessageForReasonType(), code);
@@ -613,7 +613,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      * Checks not exists another indicator system with same uri in Gopestat. Checks system retrieved not is actual system.
      */
     private void validateUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemService().findIndicatorsSystemVersions(ctx, uriGopestat, null);
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemsService().findIndicatorsSystemVersions(ctx, uriGopestat, null);
         if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
                 if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
@@ -658,7 +658,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             }
             if (dimensionInLevel.getOrderInLevel() >= dimension.getOrderInLevel()) {
                 dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() + 1);
-                getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                getIndicatorsSystemsService().updateDimension(ctx, dimensionInLevel);
             }
         }
     }
@@ -667,7 +667,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         for (Dimension dimensionInLevel : dimensionsInLevel) {
             if (dimensionInLevel.getOrderInLevel() > orderBeforeUpdate) {
                 dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() - 1);
-                getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                getIndicatorsSystemsService().updateDimension(ctx, dimensionInLevel);
             }
         }
     }
@@ -680,12 +680,12 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
             if (orderAfterUpdate < orderBeforeUpdate) {
                 if (dimensionInLevel.getOrderInLevel() >= orderAfterUpdate && dimensionInLevel.getOrderInLevel() < orderBeforeUpdate) {
                     dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() + 1);
-                    getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                    getIndicatorsSystemsService().updateDimension(ctx, dimensionInLevel);
                 }
             } else if (orderAfterUpdate > orderBeforeUpdate) {
                 if (dimensionInLevel.getOrderInLevel() > orderBeforeUpdate && dimensionInLevel.getOrderInLevel() <= orderAfterUpdate) {
                     dimensionInLevel.setOrderInLevel(dimensionInLevel.getOrderInLevel() - 1);
-                    getIndicatorsSystemService().updateDimension(ctx, dimensionInLevel);
+                    getIndicatorsSystemsService().updateDimension(ctx, dimensionInLevel);
                 }
             }
         }
@@ -696,7 +696,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
      */
     private void checkDimensionIsNotChildren(ServiceContext ctx, Dimension dimension, String parentTargetUuid) throws MetamacException {
         
-        Dimension dimensionTarget = getIndicatorsSystemService().retrieveDimension(ctx, parentTargetUuid);
+        Dimension dimensionTarget = getIndicatorsSystemsService().retrieveDimension(ctx, parentTargetUuid);
         Dimension dimensionParent = dimensionTarget.getParent();
         while (dimensionParent != null) {
             if (dimensionParent.getUuid().equals(dimension.getUuid())) {

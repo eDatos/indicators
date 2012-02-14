@@ -17,9 +17,9 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  * Implementation of IndicatorsSystemService.
  */
 @Service("indicatorsSystemService")
-public class IndicatorsSystemServiceImpl extends IndicatorsSystemServiceImplBase {
+public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBase {
 
-    public IndicatorsSystemServiceImpl() {
+    public IndicatorsSystemsServiceImpl() {
     }
 
     @Override

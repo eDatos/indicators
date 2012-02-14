@@ -12,7 +12,7 @@ Application Indicators {
 		// ----------------------------------------------------------------     
 		
 		"Provides access to indicators systems"
-    	Service IndicatorsSystemService {
+    	Service IndicatorsSystemsService {
     		> @IndicatorsSystemRepository
     		> @IndicatorsSystemVersionRepository
     		> @DimensionRepository
@@ -37,11 +37,11 @@ Application Indicators {
     	}
     	
     	"Provides access to indicators systems"
-    	Service IndicatorsSystemServiceFacade {
-	    	> @IndicatorsSystemService
+    	Service IndicatorsSystemsServiceFacade {
+	    	> @IndicatorsSystemsService
 	    	
 	    	// INDICATORS SYSTEMS
-	    	"Creates an indicator system in draft"
+	    	"Creates an indicator system"
 	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 	    	"Updates metadata of an indicator system. This version can not be published or archived"
 	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
@@ -81,12 +81,12 @@ Application Indicators {
 	    	deleteDimension(String uuid) throws MetamacException;
 	    	"Find dimensions"
 	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;	    	
-	    }    	
+	    }  
 
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
 		// ----------------------------------------------------------------        	
-		"Indicator system entity"
+		"Indicators system entity"
 		Entity IndicatorsSystem {
 			databaseTable="TBL_INDICATORS_SYSTEMS"
 			hint="idSequence=INDICATORS_SYSTEMS"
@@ -114,7 +114,7 @@ Application Indicators {
 			}
 		} 
 		
-		"Version of indicator system entity"
+		"Version of indicators system entity"
 		Entity IndicatorsSystemVersion {
 			databaseTable="TBL_INDIC_SYSTEMS_VERSIONS"
 			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
@@ -202,6 +202,8 @@ Application Indicators {
     		"Version number of IndicatorsSystemVersion"
     		String versionNumber nullable databaseColumn="VERSION_NUMBER" length="10";
     	}	
+    	
+				
 	}
 	
 	// ----------------------------------------------------------------
@@ -305,17 +307,11 @@ Application Indicators {
 
 		"States of indicator system"
     	enum IndicatorsSystemStateEnum {
-    		"In draft"
     		DRAFT,
-    		"Pending of production validation"
     		PRODUCTION_VALIDATION,
-    		"Pending of diffusion validation"
     		DIFFUSION_VALIDATION,
-    		"Validation rejected"
     		VALIDATION_REJECTED,
-    		"Published"
     		PUBLISHED,
-    		"Archived"
     		ARCHIVED
     	}      
 		"States of indicator"
@@ -324,6 +320,7 @@ Application Indicators {
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
     		VALIDATION_REJECTED,
+    		PUBLICATION_FAILED,    		
     		PUBLISHED,
     		ARCHIVED
     	}	
