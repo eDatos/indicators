@@ -216,6 +216,7 @@ public class IndicatorsSystemServiceFacadeImpl extends IndicatorsSystemServiceFa
         getIndicatorsSystemService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
+    // TODO comprobar que todos los indicadores tienen alguna versión en difusión
     @Override
     public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
