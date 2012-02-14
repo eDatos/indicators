@@ -28,6 +28,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 /**
  * Implementation of IndicatorsSystemServiceFacade.
  * TODO no extender los DTO de auditableDto, porque tienen el Id
+ * TODO En los "create", ¿devolver una uri, en lugar del uuid? (ojo! uris rests?, o serán con el code?)
+
  */
 @Service("indicatorsSystemServiceFacade")
 public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsServiceFacadeImplBase {
@@ -42,7 +44,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     }
 
     /**
-     * TODO Devolver una uri, en lugar del uuid (ojo! uris rests?)
      * TODO qué datos se almacenarán? Los sistemas de indicadores se obtienen desde Gopestat, y aquí se almacenan como "referencias" a ellas
      */
     public IndicatorsSystemDto createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {

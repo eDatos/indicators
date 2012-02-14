@@ -22,22 +22,22 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public IndicatorVersion createIndicatorVersion(ServiceContext ctx, Indicator indicator, IndicatorVersion indicatorDraft) throws MetamacException {
-
+       
         // Save indicator
         indicator = getIndicatorRepository().save(indicator);
-
+        
         // Save draft version
         indicatorDraft.setIndicator(indicator);
         indicatorDraft = getIndicatorVersionRepository().save(indicatorDraft);
-
+        
         // Update indicator with draft version
         indicator.setProductionVersion(new IndicatorVersionInformation(indicatorDraft.getId(), indicatorDraft.getVersionNumber()));
         indicator.getVersions().add(indicatorDraft);
         getIndicatorRepository().save(indicatorDraft.getIndicator());
-
+        
         return indicatorDraft;
     }
-    
+
     @Override
     public Indicator retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
@@ -58,10 +58,44 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             }
         }
         return indicatorVersion;
-    }    
+    }
+    
+    @Override
+    public void updateIndicator(ServiceContext ctx, Indicator indicator) throws MetamacException {
+        getIndicatorRepository().save(indicator);
+    }
+    
+//    @Override
+//    public void updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+//        getIndicatorVersionRepository().save(indicatorVersion);
+//    }
+    
+    @Override
+    public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+        Indicator indicator = retrieveIndicator(ctx, uuid);
+        getIndicatorRepository().delete(indicator);
+    }
+
+    @Override
+    public void deleteIndicatorVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+        IndicatorVersion indicatorVersion = retrieveIndicatorVersion(ctx, uuid, versionNumber);
+        Indicator indicator = indicatorVersion.getIndicator();
+        indicator.getVersions().remove(indicatorVersion);
+        
+        // Update
+        getIndicatorRepository().save(indicator);
+        getIndicatorVersionRepository().delete(indicatorVersion);
+    }
     
     @Override
     public List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
     }
+//
+//    // TODO criteria
+//    @Override
+//    public List<IndicatorVersion> findIndicatorVersions(ServiceContext ctx, String uriGopestat, IndicatorStateEnum state) throws MetamacException {
+//        return getIndicatorVersionRepository().findIndicatorVersions(uriGopestat, state);
+//    }
+
 }
