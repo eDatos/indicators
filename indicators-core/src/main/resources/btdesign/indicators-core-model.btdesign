@@ -46,7 +46,7 @@ Application Indicators {
 	    	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
 	    	@Indicator retrieveIndicator(String uuid) throws MetamacException;
 	    	updateIndicator(@Indicator indicator) throws MetamacException;
-//	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
+	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	deleteIndicatorVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@Indicator> findIndicators(String code) throws MetamacException;
@@ -106,8 +106,8 @@ Application Indicators {
 	    	
 	    	"Creates an indicator"
 	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
-//	    	"Updates metadata of an indicator. This version can not be published or archived"
-//	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
+	    	"Updates metadata of an indicator. This version can not be published or archived"
+	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
 	    	"Retrieves an indicator. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorDto retrieveIndicator(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves an indicator published"

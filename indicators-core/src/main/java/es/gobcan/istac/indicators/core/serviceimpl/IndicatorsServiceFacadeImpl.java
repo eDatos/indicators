@@ -27,14 +27,15 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
 
     @Autowired
-    private Do2DtoMapper        do2DtoMapper;
+    private Do2DtoMapper do2DtoMapper;
 
     @Autowired
-    private Dto2DoMapper        dto2DoMapper;
+    private Dto2DoMapper dto2DoMapper;
 
     public IndicatorsServiceFacadeImpl() {
     }
 
+    // TODO la lista de fuentes de datos ha de estar vacía
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Validation of parameters
@@ -86,8 +87,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve published version
         IndicatorVersion publishedIndicatorVersion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
         if (publishedIndicatorVersion == null || !IndicatorStateEnum.PUBLISHED.equals(publishedIndicatorVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-                    uuid, IndicatorStateEnum.PUBLISHED);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(), uuid,
+                    IndicatorStateEnum.PUBLISHED);
         }
 
         // Transform to Dto
@@ -114,222 +115,221 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
     }
 
-//    public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
-//
-//        // Retrieve version in production
-//        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, indicatorDto.getUuid(), true);
-//        if (!indicatorInProduction.getVersionNumber().equals(indicatorDto.getVersionNumber())) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(),
-//                    ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-//        }
-//
-//        // Validation
-//        InvocationValidator.checkUpdateIndicator(indicatorDto, indicatorInProduction, null);
-//
-//        // Transform
-//        // Note: attributes in indicatorSystem entity are non modifiables
-//        dto2DoMapper.indicatorDtoToDo(indicatorDto, indicatorInProduction);
-//
-//        // Update
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-//    }
-//
-//    // TODO validación: El indicador debe tener al menos un origen de datos asociado.
-//    @Override
-//    public void sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkSendIndicatorToProductionValidation(uuid, null);
-//
-//        // Retrieve version in draft
-//        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-//        if (indicatorInProduction == null
-//                || (!IndicatorStateEnum.DRAFT.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.VALIDATION_REJECTED.equals(indicatorInProduction.getState()))) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED});
-//        }
-//
-//        // Update state
-//        indicatorInProduction.setState(IndicatorStateEnum.PRODUCTION_VALIDATION);
-//        indicatorInProduction.setProductionValidationDate(new DateTime());
-//        indicatorInProduction.setProductionValidationUser(ctx.getUserId());
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-//    }
-//
-//    @Override
-//    public void sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkSendIndicatorToDiffusionValidation(uuid, null);
-//
-//        // Retrieve version in production validation
-//        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-//        if (indicatorInProduction == null || !IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState())) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, IndicatorStateEnum.PRODUCTION_VALIDATION);
-//        }
-//
-//        // Update state
-//        indicatorInProduction.setState(IndicatorStateEnum.DIFFUSION_VALIDATION);
-//        indicatorInProduction.setDiffusionValidationDate(new DateTime());
-//        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-//    }
-//
-//    @Override
-//    public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkRejectIndicatorValidation(uuid, null);
-//
-//        // Retrieve version in production (state can be production or diffusion validation)
-//        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-//        if (indicatorInProduction == null
-//                || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION
-//                        .equals(indicatorInProduction.getState()))) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
-//        }
-//
-//        // Update state
-//        indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
-//        indicatorInProduction.setProductionValidationDate(null);
-//        indicatorInProduction.setProductionValidationUser(null);
-//        indicatorInProduction.setDiffusionValidationDate(null);
-//        indicatorInProduction.setDiffusionValidationUser(null);
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-//    }
-//
-//    // TODO comprobar que todos los indicadores tienen alguna versión en difusión
-//    @Override
-//    public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkPublishIndicator(uuid, null);
-//
-//        // Retrieve version in diffusion validation
-//        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-//        if (indicatorInProduction == null || !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState())) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, IndicatorStateEnum.DIFFUSION_VALIDATION);
-//        }
-//
-//        // Update state
-//        indicatorInProduction.setState(IndicatorStateEnum.PUBLISHED);
-//        indicatorInProduction.setPublicationDate(new DateTime());
-//        indicatorInProduction.setPublicationUser(ctx.getUserId());
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-//
-//        Indicator indicator = indicatorInProduction.getIndicator();
-//        // Remove possible last version in diffusion
-//        if (indicator.getDiffusionVersion() != null) {
-//            getIndicatorsService().deleteIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
-//        }
-//        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
-//        indicator.setProductionVersion(null);
-//
-//        getIndicatorsService().updateIndicator(ctx, indicator);
-//    }
-//
-//    @Override
-//    public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkArchiveIndicator(uuid, null);
-//
-//        // Retrieve version published
-//        IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
-//        if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, IndicatorStateEnum.PUBLISHED);
-//        }
-//
-//        // Update state
-//        indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
-//        indicatorInDiffusion.setArchiveDate(new DateTime());
-//        indicatorInDiffusion.setArchiveUser(ctx.getUserId());
-//        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
-//    }
-//
-//    // TODO versionar instancias de indicadores...
-//    @Override
-//    public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
-//
-//        Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
-//        if (indicator.getProductionVersion() != null) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
-//                    uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
-//        }
-//
-//        // Initialize new version, copying values of version in diffusion
-//        IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, true);
-//        IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
-//        indicatorNewVersion.setState(IndicatorStateEnum.DRAFT);
-//        indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
-//
-//        // Create
-//        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicatorVersion(ctx, indicator, indicatorNewVersion);
-//
-//        // Transform to Dto
-//        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
-//        return indicatorDto;
-//    }
-//
-//    // TODO paginación
-//    // TODO criteria
-//    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
-//    @Override
-//    public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkFindIndicator(null);
-//
-//        // Find
-//        List<Indicator> indicator = getIndicatorsService().findIndicator(ctx, null);
-//
-//        // Transform
-//        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-//        for (Indicator indicator : indicator) {
-//            // Last version
-//            IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
-//            IndicatorVersion indicatorLastVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
-//            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorLastVersion));
-//        }
-//
-//        return indicatorDto;
-//    }
-//
-//    // TODO paginación
-//    // TODO criteria
-//    @Override
-//    public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
-//
-//        // Validation of parameters
-//        InvocationValidator.checkFindIndicatorPublished(null);
-//
-//        // Retrieve published
-//        List<IndicatorVersion> indicatorVersion = getIndicatorsService().findIndicatorVersions(ctx, null, IndicatorStateEnum.PUBLISHED);
-//
-//        // Transform
-//        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-//        for (IndicatorVersion indicatorVersion : indicatorVersion) {
-//            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
-//        }
-//
-//        return indicatorDto;
-//    }
-//    
+    public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
+
+        // Retrieve version in production
+        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, indicatorDto.getUuid(), true);
+        if (!indicatorInProduction.getVersionNumber().equals(indicatorDto.getVersionNumber())) {
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(),
+                    indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+        }
+
+        // Validation
+        InvocationValidator.checkUpdateIndicator(indicatorDto, indicatorInProduction, null);
+
+        // Transform
+        // Note: attributes in indicatorSystem entity are non modifiables
+        dto2DoMapper.indicatorDtoToDo(indicatorDto, indicatorInProduction);
+
+        // Update
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    }
+
+    // // TODO validación: El indicador debe tener al menos un origen de datos asociado.
+    // @Override
+    // public void sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkSendIndicatorToProductionValidation(uuid, null);
+    //
+    // // Retrieve version in draft
+    // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
+    // if (indicatorInProduction == null
+    // || (!IndicatorStateEnum.DRAFT.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.VALIDATION_REJECTED.equals(indicatorInProduction.getState()))) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED});
+    // }
+    //
+    // // Update state
+    // indicatorInProduction.setState(IndicatorStateEnum.PRODUCTION_VALIDATION);
+    // indicatorInProduction.setProductionValidationDate(new DateTime());
+    // indicatorInProduction.setProductionValidationUser(ctx.getUserId());
+    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    // }
+    //
+    // @Override
+    // public void sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkSendIndicatorToDiffusionValidation(uuid, null);
+    //
+    // // Retrieve version in production validation
+    // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
+    // if (indicatorInProduction == null || !IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState())) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, IndicatorStateEnum.PRODUCTION_VALIDATION);
+    // }
+    //
+    // // Update state
+    // indicatorInProduction.setState(IndicatorStateEnum.DIFFUSION_VALIDATION);
+    // indicatorInProduction.setDiffusionValidationDate(new DateTime());
+    // indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
+    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    // }
+    //
+    // @Override
+    // public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkRejectIndicatorValidation(uuid, null);
+    //
+    // // Retrieve version in production (state can be production or diffusion validation)
+    // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
+    // if (indicatorInProduction == null
+    // || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION
+    // .equals(indicatorInProduction.getState()))) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
+    // }
+    //
+    // // Update state
+    // indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
+    // indicatorInProduction.setProductionValidationDate(null);
+    // indicatorInProduction.setProductionValidationUser(null);
+    // indicatorInProduction.setDiffusionValidationDate(null);
+    // indicatorInProduction.setDiffusionValidationUser(null);
+    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    // }
+    //
+    // // TODO comprobar que todos los indicadores tienen alguna versión en difusión
+    // @Override
+    // public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkPublishIndicator(uuid, null);
+    //
+    // // Retrieve version in diffusion validation
+    // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
+    // if (indicatorInProduction == null || !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState())) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, IndicatorStateEnum.DIFFUSION_VALIDATION);
+    // }
+    //
+    // // Update state
+    // indicatorInProduction.setState(IndicatorStateEnum.PUBLISHED);
+    // indicatorInProduction.setPublicationDate(new DateTime());
+    // indicatorInProduction.setPublicationUser(ctx.getUserId());
+    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    //
+    // Indicator indicator = indicatorInProduction.getIndicator();
+    // // Remove possible last version in diffusion
+    // if (indicator.getDiffusionVersion() != null) {
+    // getIndicatorsService().deleteIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+    // }
+    // indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
+    // indicator.setProductionVersion(null);
+    //
+    // getIndicatorsService().updateIndicator(ctx, indicator);
+    // }
+    //
+    // @Override
+    // public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkArchiveIndicator(uuid, null);
+    //
+    // // Retrieve version published
+    // IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
+    // if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, IndicatorStateEnum.PUBLISHED);
+    // }
+    //
+    // // Update state
+    // indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
+    // indicatorInDiffusion.setArchiveDate(new DateTime());
+    // indicatorInDiffusion.setArchiveUser(ctx.getUserId());
+    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
+    // }
+    //
+    // // TODO versionar instancias de indicadores...
+    // @Override
+    // public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
+    //
+    // Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
+    // if (indicator.getProductionVersion() != null) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getMessageForReasonType(),
+    // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
+    // }
+    //
+    // // Initialize new version, copying values of version in diffusion
+    // IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, true);
+    // IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
+    // indicatorNewVersion.setState(IndicatorStateEnum.DRAFT);
+    // indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
+    //
+    // // Create
+    // IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicatorVersion(ctx, indicator, indicatorNewVersion);
+    //
+    // // Transform to Dto
+    // IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
+    // return indicatorDto;
+    // }
+    //
+    // // TODO paginación
+    // // TODO criteria
+    // // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
+    // @Override
+    // public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkFindIndicator(null);
+    //
+    // // Find
+    // List<Indicator> indicator = getIndicatorsService().findIndicator(ctx, null);
+    //
+    // // Transform
+    // List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
+    // for (Indicator indicator : indicator) {
+    // // Last version
+    // IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
+    // IndicatorVersion indicatorLastVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
+    // indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorLastVersion));
+    // }
+    //
+    // return indicatorDto;
+    // }
+    //
+    // // TODO paginación
+    // // TODO criteria
+    // @Override
+    // public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
+    //
+    // // Validation of parameters
+    // InvocationValidator.checkFindIndicatorPublished(null);
+    //
+    // // Retrieve published
+    // List<IndicatorVersion> indicatorVersion = getIndicatorsService().findIndicatorVersions(ctx, null, IndicatorStateEnum.PUBLISHED);
+    //
+    // // Transform
+    // List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
+    // for (IndicatorVersion indicatorVersion : indicatorVersion) {
+    // indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
+    // }
+    //
+    // return indicatorDto;
+    // }
+    //
     /**
      * Retrieves version of an indicator in production
      */
     private IndicatorVersion retrieveIndicatorStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
         Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
         if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getMessageForReasonType(),
-                    uuid);
+            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getErrorCode(), ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getMessageForReasonType(), uuid);
         }
         if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
@@ -368,16 +368,16 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
                     ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getMessageForReasonType(), code);
         }
     }
-//
-//    private void checkIndicatorSystemVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
-//        IndicatorStateEnum state = indicatorVersion.getState();
-//        boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state)
-//                || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
-//        if (!inProduction) {
-//            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(),
-//                    ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorVersion.getIndicator().getUuid(),
-//                    indicatorVersion.getVersionNumber());
-//
-//        }
-//    }
+    //
+    // private void checkIndicatorSystemVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
+    // IndicatorStateEnum state = indicatorVersion.getState();
+    // boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state)
+    // || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
+    // if (!inProduction) {
+    // throw new MetamacException(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getErrorCode(),
+    // ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getMessageForReasonType(), indicatorVersion.getIndicator().getUuid(),
+    // indicatorVersion.getVersionNumber());
+    //
+    // }
+    // }
 }

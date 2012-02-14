@@ -40,7 +40,8 @@ public enum ServiceExceptionType {
     SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED("0703"),
     SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND("0704"),
     SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND("0705"),
-    SERVICE_INDICATOR_WRONG_STATE("0706");
+    SERVICE_INDICATOR_WRONG_STATE("0706"),
+    SERVICE_INDICATOR_VERSION_WRONG_STATE("707");
 
     private String errorCode;
 
@@ -85,6 +86,7 @@ public enum ServiceExceptionType {
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND, "exception.service.validation.indicator.production_not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_IN_DIFFUSION_NOT_FOUND, "exception.service.validation.indicator.diffusion_not_found");
         MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE, "exception.service.validation.indicator.wrong_state");
+        MESSAGE_MAP.put(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE, "exception.service.validation.indicator.version_wrong_state");
 
         for (ServiceExceptionType s : EnumSet.allOf(ServiceExceptionType.class)) {
             LOOKUP.put(s.getErrorCode(), s);
