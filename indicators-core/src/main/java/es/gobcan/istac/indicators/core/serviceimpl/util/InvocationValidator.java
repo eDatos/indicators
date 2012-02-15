@@ -387,7 +387,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dimensionDto.getTitle(), "DIMENSION.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(dimensionDto.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
         if (dimensionDto.getOrderInLevel() != null && dimensionDto.getOrderInLevel() < 0) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.SERVICE_METADATA_INCORRECT, "DIMENSION.ORDER_IN_LEVEL"));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DIMENSION.ORDER_IN_LEVEL"));
         }
     }
 

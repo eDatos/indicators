@@ -126,7 +126,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -142,7 +142,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -159,7 +159,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(versionNotExists, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -198,10 +198,10 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("No published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[])e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -215,7 +215,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -231,7 +231,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -292,7 +292,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("code required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -310,7 +310,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("name required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.NAME", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -328,7 +328,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("code duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -346,7 +346,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("code duplicated");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -367,7 +367,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicator deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -407,7 +407,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicator version deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("2.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -427,7 +427,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicator is not in draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -444,7 +444,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("DataSource not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -560,7 +560,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -579,7 +579,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicator not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -598,7 +598,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Version 1 not is in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(versionNumber, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -620,7 +620,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Code is unmodifiable");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -699,7 +699,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -721,7 +721,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not draft");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.DRAFT, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
@@ -773,7 +773,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -796,7 +796,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not draft");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -820,7 +820,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not production validation");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -895,7 +895,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -918,7 +918,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not in validation");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
@@ -943,7 +943,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not in validation");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
@@ -1013,7 +1013,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator version not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(diffusionVersionBefore, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1054,7 +1054,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator version not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(diffusionVersionBefore, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1076,7 +1076,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -1099,7 +1099,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not diffusion validation");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1123,7 +1123,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not diffusion validation");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1201,7 +1201,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -1224,7 +1224,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not published");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1248,7 +1248,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator is not published");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1344,7 +1344,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator not exists");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // }
@@ -1360,7 +1360,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // fail("Indicator already exists in production");
     // } catch (MetamacException e) {
     // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
     // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
     // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
     // assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
@@ -1449,7 +1449,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1465,7 +1465,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1511,7 +1511,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("query required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1533,7 +1533,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1555,7 +1555,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1575,7 +1575,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         // fail("DataSource deleted");
         // } catch (MetamacException e) {
         // assertEquals(1, e.getExceptionItems().size());
-        // assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        // assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
         // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
         // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         // }
@@ -1589,7 +1589,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("11.033", e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1607,7 +1607,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("DataSource not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1647,7 +1647,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1681,7 +1681,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Query GPE changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1698,7 +1698,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Px changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
@@ -1714,7 +1714,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Indicators system published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
@@ -1733,7 +1733,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             fail("Data source not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }

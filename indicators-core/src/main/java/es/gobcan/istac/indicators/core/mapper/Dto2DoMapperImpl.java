@@ -49,7 +49,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             return null;
         }
         if (target == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED);
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
 
         // Non modifiables after creation: code
@@ -98,7 +98,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             return null;
         }
         if (target == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED);
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
 
         // Non modifiables after creation: code

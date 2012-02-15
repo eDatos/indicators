@@ -44,7 +44,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorsSystem retrieveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
         IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(uuid);
         if (indicatorsSystem == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, uuid);
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND, uuid);
         }
         return indicatorsSystem;
     }
@@ -54,9 +54,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(uuid, versionNumber);
         if (indicatorsSystemVersion == null) {
             if (versionNumber == null) {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_NOT_FOUND, uuid);
+                throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND, uuid);
             } else {
-                throw new MetamacException(ServiceExceptionType.SERVICE_INDICATORS_SYSTEM_VERSION_NOT_FOUND, uuid, versionNumber);
+                throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_VERSION_NOT_FOUND, uuid, versionNumber);
             }
         }
         return indicatorsSystemVersion;
@@ -109,7 +109,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public Dimension retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
         Dimension dimension = getDimensionRepository().findDimension(uuid);
         if (dimension == null) {
-            throw new MetamacException(ServiceExceptionType.SERVICE_DIMENSION_NOT_FOUND, uuid);
+            throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND, uuid);
         }
         return dimension;
     }
