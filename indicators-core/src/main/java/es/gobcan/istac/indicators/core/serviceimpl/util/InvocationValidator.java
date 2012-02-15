@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -362,20 +363,18 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    // public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-    // if (exceptions == null) {
-    // exceptions = new ArrayList<MetamacExceptionItem>();
-    // }
-    //
-    // checkDataSource(dataSourceDto, exceptions);
-    // ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
-    // ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getParentDataSourceUuid(), dataSource.getParent() != null ? dataSource.getParent().getUuid() : null,
-    // "DATA_SOURCE.PARENT_DATA_SOURCE_UUID",
-    // exceptions);
-    // ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getOrderInLevel(), dataSource.getOrderInLevel(), "DATA_SOURCE.ORDER_IN_LEVEL", exceptions);
-    //
-    // ExceptionUtils.throwIfException(exceptions);
-    // }
+    public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkDataSource(dataSourceDto, exceptions);
+        ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getQueryGpe(), dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getPx(), dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);

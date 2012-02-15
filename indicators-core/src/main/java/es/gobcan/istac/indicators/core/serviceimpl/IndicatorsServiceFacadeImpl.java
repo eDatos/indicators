@@ -392,24 +392,23 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return dataSourcesDto;
     }
 
-    // @Override
-    // public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
-    //
-    // // Retrieve
-    // // TODO comprobar parámetros antes?
-    // DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
-    //
-    // // Check indicator state
-    // IndicatorVersion indicatorVersion = retrieveIndicatorVersionOfDataSource(dataSource);
-    // checkIndicatorVersionInProduction(indicatorVersion);
-    //
-    // // Transform and update
-    // dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
-    // getIndicatorsService().updateDataSource(ctx, dataSource);
-    // }
+    @Override
+    public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
+
+        // Retrieve
+        // TODO comprobar parámetros antes?
+        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
+
+        // Check indicator state
+        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
+
+        // Transform and update
+        dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
+        getIndicatorsService().updateDataSource(ctx, dataSource);
+    }
 
     /**
      * Retrieves version of an indicator in production

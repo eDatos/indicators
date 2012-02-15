@@ -115,10 +115,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return dataSource;
     }
 
-    // @Override
-    // public DataSource updateDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
-    // return getDataSourceRepository().save(dataSource);
-    // }
+    @Override
+    public DataSource updateDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+        return getDataSourceRepository().save(dataSource);
+    }
 
     @Override
     public void deleteDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {

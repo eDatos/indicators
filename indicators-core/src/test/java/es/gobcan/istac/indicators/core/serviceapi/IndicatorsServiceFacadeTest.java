@@ -1677,79 +1677,91 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    // @Override
-    // @Test
-    // public void testUpdateDataSource() throws Exception {
-    //
-    // String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
-    // DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-    // assertEquals(2, dataSourceDto.getSubdataSources().size());
-    // dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
-    // dataSourceDto.getSubdataSources().clear(); // ignore changes of subdataSources
-    //
-    // // Update
-    // indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-    //
-    // // Validation
-    // DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-    // assertEquals(2, dataSourceDtoUpdated.getSubdataSources().size());
-    // IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
-    // }
-    //
-    // @Test
-    // public void testUpdateDataSourceErrorChangeQuery() throws Exception {
-    //
-    // DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1A_INDICATOR_1_V2);
-    // assertEquals(Long.valueOf(1), dataSourceDto.getOrderInLevel());
-    // dataSourceDto.setOrderInLevel(Long.valueOf(2));
-    //
-    // try {
-    // indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-    // fail("Order changed");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals("DATA_SOURCE.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
-    //
-    // DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V1);
-    //
-    //
-    // try {
-    // indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-    // fail("Indicators system published");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    //
-    // }
-    //
-    // @Test
-    // public void testUpdateDataSourceErrorNotExists() throws Exception {
-    //
-    // DataSourceDto dataSourceDto = new DataSourceDto();
-    // dataSourceDto.setUuid(NOT_EXISTS);
-    // dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
-    //
-    // try {
-    // indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-    // fail("Indicators system not exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
+    @Override
+    @Test
+    public void testUpdateDataSource() throws Exception {
+//
+//        String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
+//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+//        dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
+//
+//        // Update
+//        indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+//
+//        // Validation
+//        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+//        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
+    }
+
+//    @Test
+//    public void testUpdateDataSourceErrorChangeQuery() throws Exception {
+//
+//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1A_INDICATOR_1_V2);
+//        dataSourceDto.setQueryGpe("newQueryGpe");
+//
+//        try {
+//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+//            fail("Query GPE changed");
+//        } catch (MetamacException e) {
+//            assertEquals(1, e.getExceptionItems().size());
+//            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+//            assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+//        }
+//    }
+//    
+//    @Test
+//    public void testUpdateDataSourceErrorChangePx() throws Exception {
+//
+//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1A_INDICATOR_1_V2);
+//        dataSourceDto.setPx("newPx");
+//
+//        try {
+//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+//            fail("Px changed");
+//        } catch (MetamacException e) {
+//            assertEquals(1, e.getExceptionItems().size());
+//            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+//            assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(0).getMessageParameters()[0]);
+//        }
+//    }
+//
+//    @Test
+//    public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
+//
+//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V1);
+//
+//        try {
+//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+//            fail("Indicators system published");
+//        } catch (MetamacException e) {
+//            assertEquals(1, e.getExceptionItems().size());
+//            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+//            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+//            assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
+//            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
+//        }
+//
+//    }
+//
+//    @Test
+//    public void testUpdateDataSourceErrorNotExists() throws Exception {
+//
+//        DataSourceDto dataSourceDto = new DataSourceDto();
+//        dataSourceDto.setUuid(NOT_EXISTS);
+//        dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
+//
+//        try {
+//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+//            fail("Indicators system not exists");
+//        } catch (MetamacException e) {
+//            assertEquals(1, e.getExceptionItems().size());
+//            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+//            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+//        }
+//    }
 
     @Override
     protected String getDataSetFile() {
