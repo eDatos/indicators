@@ -329,17 +329,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    //
-    // public static void checkRetrieveDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-    //
-    // if (exceptions == null) {
-    // exceptions = new ArrayList<MetamacExceptionItem>();
-    // }
-    //
-    // ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-    //
-    // ExceptionUtils.throwIfException(exceptions);
-    // }
+
+    public static void checkRetrieveDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkDeleteDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
@@ -372,7 +372,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getQueryGpe(), dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getPx(), dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 

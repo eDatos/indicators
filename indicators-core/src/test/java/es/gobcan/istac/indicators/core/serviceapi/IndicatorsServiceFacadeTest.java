@@ -1421,76 +1421,55 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
     }
 
-    // @Override
-    // @Test
-    // public void testRetrieveDataSource() throws Exception {
-    //
-    // DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
-    //
-    // assertNotNull(dataSourceDto);
-    // assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourceDto.getUuid());
-    // IndicatorsAsserts.assertEqualsInternationalString(dataSourceDto.getTitle(), "es", "Título IndSys-1-v2-DataSource-1", "en", "Title IndSys-1-v2-DataSource-1");
-    // assertNull(dataSourceDto.getParentDataSourceUuid());
-    //
-    // // SubdataSources
-    // assertEquals(2, dataSourceDto.getSubdataSources().size());
-    //
-    // {
-    // DataSourceDto subdataSourceDto = dataSourceDto.getSubdataSources().get(0);
-    // assertEquals(DATA_SOURCE_1A_INDICATOR_1_V2, subdataSourceDto.getUuid());
-    // assertEquals(dataSourceDto.getUuid(), subdataSourceDto.getParentDataSourceUuid());
-    // IndicatorsAsserts.assertEqualsInternationalString(subdataSourceDto.getTitle(), "es", "Título IndSys-1-v2-DataSource-1A", "en", "Title IndSys-1-v2-DataSource-1A");
-    // assertEquals(0, subdataSourceDto.getSubdataSources().size());
-    // }
-    // {
-    // DataSourceDto subdataSourceDto = dataSourceDto.getSubdataSources().get(1);
-    // assertEquals(DATA_SOURCE_1B_INDICATOR_1_V2, subdataSourceDto.getUuid());
-    // assertEquals(dataSourceDto.getUuid(), subdataSourceDto.getParentDataSourceUuid());
-    // IndicatorsAsserts.assertEqualsInternationalString(subdataSourceDto.getTitle(), "es", "Título IndSys-1-v2-DataSource-1B", "en", "Title IndSys-1-v2-DataSource-1B");
-    // assertEquals(1, subdataSourceDto.getSubdataSources().size());
-    //
-    // // SubdataSources
-    // {
-    // DataSourceDto subsubdataSourceDto = subdataSourceDto.getSubdataSources().get(0);
-    // assertEquals(DATA_SOURCE_1BA_INDICATOR_1_V2, subsubdataSourceDto.getUuid());
-    // assertEquals(subdataSourceDto.getUuid(), subsubdataSourceDto.getParentDataSourceUuid());
-    // IndicatorsAsserts.assertEqualsInternationalString(subsubdataSourceDto.getTitle(), "es", "Título IndSys-1-v2-DataSource-1BA", "en", "Title IndSys-1-v2-DataSource-1BA");
-    // assertEquals(0, subsubdataSourceDto.getSubdataSources().size());
-    // }
-    // }
-    // }
-    //
-    // @Test
-    // public void testRetrieveDataSourceErrorParameterRequired() throws Exception {
-    //
-    // String uuid = null;
-    //
-    // try {
-    // indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-    // fail("parameter required");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testRetrieveDataSourceErrorNotExists() throws Exception {
-    //
-    // String uuid = NOT_EXISTS;
-    //
-    // try {
-    // indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-    // fail("No exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
+    @Override
+    @Test
+    public void testRetrieveDataSource() throws Exception {
+
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
+
+        assertNotNull(dataSourceDto);
+        assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourceDto.getUuid());
+        assertEquals("query-gpe Indicator-1-v2-DataSource-1", dataSourceDto.getQueryGpe());
+        assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPx());
+        assertEquals("temporary v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporaryVariable());
+        assertEquals("geographic v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicVariable());
+        IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", dataSourceDto.getCreatedDate());
+        assertEquals("user1", dataSourceDto.getCreatedBy());
+        IndicatorsAsserts.assertEqualsDate("2011-03-04 05:06:07", dataSourceDto.getLastUpdated());
+        assertEquals("user2", dataSourceDto.getLastUpdatedBy());
+    }
+
+    @Test
+    public void testRetrieveDataSourceErrorParameterRequired() throws Exception {
+
+        String uuid = null;
+
+        try {
+            indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveDataSourceErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Override
     @Test
@@ -1507,18 +1486,16 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
         assertNotNull(dataSourceDtoCreated.getUuid());
 
-        // Retrieve dataSource TODO
-        // DataSourceDto dataSourceDtoRetrieved = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), dataSourceDtoCreated.getUuid());
-        // IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoRetrieved);
-        // assertEquals(0, dataSourceDtoRetrieved.getSubdataSources().size());
-        //
-        // // Retrieves other dataSources in same level
-        // List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
-        // assertEquals(3, dataSourcesDto.size());
-        //
-        // assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
-        // assertEquals(DATA_SOURCE_2_INDICATOR_1_V2, dataSourcesDto.get(1).getUuid());
-        // assertEquals(dataSourceDtoCreated.getUuid(), dataSourcesDto.get(2).getUuid());
+        // Retrieve data source
+        DataSourceDto dataSourceDtoRetrieved = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), dataSourceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoRetrieved);
+
+        // Retrieves all data sources
+        List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
+        assertEquals(3, dataSourcesDto.size());
+        assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
+        assertEquals(DATA_SOURCE_2_INDICATOR_1_V2, dataSourcesDto.get(1).getUuid());
+        assertEquals(dataSourceDtoCreated.getUuid(), dataSourcesDto.get(2).getUuid());
     }
 
     @Test
@@ -1680,88 +1657,87 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     @Override
     @Test
     public void testUpdateDataSource() throws Exception {
-//
-//        String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
-//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-//        dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
-//
-//        // Update
-//        indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-//
-//        // Validation
-//        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-//        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
+
+        String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+        dataSourceDto.setTemporaryVariable("newTemporary");
+
+        // Update
+        indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+
+        // Validation
+        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
     }
 
-//    @Test
-//    public void testUpdateDataSourceErrorChangeQuery() throws Exception {
-//
-//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1A_INDICATOR_1_V2);
-//        dataSourceDto.setQueryGpe("newQueryGpe");
-//
-//        try {
-//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-//            fail("Query GPE changed");
-//        } catch (MetamacException e) {
-//            assertEquals(1, e.getExceptionItems().size());
-//            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-//            assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-//        }
-//    }
-//    
-//    @Test
-//    public void testUpdateDataSourceErrorChangePx() throws Exception {
-//
-//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1A_INDICATOR_1_V2);
-//        dataSourceDto.setPx("newPx");
-//
-//        try {
-//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-//            fail("Px changed");
-//        } catch (MetamacException e) {
-//            assertEquals(1, e.getExceptionItems().size());
-//            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-//            assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(0).getMessageParameters()[0]);
-//        }
-//    }
-//
-//    @Test
-//    public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
-//
-//        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V1);
-//
-//        try {
-//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-//            fail("Indicators system published");
-//        } catch (MetamacException e) {
-//            assertEquals(1, e.getExceptionItems().size());
-//            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-//            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-//            assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-//            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
-//        }
-//
-//    }
-//
-//    @Test
-//    public void testUpdateDataSourceErrorNotExists() throws Exception {
-//
-//        DataSourceDto dataSourceDto = new DataSourceDto();
-//        dataSourceDto.setUuid(NOT_EXISTS);
-//        dataSourceDto.setTitle(IndicatorsMocks.mockInternationalString());
-//
-//        try {
-//            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-//            fail("Indicators system not exists");
-//        } catch (MetamacException e) {
-//            assertEquals(1, e.getExceptionItems().size());
-//            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-//            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-//            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-//        }
-//    }
+    @Test
+    public void testUpdateDataSourceErrorChangeQuery() throws Exception {
+
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
+        dataSourceDto.setQueryGpe("newQueryGpe");
+
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+            fail("Query GPE changed");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateDataSourceErrorChangePx() throws Exception {
+
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
+        dataSourceDto.setPx("newPx");
+
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+            fail("Px changed");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
+
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V1);
+
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+            fail("Indicators system published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+
+    }
+
+    @Test
+    public void testUpdateDataSourceErrorNotExists() throws Exception {
+
+        DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setUuid(NOT_EXISTS);
+
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+            fail("Data source not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Override
     protected String getDataSetFile() {

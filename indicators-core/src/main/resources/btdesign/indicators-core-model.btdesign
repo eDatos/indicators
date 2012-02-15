@@ -144,8 +144,8 @@ Application Indicators {
 	    	@DataSourceDto createDataSource(String indicatorUuid, @DataSourceDto dataSourceDto) throws MetamacException;
 	    	"Updates metadata of data source"
 	    	updateDataSource(@DataSourceDto dataSourceDto) throws MetamacException;
-//	    	"Retrieves data source"
-//	    	@DataSourceDto retrieveDataSource(String uuid) throws MetamacException;
+	    	"Retrieves data source"
+	    	@DataSourceDto retrieveDataSource(String uuid) throws MetamacException;
 	    	"Deletes data source"
 	    	deleteDataSource(String uuid) throws MetamacException;
 	    	"Find data sources"

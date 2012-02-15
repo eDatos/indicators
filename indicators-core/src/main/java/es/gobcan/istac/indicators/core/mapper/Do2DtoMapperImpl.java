@@ -114,6 +114,11 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
 
+        target.setCreatedBy(source.getCreatedBy());
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        
         return target;
     }
 

@@ -350,17 +350,17 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return dataSourceDto;
     }
 
-    // @Override
-    // public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkRetrieveDataSource(uuid, null);
-    //
-    // // Retrieve
-    // DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
-    // DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
-    // return dataSourceDto;
-    // }
+    @Override
+    public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveDataSource(uuid, null);
+
+        // Retrieve
+        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
+        DataSourceDto dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
+        return dataSourceDto;
+    }
 
     @Override
     public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
