@@ -1475,6 +1475,11 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getUuid());
         IndicatorsAsserts.assertEqualsInternationalString(dimensionDto.getTitle(), "es", "Título IndSys-1-v2-Dimension-1", "en", "Title IndSys-1-v2-Dimension-1");
         assertNull(dimensionDto.getParentDimensionUuid());
+        
+        IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", dimensionDto.getCreatedDate());
+        assertEquals("user1", dimensionDto.getCreatedBy());
+        IndicatorsAsserts.assertEqualsDate("2011-03-04 05:06:07", dimensionDto.getLastUpdated());
+        assertEquals("user2", dimensionDto.getLastUpdatedBy());
 
         // Subdimensions
         assertEquals(2, dimensionDto.getSubdimensions().size());
