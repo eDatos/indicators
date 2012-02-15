@@ -1,6 +1,8 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
@@ -13,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DatasourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -115,7 +119,6 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
     
-    // TODO no se puede modificar query y px
     @Override
     public DataSource dataSourceDtoToDo(DataSourceDto source) {
         DataSource target = new DataSource();
@@ -129,6 +132,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setPx(source.getPx());
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
+        
+        List<DatasourceVariable> variables = dataSourceVariableDtoToDo(source.getOtherVariables(), target.getOtherVariables());
+        target.getOtherVariables().clear();
+        target.getOtherVariables().addAll(variables);
     }
     
     private InternationalString internationalStringToDo(InternationalStringDto source, InternationalString target) {
@@ -185,6 +192,41 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private LocalisedString localisedStringDtoToDo(LocalisedStringDto source, LocalisedString target) {
         target.setLabel(source.getLabel());
         target.setLocale(source.getLocale());
+        return target;
+    }
+    
+    /**
+     * Transform DataSourceVariable, reusing existing variables
+     */
+    private List<DatasourceVariable> dataSourceVariableDtoToDo(List<DatasourceVariableDto> sources, List<DatasourceVariable> targets) {
+
+        List<DatasourceVariable> targetsBefore = targets;
+        targets = new ArrayList<DatasourceVariable>();
+
+        for (DatasourceVariableDto source : sources) {
+            boolean existsBefore = false;
+            for (DatasourceVariable target : targetsBefore) {
+                if (source.getVariable().equals(target.getVariable())) {
+                    targets.add(dataSourceVariableDtoToDo(source, target));
+                    existsBefore = true;
+                    break;
+                }
+            }
+            if (!existsBefore) {
+                targets.add(dataSourceVariableDtoToDo(source));
+            }
+        }
+        return targets;
+    }
+    
+    private DatasourceVariable dataSourceVariableDtoToDo(DatasourceVariableDto source) {
+        DatasourceVariable target = new DatasourceVariable(source.getVariable(), source.getCategory());
+        return target;
+    }
+
+    private DatasourceVariable dataSourceVariableDtoToDo(DatasourceVariableDto source, DatasourceVariable target) {
+        target.setVariable(source.getVariable());
+        target.setCategory(source.getCategory());
         return target;
     }
 }

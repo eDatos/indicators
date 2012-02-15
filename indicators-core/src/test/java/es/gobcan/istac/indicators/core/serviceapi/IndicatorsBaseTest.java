@@ -14,6 +14,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("TBL_DIMENSIONS");
         tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
         tables.add("TBL_INDICATORS_SYSTEMS");
+        tables.add("TBL_DATA_SOURCE_VARIABLES");
         tables.add("TBL_DATA_SOURCES");
         tables.add("TBL_INDICATOR_VERSIONS");
         tables.add("TBL_INDICATORS");
@@ -30,7 +31,8 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_INDICATORS_SYSTEMS");
         sequences.add("SEQ_DIMENSIONS");
         sequences.add("SEQ_DATA_SOURCES");
-        sequences.add("SEQ_INDICATORS_VERSIONS");
+        sequences.add("SEQ_DATA_SOURCE_VARIABLES");
+        sequences.add("SEQ_INDICATOR_VERSIONS");
         sequences.add("SEQ_INDICATORS");
         return sequences;
     }

@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -44,12 +45,16 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getCommentary(), actual.getCommentary());
     }
     
-    // TODO otros valores fijados List de par {idVariable, idCategory}. 
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
         assertEquals(expected.getQueryGpe(), actual.getQueryGpe());
         assertEquals(expected.getPx(), actual.getPx());
         assertEquals(expected.getTemporaryVariable(), actual.getTemporaryVariable());
         assertEquals(expected.getGeographicVariable(), actual.getGeographicVariable());
+        assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
+        
+        for (DatasourceVariableDto expectedDatasourceVariable : expected.getOtherVariables()) {
+            assertEquals(expectedDatasourceVariable.getCategory(), actual.getOtherVariable(expectedDatasourceVariable.getVariable()).getCategory());
+        }
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {

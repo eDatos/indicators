@@ -1,7 +1,9 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -12,10 +14,12 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DatasourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -120,12 +124,29 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setPx(source.getPx());
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
-
+        target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
+        
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         
+        return target;
+    }
+    
+    private List<DatasourceVariableDto> dataSourceVariableDoToDto(List<DatasourceVariable> sources) {
+        List<DatasourceVariableDto> targets = new ArrayList<DatasourceVariableDto>();
+        for (DatasourceVariable source : sources) {
+            DatasourceVariableDto target = dataSourceVariableDoToDto(source);
+            targets.add(target);
+        }
+        return targets;
+    }
+
+    private DatasourceVariableDto dataSourceVariableDoToDto(DatasourceVariable source) {
+        DatasourceVariableDto target = new DatasourceVariableDto();
+        target.setVariable(source.getVariable());
+        target.setCategory(source.getCategory());
         return target;
     }
 

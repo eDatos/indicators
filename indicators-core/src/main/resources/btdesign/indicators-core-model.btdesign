@@ -303,7 +303,7 @@ Application Indicators {
 		"Version of indicator entity"
 		Entity IndicatorVersion {
 			databaseTable="TBL_INDICATOR_VERSIONS"
-			hint="idSequence=INDICATORS_VERSIONS"
+			hint="idSequence=INDICATOR_VERSIONS"
 			gap
 			
 			"State"
@@ -369,14 +369,16 @@ Application Indicators {
         	hint="idSequence=DATA_SOURCES"
         	gap
         	
-			// Query in GPE
+			"Query in GPE"
 			String queryGpe required;
-			// Px
+			"Px"
 			String px required;
-			// Temporary variable
+			"Temporary variable"
 			String temporaryVariable required;
-			// Geographic variable
+			"Geographic variable"
 			String geographicVariable required;
+			"Other variables fixing one category"
+			- Bag<@DatasourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			
 			// Relations
             "Indicator version"
@@ -389,6 +391,18 @@ Application Indicators {
             	protected List<@DataSource> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@DataSource findDataSource(String uuid);
             }
+        }  	   
+
+		"Variable of data source"
+        Entity DatasourceVariable {
+        	databaseTable = "TBL_DATA_SOURCE_VARIABLES"
+        	hint="idSequence=DATA_SOURCE_VARIABLES"
+        	gap
+        	
+			"Variable"
+			String variable required;
+			"Category"
+			String category required;
         }  	    	
 	}
 	
@@ -511,17 +525,29 @@ Application Indicators {
 	    
 	    "Dto for data source"
 	   	DataTransferObject DataSourceDto extends @AuditableDto {
-			
+			gap
+	   		
 			"Unique uuid"
 			String uuid;
-			// Query in GPE
+			"Query in GPE"
 			String queryGpe;
-			// Px
+			"Px"
 			String px;
-			// Temporary variable
+			"Temporary variable"
 			String temporaryVariable;
-			// Geographic variable
+			"Geographic variable"
 			String geographicVariable;
+			"Other variables fixing one category"
+			- List<@DatasourceVariableDto> otherVariables; 
+	    }
+	    
+	    "Dto for variables and categories"
+	   	DataTransferObject DatasourceVariableDto {
+	   	
+	   		"Variable"
+			String variable;
+			"Category fixed"
+			String category;
 	    }
 	}
 	

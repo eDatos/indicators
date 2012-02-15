@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -1501,6 +1502,14 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         dataSourceDto.setPx("px1");
         dataSourceDto.setTemporaryVariable("temporaryVariable1");
         dataSourceDto.setGeographicVariable("geographicVariable1");
+        DatasourceVariableDto datasourceVariableDto1 = new DatasourceVariableDto();
+        datasourceVariableDto1.setVariable("variable1");
+        datasourceVariableDto1.setCategory("category1");
+        dataSourceDto.addOtherVariable(datasourceVariableDto1);
+        DatasourceVariableDto datasourceVariableDto2 = new DatasourceVariableDto();
+        datasourceVariableDto2.setVariable("variable2");
+        datasourceVariableDto2.setCategory("category2");
+        dataSourceDto.addOtherVariable(datasourceVariableDto2);
 
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
