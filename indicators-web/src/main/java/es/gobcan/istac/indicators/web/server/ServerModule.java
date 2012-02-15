@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.server;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 
+import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemHandler;
@@ -9,6 +11,8 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListHan
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveIndicatorHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveIndicatorsSystemHandler;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
@@ -25,10 +29,12 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetIndicatorsSystemListAction.class,GetIndicatorsSystemListHandler.class);
 		bindHandler(GetIndicatorsSystemAction.class,GetIndicatorsSystemHandler.class);
 		bindHandler(GetIndicatorsSystemStructureAction.class,GetIndicatorsSystemStructureHandler.class);
+		bindHandler(DeleteIndicatorsSystemsAction.class,DeleteIndicatorsSystemsHandler.class);
 		
 		bindHandler(SaveIndicatorAction.class,SaveIndicatorHandler.class);
 		bindHandler(GetIndicatorListAction.class,GetIndicatorListHandler.class);
 		bindHandler(GetIndicatorAction.class,GetIndicatorHandler.class);
+		bindHandler(DeleteIndicatorsAction.class,DeleteIndicatorsHandler.class);
 	}
 	
 }

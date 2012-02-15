@@ -16,8 +16,8 @@ public class GetIndicatorHandler extends AbstractActionHandler<GetIndicatorActio
 
 	@Override
 	public GetIndicatorResult execute(GetIndicatorAction action, ExecutionContext context) throws ActionException {
-		String uuid = action.getUuid();
-		return new GetIndicatorResult(IndDatabase.getIndicatorByUuid(uuid));
+		String code = action.getCode();
+		return new GetIndicatorResult(IndDatabase.getIndicatorByCode(code));
 	}
 	
 	@Override

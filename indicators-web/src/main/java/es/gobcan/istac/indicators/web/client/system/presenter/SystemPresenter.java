@@ -47,7 +47,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 	/* Models*/
 	private IndicatorsSystemDto indSystem;
-	private Long lastStructureID;
+	private String codeLastStructure;
 
 	public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
 		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
@@ -86,8 +86,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		Long id = Long.parseLong(getIdFromRequest(placeManager.getCurrentPlaceHierarchy()));
-		retrieveIndSystem(id); 
+		String code = getIdFromRequest(placeManager.getCurrentPlaceHierarchy());
+		retrieveIndSystem(code); 
 		getView().init();
 	}
 	
@@ -100,8 +100,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		return null;
 	}
 	
-	private void retrieveIndSystem(Long indSystemId) {
-		dispatcher.execute(new GetIndicatorsSystemAction(indSystemId), new AsyncCallback<GetIndicatorsSystemResult>() {
+	private void retrieveIndSystem(String indSystemCode) {
+		dispatcher.execute(new GetIndicatorsSystemAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
@@ -136,8 +136,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 	@Override
 	public void retrieveSystemStructure() {
-		if (indSystem != null && !indSystem.getId().equals(lastStructureID)) {
-			lastStructureID = indSystem.getId();
+		if (indSystem != null && !indSystem.getId().equals(codeLastStructure)) {
+			codeLastStructure = indSystem.getCode();
 			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getId()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 				@Override
 				public void onFailure(Throwable caught) {

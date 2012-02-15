@@ -17,8 +17,8 @@ public class GetIndicatorsSystemHandler extends AbstractActionHandler<GetIndicat
 
 	@Override
 	public GetIndicatorsSystemResult execute(GetIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
-		Long id = action.getIndSysId();
-		IndicatorsSystemDto indSys = IndDatabase.getIndicatorsSystemById(id);
+		String code = action.getCode();
+		IndicatorsSystemDto indSys = IndDatabase.getIndicatorsSystemByCode(code);
 		return new GetIndicatorsSystemResult(indSys);
 	}
 

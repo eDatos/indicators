@@ -10,7 +10,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 public class GetIndicatorsSystem {
 
 	@In(1)
-	Long indSysId;
+	String code;
 	
 	@Out(1)
 	IndicatorsSystemDto indicatorsSystem;

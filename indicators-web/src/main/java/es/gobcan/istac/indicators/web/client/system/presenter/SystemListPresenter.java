@@ -24,11 +24,14 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.SaveIndicatorsSystemResult;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 	
@@ -68,30 +71,44 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 	 * View Event Handlers 
 	 */
 	@Override
-	public void createIndicatorSystem(String name) {
-		/*IndicatorSystemDto system = new IndicatorSystem();
-		system.setName(name);
-		dispatcher.execute(new SaveIndicatorSystemAction(system), new AsyncCallback<SaveIndicatorSystemResult>() {
+	public void createIndicatorsSystem(IndicatorsSystemDto system) {
+		dispatcher.execute(new SaveIndicatorsSystemAction(system), new AsyncCallback<SaveIndicatorsSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorCreate()), MessageTypeEnum.ERROR);
 			}
 			@Override
-			public void onSuccess(SaveIndicatorSystemResult result) {
+			public void onSuccess(SaveIndicatorsSystemResult result) {
 				retrieveIndicatorSystemList();
 				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemCreated()), MessageTypeEnum.SUCCESS);
 			}
-		});*/
+		});
 	}
 	
 	@Override
-	public void reloadIndicatorSystemList() {
+	public void deleteIndicatorsSystems(List<String> codes) {
+		dispatcher.execute(new DeleteIndicatorsSystemsAction(codes), new AsyncCallback<DeleteIndicatorsSystemsResult>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().systemErrorDelete()), MessageTypeEnum.ERROR);
+			}
+
+			@Override
+			public void onSuccess(DeleteIndicatorsSystemsResult result) {
+				retrieveIndicatorSystemList();
+				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemDeleted()), MessageTypeEnum.SUCCESS);
+			}
+		});
+	}
+	
+	@Override
+	public void reloadIndicatorsSystemList() {
 		retrieveIndicatorSystemList();
 	}
 	
 	@Override
-	public void goToIndicatorSystem(String indSysId) {
-		PlaceRequest systemDetailRequest = new PlaceRequest(NameTokens.systemPage).with(PlaceRequestParams.indSystemParam,indSysId);
+	public void goToIndicatorsSystem(String indSysCode) {
+		PlaceRequest systemDetailRequest = new PlaceRequest(NameTokens.systemPage).with(PlaceRequestParams.indSystemParam,indSysCode);
 		placeManager.revealPlace(systemDetailRequest);
 	}
 	

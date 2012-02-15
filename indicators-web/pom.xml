@@ -149,7 +149,7 @@
 			</plugin>
 
 			<!-- Copy static web files before executing gwt:run -->
-			<plugin>
+		<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
@@ -164,7 +164,7 @@
 				<configuration>
 					<webappDirectory>${webappDirectory}</webappDirectory>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -172,6 +172,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<generatedSourcesDirectory>${project.build.directory}/generated-sources/gwt</generatedSourcesDirectory>
 				</configuration>
 			</plugin>
 			<plugin>

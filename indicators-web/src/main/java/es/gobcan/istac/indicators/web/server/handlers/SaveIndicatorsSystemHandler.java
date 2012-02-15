@@ -18,9 +18,7 @@ public class SaveIndicatorsSystemHandler extends AbstractActionHandler<SaveIndic
 	@Override
 	public SaveIndicatorsSystemResult execute(SaveIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
 		IndicatorsSystemDto indSys = action.getIndicatorsSystem();
-		long size = IndDatabase.getIndicatorsSystems().size();
-		indSys.setId(size);
-		IndDatabase.createIndicatorsSystem(indSys);
+		IndDatabase.saveIndicatorsSystem(indSys);
 		return new SaveIndicatorsSystemResult();
 	}
 	

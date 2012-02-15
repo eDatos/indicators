@@ -10,7 +10,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 public class GetIndicator {
 
 	@In(1)
-	String uuid;
+	String code;
 	
 	@Out(1)
 	IndicatorDto indicator;

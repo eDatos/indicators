@@ -30,7 +30,7 @@ import es.gobcan.istac.indicators.web.shared.SaveIndicatorResult;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 	private DispatchAsync dispatcher;
-	private String indicatorUuid;
+	private String indicatorCode;
 	
 	public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
 		void setIndicator(IndicatorDto indicator);
@@ -55,7 +55,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		indicatorUuid = request.getParameter(PlaceRequestParams.indicatorParam, null);
+		indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	}
 	
 	private void retrieveIndicator() {
-		dispatcher.execute(new GetIndicatorAction(this.indicatorUuid), new AsyncCallback<GetIndicatorResult>() {
+		dispatcher.execute(new GetIndicatorAction(this.indicatorCode), new AsyncCallback<GetIndicatorResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);

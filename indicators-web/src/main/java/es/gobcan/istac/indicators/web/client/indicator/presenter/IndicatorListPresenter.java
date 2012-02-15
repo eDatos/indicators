@@ -14,15 +14,20 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.Place;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.SaveIndicatorAction;
@@ -31,6 +36,7 @@ import es.gobcan.istac.indicators.web.shared.SaveIndicatorResult;
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 	
 	private DispatchAsync dispatcher;
+	private PlaceManager placeManager;
 	
 	public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 		void setIndicatorList(List<IndicatorDto> indicatorList);
@@ -41,10 +47,11 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	public interface IndicatorListProxy extends Proxy<IndicatorListPresenter>, Place {}
 
 	@Inject
-	public IndicatorListPresenter(EventBus eventBus, IndicatorListView view, IndicatorListProxy proxy, DispatchAsync dispatcher) {
+	public IndicatorListPresenter(EventBus eventBus, IndicatorListView view, IndicatorListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.dispatcher = dispatcher;
 		getView().setUiHandlers(this);
+		this.placeManager = placeManager;
 	}
 	
 	@Override
@@ -73,6 +80,12 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	
 	//Manejo de eventos
 	@Override
+	public void goToIndicator(String code) {
+		PlaceRequest indicatorDetailRequest = new PlaceRequest(NameTokens.indicatorPage).with(PlaceRequestParams.indicatorParam, code);
+		placeManager.revealPlace(indicatorDetailRequest);
+	}
+	
+	@Override
 	public void createIndicator(IndicatorDto indicator) {
 		dispatcher.execute(new SaveIndicatorAction(indicator), new AsyncCallback<SaveIndicatorResult>() {
 			@Override
@@ -90,5 +103,22 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	@Override
 	public void reloadIndicatorList() {
 		retrieveIndicatorList();
+	}
+	
+	@Override
+	public void deleteIndicators(List<String> codes) {
+		dispatcher.execute(new DeleteIndicatorsAction(codes), new AsyncCallback<DeleteIndicatorsResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorDelete()), MessageTypeEnum.ERROR);
+			}
+
+			@Override
+			public void onSuccess(DeleteIndicatorsResult result) {
+				retrieveIndicatorList(); 
+				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicDeleted()), MessageTypeEnum.SUCCESS);
+			}
+		});
 	}
 }

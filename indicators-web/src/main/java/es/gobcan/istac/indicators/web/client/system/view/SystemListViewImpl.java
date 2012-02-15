@@ -4,137 +4,153 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.types.SelectionAppearance;
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.CloseClickEvent;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
 
 public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
-	private SystemListUiHandler uiHandler;
+	private SystemListUiHandler uiHandlers;
 	
 	
 	private final ListGrid indSystemListGrid;
-	private Window newModal;
 	private VLayout vLayout;
 	
-	private ToolStripButton newIndSystemActor;
+	private ToolStripButton newActor;
+	private ToolStripButton deleteActor;
 	
-	private DynamicForm newIndSysForm;
-	private TextItem nameIndSys;
-	private ButtonItem createIndSysButton;
-
+	private CreateForm createPanel;
+	private DeleteConfirmationWindow deleteConfirmationWindow;
+	
 	@Inject
 	public SystemListViewImpl() {
 		//ToolStrip
-		newIndSystemActor = new ToolStripButton(getConstants().systemNew(),RESOURCE.newListGrid().getURL());
+		newActor = new ToolStripButton(getConstants().systemNew(),RESOURCE.newListGrid().getURL());
+		deleteActor = new ToolStripButton(getConstants().systemDelete(),RESOURCE.deleteListGrid().getURL());
+		deleteActor.hide();
+		
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
-		toolStrip.addButton(newIndSystemActor);
-		
-		//List
-		ListGridField field1 = new ListGridField(IndicatorSystemRecord.IDENTIFIER,getConstants().systemListHeaderIdentifier());
-		ListGridField field2 = new ListGridField(IndicatorSystemRecord.NAME,getConstants().systemListHeaderName());
+		toolStrip.addButton(newActor);
+		toolStrip.addButton(deleteActor);
 		
 		indSystemListGrid = new ListGrid();
+		IndicatorsSystemsDS datasource = new IndicatorsSystemsDS();
+		indSystemListGrid.setDataSource(datasource);
+		indSystemListGrid.setUseAllDataSourceFields(false);
+		indSystemListGrid.setLeaveScrollbarGap(false);
+		indSystemListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+		
+		//List
+		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.FIELD_CODE,getConstants().systemListHeaderIdentifier());
+		field1.setAlign(Alignment.LEFT);
+		ListGridField field2 = new ListGridField(IndicatorsSystemsDS.FIELD_INTERNATIONAL_TITLE,getConstants().systemListHeaderTitle());
 		indSystemListGrid.setFields(field1,field2);
 		
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[0];
 
 		indSystemListGrid.setData(records);
+		
+		createPanel = new CreateForm();
+		createPanel.hide();
+		
 		vLayout = new VLayout();
 		vLayout.addMember(toolStrip);
 		vLayout.addMember(indSystemListGrid);
+		vLayout.addMember(createPanel);
 		
+		deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemDeleteConfirm());
+		deleteConfirmationWindow.hide();
 		
-		//Modals
-		
-		newIndSysForm = new DynamicForm();
-		newIndSysForm.setWidth100();
-		newIndSysForm.setHeight100();
-        newIndSysForm.setPadding(5);
-        newIndSysForm.setLayoutAlign(VerticalAlignment.BOTTOM);
-		
-		nameIndSys = new TextItem("name-new-dsd", getConstants().systemNewName());
-		nameIndSys.setRequired(true);
-        nameIndSys.setWidth(200);
-        createIndSysButton = new ButtonItem("create-new-dsd", getConstants().systemNewName());
-        createIndSysButton.setWidth(100);
-        
-        newIndSysForm.setFields(nameIndSys,createIndSysButton);
-        
 		bindEvents();
 	}
 	
 	private void bindEvents() {
 		//New Indicator System
-		newIndSystemActor.addClickHandler(new ClickHandler() {
+		newActor.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				newModal = new Window();
-                newModal.setWidth(380);
-                newModal.setHeight(100);
-                newModal.setTitle(getConstants().systemNewTitle());
-                newModal.setShowMinimizeButton(false);
-                newModal.setIsModal(true);
-                newModal.setShowModalMask(true);
-                newModal.centerInPage();
-				newModal.addCloseClickHandler(new CloseClickHandler() {
-                    @Override
-                    public void onCloseClick(CloseClickEvent event) {
-                        newModal.destroy();
-                    }
-				});
-				newModal.addItem(newIndSysForm);
-				newModal.show(); 
+				createPanel.init();
+				createPanel.show();
 			}
 		});
 		
-		//Create Indicator System in Modal
-		createIndSysButton.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				uiHandler.createIndicatorSystem(nameIndSys.getValueAsString());
-				newModal.hide();
-				newModal.destroy();
+		indSystemListGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChanged(SelectionEvent event) {
+				if (indSystemListGrid.getSelectedRecords().length > 0) {
+					deleteActor.show();
+				} else {
+					deleteActor.hide();
+				}
 			}
 		});
 		
 		indSystemListGrid.addRecordClickHandler(new RecordClickHandler() {
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
-				String id = event.getRecord().getAttribute(IndicatorSystemRecord.IDENTIFIER);
-				uiHandler.goToIndicatorSystem(id);
+				if (event.getFieldNum() != 0) { //Clicking checkbox will be ignored
+					String code = event.getRecord().getAttribute(IndicatorsSystemsDS.FIELD_CODE);
+					uiHandlers.goToIndicatorsSystem(code);
+				}
+			}
+		});
+		
+		deleteActor.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				deleteConfirmationWindow.show();
+			}
+		});
+		
+		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				uiHandlers.deleteIndicatorsSystems(getCodesFromSelected());
+				deleteConfirmationWindow.hide();
 			}
 		});
 	}
 	
 	@Override
 	public void setIndSystemList(List<IndicatorsSystemDto> indicatorsSystemList) {
+		createPanel.hide();
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
 		int index = 0;
 		for (IndicatorsSystemDto indSys : indicatorsSystemList) {
-			records[index++] = new IndicatorSystemRecord(indSys.getId(), getLocalisedString(indSys.getTitle()));
+			records[index++] = new IndicatorSystemRecord(indSys.getCode(), getLocalisedString(indSys.getTitle()));
 		}
 		indSystemListGrid.setData(records);
 	}
@@ -146,7 +162,130 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
 	@Override
 	public void setUiHandlers(SystemListUiHandler uiHandlers) {
-		this.uiHandler = uiHandlers;
+		this.uiHandlers = uiHandlers;
+	}
+	
+	/* Util */
+	public List<String> getCodesFromSelected() {
+		List<String> codes = new ArrayList<String>();
+		for (ListGridRecord record : indSystemListGrid.getSelectedRecords()) {
+			codes.add(record.getAttribute(IndicatorsSystemsDS.FIELD_CODE));
+		}
+		return codes;
 	}
 
+	private class CreateForm extends VLayout {
+		private GeneralPanel generalPanel;
+		
+		public CreateForm() {
+		
+			Label title = new Label();
+			title.setAlign(Alignment.LEFT);
+			title.setOverflow(Overflow.HIDDEN);
+			title.setHeight(40);
+			title.setStyleName("sectionTitle");
+			title.setContents(getConstants().systemNewTitle());
+			
+			this.generalPanel = new GeneralPanel();
+			
+			this.addMember(title);
+			this.addMember(generalPanel);
+			init();
+		}
+		
+		private void init() {
+			generalPanel.setIndicatorsSystem(new IndicatorsSystemDto());
+		}
+		
+		private class GeneralPanel extends VLayout {
+		    /* Data */
+		    private IndicatorsSystemDto system;
+		    
+			private InternationalMainFormLayout mainFormLayout;
+			
+			/* Edit Form*/
+			private GroupDynamicForm identifiersEditionForm;
+			private GroupDynamicForm generalEditionForm;
+			
+			public GeneralPanel() {
+				super();
+				mainFormLayout = new InternationalMainFormLayout();
+				mainFormLayout.setEditionMode();
+	
+				createForm();
+				
+				this.addMember(mainFormLayout);
+				bindEvents();
+			}
+			
+			private void bindEvents() {
+			    mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+			        @Override
+		            public void onClick(ClickEvent event) {
+			        	boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
+		                generalEditionForm.setTranslationsShowed(translationsShowed);
+		                generalEditionForm.markForRedraw();
+		            }
+		        });
+		        
+		        mainFormLayout.getSave().addClickHandler(new ClickHandler() {
+		            @Override
+		            public void onClick(ClickEvent event) {
+		                saveIndicatorsSystem();
+		            }
+		        });
+		        
+		        mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						createPanel.hide();
+					}
+				});
+	
+			}
+
+			
+			private void createForm() {
+			    RequiredTextItem code = new RequiredTextItem(IndicatorsSystemsDS.FIELD_CODE, getConstants().systemDetailIdentifier());
+				
+				// Identifiers Form
+				identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+				identifiersEditionForm.setFields(code);
+				
+				
+				MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorsSystemsDS.FIELD_INTERNATIONAL_TITLE, getConstants().systemDetailTitle());
+				internationalName.setRequired(true);
+				// General Form
+				generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
+				generalEditionForm.setFields(internationalName);
+						
+				// Status Form
+				GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
+				//statusForm.setFields(staticFinalItemEdit, staticStartDateItemEdit, staticEndDateItemEdit);
+				
+				mainFormLayout.addEditionCanvas(identifiersEditionForm);
+				mainFormLayout.addEditionCanvas(generalEditionForm);
+				mainFormLayout.addEditionCanvas(statusForm);
+			}
+			
+			public void setIndicatorsSystem(IndicatorsSystemDto system) {
+			    this.system = system;
+			    generalEditionForm.clearValues();
+			    identifiersEditionForm.clearValues();
+				mainFormLayout.setEditionMode();
+			}
+
+			
+		    private void saveIndicatorsSystem() {
+		    	boolean validated = identifiersEditionForm.validate();
+		    	validated = generalEditionForm.validate(false) && validated;
+		        if (validated) {
+		        	system.setCode((String)identifiersEditionForm.getValue(IndicatorsSystemsDS.FIELD_CODE));
+		            system.setTitle((InternationalStringDto)generalEditionForm.getValue(IndicatorsSystemsDS.FIELD_INTERNATIONAL_TITLE));
+		            SystemListViewImpl.this.uiHandlers.createIndicatorsSystem(system);
+		        }
+		    }
+		}
+	}
 }
