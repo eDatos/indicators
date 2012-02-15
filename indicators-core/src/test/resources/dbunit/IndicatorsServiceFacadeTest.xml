@@ -60,6 +60,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+			
+				<TBL_DATA_SOURCES
+						ID="10"
+						UUID="Indicator-1-v1-DataSource-1"
+						QUERY_GPE="query-gpe Indicator-1-v1-DataSource-1"
+						PX="px Indicator-1-v1-DataSource-1"
+						TEMPORARY_VARIABLE="temporary v Indicator-1-v1-DataSource-1"
+						GEOGRAPHIC_VARIABLE="geographic v Indicator-1-v1-DataSource-1"
+						INDICATOR_VERSION_FK="1"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
 				
 			<TBL_INDICATOR_VERSIONS
 				ID="2"
@@ -248,7 +266,7 @@
 			/>			
 			
 				<TBL_DATA_SOURCES
-						ID="30"
+						ID="40"
 						UUID="Indicator-3-v1-DataSource-1"
 						QUERY_GPE="query-gpe Indicator-3-v1-DataSource-1"
 						PX="px Indicator-3-v1-DataSource-1"

@@ -10,6 +10,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -124,9 +125,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getDataSourceRepository().delete(dataSource);
     }
 
-    // @Override
-    // public List<DataSource> findDataSources(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
-    // IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
-    // return indicatorsSystemVersion.getDataSources();
-    // }
+    @Override
+    public List<DataSource> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        IndicatorVersion indicatorVersion = retrieveIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+        return indicatorVersion.getDataSources();
+    }
 }

@@ -49,8 +49,9 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     private static String             INDICATOR_9                  = "Indicator-9";
 
     // Data sources
-
+    private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
     private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
+    private static String             DATA_SOURCE_2_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-2";
     private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
 
     @Test
@@ -1635,54 +1636,47 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    // @Override
-    // @Test
-    // public void testFindDataSources() throws Exception {
-    //
-    // String uuidIndicator = INDICATOR_1;
-    //
-    // // Version 1.000
-    // {
-    // List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "1.000");
-    // assertEquals(1, dataSourcesDto.size());
-    // assertEquals(DATA_SOURCE_1_INDICATOR_1_V1, dataSourcesDto.get(0).getUuid());
-    // }
-    //
-    // // Version 2.000
-    // {
-    // List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
-    // assertEquals(2, dataSourcesDto.size());
-    //
-    // assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
-    //
-    // assertEquals(2, dataSourcesDto.get(0).getSubdataSources().size());
-    // assertEquals(DATA_SOURCE_1A_INDICATOR_1_V2, dataSourcesDto.get(0).getSubdataSources().get(0).getUuid());
-    // assertEquals(DATA_SOURCE_1B_INDICATOR_1_V2, dataSourcesDto.get(0).getSubdataSources().get(1).getUuid());
-    // assertEquals(1, dataSourcesDto.get(0).getSubdataSources().get(1).getSubdataSources().size());
-    // assertEquals(DATA_SOURCE_1BA_INDICATOR_1_V2, dataSourcesDto.get(0).getSubdataSources().get(1).getSubdataSources().get(0).getUuid());
-    //
-    // assertEquals(DATA_SOURCE_2_INDICATOR_1_V2, dataSourcesDto.get(1).getUuid());
-    // }
-    // }
-    //
-    // @Test
-    // public void testFindDataSourcesErrorNotExists() throws Exception {
-    //
-    // String uuid = NOT_EXISTS;
-    //
-    // // Validation
-    // try {
-    // indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
-    // fail("Indicators system not exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    // }
-    //
+    @Override
+    @Test
+    public void testFindDataSources() throws Exception {
+
+        String uuidIndicator = INDICATOR_1;
+
+        // Version 1.000
+        {
+            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "1.000");
+            assertEquals(1, dataSourcesDto.size());
+            assertEquals(DATA_SOURCE_1_INDICATOR_1_V1, dataSourcesDto.get(0).getUuid());
+        }
+
+        // Version 2.000
+        {
+            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
+            assertEquals(2, dataSourcesDto.size());
+
+            assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
+            assertEquals(DATA_SOURCE_2_INDICATOR_1_V2, dataSourcesDto.get(1).getUuid());
+        }
+    }
+
+    @Test
+    public void testFindDataSourcesErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SERVICE_INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
     // @Override
     // @Test
     // public void testUpdateDataSource() throws Exception {

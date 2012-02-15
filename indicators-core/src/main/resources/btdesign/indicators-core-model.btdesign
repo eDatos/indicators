@@ -58,7 +58,7 @@ Application Indicators {
 //	    	@DataSource updateDataSource(@DataSource dataSource) throws MetamacException;
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(@DataSource dataSource) throws MetamacException;
-//	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
+	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
     	}
     	
     	"Provides access to indicators systems"
@@ -148,8 +148,8 @@ Application Indicators {
 //	    	@DataSourceDto retrieveDataSource(String uuid) throws MetamacException;
 	    	"Deletes data source"
 	    	deleteDataSource(String uuid) throws MetamacException;
-//	    	"Find data sources"
-//	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
+	    	"Find data sources"
+	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
 	    }
 
 	    // ----------------------------------------------------------------

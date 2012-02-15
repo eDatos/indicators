@@ -202,13 +202,13 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindDimensions(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
-        ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorsSystemVersionNumber, "INDICATORS_SYSTEM_VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -316,7 +316,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkCreateDataSource(String indicatorUuid, DataSourceDto dataSourceDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -328,17 +328,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-//
-//    public static void checkRetrieveDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
+    //
+    // public static void checkRetrieveDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    //
+    // if (exceptions == null) {
+    // exceptions = new ArrayList<MetamacExceptionItem>();
+    // }
+    //
+    // ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+    //
+    // ExceptionUtils.throwIfException(exceptions);
+    // }
 
     public static void checkDeleteDataSource(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
@@ -350,31 +350,32 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-//
-//    public static void checkFindDataSources(String indicatorsSystemUuid, String indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
-//        ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM_VERSION", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
-//
-//    public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        checkDataSource(dataSourceDto, exceptions);
-//        ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
-//        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getParentDataSourceUuid(), dataSource.getParent() != null ? dataSource.getParent().getUuid() : null, "DATA_SOURCE.PARENT_DATA_SOURCE_UUID",
-//                exceptions);
-//        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getOrderInLevel(), dataSource.getOrderInLevel(), "DATA_SOURCE.ORDER_IN_LEVEL", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
+
+    public static void checkFindDataSources(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorVersionNumber, "INDICATOR_VERSION_NUMBER", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    // public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    // if (exceptions == null) {
+    // exceptions = new ArrayList<MetamacExceptionItem>();
+    // }
+    //
+    // checkDataSource(dataSourceDto, exceptions);
+    // ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions);
+    // ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getParentDataSourceUuid(), dataSource.getParent() != null ? dataSource.getParent().getUuid() : null,
+    // "DATA_SOURCE.PARENT_DATA_SOURCE_UUID",
+    // exceptions);
+    // ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getOrderInLevel(), dataSource.getOrderInLevel(), "DATA_SOURCE.ORDER_IN_LEVEL", exceptions);
+    //
+    // ExceptionUtils.throwIfException(exceptions);
+    // }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);

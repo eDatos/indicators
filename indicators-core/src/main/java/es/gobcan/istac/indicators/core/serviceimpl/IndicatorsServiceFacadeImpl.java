@@ -376,22 +376,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsService().deleteDataSource(ctx, dataSource);
     }
 
-    // @Override
-    // public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
-    //
-    // // Retrieve dataSources and transform
-    // List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
-    // List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
-    // for (DataSource dataSource : dataSources) {
-    // dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));
-    // }
-    //
-    // return dataSourcesDto;
-    // }
-    //
+    @Override
+    public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
+
+        // Retrieve dataSources and transform
+        List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
+        List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
+        for (DataSource dataSource : dataSources) {
+            dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));
+        }
+
+        return dataSourcesDto;
+    }
+
     // @Override
     // public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
     //
