@@ -52,6 +52,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
     private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
     private static String             DATA_SOURCE_2_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-2";
+    private static String             DATA_SOURCE_1_INDICATOR_2_V1 = "Indicator-2-v1-DataSource-1";
     private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
 
     @Test
@@ -352,7 +353,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    // TODO testear delete indicators borra también los data sources
     @Test
     public void testDeleteIndicator() throws Exception {
 
@@ -372,6 +372,30 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testDeleteIndicatorCheckDeleteDataSources() throws Exception {
+
+        String uuid = INDICATOR_2;
+        String uuidDataSource = DATA_SOURCE_1_INDICATOR_2_V1;
+        List<DataSourceDto> datasources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
+        assertEquals(1, datasources.size());
+        assertEquals(uuidDataSource, datasources.get(0).getUuid());
+
+        // Delete indicator
+        indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
+
+        // Validate data sources are deleted
+        try {
+            indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuidDataSource);
+            fail("Datasource deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuidDataSource, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Test
     public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {
@@ -386,8 +410,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals("1.000", indicatorDto.getDiffusionVersion());
             assertEquals("2.000", indicatorDto.getProductionVersion());
         }
-
-        // TODO Retrieve data sources to check will be deleted
 
         // Delete indicator
         indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
@@ -412,8 +434,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("2.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
-
-        // TODO Check data sources deleted
     }
 
     @Test
