@@ -349,17 +349,17 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    // public static void checkPublishIndicator(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-    //
-    // if (exceptions == null) {
-    // exceptions = new ArrayList<MetamacExceptionItem>();
-    // }
-    //
-    // ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-    //
-    // ExceptionUtils.throwIfException(exceptions);
-    // }
-    //
+    public static void checkPublishIndicator(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     // public static void checkArchiveIndicator(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
     //
     // if (exceptions == null) {

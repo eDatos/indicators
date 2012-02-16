@@ -132,8 +132,8 @@ Application Indicators {
 	    	sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	"Rejects validation of indicator"
 	    	rejectIndicatorValidation(String uuid) throws MetamacException;
-//	    	"Publishes indicator"
-//	    	publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	"Publishes indicator"
+	    	publishIndicator(String uuid) throws MetamacException;	    		    	
 //	    	"Archives indicator"
 //	    	archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
