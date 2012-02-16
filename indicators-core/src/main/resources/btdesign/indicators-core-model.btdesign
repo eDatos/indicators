@@ -134,8 +134,8 @@ Application Indicators {
 	    	rejectIndicatorValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
 	    	publishIndicator(String uuid) throws MetamacException;	    		    	
-//	    	"Archives indicator"
-//	    	archiveIndicator(String uuid) throws MetamacException;	    		    	
+	    	"Archives indicator"
+	    	archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
 	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators. Retrieves last versions"

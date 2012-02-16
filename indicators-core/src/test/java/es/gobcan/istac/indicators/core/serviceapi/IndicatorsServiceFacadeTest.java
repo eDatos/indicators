@@ -1187,130 +1187,130 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    // @Override
-    // @Test
-    // public void testArchiveIndicator() throws Exception {
-    //
-    // String uuid = INDICATOR_3;
-    // String versionNumber = INDICATOR_3_VERSION;
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDto.getState());
-    // }
-    //
-    // // Archive
-    // indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
-    //
-    // // Validation
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
-    // assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
-    //
-    // IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorDto.getProductionValidationDate());
-    // assertEquals("user1", indicatorDto.getProductionValidationUser());
-    // IndicatorsAsserts.assertEqualsDate("2011-04-04 03:02:04", indicatorDto.getDiffusionValidationDate());
-    // assertEquals("user2", indicatorDto.getDiffusionValidationUser());
-    // IndicatorsAsserts.assertEqualsDate("2011-05-05 04:02:04", indicatorDto.getPublicationDate());
-    // assertEquals("user3", indicatorDto.getPublicationUser());
-    // assertTrue(DateUtils.isSameDay(new Date(), indicatorDto.getArchiveDate()));
-    // assertEquals(getServiceContext().getUserId(), indicatorDto.getArchiveUser());
-    // }
-    // }
-    //
-    // @Test
-    // public void testArchiveIndicatorWithProductionVersion() throws Exception {
-    //
-    // String uuid = INDICATOR_1;
-    // String diffusionVersion = "1.000";
-    // String productionVersion = "2.000";
-    //
-    // {
-    // IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
-    // IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
-    // assertEquals(productionVersion, indicatorDtoV1.getProductionVersion());
-    // assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoV1.getState());
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoV2.getState());
-    // }
-    //
-    // // Archive
-    // indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
-    //
-    // // Validation
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
-    // assertEquals(productionVersion, indicatorDto.getProductionVersion());
-    // assertEquals(diffusionVersion, indicatorDto.getDiffusionVersion());
-    // assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
-    // }
-    // }
-    //
-    // @Test
-    // public void testArchiveIndicatorErrorNotExists() throws Exception {
-    //
-    // try {
-    // indicatorsServiceFacade.archiveIndicator(getServiceContext(), NOT_EXISTS);
-    // fail("Indicator not exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testArchiveIndicatorErrorWrongStateProduction() throws Exception {
-    //
-    // String uuid = INDICATOR_2;
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorDto.getState());
-    // assertEquals("1.000", indicatorDto.getProductionVersion());
-    // assertEquals(null, indicatorDto.getDiffusionVersion());
-    // }
-    //
-    // try {
-    // indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
-    // fail("Indicator is not published");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testArchiveIndicatorErrorWrongStateDiffusion() throws Exception {
-    //
-    // String uuid = INDICATOR_8;
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
-    // assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals("1.000", indicatorDto.getDiffusionVersion());
-    // }
-    //
-    // try {
-    // indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
-    // fail("Indicator is not published");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    // }
+    @Override
+    @Test
+    public void testArchiveIndicator() throws Exception {
+
+        String uuid = INDICATOR_3;
+        String versionNumber = INDICATOR_3_VERSION;
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+            assertEquals(null, indicatorDto.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDto.getState());
+        }
+
+        // Archive
+        indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+
+        // Validation
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+            assertEquals(null, indicatorDto.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
+
+            IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorDto.getProductionValidationDate());
+            assertEquals("user1", indicatorDto.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 03:02:04", indicatorDto.getDiffusionValidationDate());
+            assertEquals("user2", indicatorDto.getDiffusionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-05-05 04:02:04", indicatorDto.getPublicationDate());
+            assertEquals("user3", indicatorDto.getPublicationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDto.getArchiveDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorDto.getArchiveUser());
+        }
+    }
+
+    @Test
+    public void testArchiveIndicatorWithProductionVersion() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String diffusionVersion = "1.000";
+        String productionVersion = "2.000";
+
+        {
+            IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
+            IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
+            assertEquals(productionVersion, indicatorDtoV1.getProductionVersion());
+            assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoV1.getState());
+            assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoV2.getState());
+        }
+
+        // Archive
+        indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+
+        // Validation
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
+            assertEquals(productionVersion, indicatorDto.getProductionVersion());
+            assertEquals(diffusionVersion, indicatorDto.getDiffusionVersion());
+            assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
+        }
+    }
+
+    @Test
+    public void testArchiveIndicatorErrorNotExists() throws Exception {
+
+        try {
+            indicatorsServiceFacade.archiveIndicator(getServiceContext(), NOT_EXISTS);
+            fail("Indicator not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testArchiveIndicatorErrorWrongStateProduction() throws Exception {
+
+        String uuid = INDICATOR_2;
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
+            assertEquals(IndicatorStateEnum.DRAFT, indicatorDto.getState());
+            assertEquals("1.000", indicatorDto.getProductionVersion());
+            assertEquals(null, indicatorDto.getDiffusionVersion());
+        }
+
+        try {
+            indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+            fail("Indicator is not published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    public void testArchiveIndicatorErrorWrongStateDiffusion() throws Exception {
+
+        String uuid = INDICATOR_8;
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
+            assertEquals(IndicatorStateEnum.ARCHIVED, indicatorDto.getState());
+            assertEquals(null, indicatorDto.getProductionVersion());
+            assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        }
+
+        try {
+            indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+            fail("Indicator is not published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
 
     @Override
     @Test

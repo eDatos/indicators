@@ -233,27 +233,25 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsService().updateIndicator(ctx, indicator);
     }
 
-    // @Override
-    // public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkArchiveIndicator(uuid, null);
-    //
-    // // Retrieve version published
-    // IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
-    // if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
-    // throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE,
-    // uuid, IndicatorStateEnum.PUBLISHED);
-    // }
-    //
-    // // Update state
-    // indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
-    // indicatorInDiffusion.setArchiveDate(new DateTime());
-    // indicatorInDiffusion.setArchiveUser(ctx.getUserId());
-    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
-    // }
+    @Override
+    public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
-    // TODO copiar data sources
+        // Validation of parameters
+        InvocationValidator.checkArchiveIndicator(uuid, null);
+
+        // Retrieve version published
+        IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
+        if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, IndicatorStateEnum.PUBLISHED);
+        }
+
+        // Update state
+        indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
+        indicatorInDiffusion.setArchiveDate(new DateTime());
+        indicatorInDiffusion.setArchiveUser(ctx.getUserId());
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
+    }
+
     @Override
     public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
 
