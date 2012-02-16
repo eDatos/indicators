@@ -15,14 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
-import es.gobcan.istac.indicators.core.domain.DatasourceVariable;
+import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -133,7 +133,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
         
-        List<DatasourceVariable> variables = dataSourceVariableDtoToDo(source.getOtherVariables(), target.getOtherVariables());
+        List<DataSourceVariable> variables = dataSourceVariableDtoToDo(source.getOtherVariables(), target.getOtherVariables());
         target.getOtherVariables().clear();
         target.getOtherVariables().addAll(variables);
     }
@@ -198,14 +198,14 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     /**
      * Transform DataSourceVariable, reusing existing variables
      */
-    private List<DatasourceVariable> dataSourceVariableDtoToDo(List<DatasourceVariableDto> sources, List<DatasourceVariable> targets) {
+    private List<DataSourceVariable> dataSourceVariableDtoToDo(List<DataSourceVariableDto> sources, List<DataSourceVariable> targets) {
 
-        List<DatasourceVariable> targetsBefore = targets;
-        targets = new ArrayList<DatasourceVariable>();
+        List<DataSourceVariable> targetsBefore = targets;
+        targets = new ArrayList<DataSourceVariable>();
 
-        for (DatasourceVariableDto source : sources) {
+        for (DataSourceVariableDto source : sources) {
             boolean existsBefore = false;
-            for (DatasourceVariable target : targetsBefore) {
+            for (DataSourceVariable target : targetsBefore) {
                 if (source.getVariable().equals(target.getVariable())) {
                     targets.add(dataSourceVariableDtoToDo(source, target));
                     existsBefore = true;
@@ -219,12 +219,12 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return targets;
     }
     
-    private DatasourceVariable dataSourceVariableDtoToDo(DatasourceVariableDto source) {
-        DatasourceVariable target = new DatasourceVariable(source.getVariable(), source.getCategory());
+    private DataSourceVariable dataSourceVariableDtoToDo(DataSourceVariableDto source) {
+        DataSourceVariable target = new DataSourceVariable(source.getVariable(), source.getCategory());
         return target;
     }
 
-    private DatasourceVariable dataSourceVariableDtoToDo(DatasourceVariableDto source, DatasourceVariable target) {
+    private DataSourceVariable dataSourceVariableDtoToDo(DataSourceVariableDto source, DataSourceVariable target) {
         target.setVariable(source.getVariable());
         target.setCategory(source.getCategory());
         return target;

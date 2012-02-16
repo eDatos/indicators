@@ -185,7 +185,7 @@
 
   
 	<!-- **************************************************************************************	-->
-	<!--    INDICATOR 2											                      	-->
+	<!--    INDICATOR 2											                     		 	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
 	<TBL_INDICATORS
@@ -317,20 +317,36 @@
 			/>			
 			
 				<TBL_DATA_SOURCES
+					ID="50"
+					UUID="Indicator-3-v1-DataSource-1"
+					QUERY_GPE="query-gpe Indicator-3-v1-DataSource-1"
+					PX="px Indicator-3-v1-DataSource-1"
+					TEMPORARY_VARIABLE="temporary v Indicator-3-v1-DataSource-1"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-3-v1-DataSource-1"
+					INDICATOR_VERSION_FK="4"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_DATA_SOURCE_VARIABLES
 						ID="50"
-						UUID="Indicator-3-v1-DataSource-1"
-						QUERY_GPE="query-gpe Indicator-3-v1-DataSource-1"
-						PX="px Indicator-3-v1-DataSource-1"
-						TEMPORARY_VARIABLE="temporary v Indicator-3-v1-DataSource-1"
-						GEOGRAPHIC_VARIABLE="geographic v Indicator-3-v1-DataSource-1"
-						INDICATOR_VERSION_FK="4"
+						UUID="Indicator-3-v1-DataSource-1-Var-1"
+						VARIABLE="variable Indicator-3-v1-DataSource-1-Var-1"
+						CATEGORY="category Indicator-3-v1-DataSource-1-Var-1"
+						DATA_SOURCE_FK="50"
 						
 						VERSION="1"
 						CREATED_BY="user1"
 						CREATED_DATE="2011-03-03 01:02:04"
 						CREATED_DATE_TZ="Europe/London"
 						LAST_UPDATED_BY="user2"
-						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED="2011-03-04 05:06:07"
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 			

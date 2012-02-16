@@ -86,7 +86,7 @@ Application Indicators {
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
-	    	"Creates a version on draft of an indicators system in production. Returns new version created"
+	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems. Retrieves last versions"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
@@ -132,8 +132,8 @@ Application Indicators {
 //	    	publishIndicator(String uuid) throws MetamacException;	    		    	
 //	    	"Archives indicator"
 //	    	archiveIndicator(String uuid) throws MetamacException;	    		    	
-//	    	"Creates a version on draft of an indicator in production. Returns new version created"
-//	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
+	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
+	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators. Retrieves last versions"
 	    	List<@IndicatorDto> findIndicators() throws MetamacException;
 	    	"Finds published indicators"
@@ -378,7 +378,7 @@ Application Indicators {
 			"Geographic variable"
 			String geographicVariable required;
 			"Other variables fixing one category"
-			- Bag<@DatasourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
+			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			
 			// Relations
             "Indicator version"
@@ -394,7 +394,7 @@ Application Indicators {
         }  	   
 
 		"Variable of data source"
-        Entity DatasourceVariable {
+        Entity DataSourceVariable {
         	databaseTable = "TBL_DATA_SOURCE_VARIABLES"
         	hint="idSequence=DATA_SOURCE_VARIABLES"
         	gap
@@ -538,12 +538,11 @@ Application Indicators {
 			"Geographic variable"
 			String geographicVariable;
 			"Other variables fixing one category"
-			- List<@DatasourceVariableDto> otherVariables; 
+			- List<@DataSourceVariableDto> otherVariables; 
 	    }
 	    
 	    "Dto for variables and categories"
-	   	DataTransferObject DatasourceVariableDto {
-	   	
+	   	DataTransferObject DataSourceVariableDto {
 	   		"Variable"
 			String variable;
 			"Category fixed"

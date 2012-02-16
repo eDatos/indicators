@@ -14,12 +14,12 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
-import es.gobcan.istac.indicators.core.domain.DatasourceVariable;
+import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -134,17 +134,17 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         return target;
     }
     
-    private List<DatasourceVariableDto> dataSourceVariableDoToDto(List<DatasourceVariable> sources) {
-        List<DatasourceVariableDto> targets = new ArrayList<DatasourceVariableDto>();
-        for (DatasourceVariable source : sources) {
-            DatasourceVariableDto target = dataSourceVariableDoToDto(source);
+    private List<DataSourceVariableDto> dataSourceVariableDoToDto(List<DataSourceVariable> sources) {
+        List<DataSourceVariableDto> targets = new ArrayList<DataSourceVariableDto>();
+        for (DataSourceVariable source : sources) {
+            DataSourceVariableDto target = dataSourceVariableDoToDto(source);
             targets.add(target);
         }
         return targets;
     }
 
-    private DatasourceVariableDto dataSourceVariableDoToDto(DatasourceVariable source) {
-        DatasourceVariableDto target = new DatasourceVariableDto();
+    private DataSourceVariableDto dataSourceVariableDoToDto(DataSourceVariable source) {
+        DataSourceVariableDto target = new DataSourceVariableDto();
         target.setVariable(source.getVariable());
         target.setCategory(source.getCategory());
         return target;

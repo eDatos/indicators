@@ -18,9 +18,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -1279,119 +1280,123 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     // assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
     // }
     // }
-    //
-    // @Override
-    // @Test
-    // public void testVersioningIndicator() throws Exception {
-    //
-    // String uuid = INDICATOR_3;
-    // String newVersionExpected = "12.000";
-    //
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
-    //
-    // IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
-    //
-    // // Validate
-    // assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
-    // IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
-    //
-    // {
-    // IndicatorDto indicatorDtoProduction = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, newVersionExpected);
-    // IndicatorDto indicatorDtoDiffusion = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
-    //
-    // IndicatorsAsserts.assertEqualsIndicator(indicatorDtoDiffusion, indicatorDtoProduction);
-    //
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoProduction.getState());
-    // assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
-    // // DataSources
-    // List<DataSourceDto> dataSources = indicatorsServiceFacade.findDataSources(getServiceContext(), indicatorDtoProduction.getUuid(), indicatorDtoProduction.getProductionVersion());
-    // assertEquals(1, dataSources.size());
-    // IndicatorsAsserts.assertEqualsInternationalString(dataSources.get(0).getName(), "es", "Título IndSys-3-v1-DataSource-1", "en", "Title IndSys-3-v1-DataSource-1");
-    // assertEquals(1, dataSources.get(0).getSubdataSources().size());
-    // IndicatorsAsserts.assertEqualsInternationalString(dataSources.get(0).getSubdataSources().get(0).getName(), "es", "Título IndSys-3-v1-DataSource-1A", "en", "Title IndSys-3-v1-DataSource-1A");
-    //
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoDiffusion.getState());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
-    // }
-    // }
-    //
-    // @Test
-    // public void testVersioningIndicatorVersionMinor() throws Exception {
-    //
-    // String uuid = INDICATOR_3;
-    // String newVersionExpected = "11.034";
-    //
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
-    //
-    // IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
-    //
-    // // Validate
-    // assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
-    // IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
-    //
-    // {
-    // IndicatorDto indicatorDtoProduction = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, newVersionExpected);
-    // IndicatorDto indicatorDtoDiffusion = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
-    //
-    // IndicatorsAsserts.assertEqualsIndicator(indicatorDtoDiffusion, indicatorDtoProduction);
-    //
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoProduction.getState());
-    // assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
-    //
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoDiffusion.getState());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
-    // assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
-    // }
-    // }
-    //
-    // @Test
-    // public void testVersioningIndicatorErrorNotExists() throws Exception {
-    //
-    // try {
-    // indicatorsServiceFacade.versioningIndicator(getServiceContext(), NOT_EXISTS, VersiontTypeEnum.MINOR);
-    // fail("Indicator not exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testVersioningIndicatorErrorAlreadyExistsProduction() throws Exception {
-    //
-    // String uuid = INDICATOR_2;
-    //
-    // try {
-    // indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
-    // fail("Indicator already exists in production");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-    // assertEquals(IndicatorStateEnum.ARCHIVED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-    // }
-    // }
+
+    @Override
+    @Test
+    public void testVersioningIndicator() throws Exception {
+
+        String uuid = INDICATOR_3;
+        String newVersionExpected = "12.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
+        assertEquals(null, indicatorDto.getProductionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+
+        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+
+        // Validate
+        assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
+        assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
+
+        {
+            IndicatorDto indicatorDtoProduction = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, newVersionExpected);
+            IndicatorDto indicatorDtoDiffusion = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
+
+            IndicatorsAsserts.assertEqualsIndicator(indicatorDtoDiffusion, indicatorDtoProduction);
+
+            assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoProduction.getState());
+            assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
+            assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
+            // Data sources
+            List<DataSourceDto> dataSources = indicatorsServiceFacade.findDataSources(getServiceContext(), indicatorDtoProduction.getUuid(), indicatorDtoProduction.getProductionVersion());
+            assertEquals(1, dataSources.size());
+            assertEquals("query-gpe Indicator-3-v1-DataSource-1", dataSources.get(0).getQueryGpe());
+            assertEquals("px Indicator-3-v1-DataSource-1", dataSources.get(0).getPx());
+            assertEquals("temporary v Indicator-3-v1-DataSource-1", dataSources.get(0).getTemporaryVariable());
+            assertEquals("geographic v Indicator-3-v1-DataSource-1", dataSources.get(0).getGeographicVariable());
+            assertEquals(1, dataSources.get(0).getOtherVariables().size());
+            assertEquals("variable Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getVariable());
+            assertEquals("category Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getCategory());
+            
+            assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoDiffusion.getState());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
+            assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorVersionMinor() throws Exception {
+
+        String uuid = INDICATOR_3;
+        String newVersionExpected = "11.034";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
+        assertEquals(null, indicatorDto.getProductionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+
+        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+
+        // Validate
+        assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
+        assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
+
+        {
+            IndicatorDto indicatorDtoProduction = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, newVersionExpected);
+            IndicatorDto indicatorDtoDiffusion = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
+
+            IndicatorsAsserts.assertEqualsIndicator(indicatorDtoDiffusion, indicatorDtoProduction);
+
+            assertEquals(IndicatorStateEnum.DRAFT, indicatorDtoProduction.getState());
+            assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
+            assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
+
+            assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDtoDiffusion.getState());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
+            assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorErrorNotExists() throws Exception {
+
+        try {
+            indicatorsServiceFacade.versioningIndicator(getServiceContext(), NOT_EXISTS, VersiontTypeEnum.MINOR);
+            fail("Indicator not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorErrorAlreadyExistsProduction() throws Exception {
+
+        String uuid = INDICATOR_2;
+
+        try {
+            indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+            fail("Indicator already exists in production");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.ARCHIVED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+        }
+    }
 
     @Override
     @Test
@@ -1513,14 +1518,14 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         dataSourceDto.setPx("px1");
         dataSourceDto.setTemporaryVariable("temporaryVariable1");
         dataSourceDto.setGeographicVariable("geographicVariable1");
-        DatasourceVariableDto datasourceVariableDto1 = new DatasourceVariableDto();
-        datasourceVariableDto1.setVariable("variable1");
-        datasourceVariableDto1.setCategory("category1");
-        dataSourceDto.addOtherVariable(datasourceVariableDto1);
-        DatasourceVariableDto datasourceVariableDto2 = new DatasourceVariableDto();
-        datasourceVariableDto2.setVariable("variable2");
-        datasourceVariableDto2.setCategory("category2");
-        dataSourceDto.addOtherVariable(datasourceVariableDto2);
+        DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
+        dataSourceVariableDto1.setVariable("variable1");
+        dataSourceVariableDto1.setCategory("category1");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto1);
+        DataSourceVariableDto dataSourceVariableDto2 = new DataSourceVariableDto();
+        dataSourceVariableDto2.setVariable("variable2");
+        dataSourceVariableDto2.setCategory("category2");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto2);
 
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
@@ -1702,10 +1707,10 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
         dataSourceDto.setTemporaryVariable("newTemporary");
         dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
-        DatasourceVariableDto datasourceVariableDto3 = new DatasourceVariableDto();
-        datasourceVariableDto3.setVariable("variable3new");
-        datasourceVariableDto3.setCategory("category3new");
-        dataSourceDto.addOtherVariable(datasourceVariableDto3);
+        DataSourceVariableDto dataSourceVariableDto3 = new DataSourceVariableDto();
+        dataSourceVariableDto3.setVariable("variable3new");
+        dataSourceVariableDto3.setCategory("category3new");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto3);
 
         // Update
         indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);

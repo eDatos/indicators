@@ -8,13 +8,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TBL_DATA_SOURCE_VARIABLES")
-public class DatasourceVariable extends DatasourceVariableBase {
+public class DataSourceVariable extends DataSourceVariableBase {
     private static final long serialVersionUID = 1L;
 
-    protected DatasourceVariable() {
+    protected DataSourceVariable() {
     }
 
-    public DatasourceVariable(String variable, String category) {
+    public DataSourceVariable(String variable, String category) {
         super(variable, category);
     }
 }

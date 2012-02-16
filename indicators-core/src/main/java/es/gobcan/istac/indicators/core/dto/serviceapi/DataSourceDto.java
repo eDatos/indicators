@@ -11,13 +11,13 @@ public class DataSourceDto extends DataSourceDtoBase {
     public DataSourceDto() {
     }
     
-    public DatasourceVariableDto getOtherVariable(String variable) {
+    public DataSourceVariableDto getOtherVariable(String variable) {
         if (variable == null) {
             return null;
         }
-        for (DatasourceVariableDto datasourceVariableDto: getOtherVariables()) {
-            if (datasourceVariableDto.getVariable().equals(variable)) {
-                return datasourceVariableDto;
+        for (DataSourceVariableDto dataSourceVariableDto: getOtherVariables()) {
+            if (dataSourceVariableDto.getVariable().equals(variable)) {
+                return dataSourceVariableDto;
             }
         }
         return null;

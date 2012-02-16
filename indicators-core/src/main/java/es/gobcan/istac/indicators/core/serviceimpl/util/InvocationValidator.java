@@ -295,6 +295,18 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkVersioningIndicator(String uuid, VersiontTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+        ValidationUtils.checkParameterRequired(versionType, "VERSION_TYPE", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkFindIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
 

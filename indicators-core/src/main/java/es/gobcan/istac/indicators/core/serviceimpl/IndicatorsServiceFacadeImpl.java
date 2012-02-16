@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
@@ -251,34 +252,33 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // indicatorInDiffusion.setArchiveUser(ctx.getUserId());
     // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
     // }
-    //
-    // // TODO copiar data sources
-    // @Override
-    // public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
-    //
-    // Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
-    // if (indicator.getProductionVersion() != null) {
-    // throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), ServiceExceptionType.INDICATOR_WRONG_STATE.getMessageForReasonType(),
-    // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
-    // }
-    //
-    // // Initialize new version, copying values of version in diffusion
-    // IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, true);
-    // IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
-    // indicatorNewVersion.setState(IndicatorStateEnum.DRAFT);
-    // indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
-    //
-    // // Create
-    // IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicatorVersion(ctx, indicator, indicatorNewVersion);
-    //
-    // // Transform to Dto
-    // IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
-    // return indicatorDto;
-    // }
-    //
+
+    // TODO copiar data sources
+    @Override
+    public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
+
+        Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, uuid);
+        if (indicator.getProductionVersion() != null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
+        }
+
+        // Initialize new version, copying values of version in diffusion
+        IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, true);
+        IndicatorVersion indicatorNewVersion = DoCopyUtils.copy(indicatorVersionDiffusion);
+        indicatorNewVersion.setState(IndicatorStateEnum.DRAFT);
+        indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
+
+        // Create
+        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicatorVersion(ctx, indicator, indicatorNewVersion);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
+        return indicatorDto;
+    }
+
     // TODO paginación
     // TODO criteria
     // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?

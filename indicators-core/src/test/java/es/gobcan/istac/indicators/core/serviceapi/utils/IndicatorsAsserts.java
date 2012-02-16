@@ -10,7 +10,7 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DatasourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -52,8 +52,8 @@ public class IndicatorsAsserts {
         assertEquals(expected.getGeographicVariable(), actual.getGeographicVariable());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
         
-        for (DatasourceVariableDto expectedDatasourceVariable : expected.getOtherVariables()) {
-            assertEquals(expectedDatasourceVariable.getCategory(), actual.getOtherVariable(expectedDatasourceVariable.getVariable()).getCategory());
+        for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
+            assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());
         }
     }
     
