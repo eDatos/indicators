@@ -74,6 +74,10 @@ Application Indicators {
 	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves an indicators system published"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
+	    	"Retrieves an indicators system by code. Retrieves last version"
+	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code) throws MetamacException;
+	    	"Retrieves an indicators system by code. Retrieves diffusion version"
+	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	"Deletes a version of an indicators system. Version to remove must be not published nor archived"
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Sends indicators system to production validation"
@@ -167,7 +171,7 @@ Application Indicators {
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
 			"Version in production"
             - @IndicatorsSystemVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
-            "Version in difussion"
+            "Version in diffusion"
             - @IndicatorsSystemVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
 			"All versions"
 			- Bag<@IndicatorsSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorsSystem orderby="versionNumber asc";
@@ -284,7 +288,7 @@ Application Indicators {
 			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
 			"Version in production"
             - @IndicatorVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
-            "Version in difussion"
+            "Version in diffusion"
             - @IndicatorVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
 			"All versions"
 			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";

@@ -84,7 +84,6 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorsAsserts.assertEqualsDate("2011-01-03 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
         IndicatorsAsserts.assertEqualsDate("2011-01-04 04:02:04", indicatorsSystemDto.getPublicationDate());
         assertNull(indicatorsSystemDto.getArchiveDate());
-
     }
 
     @Test
@@ -240,6 +239,85 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Override
+    @Test
+    public void testRetrieveIndicatorsSystemByCode() throws Exception {
+
+        String code = "CODE-1";
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code);
+
+        assertNotNull(indicatorsSystemDto);
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
+        assertEquals(indicatorsSystemDto.getProductionVersion(), indicatorsSystemDto.getVersionNumber());
+        assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorsSystemDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorsSystemByCodeErrorNotExists() throws Exception {
+
+        String code = "CODE_NOT_EXISTS";
+
+        try {
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Override
+    @Test
+    public void testRetrieveIndicatorsSystemPublishedByCode() throws Exception {
+
+        String code = "CODE-1";
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
+
+        assertNotNull(indicatorsSystemDto);
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
+        assertEquals(indicatorsSystemDto.getDiffusionVersion(), indicatorsSystemDto.getVersionNumber());
+        assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorsSystemDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorsSystemPublishedByCodeErrorNotExists() throws Exception {
+
+        String code = "CODE_NOT_EXISTS";
+
+        try {
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testRetrieveIndicatorsSystemPublishedByCodeErrorNotExistsInDiffusion() throws Exception {
+
+        String code = "CODE-2";
+
+        try {
+            indicatorsSystemsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 

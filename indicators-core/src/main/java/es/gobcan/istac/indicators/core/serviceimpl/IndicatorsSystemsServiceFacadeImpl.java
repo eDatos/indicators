@@ -104,6 +104,56 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsSystemDto;
     }
 
+    public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemByCode(code, null);
+
+        // Retrieve indicators system by code
+        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
+        if (indicatorsSystems.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
+        } else if (indicatorsSystems.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
+        }
+
+        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
+        String lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
+    }
+
+    public IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemPublishedByCode(code, null);
+
+        // Retrieve indicators system by code
+        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
+        if (indicatorsSystems.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
+        } else if (indicatorsSystems.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
+        }
+
+        // Retrieve only published
+        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
+        if (indicatorsSystem.getDiffusionVersion() == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+        }
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), indicatorsSystem.getDiffusionVersion().getVersionNumber());
+        if (!IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemVersion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+        }
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
+    }
+
     // TODO comprobar que borra instancias de indicadores. No borra indicadores asociados mediante instancias de indicadores
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
