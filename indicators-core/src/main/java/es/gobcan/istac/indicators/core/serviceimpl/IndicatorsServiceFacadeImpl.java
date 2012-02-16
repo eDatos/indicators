@@ -180,30 +180,28 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
     }
 
-    // @Override
-    // public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
-    //
-    // // Validation of parameters
-    // InvocationValidator.checkRejectIndicatorValidation(uuid, null);
-    //
-    // // Retrieve version in production (state can be production or diffusion validation)
-    // IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-    // if (indicatorInProduction == null
-    // || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION
-    // .equals(indicatorInProduction.getState()))) {
-    // throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE,
-    // uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
-    // }
-    //
-    // // Update state
-    // indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
-    // indicatorInProduction.setProductionValidationDate(null);
-    // indicatorInProduction.setProductionValidationUser(null);
-    // indicatorInProduction.setDiffusionValidationDate(null);
-    // indicatorInProduction.setDiffusionValidationUser(null);
-    // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-    // }
-    //
+    @Override
+    public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRejectIndicatorValidation(uuid, null);
+
+        // Retrieve version in production (state can be production or diffusion validation)
+        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
+        if (indicatorInProduction == null
+                || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()))) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
+        }
+
+        // Update state
+        indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
+        indicatorInProduction.setProductionValidationDate(null);
+        indicatorInProduction.setProductionValidationUser(null);
+        indicatorInProduction.setDiffusionValidationDate(null);
+        indicatorInProduction.setDiffusionValidationUser(null);
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+    }
+
     // // TODO comprobar que todos los indicadores tienen alguna versión en difusión
     // TODO el estado anterior también puede ser PUBLICATION_FAILED
     // TODO Implica realizar también INDICADORES-CU-6

@@ -130,8 +130,8 @@ Application Indicators {
 	    	sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 	    	"Sends indicator to diffusion validation"
 	    	sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
-//	    	"Rejects validation of indicator"
-//	    	rejectIndicatorValidation(String uuid) throws MetamacException;
+	    	"Rejects validation of indicator"
+	    	rejectIndicatorValidation(String uuid) throws MetamacException;
 //	    	"Publishes indicator"
 //	    	publishIndicator(String uuid) throws MetamacException;	    		    	
 //	    	"Archives indicator"
