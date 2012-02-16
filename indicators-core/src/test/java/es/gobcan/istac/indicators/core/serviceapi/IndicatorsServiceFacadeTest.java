@@ -1702,12 +1702,18 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
         dataSourceDto.setTemporaryVariable("newTemporary");
+        dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
+        DatasourceVariableDto datasourceVariableDto3 = new DatasourceVariableDto();
+        datasourceVariableDto3.setVariable("variable3new");
+        datasourceVariableDto3.setCategory("category3new");
+        dataSourceDto.addOtherVariable(datasourceVariableDto3);
 
         // Update
         indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
 
         // Validation
         DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+        assertEquals(3, dataSourceDtoUpdated.getOtherVariables().size());
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
     }
 
