@@ -35,26 +35,30 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
 
-    private static String             NOT_EXISTS                   = "not-exists";
+    private static String             NOT_EXISTS                              = "not-exists";
 
     // Indicators
-    private static String             INDICATOR_1                  = "Indicator-1";
-    private static String             INDICATOR_2                  = "Indicator-2";
-    private static String             INDICATOR_3                  = "Indicator-3";
-    private static String             INDICATOR_3_VERSION          = "11.033";
-    private static String             INDICATOR_4                  = "Indicator-4";
-    private static String             INDICATOR_5                  = "Indicator-5";
-    private static String             INDICATOR_6                  = "Indicator-6";
-    private static String             INDICATOR_7                  = "Indicator-7";
-    private static String             INDICATOR_8                  = "Indicator-8";
-    private static String             INDICATOR_9                  = "Indicator-9";
+    private static String             INDICATOR_1                             = "Indicator-1";
+    private static String             INDICATOR_2                             = "Indicator-2";
+    private static String             INDICATOR_3                             = "Indicator-3";
+    private static String             INDICATOR_3_VERSION                     = "11.033";
+    private static String             INDICATOR_4                             = "Indicator-4";
+    private static String             INDICATOR_5                             = "Indicator-5";
+    private static String             INDICATOR_6                             = "Indicator-6";
+    private static String             INDICATOR_7                             = "Indicator-7";
+    private static String             INDICATOR_8                             = "Indicator-8";
+    private static String             INDICATOR_9                             = "Indicator-9";
 
     // Data sources
-    private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
-    private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
-    private static String             DATA_SOURCE_2_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-2";
-    private static String             DATA_SOURCE_1_INDICATOR_2_V1 = "Indicator-2-v1-DataSource-1";
-    private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
+    private static String             DATA_SOURCE_1_INDICATOR_1_V1            = "Indicator-1-v1-DataSource-1";
+    private static String             DATA_SOURCE_1_INDICATOR_1_V2            = "Indicator-1-v2-DataSource-1";
+    private static String             DATA_SOURCE_2_INDICATOR_1_V2            = "Indicator-1-v2-DataSource-2";
+    private static String             DATA_SOURCE_1_INDICATOR_2_V1            = "Indicator-2-v1-DataSource-1";
+    private static String             DATA_SOURCE_1_INDICATOR_3               = "Indicator-3-v1-DataSource-1";
+
+    // Data sources variables
+    private static String             VARIABLE_1_DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1-Var-1";
+    private static String             VARIABLE_2_DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1-Var-2";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -203,7 +207,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[])e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -373,7 +377,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testDeleteIndicatorCheckDeleteDataSources() throws Exception {
 
@@ -1454,6 +1458,14 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPx());
         assertEquals("temporary v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporaryVariable());
         assertEquals("geographic v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicVariable());
+
+        // TODO obtener other variables
+        assertEquals(2, dataSourceDto.getOtherVariables().size());
+        assertEquals("variable Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getVariable());
+        assertEquals("category Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getCategory());
+        assertEquals("variable Indicator-1-v2-DataSource-1-Variable-2", dataSourceDto.getOtherVariables().get(1).getVariable());
+        assertEquals("category Indicator-1-v2-DataSource-1-Variable-2", dataSourceDto.getOtherVariables().get(1).getCategory());
+
         IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", dataSourceDto.getCreatedDate());
         assertEquals("user1", dataSourceDto.getCreatedBy());
         IndicatorsAsserts.assertEqualsDate("2011-03-04 05:06:07", dataSourceDto.getLastUpdated());
