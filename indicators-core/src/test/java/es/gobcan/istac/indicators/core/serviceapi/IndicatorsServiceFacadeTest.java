@@ -770,7 +770,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorStateEnum.DRAFT, indicatorDto.getState());
-            
+
             // Check zero data sources
             List<DataSourceDto> dataSources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
             assertEquals(0, dataSources.size());
@@ -787,103 +787,103 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    // @Override
-    // @Test
-    // public void testSendIndicatorToDiffusionValidation() throws Exception {
-    //
-    // String uuid = INDICATOR_4;
-    // String versionNumber = "1.000";
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-    // assertEquals(null, indicatorDto.getDiffusionVersion());
-    // assertEquals("1.000", indicatorDto.getProductionVersion());
-    // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, indicatorDto.getState());
-    // }
-    //
-    // // Sends to diffusion validation
-    // indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
-    //
-    // // Validation
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-    // assertEquals(null, indicatorDto.getDiffusionVersion());
-    // assertEquals("1.000", indicatorDto.getProductionVersion());
-    // assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorDto.getState());
-    //
-    // IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorDto.getProductionValidationDate());
-    // assertEquals("user1", indicatorDto.getProductionValidationUser());
-    // assertTrue(DateUtils.isSameDay(new Date(), indicatorDto.getDiffusionValidationDate()));
-    // assertEquals(getServiceContext().getUserId(), indicatorDto.getDiffusionValidationUser());
-    // assertNull(indicatorDto.getPublicationDate());
-    // assertNull(indicatorDto.getPublicationUser());
-    // assertNull(indicatorDto.getArchiveDate());
-    // assertNull(indicatorDto.getArchiveUser());
-    // }
-    // }
-    //
-    // @Test
-    // public void testSendIndicatorToDiffusionValidationErrorNotExists() throws Exception {
-    //
-    // try {
-    // indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), NOT_EXISTS);
-    // fail("Indicator not exists");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testSendIndicatorToDiffusionValidationErrorWrongStateDraft() throws Exception {
-    //
-    // String uuid = INDICATOR_2;
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
-    // assertEquals(IndicatorStateEnum.DRAFT, indicatorDto.getState());
-    // assertEquals("1.000", indicatorDto.getProductionVersion());
-    // assertEquals(null, indicatorDto.getDiffusionVersion());
-    // }
-    //
-    // try {
-    // indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
-    // fail("Indicator is not draft");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    // }
-    //
-    // @Test
-    // public void testSendIndicatorToDiffusionValidationErrorWrongStatePublished() throws Exception {
-    //
-    // String uuid = INDICATOR_3;
-    //
-    // {
-    // IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
-    // assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDto.getState());
-    // assertEquals(null, indicatorDto.getProductionVersion());
-    // assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
-    // }
-    //
-    // try {
-    // indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
-    // fail("Indicator is not production validation");
-    // } catch (MetamacException e) {
-    // assertEquals(1, e.getExceptionItems().size());
-    // assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
-    // assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-    // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-    // assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
-    // }
-    // }
-    //
+    @Override
+    @Test
+    public void testSendIndicatorToDiffusionValidation() throws Exception {
+
+        String uuid = INDICATOR_4;
+        String versionNumber = "1.000";
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals("1.000", indicatorDto.getProductionVersion());
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, indicatorDto.getState());
+        }
+
+        // Sends to diffusion validation
+        indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
+
+        // Validation
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals("1.000", indicatorDto.getProductionVersion());
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorDto.getState());
+
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorDto.getProductionValidationDate());
+            assertEquals("user1", indicatorDto.getProductionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDto.getDiffusionValidationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorDto.getDiffusionValidationUser());
+            assertNull(indicatorDto.getPublicationDate());
+            assertNull(indicatorDto.getPublicationUser());
+            assertNull(indicatorDto.getArchiveDate());
+            assertNull(indicatorDto.getArchiveUser());
+        }
+    }
+
+    @Test
+    public void testSendIndicatorToDiffusionValidationErrorNotExists() throws Exception {
+
+        try {
+            indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), NOT_EXISTS);
+            fail("Indicator not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testSendIndicatorToDiffusionValidationErrorWrongStateDraft() throws Exception {
+
+        String uuid = INDICATOR_2;
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
+            assertEquals(IndicatorStateEnum.DRAFT, indicatorDto.getState());
+            assertEquals("1.000", indicatorDto.getProductionVersion());
+            assertEquals(null, indicatorDto.getDiffusionVersion());
+        }
+
+        try {
+            indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
+            fail("Indicator is not draft");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    public void testSendIndicatorToDiffusionValidationErrorWrongStatePublished() throws Exception {
+
+        String uuid = INDICATOR_3;
+
+        {
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
+            assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDto.getState());
+            assertEquals(null, indicatorDto.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+        }
+
+        try {
+            indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
+            fail("Indicator is not production validation");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
     // @Override
     // @Test
     // public void testRejectIndicatorValidation() throws Exception {
