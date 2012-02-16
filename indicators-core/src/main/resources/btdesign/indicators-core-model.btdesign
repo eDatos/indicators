@@ -126,8 +126,8 @@ Application Indicators {
 	    	@IndicatorDto retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    	"Deletes a version of an indicator. Version to remove must be not published nor archived"
 	    	deleteIndicator(String uuid) throws MetamacException;
-//	    	"Sends indicator to production validation"
-//	    	sendIndicatorToProductionValidation(String uuid) throws MetamacException;
+	    	"Sends indicator to production validation"
+	    	sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 //	    	"Sends indicator to diffusion validation"
 //	    	sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 //	    	"Rejects validation of indicator"
