@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorsSystemServiceFacade.
- * TODO no extender los DTO de auditableDto, porque tienen el Id
  * TODO En los "create", ¿devolver una uri, en lugar del uuid? (ojo! uris rests?, o serán con el code?)
  */
 @Service("indicatorsSystemServiceFacade")

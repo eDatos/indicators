@@ -1459,7 +1459,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         assertEquals("temporary v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporaryVariable());
         assertEquals("geographic v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicVariable());
 
-        // TODO obtener other variables
         assertEquals(2, dataSourceDto.getOtherVariables().size());
         assertEquals("variable Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getVariable());
         assertEquals("category Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getCategory());
@@ -1610,16 +1609,16 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         // Delete dataSource
         indicatorsServiceFacade.deleteDataSource(getServiceContext(), uuid);
 
-        // Validation TODO
-        // try {
-        // indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-        // fail("DataSource deleted");
-        // } catch (MetamacException e) {
-        // assertEquals(1, e.getExceptionItems().size());
-        // assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-        // assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-        // assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        // }
+        // Validation
+        try {
+            indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+            fail("DataSource deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_SOURCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Test

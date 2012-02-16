@@ -25,7 +25,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorServiceFacade.
- * TODO no extender los DTO de auditableDto, porque tienen el Id
  */
 @Service("indicatorsServiceFacade")
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
@@ -253,7 +252,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
     // }
     //
-    // // TODO copiar orígenes de datos
+    // // TODO copiar data sources
     // @Override
     // public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
     //
@@ -392,7 +391,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return dataSourcesDto;
     }
 
-    // TODO guardar other variables
     @Override
     public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
 

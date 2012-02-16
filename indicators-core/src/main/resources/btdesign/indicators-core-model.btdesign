@@ -414,7 +414,7 @@ Application Indicators {
 		basePackage=es.gobcan.istac.indicators.core.dto
 		
 		"Dto for indicators system"
-	   	DataTransferObject IndicatorsSystemDto extends @AuditableDto {
+	   	DataTransferObject IndicatorsSystemDto extends @AuditDto {
 			
 			"Unique uuid"
 			String uuid;
@@ -458,7 +458,7 @@ Application Indicators {
 	    }
 	    
 	    "Dto for indicator"
-	   	DataTransferObject IndicatorDto extends @AuditableDto {
+	   	DataTransferObject IndicatorDto extends @AuditDto {
 			
 			"Unique uuid"
 			String uuid;
@@ -509,7 +509,7 @@ Application Indicators {
 	    }
 	    
 	    "Dto for dimension"
-	   	DataTransferObject DimensionDto extends @AuditableDto {
+	   	DataTransferObject DimensionDto extends @AuditDto {
 			
 			"Unique uuid"
 			String uuid;
@@ -524,7 +524,7 @@ Application Indicators {
 	    }
 	    
 	    "Dto for data source"
-	   	DataTransferObject DataSourceDto extends @AuditableDto {
+	   	DataTransferObject DataSourceDto extends @AuditDto {
 			gap
 	   		
 			"Unique uuid"
@@ -549,6 +549,14 @@ Application Indicators {
 			"Category fixed"
 			String category;
 	    }
+	    
+	    "AuditDto"
+    	DataTransferObject AuditDto {
+       		JAVADATE createdDate;
+       		String createdBy;
+       		JAVADATE lastUpdated;
+       		String lastUpdatedBy;
+    	}
 	}
 	
 	// ----------------------------------------------------------------
