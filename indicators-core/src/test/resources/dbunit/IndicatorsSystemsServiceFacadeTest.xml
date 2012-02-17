@@ -110,6 +110,40 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_INDICATOR_INSTANCES
+					ID="10"
+					UUID="IndSys-1-v2-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					DIMENSION_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					INDICATORS_SYSTEM_VERSION_FK="2"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>			
+				
+				<TBL_INDICATOR_INSTANCES
+					ID="20"
+					UUID="IndSys-1-v2-IInstance-2"
+					INDICATOR_UUID="IndicatorA"
+					DIMENSION_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					INDICATORS_SYSTEM_VERSION_FK="2"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>						
+			
 				<TBL_DIMENSIONS
 					ID="20"
 					UUID="IndSys-1-v2-Dimension-1"

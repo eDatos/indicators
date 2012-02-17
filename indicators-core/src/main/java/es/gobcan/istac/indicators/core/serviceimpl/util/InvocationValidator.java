@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -462,6 +463,18 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkCreateIndicatorInstance(String indicatorsSystemUuid, IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
+        checkIndicatorInstance(indicatorInstanceDto, exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
@@ -475,6 +488,16 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dimensionDto.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
         if (dimensionDto.getOrderInLevel() != null && dimensionDto.getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DIMENSION.ORDER_IN_LEVEL"));
+        }
+    }
+    
+    // TODO añadir el resto de atributos (query...)
+    private static void checkIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) {
+        ValidationUtils.checkParameterRequired(indicatorInstanceDto, "INDICATOR_INSTANCE", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getIndicatorUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+        if (indicatorInstanceDto.getOrderInLevel() != null && indicatorInstanceDto.getOrderInLevel() < 0) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.ORDER_IN_LEVEL"));
         }
     }
 

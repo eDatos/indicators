@@ -18,6 +18,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -25,6 +26,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -81,6 +83,20 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setTitle(internationalStringToDo(source.getTitle(), target.getTitle()));
         target.setOrderInLevel(source.getOrderInLevel());
         // Update action never updates dimensions children
+    }
+    
+    @Override
+    public IndicatorInstance indicatorInstanceDtoToDo(IndicatorInstanceDto source) {
+        IndicatorInstance target = new IndicatorInstance();
+        indicatorInstanceDtoToDo(source, target);
+        return target;
+    }
+
+    // TODO resto de atributos: query...
+    @Override
+    public void indicatorInstanceDtoToDo(IndicatorInstanceDto source, IndicatorInstance target) {
+        target.setIndicatorUuid(source.getIndicatorUuid());
+        target.setOrderInLevel(source.getOrderInLevel());
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
@@ -128,5 +129,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
         return indicatorsSystemVersion.getDimensions();
+    }
+
+    @Override
+    public IndicatorInstance createIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
+        return getIndicatorInstanceRepository().save(indicatorInstance);
+    }
+    
+    @Override
+    public IndicatorInstance updateIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
+        return getIndicatorInstanceRepository().save(indicatorInstance);
     }
 }

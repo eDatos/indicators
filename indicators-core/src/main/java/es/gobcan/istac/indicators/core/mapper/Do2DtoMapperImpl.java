@@ -16,12 +16,14 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 @Component
@@ -78,6 +80,23 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         for (Dimension dimensionChildren : source.getSubdimensions()) {
             target.getSubdimensions().add(dimensionDoToDto(dimensionChildren));
         }
+        return target;
+    }
+    
+    // TODO añadir el resto de atributos: query...
+    @Override
+    public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source) {
+        IndicatorInstanceDto target = new IndicatorInstanceDto();
+        target.setUuid(source.getUuid());
+        target.setIndicatorUuid(source.getIndicatorUuid());
+        target.setDimensionUuid(source.getDimension() != null ? source.getDimension().getUuid() : null);
+        target.setOrderInLevel(source.getOrderInLevel());
+        
+        target.setCreatedBy(source.getCreatedBy());
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        
         return target;
     }
 
