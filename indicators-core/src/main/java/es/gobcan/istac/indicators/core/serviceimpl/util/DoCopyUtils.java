@@ -11,8 +11,10 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
 
 public class DoCopyUtils {
 
@@ -26,11 +28,11 @@ public class DoCopyUtils {
         target.setAcronym(copy(source.getAcronym()));
         target.setObjetive(copy(source.getObjetive()));
         target.setDescription(copy(source.getDescription()));
-        target.getDimensions().addAll(copyDimensions(source.getDimensions(), target));
-        
+        copyElementsLevels(source, target);
+
         return target;
     }
-    
+
     /**
      * Create a new IndicatorVersion copying values from a source
      */
@@ -43,40 +45,72 @@ public class DoCopyUtils {
         target.setNotes(copy(source.getNotes()));
         target.setCommentary(copy(source.getCommentary()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
-        
+
         return target;
     }
 
     /**
-     * Copy dimensions of an indicators system
+     * 
      */
-    private static List<Dimension> copyDimensions(List<Dimension> sources, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
-        List<Dimension> targets = new ArrayList<Dimension>();
-        for (Dimension source : sources) {
-            Dimension target = copy(source);
+    private static void copyElementsLevels(IndicatorsSystemVersion indicatorsSystemVersionSource, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
+        List<ElementLevel> targets = new ArrayList<ElementLevel>();
+        List<ElementLevel> sources = indicatorsSystemVersionSource.getChildrenFirstLevel();
+        for (ElementLevel source : sources) {
+            ElementLevel target = copy(source, indicatorsSystemVersionTarget);
             target.setParent(null);
             target.setIndicatorsSystemVersion(indicatorsSystemVersionTarget);
+            target.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersionTarget);
+            indicatorsSystemVersionTarget.getChildrenFirstLevel().add(target);
+            indicatorsSystemVersionTarget.getChildrenAllLevels().add(target);
             targets.add(target);
         }
-        return targets;
     }
     
     /**
-     * Copy a dimension
+     * Copy a ElementLevel
      */
-    private static Dimension copy(Dimension source) {
-        Dimension target = new Dimension();
-        target.setTitle(copy(source.getTitle()));
+    private static ElementLevel copy(ElementLevel source, IndicatorsSystemVersion indicatorsSystemVersionTarget) {
+        ElementLevel target = new ElementLevel();
+        if (source.getDimension() != null) {
+            Dimension dimensionTarget = copy(source.getDimension());
+            dimensionTarget.setElementLevel(target);
+            target.setDimension(dimensionTarget);
+        } else if (source.getIndicatorInstance() != null) {
+            IndicatorInstance indicatorInstanceTarget = copy(source.getIndicatorInstance());
+            indicatorInstanceTarget.setElementLevel(target);
+            target.setIndicatorInstance(indicatorInstanceTarget);
+        }
         target.setOrderInLevel(source.getOrderInLevel());
-        for (Dimension subdimensionSource : source.getSubdimensions()) {
-            Dimension subdimensionTarget = copy(subdimensionSource);
-            subdimensionTarget.setParent(target);
-            subdimensionTarget.setIndicatorsSystemVersion(null);
-            target.addSubdimension(subdimensionTarget);
+        
+        for (ElementLevel childrenSource : source.getChildren()) {
+            ElementLevel childrenTarget = copy(childrenSource, indicatorsSystemVersionTarget);
+            childrenTarget.setParent(target);
+            childrenTarget.setIndicatorsSystemVersion(indicatorsSystemVersionTarget);
+            childrenTarget.setIndicatorsSystemVersionFirstLevel(null);
+            target.addChildren(childrenTarget);
+            indicatorsSystemVersionTarget.getChildrenAllLevels().add(childrenTarget);
         }
         return target;
     }
+
+    /**
+     * Copy a dimension
+     */
+    public static Dimension copy(Dimension source) {
+        Dimension target = new Dimension();
+        target.setTitle(copy(source.getTitle()));
+        return target;
+    }
     
+    /**
+     * Copy an indicator instance
+     */
+    public static IndicatorInstance copy(IndicatorInstance source) {
+        IndicatorInstance target = new IndicatorInstance();
+        target.setIndicatorUuid(source.getIndicatorUuid());
+        return target;
+    }
+
     /**
      * Copy data sources of an indicator
      */
@@ -89,7 +123,7 @@ public class DoCopyUtils {
         }
         return targets;
     }
-    
+
     /**
      * Copy a data source
      */
@@ -102,7 +136,7 @@ public class DoCopyUtils {
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         return target;
     }
-    
+
     /**
      * Copy variables of a data source
      */
@@ -114,7 +148,7 @@ public class DoCopyUtils {
         }
         return targets;
     }
-    
+
     /**
      * Copy a data source variable
      */
@@ -131,7 +165,7 @@ public class DoCopyUtils {
         target.getTexts().addAll(copyLocalisedStrings(source.getTexts()));
         return target;
     }
-    
+
     private static Set<LocalisedString> copyLocalisedStrings(Set<LocalisedString> sources) {
         Set<LocalisedString> targets = new HashSet<LocalisedString>();
         for (LocalisedString source : sources) {

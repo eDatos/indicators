@@ -11,6 +11,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
         tables.add("TBL_LOCALISED_STRINGS");
+        tables.add("TBL_ELEMENTS_LEVELS");
         tables.add("TBL_INDICATOR_INSTANCES");
         tables.add("TBL_DIMENSIONS");
         tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
@@ -36,6 +37,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_INDICATOR_VERSIONS");
         sequences.add("SEQ_INDICATORS");
         sequences.add("SEQ_INDICATOR_INSTANCES");
+        sequences.add("SEQ_ELEMENTS_LEVELS");
         return sequences;
     }
 }

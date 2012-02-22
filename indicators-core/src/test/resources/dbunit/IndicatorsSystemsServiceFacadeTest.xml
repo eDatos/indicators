@@ -58,15 +58,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
-				
-				<TBL_DIMENSIONS
+			
+					<TBL_ELEMENTS_LEVELS
+						ID="10"
+						UUID="uuid-ignored-10"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="1"
+						IND_SYSTEM_VERSION_FIRST_FK="1"
+						DIMENSION_FK="10"
+						INDICATOR_INSTANCE_FK="[null]"
+						VERSION="1"
+					/>
+					<TBL_DIMENSIONS
 						ID="10"
 						UUID="IndSys-1-v1-Dimension-1"
 						TITLE_FK="26"
-						PARENT_FK="[null]"
-						ORDER_IN_LEVEL="1"
-						INDICATORS_SYSTEM_VERSION_FK="1"
-						
+
 						VERSION="1"
 						CREATED_BY="user1"
 						CREATED_DATE="2011-03-03 01:02:04"
@@ -110,47 +119,22 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_INDICATOR_INSTANCES
-					ID="10"
-					UUID="IndSys-1-v2-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
-					DIMENSION_FK="[null]"
-					ORDER_IN_LEVEL="1"
-					INDICATORS_SYSTEM_VERSION_FK="2"
-					
-					VERSION="1"
-					CREATED_BY="user1"
-					CREATED_DATE="2011-03-03 01:02:04"
-					CREATED_DATE_TZ="Europe/London"
-					LAST_UPDATED_BY="user2"
-					LAST_UPDATED="2011-03-04 05:06:07"
-					LAST_UPDATED_TZ="Europe/London"
-				/>			
-				
-				<TBL_INDICATOR_INSTANCES
-					ID="20"
-					UUID="IndSys-1-v2-IInstance-2"
-					INDICATOR_UUID="IndicatorA"
-					DIMENSION_FK="[null]"
-					ORDER_IN_LEVEL="2"
-					INDICATORS_SYSTEM_VERSION_FK="2"
-					
-					VERSION="1"
-					CREATED_BY="user1"
-					CREATED_DATE="2011-03-03 01:02:04"
-					CREATED_DATE_TZ="Europe/London"
-					LAST_UPDATED_BY="user2"
-					LAST_UPDATED="2011-03-04 05:06:07"
-					LAST_UPDATED_TZ="Europe/London"
-				/>						
-			
-				<TBL_DIMENSIONS
-					ID="20"
-					UUID="IndSys-1-v2-Dimension-1"
-					TITLE_FK="20"
+				<TBL_ELEMENTS_LEVELS
+					ID="15"
+					UUID="uuid-ignored-15"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="1"
-					INDICATORS_SYSTEM_VERSION_FK="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="2"
+					IND_SYSTEM_VERSION_FIRST_FK="2"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="15"
+					VERSION="1"
+				/>			
+				<TBL_INDICATOR_INSTANCES
+					ID="15"
+					UUID="IndSys-1-v2-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -159,15 +143,50 @@
 					LAST_UPDATED_BY="user2"
 					LAST_UPDATED="2011-03-04 05:06:07"
 					LAST_UPDATED_TZ="Europe/London"
+				/>		
+				
+				<TBL_ELEMENTS_LEVELS
+					ID="25"
+					UUID="uuid-ignored-25"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="2"
+					IND_SYSTEM_VERSION_FIRST_FK="2"
+					DIMENSION_FK="25"
+					INDICATOR_INSTANCE_FK="[null]"
+					VERSION="1"
+				/>
+				<TBL_DIMENSIONS
+					ID="25"
+					TITLE_FK="20"
+					UUID="IndSys-1-v2-Dimension-1"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"				
 				/>
 				
+						<TBL_ELEMENTS_LEVELS
+							ID="30"
+							UUID="uuid-ignored-30"
+							PARENT_FK="25"
+							ORDER_IN_LEVEL="1"
+							
+							IND_SYSTEM_VERSION_ALL_FK="2"
+							IND_SYSTEM_VERSION_FIRST_FK="[null]"
+							DIMENSION_FK="30"
+							INDICATOR_INSTANCE_FK="[null]"
+							VERSION="1"
+						/>				
 						<TBL_DIMENSIONS
 							ID="30"
 							UUID="IndSys-1-v2-Dimension-1A"
 							TITLE_FK="21"
-							PARENT_FK="20"
-							ORDER_IN_LEVEL="1"
-							INDICATORS_SYSTEM_VERSION_FK="[null]"
 							
 							VERSION="1"
 							CREATED_BY="user1"
@@ -177,14 +196,23 @@
 							LAST_UPDATED="2011-03-3 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
 						/>		
-						
+
+						<TBL_ELEMENTS_LEVELS
+							ID="40"
+							UUID="uuid-ignored-40"
+							PARENT_FK="25"
+							ORDER_IN_LEVEL="2"
+							
+							IND_SYSTEM_VERSION_ALL_FK="2"
+							IND_SYSTEM_VERSION_FIRST_FK="[null]"
+							DIMENSION_FK="40"
+							INDICATOR_INSTANCE_FK="[null]"
+							VERSION="1"
+						/>
 						<TBL_DIMENSIONS
 							ID="40"
-							UUID="IndSys-1-v2-Dimension-1B"
 							TITLE_FK="22"
-							PARENT_FK="20"
-							ORDER_IN_LEVEL="2"
-							INDICATORS_SYSTEM_VERSION_FK="[null]"
+							UUID="IndSys-1-v2-Dimension-1B"
 							
 							VERSION="1"
 							CREATED_BY="user1"
@@ -192,34 +220,79 @@
 							CREATED_DATE_TZ="Europe/London"
 							LAST_UPDATED_BY="user2"
 							LAST_UPDATED="2011-03-3 01:02:04"
-							LAST_UPDATED_TZ="Europe/London"						
+							LAST_UPDATED_TZ="Europe/London"							
 						/>			
 						
+								<TBL_ELEMENTS_LEVELS
+									ID="50"
+									UUID="uuid-ignored-50"
+									PARENT_FK="40"
+									ORDER_IN_LEVEL="1"
+									
+									IND_SYSTEM_VERSION_ALL_FK="2"
+									IND_SYSTEM_VERSION_FIRST_FK="[null]"
+									DIMENSION_FK="50"
+									INDICATOR_INSTANCE_FK="[null]"
+									VERSION="1"
+								/>
 								<TBL_DIMENSIONS
 									ID="50"
 									UUID="IndSys-1-v2-Dimension-1BA"
 									TITLE_FK="23"
-									PARENT_FK="40"
-									ORDER_IN_LEVEL="1"
-									INDICATORS_SYSTEM_VERSION_FK="[null]"
-									
+																		
 									VERSION="1"
 									CREATED_BY="user1"
 									CREATED_DATE="2011-03-03 01:02:04"
 									CREATED_DATE_TZ="Europe/London"
 									LAST_UPDATED_BY="user2"
 									LAST_UPDATED="2011-03-3 01:02:04"
-									LAST_UPDATED_TZ="Europe/London"
-								/>							
+									LAST_UPDATED_TZ="Europe/London"								
+								/>	
+								
 				
+				<TBL_ELEMENTS_LEVELS
+					ID="20"
+					UUID="uuid-ignored-20"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="3"
+					
+					IND_SYSTEM_VERSION_ALL_FK="2"
+					IND_SYSTEM_VERSION_FIRST_FK="2"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="20"
+					VERSION="1"
+				/>
+				<TBL_INDICATOR_INSTANCES
+					ID="20"
+					UUID="IndSys-1-v2-IInstance-2"
+					INDICATOR_UUID="IndicatorA"
+						
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"				
+				/>									
+								
+				<TBL_ELEMENTS_LEVELS
+					ID="60"
+					UUID="uuid-ignored-60"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="4"
+					
+					IND_SYSTEM_VERSION_ALL_FK="2"
+					IND_SYSTEM_VERSION_FIRST_FK="2"
+					DIMENSION_FK="60"
+					INDICATOR_INSTANCE_FK="[null]"
+					VERSION="1"
+				/>
 				<TBL_DIMENSIONS
 					ID="60"
 					UUID="IndSys-1-v2-Dimension-2"
 					TITLE_FK="24"
-					PARENT_FK="[null]"
-					ORDER_IN_LEVEL="2"
-					INDICATORS_SYSTEM_VERSION_FK="2"
-					
+						
 					VERSION="1"
 					CREATED_BY="user1"
 					CREATED_DATE="2011-03-03 01:02:04"
@@ -342,13 +415,100 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
+				<TBL_ELEMENTS_LEVELS
+					ID="70"
+					UUID="uuid-ignored-70"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					
+					IND_SYSTEM_VERSION_ALL_FK="4"
+					IND_SYSTEM_VERSION_FIRST_FK="4"
+					DIMENSION_FK="70"
+					INDICATOR_INSTANCE_FK="[null]"
+					VERSION="1"
+				/>
 				<TBL_DIMENSIONS
-						ID="70"
-						UUID="IndSys-3-v1-Dimension-1"
-						TITLE_FK="25"
-						PARENT_FK="[null]"
+					ID="70"
+					UUID="IndSys-3-v1-Dimension-1"
+					TITLE_FK="25"
+							
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+				<TBL_ELEMENTS_LEVELS
+					ID="75"
+					UUID="uuid-ignored-75"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="4"
+					IND_SYSTEM_VERSION_FIRST_FK="4"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="75"
+					VERSION="1"
+				/>
+				<TBL_INDICATOR_INSTANCES
+					ID="75"
+					UUID="IndSys-3-v1-IInstance-2"
+					INDICATOR_UUID="IndicatorB"
+						
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"				
+				/>						
+				
+					<TBL_ELEMENTS_LEVELS
+						ID="78"
+						UUID="uuid-ignored-78"
+						PARENT_FK="70"
 						ORDER_IN_LEVEL="1"
-						INDICATORS_SYSTEM_VERSION_FK="4"
+						
+						IND_SYSTEM_VERSION_ALL_FK="4"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="78"
+						VERSION="1"
+					/>
+					<TBL_INDICATOR_INSTANCES
+						ID="78"
+						UUID="IndSys-3-v1-IInstance-2A"
+						INDICATOR_UUID="IndicatorC"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"				
+					/>		
+					
+					<TBL_ELEMENTS_LEVELS
+						ID="80"
+						UUID="uuid-ignored-80"
+						PARENT_FK="70"
+						ORDER_IN_LEVEL="2"
+						
+						IND_SYSTEM_VERSION_ALL_FK="4"
+						IND_SYSTEM_VERSION_FIRST_FK="[null]"
+						DIMENSION_FK="80"
+						INDICATOR_INSTANCE_FK="[null]"
+						VERSION="1"
+					/>
+					<TBL_DIMENSIONS
+						ID="80"
+						UUID="IndSys-3-v1-Dimension-1A"						
+						TITLE_FK="27"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -359,22 +519,6 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-					<TBL_DIMENSIONS
-						ID="80"
-						UUID="IndSys-3-v1-Dimension-1A"
-						TITLE_FK="27"
-						PARENT_FK="70"
-						ORDER_IN_LEVEL="1"
-						INDICATORS_SYSTEM_VERSION_FK="[null]"
-						
-						VERSION="1"
-						CREATED_BY="user1"
-						CREATED_DATE="2011-03-03 01:02:04"
-						CREATED_DATE_TZ="Europe/London"
-						LAST_UPDATED_BY="user2"
-						LAST_UPDATED="2011-03-3 01:02:04"
-						LAST_UPDATED_TZ="Europe/London"
-					/>
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 4											                      	-->
 	<!--		- Version 1: production validation												-->

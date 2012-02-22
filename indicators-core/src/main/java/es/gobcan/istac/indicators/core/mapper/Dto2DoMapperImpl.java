@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -72,31 +73,41 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
     
     @Override
-    public Dimension dimensionDtoToDo(DimensionDto source) {
-        Dimension target = new Dimension();
-        dimensionDtoToDo(source, target);
+    public ElementLevel dimensionDtoToDo(DimensionDto source) {
+        ElementLevel target = new ElementLevel();
+        target.setOrderInLevel(source.getOrderInLevel());
+        target.setIndicatorInstance(null);
+        
+        // Dimension
+        target.setDimension(new Dimension());
+        target.getDimension().setElementLevel(target);
+        dimensionDtoToDo(source, target.getDimension());
+        
         return target;
     }
 
     @Override
     public void dimensionDtoToDo(DimensionDto source, Dimension target) {
         target.setTitle(internationalStringToDo(source.getTitle(), target.getTitle()));
-        target.setOrderInLevel(source.getOrderInLevel());
-        // Update action never updates dimensions children
     }
-    
+        
     @Override
-    public IndicatorInstance indicatorInstanceDtoToDo(IndicatorInstanceDto source) {
-        IndicatorInstance target = new IndicatorInstance();
-        indicatorInstanceDtoToDo(source, target);
+    public ElementLevel indicatorInstanceDtoToDo(IndicatorInstanceDto source) {
+        ElementLevel target = new ElementLevel();
+        target.setOrderInLevel(source.getOrderInLevel());
+        target.setDimension(null);
+        
+        // Indicator instance
+        target.setIndicatorInstance(new IndicatorInstance());
+        target.getIndicatorInstance().setElementLevel(target);
+        indicatorInstanceDtoToDo(source, target.getIndicatorInstance());
         return target;
     }
-
+    
     // TODO resto de atributos: query...
     @Override
     public void indicatorInstanceDtoToDo(IndicatorInstanceDto source, IndicatorInstance target) {
         target.setIndicatorUuid(source.getIndicatorUuid());
-        target.setOrderInLevel(source.getOrderInLevel());
     }
 
     @Override

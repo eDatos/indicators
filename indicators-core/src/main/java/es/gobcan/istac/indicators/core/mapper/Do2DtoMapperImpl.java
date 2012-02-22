@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -67,9 +68,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public DimensionDto dimensionDoToDto(Dimension source) {
         DimensionDto target = new DimensionDto();
         target.setUuid(source.getUuid());
-        target.setParentDimensionUuid(source.getParent() != null ? source.getParent().getUuid() : null);
+        target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        target.setOrderInLevel(source.getOrderInLevel());
+        target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
         
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
@@ -77,8 +78,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         
         // Subdimensions
-        for (Dimension dimensionChildren : source.getSubdimensions()) {
-            target.getSubdimensions().add(dimensionDoToDto(dimensionChildren));
+        for (ElementLevel child : source.getElementLevel().getChildren()) {
+            if (child.getDimension() != null) {
+                target.getChildren().add(dimensionDoToDto(child.getDimension()));
+            }
         }
         return target;
     }
@@ -89,8 +92,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         IndicatorInstanceDto target = new IndicatorInstanceDto();
         target.setUuid(source.getUuid());
         target.setIndicatorUuid(source.getIndicatorUuid());
-        target.setDimensionUuid(source.getDimension() != null ? source.getDimension().getUuid() : null);
-        target.setOrderInLevel(source.getOrderInLevel());
+        target.setParentUuid(source.getElementLevel().getParentUuid());
+        target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
         
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));

@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -7,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -64,13 +66,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem) throws MetamacException {
-        getIndicatorsSystemRepository().save(indicatorsSystem);
+    public IndicatorsSystem updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem) throws MetamacException {
+        return getIndicatorsSystemRepository().save(indicatorsSystem);
     }
 
     @Override
-    public void updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
+    public IndicatorsSystemVersion updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        return getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
     }
 
     @Override
@@ -100,10 +102,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uriGopestat, IndicatorsSystemStateEnum state) throws MetamacException {
         return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, state);
     }
+    
+    @Override
+    public ElementLevel updateElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        return getElementLevelRepository().save(elementLevel);
+    }
 
     @Override
-    public Dimension createDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
-        return getDimensionRepository().save(dimension);
+    public ElementLevel createDimension(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        return getElementLevelRepository().save(elementLevel);
     }
 
     @Override
@@ -121,19 +128,26 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void deleteDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
-        getDimensionRepository().delete(dimension);
+    public void deleteDimension(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        getElementLevelRepository().delete(elementLevel);
     }
 
     @Override
     public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
-        return indicatorsSystemVersion.getDimensions();
+        List<ElementLevel> levels = indicatorsSystemVersion.getChildrenFirstLevel();
+        List<Dimension> dimensions = new ArrayList<Dimension>();
+        for (ElementLevel level : levels) {
+            if (level.getDimension() != null) {
+                dimensions.add(level.getDimension());
+            }
+        }
+        return dimensions;
     }
 
     @Override
-    public IndicatorInstance createIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
-        return getIndicatorInstanceRepository().save(indicatorInstance);
+    public ElementLevel createIndicatorInstance(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        return getElementLevelRepository().save(elementLevel);
     }
     
     @Override

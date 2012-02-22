@@ -4,6 +4,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -23,11 +24,11 @@ public interface Dto2DoMapper {
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source) throws MetamacException;
     
     // Dimensions
-    public Dimension dimensionDtoToDo(DimensionDto source);
+    public ElementLevel dimensionDtoToDo(DimensionDto dimensionDto);
     public void dimensionDtoToDo(DimensionDto source, Dimension target);
     
     // Indicators instances
-    public IndicatorInstance indicatorInstanceDtoToDo(IndicatorInstanceDto source);
+    public ElementLevel indicatorInstanceDtoToDo(IndicatorInstanceDto source);
     public void indicatorInstanceDtoToDo(IndicatorInstanceDto source, IndicatorInstance target);
     
     // Indicators

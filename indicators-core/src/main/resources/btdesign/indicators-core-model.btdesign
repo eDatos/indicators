@@ -17,27 +17,31 @@ Application Indicators {
     		> @IndicatorsSystemVersionRepository
     		> @DimensionRepository
     		> @IndicatorInstanceRepository
+    		> @ElementLevelRepository
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystemVersion(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
-	    	updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
-	    	updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
+	    	@IndicatorsSystem updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
+	    	@IndicatorsSystemVersion updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	deleteIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state) throws MetamacException;
 	    	
+	    	// Elements levels
+	    	@ElementLevel updateElementLevel(@ElementLevel elementLevel) throws MetamacException;
+	    	
 	    	// Dimensions
-	    	@Dimension createDimension(@Dimension dimension) throws MetamacException;
+	    	@ElementLevel createDimension(@ElementLevel elementLevel) throws MetamacException;
 	    	@Dimension updateDimension(@Dimension dimension) throws MetamacException;
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
-	    	deleteDimension(@Dimension dimension) throws MetamacException;
+	    	deleteDimension(@ElementLevel elementLevel) throws MetamacException;
 	    	List<@Dimension> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// Indicators instances
-	    	@IndicatorInstance createIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
+	    	@ElementLevel createIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
 	    	@IndicatorInstance updateIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
     	}
     	
@@ -238,10 +242,10 @@ Application Indicators {
 			// Relations
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEM_FK" <-> versions;
-			"Dimensions"
-			- Bag<@Dimension> dimensions cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
-			"Indicators instances"
-			- Bag<@IndicatorInstance> indicatorsInstances cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
+			"All children"
+			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
+			"Children at first level"
+			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersionFirstLevel;
 		
 			Repository IndicatorsSystemVersionRepository {
 				@IndicatorsSystemVersion save(@IndicatorsSystemVersion entity);
@@ -253,6 +257,37 @@ Application Indicators {
 			}
 		} 
 		
+		"Level at indicators system"
+        Entity ElementLevel {
+        	databaseTable = "TBL_ELEMENTS_LEVELS"
+        	hint="idSequence=ELEMENTS_LEVELS"
+        	gap
+        	!auditable
+        	
+            "Order in level"
+			Long orderInLevel not nullable;
+			
+			// Relations
+			"Children"
+			- Bag<@ElementLevel> children cascade="all-delete-orphan" inverse orderby="orderInLevel asc" <-> parent;
+            "Parent"
+            - @ElementLevel parent cascade="none" databaseColumn="PARENT_FK" nullable <-> children;
+			"Dimension"
+			- @Dimension dimension cascade="all" nullable databaseColumn="DIMENSION_FK" <-> elementLevel;
+			"Indicator instance"
+			- @IndicatorInstance indicatorInstance cascade="all" nullable databaseColumn="INDICATOR_INSTANCE_FK" <-> elementLevel;
+            "Indicators system version"
+			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" required databaseColumn="IND_SYSTEM_VERSION_ALL_FK" <-> childrenAllLevels;
+			"Indicators system version"
+			- @IndicatorsSystemVersion indicatorsSystemVersionFirstLevel cascade="none" fetch="lazy" nullable databaseColumn="IND_SYSTEM_VERSION_FIRST_FK" <-> childrenFirstLevel;
+			
+			"Provides access to ElementLevel"
+            Repository ElementLevelRepository {
+            	@ElementLevel save(@ElementLevel entity);
+            	delete;
+            }
+        }  		
+		
         "Dimension of indicators system"
         Entity Dimension {
         	databaseTable = "TBL_DIMENSIONS"
@@ -261,19 +296,11 @@ Application Indicators {
         	
             "Title"
             - @InternationalString title cascade="all" not nullable  databaseColumn="TITLE_FK";
-            "Order in level"
-			Long orderInLevel not nullable;
-			
+
 			// Relations
-            "Parent dimension"
-            - @Dimension parent cascade="none" databaseColumn="PARENT_FK" nullable;
-			"Subdimensions"
-			- Bag<@Dimension> subdimensions cascade="all-delete-orphan" inverse databaseColumn="PARENT_FK" orderby="orderInLevel asc";
-			"Indicators instances"
-			- Bag<@IndicatorInstance> indicatorsInstances cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> dimension;
-            "Indicators system version"
-			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> dimensions;
-            
+            "Element level"
+            - @ElementLevel elementLevel cascade="none" required inverse <-> dimension;
+			            
 			"Provides access to Dimension"
             Repository DimensionRepository {
             	@Dimension save(@Dimension entity);
@@ -291,14 +318,10 @@ Application Indicators {
         	
         	"Indicator"
         	String indicatorUuid not nullable;
-            "Order in level"
-			Long orderInLevel not nullable;
-			
+
 			// Relations
-            "Indicators system version"
-			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" required databaseColumn="INDICATORS_SYSTEM_VERSION_FK" <-> indicatorsInstances;
-            "Dimension"
-            - @Dimension dimension cascade="none" fetch="lazy" nullable databaseColumn="DIMENSION_FK" <-> indicatorsInstances;
+            "Element level"
+            - @ElementLevel elementLevel cascade="none" required inverse <-> indicatorInstance;
             
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {
@@ -555,17 +578,17 @@ Application Indicators {
 	    
 	    "Dto for dimension"
 	   	DataTransferObject DimensionDto extends @AuditDto {
-			
 			"Unique uuid"
 			String uuid;
 			"Title"
 			- @InternationalStringDto title;
+
             "Order in level"
 			Long orderInLevel;
 			"Parent dimension"
-			String parentDimensionUuid;			
-       		"Subdimensions"
-       		- List<@DimensionDto> subdimensions;            
+			String parentUuid;			
+       		"Children"
+       		- List<@DimensionDto> children;            
 	    }
 	    
 	    "Dto for data source"
@@ -600,12 +623,13 @@ Application Indicators {
 			String uuid;
 			"Indicator"
 			String indicatorUuid;
-			"Dimension"
-			String dimensionUuid;
-			// TODO pendiente: query y valor o granularidad temopral o espacial
-			// TODO nombre
+			// TODO pendiente: query y valor o granularidad temporal o espacial
+			// TODO title
+			
             "Order in level"
-			Long orderInLevel;			
+			Long orderInLevel;
+			"Parent dimension"
+			String parentUuid;
 	    }
 	    
 	    "AuditDto"

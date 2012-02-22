@@ -197,7 +197,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
         checkDimension(dimensionDto, exceptions);
         ValidationUtils.checkMetadataEmpty(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
-        ValidationUtils.checkMetadataEmpty(dimensionDto.getSubdimensions(), "DIMENSION.SUBDIMENSIONS", exceptions);
+        ValidationUtils.checkMetadataEmpty(dimensionDto.getChildren(), "DIMENSION.SUBDIMENSIONS", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -242,9 +242,8 @@ public class InvocationValidator {
 
         checkDimension(dimensionDto, exceptions);
         ValidationUtils.checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentDimensionUuid(), dimension.getParent() != null ? dimension.getParent().getUuid() : null, "DIMENSION.PARENT_DIMENSION_UUID",
-                exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentUuid(), dimension.getElementLevel().getParentUuid(), "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getElementLevel().getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -463,7 +462,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkCreateIndicatorInstance(String indicatorsSystemUuid, IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -490,7 +489,7 @@ public class InvocationValidator {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DIMENSION.ORDER_IN_LEVEL"));
         }
     }
-    
+
     // TODO añadir el resto de atributos (query...)
     private static void checkIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorInstanceDto, "INDICATOR_INSTANCE", exceptions);
