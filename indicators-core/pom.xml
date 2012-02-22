@@ -195,7 +195,7 @@
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
 			<artifactId>metamac-common-test</artifactId>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -302,7 +302,7 @@
 					</jvmSettings>
 				</configuration>
 			</plugin>
-      		<plugin>
+			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
 				<executions>
@@ -326,7 +326,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 			<plugin>
 				<groupId>org.fornax.toolsupport</groupId>
 				<artifactId>fornax-graphviz-m2-plugin</artifactId>
@@ -352,15 +352,19 @@
 						</goals>
 						<configuration>
 							<target>
-								<!-- Delete wrong configuration files -->
-								<delete file="${basedir}/src/test/resources/more-test.xml"
-									verbose="true" />
-								<delete
-									file="${basedir}/src/test/generated/resources/applicationContext-test.xml"
-									verbose="true" />
-								<delete
-									file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml"
-									verbose="true" />
+								<!-- Delete spring configuration files -->
+								<delete file="${basedir}/src/main/resources/spring.properties" />
+								<delete file="${basedir}/src/main/resources/more.xml" />
+								<delete file="${basedir}/src/generated/resources/applicationContext.xml" />
+								<delete file="${basedir}/src/generated/resources/pub-sub.xml" />
+								<delete file="${basedir}/src/generated/resources/EntityManagerFactory.xml" />
+								<delete file="${basedir}/src/generated/resources/Interceptor.xml" />
+								<delete file="${basedir}/src/generated/resources/beanRefContext.xml" />
+								<delete file="${basedir}/src/generated/resources/generated-spring.properties" />
+								<delete file="${basedir}/src/test/resources/more-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
+								<delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
 							</target>
 						</configuration>
 
