@@ -2442,6 +2442,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
 

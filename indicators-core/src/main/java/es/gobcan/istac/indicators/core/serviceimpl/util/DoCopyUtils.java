@@ -107,6 +107,7 @@ public class DoCopyUtils {
      */
     public static IndicatorInstance copy(IndicatorInstance source) {
         IndicatorInstance target = new IndicatorInstance();
+        target.setTitle(copy(source.getTitle()));
         target.setIndicatorUuid(source.getIndicatorUuid());
         return target;
     }

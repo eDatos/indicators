@@ -295,7 +295,7 @@ Application Indicators {
         	gap
         	
             "Title"
-            - @InternationalString title cascade="all" not nullable  databaseColumn="TITLE_FK";
+            - @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
 
 			// Relations
             "Element level"
@@ -315,7 +315,9 @@ Application Indicators {
         	databaseTable = "TBL_INDICATOR_INSTANCES"
         	hint="idSequence=INDICATOR_INSTANCES"
         	gap
-        	
+        	       		
+			"Title"
+       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
         	"Indicator"
         	String indicatorUuid not nullable;
 
@@ -621,10 +623,11 @@ Application Indicators {
 	   	DataTransferObject IndicatorInstanceDto extends @AuditDto {
 			"Unique uuid"
 			String uuid;
+			"Title"
+			- @InternationalStringDto title;
 			"Indicator"
 			String indicatorUuid;
 			// TODO pendiente: query y valor o granularidad temporal o espacial
-			// TODO title
 			
             "Order in level"
 			Long orderInLevel;

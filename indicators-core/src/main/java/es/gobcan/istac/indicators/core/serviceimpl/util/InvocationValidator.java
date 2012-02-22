@@ -493,6 +493,7 @@ public class InvocationValidator {
     // TODO añadir el resto de atributos (query...)
     private static void checkIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorInstanceDto, "INDICATOR_INSTANCE", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getIndicatorUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstanceDto.getOrderInLevel() != null && indicatorInstanceDto.getOrderInLevel() < 0) {
