@@ -139,10 +139,10 @@
 					
 					VERSION="1"
 					CREATED_BY="user1"
-					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE="2011-05-05 01:02:04"
 					CREATED_DATE_TZ="Europe/London"
 					LAST_UPDATED_BY="user2"
-					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED="2011-06-06 05:06:07"
 					LAST_UPDATED_TZ="Europe/London"
 				/>		
 				
@@ -1588,7 +1588,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="48"
-		LABEL="Título IndSys-3-v1-Dimension-1A"
+		LABEL="Título IndSys-1-v2-IInstance-1"
 		LOCALE="es"
 		UUID="IS-28-LS-1"
 		VERSION="1"
@@ -1597,7 +1597,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="49"
-		LABEL="Title IndSys-3-v1-Dimension-1A"
+		LABEL="Title IndSys-1-v2-IInstance-1"
 		LOCALE="en"
 		UUID="IS-28-LS-2"
 		VERSION="1"

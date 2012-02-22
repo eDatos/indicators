@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
@@ -458,7 +459,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return dimensionDto;
     }
 
-    // TODO actualizar órdenes en nivel!
     @Override
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -659,6 +659,19 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(elementLevel.getIndicatorInstance());
         return indicatorInstanceDto;
     }
+    
+    @Override
+    public IndicatorInstanceDto retrieveIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorInstance(uuid, null);
+
+        // Retrieve
+        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, uuid);
+        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
+        return indicatorInstanceDto;
+    }
+    
     /**
      * Retrieves version of an indicators system in production
      */

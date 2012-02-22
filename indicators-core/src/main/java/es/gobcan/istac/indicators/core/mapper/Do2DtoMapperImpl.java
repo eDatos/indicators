@@ -80,7 +80,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         // Subdimensions
         for (ElementLevel child : source.getElementLevel().getChildren()) {
             if (child.getDimension() != null) {
-                target.getChildren().add(dimensionDoToDto(child.getDimension()));
+                target.addSubdimension(dimensionDoToDto(child.getDimension()));
             }
         }
         return target;

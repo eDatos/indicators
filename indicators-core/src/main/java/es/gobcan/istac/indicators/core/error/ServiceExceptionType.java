@@ -18,6 +18,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DIMENSION_NOT_FOUND                                     = create("exception.indicators.dimension.not_found");
     public static final CommonServiceExceptionType DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM                = create("exception.indicators.dimension.not_found_in_indicators_system");
 
+    // Indicator instances
+    public static final CommonServiceExceptionType INDICATOR_INSTANCE_NOT_FOUND                            = create("exception.indicators.indicator_instance.not_found");
+
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                     = create("exception.indicators.indicator.not_found");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NOT_FOUND                             = create("exception.indicators.indicator.vesion_not_found");

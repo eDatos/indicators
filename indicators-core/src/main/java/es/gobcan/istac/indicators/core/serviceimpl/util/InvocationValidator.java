@@ -197,7 +197,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
         checkDimension(dimensionDto, exceptions);
         ValidationUtils.checkMetadataEmpty(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
-        ValidationUtils.checkMetadataEmpty(dimensionDto.getChildren(), "DIMENSION.SUBDIMENSIONS", exceptions);
+        ValidationUtils.checkMetadataEmpty(dimensionDto.getSubdimensions(), "DIMENSION.SUBDIMENSIONS", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -474,6 +474,63 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+//    public static void checkDeleteIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkFindIndicatorInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
+//        ValidationUtils.checkParameterRequired(indicatorsSystemVersionNumber, "INDICATORS_SYSTEM_VERSION_NUMBER", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkUpdateIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        checkIndicatorInstance(indicatorInstanceDto, exceptions);
+//        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
+//        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_INDICATOR_INSTANCE_UUID", exceptions);
+//        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
+//
+//    public static void checkUpdateIndicatorInstanceLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
+//        if (exceptions == null) {
+//            exceptions = new ArrayList<MetamacExceptionItem>();
+//        }
+//
+//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+//        ValidationUtils.checkParameterRequired(orderInLevel, "ORDER_IN_LEVEL", exceptions);
+//
+//        ExceptionUtils.throwIfException(exceptions);
+//    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);

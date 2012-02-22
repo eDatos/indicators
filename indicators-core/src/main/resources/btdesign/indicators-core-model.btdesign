@@ -43,6 +43,9 @@ Application Indicators {
 	    	// Indicators instances
 	    	@ElementLevel createIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
 	    	@IndicatorInstance updateIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
+	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
+//	    	deleteIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
+//	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -125,6 +128,14 @@ Application Indicators {
 	    	@IndicatorInstanceDto createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	"Updates metadata of indicator instance"
 //	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
+//	    	"Updates the location of indicator instance"
+//	    	updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+	    	"Retrieves indicator instance"
+	    	@IndicatorInstanceDto retrieveIndicatorInstance(String uuid) throws MetamacException;
+//	    	"Deletes indicator instance"
+//	    	deleteIndicatorInstance(String uuid) throws MetamacException;
+//	    	"Find indicators instances"
+//	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    }    	
 	    
 	    "Provides access to indicators"
@@ -304,7 +315,6 @@ Application Indicators {
 			"Provides access to Dimension"
             Repository DimensionRepository {
             	@Dimension save(@Dimension entity);
-            	delete;
             	protected List<@Dimension> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Dimension findDimension(String uuid);
             }
@@ -328,7 +338,6 @@ Application Indicators {
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {
             	@IndicatorInstance save(@IndicatorInstance entity);
-            	delete;
             	protected List<@IndicatorInstance> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorInstance findIndicatorInstance(String uuid);
             }
@@ -589,8 +598,8 @@ Application Indicators {
 			Long orderInLevel;
 			"Parent dimension"
 			String parentUuid;			
-       		"Children"
-       		- List<@DimensionDto> children;            
+       		"Subdimensions"
+       		- List<@DimensionDto> subdimensions;            
 	    }
 	    
 	    "Dto for data source"
