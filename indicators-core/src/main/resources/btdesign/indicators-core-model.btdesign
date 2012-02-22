@@ -45,7 +45,7 @@ Application Indicators {
 	    	@IndicatorInstance updateIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 //	    	deleteIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
-//	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -134,8 +134,8 @@ Application Indicators {
 	    	@IndicatorInstanceDto retrieveIndicatorInstance(String uuid) throws MetamacException;
 //	    	"Deletes indicator instance"
 //	    	deleteIndicatorInstance(String uuid) throws MetamacException;
-//	    	"Find indicators instances"
-//	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	"Find indicators instances"
+	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    }    	
 	    
 	    "Provides access to indicators"
@@ -254,7 +254,7 @@ Application Indicators {
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEM_FK" <-> versions;
 			"All children"
-			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersion;
+			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="parent asc, orderInLevel asc" <-> indicatorsSystemVersion;
 			"Children at first level"
 			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersionFirstLevel;
 		

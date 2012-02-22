@@ -64,6 +64,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     // Indicator instances
     private static String                    INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
     private static String                    INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
+    private static String                    INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -2705,6 +2706,47 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
+    @Override
+    @Test
+    public void testFindIndicatorsInstances() throws Exception {
+
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+
+        // Version 1.000
+        {
+            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "1.000");
+            assertEquals(0, indicatorsInstancesDto.size());
+        }
+
+        // Version 2.000
+        {
+            List<IndicatorInstanceDto> indicatorInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "2.000");
+            assertEquals(3, indicatorInstancesDto.size());
+
+            assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(0).getUuid());
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(1).getUuid()); // orderBy puts null at last place
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(2).getUuid());
+        }
+    }
+
+    @Test
+    public void testFindIndicatorsInstancesErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuid, "1.000");
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
 

@@ -163,4 +163,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorInstance updateIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
         return getIndicatorInstanceRepository().save(indicatorInstance);
     }
+    
+    @Override
+    public List<IndicatorInstance> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
+        List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
+        List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
+        for (ElementLevel level : levels) {
+            if (level.getIndicatorInstance() != null) {
+                indicatorsInstances.add(level.getIndicatorInstance());
+            }
+        }
+        return indicatorsInstances;
+    }
 }
