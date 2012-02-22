@@ -314,7 +314,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
     }
 
-    // TODO versionar instancias de indicadores...
     @Override
     public IndicatorsSystemDto versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
 

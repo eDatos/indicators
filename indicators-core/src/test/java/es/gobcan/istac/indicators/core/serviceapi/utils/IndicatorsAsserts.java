@@ -12,6 +12,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 /**
@@ -66,5 +67,10 @@ public class IndicatorsAsserts {
     
     public static void assertEqualsDate(String expected, Date actual) {
         assertEquals(expected, (new DateTime(actual)).toString("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public static void assertEqualsIndicatorInstance(IndicatorInstanceDto expected, IndicatorInstanceDto actual) {
+        assertEquals(expected.getIndicatorUuid(), actual.getIndicatorUuid());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
     }
 }
