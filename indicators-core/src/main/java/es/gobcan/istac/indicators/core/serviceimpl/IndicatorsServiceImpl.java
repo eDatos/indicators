@@ -10,7 +10,6 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -95,7 +94,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return getIndicatorRepository().findIndicators(code);
     }
 
-    // TODO criteria
     @Override
     public List<IndicatorVersion> findIndicatorsVersions(ServiceContext ctx, String uriGopestat, IndicatorStateEnum state) throws MetamacException {
         return getIndicatorVersionRepository().findIndicatorsVersions(state);

@@ -550,7 +550,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
         }
 
-        // Retrieve dimensions to check will be deleted // TODO chequear q también se borran las instancias de indicadores
+        // Retrieve dimensions to check will be deleted
         List<String> dimensionsUuid = new ArrayList<String>();
         dimensionsUuid.add(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionsUuid.add(DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
@@ -560,6 +560,15 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         for (String dimensionUuid : dimensionsUuid) {
             DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), dimensionUuid);
             assertNotNull(dimensionDto);
+        }
+        // Retrieve indicators instances to check will be deleted
+        List<String> indicatorsInstancesUuid = new ArrayList<String>();
+        indicatorsInstancesUuid.add(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        indicatorsInstancesUuid.add(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2);
+        indicatorsInstancesUuid.add(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
+        for (String indicatorInstanceUuid : indicatorsInstancesUuid) {
+            IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), indicatorInstanceUuid);
+            assertNotNull(indicatorInstanceDto);
         }
 
         // Delete indicators system
@@ -596,6 +605,18 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
                 assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
                 assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
                 assertEquals(dimensionUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            }
+        }
+        // Check indicators instances deleted
+        for (String indicatorInstanceUuid : indicatorsInstancesUuid) {
+            try {
+                indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), indicatorInstanceUuid);
+                fail("indicators instances deleted");
+            } catch (MetamacException e) {
+                assertEquals(1, e.getExceptionItems().size());
+                assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+                assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+                assertEquals(indicatorInstanceUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             }
         }
     }

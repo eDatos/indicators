@@ -97,7 +97,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return getIndicatorsSystemRepository().findIndicatorsSystems(code);
     }
 
-    // TODO criteria
     @Override
     public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uriGopestat, IndicatorsSystemStateEnum state) throws MetamacException {
         return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, state);

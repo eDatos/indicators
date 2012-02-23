@@ -34,6 +34,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 /**
  * Implementation of IndicatorsSystemServiceFacade.
  * TODO En los "create", ¿devolver una uri, en lugar del uuid? (ojo! uris rests?, o serán con el code?)
+ * 
+ * TODO criteria y paginación en operaciones de búsqueda: findIndicatorsSystems, findIndicatorsSystemsPublished
  */
 @Service("indicatorsSystemServiceFacade")
 public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsServiceFacadeImplBase {
@@ -184,7 +186,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsSystemStructureDto;
     }
 
-    // TODO comprobar que borra instancias de indicadores. No borra indicadores asociados mediante instancias de indicadores
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -378,8 +379,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsSystemDto;
     }
 
-    // TODO paginación
-    // TODO criteria
     // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
@@ -402,8 +401,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsSystemsDto;
     }
 
-    // TODO paginación
-    // TODO criteria
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
 

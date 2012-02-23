@@ -27,6 +27,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorServiceFacade.
+ * 
+ * TODO criteria y paginación en operaciones de búsqueda: findIndicators, findIndicatorsPublished
  */
 @Service("indicatorsServiceFacade")
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
@@ -277,8 +279,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorDto;
     }
 
-    // TODO paginación
-    // TODO criteria
     // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
     public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
@@ -301,8 +301,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorDto;
     }
 
-    // TODO paginación
-    // TODO criteria
     @Override
     public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
 
