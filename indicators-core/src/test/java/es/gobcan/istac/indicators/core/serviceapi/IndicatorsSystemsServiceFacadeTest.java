@@ -876,6 +876,19 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
         }
     }
+    
+    @Test
+    public void testSendIndicatorsSystemToProductionValidationErrorWithoutIndicatorInstance() throws Exception {
+        try {
+            indicatorsSystemsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext(), INDICATORS_SYSTEM_2);
+            fail("Indicators system has not any indicator instance");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Test
     public void testSendIndicatorsSystemToProductionValidationErrorNotExists() throws Exception {

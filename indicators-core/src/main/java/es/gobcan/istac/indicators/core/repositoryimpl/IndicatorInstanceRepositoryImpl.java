@@ -27,4 +27,13 @@ public class IndicatorInstanceRepositoryImpl extends IndicatorInstanceRepository
             return result.get(0);
         }
     }
+
+    @Override
+    public Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("indicatorsSystemUuid", indicatorsSystemUuid);
+        parameters.put("indicatorsSystemVersionNumber", indicatorsSystemVersionNumber);
+        List<IndicatorInstance> result = findByQuery("from IndicatorInstance ii where ii.elementLevel.indicatorsSystemVersion.indicatorsSystem.uuid = :indicatorsSystemUuid and ii.elementLevel.indicatorsSystemVersion.versionNumber = :indicatorsSystemVersionNumber", parameters, 1);
+        return result != null && !result.isEmpty();
+    }
 }

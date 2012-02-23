@@ -160,7 +160,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
         return indicatorsSystemDto;
     }
-    
+
     @Override
     public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(ServiceContext ctx, String uuid, String version) throws MetamacException {
 
@@ -224,7 +224,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
     }
 
-    // TODO añadir validación: El sistema debe tener al menos una instancia de indicador
     @Override
     public void sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -238,6 +237,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DRAFT,
                     IndicatorsSystemStateEnum.VALIDATION_REJECTED});
         }
+
+        // Validate to send to production
+        validateIndicatorsSystemToSendToProductionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
@@ -257,6 +259,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PRODUCTION_VALIDATION});
         }
+
+        // Validate to send to diffusion
+        validateIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
@@ -280,6 +285,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
                     IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
         }
 
+        // Validate to reject
+        validateIndicatorsSystemToReject(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
+
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.VALIDATION_REJECTED);
         indicatorsSystemInProduction.setProductionValidationDate(null);
@@ -301,6 +309,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
         }
+
+        // Validate to publish
+        validateIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
@@ -330,6 +341,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         if (indicatorsSystemInDiffusion == null || !IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemInDiffusion.getState())) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
         }
+
+        // Validate to archive
+        validateIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion.getVersionNumber());
 
         // Update state
         indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
@@ -634,7 +648,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         // Create indicator instance
         if (indicatorInstanceDto.getParentUuid() == null) {
             // Add to first level in indicators system
-            
+
             // Checks same indicator uuid is not already in level
             checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), indicatorsSystemVersion.getChildrenFirstLevel());
 
@@ -661,10 +675,10 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
                 throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, indicatorInstanceDto.getParentUuid(), indicatorsSystemUuid);
             }
-            
+
             // Checks same indicator uuid is not already in level
             checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), elementLevelParent.getChildren());
-            
+
             // Create element level with indicator instance
             elementLevel.setIndicatorsSystemVersionFirstLevel(null);
             elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
@@ -687,7 +701,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(elementLevel.getIndicatorInstance());
         return indicatorInstanceDto;
     }
-    
+
     @Override
     public IndicatorInstanceDto retrieveIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -699,7 +713,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
         return indicatorInstanceDto;
     }
-    
+
     @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -723,7 +737,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         }
         updateOrdersInLevelRemovingElement(ctx, elementsAtLevel, indicatorInstance.getElementLevel().getOrderInLevel());
     }
-    
+
     @Override
     public List<IndicatorInstanceDto> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
@@ -739,7 +753,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         return indicatorsInstancesDto;
     }
-    
+
     @Override
     public List<IndicatorInstanceDto> findIndicatorsInstancesByDimension(ServiceContext ctx, String dimensionUuid) throws MetamacException {
 
@@ -755,7 +769,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         return indicatorsInstancesDto;
     }
-    
+
     @Override
     public void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
@@ -774,7 +788,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto, indicatorInstance);
         getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
     }
-    
+
     /**
      * Retrieves version of an indicators system in production
      */
@@ -936,5 +950,52 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
                 throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
             }
         }
+    }
+
+    /**
+     * Makes validations to sent to production validation
+     * 1) Must exists at least one indicator instance
+     */
+    private void validateIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+
+        // Check exists at least one indicator instance
+        if (!getIndicatorsSystemsService().existAnyIndicatorInstance(ctx, uuid, versionNumber)) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid);
+        }
+    }
+
+    /**
+     * Makes validations to sent to diffusion validation
+     * 1) Validations when send to production validation
+     */
+    private void validateIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+
+        validateIndicatorsSystemToSendToProductionValidation(ctx, uuid, versionNumber);
+    }
+
+    /**
+     * Makes validations to publish
+     * 1) Validations when send to diffusion validation
+     */
+    private void validateIndicatorsSystemToPublish(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+
+        validateIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, versionNumber);
+    }
+
+    /**
+     * Makes validations to archive
+     * 1) Validations when publish
+     */
+    private void validateIndicatorsSystemToArchive(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+
+        validateIndicatorsSystemToPublish(ctx, uuid, versionNumber);
+    }
+
+    /**
+     * Makes validations to reject
+     */
+    private void validateIndicatorsSystemToReject(ServiceContext ctx, String uuid, String versionNumber) {
+
+        // Nothing
     }
 }

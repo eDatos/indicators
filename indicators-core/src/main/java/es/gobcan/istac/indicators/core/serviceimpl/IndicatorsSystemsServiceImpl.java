@@ -194,4 +194,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return indicatorsInstances;
     }
+
+    @Override
+    public Boolean existAnyIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) {
+        return getIndicatorInstanceRepository().existAnyIndicatorInstance(indicatorsSystemUuid, indicatorsSystemVersionNumber);
+    }
 }

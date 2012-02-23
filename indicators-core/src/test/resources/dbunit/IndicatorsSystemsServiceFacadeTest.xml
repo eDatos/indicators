@@ -975,7 +975,39 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>												
+			/>								
+			
+				<TBL_ELEMENTS_LEVELS
+						ID="120"
+						UUID="uuid-ignored-120"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="12"
+						IND_SYSTEM_VERSION_FIRST_FK="12"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="120"
+						VERSION="1"
+					/>			
+					<TBL_INDICATOR_INSTANCES
+						ID="120"
+						UUID="IndSys-9-v1-IInstance-1"
+						INDICATOR_UUID="IndicatorB"
+						TEMPORARY_GRANULARITY_ID="Annual"
+						TEMPORARY_VALUE="[null]"
+						GEOGRAPHIC_GRANULARITY_ID="Countries"
+						GEOGRAPHIC_VALUE="[null]"
+						
+						TITLE_FK="33"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-05-05 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-06-06 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>						
 			  			
 			  
 	<!-- ************************************************************************************ -->
@@ -1746,6 +1778,30 @@
 		UUID="IS-32-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="32"
-	/>													
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="33"
+		UUID="IS-33"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="60"
+		LABEL="Título IndSys-9-v1-IInstance-1"
+		LOCALE="es"
+		UUID="IS-33-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="33"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="61"
+		LABEL="Title IndSys-9-v1-IInstance-1"
+		LOCALE="en"
+		UUID="IS-33-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="33"
+	/>														
 					
 </dataset>
