@@ -2986,32 +2986,39 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     }
 
     @Test
-    public void testUpdateIndicatorInstanceErrorChangeParentAndOrder() throws Exception {
+    public void testUpdateIndicatorInstanceErrorChangeParentAndOrderAndIndicator() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
-        assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
         indicatorInstanceDto.setParentUuid(DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
+        assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        assertEquals("IndicatorA", indicatorInstanceDto.getIndicatorUuid());
+        indicatorInstanceDto.setIndicatorUuid("newIndicator");
 
         try {
             indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
-            fail("Parent and order changed");
+            fail("Unmodifiable attributes changed");
         } catch (MetamacException e) {
-            assertEquals(2, e.getExceptionItems().size());
+            assertEquals(3, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(2).getCode());
+            assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(2).getMessageParameters()[0]);
         }
 
         // Put parent null
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
+        indicatorInstanceDto.setIndicatorUuid("IndicatorA");
 
         try {
             indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);

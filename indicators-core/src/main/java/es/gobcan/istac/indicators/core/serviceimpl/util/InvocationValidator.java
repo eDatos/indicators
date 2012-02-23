@@ -248,7 +248,6 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    // TODO ¿qué atributos puede modificar? ¿indicator debe ser no modificable?
     public static void checkUpdateDimension(DimensionDto dimensionDto, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -539,6 +538,7 @@ public class InvocationValidator {
 
         checkIndicatorInstance(indicatorInstanceDto, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getIndicatorUuid(), indicatorInstance.getIndicatorUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
 
