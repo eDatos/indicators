@@ -2640,6 +2640,44 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testCreateIndicatorInstanceErrorIndicatorDuplicatedInSameLevel() throws Exception {
+
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid("IndicatorA");
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
+
+        // Root level
+        try {
+            indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+            fail("Indicator duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorInstanceDto.getIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+        
+        // In dimension level
+        indicatorInstanceDto.setIndicatorUuid("IndicatorA");
+        indicatorInstanceDto.setParentUuid(DIMENSION_1B_INDICATORS_SYSTEM_1_V2);
+        try {
+            indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+            fail("Indicator duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorInstanceDto.getIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+
+    }
 
     @Test
     public void testCreateIndicatorInstanceErrorIndicatorsSystemNotExists() throws Exception {

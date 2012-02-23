@@ -20,6 +20,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Indicator instances
     public static final CommonServiceExceptionType INDICATOR_INSTANCE_NOT_FOUND                            = create("exception.indicators.indicator_instance.not_found");
+    public static final CommonServiceExceptionType INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL   = create("exception.indicators.indicator_instance.already_exists.indicator_in_same_level");
 
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                     = create("exception.indicators.indicator.not_found");

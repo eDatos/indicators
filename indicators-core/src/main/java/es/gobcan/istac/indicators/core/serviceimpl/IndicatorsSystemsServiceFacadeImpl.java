@@ -595,8 +595,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     }
 
     // TODO atributos de granularidadesId como foreign keys a las tablas de granularidades?
-    // TODO Un indicador sólo puede aparecer una vez en cada nivel --> Añadir en base de datos la restricción: unique (INDICATOR_ID, INDICATORS_SYSTEM_VERSION_FK, DIMENSION_FK). A) gap B) script de
-    // constraints    
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
@@ -612,6 +610,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         // Create indicator instance
         if (indicatorInstanceDto.getParentUuid() == null) {
             // Add to first level in indicators system
+            
+            // Checks same indicator uuid is not already in level
+            checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), indicatorsSystemVersion.getChildrenFirstLevel());
 
             // Create element level with indicator instance
             elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
@@ -636,6 +637,10 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
                 throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, indicatorInstanceDto.getParentUuid(), indicatorsSystemUuid);
             }
+            
+            // Checks same indicator uuid is not already in level
+            checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), elementLevelParent.getChildren());
+            
             // Create element level with indicator instance
             elementLevel.setIndicatorsSystemVersionFirstLevel(null);
             elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
@@ -895,6 +900,17 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "PARENT_TARGET_UUID");
             }
             dimensionParent = dimensionParent.getParent();
+        }
+    }
+
+    /**
+     * Checks not exists an indicator instance in the level with same indicator uuid
+     */
+    private void checkIndicatorInstanceUniqueIndicator(String indicatorUuid, List<ElementLevel> elementsLevel) throws MetamacException {
+        for (ElementLevel elementLevel : elementsLevel) {
+            if (elementLevel.getIndicatorInstance() != null && elementLevel.getIndicatorInstance().getIndicatorUuid().equalsIgnoreCase(indicatorUuid)) {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
+            }
         }
     }
 }
