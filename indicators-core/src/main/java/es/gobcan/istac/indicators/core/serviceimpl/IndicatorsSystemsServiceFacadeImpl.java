@@ -21,6 +21,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -158,6 +159,29 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
         return indicatorsSystemDto;
+    }
+    
+    @Override
+    public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(ServiceContext ctx, String uuid, String version) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemStructure(uuid, version, null);
+
+        // Retrieve version requested or last version
+        IndicatorsSystemVersion indicatorsSystemVersion = null;
+        if (version == null) {
+            // Retrieve last version
+            IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
+            version = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
+        }
+        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, version);
+
+        // Builds structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = new IndicatorsSystemStructureDto();
+        indicatorsSystemStructureDto.setUuid(uuid);
+        indicatorsSystemStructureDto.setVersionNumber(indicatorsSystemVersion.getVersionNumber());
+        indicatorsSystemStructureDto.getElements().addAll(do2DtoMapper.elementsLevelsDoToDto(indicatorsSystemVersion.getChildrenFirstLevel()));
+        return indicatorsSystemStructureDto;
     }
 
     // TODO comprobar que borra instancias de indicadores. No borra indicadores asociados mediante instancias de indicadores
@@ -442,7 +466,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         }
 
         // Transform to Dto to return
-        dimensionDto = do2DtoMapper.dimensionDoToDto(elementLevel.getDimension());
+        dimensionDto = do2DtoMapper.dimensionDoToDto(elementLevel.getDimension(), Boolean.TRUE);
         return dimensionDto;
     }
 
@@ -454,7 +478,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         // Retrieve
         Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
-        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
+        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension, Boolean.TRUE);
         return dimensionDto;
     }
 
@@ -492,7 +516,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
         for (Dimension dimension : dimensions) {
-            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
+            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension, Boolean.TRUE));
         }
 
         return dimensionsDto;

@@ -19,8 +19,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -325,6 +327,71 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
+
+    @Override
+    @Test
+    public void testRetrieveIndicatorsSystemStructure() throws Exception {
+
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemStructureDto.getUuid());
+        assertEquals("2.000", indicatorsSystemStructureDto.getVersionNumber());
+
+        assertEquals(4, indicatorsSystemStructureDto.getElements().size());
+
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(0);
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, elementLevelDto.getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(1), elementLevelDto.getOrderInLevel());
+            assertEquals(0, elementLevelDto.getSubelements().size());
+        }
+
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
+            assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+            assertEquals(Long.valueOf(2), elementLevelDto.getOrderInLevel());
+            assertEquals(0, elementLevelDto.getDimension().getSubdimensions().size()); // when retrieves structure, this attribute is not filled
+            assertEquals(2, elementLevelDto.getSubelements().size());
+            
+            // Children
+            {
+                ElementLevelDto elementLevelChildDto = elementLevelDto.getSubelements().get(0);
+                assertEquals(DIMENSION_1A_INDICATORS_SYSTEM_1_V2, elementLevelChildDto.getDimension().getUuid());
+                assertEquals(Long.valueOf(1), elementLevelChildDto.getOrderInLevel());
+                assertEquals(0, elementLevelChildDto.getSubelements().size());
+            }
+            {
+                ElementLevelDto elementLevelChildDto = elementLevelDto.getSubelements().get(1);
+                assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, elementLevelChildDto.getDimension().getUuid());
+                assertEquals(Long.valueOf(2), elementLevelChildDto.getOrderInLevel());
+                assertEquals(2, elementLevelChildDto.getSubelements().size());
+                {
+                    ElementLevelDto elementLevelChildChildDto = elementLevelChildDto.getSubelements().get(0);
+                    assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, elementLevelChildChildDto.getDimension().getUuid());
+                    assertEquals(Long.valueOf(1), elementLevelChildChildDto.getOrderInLevel());
+                    assertEquals(0, elementLevelChildChildDto.getSubelements().size());
+                }
+                {
+                    ElementLevelDto elementLevelChildChildDto = elementLevelChildDto.getSubelements().get(1);
+                    assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, elementLevelChildChildDto.getIndicatorInstance().getUuid());
+                    assertEquals(Long.valueOf(2), elementLevelChildChildDto.getOrderInLevel());
+                    assertEquals(0, elementLevelChildChildDto.getSubelements().size());
+                }
+            }
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2);
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(3), elementLevelDto.getOrderInLevel());
+            assertEquals(0, elementLevelDto.getSubelements().size());
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(3);
+            assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+            assertEquals(Long.valueOf(4), elementLevelDto.getOrderInLevel());
+            assertEquals(0, elementLevelDto.getSubelements().size());
         }
     }
 
@@ -2640,7 +2707,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateIndicatorInstanceErrorIndicatorDuplicatedInSameLevel() throws Exception {
 
@@ -2663,7 +2730,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorInstanceDto.getIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
-        
+
         // In dimension level
         indicatorInstanceDto.setIndicatorUuid("IndicatorA");
         indicatorInstanceDto.setParentUuid(DIMENSION_1B_INDICATORS_SYSTEM_1_V2);

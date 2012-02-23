@@ -23,6 +23,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -65,7 +66,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     @Override
-    public DimensionDto dimensionDoToDto(Dimension source) {
+    public DimensionDto dimensionDoToDto(Dimension source, Boolean transformSubdimensions) {
         DimensionDto target = new DimensionDto();
         target.setUuid(source.getUuid());
         target.setParentUuid(source.getElementLevel().getParentUuid());
@@ -78,9 +79,11 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         
         // Subdimensions
-        for (ElementLevel child : source.getElementLevel().getChildren()) {
-            if (child.getDimension() != null) {
-                target.addSubdimension(dimensionDoToDto(child.getDimension()));
+        if (transformSubdimensions) {
+            for (ElementLevel child : source.getElementLevel().getChildren()) {
+                if (child.getDimension() != null) {
+                    target.addSubdimension(dimensionDoToDto(child.getDimension(), transformSubdimensions));
+                }
             }
         }
         return target;
@@ -157,6 +160,29 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         
+        return target;
+    }
+    
+    @Override
+    public List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources) {
+        List<ElementLevelDto> targets = new ArrayList<ElementLevelDto>();
+        for (ElementLevel source : sources) {
+            ElementLevelDto target = elementLevelDoToDto(source);
+            targets.add(target);
+        }
+        return targets;
+    }
+    
+    private ElementLevelDto elementLevelDoToDto(ElementLevel source) {
+        ElementLevelDto target = new ElementLevelDto();
+        if (source.getDimension() != null) {
+            target.setDimension(dimensionDoToDto(source.getDimension(), Boolean.FALSE));
+        } else if (source.getIndicatorInstance() != null) {
+            target.setIndicatorInstance(indicatorInstanceDoToDto(source.getIndicatorInstance()));
+        }
+        for (ElementLevel child : source.getChildren()) {
+            target.addSubelement(elementLevelDoToDto(child));
+        }
         return target;
     }
     

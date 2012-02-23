@@ -109,6 +109,8 @@ Application Indicators {
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
 	    	"Finds published indicators systems"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished() throws MetamacException;
+	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
+	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"
@@ -663,6 +665,27 @@ Application Indicators {
        		JAVADATE lastUpdated;
        		String lastUpdatedBy;
     	}
+    	
+    	"Dto for structure of indicators system"
+	   	DataTransferObject IndicatorsSystemStructureDto {
+	   		"Uuid"
+	   		String uuid;
+			"Version number of this indicator version"	
+			String versionNumber;
+			"Elements: dimensions and indicators instances"
+	   		- List<@ElementLevelDto> elements;
+	   	}
+	   	"Dto for element of level. Can be a dimension or an indicator instance"
+	   	DataTransferObject ElementLevelDto {
+	   		gap
+	   		
+	   		"Dimension"
+	   		- @DimensionDto dimension;
+	   		"Indicator instance"
+	   		- @IndicatorInstanceDto indicatorInstance;
+	   		"Subelements (only when this element is a dimension)"
+	   		- List<@ElementLevelDto> subelements;
+	   	}
 	}
 	
 	// ----------------------------------------------------------------
