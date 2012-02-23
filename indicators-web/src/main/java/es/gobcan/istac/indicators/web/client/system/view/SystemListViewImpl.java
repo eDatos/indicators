@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
@@ -19,12 +20,9 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.SelectionAppearance;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -46,7 +44,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 	private SystemListUiHandler uiHandlers;
 	
 	
-	private final ListGrid indSystemListGrid;
+	private final CustomListGrid indSystemListGrid;
 	private VLayout vLayout;
 	
 	private ToolStripButton newActor;
@@ -67,12 +65,11 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 		toolStrip.addButton(newActor);
 		toolStrip.addButton(deleteActor);
 		
-		indSystemListGrid = new ListGrid();
+		indSystemListGrid = new CustomListGrid();
 		IndicatorsSystemsDS datasource = new IndicatorsSystemsDS();
 		indSystemListGrid.setDataSource(datasource);
 		indSystemListGrid.setUseAllDataSourceFields(false);
 		indSystemListGrid.setLeaveScrollbarGap(false);
-		indSystemListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		
 		//List
 		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.FIELD_CODE,getConstants().systemListHeaderIdentifier());
@@ -150,7 +147,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
 		int index = 0;
 		for (IndicatorsSystemDto indSys : indicatorsSystemList) {
-			records[index++] = new IndicatorSystemRecord(indSys.getCode(), getLocalisedString(indSys.getTitle()));
+			records[index++] = new IndicatorSystemRecord(indSys.getUuid(), indSys.getCode(), getLocalisedString(indSys.getTitle()));
 		}
 		indSystemListGrid.setData(records);
 	}

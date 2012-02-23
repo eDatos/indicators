@@ -9,17 +9,17 @@
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
 	<inherits name="com.google.gwt.user.theme.standard.Standard" />
-	<inherits name="es.gobcan.istac.indicators.IndicatorsCore"/>
-	<inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
-<!-- 	<inherits name="org.siemac.metamac.CoreCommonApi"/> -->
-	
 	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
 	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
+
+	<!-- Dependencies -->
+	<inherits name="es.gobcan.istac.indicators.IndicatorsCore"/>
+	<inherits name="org.siemac.metamac.web.common.MetamacWebCommon" />
+	<inherits name="org.siemac.metamac.CoreCommonApi" />
+
 	<!-- GIN for dependency injection -->
 	<inherits name="com.google.gwt.inject.Inject" />
-	
-
 
 	<!-- GwtPlatform -->
 	<inherits name="com.gwtplatform.mvp.Mvp" />
@@ -40,15 +40,18 @@
 	<source path='client' />
 	<source path='shared' />
 
+	<stylesheet src="IndicatorsWeb.css"/>
 
 	<!-- Other module inherits -->
 
 	<!-- Languages -->
 	<extend-property name="locale" values="es" />
+	<extend-property name="locale" values="en" />
 <!-- 	<set-property-fallback name="locale" value="es"/> -->
 	
 	<!-- Generate code in compilation time only for gecko-based browsers -->
 	<set-property name="user.agent" value="gecko1_8" />
+
 
 
 	<!-- Configure GIN -->

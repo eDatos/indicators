@@ -15,7 +15,6 @@ import com.smartgwt.client.widgets.tab.TabSet;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
-import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 

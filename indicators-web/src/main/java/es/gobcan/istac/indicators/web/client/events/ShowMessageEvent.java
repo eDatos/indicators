@@ -2,9 +2,12 @@ package es.gobcan.istac.indicators.web.client.events;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.utils.ErrorUtils;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
+import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 
@@ -28,12 +31,23 @@ public class ShowMessageEvent extends GwtEvent<ShowMessageEvent.ShowMessageHandl
 		}
 	}
 	
+	public static void fire(HasHandlers source, Throwable e, String altMessage) {
+		if (TYPE != null) {
+			source.fireEvent(new ShowMessageEvent(e, altMessage));
+		}
+	}
+	
 	private final List<String> messages;
 	private final MessageTypeEnum messageType;
 	
 	public ShowMessageEvent(List<String> messages, MessageTypeEnum messageType) {
 		this.messages = messages;
 		this.messageType = messageType;
+	}
+	
+	public ShowMessageEvent(Throwable e, String altMessage) {
+		this.messages = ErrorUtils.getErrorMessages(e, altMessage);
+		this.messageType = MessageTypeEnum.ERROR;
 	}
 	
 	public List<String> getMessages() {

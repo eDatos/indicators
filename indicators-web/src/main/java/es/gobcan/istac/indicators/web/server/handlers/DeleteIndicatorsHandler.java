@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
@@ -16,10 +20,14 @@ public class DeleteIndicatorsHandler extends AbstractActionHandler<DeleteIndicat
 
 	@Override
 	public DeleteIndicatorsResult execute(DeleteIndicatorsAction action, ExecutionContext context) throws ActionException {
-		for (String code : action.getCodes()) {
-			IndDatabase.deleteIndicator(code);
+		try {
+			for (String code : action.getCodes()) {
+				IndDatabase.deleteIndicator(code);
+			}
+			return new DeleteIndicatorsResult();
+		} catch (MetamacException e) {
+			throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
 		}
-		return new DeleteIndicatorsResult();
 	}
 
 	@Override

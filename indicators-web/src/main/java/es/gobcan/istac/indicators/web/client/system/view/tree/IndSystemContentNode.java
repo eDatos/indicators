@@ -19,8 +19,17 @@ public class IndSystemContentNode extends TreeNode {
 		this.setAttribute(ATTR_SOURCE,source);
 		if (IndSystemContentNodeType.INDICATOR.equals(type)) {
 		    this.setIsFolder(false);
+		    this.setCanDrag(true);
+		    this.setCanAcceptDrop(true);
 		} else {
 		    this.setIsFolder(true);
+		    if (IndSystemContentNodeType.ROOT.equals(type)) {
+		    	this.setCanDrag(false);
+		    	this.setCanAcceptDrop(true);
+		    } else {
+		    	this.setCanDrag(true);
+		    	this.setCanAcceptDrop(true);
+		    }
 		}
 		
 	}

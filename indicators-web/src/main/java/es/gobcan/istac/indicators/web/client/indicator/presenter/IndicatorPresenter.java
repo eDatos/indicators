@@ -19,14 +19,12 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.SaveIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.SaveIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
 	private DispatchAsync dispatcher;
@@ -68,7 +66,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		dispatcher.execute(new GetIndicatorAction(this.indicatorCode), new AsyncCallback<GetIndicatorResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
+				ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorRetrieve());
 			}
 
 			@Override
@@ -81,14 +79,14 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	
 	/* UiHandlers */
 	public void saveIndicator(IndicatorDto indicator) {
-	    dispatcher.execute(new SaveIndicatorAction(indicator), new AsyncCallback<SaveIndicatorResult>() {
+	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
 	       @Override
 	        public void onFailure(Throwable caught) {
-	           ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
+	           ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorSave());
 	        }
 	       
 	       @Override
-	        public void onSuccess(SaveIndicatorResult result) {
+	        public void onSuccess(UpdateIndicatorResult result) {
 	           retrieveIndicator();
 	        }
 	    });

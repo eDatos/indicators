@@ -17,13 +17,14 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
-import es.gobcan.istac.indicators.web.shared.db.IndicatorSystemContent;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
-	private SystemUiHandler uiHandler;
+	private SystemUiHandler uiHandlers;
 	private VLayout panel;
 	private Label indSysLabel;
 	private TabSet tabSet;
@@ -76,7 +77,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 		structureTab.addTabSelectedHandler(new TabSelectedHandler() {
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
-				uiHandler.retrieveSystemStructure();
+				uiHandlers.retrieveSystemStructure();
 			}
 		});
 	}
@@ -89,13 +90,24 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	}
 	
 	@Override
-	public void setIndicatorsSystemStructure(List<IndicatorSystemContent> content) {
-		structurePanel.setIndicatorSystemStructure(content);
+	public void setIndicatorsSystemStructure(IndicatorsSystemDto indicatosSystem, List<DimensionDto> dimensions, List<IndicatorInstanceDto> indicatorInstances) {
+		structurePanel.setIndicatorSystemStructure(indicatosSystem, dimensions,indicatorInstances);
 	}
 	
 	@Override
 	public void setUiHandlers(SystemUiHandler uiHandlers) {
-		this.uiHandler = uiHandlers;
+		this.uiHandlers = uiHandlers;
+		this.structurePanel.setUiHandlers(uiHandlers);
+	}
+	
+	@Override
+	public void onDimensionSaved(DimensionDto dimension) {
+		structurePanel.onDimensionSaved(dimension);
+	}
+	
+	@Override
+	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
+		structurePanel.onIndicatorInstanceSaved(instance);
 	}
 	
 }

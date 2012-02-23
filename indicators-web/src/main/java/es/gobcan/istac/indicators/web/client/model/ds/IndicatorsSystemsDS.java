@@ -13,7 +13,7 @@ public class IndicatorsSystemsDS extends DataSource {
     public static String FIELD_INTERNATIONAL_TITLE = "titleint-sys";
     
     public IndicatorsSystemsDS() {
-        DataSourceIntegerField uuid = new DataSourceIntegerField(FIELD_UUID, getConstants().indicDetailIdentifier());
+        DataSourceTextField uuid = new DataSourceTextField(FIELD_UUID, getConstants().indicDetailIdentifier());
         uuid.setPrimaryKey(true);
         addField(uuid);
         

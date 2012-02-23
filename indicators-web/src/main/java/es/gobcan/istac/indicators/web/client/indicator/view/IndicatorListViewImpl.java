@@ -139,7 +139,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				uiHandlers.deleteIndicators(getCodesFromSelected());
+				uiHandlers.deleteIndicators(getCodesFromSelected()); //PRUEBA
 				deleteConfirmationWindow.hide();
 			}
 		});
