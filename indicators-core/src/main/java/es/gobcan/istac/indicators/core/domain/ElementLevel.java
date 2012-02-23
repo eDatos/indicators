@@ -16,10 +16,6 @@ public class ElementLevel extends ElementLevelBase {
     public ElementLevel() {
     }
 
-    public ElementLevel(IndicatorsSystemVersion indicatorsSystemVersionAllLevels) {
-        super(indicatorsSystemVersionAllLevels);
-    }
-
     /**
      * If exists, retrieves uuid of parent dimension
      */

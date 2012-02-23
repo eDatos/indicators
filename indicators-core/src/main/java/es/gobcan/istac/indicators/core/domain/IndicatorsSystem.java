@@ -14,8 +14,4 @@ public class IndicatorsSystem extends IndicatorsSystemBase {
 
     public IndicatorsSystem() {
     }
-
-    public IndicatorsSystem(String code) {
-        super(code);
-    }
 }

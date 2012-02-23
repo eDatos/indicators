@@ -195,7 +195,7 @@ Application Indicators {
 			gap
 			
 			"Semantic identifier of statistic operation. Non modifiable"
-       		String code required;
+       		String code not nullable;
 		
 			// Can not do an OneToOne relation with IndicatorsSystemVersion because this produces a CyclicDependency with IndicatorsSystem
 			"Version in production"
@@ -220,11 +220,10 @@ Application Indicators {
 		Entity IndicatorsSystemVersion {
 			databaseTable="TBL_INDIC_SYSTEMS_VERSIONS"
 			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
-			gap
 			
 			"State"
-			- @IndicatorsSystemStateEnum state required;
-			String versionNumber required length="10";
+			- @IndicatorsSystemStateEnum state not nullable;
+			String versionNumber not nullable length="10";
        		"Uri of statistic operation in Gopestat"
        		String uriGopestat nullable;
        		"Title of statistic operation"
@@ -291,7 +290,7 @@ Application Indicators {
 			"Indicator instance"
 			- @IndicatorInstance indicatorInstance cascade="all" nullable databaseColumn="INDICATOR_INSTANCE_FK" <-> elementLevel;
             "Indicators system version"
-			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" required databaseColumn="IND_SYSTEM_VERSION_ALL_FK" <-> childrenAllLevels;
+			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" not nullable databaseColumn="IND_SYSTEM_VERSION_ALL_FK" <-> childrenAllLevels;
 			"Indicators system version"
 			- @IndicatorsSystemVersion indicatorsSystemVersionFirstLevel cascade="none" fetch="lazy" nullable databaseColumn="IND_SYSTEM_VERSION_FIRST_FK" <-> childrenFirstLevel;
 			
@@ -306,14 +305,13 @@ Application Indicators {
         Entity Dimension {
         	databaseTable = "TBL_DIMENSIONS"
         	hint="idSequence=DIMENSIONS"
-        	gap
         	
             "Title"
             - @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
 
 			// Relations
             "Element level"
-            - @ElementLevel elementLevel cascade="none" required inverse <-> dimension;
+            - @ElementLevel elementLevel cascade="none" not nullable inverse <-> dimension;
 			            
 			"Provides access to Dimension"
             Repository DimensionRepository {
@@ -327,16 +325,23 @@ Application Indicators {
         Entity IndicatorInstance {
         	databaseTable = "TBL_INDICATOR_INSTANCES"
         	hint="idSequence=INDICATOR_INSTANCES"
-        	gap
         	       		
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
         	"Indicator"
         	String indicatorUuid not nullable;
-
+        	"Temporary granularity"
+        	String temporaryGranularityId nullable;
+        	"Temporary value"
+        	String temporaryValue nullable;
+        	"Geographic granularity"
+			String geographicGranularityId nullable;
+        	"Geographic value"
+			String geographicValue nullable;
+			
 			// Relations
             "Element level"
-            - @ElementLevel elementLevel cascade="none" required inverse <-> indicatorInstance;
+            - @ElementLevel elementLevel cascade="none" not nullable inverse <-> indicatorInstance;
             
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {
@@ -361,7 +366,7 @@ Application Indicators {
 			gap
 
 			"Code. Non modifiable"
-			String code required;
+			String code not nullable;
 			
 			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
 			"Version in production"
@@ -386,13 +391,12 @@ Application Indicators {
 		Entity IndicatorVersion {
 			databaseTable="TBL_INDICATOR_VERSIONS"
 			hint="idSequence=INDICATOR_VERSIONS"
-			gap
 			
 			"State"
-			- @IndicatorStateEnum state required;
-			String versionNumber required length="10";
+			- @IndicatorStateEnum state not nullable;
+			String versionNumber not nullable length="10";
        		"Name"
-       		- @InternationalString name cascade="all" required databaseColumn="NAME_FK";
+       		- @InternationalString name cascade="all" not nullable databaseColumn="NAME_FK";
        		"Acronym"
        		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
        		"Subject code"
@@ -449,16 +453,15 @@ Application Indicators {
         Entity DataSource {
         	databaseTable = "TBL_DATA_SOURCES"
         	hint="idSequence=DATA_SOURCES"
-        	gap
         	
 			"Query in GPE"
-			String queryGpe required;
+			String queryGpe not nullable;
 			"Px"
-			String px required;
+			String px not nullable;
 			"Temporary variable"
-			String temporaryVariable required;
+			String temporaryVariable not nullable;
 			"Geographic variable"
-			String geographicVariable required;
+			String geographicVariable not nullable;
 			"Other variables fixing one category"
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			
@@ -479,12 +482,11 @@ Application Indicators {
         Entity DataSourceVariable {
         	databaseTable = "TBL_DATA_SOURCE_VARIABLES"
         	hint="idSequence=DATA_SOURCE_VARIABLES"
-        	gap
         	
 			"Variable"
-			String variable required;
+			String variable not nullable;
 			"Category"
-			String category required;
+			String category not nullable;
         }  	    	
 	}
 	
@@ -639,7 +641,14 @@ Application Indicators {
 			- @InternationalStringDto title;
 			"Indicator"
 			String indicatorUuid;
-			// TODO pendiente: query y valor o granularidad temporal o espacial
+        	"Temporary granularity"
+        	String temporaryGranularityId;
+        	"Temporary value"
+        	String temporaryValue;
+        	"Geographic granularity"
+			String geographicGranularityId;
+        	"Geographic value"
+			String geographicValue;
 			
             "Order in level"
 			Long orderInLevel;

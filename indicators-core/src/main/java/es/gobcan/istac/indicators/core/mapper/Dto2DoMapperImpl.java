@@ -248,7 +248,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
     
     private DataSourceVariable dataSourceVariableDtoToDo(DataSourceVariableDto source) {
-        DataSourceVariable target = new DataSourceVariable(source.getVariable(), source.getCategory());
+        DataSourceVariable target = new DataSourceVariable();
+        target = dataSourceVariableDtoToDo(source, target);
         return target;
     }
 

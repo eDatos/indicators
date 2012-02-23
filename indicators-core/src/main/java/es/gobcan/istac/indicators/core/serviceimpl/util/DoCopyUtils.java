@@ -154,7 +154,9 @@ public class DoCopyUtils {
      * Copy a data source variable
      */
     private static DataSourceVariable copy(DataSourceVariable source) {
-        DataSourceVariable target = new DataSourceVariable(source.getVariable(), source.getCategory());
+        DataSourceVariable target = new DataSourceVariable();
+        target.setVariable(source.getVariable());
+        target.setCategory(source.getCategory());
         return target;
     }
 
