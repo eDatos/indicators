@@ -7,7 +7,6 @@ import org.siemac.metamac.web.common.client.utils.ErrorUtils;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
-import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 

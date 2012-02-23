@@ -2,13 +2,9 @@ package es.gobcan.istac.indicators.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
 
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
-import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

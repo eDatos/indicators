@@ -1,8 +1,6 @@
 package es.gobcan.istac.indicators.web.server.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -382,43 +380,6 @@ public class IndDatabase {
 		List<Object> children = new ArrayList<Object>(dimChildren);
 		children.addAll(indInstChildren);
 		return children;
-	}
-	
-	private static void updateOrder(List<Object> siblings) {
-		sortChildrenList(siblings);	//Ordenamos con el nuevo
-		//Reasignamos orders
-		for (int i = 0; i < siblings.size(); i++) {
-			Object obj = siblings.get(i);
-			if (obj instanceof DimensionDto) {
-				((DimensionDto)obj).setOrderInLevel(new Long(i+1));
-			} else {
-				((IndicatorInstanceDto)obj).setOrderInLevel(new Long(i+1));
-			}
-		}
-	}
-	
-	
-	private static void sortChildrenList(List<Object> children) {
-		Collections.sort(children, new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				Long leftSide = -1L;
-				Long rightSide = -1L;
-				if (o1 instanceof DimensionDto) {
-					leftSide = ((DimensionDto)o1).getOrderInLevel();
-				} else {
-					leftSide = ((IndicatorInstanceDto)o1).getOrderInLevel();
-				}
-				
-				if (o2 instanceof DimensionDto) {
-					rightSide = ((DimensionDto)o2).getOrderInLevel();
-				} else {
-					rightSide = ((IndicatorInstanceDto)o2).getOrderInLevel();
-				}
-				
-				return leftSide.compareTo(rightSide);
-			}
-		});
 	}
 	
 	
