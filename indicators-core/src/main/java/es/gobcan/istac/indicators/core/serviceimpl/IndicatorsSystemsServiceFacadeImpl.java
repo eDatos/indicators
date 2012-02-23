@@ -727,6 +727,25 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsInstancesDto;
     }
     
+    @Override
+    public void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
+
+        // Retrieve
+        // TODO comprobar parámetros antes?
+        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, indicatorInstanceDto.getUuid());
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateIndicatorInstance(indicatorInstanceDto, indicatorInstance, null);
+
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
+        checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
+
+        // Transform and update
+        dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto, indicatorInstance);
+        getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
+    }
+    
     /**
      * Retrieves version of an indicators system in production
      */

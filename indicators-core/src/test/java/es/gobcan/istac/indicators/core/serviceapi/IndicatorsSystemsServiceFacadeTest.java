@@ -557,7 +557,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         // Validation
         try {
             indicatorsSystemsServiceFacade.deleteIndicatorsSystem(getServiceContext(), uuid);
-            fail("Dimension not exists");
+            fail("Indicator system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
@@ -2117,51 +2117,41 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     }
 
     @Test
-    public void testUpdateDimensionErrorChangeParentDimension() throws Exception {
+    public void testUpdateDimensionErrorChangeParentDimensionAndOrder() throws Exception {
 
         DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, dimensionDto.getParentUuid());
-        dimensionDto.setParentUuid(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2);
-
-        try {
-            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
-            fail("Parent changed");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.PARENT_DIMENSION_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-
-        // Put parent null
-        dimensionDto.setParentUuid(null);
-
-        try {
-            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
-            fail("Parent changed");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.PARENT_DIMENSION_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testUpdateDimensionErrorChangeOrder() throws Exception {
-
-        DimensionDto dimensionDto = indicatorsSystemsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
         assertEquals(Long.valueOf(1), dimensionDto.getOrderInLevel());
+        dimensionDto.setParentUuid(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(2));
 
         try {
             indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
-            fail("Order changed");
+            fail("Parent and order changed");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+            
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DIMENSION.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+
+        // Put parent null
+        dimensionDto.setParentUuid(null);
+        dimensionDto.setOrderInLevel(Long.valueOf(1));
+
+        try {
+            indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+            fail("Parent changed");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("DIMENSION.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2194,7 +2184,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
 
         try {
             indicatorsSystemsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
-            fail("Indicators system not exists");
+            fail("Dimension not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
@@ -2841,6 +2831,99 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Override
+    @Test
+    public void testUpdateIndicatorInstance() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        // Update
+        indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+
+        // Validation
+        IndicatorInstanceDto indicatorInstanceDtoUpdated = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoUpdated);
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceErrorChangeParentAndOrder() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
+        assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
+        indicatorInstanceDto.setParentUuid(DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+            fail("Parent and order changed");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+            
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+
+        // Put parent null
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
+
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+            fail("Parent changed");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceErrorIndicatorsSystemPublished() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1);
+
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+            fail("Indicators system published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceErrorNotExists() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setUuid(NOT_EXISTS);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+            fail("Indicator instance not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

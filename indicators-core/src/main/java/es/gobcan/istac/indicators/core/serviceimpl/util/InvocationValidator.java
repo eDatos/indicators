@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
@@ -235,6 +236,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    // TODO ¿qué atributos puede modificar? ¿indicator debe ser no modificable?
     public static void checkUpdateDimension(DimensionDto dimensionDto, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -242,7 +244,7 @@ public class InvocationValidator {
 
         checkDimension(dimensionDto, exceptions);
         ValidationUtils.checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentUuid(), dimension.getElementLevel().getParentUuid(), "DIMENSION.PARENT_DIMENSION_UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentUuid(), dimension.getElementLevel().getParentUuid(), "DIMENSION.PARENT_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getElementLevel().getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
@@ -518,19 +520,19 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-//    public static void checkUpdateIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        checkIndicatorInstance(indicatorInstanceDto, exceptions);
-//        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
-//        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_INDICATOR_INSTANCE_UUID", exceptions);
-//        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
-//
+    public static void checkUpdateIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        checkIndicatorInstance(indicatorInstanceDto, exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
 //    public static void checkUpdateIndicatorInstanceLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
 //        if (exceptions == null) {
 //            exceptions = new ArrayList<MetamacExceptionItem>();

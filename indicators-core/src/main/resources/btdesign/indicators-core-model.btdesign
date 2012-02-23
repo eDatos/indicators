@@ -127,8 +127,8 @@ Application Indicators {
 	    	// INDICATORS INSTANCES	    	
 	    	"Creates a indicator instance"
 	    	@IndicatorInstanceDto createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
-//	    	"Updates metadata of indicator instance"
-//	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
+	    	"Updates metadata of indicator instance"
+	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	"Updates the location of indicator instance"
 //	    	updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	"Retrieves indicator instance"
