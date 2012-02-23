@@ -31,7 +31,6 @@ public class IndicatorsSystemRepositoryImpl extends IndicatorsSystemRepositoryBa
         }
     }
 
-    // TODO paginación
     @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorsSystem> findIndicatorsSystems(String code) {

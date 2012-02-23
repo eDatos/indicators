@@ -2740,7 +2740,35 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
 
     @Test
     public void testCreateIndicatorInstanceInSubDimension() throws Exception {
-        // TODO testear
+        
+        String parentUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid("Indicator1");
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(parentUuid);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
+        indicatorInstanceDto.setTemporaryValue("2012");
+
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+
+        // Retrieve indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        assertEquals(parentUuid, indicatorInstanceDtoRetrieved.getParentUuid());
+
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(4, indicatorsSystemStructureDto.getElements().size());
+        ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+        assertEquals(3, elementLevelDto.getSubelements().size());
+        assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(0).getDimension().getUuid());
+        assertEquals(indicatorInstanceDtoCreated.getUuid(), elementLevelDto.getSubelements().get(1).getIndicatorInstance().getUuid());
+        assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(2).getIndicatorInstance().getUuid());
     }
 
     @Test

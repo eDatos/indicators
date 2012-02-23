@@ -172,7 +172,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve version in production validation
         IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
         if (indicatorInProduction == null || !IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, IndicatorStateEnum.PRODUCTION_VALIDATION);
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION});
         }
 
         // Update state
@@ -204,7 +204,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
     }
 
-    // TODO el estado anterior también puede ser PUBLICATION_FAILED
     // TODO Implica realizar también INDICADORES-CU-6
     @Override
     public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
@@ -214,8 +213,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve version in diffusion validation
         IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null || !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, IndicatorStateEnum.DIFFUSION_VALIDATION);
+        if (indicatorInProduction == null || (!IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.PUBLICATION_FAILED.equals(indicatorInProduction.getState()))) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DIFFUSION_VALIDATION, IndicatorStateEnum.PUBLICATION_FAILED});
         }
 
         // Update state
@@ -244,7 +243,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve version published
         IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
         if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, IndicatorStateEnum.PUBLISHED);
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
         }
 
         // Update state
