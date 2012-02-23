@@ -72,5 +72,9 @@ public class IndicatorsAsserts {
     public static void assertEqualsIndicatorInstance(IndicatorInstanceDto expected, IndicatorInstanceDto actual) {
         assertEquals(expected.getIndicatorUuid(), actual.getIndicatorUuid());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getGeographicGranularityId(), actual.getGeographicGranularityId());
+        assertEquals(expected.getGeographicValue(), actual.getGeographicValue());
+        assertEquals(expected.getTemporaryGranularityId(), actual.getTemporaryGranularityId());
+        assertEquals(expected.getTemporaryValue(), actual.getTemporaryValue());
     }
 }

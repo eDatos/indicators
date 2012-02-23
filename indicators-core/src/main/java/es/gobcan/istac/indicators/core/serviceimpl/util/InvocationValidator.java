@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
@@ -559,11 +560,13 @@ public class InvocationValidator {
         }
     }
 
-    // TODO añadir el resto de atributos (query...)
     private static void checkIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorInstanceDto, "INDICATOR_INSTANCE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getIndicatorUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
+        if (ValidationUtils.isEmpty(indicatorInstanceDto.getTemporaryGranularityId()) && ValidationUtils.isEmpty(indicatorInstanceDto.getTemporaryValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY"));
+        }
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstanceDto.getOrderInLevel() != null && indicatorInstanceDto.getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.ORDER_IN_LEVEL"));

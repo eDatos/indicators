@@ -86,13 +86,16 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         return target;
     }
     
-    // TODO añadir el resto de atributos: query...
     @Override
     public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source) {
         IndicatorInstanceDto target = new IndicatorInstanceDto();
         target.setUuid(source.getUuid());
         target.setIndicatorUuid(source.getIndicatorUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setGeographicGranularityId(source.getGeographicGranularityId());
+        target.setGeographicValue(source.getGeographicValue());
+        target.setTemporaryGranularityId(source.getTemporaryGranularityId());
+        target.setTemporaryValue(source.getTemporaryValue());
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
         

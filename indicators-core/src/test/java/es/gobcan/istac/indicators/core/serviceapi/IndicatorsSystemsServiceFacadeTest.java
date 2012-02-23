@@ -382,11 +382,11 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("parameters required");
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-            
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(1).getMessageParameters()[0]);
@@ -1409,6 +1409,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getVersionNumber());
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoProduction.getDiffusionVersion());
+
             // Dimensions
             List<DimensionDto> dimensions = indicatorsSystemsServiceFacade.findDimensions(getServiceContext(), indicatorsSystemDtoProduction.getUuid(),
                     indicatorsSystemDtoProduction.getProductionVersion());
@@ -1419,9 +1420,11 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
                     "Title IndSys-3-v1-Dimension-1A");
 
             // Indicator instances
-            // TODO instancias de indicadores
-
-            // TODO mejor validar con árbol
+            List<IndicatorInstanceDto> indicatorsInstances = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), indicatorsSystemDtoProduction.getUuid(),
+                    indicatorsSystemDtoProduction.getProductionVersion());
+            assertEquals(2, indicatorsInstances.size());
+            assertEquals("IndicatorC", indicatorsInstances.get(0).getIndicatorUuid());
+            assertEquals("IndicatorB", indicatorsInstances.get(1).getIndicatorUuid());
 
             assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getState());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getVersionNumber());
@@ -1803,11 +1806,11 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("parameters required");
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-            
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
             assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
@@ -2130,7 +2133,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Parent and order changed");
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DIMENSION.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
@@ -2407,14 +2410,17 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     @Test
     public void testRetrieveIndicatorInstance() throws Exception {
 
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
 
         assertNotNull(indicatorInstanceDto);
-        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getUuid());
-        assertEquals("IndicatorB", indicatorInstanceDto.getIndicatorUuid());
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-1", "en", "Title IndSys-1-v2-IInstance-1");
-        assertNull(indicatorInstanceDto.getParentUuid());
-
+        assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getUuid());
+        assertEquals("IndicatorA", indicatorInstanceDto.getIndicatorUuid());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
+        assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
+        assertEquals("Annual", indicatorInstanceDto.getTemporaryGranularityId());
+        assertNull(indicatorInstanceDto.getTemporaryValue());
+        assertEquals("Countries", indicatorInstanceDto.getGeographicGranularityId());
+        assertNull(indicatorInstanceDto.getGeographicValue());
         IndicatorsAsserts.assertEqualsDate("2011-05-05 01:02:04", indicatorInstanceDto.getCreatedDate());
         assertEquals("user1", indicatorInstanceDto.getCreatedBy());
         IndicatorsAsserts.assertEqualsDate("2011-06-06 05:06:07", indicatorInstanceDto.getLastUpdated());
@@ -2463,6 +2469,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2484,6 +2492,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        indicatorInstanceDto.setGeographicGranularityId("countries");
+        indicatorInstanceDto.setTemporaryGranularityId("days");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2507,6 +2517,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2531,6 +2543,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
+        indicatorInstanceDto.setTemporaryValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2557,11 +2570,12 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         indicatorInstanceDto.setIndicatorUuid(null);
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(null);
+        indicatorInstanceDto.setTemporaryGranularityId(null);
         try {
             indicatorsSystemsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
             fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(3, e.getExceptionItems().size());
+            assertEquals(4, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
@@ -2573,7 +2587,11 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.TEMPORARY", e.getExceptionItems().get(2).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
+            assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(3).getMessageParameters()[0]);
         }
     }
 
@@ -2584,6 +2602,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MAX_VALUE);
 
@@ -2605,6 +2625,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MIN_VALUE);
 
@@ -2625,6 +2647,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         try {
@@ -2645,6 +2669,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2665,6 +2691,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_NOT_EXISTS);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2685,6 +2713,8 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setTemporaryValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2699,7 +2729,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testDeleteIndicatorInstance() throws Exception {
 
@@ -2760,7 +2790,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Override
     @Test
     public void testFindIndicatorsInstances() throws Exception {
@@ -2801,7 +2831,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Override
     @Test
     public void testFindIndicatorsInstancesByDimension() throws Exception {
@@ -2833,7 +2863,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Override
     @Test
     public void testUpdateIndicatorInstance() throws Exception {
@@ -2864,7 +2894,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             fail("Parent and order changed");
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);

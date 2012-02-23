@@ -109,6 +109,11 @@ public class DoCopyUtils {
         IndicatorInstance target = new IndicatorInstance();
         target.setTitle(copy(source.getTitle()));
         target.setIndicatorUuid(source.getIndicatorUuid());
+        target.setGeographicGranularityId(source.getGeographicGranularityId());
+        target.setGeographicValue(source.getGeographicValue());
+        target.setTemporaryGranularityId(source.getTemporaryGranularityId());
+        target.setTemporaryValue(source.getTemporaryValue());
+
         return target;
     }
 

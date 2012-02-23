@@ -594,9 +594,9 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         }
     }
 
-    // TODO Añadir el resto de metadatos de las instancias: query; oblicatoriamente un valor o granularidad temporal; opcionalmente un valor o granualaridad espacial
+    // TODO atributos de granularidadesId como foreign keys a las tablas de granularidades?
     // TODO Un indicador sólo puede aparecer una vez en cada nivel --> Añadir en base de datos la restricción: unique (INDICATOR_ID, INDICATORS_SYSTEM_VERSION_FK, DIMENSION_FK). A) gap B) script de
-    // constraints
+    // constraints    
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
