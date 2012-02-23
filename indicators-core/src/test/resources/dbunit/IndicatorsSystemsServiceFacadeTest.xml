@@ -26,7 +26,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="1"
+				ID="11"
 				UUID="IndSys-1-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="1"
@@ -60,19 +60,19 @@
 			/>
 			
 					<TBL_ELEMENTS_LEVELS
-						ID="10"
+						ID="111"
 						UUID="uuid-ignored-10"
 						PARENT_FK="[null]"
 						ORDER_IN_LEVEL="1"
 						
-						IND_SYSTEM_VERSION_ALL_FK="1"
-						IND_SYSTEM_VERSION_FIRST_FK="1"
-						DIMENSION_FK="10"
+						IND_SYSTEM_VERSION_ALL_FK="11"
+						IND_SYSTEM_VERSION_FIRST_FK="11"
+						DIMENSION_FK="111"
 						INDICATOR_INSTANCE_FK="[null]"
 						VERSION="1"
 					/>
 					<TBL_DIMENSIONS
-						ID="10"
+						ID="111"
 						UUID="IndSys-1-v1-Dimension-1"
 						TITLE_FK="26"
 
@@ -84,9 +84,41 @@
 						LAST_UPDATED="2011-03-3 01:02:04"
 						LAST_UPDATED_TZ="Europe/London"
 					/>
+					
+					<TBL_ELEMENTS_LEVELS
+						ID="112"
+						UUID="uuid-ignored-112"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="2"
+						
+						IND_SYSTEM_VERSION_ALL_FK="11"
+						IND_SYSTEM_VERSION_FIRST_FK="11"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="112"
+						VERSION="1"
+					/>			
+					<TBL_INDICATOR_INSTANCES
+						ID="112"
+						UUID="IndSys-1-v1-IInstance-1"
+						INDICATOR_UUID="IndicatorB"
+						TEMPORARY_GRANULARITY_ID="Annual"
+						TEMPORARY_VALUE="[null]"
+						GEOGRAPHIC_GRANULARITY_ID="Countries"
+						GEOGRAPHIC_VALUE="[null]"
+						
+						TITLE_FK="35"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-05-05 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-06-06 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
 			
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="2"
+				ID="12"
 				UUID="IndSys-1-v2"
 				VERSION_NUMBER="2.000"
 				TITLE_FK="5"
@@ -120,19 +152,19 @@
 			/>
 			
 				<TBL_ELEMENTS_LEVELS
-					ID="15"
+					ID="121"
 					UUID="uuid-ignored-15"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="1"
 					
-					IND_SYSTEM_VERSION_ALL_FK="2"
-					IND_SYSTEM_VERSION_FIRST_FK="2"
+					IND_SYSTEM_VERSION_ALL_FK="12"
+					IND_SYSTEM_VERSION_FIRST_FK="12"
 					DIMENSION_FK="[null]"
-					INDICATOR_INSTANCE_FK="15"
+					INDICATOR_INSTANCE_FK="121"
 					VERSION="1"
 				/>			
 				<TBL_INDICATOR_INSTANCES
-					ID="15"
+					ID="121"
 					UUID="IndSys-1-v2-IInstance-1"
 					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
@@ -152,19 +184,19 @@
 				/>		
 				
 				<TBL_ELEMENTS_LEVELS
-					ID="25"
+					ID="122"
 					UUID="uuid-ignored-25"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="2"
 					
-					IND_SYSTEM_VERSION_ALL_FK="2"
-					IND_SYSTEM_VERSION_FIRST_FK="2"
-					DIMENSION_FK="25"
+					IND_SYSTEM_VERSION_ALL_FK="12"
+					IND_SYSTEM_VERSION_FIRST_FK="12"
+					DIMENSION_FK="122"
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
 				<TBL_DIMENSIONS
-					ID="25"
+					ID="122"
 					TITLE_FK="20"
 					UUID="IndSys-1-v2-Dimension-1"
 					
@@ -178,19 +210,19 @@
 				/>
 				
 						<TBL_ELEMENTS_LEVELS
-							ID="30"
+							ID="1221"
 							UUID="uuid-ignored-30"
-							PARENT_FK="25"
+							PARENT_FK="122"
 							ORDER_IN_LEVEL="1"
 							
-							IND_SYSTEM_VERSION_ALL_FK="2"
+							IND_SYSTEM_VERSION_ALL_FK="12"
 							IND_SYSTEM_VERSION_FIRST_FK="[null]"
-							DIMENSION_FK="30"
+							DIMENSION_FK="1221"
 							INDICATOR_INSTANCE_FK="[null]"
 							VERSION="1"
 						/>				
 						<TBL_DIMENSIONS
-							ID="30"
+							ID="1221"
 							UUID="IndSys-1-v2-Dimension-1A"
 							TITLE_FK="21"
 							
@@ -204,19 +236,19 @@
 						/>		
 
 						<TBL_ELEMENTS_LEVELS
-							ID="40"
+							ID="1222"
 							UUID="uuid-ignored-40"
-							PARENT_FK="25"
+							PARENT_FK="122"
 							ORDER_IN_LEVEL="2"
 							
-							IND_SYSTEM_VERSION_ALL_FK="2"
+							IND_SYSTEM_VERSION_ALL_FK="12"
 							IND_SYSTEM_VERSION_FIRST_FK="[null]"
-							DIMENSION_FK="40"
+							DIMENSION_FK="1222"
 							INDICATOR_INSTANCE_FK="[null]"
 							VERSION="1"
 						/>
 						<TBL_DIMENSIONS
-							ID="40"
+							ID="1222"
 							TITLE_FK="22"
 							UUID="IndSys-1-v2-Dimension-1B"
 							
@@ -230,19 +262,19 @@
 						/>			
 						
 								<TBL_ELEMENTS_LEVELS
-									ID="50"
+									ID="12221"
 									UUID="uuid-ignored-50"
-									PARENT_FK="40"
+									PARENT_FK="1222"
 									ORDER_IN_LEVEL="1"
 									
-									IND_SYSTEM_VERSION_ALL_FK="2"
+									IND_SYSTEM_VERSION_ALL_FK="12"
 									IND_SYSTEM_VERSION_FIRST_FK="[null]"
-									DIMENSION_FK="50"
+									DIMENSION_FK="12221"
 									INDICATOR_INSTANCE_FK="[null]"
 									VERSION="1"
 								/>
 								<TBL_DIMENSIONS
-									ID="50"
+									ID="12221"
 									UUID="IndSys-1-v2-Dimension-1BA"
 									TITLE_FK="23"
 																		
@@ -256,19 +288,19 @@
 								/>	
 								
 								<TBL_ELEMENTS_LEVELS
-									ID="51"
+									ID="12222"
 									UUID="uuid-ignored-51"
-									PARENT_FK="40"
+									PARENT_FK="1222"
 									ORDER_IN_LEVEL="2"
 									
-									IND_SYSTEM_VERSION_ALL_FK="2"
+									IND_SYSTEM_VERSION_ALL_FK="12"
 									IND_SYSTEM_VERSION_FIRST_FK="[null]"
 									DIMENSION_FK="[null]"
-									INDICATOR_INSTANCE_FK="51"
+									INDICATOR_INSTANCE_FK="12222"
 									VERSION="1"
 								/>
 								<TBL_INDICATOR_INSTANCES
-									ID="51"
+									ID="12222"
 									UUID="IndSys-1-v2-IInstance-3"
 									INDICATOR_UUID="IndicatorA"
 									TEMPORARY_GRANULARITY_ID="Annual"
@@ -288,19 +320,19 @@
 								
 				
 				<TBL_ELEMENTS_LEVELS
-					ID="20"
+					ID="123"
 					UUID="uuid-ignored-20"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="3"
 					
-					IND_SYSTEM_VERSION_ALL_FK="2"
-					IND_SYSTEM_VERSION_FIRST_FK="2"
+					IND_SYSTEM_VERSION_ALL_FK="12"
+					IND_SYSTEM_VERSION_FIRST_FK="12"
 					DIMENSION_FK="[null]"
-					INDICATOR_INSTANCE_FK="20"
+					INDICATOR_INSTANCE_FK="123"
 					VERSION="1"
 				/>
 				<TBL_INDICATOR_INSTANCES
-					ID="20"
+					ID="123"
 					UUID="IndSys-1-v2-IInstance-2"
 					INDICATOR_UUID="IndicatorA"
 					TEMPORARY_GRANULARITY_ID="Annual"
@@ -319,19 +351,19 @@
 				/>									
 								
 				<TBL_ELEMENTS_LEVELS
-					ID="60"
+					ID="124"
 					UUID="uuid-ignored-60"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="4"
 					
-					IND_SYSTEM_VERSION_ALL_FK="2"
-					IND_SYSTEM_VERSION_FIRST_FK="2"
-					DIMENSION_FK="60"
+					IND_SYSTEM_VERSION_ALL_FK="12"
+					IND_SYSTEM_VERSION_FIRST_FK="12"
+					DIMENSION_FK="124"
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
 				<TBL_DIMENSIONS
-					ID="60"
+					ID="124"
 					UUID="IndSys-1-v2-Dimension-2"
 					TITLE_FK="24"
 						
@@ -368,7 +400,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="3"
+				ID="21"
 				UUID="IndSys-2-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="9"
@@ -424,7 +456,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="4"
+				ID="31"
 				UUID="IndSys-3-v1"
 				VERSION_NUMBER="11.033"
 				TITLE_FK="10"
@@ -458,19 +490,19 @@
 			/>			
 			
 				<TBL_ELEMENTS_LEVELS
-					ID="70"
+					ID="311"
 					UUID="uuid-ignored-70"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="1"
 					
-					IND_SYSTEM_VERSION_ALL_FK="4"
-					IND_SYSTEM_VERSION_FIRST_FK="4"
-					DIMENSION_FK="70"
+					IND_SYSTEM_VERSION_ALL_FK="31"
+					IND_SYSTEM_VERSION_FIRST_FK="31"
+					DIMENSION_FK="311"
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
 				<TBL_DIMENSIONS
-					ID="70"
+					ID="311"
 					UUID="IndSys-3-v1-Dimension-1"
 					TITLE_FK="25"
 							
@@ -484,19 +516,19 @@
 				/>					
 				
 					<TBL_ELEMENTS_LEVELS
-						ID="78"
+						ID="3111"
 						UUID="uuid-ignored-78"
-						PARENT_FK="70"
+						PARENT_FK="311"
 						ORDER_IN_LEVEL="1"
 						
-						IND_SYSTEM_VERSION_ALL_FK="4"
+						IND_SYSTEM_VERSION_ALL_FK="31"
 						IND_SYSTEM_VERSION_FIRST_FK="[null]"
 						DIMENSION_FK="[null]"
-						INDICATOR_INSTANCE_FK="78"
+						INDICATOR_INSTANCE_FK="3111"
 						VERSION="1"
 					/>
 					<TBL_INDICATOR_INSTANCES
-						ID="78"
+						ID="3111"
 						UUID="IndSys-3-v1-IInstance-2A"
 						INDICATOR_UUID="IndicatorC"
 						TEMPORARY_GRANULARITY_ID="Annual"
@@ -515,19 +547,19 @@
 					/>		
 					
 					<TBL_ELEMENTS_LEVELS
-						ID="80"
+						ID="3112"
 						UUID="uuid-ignored-80"
-						PARENT_FK="70"
+						PARENT_FK="311"
 						ORDER_IN_LEVEL="2"
 						
-						IND_SYSTEM_VERSION_ALL_FK="4"
+						IND_SYSTEM_VERSION_ALL_FK="31"
 						IND_SYSTEM_VERSION_FIRST_FK="[null]"
-						DIMENSION_FK="80"
+						DIMENSION_FK="3112"
 						INDICATOR_INSTANCE_FK="[null]"
 						VERSION="1"
 					/>
 					<TBL_DIMENSIONS
-						ID="80"
+						ID="3112"
 						UUID="IndSys-3-v1-Dimension-1A"						
 						TITLE_FK="27"
 						
@@ -541,19 +573,19 @@
 					/>
 				
 				<TBL_ELEMENTS_LEVELS
-					ID="75"
+					ID="312"
 					UUID="uuid-ignored-75"
 					PARENT_FK="[null]"
 					ORDER_IN_LEVEL="2"
 					
-					IND_SYSTEM_VERSION_ALL_FK="4"
-					IND_SYSTEM_VERSION_FIRST_FK="4"
+					IND_SYSTEM_VERSION_ALL_FK="31"
+					IND_SYSTEM_VERSION_FIRST_FK="31"
 					DIMENSION_FK="[null]"
-					INDICATOR_INSTANCE_FK="75"
+					INDICATOR_INSTANCE_FK="312"
 					VERSION="1"
 				/>
 				<TBL_INDICATOR_INSTANCES
-					ID="75"
+					ID="312"
 					UUID="IndSys-3-v1-IInstance-2"
 					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
@@ -594,7 +626,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="5"
+				ID="41"
 				UUID="IndSys-4-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="11"
@@ -627,6 +659,38 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
+				<TBL_ELEMENTS_LEVELS
+					ID="411"
+					UUID="uuid-ignored-411"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="2"
+					
+					IND_SYSTEM_VERSION_ALL_FK="41"
+					IND_SYSTEM_VERSION_FIRST_FK="41"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="411"
+					VERSION="1"
+				/>			
+				<TBL_INDICATOR_INSTANCES
+					ID="411"
+					UUID="IndSys-4-v1-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					TEMPORARY_GRANULARITY_ID="Annual"
+					TEMPORARY_VALUE="[null]"
+					GEOGRAPHIC_GRANULARITY_ID="Countries"
+					GEOGRAPHIC_VALUE="[null]"
+					
+					TITLE_FK="36"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-05-05 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-06-06 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 5											                      	-->
 	<!--		- Version 1: diffusion validation												-->
@@ -650,7 +714,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="6"
+				ID="51"
 				UUID="IndSys-5-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="12"
@@ -683,6 +747,38 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
 			
+				<TBL_ELEMENTS_LEVELS
+						ID="511"
+						UUID="uuid-ignored-511"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="51"
+						IND_SYSTEM_VERSION_FIRST_FK="51"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="511"
+						VERSION="1"
+					/>			
+				<TBL_INDICATOR_INSTANCES
+					ID="511"
+					UUID="IndSys-5-v1-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					TEMPORARY_GRANULARITY_ID="Annual"
+					TEMPORARY_VALUE="[null]"
+					GEOGRAPHIC_GRANULARITY_ID="Countries"
+					GEOGRAPHIC_VALUE="[null]"
+					
+					TITLE_FK="34"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-05-05 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-06-06 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 6											                      	-->
 	<!--		- Version 1: published															-->
@@ -707,7 +803,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="7"
+				ID="61"
 				UUID="IndSys-6-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="13"
@@ -741,7 +837,7 @@
 			/>
 			
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="8"
+				ID="62"
 				UUID="IndSys-6-v2"
 				VERSION_NUMBER="2.000"
 				TITLE_FK="14"
@@ -774,6 +870,37 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_ELEMENTS_LEVELS
+					ID="621"
+					UUID="uuid-ignored-621"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					
+					IND_SYSTEM_VERSION_ALL_FK="62"
+					IND_SYSTEM_VERSION_FIRST_FK="62"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="621"
+					VERSION="1"
+				/>			
+				<TBL_INDICATOR_INSTANCES
+					ID="621"
+					UUID="IndSys-6-v2-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					TEMPORARY_GRANULARITY_ID="Annual"
+					TEMPORARY_VALUE="[null]"
+					GEOGRAPHIC_GRANULARITY_ID="Countries"
+					GEOGRAPHIC_VALUE="[null]"
+					TITLE_FK="37"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-05-05 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-06-06 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>	
+			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 7											                      	-->
 	<!--		- Version 1: archived															-->
@@ -798,7 +925,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="9"
+				ID="71"
 				UUID="IndSys-7-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="15"
@@ -832,7 +959,7 @@
 			/>
 			
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="10"
+				ID="72"
 				UUID="IndSys-7-v2"
 				VERSION_NUMBER="2.000"
 				TITLE_FK="16"
@@ -863,7 +990,38 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>			
+			/>		
+			
+				<TBL_ELEMENTS_LEVELS
+					ID="721"
+					UUID="uuid-ignored-721"
+					PARENT_FK="[null]"
+					ORDER_IN_LEVEL="1"
+					
+					IND_SYSTEM_VERSION_ALL_FK="72"
+					IND_SYSTEM_VERSION_FIRST_FK="72"
+					DIMENSION_FK="[null]"
+					INDICATOR_INSTANCE_FK="721"
+					VERSION="1"
+				/>			
+				<TBL_INDICATOR_INSTANCES
+					ID="721"
+					UUID="IndSys-7-v2-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					TEMPORARY_GRANULARITY_ID="Annual"
+					TEMPORARY_VALUE="[null]"
+					GEOGRAPHIC_GRANULARITY_ID="Countries"
+					GEOGRAPHIC_VALUE="[null]"
+					TITLE_FK="38"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-05-05 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-06-06 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>	
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 8											                      	-->
@@ -888,7 +1046,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="11"
+				ID="81"
 				UUID="IndSys-8-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="17"
@@ -944,7 +1102,7 @@
 	 />
   
 			<TBL_INDIC_SYSTEMS_VERSIONS
-				ID="12"
+				ID="91"
 				UUID="IndSys-9-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="18"
@@ -978,36 +1136,36 @@
 			/>								
 			
 				<TBL_ELEMENTS_LEVELS
-						ID="120"
+						ID="911"
 						UUID="uuid-ignored-120"
 						PARENT_FK="[null]"
 						ORDER_IN_LEVEL="1"
 						
-						IND_SYSTEM_VERSION_ALL_FK="12"
-						IND_SYSTEM_VERSION_FIRST_FK="12"
+						IND_SYSTEM_VERSION_ALL_FK="91"
+						IND_SYSTEM_VERSION_FIRST_FK="91"
 						DIMENSION_FK="[null]"
-						INDICATOR_INSTANCE_FK="120"
+						INDICATOR_INSTANCE_FK="911"
 						VERSION="1"
 					/>			
-					<TBL_INDICATOR_INSTANCES
-						ID="120"
-						UUID="IndSys-9-v1-IInstance-1"
-						INDICATOR_UUID="IndicatorB"
-						TEMPORARY_GRANULARITY_ID="Annual"
-						TEMPORARY_VALUE="[null]"
-						GEOGRAPHIC_GRANULARITY_ID="Countries"
-						GEOGRAPHIC_VALUE="[null]"
-						
-						TITLE_FK="33"
-						
-						VERSION="1"
-						CREATED_BY="user1"
-						CREATED_DATE="2011-05-05 01:02:04"
-						CREATED_DATE_TZ="Europe/London"
-						LAST_UPDATED_BY="user2"
-						LAST_UPDATED="2011-06-06 05:06:07"
-						LAST_UPDATED_TZ="Europe/London"
-					/>						
+				<TBL_INDICATOR_INSTANCES
+					ID="911"
+					UUID="IndSys-9-v1-IInstance-1"
+					INDICATOR_UUID="IndicatorB"
+					TEMPORARY_GRANULARITY_ID="Annual"
+					TEMPORARY_VALUE="[null]"
+					GEOGRAPHIC_GRANULARITY_ID="Countries"
+					GEOGRAPHIC_VALUE="[null]"
+					
+					TITLE_FK="33"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-05-05 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-06-06 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>						
 			  			
 			  
 	<!-- ************************************************************************************ -->
@@ -1802,6 +1960,126 @@
 		UUID="IS-33-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="33"
+	/>			
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="34"
+		UUID="IS-34"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="62"
+		LABEL="Título IndSys-5-v1-IInstance-1"
+		LOCALE="es"
+		UUID="IS-34-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="34"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="63"
+		LABEL="Title IndSys-5-v1-IInstance-1"
+		LOCALE="en"
+		UUID="IS-34-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="34"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="35"
+		UUID="IS-35"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="64"
+		LABEL="Título IndSys-5-v1-IInstance-1"
+		LOCALE="es"
+		UUID="IS-35-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="35"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="65"
+		LABEL="Title IndSys-5-v1-IInstance-1"
+		LOCALE="en"
+		UUID="IS-35-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="35"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="36"
+		UUID="IS-36"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="66"
+		LABEL="Título IndSys-4-v1-IInstance-1"
+		LOCALE="es"
+		UUID="IS-36-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="36"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="67"
+		LABEL="Title IndSys-4-v1-IInstance-1"
+		LOCALE="en"
+		UUID="IS-36-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="36"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="37"
+		UUID="IS-37"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="68"
+		LABEL="Título IndSys-6-v2-IInstance-1"
+		LOCALE="es"
+		UUID="IS-37-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="37"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="69"
+		LABEL="Title IndSys-6-v6-IInstance-1"
+		LOCALE="en"
+		UUID="IS-37-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="37"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="38"
+		UUID="IS-38"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="70"
+		LABEL="Título IndSys-7-v2-IInstance-1"
+		LOCALE="es"
+		UUID="IS-38-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="38"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="71"
+		LABEL="Title IndSys-7-v6-IInstance-1"
+		LOCALE="en"
+		UUID="IS-38-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="38"
 	/>														
 					
 </dataset>

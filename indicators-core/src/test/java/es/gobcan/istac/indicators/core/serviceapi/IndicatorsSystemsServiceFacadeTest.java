@@ -64,6 +64,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     private static String                    DIMENSION_1_INDICATORS_SYSTEM_3             = "IndSys-3-v1-Dimension-1";
 
     // Indicator instances
+    private static String                    INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1 = "IndSys-1-v1-IInstance-1";
     private static String                    INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
     private static String                    INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
     private static String                    INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
@@ -3005,17 +3006,18 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
         // Version 1.000
         {
             List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "1.000");
-            assertEquals(0, indicatorsInstancesDto.size());
+            assertEquals(1, indicatorsInstancesDto.size());
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1, indicatorsInstancesDto.get(0).getUuid());
         }
 
         // Version 2.000
         {
-            List<IndicatorInstanceDto> indicatorInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "2.000");
-            assertEquals(3, indicatorInstancesDto.size());
+            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "2.000");
+            assertEquals(3, indicatorsInstancesDto.size());
 
-            assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(0).getUuid());
-            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(1).getUuid()); // orderBy puts null at last place
-            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorInstancesDto.get(2).getUuid());
+            assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorsInstancesDto.get(0).getUuid());
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsInstancesDto.get(1).getUuid()); // orderBy puts null at last place
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsInstancesDto.get(2).getUuid());
         }
     }
 

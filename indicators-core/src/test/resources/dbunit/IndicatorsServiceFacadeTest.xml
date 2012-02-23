@@ -26,7 +26,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="1"
+				ID="11"
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="1"
@@ -62,13 +62,13 @@
 			/>
 			
 				<TBL_DATA_SOURCES
-						ID="10"
+						ID="111"
 						UUID="Indicator-1-v1-DataSource-1"
 						QUERY_GPE="query-gpe Indicator-1-v1-DataSource-1"
 						PX="px Indicator-1-v1-DataSource-1"
 						TEMPORARY_VARIABLE="temporary v Indicator-1-v1-DataSource-1"
 						GEOGRAPHIC_VARIABLE="geographic v Indicator-1-v1-DataSource-1"
-						INDICATOR_VERSION_FK="1"
+						INDICATOR_VERSION_FK="11"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -80,7 +80,7 @@
 					/>
 				
 			<TBL_INDICATOR_VERSIONS
-				ID="2"
+				ID="12"
 				UUID="Indicator-1-v2"
 				VERSION_NUMBER="2.000"
 				NAME_FK="5"
@@ -115,13 +115,13 @@
 			/>
 			
 				<TBL_DATA_SOURCES
-					ID="20"
+					ID="121"
 					UUID="Indicator-1-v2-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-1-v2-DataSource-1"
 					PX="px Indicator-1-v2-DataSource-1"
 					TEMPORARY_VARIABLE="temporary v Indicator-1-v2-DataSource-1"
 					GEOGRAPHIC_VARIABLE="geographic v Indicator-1-v2-DataSource-1"
-					INDICATOR_VERSION_FK="2"
+					INDICATOR_VERSION_FK="12"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -133,11 +133,11 @@
 				/>
 				
 					<TBL_DATA_SOURCE_VARIABLES
-						ID="30"
+						ID="1211"
 						UUID="Indicator-1-v2-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-1"
 						CATEGORY="category Indicator-1-v2-DataSource-1-Variable-1"
-						DATA_SOURCE_FK="20"
+						DATA_SOURCE_FK="121"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -149,11 +149,11 @@
 					/>
 					
 					<TBL_DATA_SOURCE_VARIABLES
-						ID="40"
+						ID="1212"
 						UUID="Indicator-1-v2-DataSource-1-Var-2"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-2"
 						CATEGORY="category Indicator-1-v2-DataSource-1-Variable-2"
-						DATA_SOURCE_FK="20"
+						DATA_SOURCE_FK="121"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -166,13 +166,13 @@
 					
 					
 				<TBL_DATA_SOURCES
-					ID="30"
+					ID="122"
 					UUID="Indicator-1-v2-DataSource-2"
 					QUERY_GPE="query-gpe Indicator-1-v2-DataSource-2"
 					PX="px Indicator-1-v2-DataSource-2"
 					TEMPORARY_VARIABLE="temporary v Indicator-1-v2-DataSource-2"
 					GEOGRAPHIC_VARIABLE="geographic v Indicator-1-v2-DataSource-2"
-					INDICATOR_VERSION_FK="2"
+					INDICATOR_VERSION_FK="12"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -207,7 +207,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="3"
+				ID="21"
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="9"
@@ -264,7 +264,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="4"
+				ID="31"
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="11.033"
 				NAME_FK="10"
@@ -299,13 +299,13 @@
 			/>			
 			
 				<TBL_DATA_SOURCES
-					ID="50"
+					ID="311"
 					UUID="Indicator-3-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-3-v1-DataSource-1"
 					PX="px Indicator-3-v1-DataSource-1"
 					TEMPORARY_VARIABLE="temporary v Indicator-3-v1-DataSource-1"
 					GEOGRAPHIC_VARIABLE="geographic v Indicator-3-v1-DataSource-1"
-					INDICATOR_VERSION_FK="4"
+					INDICATOR_VERSION_FK="31"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -317,11 +317,11 @@
 				/>
 				
 					<TBL_DATA_SOURCE_VARIABLES
-						ID="50"
+						ID="3111"
 						UUID="Indicator-3-v1-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-3-v1-DataSource-1-Var-1"
 						CATEGORY="category Indicator-3-v1-DataSource-1-Var-1"
-						DATA_SOURCE_FK="50"
+						DATA_SOURCE_FK="311"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -355,7 +355,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="5"
+				ID="41"
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="11"
@@ -412,7 +412,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="6"
+				ID="51"
 				UUID="Indicator-5-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="12"
@@ -470,7 +470,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="7"
+				ID="61"
 				UUID="Indicator-6-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="13"
@@ -505,7 +505,7 @@
 			/>
 			
 			<TBL_INDICATOR_VERSIONS
-				ID="8"
+				ID="62"
 				UUID="Indicator-6-v2"
 				VERSION_NUMBER="2.000"
 				NAME_FK="14"
@@ -562,7 +562,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="9"
+				ID="71"
 				UUID="Indicator-7-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="15"
@@ -597,7 +597,7 @@
 			/>
 			
 			<TBL_INDICATOR_VERSIONS
-				ID="10"
+				ID="72"
 				UUID="Indicator-7-v2"
 				VERSION_NUMBER="2.000"
 				NAME_FK="16"
@@ -654,7 +654,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="11"
+				ID="81"
 				UUID="Indicator-8-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="17"
@@ -711,7 +711,7 @@
 	 />
   
 			<TBL_INDICATOR_VERSIONS
-				ID="12"
+				ID="91"
 				UUID="Indicator-9-v1"
 				VERSION_NUMBER="1.000"
 				NAME_FK="18"
@@ -746,13 +746,13 @@
 			/>			
 			
 				<TBL_DATA_SOURCES
-					ID="120"
+					ID="911"
 					UUID="Indicator-9-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-9-v1-DataSource-1"
 					PX="px Indicator-9-v1-DataSource-1"
 					TEMPORARY_VARIABLE="temporary v Indicator-9-v1-DataSource-1"
 					GEOGRAPHIC_VARIABLE="geographic v Indicator-9-v1-DataSource-1"
-					INDICATOR_VERSION_FK="12"
+					INDICATOR_VERSION_FK="91"
 					
 					VERSION="1"
 					CREATED_BY="user1"
