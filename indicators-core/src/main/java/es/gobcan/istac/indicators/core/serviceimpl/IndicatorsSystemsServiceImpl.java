@@ -165,6 +165,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
     
     @Override
+    public void deleteIndicatorInstance(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+        getElementLevelRepository().delete(elementLevel);
+    }
+    
+    @Override
     public List<IndicatorInstance> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();

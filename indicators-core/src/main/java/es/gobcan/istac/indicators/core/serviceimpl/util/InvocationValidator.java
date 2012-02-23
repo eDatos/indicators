@@ -486,16 +486,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-//    public static void checkDeleteIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
+    public static void checkDeleteIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkFindIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {

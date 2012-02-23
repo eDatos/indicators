@@ -672,6 +672,30 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
     }
     
     @Override
+    public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkDeleteIndicatorInstance(uuid, null);
+
+        // Check indicators system state
+        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
+        checkIndicatorSystemVersionInProduction(indicatorsSystemVersion);
+
+        // Delete
+        getIndicatorsSystemsService().deleteIndicatorInstance(ctx, indicatorInstance.getElementLevel());
+
+        // Update orders of other elements in level
+        List<ElementLevel> elementsAtLevel = null;
+        if (indicatorInstance.getElementLevel().getParent() == null) {
+            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
+        } else {
+            elementsAtLevel = indicatorInstance.getElementLevel().getParent().getChildren();
+        }
+        updateOrdersInLevelRemovingElement(ctx, elementsAtLevel, indicatorInstance.getElementLevel().getOrderInLevel());
+    }
+    
+    @Override
     public List<IndicatorInstanceDto> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
         // Validation of parameters
