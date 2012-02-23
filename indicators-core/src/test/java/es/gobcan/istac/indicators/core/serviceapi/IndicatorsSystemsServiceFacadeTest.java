@@ -2749,6 +2749,38 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
+    
+    @Override
+    @Test
+    public void testFindIndicatorsInstancesByDimension() throws Exception {
+
+        {
+            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstancesByDimension(getServiceContext(), DIMENSION_1B_INDICATORS_SYSTEM_1_V2);
+            assertEquals(1, indicatorsInstancesDto.size());
+            assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorsInstancesDto.get(0).getUuid());
+        }
+        {
+            List<IndicatorInstanceDto> indicatorInstancesDto = indicatorsSystemsServiceFacade.findIndicatorsInstancesByDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V1);
+            assertEquals(0, indicatorInstancesDto.size());
+        }
+    }
+
+    @Test
+    public void testFindIndicatorsInstancesByDimensionErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsSystemsServiceFacade.findIndicatorsInstancesByDimension(getServiceContext(), uuid);
+            fail("dimension not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Override
     protected String getDataSetFile() {

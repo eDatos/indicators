@@ -507,6 +507,16 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkFindIndicatorsInstancesByDimension(String dimensionUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(dimensionUuid, "DIMENSION_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
 //    public static void checkUpdateIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
 //        if (exceptions == null) {

@@ -687,6 +687,22 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         return indicatorsInstancesDto;
     }
     
+    @Override
+    public List<IndicatorInstanceDto> findIndicatorsInstancesByDimension(ServiceContext ctx, String dimensionUuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsInstancesByDimension(dimensionUuid, null);
+
+        // Retrieve indicators instances and transform
+        List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstancesByDimension(ctx, dimensionUuid);
+        List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
+        for (IndicatorInstance indicatorInstance : indicatorsInstances) {
+            indicatorsInstancesDto.add(do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance));
+        }
+
+        return indicatorsInstancesDto;
+    }
+    
     /**
      * Retrieves version of an indicators system in production
      */

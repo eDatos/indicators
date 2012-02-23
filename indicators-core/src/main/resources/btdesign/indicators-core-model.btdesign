@@ -46,6 +46,7 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 //	    	deleteIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
 	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@IndicatorInstance> findIndicatorsInstancesByDimension(String dimensionUuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -136,6 +137,8 @@ Application Indicators {
 //	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	"Find indicators instances"
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	"Find indicators instances of a dimension"
+	    	List<@IndicatorInstanceDto> findIndicatorsInstancesByDimension(String dimensionUuid) throws MetamacException;
 	    }    	
 	    
 	    "Provides access to indicators"

@@ -176,4 +176,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return indicatorsInstances;
     }
+    
+    @Override
+    public List<IndicatorInstance> findIndicatorsInstancesByDimension(ServiceContext ctx, String dimensionUuid) throws MetamacException {
+        Dimension dimension = retrieveDimension(ctx, dimensionUuid);
+        List<ElementLevel> levels = dimension.getElementLevel().getChildren();
+        List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
+        for (ElementLevel level : levels) {
+            if (level.getIndicatorInstance() != null) {
+                indicatorsInstances.add(level.getIndicatorInstance());
+            }
+        }
+        return indicatorsInstances;
+    }
 }
