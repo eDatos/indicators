@@ -2526,7 +2526,7 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
     }
 
     @Test
-    public void testUpdateDimensionErrorOrderIncorrect() throws Exception {
+    public void testUpdateDimensionLocationErrorOrderIncorrect() throws Exception {
 
         try {
             indicatorsSystemsServiceFacade.updateDimensionLocation(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2, null, Long.MAX_VALUE);
@@ -3217,6 +3217,224 @@ public class IndicatorsSystemsServiceFacadeTest extends IndicatorsBaseTest imple
             assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Override
+    @Test
+    public void testUpdateIndicatorInstanceLocation() throws Exception {
+        // In other test testUpdateIndicatorInstanceLocation*
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationActualWithoutParentTargetWithParent() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
+        String parentBeforeUuid = null;
+        String parentTargetUuid = DIMENSION_2_INDICATORS_SYSTEM_1_V2;
+
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentBeforeUuid, indicatorInstanceDto.getParentUuid());
+
+        // Update location
+        indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+
+        // Validate indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, indicatorInstanceDtoChanged.getParentUuid());
+
+        // Validate source
+        {
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            assertEquals(3, indicatorsSystemStructureDto.getElements().size());
+            assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getDimension().getUuid());
+            assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+            assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getDimension().getUuid());
+            assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+        }
+
+        // Validate target
+        {
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2);
+            assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
+            assertEquals(1, elementLevelDto.getSubelements().size());
+            assertEquals(uuid, elementLevelDto.getSubelements().get(0).getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationActualWithParentTargetWithoutParent() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
+        String parentBeforeUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = null;
+
+        // Retrieve actual
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentBeforeUuid, indicatorInstanceDto.getParentUuid());
+
+        // Update location
+        indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(2));
+
+        // Validate parent is changed in indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertNull(indicatorInstanceDtoChanged.getParentUuid());
+
+        // Validate source
+        {
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2).getSubelements().get(1);
+            assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
+            assertEquals(1, elementLevelDto.getSubelements().size());
+        }
+
+        // Validate target
+        {            
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            assertEquals(5, indicatorsSystemStructureDto.getElements().size());
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+            assertEquals(uuid, indicatorsSystemStructureDto.getElements().get(1).getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+            assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getDimension().getUuid());
+            assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
+            assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(4).getDimension().getUuid());
+            assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationChangingDimensionParent() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
+        String parentBeforeUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = DIMENSION_1A_INDICATORS_SYSTEM_1_V2;
+
+        // Retrieve actual
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentBeforeUuid, indicatorInstanceDto.getParentUuid());
+
+        // Update location
+        indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+
+        // Validate indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, indicatorInstanceDtoChanged.getParentUuid());
+        
+        // Validate source
+        {
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
+            assertEquals(parentBeforeUuid, elementLevelDto.getDimension().getUuid());
+            assertEquals(1, elementLevelDto.getSubelements().size());
+        }
+        
+        // Validate target
+        {
+            IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(0);
+            assertEquals(parentTargetUuid, elementLevelDto.getDimension().getUuid());
+            assertEquals(1, elementLevelDto.getSubelements().size());
+            assertEquals(uuid, elementLevelDto.getSubelements().get(0).getIndicatorInstance().getUuid());
+        }
+
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationActualSameParentOnlyChangeOrderWithoutParent() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
+
+        // Retrieve actual
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertNull(indicatorInstanceDto.getParentUuid());
+        assertEquals(Long.valueOf(1), indicatorInstanceDto.getOrderInLevel());
+
+        // Update location
+        indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
+
+        // Validate indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertNull(indicatorInstanceDtoChanged.getParentUuid());
+        assertEquals(Long.valueOf(4), indicatorInstanceDtoChanged.getOrderInLevel());
+        
+        // Validate source and target
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(4, indicatorsSystemStructureDto.getElements().size());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getDimension().getUuid());
+        assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+        assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getDimension().getUuid());
+        assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationActualSameParentOnlyChangeOrderWithParent() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
+        String parentUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
+
+        // Retrieve actual
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentUuid, indicatorInstanceDto.getParentUuid());
+        assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
+
+        // Update location
+        indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, indicatorInstanceDto.getParentUuid(), Long.valueOf(1));
+
+        // Validate indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsSystemsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentUuid, indicatorInstanceDtoChanged.getParentUuid());
+        assertEquals(Long.valueOf(1), indicatorInstanceDtoChanged.getOrderInLevel());
+        
+        // Validate source and target
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsSystemsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
+        ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1).getSubelements().get(1);
+        assertEquals(parentUuid, elementLevelDto.getDimension().getUuid());
+        assertEquals(2, elementLevelDto.getSubelements().size());
+        assertEquals(uuid, elementLevelDto.getSubelements().get(0).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(1), elementLevelDto.getSubelements().get(0).getIndicatorInstance().getOrderInLevel());
+        assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(1).getDimension().getUuid());
+        assertEquals(Long.valueOf(2), elementLevelDto.getSubelements().get(1).getDimension().getOrderInLevel());
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, null, Long.valueOf(1));
+            fail("IndicatorInstance not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorInstanceLocationErrorOrderIncorrect() throws Exception {
+
+        try {
+            indicatorsSystemsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, null, Long.MAX_VALUE);
+            fail("order incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

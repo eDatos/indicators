@@ -545,16 +545,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-//    public static void checkUpdateIndicatorInstanceLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
-//        if (exceptions == null) {
-//            exceptions = new ArrayList<MetamacExceptionItem>();
-//        }
-//
-//        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
-//        ValidationUtils.checkParameterRequired(orderInLevel, "ORDER_IN_LEVEL", exceptions);
-//
-//        ExceptionUtils.throwIfException(exceptions);
-//    }
+    public static void checkUpdateIndicatorInstanceLocation(String uuid, String parentUuid, Long orderInLevel, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+        ValidationUtils.checkParameterRequired(orderInLevel, "ORDER_IN_LEVEL", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
