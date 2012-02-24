@@ -72,11 +72,11 @@ Application Indicators {
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(@DataSource dataSource) throws MetamacException;
 	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
-    	}
-    	
-    	"Provides access to indicators systems"
-    	Service IndicatorsSystemsServiceFacade {
-	    	> @IndicatorsSystemsService
+    	}   	
+	    
+	    "Provides access to indicators, indicators systems..."
+    	Service IndicatorsServiceFacade {
+			> @IndicatorsSystemsService
     		> @IndicatorsService
 	    	
 	    	// INDICATORS SYSTEMS
@@ -140,12 +140,8 @@ Application Indicators {
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	"Retrieves all indicators instances of a indicators system regardless of the level"
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
-	    }    	
-	    
-	    "Provides access to indicators"
-    	Service IndicatorsServiceFacade {
-	    	> @IndicatorsService
 	    	
+	    	// INDICATORS
 	    	"Creates an indicator"
 	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
 	    	"Updates metadata of an indicator. This version can not be published or archived"
@@ -173,7 +169,7 @@ Application Indicators {
 	    	"Finds published indicators"
 	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
 	    	
-	    	// Datasources
+	    	// DATASOURCES
 	    	"Creates a data source"
 	    	@DataSourceDto createDataSource(String indicatorUuid, @DataSourceDto dataSourceDto) throws MetamacException;
 	    	"Updates metadata of data source"

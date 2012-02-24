@@ -27,11 +27,13 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
+ * Test to IndicatorsServiceFacade. Testing: indicators, data sources
+ * 
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements IndicatorsServiceFacadeTestBase {
+public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
@@ -676,7 +678,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testSendIndicatorToProductionValidation() throws Exception {
 
@@ -805,7 +806,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testSendIndicatorToDiffusionValidation() throws Exception {
 
@@ -902,7 +902,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testRejectIndicatorValidation() throws Exception {
 
@@ -1026,7 +1025,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testPublishIndicator() throws Exception {
 
@@ -1207,7 +1205,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testArchiveIndicator() throws Exception {
 
@@ -1332,7 +1329,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testVersioningIndicator() throws Exception {
 
@@ -1449,7 +1445,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testFindIndicators() throws Exception {
 
@@ -1488,7 +1483,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(9).getState());
     }
 
-    @Override
     @Test
     public void testFindIndicatorsPublished() throws Exception {
 
@@ -1505,7 +1499,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         assertEquals(IndicatorStateEnum.PUBLISHED, indicatorsDto.get(2).getState());
     }
 
-    @Override
     @Test
     public void testRetrieveDataSource() throws Exception {
 
@@ -1562,7 +1555,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testCreateDataSource() throws Exception {
 
@@ -1712,7 +1704,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testFindDataSources() throws Exception {
 
@@ -1753,7 +1744,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         }
     }
 
-    @Override
     @Test
     public void testUpdateDataSource() throws Exception {
 
@@ -1824,7 +1814,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
-
     }
 
     @Test
@@ -1846,6 +1835,6 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
 
     @Override
     protected String getDataSetFile() {
-        return "dbunit/IndicatorsServiceFacadeTest.xml";
+        return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
     }
 }
