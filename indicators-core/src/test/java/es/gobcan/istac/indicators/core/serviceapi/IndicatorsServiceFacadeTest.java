@@ -49,6 +49,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     private static String             INDICATOR_7                  = "Indicator-7";
     private static String             INDICATOR_8                  = "Indicator-8";
     private static String             INDICATOR_9                  = "Indicator-9";
+    private static String             INDICATOR_10                 = "Indicator-10";
 
     // Data sources
     private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
@@ -483,6 +484,23 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
     }
 
     @Test
+    public void testDeleteIndicatorErrorWithIndicatorInstances() throws Exception {
+
+        String uuid = INDICATOR_10;
+
+        // Validation
+        try {
+            indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
+            fail("Indicator is not in draft");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testUpdateIndicator() throws Exception {
 
         String uuid = INDICATOR_1;
@@ -880,7 +898,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);            
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1437,7 +1455,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
 
         // Retrieve last versions...
         List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext());
-        assertEquals(9, indicatorsDto.size());
+        assertEquals(10, indicatorsDto.size());
 
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
         assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(0).getState());
@@ -1465,6 +1483,9 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
 
         assertEquals(INDICATOR_9, indicatorsDto.get(8).getUuid());
         assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, indicatorsDto.get(8).getState());
+
+        assertEquals(INDICATOR_10, indicatorsDto.get(9).getUuid());
+        assertEquals(IndicatorStateEnum.DRAFT, indicatorsDto.get(9).getState());
     }
 
     @Override

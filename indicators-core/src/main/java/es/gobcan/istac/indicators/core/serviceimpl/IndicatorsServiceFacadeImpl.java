@@ -27,7 +27,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorServiceFacade.
- * 
  * TODO criteria y paginación en operaciones de búsqueda: findIndicators, findIndicatorsPublished
  */
 @Service("indicatorsServiceFacade")
@@ -103,7 +102,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorDto;
     }
 
-    // TODO comprobar que no tiene ninguna instancia de indicador asociada
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -115,6 +113,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Delete whole indicator or only last version
         if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorVersion.getVersionNumber())) {
             // If indicator is not published or archived, delete whole indicator
+
+            // Check not exists any indicator instance for this indicator
+            if (indicatorVersion.getIndicator().getIndicatorsInstances().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS, uuid);
+            }
             getIndicatorsService().deleteIndicator(ctx, uuid);
         } else {
             getIndicatorsService().deleteIndicatorVersion(ctx, uuid, indicatorVersion.getVersionNumber());
@@ -216,7 +219,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve version in diffusion validation
         IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null || (!IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.PUBLICATION_FAILED.equals(indicatorInProduction.getState()))) {
+        if (indicatorInProduction == null
+                || (!IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.PUBLICATION_FAILED.equals(indicatorInProduction.getState()))) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DIFFUSION_VALIDATION, IndicatorStateEnum.PUBLICATION_FAILED});
         }
 
