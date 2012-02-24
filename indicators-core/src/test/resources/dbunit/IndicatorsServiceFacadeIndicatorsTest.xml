@@ -389,6 +389,24 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
+				<TBL_DATA_SOURCES
+					ID="411"
+					UUID="Indicator-4-v1-DataSource-1"
+					QUERY_GPE="query-gpe Indicator-4-v1-DataSource-1"
+					PX="px Indicator-4-v1-DataSource-1"
+					TEMPORARY_VARIABLE="temporary v Indicator-4-v1-DataSource-1"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-4-v1-DataSource-1"
+					INDICATOR_VERSION_FK="41"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+		
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 5											                      	-->
 	<!--		- Version 1: diffusion validation												-->
@@ -445,6 +463,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
+			
+				<TBL_DATA_SOURCES
+					ID="511"
+					UUID="Indicator-5-v1-DataSource-1"
+					QUERY_GPE="query-gpe Indicator-5-v1-DataSource-1"
+					PX="px Indicator-5-v1-DataSource-1"
+					TEMPORARY_VARIABLE="temporary v Indicator-5-v1-DataSource-1"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-5-v1-DataSource-1"
+					INDICATOR_VERSION_FK="51"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 6											 		                     	-->
@@ -538,6 +574,24 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_DATA_SOURCES
+					ID="621"
+					UUID="Indicator-6-v2-DataSource-1"
+					QUERY_GPE="query-gpe Indicator-6-v2-DataSource-1"
+					PX="px Indicator-6-v2-DataSource-1"
+					TEMPORARY_VARIABLE="temporary v Indicator-6-v2-DataSource-1"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-6-v2-DataSource-1"
+					INDICATOR_VERSION_FK="62"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 7											                    		  	-->
 	<!--		- Version 1: archived															-->
@@ -630,6 +684,24 @@
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
+			
+				<TBL_DATA_SOURCES
+					ID="721"
+					UUID="Indicator-7-v2-DataSource-1"
+					QUERY_GPE="query-gpe Indicator-7-v2-DataSource-1"
+					PX="px Indicator-7-v2-DataSource-1"
+					TEMPORARY_VARIABLE="temporary v Indicator-7-v2-DataSource-1"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-7-v2-DataSource-1"
+					INDICATOR_VERSION_FK="72"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 8											                      			-->
