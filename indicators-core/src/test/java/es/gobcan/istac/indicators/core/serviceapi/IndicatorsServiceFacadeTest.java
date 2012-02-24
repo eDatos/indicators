@@ -491,7 +491,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
         // Validation
         try {
             indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
-            fail("Indicator is not in draft");
+            fail("Indicator has indicator instances");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS.getCode(), e.getExceptionItems().get(0).getCode());
