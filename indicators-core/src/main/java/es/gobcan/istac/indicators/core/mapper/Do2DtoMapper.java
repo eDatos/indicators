@@ -21,7 +21,7 @@ public interface Do2DtoMapper {
 	public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
 
 	// Dimensions
-    public DimensionDto dimensionDoToDto(Dimension source, Boolean transformSubdimensions);
+    public DimensionDto dimensionDoToDto(Dimension source);
 
     // Indicators instances
     public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source);

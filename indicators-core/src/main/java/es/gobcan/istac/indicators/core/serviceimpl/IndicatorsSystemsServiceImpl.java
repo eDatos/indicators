@@ -134,7 +134,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     @Override
     public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
-        List<ElementLevel> levels = indicatorsSystemVersion.getChildrenFirstLevel();
+        List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
         List<Dimension> dimensions = new ArrayList<Dimension>();
         for (ElementLevel level : levels) {
             if (level.getDimension() != null) {
@@ -172,19 +172,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public List<IndicatorInstance> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemVersion(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
-        List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
-        for (ElementLevel level : levels) {
-            if (level.getIndicatorInstance() != null) {
-                indicatorsInstances.add(level.getIndicatorInstance());
-            }
-        }
-        return indicatorsInstances;
-    }
-    
-    @Override
-    public List<IndicatorInstance> findIndicatorsInstancesByDimension(ServiceContext ctx, String dimensionUuid) throws MetamacException {
-        Dimension dimension = retrieveDimension(ctx, dimensionUuid);
-        List<ElementLevel> levels = dimension.getElementLevel().getChildren();
         List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
         for (ElementLevel level : levels) {
             if (level.getIndicatorInstance() != null) {

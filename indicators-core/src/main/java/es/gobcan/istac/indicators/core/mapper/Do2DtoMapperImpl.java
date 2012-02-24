@@ -66,7 +66,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     @Override
-    public DimensionDto dimensionDoToDto(Dimension source, Boolean transformSubdimensions) {
+    public DimensionDto dimensionDoToDto(Dimension source) {
         DimensionDto target = new DimensionDto();
         target.setUuid(source.getUuid());
         target.setParentUuid(source.getElementLevel().getParentUuid());
@@ -78,14 +78,6 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
         
-        // Subdimensions
-        if (transformSubdimensions) {
-            for (ElementLevel child : source.getElementLevel().getChildren()) {
-                if (child.getDimension() != null) {
-                    target.addSubdimension(dimensionDoToDto(child.getDimension(), transformSubdimensions));
-                }
-            }
-        }
         return target;
     }
     
@@ -176,7 +168,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     private ElementLevelDto elementLevelDoToDto(ElementLevel source) {
         ElementLevelDto target = new ElementLevelDto();
         if (source.getDimension() != null) {
-            target.setDimension(dimensionDoToDto(source.getDimension(), Boolean.FALSE));
+            target.setDimension(dimensionDoToDto(source.getDimension()));
         } else if (source.getIndicatorInstance() != null) {
             target.setIndicatorInstance(indicatorInstanceDoToDto(source.getIndicatorInstance()));
         }

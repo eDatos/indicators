@@ -529,7 +529,7 @@
 					/>
 					<TBL_INDICATOR_INSTANCES
 						ID="3111"
-						UUID="IndSys-3-v1-IInstance-2A"
+						UUID="IndSys-3-v1-IInstance-1A"
 						INDICATOR_UUID="IndicatorC"
 						TEMPORARY_GRANULARITY_ID="Annual"
 						TEMPORARY_VALUE="[null]"
@@ -1874,7 +1874,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="54"
-		LABEL="Título IndSys-3-v1-Dimension-1A"
+		LABEL="Título IndSys-3-v1-IInstance-2"
 		LOCALE="es"
 		UUID="IS-30-LS-1"
 		VERSION="1"
@@ -1883,7 +1883,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="55"
-		LABEL="Title IndSys-3-v1-Dimension-1A"
+		LABEL="Title IndSys-3-v1-IInstance-2"
 		LOCALE="en"
 		UUID="IS-30-LS-2"
 		VERSION="1"
@@ -1898,7 +1898,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="56"
-		LABEL="Título IndSys-3-v1-Dimension-1A"
+		LABEL="Título IndSys-3-v1-IInstance-1A"
 		LOCALE="es"
 		UUID="IS-31-LS-1"
 		VERSION="1"
@@ -1907,7 +1907,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="57"
-		LABEL="Title IndSys-3-v1-Dimension-1A"
+		LABEL="Title IndSys-3-v1-IInstance-1A"
 		LOCALE="en"
 		UUID="IS-31-LS-2"
 		VERSION="1"

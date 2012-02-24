@@ -46,7 +46,6 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	deleteIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
 	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
-	    	List<@IndicatorInstance> findIndicatorsInstancesByDimension(String dimensionUuid) throws MetamacException;
 	    	Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber);
     	}
     	
@@ -124,7 +123,7 @@ Application Indicators {
 	    	@DimensionDto retrieveDimension(String uuid) throws MetamacException;
 	    	"Deletes dimension"
 	    	deleteDimension(String uuid) throws MetamacException;
-	    	"Find dimensions"
+	    	"Retrieves all dimensions of a indicators system regardless of the level"
 	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// INDICATORS INSTANCES	    	
@@ -138,10 +137,8 @@ Application Indicators {
 	    	@IndicatorInstanceDto retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	"Deletes indicator instance"
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
-	    	"Find indicators instances"
+	    	"Retrieves all indicators instances of a indicators system regardless of the level"
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
-	    	"Find indicators instances of a dimension"
-	    	List<@IndicatorInstanceDto> findIndicatorsInstancesByDimension(String dimensionUuid) throws MetamacException;
 	    }    	
 	    
 	    "Provides access to indicators"
@@ -607,8 +604,6 @@ Application Indicators {
 			Long orderInLevel;
 			"Parent dimension"
 			String parentUuid;			
-       		"Subdimensions"
-       		- List<@DimensionDto> subdimensions;            
 	    }
 	    
 	    "Dto for data source"

@@ -477,7 +477,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         }
 
         // Transform to Dto to return
-        dimensionDto = do2DtoMapper.dimensionDoToDto(elementLevel.getDimension(), Boolean.TRUE);
+        dimensionDto = do2DtoMapper.dimensionDoToDto(elementLevel.getDimension());
         return dimensionDto;
     }
 
@@ -489,7 +489,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         // Retrieve
         Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
-        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension, Boolean.TRUE);
+        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
     }
 
@@ -527,7 +527,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
         for (Dimension dimension : dimensions) {
-            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension, Boolean.TRUE));
+            dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
         }
 
         return dimensionsDto;
@@ -677,22 +677,6 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
 
         // Retrieve indicators instances and transform
         List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstances(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
-        List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
-        for (IndicatorInstance indicatorInstance : indicatorsInstances) {
-            indicatorsInstancesDto.add(do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance));
-        }
-
-        return indicatorsInstancesDto;
-    }
-
-    @Override
-    public List<IndicatorInstanceDto> findIndicatorsInstancesByDimension(ServiceContext ctx, String dimensionUuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsInstancesByDimension(dimensionUuid, null);
-
-        // Retrieve indicators instances and transform
-        List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstancesByDimension(ctx, dimensionUuid);
         List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
         for (IndicatorInstance indicatorInstance : indicatorsInstances) {
             indicatorsInstancesDto.add(do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance));

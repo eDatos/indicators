@@ -210,7 +210,6 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, "INDICATORS_SYSTEM_UUID", exceptions);
         checkDimension(dimensionDto, exceptions);
         ValidationUtils.checkMetadataEmpty(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions);
-        ValidationUtils.checkMetadataEmpty(dimensionDto.getSubdimensions(), "DIMENSION.SUBDIMENSIONS", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
