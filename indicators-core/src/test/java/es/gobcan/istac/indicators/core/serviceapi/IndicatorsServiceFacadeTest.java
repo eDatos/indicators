@@ -856,7 +856,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -880,7 +880,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);            
         }
     }
 
@@ -1159,12 +1159,13 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.PUBLICATION_FAILED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
     @Test
-    public void testPublishIndicatorErrorWrongStateDiffusion() throws Exception {
+    public void testPublishIndicatorErrorWrongStatePublished() throws Exception {
 
         String uuid = INDICATOR_3;
 
@@ -1183,7 +1184,8 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.PUBLICATION_FAILED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -1284,12 +1286,12 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
     @Test
-    public void testArchiveIndicatorErrorWrongStateDiffusion() throws Exception {
+    public void testArchiveIndicatorErrorWrongStateArchived() throws Exception {
 
         String uuid = INDICATOR_8;
 
@@ -1308,7 +1310,7 @@ public class IndicatorsServiceFacadeTest extends IndicatorsBaseTest implements I
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
