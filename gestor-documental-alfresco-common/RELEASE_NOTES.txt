@@ -1,0 +1,164 @@
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.7 (28/11/2011)
+========================================================================================
+	* Bugfix en búsqueda de nodos. Si el atributo comienza por número no buscaba. Debe
+	  codificarse con ISO9075.
+
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.6 (23/05/2011)
+========================================================================================
+	* Nuevo metodo para crear version donde se puedes especificar si es minor o major
+	* Deprecado metodo que siempre creaba las verisones minor
+	* Nuevo metodo que obtiene la versi�n de un nodo especificando la version como String "major.minor"
+	* Deprecado metodo que obtenia la versi�n de un nodo s�lo teniendo en cuenta el minor
+	* Nuevo metodo que restaura el top de versiones de un nodo, con la version especificada 
+	
+	* La limitacion de las versiones major se deb�a al bug AR1863 solucionado en la versi�n de alfresco
+	2.1.2: http://wiki.alfresco.com/wiki/Release_2.1.2
+	
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.5 (10/12/2010)
+========================================================================================
+	* Eliminada dependencia 'arte-common'
+	
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.4 (13/10/2010)
+========================================================================================
+	* BUG FIX. Arreglado un bug que se introdujo en el nuevo metodo de la version 2.1.2
+	  
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.3 (24/09/2010)
+========================================================================================
+	* Cambiado el m�tdodo 'public InputStream obtenerContenidoPorNodeUuid(String nodeUuid)
+	 throws Exception', ahora si el nodo no se encuentra en el SpacesStore se busca en
+	 en el Version2Stores antes de arrojar una excepcion.
+	  
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.2 (13/08/2010)
+========================================================================================
+	* A�adido m�tdodo 'public String guardarContenido(InputStream stream, String fileName,
+	  String mimetype, String encoding, int timeout) throws Exception;'. 
+	  Soluciona problemas detectados al subir archivos de gran tama�o. El anterior 
+	  'guardarContenido' ha sido marcado como deprecated. Nota: El c�digo del 
+	  'gaurdarContenido' antiguo est� basado en un c�digo marcado como deprecation en las 
+	  librer�as de alfresco.
+	  
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.1 (22/03/2010)
+========================================================================================
+	* Eliminada operaci�n 'obtenerContenidoPorContentUrl', ya que si el usuario
+	  no es administrador de Alfresco no es posible obtener el contenido (daba null)
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.1.0 (02/03/2010)
+========================================================================================
+	* Se han introducido mejoras para permitir m�ltiples instancias del gestordocumental
+	  con distintos entornos Alfresco. Para ello ha habido que reescribir el AuthenticationUtils,
+	  el WebServicFactory y el CookieHandler de Alfresco para permitir que los servicios
+	  de conexi�n con alfresco no se entremezclen y usen cada uno su endpoint correspondiente.
+	* Se ha eliminado el m�todo 'restablecerConexion' puesto que se introdujo como fix
+	  para el problema que soluciona esta version (ver punto anterior).
+	
+========================================================================================
+                        gestordocumental-alfresco-common-2.0.3 (17/02/2010)
+========================================================================================
+	* a�adido m�todo 'restablecerConexion' que vuelve a establecer el EndPointAddress 
+	para el WebServiceFactory de Alfresco y abre una sesion.
+	
+========================================================================================
+                        gestordocumental-alfresco-common-2.0.2 (04/02/2010)
+========================================================================================
+	* a�adido m�todo 'obtenerContenidoPorNodeUuid' que nos permite obenter el contenido
+	  de un nodo sabiendo su uuid. NOTA: Si el nodo tiene varios contenidos este m�todo
+	  no s�lo devolver� el contenido principal.
+	
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.0.1 (04/01/2010)
+========================================================================================
+	* Eliminado m�todo 'obtenerContenido' porque no obtiene correctamente el contenido
+	  cuando Alfresco no lo ha indexado. Utilizar en su lugar 'obtenerContenidoPorContentUrl'
+	
+
+========================================================================================
+                        gestordocumental-alfresco-common-2.0.0 (07/2009)
+========================================================================================
+	* REFACTOR MUY IMPORTANTE!!! SIMPLIFICACI�N DE SERVICIOS
+	* Nuevo servicio: 'existeRuta'
+	* En "getPredicado" se permite que ya se especifique el path completo
+	* Al eliminar un nodo, bugfix: se devuelve el nodo origen
+	* Nueva utilidad: valoresToNamedValue
+	* Al realizar una consulta, se permite especificar que la propiedad sea nula
+	* Nuevo servicio: obtener el valor de una propiedad dada la ubicaci�n del nodo
+
+	  
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.10 (28/05/2009)
+========================================================================================
+    * BUGFIX: Error al establecer la conexi�n con alfresco para subir un documento.
+              si al obtener el puerto de una uri me da -1 implica que hay que utilizar
+              el puerto por defecto (http = 80 y https = 443). 
+
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.9 (27/05/2009)
+========================================================================================
+	* En 'completarPathNormalizadoConQnamePrefix' se comprueba si la carpeta tiene ya
+	  el prefix
+	* En 'crearNodoAbsoluto" se comprueba si el nombre del nodo tiene ya el prefix
+	* Se a�ade un Map para obtener los namespaces a partir de un prefix
+	  
+
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.8 (20/05/2009)
+========================================================================================
+	* BUGFIX: Corregido url de acceso no usuales para poner subir conenidos al alfresco
+	          utilizando el api REST.	  
+	  
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.7 (20/04/2009)
+========================================================================================
+	* Actualizada interfaz para poder obtener el objeto contet de un nodo. 
+	  
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.6 (23/03/2009)
+========================================================================================
+	* Bugfix: Obtenci�n del Path del Nodo padre. Se cambia el orden de las sustituciones 
+	  para dejar limpio el path absoluto del nodo padre 
+
+
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.4 (17/02/2009)
+========================================================================================
+	* Se prohibe la creaci�n del path raiz. As� conseguimos que se pueda tener el path
+	  por defecto con distintos namespaces
+
+
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.4 (17/02/2009)
+========================================================================================
+	* A�adidos m�todos para poder hacer streaming a la hora de insertar un contenido
+
+
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.3 (20/01/2009)
+========================================================================================
+	* Actualizadas las librer�as del proyecto y a�adidos metodos de utilidades
+	
+========================================================================================
+                        gestordocumental-alfresco-common-1.1.2 (17/11/2008)
+========================================================================================
+	* Eliminado hash de la uri del documento
+		
+========================================================================================
+                        gestordocumental-alfresco-common-1.0.0 (06/2008)
+========================================================================================
+	* Nuevas funcionalidades:
+		- DocumentoCML con nodo origen como referencia
+
+========================================================================================
+                       gestordocumental-alfresco-common-1.0.0 (05/2008)
+========================================================================================
+    * Funcionalidades comunes del Alfresco

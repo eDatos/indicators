@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+
+	<bean id="propertyPlaceholderConfigurer" class="com.arte.contratacion.pliegos.conf.PropertyPlaceholderConfigurer" />
+	<bean id="appProperty" factory-bean="propertyPlaceholderConfigurer" factory-method="getProperties" />
+
+	<bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+		<property name="filterInvocationDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor,channelProcessingFilter
+			</value>
+		</property>
+	</bean>
+
+	<bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
+		<constructor-arg value="/login.jsp"/> <!-- URL redirected to after logout -->
+		<constructor-arg>
+			<list>
+				<bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/processLogout"></property>		
+	</bean>
+	
+	<!-- The work of the HttpSessionContextIntegrationFilter is very specialized and therefor very easy to configure.
+		  The only thing this filter does, is propagating the established authentication object through all requests. 
+		  The filter wraps the authentication object a ThreadLocal and hands that wrapper over to the other filters in
+		  the chain.  -->
+	<bean id="httpSessionContextIntegrationFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
+	</bean>
+
+
+	<!-- The first filter through which the HTTP request will pass is the formAuthenticationProcessingFilter bean.
+		  This filter specializes in handling authentication request, i.e. The validation of username/password combinations -->
+	<bean id="authenticationProcessingFilter" class="com.arte.contratacion.pliegos.web.acegisecurity.AuthenticationProcessingFilterToLocked">
+		<property name="authenticationManager"><ref bean="authenticationManager"/></property>
+		<property name="authenticationFailureUrl"><value>/login.jsp?error=true</value></property>
+		<property name="defaultTargetUrl"><value>/gestion/administracion.jsp</value></property>
+		<property name="filterProcessesUrl"><value>/j_acegi_security_check</value></property>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.acegisecurity.LockedException">/usuarioBloqueado.iface</prop>
+				<prop key="com.arte.contratacion.pliegos.web.acegisecurity.MultipleIncorrectLoginException">/login.jsp?error=true&amp;loginsFallidos=true</prop>
+			</props>
+		</property>
+	</bean>
+	
+ 	<bean id="anonymousProcessingFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
+        <property name="key" value="anonymous_acegi_contratacion"/>
+        <property name="userAttribute" value="anonymous_acegi_contratacion,Rol_Anonymous"/>
+    </bean>
+    
+
+	<!-- The ExceptionTranslationFilter is the one of the two“pivotal” filters in the security system
+			(the other being FilterSecurityInterceptor). In short, ExceptionTranslationFilter catches any authentication
+			or authorization error (in the form of an AcegiSecurityException) and may do one of the following two things. 
+			If the exception was caused by the absence of an Authentication object (i.e. the user has not logged in yet), 
+			it spawns the configured AuthenticationEntryPoint to prompt the user for login (more on AuthenticationEntryPoint later).
+			If the exception was caused by an authorization exception thrown by FilterSecurityInterceptor (i.e. the user is logged
+			in but is not authorized for the resource requested), ExceptionTranslationFilter will send an SC_FORBIDDEN (HTTP 403)
+			error to the browser, which will display it’s built-in version of an ‘unauthorized access’ page.
+	 -->
+	<bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint">
+			<ref bean="authenticationProcessingFilterEntryPoint" />
+		</property>
+		<property name="accessDeniedHandler">
+			<bean class="org.acegisecurity.ui.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/gestion/otros/acceso-denegado.iface"/>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- FilterSecurityInterceptor contains the definitions of the secured resources -->
+	<bean id="filterSecurityInterceptor"
+		class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+
+		<property name="authenticationManager">
+			<ref bean="authenticationManager" />
+		</property>
+
+		<property name="accessDecisionManager">
+			<ref bean="accessDecisionManager" />
+		</property>
+
+		<property name="objectDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT 
+				/gestion/**=Rol_Super_Administrador,Rol_Administrador,Rol_JefeUnidad,Rol_Gestor,Rol_Tecnico_Cibercentro 
+				/gestion/usuarios/**=Rol_Super_Administrador,Rol_Administrador,Rol_Tecnico_Cibercentro
+				/gestion/procedimientos/**=Rol_Super_Administrador,Rol_Administrador,Rol_JefeUnidad,Rol_Gestor
+				/gestion/anuncios/**=Rol_Super_Administrador,Rol_Administrador,Rol_JefeUnidad,Rol_Gestor
+				/contenido/**=Rol_Anonymous				
+			</value>
+		</property>
+	</bean>
+
+
+	<!-- Autenticacion con LDAP o, si falla, con JDBC -->
+	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+		<property name="providers">
+			<list>
+				<ref bean="ldapAuthenticationDaoProvider" />
+ 				<ref bean="daoAuthenticationProvider" />				  
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="queryRoles" class="java.lang.String">
+		<constructor-arg index="0" value="SELECT u.usuario,r.rol FROM rol r,usuario u WHERE u.usuario = ? AND usuario_fk = u.identificador"/>
+	</bean>
+	
+	<!-- Autenticacion con JDBC -->
+	<bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService">
+			<ref bean="jdbcAuthenticationDao" />
+		</property>
+	</bean>
+	<bean id="jdbcAuthenticationDao" class="org.acegisecurity.userdetails.jdbc.JdbcDaoImpl">
+		<property name="dataSource"><ref bean="datasource"/></property>
+		<property name="authoritiesByUsernameQuery"><ref bean="queryRoles"/></property>
+	</bean>
+	<!-- / Autenticacion con JDBC -->
+	
+	
+	<!-- Autenticacion con LDAP -->
+
+	<bean id="initialDirContextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
+		<constructor-arg value="${ldap.url}" />
+		<property name="managerDn"><value>${ldap.nombreUsuario}</value></property>
+		<property name="managerPassword"><value>${ldap.password}</value></property>
+	</bean>
+
+	<bean id="authoritiesJdbcPopulator" class="com.arte.contratacion.pliegos.web.ldap.JdbcAuthoritiesPopulator">
+		<property name="dataSource"><ref bean="datasource"/></property>
+		<property name="authoritiesByUsernameQuery"><ref bean="queryRoles"/></property>
+	</bean>
+	
+	<bean id="ldapAuthenticationDaoProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+		<constructor-arg index="0">
+			<bean class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+				<constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+				<property name="userSearch">
+					<bean class="org.acegisecurity.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0"><value>${ldap.raiz}</value></constructor-arg>
+						<constructor-arg index="1"><value>${ldap.dnUsuario}</value></constructor-arg>						
+						<constructor-arg><ref local="initialDirContextFactory"/></constructor-arg>
+						 <property name="searchSubtree" value="true" />						
+					</bean>
+				</property>				
+			</bean>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<ref bean="authoritiesJdbcPopulator"/>
+		</constructor-arg>		
+	</bean>
+	<!-- /Autenticacion con LDAP -->
+	
+    <bean id="datasource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName"><value>java:comp/env/jdbc/perfildelcontratante</value></property>
+    </bean>
+    
+	<!-- Se usa votación AffirmativeBased, queriendo decir que el usuario tiene que tener uno de los
+			roles especificados en objectDefinitionSource. -->
+	<bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions"><value>false</value></property>
+		<property name="decisionVoters">
+			<list>
+				<ref bean="roleVoter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter">
+		<property name="rolePrefix">
+			<value>Rol_</value>
+		</property>
+	</bean>
+
+
+	<bean id="authenticationProcessingFilterEntryPoint" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+		<property name="loginFormUrl">
+			<value>/login.jsp</value>
+		</property>
+		<property name="forceHttps">
+			<value>true</value>
+		</property>
+	</bean>
+	
+	<bean id="channelProcessingFilter" class="org.acegisecurity.securechannel.ChannelProcessingFilter">
+		<property name="channelDecisionManager"><ref bean="channelDecisionManager"/></property>
+		<property name="filterInvocationDefinitionSource">
+			<value>
+			CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+			\A/login.jsp.*\Z=REQUIRES_SECURE_CHANNEL
+			\A/j_acegi_security_check.*\Z=REQUIRES_SECURE_CHANNEL
+			\A/gestion/administracion.jsp\Z=REQUIRES_SECURE_CHANNEL
+			\A.*\Z=REQUIRES_INSECURE_CHANNEL
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="channelDecisionManager" class="org.acegisecurity.securechannel.ChannelDecisionManagerImpl">
+		<property name="channelProcessors">
+			<list>
+				<bean class="org.acegisecurity.securechannel.SecureChannelProcessor" />
+				<bean class="org.acegisecurity.securechannel.InsecureChannelProcessor" />
+			</list>
+		</property>
+	</bean>	
+</beans>
