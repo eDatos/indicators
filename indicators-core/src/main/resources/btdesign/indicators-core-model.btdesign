@@ -323,8 +323,8 @@ Application Indicators {
         
 		"Instance of indicator"
         Entity IndicatorInstance {
-        	databaseTable = "TBL_INDICATOR_INSTANCES"
-        	hint="idSequence=INDICATOR_INSTANCES"
+        	databaseTable = "TBL_INDICATORS_INSTANCES"
+        	hint="idSequence=INDICATORS_INSTANCES"
         	       		
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
@@ -390,8 +390,8 @@ Application Indicators {
 	    
 		"Version of indicator entity"
 		Entity IndicatorVersion {
-			databaseTable="TBL_INDICATOR_VERSIONS"
-			hint="idSequence=INDICATOR_VERSIONS"
+			databaseTable="TBL_INDICATORS_VERSIONS"
+			hint="idSequence=INDICATORS_VERSIONS"
 			
 			"State"
 			- @IndicatorStateEnum state not nullable;
@@ -481,8 +481,8 @@ Application Indicators {
 
 		"Variable of data source"
         Entity DataSourceVariable {
-        	databaseTable = "TBL_DATA_SOURCE_VARIABLES"
-        	hint="idSequence=DATA_SOURCE_VARIABLES"
+        	databaseTable = "TBL_DATA_SOURCES_VARIABLES"
+        	hint="idSequence=DATA_SOURCES_VARIABLES"
         	
 			"Variable"
 			String variable not nullable;

@@ -25,7 +25,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="11"
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
@@ -79,7 +79,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 				
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="12"
 				UUID="Indicator-1-v2"
 				VERSION_NUMBER="2.000"
@@ -132,7 +132,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_DATA_SOURCE_VARIABLES
+					<TBL_DATA_SOURCES_VARIABLES
 						ID="1211"
 						UUID="Indicator-1-v2-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-1"
@@ -148,7 +148,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-					<TBL_DATA_SOURCE_VARIABLES
+					<TBL_DATA_SOURCES_VARIABLES
 						ID="1212"
 						UUID="Indicator-1-v2-DataSource-1-Var-2"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-2"
@@ -206,7 +206,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="21"
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
@@ -263,7 +263,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="31"
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="11.033"
@@ -316,7 +316,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_DATA_SOURCE_VARIABLES
+					<TBL_DATA_SOURCES_VARIABLES
 						ID="3111"
 						UUID="Indicator-3-v1-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-3-v1-DataSource-1-Var-1"
@@ -354,7 +354,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="41"
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
@@ -411,7 +411,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="51"
 				UUID="Indicator-5-v1"
 				VERSION_NUMBER="1.000"
@@ -469,7 +469,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="61"
 				UUID="Indicator-6-v1"
 				VERSION_NUMBER="1.000"
@@ -504,7 +504,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="62"
 				UUID="Indicator-6-v2"
 				VERSION_NUMBER="2.000"
@@ -561,7 +561,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="71"
 				UUID="Indicator-7-v1"
 				VERSION_NUMBER="1.000"
@@ -596,7 +596,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="72"
 				UUID="Indicator-7-v2"
 				VERSION_NUMBER="2.000"
@@ -653,7 +653,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="81"
 				UUID="Indicator-8-v1"
 				VERSION_NUMBER="1.000"
@@ -710,7 +710,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATOR_VERSIONS
+			<TBL_INDICATORS_VERSIONS
 				ID="91"
 				UUID="Indicator-9-v1"
 				VERSION_NUMBER="1.000"
