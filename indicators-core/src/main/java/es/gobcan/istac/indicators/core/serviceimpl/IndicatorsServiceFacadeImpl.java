@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -232,130 +231,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkSendIndicatorsSystemToProductionValidation(uuid, null);
-
-        // Retrieve version in draft
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DRAFT,
-                    IndicatorsSystemStateEnum.VALIDATION_REJECTED});
-        }
-
-        // Validate to send to production
-        checkIndicatorsSystemToSendToProductionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
-
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
-        indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
-        indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().sendIndicatorsSystemToProductionValidation(ctx, uuid);
     }
 
     @Override
     public void sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkSendIndicatorsSystemToDiffusionValidation(uuid, null);
-
-        // Retrieve version in production validation
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PRODUCTION_VALIDATION});
-        }
-
-        // Validate to send to diffusion
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
-
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
-        indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
-        indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().sendIndicatorsSystemToDiffusionValidation(ctx, uuid);
     }
 
     @Override
     public void rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
-
-        // Retrieve version in production (state can be production or diffusion validation)
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION
-                        .equals(indicatorsSystemInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PRODUCTION_VALIDATION,
-                    IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
-        }
-
-        // Validate to reject
-        checkIndicatorsSystemToReject(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
-
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.VALIDATION_REJECTED);
-        indicatorsSystemInProduction.setProductionValidationDate(null);
-        indicatorsSystemInProduction.setProductionValidationUser(null);
-        indicatorsSystemInProduction.setDiffusionValidationDate(null);
-        indicatorsSystemInProduction.setDiffusionValidationUser(null);
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
+        getIndicatorsSystemsService().rejectIndicatorsSystemValidation(ctx, uuid);
     }
 
-    // TODO comprobar que todos los indicadores tienen alguna versión PUBLISHED
     @Override
     public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkPublishIndicatorsSystem(uuid, null);
-
-        // Retrieve version in diffusion validation
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
-        }
-
-        // Validate to publish
-        checkIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
-
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
-        indicatorsSystemInProduction.setPublicationDate(new DateTime());
-        indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
-
-        IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
-        // Remove possible last version in diffusion
-        if (indicatorsSystem.getDiffusionVersion() != null) {
-            getIndicatorsSystemsService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
-        }
-        indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemInProduction.getId(), indicatorsSystemInProduction.getVersionNumber()));
-        indicatorsSystem.setProductionVersion(null);
-
-        getIndicatorsSystemsService().updateIndicatorsSystem(ctx, indicatorsSystem);
+        getIndicatorsSystemsService().publishIndicatorsSystem(ctx, uuid);
     }
 
     @Override
     public void archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkArchiveIndicatorsSystem(uuid, null);
-
-        // Retrieve version published
-        IndicatorsSystemVersion indicatorsSystemInDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, false);
-        if (indicatorsSystemInDiffusion == null || !IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemInDiffusion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
-        }
-
-        // Validate to archive
-        checkIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion.getVersionNumber());
-
-        // Update state
-        indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
-        indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
-        indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
+        getIndicatorsSystemsService().archiveIndicatorsSystem(ctx, uuid);
     }
 
     @Override
@@ -831,117 +727,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkSendIndicatorToProductionValidation(uuid, null);
-
-        // Retrieve version in draft
-        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null || (!IndicatorStateEnum.DRAFT.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.VALIDATION_REJECTED.equals(indicatorInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED});
-        }
-
-        // Check indicator has any data source
-        if (indicatorInProduction.getDataSources().size() == 0) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_HAVE_DATA_SOURCES, uuid);
-        }
-
-        // Update state
-        indicatorInProduction.setState(IndicatorStateEnum.PRODUCTION_VALIDATION);
-        indicatorInProduction.setProductionValidationDate(new DateTime());
-        indicatorInProduction.setProductionValidationUser(ctx.getUserId());
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorsService().sendIndicatorToProductionValidation(ctx, uuid);
     }
 
     @Override
     public void sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkSendIndicatorToDiffusionValidation(uuid, null);
-
-        // Retrieve version in production validation
-        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null || !IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION});
-        }
-
-        // Update state
-        indicatorInProduction.setState(IndicatorStateEnum.DIFFUSION_VALIDATION);
-        indicatorInProduction.setDiffusionValidationDate(new DateTime());
-        indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorsService().sendIndicatorToDiffusionValidation(ctx, uuid);
     }
 
     @Override
     public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRejectIndicatorValidation(uuid, null);
-
-        // Retrieve version in production (state can be production or diffusion validation)
-        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null
-                || (!IndicatorStateEnum.PRODUCTION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
-        }
-
-        // Update state
-        indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
-        indicatorInProduction.setProductionValidationDate(null);
-        indicatorInProduction.setProductionValidationUser(null);
-        indicatorInProduction.setDiffusionValidationDate(null);
-        indicatorInProduction.setDiffusionValidationUser(null);
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorsService().rejectIndicatorValidation(ctx, uuid);
     }
 
-    // TODO Implica realizar también INDICADORES-CU-6
     @Override
     public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkPublishIndicator(uuid, null);
-
-        // Retrieve version in diffusion validation
-        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, uuid, false);
-        if (indicatorInProduction == null
-                || (!IndicatorStateEnum.DIFFUSION_VALIDATION.equals(indicatorInProduction.getState()) && !IndicatorStateEnum.PUBLICATION_FAILED.equals(indicatorInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.DIFFUSION_VALIDATION, IndicatorStateEnum.PUBLICATION_FAILED});
-        }
-
-        // Update state
-        indicatorInProduction.setState(IndicatorStateEnum.PUBLISHED);
-        indicatorInProduction.setPublicationDate(new DateTime());
-        indicatorInProduction.setPublicationUser(ctx.getUserId());
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
-
-        Indicator indicator = indicatorInProduction.getIndicator();
-        // Remove possible last version in diffusion
-        if (indicator.getDiffusionVersion() != null) {
-            getIndicatorsService().deleteIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
-        }
-        indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
-        indicator.setProductionVersion(null);
-
-        getIndicatorsService().updateIndicator(ctx, indicator);
+        getIndicatorsService().publishIndicator(ctx, uuid);
     }
 
     @Override
     public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkArchiveIndicator(uuid, null);
-
-        // Retrieve version published
-        IndicatorVersion indicatorInDiffusion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
-        if (indicatorInDiffusion == null || !IndicatorStateEnum.PUBLISHED.equals(indicatorInDiffusion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
-        }
-
-        // Update state
-        indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
-        indicatorInDiffusion.setArchiveDate(new DateTime());
-        indicatorInDiffusion.setArchiveUser(ctx.getUserId());
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInDiffusion);
+        getIndicatorsService().archiveIndicator(ctx, uuid);
     }
 
     @Override
@@ -1261,53 +1067,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
                 throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
             }
         }
-    }
-
-    /**
-     * Makes validations to sent to production validation
-     * 1) Must exists at least one indicator instance
-     */
-    private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-
-        // Check exists at least one indicator instance
-        if (!getIndicatorsSystemsService().existAnyIndicatorInstance(ctx, uuid, versionNumber)) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid);
-        }
-    }
-
-    /**
-     * Makes validations to sent to diffusion validation
-     * 1) Validations when send to production validation
-     */
-    private void checkIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-
-        checkIndicatorsSystemToSendToProductionValidation(ctx, uuid, versionNumber);
-    }
-
-    /**
-     * Makes validations to publish
-     * 1) Validations when send to diffusion validation
-     */
-    private void checkIndicatorsSystemToPublish(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, versionNumber);
-    }
-
-    /**
-     * Makes validations to archive
-     * 1) Validations when publish
-     */
-    private void checkIndicatorsSystemToArchive(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-
-        checkIndicatorsSystemToPublish(ctx, uuid, versionNumber);
-    }
-
-    /**
-     * Makes validations to reject
-     */
-    private void checkIndicatorsSystemToReject(ServiceContext ctx, String uuid, String versionNumber) {
-
-        // Nothing
     }
     
     private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
