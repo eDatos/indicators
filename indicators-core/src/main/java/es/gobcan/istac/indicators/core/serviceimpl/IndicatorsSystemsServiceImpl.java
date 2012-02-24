@@ -311,11 +311,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return indicatorsInstances;
     }
 
-    @Override
-    public Boolean existAnyIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) {
-        return getIndicatorInstanceRepository().existAnyIndicatorInstance(indicatorsSystemUuid, indicatorsSystemVersionNumber);
-    }
-
     /**
      * Retrieves version of an indicators system in production
      */
@@ -356,7 +351,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
         // Check exists at least one indicator instance
-        if (!existAnyIndicatorInstance(ctx, uuid, versionNumber)) {
+        if (!getIndicatorInstanceRepository().existAnyIndicatorInstance(uuid, versionNumber)) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid);
         }
     }
