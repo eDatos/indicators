@@ -106,7 +106,6 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     
     @Override
     public void indicatorInstanceDtoToDo(IndicatorInstanceDto source, IndicatorInstance target) {
-        target.setIndicatorUuid(source.getIndicatorUuid());
         target.setTitle(internationalStringToDo(source.getTitle(), target.getTitle()));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -573,8 +574,13 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
         // Retrieve indicators system version and check it is in production
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
 
+        // Retrieve indicator
+        Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, indicatorInstanceDto.getIndicatorUuid());
+        
         // Transform
         ElementLevel elementLevel = dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto);
+        elementLevel.getIndicatorInstance().setIndicator(indicator);
+        // Note: update indicator adding indicator instance is not necesary
 
         // Create indicator instance
         if (indicatorInstanceDto.getParentUuid() == null) {
@@ -627,7 +633,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
             indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
             getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
         }
-
+        
         // Transform to Dto to return
         indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(elementLevel.getIndicatorInstance());
         return indicatorInstanceDto;
@@ -872,7 +878,7 @@ public class IndicatorsSystemsServiceFacadeImpl extends IndicatorsSystemsService
      */
     private void checkIndicatorInstanceUniqueIndicator(String indicatorUuid, List<ElementLevel> elementsLevel) throws MetamacException {
         for (ElementLevel elementLevel : elementsLevel) {
-            if (elementLevel.getIndicatorInstance() != null && elementLevel.getIndicatorInstance().getIndicatorUuid().equalsIgnoreCase(indicatorUuid)) {
+            if (elementLevel.getIndicatorInstance() != null && elementLevel.getIndicatorInstance().getIndicator().getUuid().equals(indicatorUuid)) {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
             }
         }

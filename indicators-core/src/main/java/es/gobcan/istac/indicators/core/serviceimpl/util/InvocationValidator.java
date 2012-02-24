@@ -537,7 +537,7 @@ public class InvocationValidator {
 
         checkIndicatorInstance(indicatorInstanceDto, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getIndicatorUuid(), indicatorInstance.getIndicatorUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
+        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getIndicatorUuid(), indicatorInstance.getIndicator().getUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
 
@@ -584,6 +584,8 @@ public class InvocationValidator {
     }
 
     // TODO revisar qué metadatos son requeridos
+    // TODO Quantity: cuáles son los metadatos obligatorios? Ojo! Depende del tipo de Quantity
+    // TODO Quantity es obligatorio
     private static void checkIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorDto, "INDICATOR", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getCode(), "INDICATOR.CODE", exceptions);

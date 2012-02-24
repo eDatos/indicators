@@ -42,6 +42,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public IndicatorsServiceFacadeImpl() {
     }
 
+    // TODO listado de dudas de Ri a Alberto
+    // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Validation of parameters
@@ -101,6 +103,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorDto;
     }
 
+    // TODO comprobar que no tiene ninguna instancia de indicador asociada
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters

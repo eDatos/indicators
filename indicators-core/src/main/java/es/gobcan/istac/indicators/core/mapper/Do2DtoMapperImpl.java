@@ -85,7 +85,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source) {
         IndicatorInstanceDto target = new IndicatorInstanceDto();
         target.setUuid(source.getUuid());
-        target.setIndicatorUuid(source.getIndicatorUuid());
+        target.setIndicatorUuid(source.getIndicator().getUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());

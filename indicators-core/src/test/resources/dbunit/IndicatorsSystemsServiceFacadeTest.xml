@@ -100,13 +100,12 @@
 					<TBL_INDICATORS_INSTANCES
 						ID="112"
 						UUID="IndSys-1-v1-IInstance-1"
-						INDICATOR_UUID="IndicatorB"
 						TEMPORARY_GRANULARITY_ID="Annual"
 						TEMPORARY_VALUE="[null]"
 						GEOGRAPHIC_GRANULARITY_ID="Countries"
 						GEOGRAPHIC_VALUE="[null]"
-						
 						TITLE_FK="35"
+						INDICATOR_FK="1"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -166,13 +165,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="121"
 					UUID="IndSys-1-v2-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
-					
 					TITLE_FK="28"
+					INDICATOR_FK="1"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -302,12 +300,12 @@
 								<TBL_INDICATORS_INSTANCES
 									ID="12222"
 									UUID="IndSys-1-v2-IInstance-3"
-									INDICATOR_UUID="IndicatorA"
 									TEMPORARY_GRANULARITY_ID="Annual"
 									TEMPORARY_VALUE="[null]"
 									GEOGRAPHIC_GRANULARITY_ID="Countries"
 									GEOGRAPHIC_VALUE="[null]"
 									TITLE_FK="32"
+									INDICATOR_FK="2"
 															
 									VERSION="1"
 									CREATED_BY="user1"
@@ -334,12 +332,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="123"
 					UUID="IndSys-1-v2-IInstance-2"
-					INDICATOR_UUID="IndicatorA"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
 					TITLE_FK="29"
+					INDICATOR_FK="3"
 											
 					VERSION="1"
 					CREATED_BY="user1"
@@ -530,12 +528,12 @@
 					<TBL_INDICATORS_INSTANCES
 						ID="3111"
 						UUID="IndSys-3-v1-IInstance-1A"
-						INDICATOR_UUID="IndicatorC"
 						TEMPORARY_GRANULARITY_ID="Annual"
 						TEMPORARY_VALUE="[null]"
 						GEOGRAPHIC_GRANULARITY_ID="Countries"
 						GEOGRAPHIC_VALUE="[null]"
 						TITLE_FK="31"
+						INDICATOR_FK="1"
 						
 						VERSION="1"
 						CREATED_BY="user1"
@@ -587,12 +585,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="312"
 					UUID="IndSys-3-v1-IInstance-2"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
 					TITLE_FK="30"
+					INDICATOR_FK="1"
 						
 					VERSION="1"
 					CREATED_BY="user1"
@@ -674,13 +672,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="411"
 					UUID="IndSys-4-v1-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
-					
 					TITLE_FK="36"
+					INDICATOR_FK="2"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -762,13 +759,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="511"
 					UUID="IndSys-5-v1-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
-					
 					TITLE_FK="34"
+					INDICATOR_FK="1"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -885,12 +881,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="621"
 					UUID="IndSys-6-v2-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
 					TITLE_FK="37"
+					INDICATOR_FK="1"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1007,12 +1003,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="721"
 					UUID="IndSys-7-v2-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
 					TITLE_FK="38"
+					INDICATOR_FK="1"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1150,13 +1146,12 @@
 				<TBL_INDICATORS_INSTANCES
 					ID="911"
 					UUID="IndSys-9-v1-IInstance-1"
-					INDICATOR_UUID="IndicatorB"
 					TEMPORARY_GRANULARITY_ID="Annual"
 					TEMPORARY_VALUE="[null]"
 					GEOGRAPHIC_GRANULARITY_ID="Countries"
 					GEOGRAPHIC_VALUE="[null]"
-					
 					TITLE_FK="33"
+					INDICATOR_FK="1"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1167,6 +1162,179 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>						
 			  			
+			  			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 1											                      			-->
+	<!--		- Version 1: published															-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="1"
+		UUID="Indicator-1"
+		CODE="CODE-1"
+		PRODUCTION_ID="[null]"
+		PRODUCTION_VERSION_NUMBER="[null]"
+		DIFFUSION_ID="1"
+		DIFFUSION_VERSION_NUMBER="1.000"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATORS_VERSIONS
+				ID="11"
+				UUID="Indicator-1-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="39"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+				NOTE_URL="http://indicators/1"
+				SUBJECT_CODE="subjectCode1A"
+
+	  			INDICATOR_FK="1"
+	  			STATE="PUBLISHED"
+				
+				PRODUCTION_VALIDATION_DATE="2011-01-02 02:02:04"
+				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+				PRODUCTION_VALIDATION_USER="user1"
+				DIFFUSION_VALIDATION_DATE="2011-01-03 03:02:04"
+				DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+				DIFFUSION_VALIDATION_USER="user2"
+				PUBLICATION_DATE="2011-01-04 04:02:04"
+				PUBLICATION_DATE_TZ="Europe/London"
+				PUBLICATION_USER="user3"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>				
+
+  
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 2											                     		 	-->
+	<!--		- Version 1: draft																-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="2"
+		UUID="Indicator-2"
+		CODE="CODE-2"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATORS_VERSIONS
+				ID="21"
+				UUID="Indicator-2-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="40"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="2"
+	  			STATE="DRAFT"
+				NOTE_URL="http://indicators/2"
+				SUBJECT_CODE="subjectCode2"
+				
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+								
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>	
+			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 3											                     		 	-->
+	<!--		- Version 1: draft																-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="3"
+		UUID="Indicator-3"
+		CODE="CODE-3"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+  
+			<TBL_INDICATORS_VERSIONS
+				ID="31"
+				UUID="Indicator-3-v1"
+				VERSION_NUMBER="1.000"
+				NAME_FK="41"
+				ACRONYM_FK="[null]"
+	  			NOTES_FK="[null]"
+	  			COMMENTARY_FK="[null]"
+	  			INDICATOR_FK="3"
+	  			STATE="DRAFT"
+				NOTE_URL="http://indicators/3"
+				SUBJECT_CODE="subjectCode"
+				
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+								
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-01-01 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-01-22 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>					  			
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -2080,6 +2248,78 @@
 		UUID="IS-38-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="38"
-	/>														
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="39"
+		UUID="IS-39"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="72"
+		LABEL="Título IndSys-7-v2-IInstance-1"
+		LOCALE="es"
+		UUID="IS-39-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="39"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="73"
+		LABEL="Title IndSys-7-v6-IInstance-1"
+		LOCALE="en"
+		UUID="IS-39-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="39"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="40"
+		UUID="IS-40"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="74"
+		LABEL="Título IndSys-7-v2-IInstance-1"
+		LOCALE="es"
+		UUID="IS-40-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="40"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="75"
+		LABEL="Title IndSys-7-v6-IInstance-1"
+		LOCALE="en"
+		UUID="IS-40-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="40"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="41"
+		UUID="IS-41"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="76"
+		LABEL="Título IndSys-7-v2-IInstance-1"
+		LOCALE="es"
+		UUID="IS-41-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="41"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="77"
+		LABEL="Title IndSys-7-v6-IInstance-1"
+		LOCALE="en"
+		UUID="IS-41-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="41"
+	/>													
 					
 </dataset>
