@@ -43,17 +43,17 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorDraft;
     }
 
-    @Override
-    public Indicator retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
-        if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND, uuid);
-        }
-        return indicator;
-    }
+    public IndicatorVersion retrieveIndicator(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
-    @Override
-    public IndicatorVersion retrieveIndicatorVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicator(uuid, versionNumber, null);
+
+        // Retrieve version requested or last version
+        if (versionNumber == null) {
+            // Retrieve last version
+            Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
+            versionNumber = indicator.getProductionVersion() != null ? indicator.getProductionVersion().getVersionNumber() : indicator.getDiffusionVersion().getVersionNumber();
+        }
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(uuid, versionNumber);
         if (indicatorVersion == null) {
             if (versionNumber == null) {
@@ -62,6 +62,67 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, uuid, versionNumber);
             }
         }
+        return indicatorVersion;
+    }
+
+    @Override
+    public IndicatorVersion retrieveIndicatorPublished(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorPublished(uuid, null);
+
+        // Retrieve published version
+        IndicatorVersion publishedIndicatorVersion = retrieveIndicatorStateInDiffusion(ctx, uuid, false);
+        if (publishedIndicatorVersion == null || !IndicatorStateEnum.PUBLISHED.equals(publishedIndicatorVersion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+
+        return publishedIndicatorVersion;
+    }
+
+    public IndicatorVersion retrieveIndicatorByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorByCode(code, null);
+
+        // Retrieve indicator by code
+        List<Indicator> indicators = findIndicators(ctx, code);
+        if (indicators.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE, code);
+        } else if (indicators.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
+        }
+
+        // Retrieve version requested or last version
+        Indicator indicator = indicators.get(0);
+        IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicator.getUuid(), versionNumber);
+
+        return indicatorVersion;
+    }
+
+    public IndicatorVersion retrieveIndicatorPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorPublishedByCode(code, null);
+
+        // Retrieve indicator by code
+        List<Indicator> indicators = findIndicators(ctx, code);
+        if (indicators.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE, code);
+        } else if (indicators.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
+        }
+
+        // Retrieve only published
+        Indicator indicator = indicators.get(0);
+        if (indicator.getDiffusionVersion() == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+        IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicator.getUuid(), indicator.getDiffusionVersion().getVersionNumber());
+        if (!IndicatorStateEnum.PUBLISHED.equals(indicatorVersion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+
         return indicatorVersion;
     }
 
@@ -210,7 +271,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         Indicator indicator = indicatorInProduction.getIndicator();
         // Remove possible last version in diffusion
         if (indicator.getDiffusionVersion() != null) {
-            IndicatorVersion indicatorDiffusionVersion = retrieveIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+            IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
             indicator.getVersions().remove(indicatorDiffusionVersion);
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
@@ -250,6 +311,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     
     @Override
     public DataSource retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkRetrieveDataSource(uuid, null);
+
+        // Retrieve
         DataSource dataSource = getDataSourceRepository().findDataSource(uuid);
         if (dataSource == null) {
             throw new MetamacException(ServiceExceptionType.DATA_SOURCE_NOT_FOUND, uuid);
@@ -277,7 +343,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public List<DataSource> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        IndicatorVersion indicatorVersion = retrieveIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+        IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
     }
     
@@ -285,14 +351,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Retrieves version of an indicator in production
      */
     private IndicatorVersion retrieveIndicatorStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        Indicator indicator = retrieveIndicator(ctx, uuid);
+        Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
         if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
         if (indicator.getProductionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionProduction = retrieveIndicatorVersion(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
+        IndicatorVersion indicatorVersionProduction = retrieveIndicator(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
         return indicatorVersionProduction;
     }
     
@@ -301,14 +367,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Retrieves version of an indicator in diffusion
      */
     private IndicatorVersion retrieveIndicatorStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
-        Indicator indicator = retrieveIndicator(ctx, uuid);
+        Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
         if (indicator.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
         if (indicator.getDiffusionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, uuid);
         }
-        IndicatorVersion indicatorVersionDiffusion = retrieveIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+        IndicatorVersion indicatorVersionDiffusion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
         return indicatorVersionDiffusion;
     }
     
@@ -372,5 +438,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
 
         }
+    }
+    
+    // TODO refactor, hacer privado
+    public Indicator retrieveIndicatorBorrar(ServiceContext ctx, String uuid) throws MetamacException {
+
+        Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
+        if (indicator == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND, uuid);
+        }
+        return indicator;
     }
 }

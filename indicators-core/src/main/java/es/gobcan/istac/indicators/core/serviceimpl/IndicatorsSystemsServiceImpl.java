@@ -99,7 +99,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Retrieve version requested or last version
         IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), versionNumber);
-        
+
         return indicatorsSystemVersion;
     }
 
@@ -127,6 +127,19 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         return indicatorsSystemVersion;
+    }
+
+    @Override
+    public List<ElementLevel> retrieveIndicatorsSystemStructure(ServiceContext ctx, String uuid, String version) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemStructure(uuid, version, null);
+
+        // Retrieve version requested or last version
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, uuid, version);
+
+        // Builds structure
+        return indicatorsSystemVersion.getChildrenFirstLevel();
     }
 
     @Override
@@ -318,6 +331,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public Dimension retrieveDimension(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveDimension(uuid, null);
+
+        // Retrieve
         Dimension dimension = getDimensionRepository().findDimension(uuid);
         if (dimension == null) {
             throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND, uuid);
@@ -377,6 +395,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public IndicatorInstance retrieveIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorInstance(uuid, null);
+
+        // Retrieve
         IndicatorInstance indicatorInstance = getIndicatorInstanceRepository().findIndicatorInstance(uuid);
         if (indicatorInstance == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND, uuid);
@@ -529,7 +552,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
     }
-    
+
     // TODO refactor, hacer privado
     public IndicatorsSystem retrieveIndicatorsSystemBorrar(ServiceContext ctx, String uuid) throws MetamacException {
 
