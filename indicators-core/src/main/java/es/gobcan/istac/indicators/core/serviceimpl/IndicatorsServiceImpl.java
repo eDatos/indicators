@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -73,22 +74,35 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public void updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         getIndicatorVersionRepository().save(indicatorVersion);
     }
-
+    
     @Override
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        Indicator indicator = retrieveIndicator(ctx, uuid);
-        getIndicatorRepository().delete(indicator);
-    }
 
-    @Override
-    public void deleteIndicatorVersion(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
-        IndicatorVersion indicatorVersion = retrieveIndicatorVersion(ctx, uuid, versionNumber);
-        Indicator indicator = indicatorVersion.getIndicator();
-        indicator.getVersions().remove(indicatorVersion);
+        // Validation of parameters
+        InvocationValidator.checkDeleteIndicator(uuid, null);
 
-        // Update
-        getIndicatorRepository().save(indicator);
-        getIndicatorVersionRepository().delete(indicatorVersion);
+        // Retrieve version in production
+        IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, uuid, true);
+
+        // Delete whole indicator or only last version
+        if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorVersion.getVersionNumber())) {
+            // If indicator is not published or archived, delete whole indicator
+            Indicator indicator = indicatorVersion.getIndicator();
+
+            // Check not exists any indicator instance for this indicator
+            if (indicator.getIndicatorsInstances().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS, uuid);
+            }
+            getIndicatorRepository().delete(indicator);
+        } else {
+            Indicator indicator = indicatorVersion.getIndicator();
+            indicator.getVersions().remove(indicatorVersion);
+            indicator.setProductionVersion(null);
+
+            // Update
+            getIndicatorRepository().save(indicator);
+            getIndicatorVersionRepository().delete(indicatorVersion);
+        }
     }
 
     @Override
@@ -196,7 +210,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         Indicator indicator = indicatorInProduction.getIndicator();
         // Remove possible last version in diffusion
         if (indicator.getDiffusionVersion() != null) {
-            deleteIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+            IndicatorVersion indicatorDiffusionVersion = retrieveIndicatorVersion(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+            indicator.getVersions().remove(indicatorDiffusionVersion);
+            getIndicatorRepository().save(indicator);
+            getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
         }
         indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
         indicator.setProductionVersion(null);
@@ -246,7 +263,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void deleteDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+    public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkDeleteDataSource(uuid, null);
+
+        // Check indicator state
+        DataSource dataSource = retrieveDataSource(ctx, uuid);
+        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
+
+        // Delete
         getDataSourceRepository().delete(dataSource);
     }
 
@@ -255,8 +280,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         IndicatorVersion indicatorVersion = retrieveIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
     }
-    
-    
     
     /**
      * Retrieves version of an indicator in production
@@ -336,5 +359,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void checkIndicatorsToReject(ServiceContext ctx, IndicatorVersion indicatorVersion) {
 
         // Nothing
+    }
+    
+    /**
+     * Checks that the indicator version is in any state in production
+     */
+    private void checkIndicatorVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
+        IndicatorStateEnum state = indicatorVersion.getState();
+        boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state)
+                || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
+        if (!inProduction) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+
+        }
     }
 }

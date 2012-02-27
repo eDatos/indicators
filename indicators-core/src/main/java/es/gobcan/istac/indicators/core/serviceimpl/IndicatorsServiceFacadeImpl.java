@@ -10,7 +10,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -196,22 +195,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkDeleteIndicatorsSystem(uuid, null);
-
-        // Retrieve version in production
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, uuid, true);
-
-        // Delete whole indicators system or only last version
-        if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
-            // If indicators system is not published or archived, delete whole indicators system
-            getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
-        } else {
-            getIndicatorsSystemsService().deleteIndicatorsSystemVersion(ctx, uuid, indicatorsSystemVersion.getVersionNumber());
-            indicatorsSystemVersion.getIndicatorsSystem().setProductionVersion(null);
-            getIndicatorsSystemsService().updateIndicatorsSystem(ctx, indicatorsSystemVersion.getIndicatorsSystem());
-        }
+        getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
     }
 
     public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
@@ -401,26 +385,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkDeleteDimension(uuid, null);
-
-        // Check indicators system state
-        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, uuid);
-        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Delete
-        getIndicatorsSystemsService().deleteDimension(ctx, dimension.getElementLevel());
-
-        // Update orders of other elements in level
-        List<ElementLevel> elementsAtLevel = null;
-        if (dimension.getElementLevel().getParent() == null) {
-            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
-        } else {
-            elementsAtLevel = dimension.getElementLevel().getParent().getChildren();
-        }
-        updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, dimension.getElementLevel().getOrderInLevel());
+        getIndicatorsSystemsService().deleteDimension(ctx, uuid);
     }
 
     @Override
@@ -481,7 +446,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve indicator
         Indicator indicator = getIndicatorsService().retrieveIndicator(ctx, indicatorInstanceDto.getIndicatorUuid());
-        
+
         // Transform
         ElementLevel elementLevel = dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto);
         elementLevel.getIndicatorInstance().setIndicator(indicator);
@@ -538,7 +503,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
             getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
         }
-        
+
         // Transform to Dto to return
         indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(elementLevel.getIndicatorInstance());
         return indicatorInstanceDto;
@@ -558,26 +523,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkDeleteIndicatorInstance(uuid, null);
-
-        // Check indicators system state
-        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, uuid);
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Delete
-        getIndicatorsSystemsService().deleteIndicatorInstance(ctx, indicatorInstance.getElementLevel());
-
-        // Update orders of other elements in level
-        List<ElementLevel> elementsAtLevel = null;
-        if (indicatorInstance.getElementLevel().getParent() == null) {
-            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
-        } else {
-            elementsAtLevel = indicatorInstance.getElementLevel().getParent().getChildren();
-        }
-        updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, indicatorInstance.getElementLevel().getOrderInLevel());
+        getIndicatorsSystemsService().deleteIndicatorInstance(ctx, uuid);
     }
 
     @Override
@@ -614,7 +560,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto, indicatorInstance);
         getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
     }
-    
+
     @Override
     public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
@@ -686,7 +632,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(publishedIndicatorVersion);
         return indicatorDto;
     }
-    
+
     public IndicatorDto retrieveIndicatorByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -732,8 +678,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         if (indicator.getDiffusionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
         }
-        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(),
-                indicator.getDiffusionVersion().getVersionNumber());
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), indicator.getDiffusionVersion().getVersionNumber());
         if (!IndicatorStateEnum.PUBLISHED.equals(indicatorVersion.getState())) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
         }
@@ -744,27 +689,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkDeleteIndicator(uuid, null);
-
-        // Retrieve version in production
-        IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, uuid, true);
-
-        // Delete whole indicator or only last version
-        if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorVersion.getVersionNumber())) {
-            // If indicator is not published or archived, delete whole indicator
-
-            // Check not exists any indicator instance for this indicator
-            if (indicatorVersion.getIndicator().getIndicatorsInstances().size() != 0) {
-                throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS, uuid);
-            }
-            getIndicatorsService().deleteIndicator(ctx, uuid);
-        } else {
-            getIndicatorsService().deleteIndicatorVersion(ctx, uuid, indicatorVersion.getVersionNumber());
-            indicatorVersion.getIndicator().setProductionVersion(null);
-            getIndicatorsService().updateIndicator(ctx, indicatorVersion.getIndicator());
-        }
+        getIndicatorsService().deleteIndicator(ctx, uuid);
     }
 
     public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
@@ -916,16 +841,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void deleteDataSource(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkDeleteDataSource(uuid, null);
-
-        // Check indicator state
-        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
-        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
-
-        // Delete
-        getIndicatorsService().deleteDataSource(ctx, dataSource);
+        getIndicatorsService().deleteDataSource(ctx, uuid);
     }
 
     @Override
@@ -961,8 +877,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
         getIndicatorsService().updateDataSource(ctx, dataSource);
     }
-
-
 
     /**
      * Retrieves version of an indicators system in production
@@ -1078,7 +992,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
     }
 
-    private void updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToChangeOrder, Long orderBeforeUpdate, Long orderAfterUpdate) throws MetamacException {
+    private void updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToChangeOrder, Long orderBeforeUpdate,
+            Long orderAfterUpdate) throws MetamacException {
 
         // Checks orders
         if (orderAfterUpdate > elementsAtLevel.size()) {
@@ -1129,7 +1044,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             }
         }
     }
-    
+
     private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
         // Change order
@@ -1193,13 +1108,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         } else {
             // Same parent, only changes order
             // Check order is correct and update orders
-            List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel
-                    .getIndicatorsSystemVersionFirstLevel().getChildrenFirstLevel();
+            List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getIndicatorsSystemVersionFirstLevel()
+                    .getChildrenFirstLevel();
             updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
             getIndicatorsSystemsService().updateElementLevel(ctx, elementLevel);
         }
     }
-    
+
     /**
      * Retrieves version of an indicator in production
      */
