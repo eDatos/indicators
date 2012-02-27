@@ -32,21 +32,29 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public IndicatorsSystemVersion createIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemDraft) throws MetamacException {
+    public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystem, indicatorsSystemVersion, null);
+        checkIndicatorsSystemCodeUnique(ctx, indicatorsSystem.getCode(), null);
+        checkIndicatorsSystemUriGopestatUnique(ctx, indicatorsSystemVersion.getUriGopestat(), null);        
 
         // Save indicator
+        indicatorsSystem.setDiffusionVersion(null);
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
 
         // Save draft version
-        indicatorsSystemDraft.setIndicatorsSystem(indicatorsSystem);
-        indicatorsSystemDraft = getIndicatorsSystemVersionRepository().save(indicatorsSystemDraft);
+        indicatorsSystemVersion.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
+        indicatorsSystemVersion.setIndicatorsSystem(indicatorsSystem);
+        indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
 
         // Update indicator with draft version
-        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemDraft.getId(), indicatorsSystemDraft.getVersionNumber()));
-        indicatorsSystem.getVersions().add(indicatorsSystemDraft);
-        getIndicatorsSystemRepository().save(indicatorsSystemDraft.getIndicatorsSystem());
+        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemVersion.getId(), indicatorsSystemVersion.getVersionNumber()));
+        indicatorsSystem.getVersions().add(indicatorsSystemVersion);
+        getIndicatorsSystemRepository().save(indicatorsSystemVersion.getIndicatorsSystem());
 
-        return indicatorsSystemDraft;
+        return indicatorsSystemVersion;
     }
 
     public IndicatorsSystemVersion retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
@@ -381,8 +389,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
 
         // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
-        return indicatorsSystemVersionCreated;
+        indicatorsSystemNewVersion.setIndicatorsSystem(indicatorsSystem);
+        indicatorsSystemNewVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemNewVersion);
+        // Update indicator with draft version
+        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemNewVersion.getId(), indicatorsSystemNewVersion.getVersionNumber()));
+        indicatorsSystem.getVersions().add(indicatorsSystemNewVersion);
+        getIndicatorsSystemRepository().save(indicatorsSystem);
+
+        return indicatorsSystemNewVersion;
     }
 
     @Override
@@ -527,6 +541,30 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
         return indicatorsInstances;
+    }
+
+    /**
+     * Checks not exists another indicators system with same code. Checks system retrieved not is actual system.
+     */
+    private void checkIndicatorsSystemCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
+        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, code);
+        if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, code);
+        }
+    }
+
+    /**
+     * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
+     */
+    private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystemVersions(ctx, uriGopestat, null);
+        if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
+            for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
+                if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
+                    throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
+                }
+            }
+        }
     }
 
     /**

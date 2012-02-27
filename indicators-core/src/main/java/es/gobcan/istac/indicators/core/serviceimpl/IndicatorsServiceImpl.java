@@ -30,21 +30,28 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public IndicatorVersion createIndicatorVersion(ServiceContext ctx, Indicator indicator, IndicatorVersion indicatorDraft) throws MetamacException {
+    public IndicatorVersion createIndicator(ServiceContext ctx, Indicator indicator, IndicatorVersion indicatorVersion) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkCreateIndicator(indicator, indicatorVersion, null);
+        checkIndicatorCodeUnique(ctx, indicator.getCode(), null);
 
         // Save indicator
+        indicator.setDiffusionVersion(null);
         indicator = getIndicatorRepository().save(indicator);
 
         // Save draft version
-        indicatorDraft.setIndicator(indicator);
-        indicatorDraft = getIndicatorVersionRepository().save(indicatorDraft);
+        indicatorVersion.setState(IndicatorStateEnum.DRAFT);
+        indicatorVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
+        indicatorVersion.setIndicator(indicator);
+        indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
 
         // Update indicator with draft version
-        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorDraft.getId(), indicatorDraft.getVersionNumber()));
-        indicator.getVersions().add(indicatorDraft);
-        getIndicatorRepository().save(indicatorDraft.getIndicator());
+        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber()));
+        indicator.getVersions().add(indicatorVersion);
+        getIndicatorRepository().save(indicatorVersion.getIndicator());
 
-        return indicatorDraft;
+        return indicatorVersion;
     }
 
     public IndicatorVersion retrieveIndicator(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
@@ -191,7 +198,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         return indicatorsVersions;
     }
-    
+
     @Override
     public List<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
 
@@ -209,7 +216,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         return indicatorsVersions;
     }
-    
+
     @Override
     public List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
@@ -367,8 +374,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
 
         // Create
-        IndicatorVersion indicatorVersionCreated = createIndicatorVersion(ctx, indicator, indicatorNewVersion);
-        return indicatorVersionCreated;
+        indicatorNewVersion.setIndicator(indicator);
+        indicatorNewVersion = getIndicatorVersionRepository().save(indicatorNewVersion);
+        // Update indicator with draft version
+        indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber()));
+        indicator.getVersions().add(indicatorNewVersion);
+        getIndicatorRepository().save(indicator);
+
+        return indicatorNewVersion;
     }
 
     @Override
@@ -417,6 +430,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
+    }
+
+    /**
+     * Checks not exists another indicator with same code. Checks indicator retrieved not is actual indicator.
+     */
+    private void checkIndicatorCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
+        List<Indicator> indicator = findIndicators(ctx, code);
+        if (indicator != null && indicator.size() != 0 && !indicator.get(0).getUuid().equals(actualUuid)) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
+        }
     }
 
     /**

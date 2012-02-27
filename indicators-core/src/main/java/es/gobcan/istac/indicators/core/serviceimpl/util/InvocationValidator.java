@@ -11,8 +11,10 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -24,14 +26,15 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class InvocationValidator {
 
-    public static void checkCreateIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicatorsSystem(IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicatorsSystem(indicatorsSystemDto, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
+        checkIndicatorsSystem(indicatorsSystem, indicatorsSystemVersion, exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorsSystem.getId(), "INDICATORS_SYSTEM.UUID", exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getId(), "INDICATORS_SYSTEM.UUID", exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -42,7 +45,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicatorsSystem(indicatorsSystemDto, exceptions);
+//        checkIndicatorsSystem(indicatorsSystemDto, exceptions); // TODO
         ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorsSystemInProduction.getIndicatorsSystem().getCode(), indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
@@ -271,14 +274,15 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkCreateIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicator(Indicator indicator, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicator(indicatorDto, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorDto.getUuid(), "INDICATOR.UUID", exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
+        checkIndicator(indicator, indicatorVersion, exceptions);
+        ValidationUtils.checkMetadataEmpty(indicator.getId(), "INDICATOR.UUID", exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorVersion.getId(), "INDICATOR.UUID", exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorVersion.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -288,7 +292,7 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicator(indicatorDto, exceptions);
+//        checkIndicator(indicatorDto, exceptions); // TODO
         ValidationUtils.checkMetadataRequired(indicatorDto.getUuid(), "INDICATORS.UUID", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
         ValidationUtils.checkMetadataUnmodifiable(indicatorInProduction.getIndicator().getCode(), indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
@@ -565,10 +569,11 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    private static void checkIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(indicatorsSystemDto, "INDICATORS_SYSTEM", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getTitle(), "INDICATORS_SYSTEM.TITLE", exceptions);
+    private static void checkIndicatorsSystem(IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
+        ValidationUtils.checkParameterRequired(indicatorsSystem, "INDICATORS_SYSTEM", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorsSystem.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), "INDICATORS_SYSTEM.TITLE", exceptions);
     }
 
     private static void checkDimension(DimensionDto dimensionDto, List<MetamacExceptionItem> exceptions) {
@@ -596,10 +601,11 @@ public class InvocationValidator {
     // TODO revisar qué metadatos son requeridos
     // TODO Quantity: cuáles son los metadatos obligatorios? Ojo! Depende del tipo de Quantity
     // TODO Quantity es obligatorio
-    private static void checkIndicator(IndicatorDto indicatorDto, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(indicatorDto, "INDICATOR", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorDto.getName(), "INDICATOR.NAME", exceptions);
+    private static void checkIndicator(Indicator indicator, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
+        ValidationUtils.checkParameterRequired(indicator, "INDICATOR", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorVersion, "INDICATOR", exceptions);
+        ValidationUtils.checkMetadataRequired(indicator.getCode(), "INDICATOR.CODE", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getName(), "INDICATOR.NAME", exceptions);
     }
 
     private static void checkDataSource(DataSourceDto dataSourceDto, List<MetamacExceptionItem> exceptions) {

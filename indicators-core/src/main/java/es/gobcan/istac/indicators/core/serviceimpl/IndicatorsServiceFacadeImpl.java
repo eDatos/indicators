@@ -16,7 +16,6 @@ import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
@@ -32,7 +31,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
-import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorServiceFacade.
@@ -55,22 +53,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      */
     public IndicatorsSystemDto createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystemDto, null);
-        checkIndicatorsSystemCodeUnique(ctx, indicatorsSystemDto.getCode(), null);
-        checkIndicatorsSystemUriGopestatUnique(ctx, indicatorsSystemDto.getUriGopestat(), null);
-
         // Transform
-        IndicatorsSystem indicatorsSystem = new IndicatorsSystem();
-        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystem);
-        indicatorsSystem.setDiffusionVersion(null);
-        // Version in draft
+        IndicatorsSystem indicatorsSystem = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, new IndicatorsSystem());
         IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto);
-        draftVersion.setState(IndicatorsSystemStateEnum.DRAFT);
-        draftVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
 
         // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, draftVersion);
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystem(ctx, indicatorsSystem, draftVersion);
 
         // Transform to Dto
         indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
@@ -205,7 +193,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
             indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
         }
-        
+
         return indicatorsSystemsDto;
     }
 
@@ -307,7 +295,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve dimensions
         List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
-        
+
         // Transform
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
         for (Dimension dimension : dimensions) {
@@ -443,7 +431,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve indicators instances
         List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstances(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
-        
+
         // Transform
         List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
         for (IndicatorInstance indicatorInstance : indicatorsInstances) {
@@ -487,21 +475,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkCreateIndicator(indicatorDto, null);
-        checkIndicatorCodeUnique(ctx, indicatorDto.getCode(), null);
-
         // Transform
-        Indicator indicator = new Indicator();
-        indicator.setDiffusionVersion(null);
-        dto2DoMapper.indicatorDtoToDo(indicatorDto, indicator);
-        // Version in draft
+        Indicator indicator = dto2DoMapper.indicatorDtoToDo(indicatorDto, new Indicator());
         IndicatorVersion draftVersion = dto2DoMapper.indicatorDtoToDo(indicatorDto);
-        draftVersion.setState(IndicatorStateEnum.DRAFT);
-        draftVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
 
         // Create
-        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicatorVersion(ctx, indicator, draftVersion);
+        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicator, draftVersion);
 
         // Transform to Dto
         indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
@@ -619,7 +598,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         for (IndicatorVersion indicatorVersion : indicatorsVersion) {
             indicatorsDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
         }
-        
+
         return indicatorsDto;
     }
 
@@ -637,7 +616,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return indicatorsDto;
     }
-    
+
     @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
@@ -685,7 +664,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve dataSources
         List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
-        
+
         // Transform
         List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
         for (DataSource dataSource : dataSources) {
@@ -726,30 +705,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
         return indicatorsSystemVersionProduction;
-    }
-
-    /**
-     * Checks not exists another indicators system with same code. Checks system retrieved not is actual system.
-     */
-    private void checkIndicatorsSystemCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, code);
-        }
-    }
-
-    /**
-     * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
-     */
-    private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemsService().findIndicatorsSystemVersions(ctx, uriGopestat, null);
-        if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
-            for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
-                if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
-                    throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
-                }
-            }
-        }
     }
 
     /**
@@ -947,16 +902,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         IndicatorVersion indicatorVersionProduction = getIndicatorsService().retrieveIndicator(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
         return indicatorVersionProduction;
-    }
-
-    /**
-     * Checks not exists another indicator with same code. Checks indicator retrieved not is actual indicator.
-     */
-    private void checkIndicatorCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
-        List<Indicator> indicator = getIndicatorsService().findIndicators(ctx, code);
-        if (indicator != null && indicator.size() != 0 && !indicator.get(0).getUuid().equals(actualUuid)) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
-        }
     }
 
     /**
