@@ -243,6 +243,99 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
+    public void testRetrieveIndicatorByCode() throws Exception {
+
+        String code = "CODE-1";
+        String versionNumber = "1.000";
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContext(), code, versionNumber);
+
+        assertNotNull(indicatorDto);
+        assertEquals(INDICATOR_1, indicatorDto.getUuid());
+        assertEquals("1.000", indicatorDto.getVersionNumber());
+        assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorByCodeLastVersion() throws Exception {
+
+        String code = "CODE-1";
+        String versionNumber = null;
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContext(), code, versionNumber);
+
+        assertNotNull(indicatorDto);
+        assertEquals(INDICATOR_1, indicatorDto.getUuid());
+        assertEquals(indicatorDto.getProductionVersion(), indicatorDto.getVersionNumber());
+        assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorByCodeErrorNotExists() throws Exception {
+
+        String code = "CODE_NOT_EXISTS";
+
+        try {
+            indicatorsServiceFacade.retrieveIndicatorByCode(getServiceContext(), code, null);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveIndicatorPublishedByCode() throws Exception {
+
+        String code = "CODE-1";
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContext(), code);
+
+        assertNotNull(indicatorDto);
+        assertEquals(INDICATOR_1, indicatorDto.getUuid());
+        assertEquals(indicatorDto.getDiffusionVersion(), indicatorDto.getVersionNumber());
+        assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorPublishedByCodeErrorNotExists() throws Exception {
+
+        String code = "CODE_NOT_EXISTS";
+
+        try {
+            indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContext(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveIndicatorPublishedByCodeErrorNotExistsInDiffusion() throws Exception {
+
+        String code = "CODE-2";
+
+        try {
+            indicatorsServiceFacade.retrieveIndicatorPublishedByCode(getServiceContext(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATOR_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
+
+    @Test
     public void testCreateIndicator() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();

@@ -686,6 +686,62 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(publishedIndicatorVersion);
         return indicatorDto;
     }
+    
+    public IndicatorDto retrieveIndicatorByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorByCode(code, null);
+
+        // Retrieve indicator by code
+        List<Indicator> indicators = getIndicatorsService().findIndicators(ctx, code);
+        if (indicators.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE, code);
+        } else if (indicators.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
+        }
+
+        // Retrieve version requested or last version
+        Indicator indicator = indicators.get(0);
+        IndicatorVersion indicatorVersion = null;
+        if (versionNumber == null) {
+            // Retrieve last version
+            versionNumber = indicator.getProductionVersion() != null ? indicator.getProductionVersion().getVersionNumber() : indicator.getDiffusionVersion().getVersionNumber();
+        }
+        indicatorVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(), versionNumber);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
+    }
+
+    public IndicatorDto retrieveIndicatorPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorPublishedByCode(code, null);
+
+        // Retrieve indicator by code
+        List<Indicator> indicators = getIndicatorsService().findIndicators(ctx, code);
+        if (indicators.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE, code);
+        } else if (indicators.size() > 1) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
+        }
+
+        // Retrieve only published
+        Indicator indicator = indicators.get(0);
+        if (indicator.getDiffusionVersion() == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorVersion(ctx, indicator.getUuid(),
+                indicator.getDiffusionVersion().getVersionNumber());
+        if (!IndicatorStateEnum.PUBLISHED.equals(indicatorVersion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
+    }
 
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
