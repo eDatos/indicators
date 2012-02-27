@@ -1,9 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -275,13 +273,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkUpdateDimensionLocation(uuid, parentTargetUuid, orderInLevel, null);
-
-        // Update location
-        ElementLevel elementLevel = getIndicatorsSystemsService().retrieveDimension(ctx, uuid).getElementLevel();
-        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        getIndicatorsSystemsService().updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 
     @Override
@@ -350,13 +342,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkUpdateIndicatorInstanceLocation(uuid, parentTargetUuid, orderInLevel, null);
-
-        // Update location
-        ElementLevel elementLevel = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, uuid).getElementLevel();
-        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        getIndicatorsSystemsService().updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
@@ -594,161 +580,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         }
     }
-
-    private void updateIndicatorsSystemElementsOrdersInLevelAddingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToAdd) throws MetamacException {
-
-        // Create a set with all possibles orders. At the end of this method, this set must be empty
-        Set<Long> orders = new HashSet<Long>();
-        for (int i = 1; i <= elementsAtLevel.size(); i++) {
-            orders.add(Long.valueOf(i));
-        }
-
-        // Update orders
-        for (ElementLevel elementInLevel : elementsAtLevel) {
-            // it is possible that element is already added to parent and order is already set
-            if (elementInLevel.getElementUuid().equals(elementToAdd.getElementUuid())) {
-                // nothing
-            } else {
-                // Update order
-                if (elementInLevel.getOrderInLevel() >= elementToAdd.getOrderInLevel()) {
-                    elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() + 1);
-                    getIndicatorsSystemsService().updateElementLevel(ctx, elementInLevel);
-                }
-            }
-
-            boolean removed = orders.remove(elementInLevel.getOrderInLevel());
-            if (!removed) {
-                break; // order incorrect
-            }
-        }
-
-        // Checks orders
-        if (!orders.isEmpty()) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
-        }
-    }
-
-    private void updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, Long orderBeforeUpdate) throws MetamacException {
-        for (ElementLevel elementInLevel : elementsAtLevel) {
-            if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
-                elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() - 1);
-                getIndicatorsSystemsService().updateElementLevel(ctx, elementInLevel);
-            }
-        }
-    }
-
-    private void updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToChangeOrder, Long orderBeforeUpdate,
-            Long orderAfterUpdate) throws MetamacException {
-
-        // Checks orders
-        if (orderAfterUpdate > elementsAtLevel.size()) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
-        }
-
-        // Update orders
-        for (ElementLevel elementAtLevel : elementsAtLevel) {
-            if (elementAtLevel.getElementUuid().equals(elementToChangeOrder.getElementUuid())) {
-                continue;
-            }
-            if (orderAfterUpdate < orderBeforeUpdate) {
-                if (elementAtLevel.getOrderInLevel() >= orderAfterUpdate && elementAtLevel.getOrderInLevel() < orderBeforeUpdate) {
-                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() + 1);
-                    getIndicatorsSystemsService().updateElementLevel(ctx, elementAtLevel);
-                }
-            } else if (orderAfterUpdate > orderBeforeUpdate) {
-                if (elementAtLevel.getOrderInLevel() > orderBeforeUpdate && elementAtLevel.getOrderInLevel() <= orderAfterUpdate) {
-                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() - 1);
-                    getIndicatorsSystemsService().updateElementLevel(ctx, elementAtLevel);
-                }
-            }
-        }
-    }
-
-    /**
-     * We can not move a dimension to its child
-     */
-    private void checkDimensionIsNotChildren(ServiceContext ctx, Dimension dimension, String parentTargetUuid) throws MetamacException {
-
-        Dimension dimensionTarget = getIndicatorsSystemsService().retrieveDimension(ctx, parentTargetUuid);
-        ElementLevel dimensionParent = dimensionTarget.getElementLevel().getParent();
-        while (dimensionParent != null) {
-            if (dimensionParent.getDimension() != null && dimensionParent.getElementUuid().equals(dimension.getUuid())) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "PARENT_TARGET_UUID");
-            }
-            dimensionParent = dimensionParent.getParent();
-        }
-    }
     
-    private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-
-        // Change order
-        Long orderInLevelBefore = elementLevel.getOrderInLevel();
-        elementLevel.setOrderInLevel(orderInLevel);
-
-        // Check indicators system state
-        IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Check target parent is not children of this dimension (only when element is a dimension)
-        if (parentTargetUuid != null && elementLevel.getDimension() != null) {
-            checkDimensionIsNotChildren(ctx, elementLevel.getDimension(), parentTargetUuid);
-        }
-
-        // Update parent and/or order
-        String parentUuidActual = elementLevel.getParentUuid();
-        if ((parentUuidActual == null && parentTargetUuid != null) || (parentUuidActual != null && parentTargetUuid == null)
-                || (parentUuidActual != null && parentTargetUuid != null && !parentTargetUuid.equals(parentUuidActual))) {
-
-            ElementLevel parentActual = elementLevel.getParent() != null ? elementLevel.getParent() : null;
-            ElementLevel parentTarget = parentTargetUuid != null ? getIndicatorsSystemsService().retrieveDimension(ctx, parentTargetUuid).getElementLevel() : null;
-
-            // Update target parent, adding dimension
-            List<ElementLevel> elementsInLevel = null;
-            if (parentTarget == null) {
-                indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
-                getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-                elementsInLevel = indicatorsSystemVersion.getChildrenFirstLevel();
-            } else {
-                parentTarget.addChildren(elementLevel);
-                getIndicatorsSystemsService().updateElementLevel(ctx, parentTarget);
-                elementsInLevel = parentTarget.getChildren();
-            }
-            // Check order is correct and update orders
-            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementsInLevel, elementLevel);
-
-            // Update dimension, changing parent
-            if (parentTarget == null) {
-                elementLevel.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersion);
-                elementLevel.setParent(null);
-            } else {
-                elementLevel.setIndicatorsSystemVersionFirstLevel(null);
-                elementLevel.setParent(parentTarget);
-            }
-            getIndicatorsSystemsService().updateElementLevel(ctx, elementLevel);
-
-            // Update actual parent dimension or indicators system version, removing dimension
-            if (parentActual != null) {
-                parentActual.getChildren().remove(elementLevel);
-                getIndicatorsSystemsService().updateElementLevel(ctx, parentActual);
-                // Update order of other dimensions
-                updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, parentActual.getChildren(), orderInLevelBefore);
-            } else {
-                indicatorsSystemVersion.getChildrenFirstLevel().remove(elementLevel);
-                getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-                // Update order of other dimensions
-                updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, indicatorsSystemVersion.getChildrenFirstLevel(), orderInLevelBefore);
-            }
-
-        } else {
-            // Same parent, only changes order
-            // Check order is correct and update orders
-            List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getIndicatorsSystemVersionFirstLevel()
-                    .getChildrenFirstLevel();
-            updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
-            getIndicatorsSystemsService().updateElementLevel(ctx, elementLevel);
-        }
-    }
-
     /**
      * Retrieves version of an indicator in production
      */

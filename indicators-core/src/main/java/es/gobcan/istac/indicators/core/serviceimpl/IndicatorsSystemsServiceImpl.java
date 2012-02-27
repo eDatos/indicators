@@ -440,6 +440,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public Dimension updateDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
         return getDimensionRepository().save(dimension);
     }
+    
+    @Override
+    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateDimensionLocation(uuid, parentTargetUuid, orderInLevel, null);
+
+        // Update location
+        ElementLevel elementLevel = retrieveDimension(ctx, uuid).getElementLevel();
+        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+    }
 
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -450,22 +461,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         Dimension dimension = retrieveDimension(ctx, uuid);
         ElementLevel elementLevel = dimension.getElementLevel();
 
-        // Check indicators system state
-        IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Update orders of other elements in level
-        List<ElementLevel> elementsAtLevel = null;
-        if (elementLevel.getParent() == null) {
-            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
-        } else {
-            elementsAtLevel = elementLevel.getParent().getChildren();
-        }
-        elementsAtLevel.remove(elementLevel);
-        updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel.getOrderInLevel());
-
         // Delete
-        getElementLevelRepository().delete(elementLevel);
+        deleteElementLevel(ctx, elementLevel);
     }
 
     @Override
@@ -518,6 +515,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorInstance updateIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
         return getIndicatorInstanceRepository().save(indicatorInstance);
     }
+    
+
+    @Override
+    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkUpdateIndicatorInstanceLocation(uuid, parentTargetUuid, orderInLevel, null);
+
+        // Update location
+        ElementLevel elementLevel = retrieveIndicatorInstance(ctx, uuid).getElementLevel();
+        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+    }
 
     @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
@@ -529,22 +538,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorInstance indicatorInstance = retrieveIndicatorInstance(ctx, uuid);
         ElementLevel elementLevel = indicatorInstance.getElementLevel();
 
-        // Check indicators system state
-        IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
         // Delete
-        getElementLevelRepository().delete(elementLevel);
-
-        // Update orders of other elements in level
-        List<ElementLevel> elementsAtLevel = null;
-        if (elementLevel.getParent() == null) {
-            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
-        } else {
-            elementsAtLevel = elementLevel.getParent().getChildren();
-        }
-        elementsAtLevel.remove(elementLevel);
-        updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel.getOrderInLevel());
+        deleteElementLevel(ctx, elementLevel);
     }
 
     @Override
@@ -755,6 +750,93 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
     }
+    
+    private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+
+        // Change order
+        Long orderInLevelBefore = elementLevel.getOrderInLevel();
+        elementLevel.setOrderInLevel(orderInLevel);
+
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
+        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
+
+        // Check target parent is not children of this dimension (only when element is a dimension)
+        if (parentTargetUuid != null && elementLevel.getDimension() != null) {
+            checkDimensionIsNotChildren(ctx, elementLevel.getDimension(), parentTargetUuid);
+        }
+
+        // Update parent and/or order
+        String parentUuidActual = elementLevel.getParentUuid();
+        if ((parentUuidActual == null && parentTargetUuid != null) || (parentUuidActual != null && parentTargetUuid == null)
+                || (parentUuidActual != null && parentTargetUuid != null && !parentTargetUuid.equals(parentUuidActual))) {
+
+            ElementLevel parentActual = elementLevel.getParent() != null ? elementLevel.getParent() : null;
+            ElementLevel parentTarget = parentTargetUuid != null ? retrieveDimension(ctx, parentTargetUuid).getElementLevel() : null;
+
+            // Update actual parent dimension or indicators system version, removing dimension
+            if (parentActual != null) {
+                // Update order of other dimensions
+                elementLevel.setParent(null);
+                updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, parentActual.getChildren(), elementLevel, orderInLevelBefore);
+            } else {
+                // Update order of other dimensions
+                elementLevel.setIndicatorsSystemVersionFirstLevel(null);
+                updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, indicatorsSystemVersion.getChildrenFirstLevel(), elementLevel, orderInLevelBefore);
+            }
+
+            // Update target parent, adding dimension
+            List<ElementLevel> elementsInLevel = null;
+            if (parentTarget == null) {
+                indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
+                updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                elementsInLevel = indicatorsSystemVersion.getChildrenFirstLevel();
+            } else {
+                parentTarget.addChildren(elementLevel);
+                updateElementLevel(ctx, parentTarget);
+                elementsInLevel = parentTarget.getChildren();
+            }
+            // Check order is correct and update orders
+            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementsInLevel, elementLevel);
+
+            // Update dimension, changing parent
+            if (parentTarget == null) {
+                elementLevel.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersion);
+                elementLevel.setParent(null);
+            } else {
+                elementLevel.setIndicatorsSystemVersionFirstLevel(null);
+                elementLevel.setParent(parentTarget);
+            }
+            updateElementLevel(ctx, elementLevel);
+        } else {
+            // Same parent, only changes order
+            // Check order is correct and update orders
+            List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getIndicatorsSystemVersionFirstLevel()
+                    .getChildrenFirstLevel();
+            updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
+            updateElementLevel(ctx, elementLevel);
+        }
+    }
+    
+    private void deleteElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
+
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
+        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
+
+        // Update orders of other elements in level
+        List<ElementLevel> elementsAtLevel = null;
+        if (elementLevel.getParent() == null) {
+            elementsAtLevel = indicatorsSystemVersion.getChildrenFirstLevel();
+        } else {
+            elementsAtLevel = elementLevel.getParent().getChildren();
+        }
+        elementsAtLevel.remove(elementLevel);
+        updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ctx, elementsAtLevel, elementLevel, elementLevel.getOrderInLevel());
+
+        // Delete
+        getElementLevelRepository().delete(elementLevel);
+    }
 
     private void updateIndicatorsSystemElementsOrdersInLevelAddingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToAdd) throws MetamacException {
 
@@ -789,9 +871,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
     }
 
-    private void updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, Long orderBeforeUpdate) throws MetamacException {
+    private void updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToRemove, Long orderBeforeUpdate) throws MetamacException {
         for (ElementLevel elementInLevel : elementsAtLevel) {
-            if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
+            if (elementInLevel.getElementUuid().equals(elementToRemove.getElementUuid())) {
+                // nothing
+            } else if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
                 elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() - 1);
                 updateElementLevel(ctx, elementInLevel);
             }
