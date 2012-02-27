@@ -258,7 +258,23 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testRetrieveIndicatorsSystemByCode() throws Exception {
 
         String code = "CODE-1";
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code);
+        String versionNumber = "1.000";
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code, versionNumber);
+
+        assertNotNull(indicatorsSystemDto);
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
+        assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
+        assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
+        assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
+        assertEquals("CODE-1", indicatorsSystemDto.getCode());
+    }
+
+    @Test
+    public void testRetrieveIndicatorsSystemByCodeLastVersion() throws Exception {
+
+        String code = "CODE-1";
+        String versionNumber = null;
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code, versionNumber);
 
         assertNotNull(indicatorsSystemDto);
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
@@ -274,7 +290,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String code = "CODE_NOT_EXISTS";
 
         try {
-            indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code);
+            indicatorsServiceFacade.retrieveIndicatorsSystemByCode(getServiceContext(), code, null);
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

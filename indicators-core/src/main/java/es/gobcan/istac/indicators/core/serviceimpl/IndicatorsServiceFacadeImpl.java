@@ -116,7 +116,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorsSystemDto;
     }
 
-    public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code) throws MetamacException {
+    public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorsSystemByCode(code, null);
@@ -129,9 +129,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
         }
 
+        // Retrieve version requested or last version
         IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
-        String lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion);
+        IndicatorsSystemVersion indicatorsSystemVersion = null;
+        if (versionNumber == null) {
+            // Retrieve last version
+            versionNumber = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
+        }
+        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), versionNumber);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);

@@ -180,7 +180,7 @@ Application Indicators {
 	    	"Retrieves an indicators system published"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	"Retrieves an indicators system by code. Retrieves last version"
-	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code) throws MetamacException;
+	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
 	    	"Retrieves an indicators system by code. Retrieves diffusion version"
 	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	"Deletes a version of an indicators system. Version to remove must be not published nor archived"
