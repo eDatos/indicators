@@ -16,8 +16,11 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Implementation of IndicatorsSystemService.
@@ -317,6 +320,29 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
         updateIndicatorsSystemVersion(ctx, indicatorsSystemInDiffusion);
+    }
+
+    @Override
+    public IndicatorsSystemVersion versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
+
+        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystemBorrar(ctx, uuid);
+        if (indicatorsSystem.getProductionVersion() != null) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED,
+                    IndicatorsSystemStateEnum.ARCHIVED});
+        }
+
+        // Initialize new version, copying values of version in diffusion
+        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, true);
+        IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
+        indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
+
+        // Create
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
+        return indicatorsSystemVersionCreated;
     }
 
     @Override
