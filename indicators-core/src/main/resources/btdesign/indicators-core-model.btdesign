@@ -24,14 +24,6 @@ Application Indicators {
 //	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 //	    	"Updates metadata of an indicators system. This version can not be published or archived"
 //	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-//	    	"Retrieves an indicators system. If versionNumber is not provided, retrieves last version"
-//	    	@IndicatorsSystemDto retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
-//	    	"Retrieves an indicators system published"
-//	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
-//	    	"Retrieves an indicators system by code. Retrieves last version"
-//	    	@IndicatorsSystemDto retrieveIndicatorsSystemByCode(String code) throws MetamacException;
-//	    	"Retrieves an indicators system by code. Retrieves diffusion version"
-//	    	@IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 //	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
 //	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 //	    	"Finds indicators systems. Retrieves last versions"
@@ -67,8 +59,11 @@ Application Indicators {
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystemVersion(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
-	    	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber) throws MetamacException;
-	    	@IndicatorsSystem retrieveIndicatorsSystem(String uuid) throws MetamacException;
+	    	@IndicatorsSystem retrieveIndicatorsSystemBorrar(String uuid) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	@IndicatorsSystem updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
 	    	@IndicatorsSystemVersion updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;

@@ -81,17 +81,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     public IndicatorsSystemDto retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String version) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystem(uuid, version, null);
-
-        // Retrieve version requested or last version
-        IndicatorsSystemVersion indicatorsSystemVersion = null;
-        if (version == null) {
-            // Retrieve last version
-            IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
-            version = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
-        }
-        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, version);
+        // Retrieve
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, version);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -101,41 +92,18 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public IndicatorsSystemDto retrieveIndicatorsSystemPublished(ServiceContext ctx, String uuid) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystemPublished(uuid, null);
-
-        // Retrieve published version
-        IndicatorsSystemVersion publishedIndicatorsSystemVersion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, false);
-        if (publishedIndicatorsSystemVersion == null || !IndicatorsSystemStateEnum.PUBLISHED.equals(publishedIndicatorsSystemVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
-        }
+        // Retrieve
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, uuid);
 
         // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(publishedIndicatorsSystemVersion);
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
         return indicatorsSystemDto;
     }
 
     public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystemByCode(code, null);
-
-        // Retrieve indicators system by code
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
-        } else if (indicatorsSystems.size() > 1) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
-        }
-
-        // Retrieve version requested or last version
-        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
-        IndicatorsSystemVersion indicatorsSystemVersion = null;
-        if (versionNumber == null) {
-            // Retrieve last version
-            versionNumber = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
-        }
-        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), versionNumber);
+        // Retrieve
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemByCode(ctx, code, versionNumber);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -144,27 +112,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     public IndicatorsSystemDto retrieveIndicatorsSystemPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystemPublishedByCode(code, null);
-
-        // Retrieve indicators system by code
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
-        } else if (indicatorsSystems.size() > 1) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
-        }
-
-        // Retrieve only published
-        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
-        if (indicatorsSystem.getDiffusionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
-        }
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(),
-                indicatorsSystem.getDiffusionVersion().getVersionNumber());
-        if (!IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
-        }
+        // Retrieve
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublishedByCode(ctx, code);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -178,13 +127,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         InvocationValidator.checkRetrieveIndicatorsSystemStructure(uuid, version, null);
 
         // Retrieve version requested or last version
-        IndicatorsSystemVersion indicatorsSystemVersion = null;
-        if (version == null) {
-            // Retrieve last version
-            IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
-            version = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
-        }
-        indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, version);
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, version);
 
         // Builds structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = new IndicatorsSystemStructureDto();
@@ -246,27 +189,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public IndicatorsSystemDto versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
-
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
-        if (indicatorsSystem.getProductionVersion() != null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED,
-                    IndicatorsSystemStateEnum.ARCHIVED});
-        }
-
-        // Initialize new version, copying values of version in diffusion
-        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, true);
-        IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
-        indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
-        indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
-
-        // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
-
-        // Transform to Dto
-        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
-        return indicatorsSystemDto;
+         // Validation of parameters
+         InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
+        
+         IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystemBorrar(ctx, uuid);
+         if (indicatorsSystem.getProductionVersion() != null) {
+         throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED,
+         IndicatorsSystemStateEnum.ARCHIVED});
+         }
+        
+         // Initialize new version, copying values of version in diffusion
+         IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, true);
+         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
+         indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
+         indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
+        
+         // Create
+         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystemVersion(ctx, indicatorsSystem, indicatorsSystemNewVersion);
+        
+         // Transform to Dto
+         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersionCreated);
+         return indicatorsSystemDto;
     }
 
     // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
@@ -284,7 +227,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
             // Last version
             IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
-            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
+            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
             indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemLastVersion));
         }
 
@@ -882,18 +825,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      * Retrieves version of an indicators system in production
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
-        if (indicatorsSystem == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND, uuid);
-        }
+        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystemBorrar(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
         if (indicatorsSystem.getProductionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND, uuid);
         }
-        IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemsService()
-                .retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
+        IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
         return indicatorsSystemVersionProduction;
     }
 
@@ -901,14 +840,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
      * Retrieves version of an indicators system in diffusion
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = getIndicatorsSystemsService().retrieveIndicatorsSystemBorrar(ctx, uuid);
         if (indicatorsSystem.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
         if (indicatorsSystem.getDiffusionVersion() == null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND, uuid);
         }
-        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = getIndicatorsSystemsService().retrieveIndicatorsSystemVersion(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
+        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
         return indicatorsSystemVersionDiffusion;
     }
 
