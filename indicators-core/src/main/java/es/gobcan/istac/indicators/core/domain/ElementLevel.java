@@ -17,12 +17,26 @@ public class ElementLevel extends ElementLevelBase {
     }
 
     /**
+     * @return True when element is a dimension
+     */
+    public Boolean isDimension() {
+        return getDimension() != null;
+    }
+
+    /**
+     * @return True when element is an indicator instance
+     */
+    public Boolean isIndicatorInstance() {
+        return getIndicatorInstance() != null;
+    }
+
+    /**
      * If exists, retrieves uuid of parent dimension
      */
     public String getParentUuid() {
         return super.getParent() != null ? super.getParent().getDimension().getUuid() : null;
     }
-    
+
     public String getElementUuid() {
         if (this.getDimension() != null) {
             return this.getDimension().getUuid();

@@ -1,7 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
@@ -31,13 +33,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorsSystemsServiceImpl() {
     }
 
+    /**
+     * TODO qué datos se almacenarán? Los sistemas de indicadores se obtienen desde Gopestat, y aquí se almacenan como "referencias" a ellas
+     */
     @Override
     public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystem, indicatorsSystemVersion, null);
         checkIndicatorsSystemCodeUnique(ctx, indicatorsSystem.getCode(), null);
-        checkIndicatorsSystemUriGopestatUnique(ctx, indicatorsSystemVersion.getUriGopestat(), null);        
+        checkIndicatorsSystemUriGopestatUnique(ctx, indicatorsSystemVersion.getUriGopestat(), null);
 
         // Save indicator
         indicatorsSystem.setDiffusionVersion(null);
@@ -210,7 +215,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         return indicatorsSystemsVersions;
     }
-    
+
     @Override
     public List<IndicatorsSystemVersion> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
 
@@ -405,8 +410,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public ElementLevel createDimension(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
-        return getElementLevelRepository().save(elementLevel);
+    public Dimension createDimension(ServiceContext ctx, String indicatorsSystemUuid, Dimension dimension) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimension, null);
+
+        // Create dimension
+        ElementLevel elementLevel = dimension.getElementLevel();
+        elementLevel = createElementLevel(ctx, indicatorsSystemUuid, elementLevel);
+
+        return elementLevel.getDimension();
     }
 
     @Override
@@ -466,16 +479,25 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
         List<Dimension> dimensions = new ArrayList<Dimension>();
         for (ElementLevel level : levels) {
-            if (level.getDimension() != null) {
+            if (level.isDimension()) {
                 dimensions.add(level.getDimension());
             }
         }
         return dimensions;
     }
 
+    // TODO atributos de granularidadesId como foreign keys a las tablas de granularidades?
     @Override
-    public ElementLevel createIndicatorInstance(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
-        return getElementLevelRepository().save(elementLevel);
+    public IndicatorInstance createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstance indicatorInstance) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkCreateIndicatorInstance(indicatorsSystemUuid, indicatorInstance, null);
+
+        // Create dimension
+        ElementLevel elementLevel = indicatorInstance.getElementLevel();
+        elementLevel = createElementLevel(ctx, indicatorsSystemUuid, elementLevel);
+
+        return elementLevel.getIndicatorInstance();
     }
 
     @Override
@@ -536,7 +558,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
         List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();
         for (ElementLevel level : levels) {
-            if (level.getIndicatorInstance() != null) {
+            if (level.isIndicatorInstance()) {
                 indicatorsInstances.add(level.getIndicatorInstance());
             }
         }
@@ -658,6 +680,115 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Nothing
     }
 
+    /**
+     * Create element level: dimension or indicator instance
+     */
+    private ElementLevel createElementLevel(ServiceContext ctx, String indicatorsSystemUuid, ElementLevel elementLevel) throws MetamacException {
+
+        // Retrieve indicators system version and check it is in production
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
+
+        if (elementLevel.getParent() == null) {
+            // Add to first level in indicators system
+
+            // Checks same indicator uuid is not already in level
+            if (elementLevel.isIndicatorInstance()) {
+                checkIndicatorInstanceUniqueIndicator(elementLevel.getIndicatorInstance().getIndicator().getUuid(), indicatorsSystemVersion.getChildrenFirstLevel());
+            }
+
+            // Create element level with dimension
+            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
+            elementLevel.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersion);
+            elementLevel.setParent(null);
+            elementLevel = getElementLevelRepository().save(elementLevel);
+
+            // Update indicators system adding element
+            indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
+            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
+            indicatorsSystemVersion = updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+
+            // Check order and update order of other elements in this level
+            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, indicatorsSystemVersion.getChildrenFirstLevel(), elementLevel);
+        } else {
+            // Add to parent element
+
+            ElementLevel elementLevelParent = elementLevel.getParent();
+
+            // Check dimension parent belogs to indicators system provided
+            IndicatorsSystemVersion indicatorsSystemVersionOfDimensionParent = elementLevelParent.getIndicatorsSystemVersion();
+            if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
+                throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, elementLevel.getParentUuid(), indicatorsSystemUuid);
+            }
+            
+            // Checks same indicator uuid is not already in level
+            if (elementLevel.isIndicatorInstance()) {
+                checkIndicatorInstanceUniqueIndicator(elementLevel.getIndicatorInstance().getIndicator().getUuid(), elementLevelParent.getChildren());
+            }
+
+            // Create element level with dimension
+            elementLevel.setIndicatorsSystemVersionFirstLevel(null);
+            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
+            elementLevel.setParent(elementLevelParent);
+            elementLevel = getElementLevelRepository().save(elementLevel);
+
+            // Update parent level adding element
+            elementLevelParent.addChildren(elementLevel);
+            elementLevelParent = updateElementLevel(ctx, elementLevelParent);
+
+            // Update order of other elements in this level
+            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementLevelParent.getChildren(), elementLevel);
+
+            // Update indicators system adding element to all children
+            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
+            updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+        }
+        return elementLevel;
+    }
+    
+    /**
+     * Checks not exists an indicator instance in the level with same indicator uuid
+     */
+    private void checkIndicatorInstanceUniqueIndicator(String indicatorUuid, List<ElementLevel> elementsLevel) throws MetamacException {
+        for (ElementLevel elementLevel : elementsLevel) {
+            if (elementLevel.isIndicatorInstance() && elementLevel.getIndicatorInstance().getIndicator().getUuid().equals(indicatorUuid)) {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
+            }
+        }
+    }
+
+    private void updateIndicatorsSystemElementsOrdersInLevelAddingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToAdd) throws MetamacException {
+
+        // Create a set with all possibles orders. At the end of this method, this set must be empty
+        Set<Long> orders = new HashSet<Long>();
+        for (int i = 1; i <= elementsAtLevel.size(); i++) {
+            orders.add(Long.valueOf(i));
+        }
+
+        // Update orders
+        for (ElementLevel elementInLevel : elementsAtLevel) {
+            // it is possible that element is already added to parent and order is already set
+            if (elementInLevel.getElementUuid().equals(elementToAdd.getElementUuid())) {
+                // nothing
+            } else {
+                // Update order
+                if (elementInLevel.getOrderInLevel() >= elementToAdd.getOrderInLevel()) {
+                    elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() + 1);
+                    updateElementLevel(ctx, elementInLevel);
+                }
+            }
+
+            boolean removed = orders.remove(elementInLevel.getOrderInLevel());
+            if (!removed) {
+                break; // order incorrect
+            }
+        }
+
+        // Checks orders
+        if (!orders.isEmpty()) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
+        }
+    }
+
     private void updateIndicatorsSystemElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, Long orderBeforeUpdate) throws MetamacException {
         for (ElementLevel elementInLevel : elementsAtLevel) {
             if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
@@ -666,6 +797,49 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
     }
+
+    private void updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToChangeOrder, Long orderBeforeUpdate,
+            Long orderAfterUpdate) throws MetamacException {
+
+        // Checks orders
+        if (orderAfterUpdate > elementsAtLevel.size()) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
+        }
+
+        // Update orders
+        for (ElementLevel elementAtLevel : elementsAtLevel) {
+            if (elementAtLevel.getElementUuid().equals(elementToChangeOrder.getElementUuid())) {
+                continue;
+            }
+            if (orderAfterUpdate < orderBeforeUpdate) {
+                if (elementAtLevel.getOrderInLevel() >= orderAfterUpdate && elementAtLevel.getOrderInLevel() < orderBeforeUpdate) {
+                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() + 1);
+                    updateElementLevel(ctx, elementAtLevel);
+                }
+            } else if (orderAfterUpdate > orderBeforeUpdate) {
+                if (elementAtLevel.getOrderInLevel() > orderBeforeUpdate && elementAtLevel.getOrderInLevel() <= orderAfterUpdate) {
+                    elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() - 1);
+                    updateElementLevel(ctx, elementAtLevel);
+                }
+            }
+        }
+    }
+
+    /**
+     * We can not move a dimension to its child
+     */
+    private void checkDimensionIsNotChildren(ServiceContext ctx, Dimension dimension, String parentTargetUuid) throws MetamacException {
+
+        Dimension dimensionTarget = retrieveDimension(ctx, parentTargetUuid);
+        ElementLevel dimensionParent = dimensionTarget.getElementLevel().getParent();
+        while (dimensionParent != null) {
+            if (dimensionParent.isDimension() && dimensionParent.getElementUuid().equals(dimension.getUuid())) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "PARENT_TARGET_UUID");
+            }
+            dimensionParent = dimensionParent.getParent();
+        }
+    }
+
 
     // TODO refactor, hacer privado
     public IndicatorsSystem retrieveIndicatorsSystemBorrar(ServiceContext ctx, String uuid) throws MetamacException {

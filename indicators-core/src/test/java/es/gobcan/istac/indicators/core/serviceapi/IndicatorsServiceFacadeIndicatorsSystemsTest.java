@@ -2879,7 +2879,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorIndicatorsSystemNotExists() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator1");
+        indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicValue("Spain");
         indicatorInstanceDto.setTemporaryValue("2012");
@@ -2901,7 +2901,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator1");
+        indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicValue("Spain");
         indicatorInstanceDto.setTemporaryValue("2012");

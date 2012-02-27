@@ -1,10 +1,10 @@
 package es.gobcan.istac.indicators.core.mapper;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
-import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -19,24 +19,24 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 public interface Dto2DoMapper {
 
     // Indicators systems
-    public IndicatorsSystem indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException;
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException;
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(IndicatorsSystemDto source) throws MetamacException;
+    public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException;
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException;
+    public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException;
     
     // Dimensions
-    public ElementLevel dimensionDtoToDo(DimensionDto dimensionDto);
-    public void dimensionDtoToDo(DimensionDto source, Dimension target);
+    public Dimension dimensionDtoToDo(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
+    public void dimensionDtoToDo(ServiceContext ctx, DimensionDto source, Dimension target) throws MetamacException;
     
     // Indicators instances
-    public ElementLevel indicatorInstanceDtoToDo(IndicatorInstanceDto source);
-    public void indicatorInstanceDtoToDo(IndicatorInstanceDto source, IndicatorInstance target);
+    public IndicatorInstance indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source) throws MetamacException;
+    public void indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source, IndicatorInstance target) throws MetamacException;
     
     // Indicators
-    public Indicator indicatorDtoToDo(IndicatorDto source, Indicator target) throws MetamacException;
-    public IndicatorVersion indicatorDtoToDo(IndicatorDto source, IndicatorVersion target) throws MetamacException;
-    public IndicatorVersion indicatorDtoToDo(IndicatorDto source) throws MetamacException;
+    public Indicator indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, Indicator target) throws MetamacException;
+    public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, IndicatorVersion target) throws MetamacException;
+    public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source) throws MetamacException;
     
     // Data sources
-    public DataSource dataSourceDtoToDo(DataSourceDto source);
-    public void dataSourceDtoToDo(DataSourceDto source, DataSource target);
+    public DataSource dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source) throws MetamacException;
+    public void dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source, DataSource target) throws MetamacException;
 }

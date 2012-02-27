@@ -48,14 +48,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public IndicatorsServiceFacadeImpl() {
     }
 
-    /**
-     * TODO qué datos se almacenarán? Los sistemas de indicadores se obtienen desde Gopestat, y aquí se almacenan como "referencias" a ellas
-     */
     public IndicatorsSystemDto createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
 
         // Transform
-        IndicatorsSystem indicatorsSystem = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, new IndicatorsSystem());
-        IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto);
+        IndicatorsSystem indicatorsSystem = dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto, new IndicatorsSystem());
+        IndicatorsSystemVersion draftVersion = dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto);
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = getIndicatorsSystemsService().createIndicatorsSystem(ctx, indicatorsSystem, draftVersion);
@@ -140,7 +137,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         // Note: attributes in indicatorSystem entity are non modifiables
-        dto2DoMapper.indicatorsSystemDtoToDo(indicatorsSystemDto, indicatorsSystemInProduction);
+        dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto, indicatorsSystemInProduction);
 
         // Update
         getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemInProduction);
@@ -215,62 +212,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkCreateDimension(indicatorsSystemUuid, dimensionDto, null);
-
-        // Retrieve indicators system version and check it is in production
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
-
         // Transform
-        ElementLevel elementLevel = dto2DoMapper.dimensionDtoToDo(dimensionDto);
+        Dimension dimension = dto2DoMapper.dimensionDtoToDo(ctx, dimensionDto);
 
         // Create dimension
-        if (dimensionDto.getParentUuid() == null) {
-            // Add to first level in indicators system
-
-            // Create element level with dimension
-            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
-            elementLevel.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersion);
-            elementLevel.setParent(null);
-            elementLevel = getIndicatorsSystemsService().createDimension(ctx, elementLevel);
-
-            // Update indicators system adding element
-            indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
-            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
-            indicatorsSystemVersion = getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-
-            // Check order and update order of other elements in this level
-            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, indicatorsSystemVersion.getChildrenFirstLevel(), elementLevel);
-        } else {
-            // Add to parent element
-
-            ElementLevel elementLevelParent = getIndicatorsSystemsService().retrieveDimension(ctx, dimensionDto.getParentUuid()).getElementLevel();
-
-            // Check dimension parent belogs to indicators system provided
-            IndicatorsSystemVersion indicatorsSystemVersionOfDimensionParent = elementLevelParent.getIndicatorsSystemVersion();
-            if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
-                throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, dimensionDto.getParentUuid(), indicatorsSystemUuid);
-            }
-            // Create element level with dimension
-            elementLevel.setIndicatorsSystemVersionFirstLevel(null);
-            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
-            elementLevel.setParent(elementLevelParent);
-            elementLevel = getIndicatorsSystemsService().createDimension(ctx, elementLevel);
-
-            // Update parent level adding element
-            elementLevelParent.addChildren(elementLevel);
-            elementLevelParent = getIndicatorsSystemsService().updateElementLevel(ctx, elementLevelParent);
-
-            // Update order of other elements in this level
-            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementLevelParent.getChildren(), elementLevel);
-
-            // Update indicators system adding element to all children
-            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
-            getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-        }
-
+        dimension = getIndicatorsSystemsService().createDimension(ctx, indicatorsSystemUuid, dimension);
+        
         // Transform to Dto to return
-        dimensionDto = do2DtoMapper.dimensionDoToDto(elementLevel.getDimension());
+        dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
     }
 
@@ -320,7 +269,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 
         // Transform and update
-        dto2DoMapper.dimensionDtoToDo(dimensionDto, dimension);
+        dto2DoMapper.dimensionDtoToDo(ctx, dimensionDto, dimension);
         getIndicatorsSystemsService().updateDimension(ctx, dimension);
     }
 
@@ -335,78 +284,17 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
     }
 
-    // TODO atributos de granularidadesId como foreign keys a las tablas de granularidades?
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkCreateIndicatorInstance(indicatorsSystemUuid, indicatorInstanceDto, null);
-
-        // Retrieve indicators system version and check it is in production
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
-
-        // Retrieve indicator
-        Indicator indicator = getIndicatorsService().retrieveIndicatorBorrar(ctx, indicatorInstanceDto.getIndicatorUuid());
-
         // Transform
-        ElementLevel elementLevel = dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto);
-        elementLevel.getIndicatorInstance().setIndicator(indicator);
-        // Note: update indicator adding indicator instance is not necesary
+        IndicatorInstance indicatorInstance = dto2DoMapper.indicatorInstanceDtoToDo(ctx, indicatorInstanceDto);
 
         // Create indicator instance
-        if (indicatorInstanceDto.getParentUuid() == null) {
-            // Add to first level in indicators system
-
-            // Checks same indicator uuid is not already in level
-            checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), indicatorsSystemVersion.getChildrenFirstLevel());
-
-            // Create element level with indicator instance
-            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
-            elementLevel.setIndicatorsSystemVersionFirstLevel(indicatorsSystemVersion);
-            elementLevel.setParent(null);
-            elementLevel = getIndicatorsSystemsService().createIndicatorInstance(ctx, elementLevel);
-
-            // Update indicators system adding element
-            indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
-            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
-            getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-
-            // Check order and update order of other elements in this level
-            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, indicatorsSystemVersion.getChildrenFirstLevel(), elementLevel);
-        } else {
-            // Add to parent element
-
-            ElementLevel elementLevelParent = getIndicatorsSystemsService().retrieveDimension(ctx, indicatorInstanceDto.getParentUuid()).getElementLevel();
-
-            // Check dimension parent belogs to indicators system provided
-            IndicatorsSystemVersion indicatorsSystemVersionOfDimensionParent = elementLevelParent.getIndicatorsSystemVersion();
-            if (!indicatorsSystemVersionOfDimensionParent.getIndicatorsSystem().getUuid().equals(indicatorsSystemUuid)) {
-                throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, indicatorInstanceDto.getParentUuid(), indicatorsSystemUuid);
-            }
-
-            // Checks same indicator uuid is not already in level
-            checkIndicatorInstanceUniqueIndicator(indicatorInstanceDto.getIndicatorUuid(), elementLevelParent.getChildren());
-
-            // Create element level with indicator instance
-            elementLevel.setIndicatorsSystemVersionFirstLevel(null);
-            elementLevel.setIndicatorsSystemVersion(indicatorsSystemVersion);
-            elementLevel.setParent(elementLevelParent);
-            elementLevel = getIndicatorsSystemsService().createIndicatorInstance(ctx, elementLevel);
-
-            // Update parent level adding element
-            elementLevelParent.addChildren(elementLevel);
-            getIndicatorsSystemsService().updateElementLevel(ctx, elementLevelParent);
-
-            // Update order of other elements in this level
-            updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementLevelParent.getChildren(), elementLevel);
-
-            // Update indicators system adding element to all children
-            indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
-            getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-        }
-
+        indicatorInstance = getIndicatorsSystemsService().createIndicatorInstance(ctx, indicatorsSystemUuid, indicatorInstance);
+        
         // Transform to Dto to return
-        indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(elementLevel.getIndicatorInstance());
+        indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
         return indicatorInstanceDto;
     }
 
@@ -456,7 +344,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 
         // Transform and update
-        dto2DoMapper.indicatorInstanceDtoToDo(indicatorInstanceDto, indicatorInstance);
+        dto2DoMapper.indicatorInstanceDtoToDo(ctx, indicatorInstanceDto, indicatorInstance);
         getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
     }
 
@@ -471,13 +359,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
     }
 
-    // TODO listado de dudas de Ri a Alberto
-    // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Transform
-        Indicator indicator = dto2DoMapper.indicatorDtoToDo(indicatorDto, new Indicator());
-        IndicatorVersion draftVersion = dto2DoMapper.indicatorDtoToDo(indicatorDto);
+        Indicator indicator = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto, new Indicator());
+        IndicatorVersion draftVersion = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto);
 
         // Create
         IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicator, draftVersion);
@@ -545,7 +431,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         // Note: attributes in indicatorSystem entity are non modifiables
-        dto2DoMapper.indicatorDtoToDo(indicatorDto, indicatorInProduction);
+        dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto, indicatorInProduction);
 
         // Update
         getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
@@ -620,23 +506,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkCreateDataSource(indicatorUuid, dataSourceDto, null);
-
-        // Retrieve indicator version and check it is in production
-        IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, indicatorUuid, true);
-
         // Transform
-        DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(dataSourceDto);
-        dataSource = getIndicatorsService().createDataSource(ctx, dataSource);
-
-        // Create dataSource
-        dataSource.setIndicatorVersion(indicatorVersion);
-        dataSource = getIndicatorsService().createDataSource(ctx, dataSource);
-
-        // Update indicator adding dataSource
-        indicatorVersion.addDataSource(dataSource);
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+        DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto);
+        
+        // Create
+        dataSource = getIndicatorsService().createDataSource(ctx, indicatorUuid, dataSource);
 
         // Transform to Dto to return
         dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
@@ -688,7 +562,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
 
         // Transform and update
-        dto2DoMapper.dataSourceDtoToDo(dataSourceDto, dataSource);
+        dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto, dataSource);
         getIndicatorsService().updateDataSource(ctx, dataSource);
     }
 
@@ -804,18 +678,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             dimensionParent = dimensionParent.getParent();
         }
     }
-
-    /**
-     * Checks not exists an indicator instance in the level with same indicator uuid
-     */
-    private void checkIndicatorInstanceUniqueIndicator(String indicatorUuid, List<ElementLevel> elementsLevel) throws MetamacException {
-        for (ElementLevel elementLevel : elementsLevel) {
-            if (elementLevel.getIndicatorInstance() != null && elementLevel.getIndicatorInstance().getIndicator().getUuid().equals(indicatorUuid)) {
-                throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL, indicatorUuid);
-            }
-        }
-    }
-
+    
     private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
         // Change order

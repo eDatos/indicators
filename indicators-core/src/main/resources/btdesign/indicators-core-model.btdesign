@@ -20,12 +20,10 @@ Application Indicators {
     		> @ElementLevelRepository
     		
 	    	// DIMENSIONS
-//	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
 //	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
 //	    	updateDimensionLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	
 	    	// INDICATORS INSTANCES	    	
-//	    	@IndicatorInstanceDto createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
     		
@@ -56,14 +54,14 @@ Application Indicators {
 	    	@ElementLevel updateElementLevel(@ElementLevel elementLevel) throws MetamacException;
 	    	
 	    	// Dimensions
-	    	@ElementLevel createDimension(@ElementLevel elementLevel) throws MetamacException;
+	    	@Dimension createDimension(String indicatorsSystemUuid, @Dimension dimension) throws MetamacException;
 	    	@Dimension updateDimension(@Dimension dimension) throws MetamacException;
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
 	    	deleteDimension(String uuid) throws MetamacException;
 	    	List<@Dimension> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// Indicators instances
-	    	@ElementLevel createIndicatorInstance(@ElementLevel elementLevel) throws MetamacException;
+	    	@IndicatorInstance createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstance indicatorInstance) throws MetamacException;
 	    	@IndicatorInstance updateIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
@@ -98,7 +96,7 @@ Application Indicators {
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
 	    	
 	    	// Data sources
-	    	@DataSource createDataSource(@DataSource dataSource) throws MetamacException;
+	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
 	    	@DataSource updateDataSource(@DataSource dataSource) throws MetamacException;
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
@@ -106,8 +104,6 @@ Application Indicators {
 	    	
 //	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
 //	    	
-//	    	// DATASOURCES
-//	    	@DataSourceDto createDataSource(String indicatorUuid, @DataSourceDto dataSourceDto) throws MetamacException;
 //	    	updateDataSource(@DataSourceDto dataSourceDto) throws MetamacException;
     	}   	
 	    

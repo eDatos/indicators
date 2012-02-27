@@ -29,6 +29,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public IndicatorsServiceImpl() {
     }
 
+    // TODO listado de dudas de Ri a Alberto
+    // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, Indicator indicator, IndicatorVersion indicatorVersion) throws MetamacException {
 
@@ -385,8 +387,23 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public DataSource createDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
-        return getDataSourceRepository().save(dataSource);
+    public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkCreateDataSource(indicatorUuid, dataSource, null);
+
+        // Retrieve indicator version and check it is in production
+        IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, indicatorUuid, true);
+
+        // Create dataSource
+        dataSource.setIndicatorVersion(indicatorVersion);
+        dataSource = getDataSourceRepository().save(dataSource);
+
+        // Update indicator adding dataSource
+        indicatorVersion.addDataSource(dataSource);
+        updateIndicatorVersion(ctx, indicatorVersion);
+        
+        return dataSource;
     }
 
     @Override
