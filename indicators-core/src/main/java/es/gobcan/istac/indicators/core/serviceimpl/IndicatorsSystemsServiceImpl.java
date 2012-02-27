@@ -181,6 +181,46 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
     }
 
+    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
+    @Override
+    public List<IndicatorsSystemVersion> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystems(null);
+
+        // Find
+        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, null);
+
+        // Transform
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
+        for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
+            // Last version
+            IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
+            IndicatorsSystemVersion indicatorsSystemLastVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
+            indicatorsSystemsVersions.add(indicatorsSystemLastVersion);
+        }
+
+        return indicatorsSystemsVersions;
+    }
+    
+    @Override
+    public List<IndicatorsSystemVersion> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystemsPublished(null);
+
+        // Retrieve published
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
+
+        // Transform
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
+        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
+            indicatorsSystemsVersions.add(indicatorsSystemVersion);
+        }
+
+        return indicatorsSystemsVersions;
+    }
+
     @Override
     public List<IndicatorsSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorsSystemRepository().findIndicatorsSystems(code);
@@ -403,6 +443,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindDimensions(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
+
+        // Retrieve dimensions
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
         List<Dimension> dimensions = new ArrayList<Dimension>();
@@ -468,6 +513,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public List<IndicatorInstance> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsInstances(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
+
+        // Retrieve
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
         List<ElementLevel> levels = indicatorsSystemVersion.getChildrenAllLevels();
         List<IndicatorInstance> indicatorsInstances = new ArrayList<IndicatorInstance>();

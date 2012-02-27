@@ -19,7 +19,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
@@ -195,36 +194,26 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorsSystemDto;
     }
 
-    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystems(null);
-
         // Find
-        List<IndicatorsSystem> indicatorsSystems = getIndicatorsSystemsService().findIndicatorsSystems(ctx, null);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystems(ctx);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
-        for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
-            // Last version
-            IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
-            IndicatorsSystemVersion indicatorsSystemLastVersion = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
-            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemLastVersion));
+        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
+            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
         }
-
+        
         return indicatorsSystemsDto;
     }
 
     @Override
     public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystemsPublished(null);
-
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
@@ -316,11 +305,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public List<DimensionDto> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindDimensions(indicatorsSystemUuid, indicatorsSystemVersion, null);
-
-        // Retrieve dimensions and transform
+        // Retrieve dimensions
         List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        
+        // Transform
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
         for (Dimension dimension : dimensions) {
             dimensionsDto.add(do2DtoMapper.dimensionDoToDto(dimension));
@@ -453,11 +441,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public List<IndicatorInstanceDto> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsInstances(indicatorsSystemUuid, indicatorsSystemVersion, null);
-
-        // Retrieve indicators instances and transform
+        // Retrieve indicators instances
         List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstances(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        
+        // Transform
         List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
         for (IndicatorInstance indicatorInstance : indicatorsInstances) {
             indicatorsInstancesDto.add(do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance));
@@ -621,46 +608,36 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return indicatorDto;
     }
 
-    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
     public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindIndicators(null);
-
         // Find
-        List<Indicator> indicators = getIndicatorsService().findIndicators(ctx, null);
+        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicators(ctx);
 
         // Transform
-        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-        for (Indicator indicator : indicators) {
-            // Last version
-            IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
-            IndicatorVersion indicatorLastVersion = getIndicatorsService().retrieveIndicator(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
-            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorLastVersion));
+        List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();
+        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
+            indicatorsDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
         }
-
-        return indicatorDto;
+        
+        return indicatorsDto;
     }
 
     @Override
     public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsPublished(null);
-
         // Retrieve published
-        List<IndicatorVersion> indicatorsVersions = getIndicatorsService().findIndicatorsVersions(ctx, null, IndicatorStateEnum.PUBLISHED);
+        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicatorsPublished(ctx);
 
         // Transform
-        List<IndicatorDto> indicatorDto = new ArrayList<IndicatorDto>();
-        for (IndicatorVersion indicatorVersion : indicatorsVersions) {
-            indicatorDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
+        List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();
+        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
+            indicatorsDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
         }
 
-        return indicatorDto;
+        return indicatorsDto;
     }
-
+    
     @Override
     public DataSourceDto createDataSource(ServiceContext ctx, String indicatorUuid, DataSourceDto dataSourceDto) throws MetamacException {
 
@@ -706,11 +683,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
 
-        // Validation of parameters
-        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersion, null);
-
-        // Retrieve dataSources and transform
+        // Retrieve dataSources
         List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
+        
+        // Transform
         List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
         for (DataSource dataSource : dataSources) {
             dataSourcesDto.add(do2DtoMapper.dataSourceDoToDto(dataSource));

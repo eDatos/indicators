@@ -22,20 +22,16 @@ Application Indicators {
     		// INDICATORS SYSTEMS
 //	    	@IndicatorsSystemDto createIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 //	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
-//	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
-//	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished() throws MetamacException;
 	    	
 	    	// DIMENSIONS
 //	    	@DimensionDto createDimension(String indicatorsSystemUuid, @DimensionDto dimensionDto) throws MetamacException;
 //	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
 //	    	updateDimensionLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
-//	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// INDICATORS INSTANCES	    	
 //	    	@IndicatorInstanceDto createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 //	    	updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
-//	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystemVersion(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -45,12 +41,13 @@ Application Indicators {
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	List<@ElementLevel> retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
-	    	
 	    	@IndicatorsSystem updateIndicatorsSystem(@IndicatorsSystem indicatorsSystem) throws MetamacException;
 	    	@IndicatorsSystemVersion updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystems() throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemsPublished() throws MetamacException;
 	    	sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
 	    	sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
@@ -93,7 +90,9 @@ Application Indicators {
 	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	List<@Indicator> findIndicators(String code) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicatorsVersions(String uriGopestat, @IndicatorStateEnum state) throws MetamacException;
+	    	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorStateEnum state) throws MetamacException;
+	    	List<@IndicatorVersion> findIndicators() throws MetamacException;
+	    	List<@IndicatorVersion> findIndicatorsPublished() throws MetamacException;
 	    	sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 	    	sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	rejectIndicatorValidation(String uuid) throws MetamacException;
@@ -111,13 +110,10 @@ Application Indicators {
 //	    	// INDICATORS
 //	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
 //	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
-//	    	List<@IndicatorDto> findIndicators() throws MetamacException;
-//	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
 //	    	
 //	    	// DATASOURCES
 //	    	@DataSourceDto createDataSource(String indicatorUuid, @DataSourceDto dataSourceDto) throws MetamacException;
 //	    	updateDataSource(@DataSourceDto dataSourceDto) throws MetamacException;
-//	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."

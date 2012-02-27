@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -169,13 +170,53 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
     }
 
+    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
+    @Override
+    public List<IndicatorVersion> findIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicators(null);
+
+        // Find
+        List<Indicator> indicators = findIndicators(ctx, null);
+
+        // Transform
+        List<IndicatorVersion> indicatorsVersions = new ArrayList<IndicatorVersion>();
+        for (Indicator indicator : indicators) {
+            // Last version
+            IndicatorVersionInformation lastVersion = indicator.getProductionVersion() != null ? indicator.getProductionVersion() : indicator.getDiffusionVersion();
+            IndicatorVersion indicatorLastVersion = retrieveIndicator(ctx, indicator.getUuid(), lastVersion.getVersionNumber());
+            indicatorsVersions.add(indicatorLastVersion);
+        }
+
+        return indicatorsVersions;
+    }
+    
+    @Override
+    public List<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsPublished(null);
+
+        // Retrieve published
+        List<IndicatorVersion> indicatorsVersion = findIndicatorsVersions(ctx, IndicatorStateEnum.PUBLISHED);
+
+        // Transform
+        List<IndicatorVersion> indicatorsVersions = new ArrayList<IndicatorVersion>();
+        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
+            indicatorsVersions.add(indicatorVersion);
+        }
+
+        return indicatorsVersions;
+    }
+    
     @Override
     public List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
     }
 
     @Override
-    public List<IndicatorVersion> findIndicatorsVersions(ServiceContext ctx, String uriGopestat, IndicatorStateEnum state) throws MetamacException {
+    public List<IndicatorVersion> findIndicatorsVersions(ServiceContext ctx, IndicatorStateEnum state) throws MetamacException {
         return getIndicatorVersionRepository().findIndicatorsVersions(state);
     }
 
@@ -309,7 +350,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public IndicatorVersion versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
 
@@ -369,6 +410,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public List<DataSource> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersionNumber, null);
+
+        // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
     }
