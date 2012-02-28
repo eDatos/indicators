@@ -1722,7 +1722,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorsSystemUuid, dataSourceDto);
-            fail("Indicators system not exists");
+            fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
@@ -1744,7 +1744,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorsSystemUuid, dataSourceDto);
-            fail("Indicators system not in production");
+            fail("Indicator not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
@@ -1838,7 +1838,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
         // Validation
         try {
             indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
-            fail("Indicators system not exists");
+            fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
@@ -1916,7 +1916,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         try {
             indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-            fail("Indicators system published");
+            fail("Indicator published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
