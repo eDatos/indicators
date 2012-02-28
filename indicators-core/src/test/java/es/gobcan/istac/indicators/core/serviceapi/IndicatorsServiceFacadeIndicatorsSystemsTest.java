@@ -795,6 +795,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), INDICATORS_SYSTEM_1, "2.000");
         indicatorsSystemDto.setUuid(NOT_EXISTS);
+        indicatorsSystemDto.setVersionNumber(null);
 
         try {
             indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -820,9 +821,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 

@@ -8,7 +8,6 @@ import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -18,12 +17,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 public interface Dto2DoMapper {
 
-    
     // TODO no recibe target
     
     // Indicators systems
-    public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException;
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException;
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException;
     
     // Dimensions

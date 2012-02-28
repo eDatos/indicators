@@ -14,38 +14,36 @@ import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class InvocationValidator {
 
-    public static void checkCreateIndicatorsSystem(IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicatorsSystem(indicatorsSystem, indicatorsSystemVersion, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorsSystem.getId(), "INDICATORS_SYSTEM.UUID", exceptions); // uuid never is null: it is initialized when create object
+        checkIndicatorsSystem(indicatorsSystemVersion, exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getIndicatorsSystem().getId(), "INDICATORS_SYSTEM.UUID", exceptions); // uuid never is null: it is initialized when create object
         ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getId(), "INDICATORS_SYSTEM.UUID", exceptions);
         ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateIndicatorsSystem(IndicatorsSystemDto indicatorsSystemDto, IndicatorsSystemVersion indicatorsSystemInProduction, List<MetamacExceptionItem> exceptions)
+    public static void checkUpdateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions)
             throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-//        checkIndicatorsSystem(indicatorsSystemDto, exceptions); // TODO
-        ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getUuid(), "INDICATORS_SYSTEM.UUID", exceptions); // TODO uuid never is null: it is initialized when create object
-        ValidationUtils.checkMetadataRequired(indicatorsSystemDto.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(indicatorsSystemInProduction.getIndicatorsSystem().getCode(), indicatorsSystemDto.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
+        checkIndicatorsSystem(indicatorsSystemVersion, exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getId(), "INDICATORS_SYSTEM.UUID", exceptions); // uuid never is null: it is initialized when create object
+        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), "INDICATORS_SYSTEM.UUID", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -565,10 +563,10 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    private static void checkIndicatorsSystem(IndicatorsSystem indicatorsSystem, IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(indicatorsSystem, "INDICATORS_SYSTEM", exceptions);
+    private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorsSystem.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorsSystemVersion.getIndicatorsSystem(), "INDICATORS_SYSTEM", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getTitle(), "INDICATORS_SYSTEM.TITLE", exceptions);
     }
 

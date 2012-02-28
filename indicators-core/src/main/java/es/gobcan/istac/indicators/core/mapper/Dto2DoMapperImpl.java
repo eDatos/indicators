@@ -50,39 +50,27 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private IndicatorsService             indicatorsService;
 
     @Override
-    public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
-        }
-
-        target.setCode(source.getCode()); // non modifiable after creation
-        return target;
-    }
-
-    @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        IndicatorsSystemVersion target = new IndicatorsSystemVersion();
-        return indicatorsSystemDtoToDo(ctx, source, target);
-    }
-
-    @Override
-    public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException {
 
         if (source == null) {
             return null;
         }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
-        }
 
-        // Non modifiables after creation: code
-        // Attributes non modifiables by user: state
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        IndicatorsSystemVersion target = null;
+        if (source.getUuid() == null) {
+            target = new IndicatorsSystemVersion();
+            target.setIndicatorsSystem(new IndicatorsSystem());
+            // non modifiable after creation
+            target.getIndicatorsSystem().setCode(source.getCode());
+        } else {
+            target = indicatorsSystemsService.retrieveIndicatorsSystem(ctx, source.getUuid(), source.getVersionNumber());
+
+            // Metadata unmodifiable
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            ValidationUtils.checkMetadataUnmodifiable(target.getIndicatorsSystem().getCode(), source.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
+            ExceptionUtils.throwIfException(exceptions);
+        }
 
         // Attributes modifiables
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATORS_SYSTEM.TITLE"));
@@ -100,7 +88,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             return null;
         }
 
-        // If exists, retrieves existing entity. Otherwise, creates new entity 
+        // If exists, retrieves existing entity. Otherwise, creates new entity
         Dimension target = null;
         if (source.getUuid() == null) {
             target = new Dimension();
@@ -111,11 +99,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target = indicatorsSystemsService.retrieveDimension(ctx, source.getUuid());
 
-        }
-
-        // Metadata unmodifiable
-        if (source.getUuid() == null) {
-        } else {
+            // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             // This metadatas are modified in specific operation
             ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "DIMENSION.PARENT_UUID", exceptions);
@@ -125,7 +109,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "DIMENSION.TITLE"));
-        
+
         // Related entities
         if (source.getParentUuid() != null) {
             Dimension dimensionParent = indicatorsSystemsService.retrieveDimension(ctx, source.getParentUuid());
@@ -140,8 +124,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source == null) {
             return null;
         }
-        
-        // If exists, retrieves existing entity. Otherwise, creates new entity 
+
+        // If exists, retrieves existing entity. Otherwise, creates new entity
         IndicatorInstance target = null;
         if (source.getUuid() == null) {
             target = new IndicatorInstance();
@@ -152,13 +136,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setDimension(null);
         } else {
             target = indicatorsSystemsService.retrieveIndicatorInstance(ctx, source.getUuid());
-        }
 
-        // Metadata unmodifiable
-        if (source.getUuid() == null) {
-        } else {
+            // Metadata unmodifiable (these metadatas are modified in specific operation)
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-            // This metadatas are modified in specific operation
+
             ValidationUtils.checkMetadataUnmodifiable(source.getIndicatorUuid(), target.getIndicator().getUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
@@ -171,7 +152,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setGeographicValue(source.getGeographicValue());
         target.setTemporaryGranularityId(source.getTemporaryGranularityId());
         target.setTemporaryValue(source.getTemporaryValue());
-        
+
         // Related entities
         if (source.getParentUuid() != null) {
             Dimension dimensionParent = indicatorsSystemsService.retrieveDimension(ctx, source.getParentUuid());
@@ -181,7 +162,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             Indicator indicator = indicatorsService.retrieveIndicatorBorrar(ctx, source.getIndicatorUuid());
             target.setIndicator(indicator);
         }
-        
+
         return target;
     }
 
@@ -240,16 +221,14 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         DataSource target = null;
         if (source.getUuid() == null) {
             target = new DataSource();
-        } else {
-            target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
 
-        }
-
-        // Metadata unmodifiable
-        if (source.getUuid() == null) {
+            // Metadata unmodifiable
             target.setQueryGpe(source.getQueryGpe());
             target.setPx(source.getPx());
         } else {
+            target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
+
+            // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             ValidationUtils.checkMetadataUnmodifiable(target.getQueryGpe(), source.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
             ValidationUtils.checkMetadataUnmodifiable(target.getPx(), source.getPx(), "DATA_SOURCE.PX", exceptions);
