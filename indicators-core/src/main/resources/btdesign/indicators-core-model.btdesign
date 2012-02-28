@@ -27,7 +27,7 @@ Application Indicators {
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	List<@ElementLevel> retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
-	    	@IndicatorsSystemVersion updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
+	    	updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state) throws MetamacException;
@@ -67,13 +67,12 @@ Application Indicators {
     		> @DataSourceRepository
     		
     		// Indicator
-    		@IndicatorVersion createIndicator(@Indicator indicator, @IndicatorVersion indicatorVersion) throws MetamacException;
+    		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	@Indicator retrieveIndicatorBorrar(String uuid) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicator(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorByCode(String code, String versionNumber) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorPublishedByCode(String code) throws MetamacException;
-	    	updateIndicator(@Indicator indicator) throws MetamacException;
 	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	List<@Indicator> findIndicators(String code) throws MetamacException;
@@ -93,8 +92,6 @@ Application Indicators {
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
 	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
-	    	
-//	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."

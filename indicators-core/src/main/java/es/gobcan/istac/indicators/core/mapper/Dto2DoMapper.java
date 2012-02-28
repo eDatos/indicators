@@ -1,11 +1,10 @@
 package es.gobcan.istac.indicators.core.mapper;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext; 
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -17,8 +16,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 public interface Dto2DoMapper {
 
-    // TODO no recibe target
-    
     // Indicators systems
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException;
     
@@ -29,8 +26,6 @@ public interface Dto2DoMapper {
     public IndicatorInstance indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source) throws MetamacException;
     
     // Indicators
-    public Indicator indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, Indicator target) throws MetamacException;
-    public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, IndicatorVersion target) throws MetamacException;
     public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source) throws MetamacException;
     
     // Data sources

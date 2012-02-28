@@ -166,39 +166,29 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
 
-    @Override
-    public Indicator indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, Indicator target) throws MetamacException {
-        if (source == null) {
-            return null;
-        }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
-        }
-        target.setCode(source.getCode()); // non modifiable after creation
-        return target;
-    }
-
+    
     @Override
     public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source) throws MetamacException {
+
         if (source == null) {
             return null;
         }
 
-        IndicatorVersion target = new IndicatorVersion();
-        return indicatorDtoToDo(ctx, source, target);
-    }
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        IndicatorVersion target = null;
+        if (source.getUuid() == null) {
+            target = new IndicatorVersion();
+            target.setIndicator(new Indicator());
+            // non modifiable after creation
+            target.getIndicator().setCode(source.getCode());
+        } else {
+            target = indicatorsService.retrieveIndicator(ctx, source.getUuid(), source.getVersionNumber());
 
-    @Override
-    public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, IndicatorVersion target) throws MetamacException {
-        if (source == null) {
-            return null;
+            // Metadata unmodifiable
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), "INDICATOR.CODE", exceptions);
+            ExceptionUtils.throwIfException(exceptions);
         }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
-        }
-
-        // Non modifiables after creation: code
-        // Attributes non modifiables by user: states
 
         // Attributes modifiables
         target.setName(internationalStringToDo(ctx, source.getName(), target.getName(), "INDICATOR.NAME"));

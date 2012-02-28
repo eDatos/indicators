@@ -699,6 +699,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), INDICATOR_1, "2.000");
         indicatorDto.setUuid(NOT_EXISTS);
+        indicatorDto.setVersionNumber(null);
 
         try {
             indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -724,9 +725,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
             fail("Indicator not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.DRAFT, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -743,10 +748,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
             fail("Version 1 not is in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(versionNumber, e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.DRAFT, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -1770,13 +1778,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         try {
             indicatorsServiceFacade.deleteDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_3);
-            fail("Indicators system not in production");
+            fail("Indicator not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals("11.033", e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.DRAFT, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -1908,10 +1919,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
             fail("Indicators system published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals("1.000", e.getExceptionItems().get(0).getMessageParameters()[1]);
+            assertEquals(IndicatorStateEnum.DRAFT, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorStateEnum.VALIDATION_REJECTED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 

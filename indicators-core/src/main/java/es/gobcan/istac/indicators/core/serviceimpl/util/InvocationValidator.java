@@ -11,11 +11,9 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -44,6 +42,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getId(), "INDICATORS_SYSTEM.UUID", exceptions); // uuid never is null: it is initialized when create object
         ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), "INDICATORS_SYSTEM.UUID", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), "INDICATORS_SYSTEM.VERSION_NUMBER", exceptions);
+        // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -252,7 +251,6 @@ public class InvocationValidator {
 
         checkDimension(dimension, exceptions);
         ValidationUtils.checkMetadataRequired(dimension.getId(), "DIMENSION.UUID", exceptions); // uuid never is null: it is initialized when create object
-        
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -269,28 +267,29 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkCreateIndicator(Indicator indicator, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkCreateIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkIndicator(indicator, indicatorVersion, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicator.getId(), "INDICATOR.UUID", exceptions);
+        checkIndicator(indicatorVersion, exceptions);
         ValidationUtils.checkMetadataEmpty(indicatorVersion.getId(), "INDICATOR.UUID", exceptions);
+        ValidationUtils.checkMetadataEmpty(indicatorVersion.getIndicator().getId(), "INDICATOR.UUID", exceptions);
         ValidationUtils.checkMetadataEmpty(indicatorVersion.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateIndicator(IndicatorDto indicatorDto, IndicatorVersion indicatorInProduction, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkUpdateIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-//        checkIndicator(indicatorDto, exceptions); // TODO
-        ValidationUtils.checkMetadataRequired(indicatorDto.getUuid(), "INDICATORS.UUID", exceptions); // TODO id required
-        ValidationUtils.checkMetadataRequired(indicatorDto.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(indicatorInProduction.getIndicator().getCode(), indicatorDto.getCode(), "INDICATOR.CODE", exceptions);
+        checkIndicator(indicatorVersion, exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getId(), "INDICATORS.UUID", exceptions); // uuid never is null: it is initialized when create object
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getId(), "INDICATORS.UUID", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getVersionNumber(), "INDICATOR.VERSION_NUMBER", exceptions);
+        // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -488,7 +487,6 @@ public class InvocationValidator {
 
         checkDataSource(dataSource, exceptions); 
         ValidationUtils.checkMetadataRequired(dataSource.getId(), "DATA_SOURCE.UUID", exceptions);  // uuid never is null: it is initialized when create object
-        
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -546,7 +544,6 @@ public class InvocationValidator {
 
         checkIndicatorInstance(indicatorInstance, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);   // uuid never is null: it is initialized when create object
-        
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -597,10 +594,10 @@ public class InvocationValidator {
     // TODO revisar qué metadatos son requeridos
     // TODO Quantity: cuáles son los metadatos obligatorios? Ojo! Depende del tipo de Quantity
     // TODO Quantity es obligatorio
-    private static void checkIndicator(Indicator indicator, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
-        ValidationUtils.checkParameterRequired(indicator, "INDICATOR", exceptions);
+    private static void checkIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorVersion, "INDICATOR", exceptions);
-        ValidationUtils.checkMetadataRequired(indicator.getCode(), "INDICATOR.CODE", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorVersion.getIndicator(), "INDICATOR", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), "INDICATOR.CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getName(), "INDICATOR.NAME", exceptions);
     }
 

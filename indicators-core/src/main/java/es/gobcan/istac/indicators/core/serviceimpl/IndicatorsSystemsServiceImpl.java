@@ -161,7 +161,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public IndicatorsSystemVersion updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    public void updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         // Validation
         InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
@@ -170,7 +170,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
         
         // Update
-        return getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
+        getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
     }
 
     @Override
@@ -617,7 +617,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         if (!inProduction) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemStateEnum[]{
                     IndicatorsSystemStateEnum.DRAFT, IndicatorsSystemStateEnum.VALIDATION_REJECTED, IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
-
         }
     }
 

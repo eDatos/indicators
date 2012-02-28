@@ -32,10 +32,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     // TODO listado de dudas de Ri a Alberto
     // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
     @Override
-    public IndicatorVersion createIndicator(ServiceContext ctx, Indicator indicator, IndicatorVersion indicatorVersion) throws MetamacException {
+    public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
+        Indicator indicator = indicatorVersion.getIndicator();
+        
         // Validation of parameters
-        InvocationValidator.checkCreateIndicator(indicator, indicatorVersion, null);
+        InvocationValidator.checkCreateIndicator(indicatorVersion, null);
         checkIndicatorCodeUnique(ctx, indicator.getCode(), null);
 
         // Save indicator
@@ -51,7 +53,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update indicator with draft version
         indicator.setProductionVersion(new IndicatorVersionInformation(indicatorVersion.getId(), indicatorVersion.getVersionNumber()));
         indicator.getVersions().add(indicatorVersion);
-        getIndicatorRepository().save(indicatorVersion.getIndicator());
+        getIndicatorRepository().save(indicator);
 
         return indicatorVersion;
     }
@@ -140,12 +142,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void updateIndicator(ServiceContext ctx, Indicator indicator) throws MetamacException {
-        getIndicatorRepository().save(indicator);
-    }
-
-    @Override
     public void updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+
+        // Validation
+        InvocationValidator.checkUpdateIndicator(indicatorVersion, null);
+
+        // Check indicators system state
+        checkIndicatorVersionInProduction(indicatorVersion);
+        
+        // Update
         getIndicatorVersionRepository().save(indicatorVersion);
     }
 
@@ -248,7 +253,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setState(IndicatorStateEnum.PRODUCTION_VALIDATION);
         indicatorInProduction.setProductionValidationDate(new DateTime());
         indicatorInProduction.setProductionValidationUser(ctx.getUserId());
-        updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorVersionRepository().save(indicatorInProduction);
     }
 
     @Override
@@ -270,7 +275,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setState(IndicatorStateEnum.DIFFUSION_VALIDATION);
         indicatorInProduction.setDiffusionValidationDate(new DateTime());
         indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
-        updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorVersionRepository().save(indicatorInProduction);
     }
 
     @Override
@@ -295,7 +300,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProductionValidationUser(null);
         indicatorInProduction.setDiffusionValidationDate(null);
         indicatorInProduction.setDiffusionValidationUser(null);
-        updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorVersionRepository().save(indicatorInProduction);
     }
 
     // TODO Implica realizar también INDICADORES-CU-6
@@ -319,7 +324,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setState(IndicatorStateEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
-        updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorVersionRepository().save(indicatorInProduction);
 
         Indicator indicator = indicatorInProduction.getIndicator();
         // Remove possible last version in diffusion
@@ -332,7 +337,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
         indicator.setProductionVersion(null);
 
-        updateIndicator(ctx, indicator);
+        getIndicatorRepository().save(indicator);
     }
 
     @Override
@@ -354,7 +359,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
         indicatorInDiffusion.setArchiveDate(new DateTime());
         indicatorInDiffusion.setArchiveUser(ctx.getUserId());
-        updateIndicatorVersion(ctx, indicatorInDiffusion);
+        getIndicatorVersionRepository().save(indicatorInDiffusion);
     }
 
     @Override
@@ -401,7 +406,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update indicator adding dataSource
         indicatorVersion.addDataSource(dataSource);
-        updateIndicatorVersion(ctx, indicatorVersion);
+        getIndicatorVersionRepository().save(indicatorVersion);
         
         return dataSource;
     }
@@ -552,8 +557,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state)
                 || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
-
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), new IndicatorStateEnum[]{
+                IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED, IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
         }
     }
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -22,10 +21,8 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
-import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 
 /**
  * Implementation of IndicatorServiceFacade.
@@ -315,11 +312,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Transform
-        Indicator indicator = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto, new Indicator());
-        IndicatorVersion draftVersion = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto);
+        IndicatorVersion indicatorVersion = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto);
 
         // Create
-        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicator, draftVersion);
+        IndicatorVersion indicatorVersionCreated = getIndicatorsService().createIndicator(ctx, indicatorVersion);
 
         // Transform to Dto
         indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersionCreated);
@@ -373,21 +369,11 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
-        // Retrieve version in production
-        IndicatorVersion indicatorInProduction = retrieveIndicatorStateInProduction(ctx, indicatorDto.getUuid(), true);
-        if (!indicatorInProduction.getVersionNumber().equals(indicatorDto.getVersionNumber())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE, indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-        }
-
-        // Validation
-        InvocationValidator.checkUpdateIndicator(indicatorDto, indicatorInProduction, null);
-
         // Transform
-        // Note: attributes in indicatorSystem entity are non modifiables
-        dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto, indicatorInProduction);
+        IndicatorVersion indicatorVersion = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto);
 
         // Update
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorInProduction);
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
     }
 
     @Override
@@ -509,23 +495,5 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         
         // Update
         getIndicatorsService().updateDataSource(ctx, dataSource);
-    }
-    
-    /**
-     * Retrieves version of an indicator in production
-     */
-    private IndicatorVersion retrieveIndicatorStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        Indicator indicator = getIndicatorsService().retrieveIndicatorBorrar(ctx, uuid);
-        if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND, uuid);
-        }
-        if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
-            return null; // to throws an specific exception
-        }
-        if (indicator.getProductionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND, uuid);
-        }
-        IndicatorVersion indicatorVersionProduction = getIndicatorsService().retrieveIndicator(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
-        return indicatorVersionProduction;
     }
 }
