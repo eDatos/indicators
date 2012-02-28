@@ -16,7 +16,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
@@ -486,15 +485,15 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateDataSource(DataSourceDto dataSourceDto, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkUpdateDataSource(DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-//        checkDataSource(dataSourceDto, exceptions); // TODO update 
-        ValidationUtils.checkMetadataRequired(dataSourceDto.getUuid(), "DATA_SOURCE.UUID", exceptions); // TODO id required
-        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getQueryGpe(), dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(dataSourceDto.getPx(), dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
+        checkDataSource(dataSource, exceptions); 
+        ValidationUtils.checkMetadataRequired(dataSource.getId(), "DATA_SOURCE.UUID", exceptions);  // uuid never is null: it is initialized when create object
+        
+        // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }

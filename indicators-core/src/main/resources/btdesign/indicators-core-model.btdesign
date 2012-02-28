@@ -103,8 +103,6 @@ Application Indicators {
 	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
 	    	
 //	    	updateIndicator(@IndicatorDto indicatorDto) throws MetamacException;
-//	    	
-//	    	updateDataSource(@DataSourceDto dataSourceDto) throws MetamacException;
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."

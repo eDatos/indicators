@@ -1859,19 +1859,25 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
-    public void testUpdateDataSourceErrorChangeQuery() throws Exception {
+    public void testUpdateDataSourceErrorChangeMetadataUnmodifiable() throws Exception {
 
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
         dataSourceDto.setQueryGpe("newQueryGpe");
+        dataSourceDto.setPx("newPx");
 
         try {
             indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-            fail("Query GPE changed");
+            fail("Query GPE and px changed");
         } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(2, e.getExceptionItems().size());
+            
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 

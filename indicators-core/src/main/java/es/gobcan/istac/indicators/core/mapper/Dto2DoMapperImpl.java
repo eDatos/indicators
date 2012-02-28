@@ -12,6 +12,9 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.InternationalStringRepository;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +57,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (target == null) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
+        
         target.setCode(source.getCode()); // non modifiable after creation
         return target;
     }
@@ -213,30 +217,38 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source == null) {
             return null;
         }
-        DataSource target = new DataSource();
-        dataSourceDtoToDo(ctx, source, target);
-        return target;
-    }
 
-    @Override
-    public void dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source, DataSource target) throws MetamacException {
-        if (source == null) {
-            return;
+        DataSource target = null;
+        if (source.getUuid() == null) {
+            target = new DataSource();
+        } else {
+            target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
+            
         }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
+        
+        // Metadata unmodifiable
+        if (source.getUuid() == null) {
+            target.setQueryGpe(source.getQueryGpe());
+            target.setPx(source.getPx());
+        } else {
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            ValidationUtils.checkMetadataUnmodifiable(target.getQueryGpe(), source.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getPx(), source.getPx(), "DATA_SOURCE.PX", exceptions);
+            ExceptionUtils.throwIfException(exceptions);
         }
-        target.setQueryGpe(source.getQueryGpe());
-        target.setPx(source.getPx());
+            
+        // Metadata modifiable
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
         
         List<DataSourceVariable> variables = dataSourceVariableDtoToDo(ctx, source.getOtherVariables(), target.getOtherVariables());
         target.getOtherVariables().clear();
         target.getOtherVariables().addAll(variables);
+
+        return target;
     }
     
-    private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) {
+    private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException {
         if (source == null) {
             if (target != null) {
                 // delete previous entity
@@ -247,6 +259,11 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         if (target == null) {
             target = new InternationalString();
+        }
+        
+        // TODO decidir si poner aquí la validación
+        if (ValidationUtils.isEmpty(source)) {
+            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, "INTERNATIONAL_STRING");
         }
 
         Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts());

@@ -422,6 +422,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public DataSource updateDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkUpdateDataSource(dataSource, null);
+
+        // Check indicator state
+        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
+        
+        // Update
         return getDataSourceRepository().save(dataSource);
     }
 

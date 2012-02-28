@@ -22,7 +22,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -537,18 +536,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
 
-        // Retrieve
-        // TODO comprobar parámetros antes?
-        DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, dataSourceDto.getUuid());
-
-        // Validation of parameters
-        InvocationValidator.checkUpdateDataSource(dataSourceDto, dataSource, null);
-
-        // Check indicator state
-        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
-
         // Transform and update
-        dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto, dataSource);
+        DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto);
+        
+        // Update
         getIndicatorsService().updateDataSource(ctx, dataSource);
     }
 
@@ -597,18 +588,5 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         IndicatorVersion indicatorVersionProduction = getIndicatorsService().retrieveIndicator(ctx, uuid, indicator.getProductionVersion().getVersionNumber());
         return indicatorVersionProduction;
-    }
-
-    /**
-     * Checks that the indicator version is in any state in production
-     */
-    private void checkIndicatorVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
-        IndicatorStateEnum state = indicatorVersion.getState();
-        boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state)
-                || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
-        if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
-
-        }
     }
 }

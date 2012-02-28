@@ -18,6 +18,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
 public interface Dto2DoMapper {
 
+    
+    // TODO no recibe target
+    
     // Indicators systems
     public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException;
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystemVersion target) throws MetamacException;
@@ -38,5 +41,4 @@ public interface Dto2DoMapper {
     
     // Data sources
     public DataSource dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source) throws MetamacException;
-    public void dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source, DataSource target) throws MetamacException;
 }
