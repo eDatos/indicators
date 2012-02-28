@@ -4,8 +4,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.utils.ErrorUtils;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -27,12 +25,13 @@ import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 	
@@ -88,13 +87,13 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	
 	@Override
 	public void createIndicator(IndicatorDto indicator) {
-		dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
+		dispatcher.execute(new CreateIndicatorAction(indicator), new AsyncCallback<CreateIndicatorResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(IndicatorListPresenter.this, caught, getMessages().indicErrorCreate());
 			}
 			@Override
-			public void onSuccess(UpdateIndicatorResult result) {
+			public void onSuccess(CreateIndicatorResult result) {
 				retrieveIndicatorList(); 
 				ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicCreated()), MessageTypeEnum.SUCCESS);
 			}
@@ -107,8 +106,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	}
 	
 	@Override
-	public void deleteIndicators(List<String> codes) {
-		dispatcher.execute(new DeleteIndicatorsAction(codes), new AsyncCallback<DeleteIndicatorsResult>() {
+	public void deleteIndicators(List<String> uuids) {
+		dispatcher.execute(new DeleteIndicatorsAction(uuids), new AsyncCallback<DeleteIndicatorsResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

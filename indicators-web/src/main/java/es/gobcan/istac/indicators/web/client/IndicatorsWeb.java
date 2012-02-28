@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
 
+import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
 
 /**
@@ -12,6 +13,7 @@ import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
 public class IndicatorsWeb implements EntryPoint {
 
 	private static IndicatorsWebMessages messages;
+	private static IndicatorsWebCoreMessages coreMessages;
 	private static IndicatorsWebConstants constants;
 	private IndicatorsWebGinjector ginjector = GWT.create(IndicatorsWebGinjector.class);
 	
@@ -21,6 +23,13 @@ public class IndicatorsWeb implements EntryPoint {
 		DelayedBindRegistry.bind(ginjector);
 		
 		ginjector.getPlaceManager().revealCurrentPlace();
+	}
+	
+	public static IndicatorsWebCoreMessages getCoreMessages() {
+	    if (coreMessages == null) {
+	        coreMessages = GWT.create(IndicatorsWebCoreMessages.class);
+	    }
+	    return coreMessages;
 	}
 	
 	public static IndicatorsWebMessages getMessages() {

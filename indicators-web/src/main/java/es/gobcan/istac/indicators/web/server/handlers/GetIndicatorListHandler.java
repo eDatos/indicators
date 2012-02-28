@@ -1,27 +1,42 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.web.server.model.IndDatabase;
+import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 
-public class GetIndicatorListHandler extends AbstractActionHandler<GetIndicatorListAction, GetIndicatorListResult>{
+@Component
+public class GetIndicatorListHandler extends AbstractActionHandler<GetIndicatorListAction, GetIndicatorListResult> {
 
-	public GetIndicatorListHandler() {
-		super(GetIndicatorListAction.class);
-	}
-	
-	@Override
-	public GetIndicatorListResult execute(GetIndicatorListAction action, ExecutionContext context) throws ActionException {
-		return new GetIndicatorListResult(IndDatabase.getIndicators());
-	}
+    @Autowired
+    private IndicatorsServiceWrapper service;
+    
+    public GetIndicatorListHandler() {
+        super(GetIndicatorListAction.class);
+    }
 
-	@Override
-	public void undo(GetIndicatorListAction action, GetIndicatorListResult result, ExecutionContext context) throws ActionException {
-		
-	}
+    @Override
+    public GetIndicatorListResult execute(GetIndicatorListAction action, ExecutionContext context) throws ActionException {
+        try {
+            return new GetIndicatorListResult(service.findIndicators(ServiceContextHelper.getServiceContext()));
+        } catch (MetamacException e) {
+            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+        }
+    }
+
+    @Override
+    public void undo(GetIndicatorListAction action, GetIndicatorListResult result, ExecutionContext context) throws ActionException {
+
+    }
 
 }

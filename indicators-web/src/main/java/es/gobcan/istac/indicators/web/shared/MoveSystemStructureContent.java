@@ -5,6 +5,8 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+
 @GenDispatch(isSecure=false)
 public class MoveSystemStructureContent {
 	
@@ -18,6 +20,6 @@ public class MoveSystemStructureContent {
 	Long targetOrderInLevel;
 	
 	@In(4)
-	List<Object> contents;
+	List<ElementLevelDto> levels;
 	
 }

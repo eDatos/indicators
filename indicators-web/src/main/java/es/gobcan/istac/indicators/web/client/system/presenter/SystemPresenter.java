@@ -4,8 +4,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.utils.ErrorUtils;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,13 +23,16 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
@@ -67,7 +68,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
 	public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
 		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
-		void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, List<DimensionDto> dimensions, List<IndicatorInstanceDto> indicatorInstances);
+		void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure);
 		void onDimensionSaved(DimensionDto dimension);
 		void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
 		void init();
@@ -118,7 +119,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		return null;
 	}
 	
-	private void retrieveIndSystem(String indSystemCode) {
+	@Override
+	public void retrieveIndSystem(String indSystemCode) {
 		dispatcher.execute(new GetIndicatorsSystemAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -138,7 +140,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	public void retrieveSystemStructure() {
 		if (indSystem != null && !indSystem.getCode().equals(codeLastStructure)) {
 			codeLastStructure = indSystem.getCode();
-			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getUuid()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
+			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucErrorRetrieve());
@@ -146,7 +148,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 				@Override
 				public void onSuccess(GetIndicatorsSystemStructureResult result) {
-					getView().setIndicatorsSystemStructure(indSystem, result.getDimensions(), result.getIndicatorInstances());
+					getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
 				}
 				
 			});
@@ -238,8 +240,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	@Override
-	public void moveSystemStructureNodes(String systemUuid, String targetUuid, List<Object> nodes, Long newOrder) {
-		dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, nodes), new AsyncCallback<MoveSystemStructureContentResult>() {
+	public void moveSystemStructureNodes(String systemUuid, String targetUuid, List<ElementLevelDto> levels, Long newOrder) {
+		dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, levels), new AsyncCallback<MoveSystemStructureContentResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				retrieveSystemStructureNoCache();
@@ -271,7 +273,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 	private void retrieveSystemStructureNoCache() {
 		codeLastStructure = indSystem.getCode();
-		dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getUuid()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
+		dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucErrorRetrieve());
@@ -279,7 +281,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			
 			@Override
 			public void onSuccess(GetIndicatorsSystemStructureResult result) {
-				getView().setIndicatorsSystemStructure(indSystem, result.getDimensions(), result.getIndicatorInstances());
+				getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
 			}
 			
 		});

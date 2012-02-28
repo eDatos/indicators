@@ -139,7 +139,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				uiHandlers.deleteIndicators(getCodesFromSelected()); //PRUEBA
+				uiHandlers.deleteIndicators(getUuidsFromSelected());
 				deleteConfirmationWindow.hide();
 			}
 		});
@@ -167,10 +167,10 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	}
 	
 	/* Util */
-	public List<String> getCodesFromSelected() {
+	public List<String> getUuidsFromSelected() {
 		List<String> codes = new ArrayList<String>();
 		for (ListGridRecord record : indicatorList.getSelectedRecords()) {
-			codes.add(record.getAttribute(IndicatorsDS.FIELD_CODE));
+			codes.add(record.getAttribute(IndicatorsDS.FIELD_UUID));
 		}
 		return codes;
 	}

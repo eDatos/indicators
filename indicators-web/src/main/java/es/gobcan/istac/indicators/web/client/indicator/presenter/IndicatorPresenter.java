@@ -78,6 +78,20 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	}
 	
 	/* UiHandlers */
+	public void createIndicator(IndicatorDto indicator) {
+	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
+	        @Override
+	        public void onFailure(Throwable caught) {
+	            ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorSave());
+	        }
+	        
+	        @Override
+	        public void onSuccess(UpdateIndicatorResult result) {
+	            retrieveIndicator();
+	        }
+	    });
+	}
+	
 	public void saveIndicator(IndicatorDto indicator) {
 	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
 	       @Override

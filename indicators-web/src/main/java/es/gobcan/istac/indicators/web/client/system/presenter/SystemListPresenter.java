@@ -4,8 +4,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.utils.ErrorUtils;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -24,15 +22,10 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemResult;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 	
@@ -71,36 +64,6 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 	/**
 	 * View Event Handlers 
 	 */
-	@Override
-	public void createIndicatorsSystem(IndicatorsSystemDto system) {
-		dispatcher.execute(new UpdateIndicatorsSystemAction(system), new AsyncCallback<UpdateIndicatorsSystemResult>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemListPresenter.this, caught, getMessages().systemErrorCreate());
-			}
-			@Override
-			public void onSuccess(UpdateIndicatorsSystemResult result) {
-				retrieveIndicatorSystemList();
-				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemCreated()), MessageTypeEnum.SUCCESS);
-			}
-		});
-	}
-	
-	@Override
-	public void deleteIndicatorsSystems(List<String> codes) {
-		dispatcher.execute(new DeleteIndicatorsSystemsAction(codes), new AsyncCallback<DeleteIndicatorsSystemsResult>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemListPresenter.this, caught, getMessages().systemErrorDelete());
-			}
-
-			@Override
-			public void onSuccess(DeleteIndicatorsSystemsResult result) {
-				retrieveIndicatorSystemList();
-				ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemDeleted()), MessageTypeEnum.SUCCESS);
-			}
-		});
-	}
 	
 	@Override
 	public void reloadIndicatorsSystemList() {

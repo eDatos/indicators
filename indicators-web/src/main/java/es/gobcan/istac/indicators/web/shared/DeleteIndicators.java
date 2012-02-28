@@ -9,5 +9,5 @@ import com.gwtplatform.dispatch.annotation.In;
 public class DeleteIndicators {
 
 	@In(1)
-	List<String> codes;
+	List<String> uuids;
 }

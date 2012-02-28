@@ -2,13 +2,12 @@ package es.gobcan.istac.indicators.web.client.events;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.utils.ErrorUtils;
-
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 
 import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 
 public class ShowMessageEvent extends GwtEvent<ShowMessageEvent.ShowMessageHandler> {
 

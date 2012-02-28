@@ -5,6 +5,7 @@ import java.util.List;
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
@@ -18,8 +19,9 @@ public interface SystemUiHandler extends UiHandlers {
 	void updateIndicatorInstance(IndicatorInstanceDto instance);
 	void deleteIndicatorInstance(IndicatorInstanceDto instance);
 	
-	void moveSystemStructureNodes(String systemUuid, String targetUuid, List<Object> nodes, Long newOrder);
+	void moveSystemStructureNodes(String systemUuid, String targetUuid, List<ElementLevelDto> levels, Long newOrder);
 	
+	void retrieveIndSystem(String indSystemCode);
 	void retrieveSystemStructure();
 	
 }

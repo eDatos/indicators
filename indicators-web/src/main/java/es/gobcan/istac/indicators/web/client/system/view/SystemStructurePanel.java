@@ -1,9 +1,6 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.DIMENSION;
-import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.INDICATOR;
-import static es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNodeType.ROOT;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.ArrayList;
@@ -14,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
-import org.siemac.metamac.web.common.client.utils.ErrorUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -32,10 +28,6 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TreeModelType;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.DragStopEvent;
-import com.smartgwt.client.widgets.events.DragStopHandler;
-import com.smartgwt.client.widgets.events.DropEvent;
-import com.smartgwt.client.widgets.events.DropHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -51,6 +43,8 @@ import com.smartgwt.client.widgets.tree.events.FolderClosedEvent;
 import com.smartgwt.client.widgets.tree.events.FolderClosedHandler;
 import com.smartgwt.client.widgets.tree.events.FolderContextClickEvent;
 import com.smartgwt.client.widgets.tree.events.FolderContextClickHandler;
+import com.smartgwt.client.widgets.tree.events.FolderDropEvent;
+import com.smartgwt.client.widgets.tree.events.FolderDropHandler;
 import com.smartgwt.client.widgets.tree.events.FolderOpenedEvent;
 import com.smartgwt.client.widgets.tree.events.FolderOpenedHandler;
 import com.smartgwt.client.widgets.tree.events.LeafClickEvent;
@@ -59,10 +53,10 @@ import com.smartgwt.client.widgets.tree.events.LeafContextClickEvent;
 import com.smartgwt.client.widgets.tree.events.LeafContextClickHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.model.ds.DimensionDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorInstanceDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
@@ -126,9 +120,19 @@ public class SystemStructurePanel extends VLayout {
 		treePanelEdit.setIndicatorsSystem(indSys);
 	}
 	
-	public void setIndicatorSystemStructure(IndicatorsSystemDto indicatorsSystem, List<DimensionDto> dimensions, List<IndicatorInstanceDto> indicatorInstances) {
+	public void setIndicatorSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure) {
+	    if (this.system != null && indicatorsSystem != null) {
+	        if (this.system.getCode().equals(indicatorsSystem.getCode())) { //reloading same structure
+	            //check if we have just persisted the system, in that case reload
+	            if (this.system.getUuid() == null && structure.getUuid() != null) {
+	                uiHandlers.retrieveIndSystem(this.system.getCode());
+	            }
+	        } else { //loading new structure, we must hide panels with old information
+	            hidePanels();
+	        }
+	    }
 		this.system = indicatorsSystem;
-		treePanelEdit.setIndicatorSystemStructure(dimensions, indicatorInstances);
+		treePanelEdit.setIndicatorSystemStructure(structure);
 	}
 	
 	public void selectDimension(DimensionDto dim) {
@@ -224,13 +228,13 @@ public class SystemStructurePanel extends VLayout {
 		protected IndSystemContentNode falseRoot;
 		protected Tree tree;
 		protected final TreeGrid treeGrid;
-		protected Map<Object,IndSystemContentNode> sourceMapping;
+		protected Map<ElementLevelDto,IndSystemContentNode> sourceMapping;
 		protected String treeOpenState;					//Internal representation that helps us to recover opened nodes after reloading tree
 		
 		public TreePanel() {
 			super();
 			this.setHeight(400);
-			falseRoot = new IndSystemContentNode(FALSE_ROOT_NODE_ID.toString(), "", ROOT, ROOT_NODE_ID.toString(), null);
+			falseRoot = new IndSystemContentNode(FALSE_ROOT_NODE_ID.toString(), "", ROOT_NODE_ID.toString(), null);
 			
 			tree = new Tree();
 			tree.setModelType(TreeModelType.PARENT);
@@ -245,7 +249,7 @@ public class SystemStructurePanel extends VLayout {
 	        treeGrid.setFields(new TreeGridField("Name"));
 	        treeGrid.setData(tree);
 	        treeGrid.setShowCellContextMenus(true);
-	        sourceMapping = new HashMap<Object, IndSystemContentNode>();
+	        sourceMapping = new HashMap<ElementLevelDto, IndSystemContentNode>();
 			this.addMember(treeGrid);
 		}
 		
@@ -255,22 +259,22 @@ public class SystemStructurePanel extends VLayout {
 		 * @param dimensions
 		 * @param totalInstances
 		 */
-		private void buildNodes(TreeNode parentNode, List<Object>children, List<IndicatorInstanceDto> totalInstances) {
+		private void buildNodes(TreeNode parentNode, List<ElementLevelDto> elementsLevel) {
 			String parentId = parentNode.getAttribute("ID");
-			for (Object child : children) {
-				if (child instanceof DimensionDto) {
-					DimensionDto dim = (DimensionDto)child;
-					IndSystemContentNode node = new IndSystemContentNode(dim.getUuid(), InternationalStringUtils.getLocalisedString(dim.getTitle()), DIMENSION, parentId, dim);
-					tree.add(node, parentNode);
-					sourceMapping.put(dim, node);
-					List<Object> subChildren = buildChildrenList(dim.getUuid(), dim.getSubdimensions(),totalInstances);
-					buildNodes(node, subChildren,totalInstances);
-				} else if (child instanceof IndicatorInstanceDto) {
-					IndicatorInstanceDto indInst = (IndicatorInstanceDto)child;
-					IndSystemContentNode node = new IndSystemContentNode(indInst.getUuid(), InternationalStringUtils.getLocalisedString(indInst.getTitle()), INDICATOR, parentId, indInst);
-					tree.add(node, parentNode);
-					sourceMapping.put(indInst, node);
-				}
+			for (ElementLevelDto elemLevel : elementsLevel) {
+			    if (elemLevel.isDimension()) {
+			        DimensionDto dim = elemLevel.getDimension();
+			        IndSystemContentNode node = new IndSystemContentNode(dim.getUuid(), InternationalStringUtils.getLocalisedString(dim.getTitle()), parentId, elemLevel);
+			        tree.add(node, parentNode);
+			        sourceMapping.put(elemLevel, node);
+			        List<ElementLevelDto> children = buildChildrenList(elemLevel.getSubelements());
+			        buildNodes(node, children);
+			    } else if (elemLevel.isIndicatorInstance()) {
+			        IndicatorInstanceDto indInst = elemLevel.getIndicatorInstance();
+			        IndSystemContentNode node = new IndSystemContentNode(indInst.getUuid(), InternationalStringUtils.getLocalisedString(indInst.getTitle()), parentId, elemLevel);
+			        tree.add(node, parentNode);
+			        sourceMapping.put(elemLevel, node);
+			    }
 			}
 		}
 		
@@ -280,18 +284,18 @@ public class SystemStructurePanel extends VLayout {
 			treeGrid.redraw();
 		}
 		
-		public void setIndicatorSystemStructure(List<DimensionDto> dimensions, List<IndicatorInstanceDto> indicatorInstances) {
+		public void setIndicatorSystemStructure(IndicatorsSystemStructureDto structure) {
 			//Clear the tree
 			tree.removeList(tree.getAllNodes());
 			sourceMapping.clear();
 
 			//Build nodes recursevely
 			tree.add(falseRoot,"/");
-			List<Object> children = buildChildrenList(null, dimensions, indicatorInstances);
-			
-			buildNodes(falseRoot, children, indicatorInstances);
-
-			recoverOpenState();
+			if (structure != null) {
+			    List<ElementLevelDto> children = buildChildrenList(structure.getElements());
+			    buildNodes(falseRoot, children);
+			    recoverOpenState();
+			}
 			treeGrid.markForRedraw();
 		}
 		
@@ -318,38 +322,14 @@ public class SystemStructurePanel extends VLayout {
 		 * Given subdimensions and ALL indicatorInstances, the method must create a new List containing all parentUuid direct children
 		 * and it must be sorted by orderInLevel field.
 		 */
-		private List<Object> buildChildrenList(String parentUuid, List<DimensionDto> dimensions, List<IndicatorInstanceDto> indicatorInstances) {
-			List<Object> children = new ArrayList<Object>(dimensions);
-			
-			for (IndicatorInstanceDto inst : indicatorInstances) {
-				if (parentUuid == null && inst.getParentUuid() == null) {
-					children.add(inst);
-				} else if (parentUuid != null && parentUuid.equals(inst.getParentUuid())) {
-					children.add(inst);
-				}
-			}
-			
-			Collections.sort(children, new Comparator<Object>() {
+		private List<ElementLevelDto> buildChildrenList(List<ElementLevelDto> elementsLevel) {
+			Collections.sort(elementsLevel, new Comparator<ElementLevelDto>() {
 				@Override
-				public int compare(Object o1, Object o2) {
-					Long leftSide = -1L;
-					Long rightSide = -1L;
-					if (o1 instanceof DimensionDto) {
-						leftSide = ((DimensionDto)o1).getOrderInLevel();
-					} else {
-						leftSide = ((IndicatorInstanceDto)o1).getOrderInLevel();
-					}
-					
-					if (o2 instanceof DimensionDto) {
-						rightSide = ((DimensionDto)o2).getOrderInLevel();
-					} else {
-						rightSide = ((IndicatorInstanceDto)o2).getOrderInLevel();
-					}
-					
-					return leftSide.compareTo(rightSide);
+				public int compare(ElementLevelDto o1, ElementLevelDto o2) {
+					return o1.getOrderInLevel().compareTo(o2.getOrderInLevel());
 				}
 			});
-			return children;
+			return elementsLevel;
 		}
 	}
 
@@ -391,7 +371,7 @@ public class SystemStructurePanel extends VLayout {
                 public void onFolderClick(FolderClickEvent event) {
                     IndSystemContentNode node = (IndSystemContentNode)event.getFolder();
                     if (node.isDimension()) {
-                        SystemStructurePanel.this.selectDimension((DimensionDto)node.getSource());
+                        SystemStructurePanel.this.selectDimension(node.getSource().getDimension());
                     }
                 }
             });
@@ -400,72 +380,55 @@ public class SystemStructurePanel extends VLayout {
                 public void onLeafClick(LeafClickEvent event) {
                     IndSystemContentNode node = (IndSystemContentNode)event.getLeaf();
                     if (node.isIndicator()) {
-                        SystemStructurePanel.this.selectIndicatorInstance((IndicatorInstanceDto)node.getSource());
+                        SystemStructurePanel.this.selectIndicatorInstance(node.getSource().getIndicatorInstance());
                     }
                 }
             });
-            treeGrid.addDropHandler(new DropHandler() {
+            
+            treeGrid.addFolderDropHandler(new FolderDropHandler() {
 				
 				@Override
-				public void onDrop(DropEvent event) {
-					if (!isDroppable(treeGrid.getDropFolder(), treeGrid.getDragData())) {
-						event.cancel();
-					}
-				}
-			});
-            
-            treeGrid.addDragStopHandler(new DragStopHandler() {
-				@Override
-				public void onDragStop(DragStopEvent event) {
-					/* Workaround: when a node is dropped into a closed folder, the getDropFolder method returns 
-					 * the dropped node instead of dropped folder, in order to solve this the dropped folder is obtained getting
-					 * the first dropped node and finding out who its parent is.
-					 */
-					TreeNode firstDragged = ((TreeNode)(treeGrid.getDragData()[0]));
-					TreeNode dropFolder = treeGrid.getData().getParent(firstDragged);
-					if (isDroppable(dropFolder, treeGrid.getDragData())) {
-						Record[] records = treeGrid.getDragData();
-						List<Object> content = new ArrayList<Object>();
-						for (Record rec : records) {
-							IndSystemContentNode node = (IndSystemContentNode)rec;
-							content.add(node.getSource());
+				public void onFolderDrop(FolderDropEvent event) {
+					TreeNode dropFolder = event.getFolder();
+					TreeNode[] droppedNodes = event.getNodes();
+					int position = event.getIndex(); //absolute position
+					if (isDroppable(dropFolder, droppedNodes)) {
+	                    TreeNode[] siblings = treeGrid.getData().getChildren(dropFolder);
+					    
+					    //We find out position of nodes under dropFolder
+					    int relPosition = position;        //use to update position
+					    for (TreeNode node : droppedNodes) {
+					        int pos = -1;
+					        for (int i = 0; i < siblings.length; i++) {
+					            if (siblings[i] == node) {
+					                pos = i;
+					            }
+					        }
+					        if (pos >= 0 && pos < position) { //if any of moved nodes is before final position, the position must be updated
+					            relPosition--;
+					        }
+					    }
+					    
+						List<ElementLevelDto> content = new ArrayList<ElementLevelDto>();
+						for (TreeNode node : droppedNodes) {
+							IndSystemContentNode indNode = (IndSystemContentNode)node;
+							content.add(indNode.getSource());
 						}
 						//Get drop folder, finding out target dimension/root 
 						IndSystemContentNode nodeParent = (IndSystemContentNode)(dropFolder);
 						String targetUuid = nodeParent.isRoot() ? null : nodeParent.getId();
 						
-						//We need to find out new order, we do this observing updated tree structure
-						TreeNode[] siblings = treeGrid.getData().getChildren(nodeParent);
-						Long order = 1L;
-						
-						//We look for the index of first inserting element in updated tree
-						String firstInsertElementUuid = ((IndSystemContentNode)(records[0])).getId();
-						int index = -1;
-						for (index = 0; index < siblings.length; index++) {
-							IndSystemContentNode contNode = (IndSystemContentNode)(siblings[index]);
-							if (contNode.getId().equals(firstInsertElementUuid)) {
-								break;
-							}
-						}
-						//We want the node right before
-						if (index == 0) {
-							order = 1L;
-						} else {
-							IndSystemContentNode contNode = (IndSystemContentNode)(siblings[index-1]);
-							if (contNode.getSource() instanceof DimensionDto) {
-								order = ((DimensionDto)contNode.getSource()).getOrderInLevel() + 1;
-							} else if (contNode.getSource() instanceof IndicatorInstanceDto) {
-								order = ((IndicatorInstanceDto)contNode.getSource()).getOrderInLevel() + 1;
-							}
-						}
-						
+						Long order = relPosition + 1L; //relative position starts at 0, order at 1
+
 						uiHandlers.moveSystemStructureNodes(system.getUuid(), targetUuid, content, order);
 					}
+					event.cancel();
 				}
 			});
             
             treeGrid.addFolderOpenedHandler(new FolderOpenedHandler() {
 				
+                //This method is used to save the open state
 				@Override
 				public void onFolderOpened(FolderOpenedEvent event) {
 					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -496,25 +459,7 @@ public class SystemStructurePanel extends VLayout {
        
         private boolean isDroppable(TreeNode dropFolder, Record[] dragData) {
         	if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) {	//Replacing false root is not allowed
-				ShowMessageEvent.fire(SystemStructurePanel.this, ErrorUtils.getMessageList("No puede existir más de una raiz"), MessageTypeEnum.ERROR);
 				return false;
-			} else { 
-				//can´t move a node into any of its descendents
-				List<String> messages = new ArrayList<String>();
-				treeGrid.getDropFolder();
-				for (Record rec: treeGrid.getDragData()) {
-					if (rec instanceof TreeNode) {
-						TreeNode dragNode = (TreeNode)rec;
-						if (treeGrid.getData().isDescendantOf(treeGrid.getDropFolder(), dragNode)) {
-							messages.add("Nodo X no se puede mover al destino al ser descendiente");
-						}
-						
-					}
-				}
-				if (!messages.isEmpty()) {
-					ShowMessageEvent.fire(SystemStructurePanel.this, messages, MessageTypeEnum.ERROR);
-					return false;
-				}
 			}
         	return true;
         }
@@ -529,7 +474,7 @@ public class SystemStructurePanel extends VLayout {
                     if (selNode == falseRoot)
                         SystemStructurePanel.this.selectDimForCreate = null;
                     else {
-                        SystemStructurePanel.this.selectDimForCreate = (DimensionDto)selNode.getSource();
+                        SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
                     }
                     SystemStructurePanel.this.showDimCreatePanel();
                 }
@@ -542,7 +487,7 @@ public class SystemStructurePanel extends VLayout {
                     if (selNode == falseRoot)
                         SystemStructurePanel.this.selectDimForCreate = null;
                     else {
-                        SystemStructurePanel.this.selectDimForCreate = (DimensionDto)selNode.getSource();
+                        SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
                     }
                     SystemStructurePanel.this.showIndicInstanceCreatePanel();
 				}
@@ -553,7 +498,7 @@ public class SystemStructurePanel extends VLayout {
                 item1.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						DimensionDto dim = (DimensionDto)selNode.getSource();
+						DimensionDto dim = selNode.getSource().getDimension();
 						selectedDimension = dim;
 						dimensionDeleteConfirm.show();
 					}
@@ -573,7 +518,7 @@ public class SystemStructurePanel extends VLayout {
             item1.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					IndicatorInstanceDto instance = (IndicatorInstanceDto)selNode.getSource();
+					IndicatorInstanceDto instance = selNode.getSource().getIndicatorInstance();
 					selectedIndInstance = instance;
 					indInstanceDeleteConfirm.show();
 				}

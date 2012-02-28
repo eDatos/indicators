@@ -12,34 +12,33 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 
 @Component
-public class GetIndicatorsSystemListHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
-
-    @Autowired
+public class CreateIndicatorHandler extends AbstractActionHandler<CreateIndicatorAction, CreateIndicatorResult>{
+    
+    @Autowired 
     private IndicatorsServiceWrapper service;
-
-    public GetIndicatorsSystemListHandler() {
-        super(GetIndicatorsSystemListAction.class);
+    
+    
+    public CreateIndicatorHandler() {
+        super(CreateIndicatorAction.class);
     }
-
+    
     @Override
-    public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
+    public CreateIndicatorResult execute(CreateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            Object obj = null;
-            obj.getClass();
-            return new GetIndicatorsSystemListResult(service.findIndicatorsSystems(ServiceContextHelper.getServiceContext()));
+            service.createIndicator(ServiceContextHelper.getServiceContext(), action.getIndicator());
+            return new CreateIndicatorResult();
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
-        } 
+        }
     }
 
     @Override
-    public void undo(GetIndicatorsSystemListAction action, GetIndicatorsSystemListResult result, ExecutionContext context) throws ActionException {
-        // TODO Auto-generated method stub
-
+    public void undo(CreateIndicatorAction action, CreateIndicatorResult result, ExecutionContext context) throws ActionException {
+        
     }
 
 }
