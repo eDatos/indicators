@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -472,6 +473,27 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemParametersInternationalStringMalformed() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorsSystemDto.getAcronym().addText(new LocalisedStringDto());
+
+        try {
+            indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+            fail("parameters required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATORS_SYSTEM.ACRONYM", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

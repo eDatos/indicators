@@ -85,10 +85,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         // Attributes non modifiables by user: state
 
         // Attributes modifiables
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle()));
-        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym()));
-        target.setDescription(internationalStringToDo(ctx, source.getDescription(), target.getDescription()));
-        target.setObjetive(internationalStringToDo(ctx, source.getObjetive(), target.getObjetive()));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATORS_SYSTEM.TITLE"));
+        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATORS_SYSTEM.ACRONYM"));
+        target.setDescription(internationalStringToDo(ctx, source.getDescription(), target.getDescription(), "INDICATORS_SYSTEM.DESCRIPTION"));
+        target.setObjetive(internationalStringToDo(ctx, source.getObjetive(), target.getObjetive(), "INDICATORS_SYSTEM.OBJETIVE"));
         target.setUriGopestat(source.getUriGopestat());
 
         return target;
@@ -119,7 +119,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (target == null) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle()));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "DIMENSION.TITLE"));
         if (source.getParentUuid() != null) {
             Dimension dimensionParent = indicatorsSystemsService.retrieveDimension(ctx, source.getParentUuid());
             target.getElementLevel().setParent(dimensionParent.getElementLevel());
@@ -152,7 +152,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (target == null) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle()));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());
         target.setTemporaryGranularityId(source.getTemporaryGranularityId());
@@ -202,11 +202,11 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         // Attributes non modifiables by user: states
 
         // Attributes modifiables
-        target.setName(internationalStringToDo(ctx, source.getName(), target.getName()));
-        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym()));
-        target.setCommentary(internationalStringToDo(ctx, source.getCommentary(), target.getCommentary()));
+        target.setName(internationalStringToDo(ctx, source.getName(), target.getName(), "INDICATOR.NAME"));
+        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATOR.ACRONYM"));
+        target.setCommentary(internationalStringToDo(ctx, source.getCommentary(), target.getCommentary(), "INDICATOR.COMMENTARY"));
         target.setSubjectCode(source.getSubjectCode());
-        target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes()));
+        target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), "INDICATOR.NOTES"));
         target.setNoteUrl(source.getNoteUrl());
         
         return target;
@@ -248,7 +248,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
     
-    private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException {
+    private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
         if (source == null) {
             if (target != null) {
                 // delete previous entity
@@ -261,9 +261,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target = new InternationalString();
         }
         
-        // TODO decidir si poner aquí la validación
         if (ValidationUtils.isEmpty(source)) {
-            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, "INTERNATIONAL_STRING");
+            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
         }
 
         Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts());
