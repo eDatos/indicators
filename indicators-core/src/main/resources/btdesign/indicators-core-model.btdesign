@@ -21,7 +21,6 @@ Application Indicators {
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
-	    	@IndicatorsSystem retrieveIndicatorsSystemBorrar(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystem(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublished(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String code, String versionNumber) throws MetamacException;
@@ -29,8 +28,6 @@ Application Indicators {
 	    	List<@ElementLevel> retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
-	    	List<@IndicatorsSystem> findIndicatorsSystems(String code) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state) throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystems() throws MetamacException;
 	    	List<@IndicatorsSystemVersion> findIndicatorsSystemsPublished() throws MetamacException;
 	    	sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
@@ -39,9 +36,6 @@ Application Indicators {
 	    	publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
-	    	
-	    	// Elements levels
-	    	@ElementLevel updateElementLevel(@ElementLevel elementLevel) throws MetamacException;
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(String indicatorsSystemUuid, @Dimension dimension) throws MetamacException;
@@ -68,15 +62,13 @@ Application Indicators {
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
-	    	@Indicator retrieveIndicatorBorrar(String uuid) throws MetamacException;
+	    	@Indicator retrieveIndicator(String uuid) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicator(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorByCode(String code, String versionNumber) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorPublishedByCode(String code) throws MetamacException;
 	    	updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
-	    	List<@Indicator> findIndicators(String code) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorStateEnum state) throws MetamacException;
 	    	List<@IndicatorVersion> findIndicators() throws MetamacException;
 	    	List<@IndicatorVersion> findIndicatorsPublished() throws MetamacException;
 	    	sendIndicatorToProductionValidation(String uuid) throws MetamacException;

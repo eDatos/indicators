@@ -57,7 +57,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         return indicatorVersion;
     }
+    
+    @Override
+    public Indicator retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
+        Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
+        if (indicator == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND, uuid);
+        }
+        return indicator;
+    }
+
+    @Override
     public IndicatorVersion retrieveIndicator(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -66,7 +77,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve version requested or last version
         if (versionNumber == null) {
             // Retrieve last version
-            Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
+            Indicator indicator = retrieveIndicator(ctx, uuid);
             versionNumber = indicator.getProductionVersion() != null ? indicator.getProductionVersion().getVersionNumber() : indicator.getDiffusionVersion().getVersionNumber();
         }
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(uuid, versionNumber);
@@ -95,6 +106,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return publishedIndicatorVersion;
     }
 
+    @Override
     public IndicatorVersion retrieveIndicatorByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -115,6 +127,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorVersion;
     }
 
+    @Override
     public IndicatorVersion retrieveIndicatorPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
 
         // Validation of parameters
@@ -213,7 +226,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkFindIndicatorsPublished(null);
 
         // Retrieve published
-        List<IndicatorVersion> indicatorsVersion = findIndicatorsVersions(ctx, IndicatorStateEnum.PUBLISHED);
+        List<IndicatorVersion> indicatorsVersion = getIndicatorVersionRepository().findIndicatorsVersions(IndicatorStateEnum.PUBLISHED);
 
         // Transform
         List<IndicatorVersion> indicatorsVersions = new ArrayList<IndicatorVersion>();
@@ -222,16 +235,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         return indicatorsVersions;
-    }
-
-    @Override
-    public List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
-        return getIndicatorRepository().findIndicators(code);
-    }
-
-    @Override
-    public List<IndicatorVersion> findIndicatorsVersions(ServiceContext ctx, IndicatorStateEnum state) throws MetamacException {
-        return getIndicatorVersionRepository().findIndicatorsVersions(state);
     }
 
     @Override
@@ -369,7 +372,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkVersioningIndicator(uuid, versionType, null);
 
         // Retrieve
-        Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
+        Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getProductionVersion() != null) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, uuid, new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED, IndicatorStateEnum.ARCHIVED});
         }
@@ -476,7 +479,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Retrieves version of an indicator in production
      */
     private IndicatorVersion retrieveIndicatorStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
+        Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
@@ -491,7 +494,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Retrieves version of an indicator in diffusion
      */
     private IndicatorVersion retrieveIndicatorStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
-        Indicator indicator = retrieveIndicatorBorrar(ctx, uuid);
+        Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
@@ -561,14 +564,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED, IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
         }
     }
-
-    // TODO refactor, hacer privado
-    public Indicator retrieveIndicatorBorrar(ServiceContext ctx, String uuid) throws MetamacException {
-
-        Indicator indicator = getIndicatorRepository().retrieveIndicator(uuid);
-        if (indicator == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND, uuid);
-        }
-        return indicator;
+    
+    private List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
+        return getIndicatorRepository().findIndicators(code);
     }
 }

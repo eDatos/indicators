@@ -64,6 +64,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return indicatorsSystemVersion;
     }
 
+    @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystem(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -72,7 +73,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Retrieve version requested or last version
         if (versionNumber == null) {
             // Retrieve last version
-            IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystemBorrar(ctx, uuid);
+            IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
             versionNumber = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion().getVersionNumber() : indicatorsSystem.getDiffusionVersion().getVersionNumber();
         }
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(uuid, versionNumber);
@@ -101,6 +102,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return publishedIndicatorsSystemVersion;
     }
 
+    @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemByCode(ServiceContext ctx, String code, String versionNumber) throws MetamacException {
 
         // Validation of parameters
@@ -121,6 +123,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return indicatorsSystemVersion;
     }
 
+    @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemPublishedByCode(ServiceContext ctx, String code) throws MetamacException {
 
         // Validation of parameters
@@ -228,8 +231,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkFindIndicatorsSystemsPublished(null);
 
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = findIndicatorsSystemVersions(ctx, null, IndicatorsSystemStateEnum.PUBLISHED);
-
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(null, IndicatorsSystemStateEnum.PUBLISHED);
+        
         // Transform
         List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
         for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
@@ -237,16 +240,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         return indicatorsSystemsVersions;
-    }
-
-    @Override
-    public List<IndicatorsSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
-        return getIndicatorsSystemRepository().findIndicatorsSystems(code);
-    }
-
-    @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(ServiceContext ctx, String uriGopestat, IndicatorsSystemStateEnum state) throws MetamacException {
-        return getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, state);
     }
 
     @Override
@@ -387,7 +380,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);
 
-        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystemBorrar(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() != null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED,
                     IndicatorsSystemStateEnum.ARCHIVED});
@@ -408,11 +401,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         getIndicatorsSystemRepository().save(indicatorsSystem);
 
         return indicatorsSystemNewVersion;
-    }
-
-    @Override
-    public ElementLevel updateElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
-        return getElementLevelRepository().save(elementLevel);
     }
 
     @Override
@@ -597,7 +585,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
      */
     private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystemVersions(ctx, uriGopestat, null);
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, null);
         if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
                 if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
@@ -624,7 +612,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Retrieves version of an indicators system in production
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystemBorrar(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
         }
@@ -639,7 +627,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Retrieves version of an indicators system in diffusion
      */
     private IndicatorsSystemVersion retrieveIndicatorsSystemStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
-        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystemBorrar(ctx, uuid);
+        IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
         }
@@ -750,7 +738,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
             // Update parent level adding element
             elementLevelParent.addChildren(elementLevel);
-            elementLevelParent = updateElementLevel(ctx, elementLevelParent);
+            elementLevelParent = updateElementLevel(elementLevelParent);
 
             // Update order of other elements in this level
             updateIndicatorsSystemElementsOrdersInLevelAddingElement(ctx, elementLevelParent.getChildren(), elementLevel);
@@ -815,7 +803,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 elementsInLevel = indicatorsSystemVersion.getChildrenFirstLevel();
             } else {
                 parentTarget.addChildren(elementLevel);
-                updateElementLevel(ctx, parentTarget);
+                updateElementLevel(parentTarget);
                 elementsInLevel = parentTarget.getChildren();
             }
             // Check order is correct and update orders
@@ -829,14 +817,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 elementLevel.setIndicatorsSystemVersionFirstLevel(null);
                 elementLevel.setParent(parentTarget);
             }
-            updateElementLevel(ctx, elementLevel);
+            updateElementLevel(elementLevel);
         } else {
             // Same parent, only changes order
             // Check order is correct and update orders
             List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getIndicatorsSystemVersionFirstLevel()
                     .getChildrenFirstLevel();
             updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
-            updateElementLevel(ctx, elementLevel);
+            updateElementLevel(elementLevel);
         }
     }
 
@@ -877,7 +865,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 // Update order
                 if (elementInLevel.getOrderInLevel() >= elementToAdd.getOrderInLevel()) {
                     elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() + 1);
-                    updateElementLevel(ctx, elementInLevel);
+                    updateElementLevel(elementInLevel);
                 }
             }
 
@@ -900,7 +888,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 // nothing
             } else if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
                 elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() - 1);
-                updateElementLevel(ctx, elementInLevel);
+                updateElementLevel(elementInLevel);
             }
         }
     }
@@ -921,12 +909,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             if (orderAfterUpdate < orderBeforeUpdate) {
                 if (elementAtLevel.getOrderInLevel() >= orderAfterUpdate && elementAtLevel.getOrderInLevel() < orderBeforeUpdate) {
                     elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() + 1);
-                    updateElementLevel(ctx, elementAtLevel);
+                    updateElementLevel(elementAtLevel);
                 }
             } else if (orderAfterUpdate > orderBeforeUpdate) {
                 if (elementAtLevel.getOrderInLevel() > orderBeforeUpdate && elementAtLevel.getOrderInLevel() <= orderAfterUpdate) {
                     elementAtLevel.setOrderInLevel(elementAtLevel.getOrderInLevel() - 1);
-                    updateElementLevel(ctx, elementAtLevel);
+                    updateElementLevel(elementAtLevel);
                 }
             }
         }
@@ -947,13 +935,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
     }
 
-    // TODO refactor, hacer privado
-    public IndicatorsSystem retrieveIndicatorsSystemBorrar(ServiceContext ctx, String uuid) throws MetamacException {
+    private IndicatorsSystem retrieveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(uuid);
         if (indicatorsSystem == null) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND, uuid);
         }
         return indicatorsSystem;
+    }
+    
+    private List<IndicatorsSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
+        return getIndicatorsSystemRepository().findIndicatorsSystems(code);
+    }
+    
+    private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
+        return getElementLevelRepository().save(elementLevel);
     }
 }

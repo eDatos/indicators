@@ -159,7 +159,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setParent(dimensionParent.getElementLevel());
         }
         if (source.getIndicatorUuid() != null) {
-            Indicator indicator = indicatorsService.retrieveIndicatorBorrar(ctx, source.getIndicatorUuid());
+            Indicator indicator = indicatorsService.retrieveIndicator(ctx, source.getIndicatorUuid());
             target.setIndicator(indicator);
         }
 
