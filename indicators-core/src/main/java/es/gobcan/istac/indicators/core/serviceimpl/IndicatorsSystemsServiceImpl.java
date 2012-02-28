@@ -438,6 +438,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public Dimension updateDimension(ServiceContext ctx, Dimension dimension) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkUpdateDimension(dimension, null);
+
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
+        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
+        
+        // Update
         return getDimensionRepository().save(dimension);
     }
     
@@ -513,6 +522,15 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public IndicatorInstance updateIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkUpdateIndicatorInstance(indicatorInstance, null);
+
+        // Check indicators system state
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
+        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
+        
+        // Update
         return getIndicatorInstanceRepository().save(indicatorInstance);
     }
     

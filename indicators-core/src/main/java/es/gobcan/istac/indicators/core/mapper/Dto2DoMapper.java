@@ -28,11 +28,9 @@ public interface Dto2DoMapper {
     
     // Dimensions
     public Dimension dimensionDtoToDo(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
-    public void dimensionDtoToDo(ServiceContext ctx, DimensionDto source, Dimension target) throws MetamacException;
     
     // Indicators instances
     public IndicatorInstance indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source) throws MetamacException;
-    public void indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source, IndicatorInstance target) throws MetamacException;
     
     // Indicators
     public Indicator indicatorDtoToDo(ServiceContext ctx, IndicatorDto source, Indicator target) throws MetamacException;

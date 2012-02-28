@@ -254,19 +254,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public void updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
 
-        // Retrieve
-        // TODO comprobar parámetros antes?
-        Dimension dimension = getIndicatorsSystemsService().retrieveDimension(ctx, dimensionDto.getUuid());
-
-        // Validation of parameters
-        InvocationValidator.checkUpdateDimension(dimensionDto, dimension, null);
-
-        // Check indicators system state
-        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Transform and update
-        dto2DoMapper.dimensionDtoToDo(ctx, dimensionDto, dimension);
+        // Transform
+        Dimension dimension = dto2DoMapper.dimensionDtoToDo(ctx, dimensionDto);
+        
+        // Update
         getIndicatorsSystemsService().updateDimension(ctx, dimension);
     }
 
@@ -323,19 +314,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
-        // Retrieve
-        // TODO comprobar parámetros antes?
-        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstance(ctx, indicatorInstanceDto.getUuid());
-
-        // Validation of parameters
-        InvocationValidator.checkUpdateIndicatorInstance(indicatorInstanceDto, indicatorInstance, null);
-
-        // Check indicators system state
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Transform and update
-        dto2DoMapper.indicatorInstanceDtoToDo(ctx, indicatorInstanceDto, indicatorInstance);
+        // Transform
+        IndicatorInstance indicatorInstance = dto2DoMapper.indicatorInstanceDtoToDo(ctx, indicatorInstanceDto);
+        
+        // Update
         getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
     }
 
@@ -556,20 +538,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         IndicatorsSystemVersion indicatorsSystemVersionProduction = getIndicatorsSystemsService().retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getProductionVersion().getVersionNumber());
         return indicatorsSystemVersionProduction;
-    }
-
-    /**
-     * Checks that the indicators system version is in any state in production
-     */
-    private void checkIndicatorsSystemVersionInProduction(IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-        IndicatorsSystemStateEnum state = indicatorsSystemVersion.getState();
-        boolean inProduction = IndicatorsSystemStateEnum.DRAFT.equals(state) || IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(state)
-                || IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(state);
-        if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemStateEnum[]{
-                    IndicatorsSystemStateEnum.DRAFT, IndicatorsSystemStateEnum.VALIDATION_REJECTED, IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
-
-        }
     }
     
     /**

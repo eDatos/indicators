@@ -19,12 +19,6 @@ Application Indicators {
     		> @IndicatorInstanceRepository
     		> @ElementLevelRepository
     		
-	    	// DIMENSIONS
-//	    	updateDimension(@DimensionDto dimensionDto) throws MetamacException;
-	    	
-	    	// INDICATORS INSTANCES	    	
-//	    	updateIndicatorInstance(@IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
-    		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystem indicatorsSystem, @IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 //	    	updateIndicatorsSystem(@IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;

@@ -16,9 +16,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -249,15 +247,15 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateDimension(DimensionDto dimensionDto, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkUpdateDimension(Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-//        checkDimension(dimensionDto, exceptions); // TODO update
-        ValidationUtils.checkMetadataRequired(dimensionDto.getUuid(), "DIMENSION.UUID", exceptions); // TODO id required
-        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getParentUuid(), dimension.getElementLevel().getParentUuid(), "DIMENSION.PARENT_UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(dimensionDto.getOrderInLevel(), dimension.getElementLevel().getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
+        checkDimension(dimension, exceptions);
+        ValidationUtils.checkMetadataRequired(dimension.getId(), "DIMENSION.UUID", exceptions); // uuid never is null: it is initialized when create object
+        
+        // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -543,16 +541,15 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto, IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkUpdateIndicatorInstance(IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-//        checkIndicatorInstance(indicatorInstanceDto, exceptions); // TODO update
-        ValidationUtils.checkMetadataRequired(indicatorInstanceDto.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions); // TODO id required
-        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getIndicatorUuid(), indicatorInstance.getIndicator().getUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getParentUuid(), indicatorInstance.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
-        ValidationUtils.checkMetadataUnmodifiable(indicatorInstanceDto.getOrderInLevel(), indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+        checkIndicatorInstance(indicatorInstance, exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);   // uuid never is null: it is initialized when create object
+        
+        // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }

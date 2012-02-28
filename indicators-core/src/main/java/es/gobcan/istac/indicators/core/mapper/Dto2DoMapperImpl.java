@@ -42,22 +42,22 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
     private InternationalStringRepository internationalStringRepository;
-    
-    @Autowired
-    private IndicatorsSystemsService indicatorsSystemsService;
 
     @Autowired
-    private IndicatorsService indicatorsService;
+    private IndicatorsSystemsService      indicatorsSystemsService;
+
+    @Autowired
+    private IndicatorsService             indicatorsService;
 
     @Override
-    public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target)  throws MetamacException {
+    public IndicatorsSystem indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source, IndicatorsSystem target) throws MetamacException {
         if (source == null) {
             return null;
         }
         if (target == null) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
         }
-        
+
         target.setCode(source.getCode()); // non modifiable after creation
         return target;
     }
@@ -93,70 +93,86 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         return target;
     }
-    
+
     @Override
     public Dimension dimensionDtoToDo(ServiceContext ctx, DimensionDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
-        
-        Dimension target = new Dimension();
-        target.setElementLevel(new ElementLevel());
-        target.getElementLevel().setOrderInLevel(source.getOrderInLevel());
-        target.getElementLevel().setIndicatorInstance(null);
-        target.getElementLevel().setDimension(target);
-        
-        dimensionDtoToDo(ctx, source, target);
-        
-        return target;
-    }
 
-    @Override
-    public void dimensionDtoToDo(ServiceContext ctx, DimensionDto source, Dimension target) throws MetamacException {
-        if (source == null) {
-            return;
+        // If exists, retrieves existing entity. Otherwise, creates new entity 
+        Dimension target = null;
+        if (source.getUuid() == null) {
+            target = new Dimension();
+            target.setElementLevel(new ElementLevel());
+            target.getElementLevel().setOrderInLevel(source.getOrderInLevel());
+            target.getElementLevel().setIndicatorInstance(null);
+            target.getElementLevel().setDimension(target);
+        } else {
+            target = indicatorsSystemsService.retrieveDimension(ctx, source.getUuid());
+
         }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
+
+        // Metadata unmodifiable
+        if (source.getUuid() == null) {
+        } else {
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            // This metadatas are modified in specific operation
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "DIMENSION.PARENT_UUID", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
+            ExceptionUtils.throwIfException(exceptions);
         }
+
+        // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "DIMENSION.TITLE"));
+        
+        // Related entities
         if (source.getParentUuid() != null) {
             Dimension dimensionParent = indicatorsSystemsService.retrieveDimension(ctx, source.getParentUuid());
             target.getElementLevel().setParent(dimensionParent.getElementLevel());
         }
+
+        return target;
     }
-        
+
     @Override
     public IndicatorInstance indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
         
-        IndicatorInstance target = new IndicatorInstance();
-        
-        target.setElementLevel(new ElementLevel());
-        target.getElementLevel().setOrderInLevel(source.getOrderInLevel());
-        target.getElementLevel().setIndicatorInstance(target);
-        target.getElementLevel().setDimension(null);
-        
-        indicatorInstanceDtoToDo(ctx, source, target);
-        
-        return target;
-    }
-    
-    @Override
-    public void indicatorInstanceDtoToDo(ServiceContext ctx, IndicatorInstanceDto source, IndicatorInstance target) throws MetamacException {
-        if (source == null) {
-            return;
+        // If exists, retrieves existing entity. Otherwise, creates new entity 
+        IndicatorInstance target = null;
+        if (source.getUuid() == null) {
+            target = new IndicatorInstance();
+
+            target.setElementLevel(new ElementLevel());
+            target.getElementLevel().setOrderInLevel(source.getOrderInLevel());
+            target.getElementLevel().setIndicatorInstance(target);
+            target.getElementLevel().setDimension(null);
+        } else {
+            target = indicatorsSystemsService.retrieveIndicatorInstance(ctx, source.getUuid());
         }
-        if (target == null) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED);
+
+        // Metadata unmodifiable
+        if (source.getUuid() == null) {
+        } else {
+            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+            // This metadatas are modified in specific operation
+            ValidationUtils.checkMetadataUnmodifiable(source.getIndicatorUuid(), target.getIndicator().getUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+            ExceptionUtils.throwIfException(exceptions);
         }
+
+        // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());
         target.setTemporaryGranularityId(source.getTemporaryGranularityId());
         target.setTemporaryValue(source.getTemporaryValue());
+        
+        // Related entities
         if (source.getParentUuid() != null) {
             Dimension dimensionParent = indicatorsSystemsService.retrieveDimension(ctx, source.getParentUuid());
             target.getElementLevel().setParent(dimensionParent.getElementLevel());
@@ -165,6 +181,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             Indicator indicator = indicatorsService.retrieveIndicatorBorrar(ctx, source.getIndicatorUuid());
             target.setIndicator(indicator);
         }
+        
+        return target;
     }
 
     @Override
@@ -184,7 +202,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source == null) {
             return null;
         }
-        
+
         IndicatorVersion target = new IndicatorVersion();
         return indicatorDtoToDo(ctx, source, target);
     }
@@ -208,24 +226,25 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setSubjectCode(source.getSubjectCode());
         target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), "INDICATOR.NOTES"));
         target.setNoteUrl(source.getNoteUrl());
-        
+
         return target;
     }
-    
+
     @Override
     public DataSource dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
 
+        // If exists, retrieves existing entity. Otherwise, creates new entity
         DataSource target = null;
         if (source.getUuid() == null) {
             target = new DataSource();
         } else {
             target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
-            
+
         }
-        
+
         // Metadata unmodifiable
         if (source.getUuid() == null) {
             target.setQueryGpe(source.getQueryGpe());
@@ -236,18 +255,18 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ValidationUtils.checkMetadataUnmodifiable(target.getPx(), source.getPx(), "DATA_SOURCE.PX", exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
-            
+
         // Metadata modifiable
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
-        
+
         List<DataSourceVariable> variables = dataSourceVariableDtoToDo(ctx, source.getOtherVariables(), target.getOtherVariables());
         target.getOtherVariables().clear();
         target.getOtherVariables().addAll(variables);
 
         return target;
     }
-    
+
     private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
         if (source == null) {
             if (target != null) {
@@ -260,7 +279,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (target == null) {
             target = new InternationalString();
         }
-        
+
         if (ValidationUtils.isEmpty(source)) {
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
         }
@@ -308,7 +327,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setLocale(source.getLocale());
         return target;
     }
-    
+
     /**
      * Transform DataSourceVariable, reusing existing variables
      */
@@ -332,7 +351,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
         return targets;
     }
-    
+
     private DataSourceVariable dataSourceVariableDtoToDo(ServiceContext ctx, DataSourceVariableDto source) {
         DataSourceVariable target = new DataSourceVariable();
         target = dataSourceVariableDtoToDo(ctx, source, target);
