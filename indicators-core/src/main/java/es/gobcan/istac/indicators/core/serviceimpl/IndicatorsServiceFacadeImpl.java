@@ -14,12 +14,14 @@ import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
@@ -495,5 +497,31 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         
         // Update
         getIndicatorsService().updateDataSource(ctx, dataSource);
+    }
+    
+    @Override
+    public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Retrieve
+        QuantityUnit quantityUnit = getIndicatorsService().retrieveQuantityUnit(ctx, uuid);
+
+        // Transform
+        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
+        return quantityUnitDto;
+    }
+
+    @Override
+    public List<QuantityUnitDto> findQuantityUnits(ServiceContext ctx) throws MetamacException {
+
+        // Retrieve quantityUnits
+        List<QuantityUnit> quantityUnits = getIndicatorsService().findQuantityUnits(ctx);
+
+        // Transform
+        List<QuantityUnitDto> quantityUnitsDto = new ArrayList<QuantityUnitDto>();
+        for (QuantityUnit quantityUnit : quantityUnits) {
+            quantityUnitsDto.add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
+        }
+
+        return quantityUnitsDto;
     }
 }

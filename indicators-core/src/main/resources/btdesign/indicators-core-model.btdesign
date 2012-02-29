@@ -89,7 +89,6 @@ Application Indicators {
 	    	// Quantity units
 	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	List<@QuantityUnit> findQuantityUnits() throws MetamacException;
-	    		    	
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."
@@ -201,7 +200,12 @@ Application Indicators {
 	    	"Deletes data source"
 	    	deleteDataSource(String uuid) throws MetamacException;
 	    	"Find data sources"
-	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
+	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	
+	    	// QUANTITY UNITS
+	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
+	    	List<@QuantityUnitDto> findQuantityUnits() throws MetamacException;
+	    		    	
 	    }
 
 	    // ----------------------------------------------------------------
@@ -519,7 +523,7 @@ Application Indicators {
 			"Symbol of unit (example: km)"
 			String symbol nullable;
 			"Position of symbol of unit"
-			- @SymbolPositionEnum symbolPosition not nullable;
+			- @QuantityUnitSymbolPositionEnum symbolPosition not nullable;
        		"Text of unit"
        		- @InternationalString text cascade="all" nullable databaseColumn="TEXT_FK";
        		
@@ -814,6 +818,18 @@ Application Indicators {
 	   		"Subelements (only when this element is a dimension)"
 	   		- List<@ElementLevelDto> subelements;
 	   	}
+	   	
+	   	"Dto for units of quantities"
+    	DataTransferObject QuantityUnitDto {
+	   		"Uuid"
+	   		String uuid;
+			"Symbol of unit (example: km)"
+			String symbol;
+			"Position of symbol of unit"
+			- @QuantityUnitSymbolPositionEnum symbolPosition;
+       		"Text of unit"
+       		- @InternationalStringDto text;
+    	}
 	}
 	
 	// ----------------------------------------------------------------
@@ -861,7 +877,7 @@ Application Indicators {
     	}
     	
     	"Type of symbol position"
-    	enum SymbolPositionEnum {
+    	enum QuantityUnitSymbolPositionEnum {
     		START,
     		END
     	}	

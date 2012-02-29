@@ -8,12 +8,14 @@ import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 
 public interface Do2DtoMapper {
     
@@ -34,4 +36,7 @@ public interface Do2DtoMapper {
 
     // Elements levels
     public List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
+    
+    // Quantity unit
+    public QuantityUnitDto quantityUnitDoToDto(QuantityUnit source);
 }

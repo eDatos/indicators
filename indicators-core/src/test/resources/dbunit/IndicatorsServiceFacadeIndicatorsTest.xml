@@ -1263,7 +1263,7 @@
 	<LIS_QUANTITIES_UNITS
 		ID="2"
  		UUID="2"
-  		SYMBOL="[null]"
+  		SYMBOL="kg"
   		VERSION="1"
   		TEXT_FK="34"
   		SYMBOL_POSITION="START"
@@ -2048,7 +2048,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="60"
-		LABEL="Porcentaje de 1"
+		LABEL="Kilómetros"
 		LOCALE="es"
 		UUID="IS-33-LS-1"
 		VERSION="1"
@@ -2057,7 +2057,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="61"
-		LABEL="Percentage of 1"
+		LABEL="Kilometers"
 		LOCALE="en"
 		UUID="IS-33-LS-2"
 		VERSION="1"
