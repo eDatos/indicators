@@ -513,7 +513,24 @@ Application Indicators {
 			"Base quantity"
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
 	    }
-        
+	    
+	    "Metric characteristics of a data source of indicator"
+	    Entity RateDerivation {
+        	databaseTable = "TBL_RATES_DERIVATIONS"
+        	hint="idSequence=RATES_DERIVATIONS"
+
+	    	"Method type"
+			- @RateDerivationMethodTypeEnum methodType not nullable;
+			"Method"
+			String method not nullable;
+			"Rounding"
+			- @RateDerivationRoundingEnum rounding nullable;
+
+			// Relations
+			"Quantity"
+			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
+	    }
+	    
         "Table values for units"
 	    Entity QuantityUnit {
         	databaseTable = "LIS_QUANTITIES_UNITS"
@@ -562,6 +579,10 @@ Application Indicators {
 			// Relations
             "Indicator version"
 			- @IndicatorVersion indicatorVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATOR_VERSION_FK" <-> dataSources;
+            "Interperiod rate"
+			- @RateDerivation interperiodRate not nullable cascade="all" databaseColumn="INTERPERIOD_RATE_FK";
+            "Annual rate"
+			- @RateDerivation annualRate not nullable cascade="all" databaseColumn="ANNUAL_RATE_FK";
             
 			"Provides access to Dimension"
             Repository DataSourceRepository {
@@ -691,42 +712,6 @@ Application Indicators {
 			"User who archived"
 			String archiveUser;       		    
 	    }
-		
-		"Dto for quantity"
-		DataTransferObject QuantityDto {
-			gap
-			
-			"Type"
-			- @QuantityTypeEnum type;
-			"Unit"
-			String unitUuid;
-			"Multiplier of percentage. Default must be 1"
-			Integer unitMultiplier;
-			"Number of significant digits to use when displaying the values of a metric concept"
-			Integer significantDigits;
-			"Number of decimal places to use for displaying the values of a metric concept"
-			Integer decimalPlaces;
-			"Min"
-			Integer minimum;
-			"Max"
-			Integer maximum;
-			"Indicator denominator of the fraction"
-			String denominatorIndicatorUuid;
-			"Indicator numerator of the fraction"
-			String numeratorIndicatorUuid;
-			"When Quantity is Ratio, true if is a percentage"
-			Boolean isPercentage;
-			"In percentages, descriptive text to display next to number that specifies what this is a percentage of"
-			-@InternationalStringDto percentageOf;
-			"Value base"
-			Integer baseValue;
-			"Temporal value base"
-			String baseTime;
-			"Geographic value base"
-			String baseLocation;
-			"Indicator for base quantity"
-			String baseQuantityIndicatorUuid;
-		}
 
 	    "Dto for dimension"
 	   	DataTransferObject DimensionDto extends @AuditDto {
@@ -756,7 +741,11 @@ Application Indicators {
 			"Geographic variable"
 			String geographicVariable;
 			"Other variables fixing one category"
-			- List<@DataSourceVariableDto> otherVariables; 
+			- List<@DataSourceVariableDto> otherVariables;
+			"Interperiod rate"
+			- @RateDerivationDto interperiodRate;
+			"Annual rate"
+			- @RateDerivationDto annualRate; 
 	    }
 	    
 	    "Dto for variables and categories"
@@ -819,6 +808,54 @@ Application Indicators {
 	   		- List<@ElementLevelDto> subelements;
 	   	}
 	   	
+	   	"Dto for quantity"
+		DataTransferObject QuantityDto {
+			gap
+			
+			"Type"
+			- @QuantityTypeEnum type;
+			"Unit"
+			String unitUuid;
+			"Multiplier of percentage. Default must be 1"
+			Integer unitMultiplier;
+			"Number of significant digits to use when displaying the values of a metric concept"
+			Integer significantDigits;
+			"Number of decimal places to use for displaying the values of a metric concept"
+			Integer decimalPlaces;
+			"Min"
+			Integer minimum;
+			"Max"
+			Integer maximum;
+			"Indicator denominator of the fraction"
+			String denominatorIndicatorUuid;
+			"Indicator numerator of the fraction"
+			String numeratorIndicatorUuid;
+			"When Quantity is Ratio, true if is a percentage"
+			Boolean isPercentage;
+			"In percentages, descriptive text to display next to number that specifies what this is a percentage of"
+			-@InternationalStringDto percentageOf;
+			"Value base"
+			Integer baseValue;
+			"Temporal value base"
+			String baseTime;
+			"Geographic value base"
+			String baseLocation;
+			"Indicator for base quantity"
+			String baseQuantityIndicatorUuid;
+		}
+
+	    "Dto for rate derivation"
+	    DataTransferObject RateDerivationDto {
+	    	"Method type"
+			- @RateDerivationMethodTypeEnum methodType;
+			"Method"
+			String method;
+			"Quantity"
+       		- @QuantityDto quantity;
+       		"Rounding"
+			- @RateDerivationRoundingEnum rounding;
+	    }
+	    
 	   	"Dto for units of quantities"
     	DataTransferObject QuantityUnitDto {
 	   		"Uuid"
@@ -876,10 +913,22 @@ Application Indicators {
     		CHANGE_RATE
     	}
     	
-    	"Type of symbol position"
+    	"Type of symbol position of quantity unit"
     	enum QuantityUnitSymbolPositionEnum {
     		START,
     		END
     	}	
+
+	   	"Type of rate derivation"
+    	enum RateDerivationMethodTypeEnum {
+    		CALCULATE,
+    		LOAD
+    	}
+    	
+    	"Type of rate derivation"
+    	enum RateDerivationRoundingEnum {
+    		UPWARD,
+    		DOWN
+    	}		
 	}
 }

@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
 
 public class DoCopyUtils {
 
@@ -164,6 +165,20 @@ public class DoCopyUtils {
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
+        target.setInterperiodRate(copyRateDerivation(source.getInterperiodRate()));
+        target.setAnnualRate(copyRateDerivation(source.getAnnualRate()));
+        return target;
+    }
+
+    /**
+     * Copy a rate derivation
+     */
+    private static RateDerivation copyRateDerivation(RateDerivation source) {
+        RateDerivation target = new RateDerivation();
+        target.setMethodType(source.getMethodType());
+        target.setMethod(source.getMethod());
+        target.setQuantity(copy(source.getQuantity()));
+        target.setRounding(source.getRounding());
         return target;
     }
 

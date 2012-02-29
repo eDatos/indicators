@@ -566,6 +566,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * 1) Validations when send to diffusion validation
      * 2) If is a fraction or extension, checks numerator and denominator are published
      * 3) If is a change rate or extension, checks base quantity is published
+     * TODO comprobar que todos los indicadores de los quantities de los datasources están publicados
      */
     private void checkIndicatorToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 

@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 
 /**
  * Asserts to tests
@@ -77,8 +78,17 @@ public class IndicatorsAsserts {
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
             assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());
         }
+        assertEqualsRateDerivation(expected.getInterperiodRate(), actual.getInterperiodRate());
+        assertEqualsRateDerivation(expected.getAnnualRate(), actual.getAnnualRate());
     }
     
+    private static void assertEqualsRateDerivation(RateDerivationDto expected, RateDerivationDto actual) {
+        assertEquals(expected.getMethodType(), actual.getMethodType());
+        assertEquals(expected.getMethod(), actual.getMethod());
+        assertEquals(expected.getRounding(), actual.getRounding());
+        assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
+    }
+
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {
         MetamacAsserts.assertEqualsInternationalString(expected, actual);
     }

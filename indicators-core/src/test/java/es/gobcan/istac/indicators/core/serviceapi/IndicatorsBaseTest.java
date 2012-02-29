@@ -33,6 +33,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("TBL_DATA_SOURCES");
         tables.add("TBL_INDICATORS_VERSIONS");
         tables.add("TBL_INDICATORS");
+        tables.add("TBL_RATES_DERIVATIONS");
         tables.add("TBL_QUANTITIES");
         tables.add("LIS_QUANTITIES_UNITS");
         tables.add("TBL_INTERNATIONAL_STRINGS");
@@ -53,6 +54,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_INDICATORS");
         sequences.add("SEQ_INDICATORS_INSTANCES");
         sequences.add("SEQ_ELEMENTS_LEVELS");
+        sequences.add("SEQ_RATES_DERIVATIONS");
         sequences.add("SEQ_QUANTITIES");
         sequences.add("SEQ_QUANTITIES_UNITS");
         return sequences;

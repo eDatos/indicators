@@ -15,6 +15,9 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -620,59 +623,59 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorVersion.getName(), "INDICATOR.NAME", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), "INDICATOR.SUBJECT_CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE", exceptions);
-        
-        // Quantity
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", exceptions);
-        if (!ValidationUtils.isEmpty(indicatorVersion.getQuantity())) {
-            checkQuantity(indicatorVersion.getQuantity(), exceptions);
-        }
+        checkQuantity(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", exceptions);
     }
 
-    private static void checkQuantity(Quantity quantity, List<MetamacExceptionItem> exceptions) {
+    private static void checkQuantity(Quantity quantity, String parameterName, List<MetamacExceptionItem> exceptions) {
+        
+        ValidationUtils.checkMetadataRequired(quantity, parameterName, exceptions);
+        if (ValidationUtils.isEmpty(quantity)) {
+            return;
+        }
         
         // checks required
-        ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), "INDICATOR.QUANTITY.TYPE", exceptions);
-        ValidationUtils.checkMetadataRequired(quantity.getUnit(), "INDICATOR.QUANTITY.UNIT_UUID", exceptions);
-        ValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), "INDICATOR.QUANTITY.UNIT_MULTIPLIER", exceptions);
+        ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ".TYPE", exceptions);
+        ValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ".UNIT_UUID", exceptions);
+        ValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), parameterName + ".UNIT_MULTIPLIER", exceptions);
         if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataRequired(quantity.getIsPercentage(), "INDICATOR.QUANTITY.IS_PERCENTAGE", exceptions);
+            ValidationUtils.checkMetadataRequired(quantity.getIsPercentage(), parameterName + ".IS_PERCENTAGE", exceptions);
         }
         if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
             if (ValidationUtils.isEmpty(quantity.getBaseValue()) && ValidationUtils.isEmpty(quantity.getBaseTime()) && ValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR.QUANTITY.BASE_VALUE", "INDICATOR.QUANTITY.BASE_TIME", "INDICATOR.QUANTITY.BASE_LOCATION"));
+                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName + ".BASE_LOCATION"));
             }
             // must be filled only one of followings
             if (!ValidationUtils.isEmpty(quantity.getBaseValue())) {
-                ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), "INDICATOR.QUANTITY.BASE_TIME", exceptions);
-                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), parameterName + ".BASE_TIME", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
             } else if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
-                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
             }
         }
         if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataRequired(quantity.getBaseQuantity(), "INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataRequired(quantity.getBaseQuantity(), parameterName + ".BASE_QUANTITY_INDICATOR_UUID", exceptions);
         }
         
         // Quantity: checks unexpected
         if (!IndicatorUtils.isMagnituteOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataEmpty(quantity.getMinimum(), "INDICATOR.QUANTITY.MINIMUM", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getMaximum(), "INDICATOR.QUANTITY.MAXIMUM", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getMinimum(), parameterName + ".MINIMUM", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getMaximum(), parameterName + ".MAXIMUM", exceptions);
         }
         if (!IndicatorUtils.isFractionOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataEmpty(quantity.getNumerator(), "INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getDenominator(), "INDICATOR.QUANTITY.DENOMINATOR_INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getNumerator(), parameterName + ".NUMERATOR_INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getDenominator(), parameterName + ".DENOMINATOR_INDICATOR_UUID", exceptions);
         }
         if (!IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataEmpty(quantity.getIsPercentage(), "INDICATOR.QUANTITY.IS_PERCENTAGE", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getPercentageOf(), "INDICATOR.QUANTITY.PERCENTAGE_OF", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getIsPercentage(), parameterName + ".IS_PERCENTAGE", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getPercentageOf(), parameterName + ".PERCENTAGE_OF", exceptions);
         }
         if (!IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataEmpty(quantity.getBaseValue(), "INDICATOR.QUANTITY.BASE_VALUE", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), "INDICATOR.QUANTITY.BASE_TIME", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseValue(), parameterName + ".BASE_VALUE", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), parameterName + ".BASE_TIME", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
         }
         if (!IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
-            ValidationUtils.checkMetadataEmpty(quantity.getBaseQuantity(), "INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseQuantity(), parameterName + ".BASE_QUANTITY_INDICATOR_UUID", exceptions);
         }
     }
 
@@ -682,5 +685,35 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getTemporaryVariable(), "DATA_SOURCE.TEMPORARY_VARIABLE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getGeographicVariable(), "DATA_SOURCE.GEOGRAPHIC_VARIABLE", exceptions);
+        checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
+        checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
+    }
+    
+    private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, List<MetamacExceptionItem> exceptions) {
+        
+        ValidationUtils.checkMetadataRequired(rateDerivation, parameterName, exceptions);
+        if (ValidationUtils.isEmpty(rateDerivation)) {
+            return;
+        }
+        
+        // checks required
+        ValidationUtils.checkMetadataRequired(rateDerivation.getMethodType(), parameterName + ".METHOD_TYPE", exceptions);
+        ValidationUtils.checkMetadataRequired(rateDerivation.getMethod(), parameterName + ".METHOD", exceptions);
+        if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType())) {
+            ValidationUtils.checkMetadataRequired(rateDerivation.getRounding(), parameterName + ".ROUNDING", exceptions);
+        }
+        ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity(), parameterName + ".QUANTITY", exceptions);
+        if (!ValidationUtils.isEmpty(rateDerivation.getQuantity())) {
+            if (!ValidationUtils.isEmpty(rateDerivation.getQuantity().getQuantityType())) {
+                if (!QuantityTypeEnum.AMOUNT.equals(rateDerivation.getQuantity().getQuantityType()) && !QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
+                    exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));            
+                }
+            }
+            checkQuantity(rateDerivation.getQuantity(), parameterName + ".QUANTITY", exceptions);
+            if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType())) {
+                ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getDecimalPlaces(), parameterName + ".QUANTITY.DECIMAL_PLACES", exceptions);            
+            }
+            // TODO baseQuantity ha de ser el propio indicador
+        }
     }
 }

@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -31,6 +32,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -153,6 +155,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
+        target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));
+        target.setAnnualRate(rateDerivationDoToDto(source.getAnnualRate()));
         
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
@@ -269,6 +273,19 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         if (source.getBaseQuantity() != null) {
             target.setBaseQuantityIndicatorUuid(source.getBaseQuantity().getUuid());
         }
+        return target;
+    }
+    
+    private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
+        if (source == null) {
+            return null;
+        }
+        RateDerivationDto target = new RateDerivationDto();
+        target.setMethodType(source.getMethodType());
+        target.setMethod(source.getMethod());
+        target.setQuantity(quantityDoToDto(source.getQuantity()));
+        target.setRounding(source.getRounding());
+        
         return target;
     }
 }

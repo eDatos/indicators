@@ -28,6 +28,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -35,6 +36,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
@@ -235,10 +237,31 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setTemporaryVariable(source.getTemporaryVariable());
         target.setGeographicVariable(source.getGeographicVariable());
 
+        // Related entities
+        target.setInterperiodRate(rateDerivationDtoToDo(ctx, source.getInterperiodRate(), target.getInterperiodRate()));
+        target.setAnnualRate(rateDerivationDtoToDo(ctx, source.getAnnualRate(), target.getAnnualRate()));
+
         List<DataSourceVariable> variables = dataSourceVariableDtoToDo(ctx, source.getOtherVariables(), target.getOtherVariables());
         target.getOtherVariables().clear();
         target.getOtherVariables().addAll(variables);
 
+        return target;
+    }
+
+    private RateDerivation rateDerivationDtoToDo(ServiceContext ctx, RateDerivationDto source, RateDerivation target) throws MetamacException {
+
+        if (source == null) {
+            return null;
+        }
+        if (target == null) {
+            target = new RateDerivation();
+        }
+
+        target.setMethodType(source.getMethodType());
+        target.setMethod(source.getMethod());
+        target.setRounding(source.getRounding());
+        target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
+        
         return target;
     }
 
