@@ -33,6 +33,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_WRONG_STATE                                   = create("exception.indicators.indicator.wrong_state");
     public static final CommonServiceExceptionType INDICATOR_MUST_HAVE_DATA_SOURCES                        = create("exception.indicators.indicator.must_have_data_sources");
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS             = create("exception.indicators.indicator.must_not_be_in_indicators_systems");
+    public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR         = create("exception.indicators.indicator.must_not_be_linked_to_other_indicator");
 
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                   = create("exception.indicators.data_source.not_found");

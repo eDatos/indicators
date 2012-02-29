@@ -850,7 +850,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testDeleteIndicator() throws Exception {
 
-        String uuid = INDICATOR_2;
+        String uuid = INDICATOR_4;
 
         // Delete indicator only in draft
         indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
@@ -992,6 +992,87 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
     }
 
+    @Test
+    public void testDeleteIndicatorErrorAsQuantityNumerator() throws Exception {
+
+        String uuid = INDICATOR_2;
+        String uuidLinked = INDICATOR_4;
+
+        // Retrieves indicator linked
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuidLinked, null);
+        assertEquals(uuid, indicatorDto.getQuantity().getNumeratorIndicatorUuid());
+        assertNull(indicatorDto.getQuantity().getDenominatorIndicatorUuid());
+        assertNull(indicatorDto.getQuantity().getBaseQuantityIndicatorUuid());
+                
+        // Try delete
+        try {
+            indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
+            fail("Indicator is linked to other indicator");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(uuidLinked, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    public void testDeleteIndicatorErrorAsQuantityDenominator() throws Exception {
+
+        String uuid = INDICATOR_2;
+        String uuidLinked = INDICATOR_4;
+        
+        // Links as denominator
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuidLinked, null);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(null);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(uuid);
+        indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(null);
+        indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+                
+        // Try delete
+        try {
+            indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
+            fail("Indicator is linked to other indicator");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(uuidLinked, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+    
+    @Test
+    public void testDeleteIndicatorErrorAsQuantityBaseQuantity() throws Exception {
+
+        String uuid = INDICATOR_2;
+        String uuidLinked = INDICATOR_4;
+        
+        // Links as base quantity
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuidLinked, null);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(null);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(uuid);
+        indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(null);
+        indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+                
+        // Try delete
+        try {
+            indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
+            fail("Indicator is linked to other indicator");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(uuidLinked, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
     @Test
     public void testUpdateIndicator() throws Exception {
 

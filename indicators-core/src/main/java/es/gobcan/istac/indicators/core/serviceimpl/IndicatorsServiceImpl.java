@@ -170,7 +170,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         getIndicatorVersionRepository().save(indicatorVersion);
     }
 
-    // TODO ojo si este indicador está como numerator, denominator o baseQuantity de otro. Dar error!!
     @Override
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -189,6 +188,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             if (indicator.getIndicatorsInstances().size() != 0) {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS, uuid);
             }
+            // Check not exists any indicator with this indicator as numerator, denominator or base quantity
+            IndicatorVersion indicatorVersionLinked = getIndicatorVersionRepository().findOneIndicatorVersionLinkedToIndicator(uuid);
+            if (indicatorVersionLinked != null) {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR, uuid, indicatorVersionLinked.getIndicator().getUuid());
+            }
+
             getIndicatorRepository().delete(indicator);
         } else {
             Indicator indicator = indicatorVersion.getIndicator();

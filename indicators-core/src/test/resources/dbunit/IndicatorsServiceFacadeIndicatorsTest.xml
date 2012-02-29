@@ -484,9 +484,10 @@
 				<TBL_QUANTITIES
 				  	ID="411"
   					UUID="Quantity-411"
-					QUANTITY_TYPE="QUANTITY"
+					QUANTITY_TYPE="FRACTION"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+  					NUMERATOR_FK="2"
 					UNIT_FK="1"
 
 					VERSION="1"

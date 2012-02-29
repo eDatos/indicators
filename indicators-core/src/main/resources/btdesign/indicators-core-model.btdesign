@@ -465,6 +465,7 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
             	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorStateEnum state);
+            	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
 			}
 		}     	
 		

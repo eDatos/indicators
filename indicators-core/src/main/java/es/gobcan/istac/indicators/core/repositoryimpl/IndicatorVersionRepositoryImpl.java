@@ -50,5 +50,35 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         // Find
         List<IndicatorVersion> result = criteria.list();
         return result;        
-    }    
+    }
+
+    @Override
+    public IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid) {
+        
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("uuid", indicatorUuid);
+
+        // Numerator
+        {
+            List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.quantity.numerator.uuid = :uuid", parameters, 1);
+            if (result != null && !result.isEmpty()) {
+                return result.get(0);
+            }
+        }
+        // Denominator
+        {
+            List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.quantity.denominator.uuid = :uuid", parameters, 1);
+            if (result != null && !result.isEmpty()) {
+                return result.get(0);
+            }
+        }
+        // Base quantity
+        {
+            List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.quantity.baseQuantity.uuid = :uuid", parameters, 1);
+            if (result != null && !result.isEmpty()) {
+                return result.get(0);
+            }
+        }
+        return null;
+    }
 }
