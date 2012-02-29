@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.Quantity;
 
 public class DoCopyUtils {
 
@@ -41,11 +42,34 @@ public class DoCopyUtils {
         target.setName(copy(source.getName()));
         target.setAcronym(copy(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
-        target.setNoteUrl(source.getNoteUrl());
+        target.setSubjectTitle(copy(source.getSubjectTitle()));
+        target.setNotesUrl(source.getNotesUrl());
         target.setNotes(copy(source.getNotes()));
+        target.setConceptDescription(copy(source.getConceptDescription()));
         target.setCommentary(copy(source.getCommentary()));
+        target.setQuantity(copy(source.getQuantity()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
 
+        return target;
+    }
+
+    private static Quantity copy(Quantity source) {
+        Quantity target = new Quantity();
+        target.setQuantityType(source.getQuantityType());
+        target.setUnit(source.getUnit());
+        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setSignificantDigits(source.getSignificantDigits());
+        target.setDecimalPlaces(source.getDecimalPlaces());
+        target.setMinimum(source.getMinimum());
+        target.setMaximum(source.getMaximum());
+        target.setNumerator(source.getNumerator());
+        target.setDenominator(source.getDenominator());
+        target.setIsPercentage(source.getIsPercentage());
+        target.setPercentageOf(copy(source.getPercentageOf()));
+        target.setBaseValue(source.getBaseValue());
+        target.setBaseTime(source.getBaseTime());
+        target.setBaseLocation(source.getBaseLocation());
+        target.setBaseQuantity(source.getBaseQuantity());
         return target;
     }
 
@@ -65,7 +89,7 @@ public class DoCopyUtils {
             targets.add(target);
         }
     }
-    
+
     /**
      * Copy a ElementLevel
      */
@@ -81,7 +105,7 @@ public class DoCopyUtils {
             target.setIndicatorInstance(indicatorInstanceTarget);
         }
         target.setOrderInLevel(source.getOrderInLevel());
-        
+
         for (ElementLevel childrenSource : source.getChildren()) {
             ElementLevel childrenTarget = copy(childrenSource, indicatorsSystemVersionTarget);
             childrenTarget.setParent(target);
@@ -101,7 +125,7 @@ public class DoCopyUtils {
         target.setTitle(copy(source.getTitle()));
         return target;
     }
-    
+
     /**
      * Copy an indicator instance
      */

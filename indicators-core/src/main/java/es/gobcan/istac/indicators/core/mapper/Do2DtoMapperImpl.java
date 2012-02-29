@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -27,6 +28,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -113,9 +115,12 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setName(internationalStringToDto(source.getName()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
+        target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
+        target.setQuantity(quantityDoToDto(source.getQuantity()));
+        target.setConceptDescription(internationalStringToDto(source.getConceptDescription()));
         target.setCommentary(internationalStringToDto(source.getCommentary()));
         target.setNotes(internationalStringToDto(source.getNotes()));
-        target.setNoteUrl(source.getNoteUrl());
+        target.setNotesUrl(source.getNotesUrl());
         target.setState(source.getState());
         target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
@@ -136,7 +141,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-
+    
     @Override
     public DataSourceDto dataSourceDoToDto(DataSource source) {
         DataSourceDto target = new DataSourceDto();
@@ -219,5 +224,37 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
             return null;
         }
         return source.toDate();
+    }
+    
+    // Note: transforms all metadata regardless of the type
+    //       InvocationValidation checks metadata unexpected for each type
+    private QuantityDto quantityDoToDto(Quantity source) {
+        if (source == null) {
+            return null;
+        }
+
+        QuantityDto target = new QuantityDto();
+        target.setType(source.getQuantityType());
+        target.setUnitUuid(source.getUnit().getUuid());
+        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setSignificantDigits(source.getSignificantDigits());
+        target.setDecimalPlaces(source.getDecimalPlaces());
+        target.setMinimum(source.getMinimum());
+        target.setMaximum(source.getMaximum());
+        if (source.getNumerator() != null) {
+            target.setNumeratorIndicatorUuid(source.getNumerator().getUuid());
+        }
+        if (source.getDenominator() != null) {
+            target.setDenominatorIndicatorUuid(source.getDenominator().getUuid());
+        }
+        target.setIsPercentage(source.getIsPercentage());
+        target.setPercentageOf(internationalStringToDto(source.getPercentageOf()));
+        target.setBaseValue(source.getBaseValue());    
+        target.setBaseTime(source.getBaseTime());    
+        target.setBaseLocation(source.getBaseLocation()); // TODO será una fk a tabla de valores geográficos
+        if (source.getBaseQuantity() != null) {
+            target.setBaseQuantityIndicatorUuid(source.getBaseQuantity().getUuid());
+        }
+        return target;
     }
 }

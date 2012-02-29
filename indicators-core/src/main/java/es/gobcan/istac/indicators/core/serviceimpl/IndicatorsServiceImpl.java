@@ -13,10 +13,12 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
@@ -29,13 +31,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     public IndicatorsServiceImpl() {
     }
 
-    // TODO listado de dudas de Ri a Alberto
-    // TODO metadatos: subjectCode es una lista. Se debe permitir realizar búsquedas por este campo.
+    // TODO Búsquedas por subjectCode
+    // Metadato 'base_time': corresponde a un valor temporal siguiendo el formato para valores temporales.
+    // Metadato 'baseLocation': corresponde a un valor de la tabla de valores geográficos (foreign key)
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
         Indicator indicator = indicatorVersion.getIndicator();
-        
+
         // Validation of parameters
         InvocationValidator.checkCreateIndicator(indicatorVersion, null);
         checkIndicatorCodeUnique(ctx, indicator.getCode(), null);
@@ -57,7 +60,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         return indicatorVersion;
     }
-    
+
     @Override
     public Indicator retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -162,11 +165,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check indicators system state
         checkIndicatorVersionInProduction(indicatorVersion);
-        
+
         // Update
         getIndicatorVersionRepository().save(indicatorVersion);
     }
 
+    // TODO ojo si este indicador está como numerator, denominator o baseQuantity de otro. Dar error!!
     @Override
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -250,7 +254,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Validate to send to production
-        checkIndicatorsToSendToProductionValidation(ctx, indicatorInProduction);
+        checkIndicatorToSendToProductionValidation(ctx, indicatorInProduction);
 
         // Update state
         indicatorInProduction.setState(IndicatorStateEnum.PRODUCTION_VALIDATION);
@@ -272,7 +276,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Validate to send to diffusion
-        checkIndicatorsToSendToDiffusionValidation(ctx, indicatorInProduction);
+        checkIndicatorToSendToDiffusionValidation(ctx, indicatorInProduction);
 
         // Update state
         indicatorInProduction.setState(IndicatorStateEnum.DIFFUSION_VALIDATION);
@@ -295,7 +299,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Validate to reject
-        checkIndicatorsToReject(ctx, indicatorInProduction);
+        checkIndicatorToReject(ctx, indicatorInProduction);
 
         // Update state
         indicatorInProduction.setState(IndicatorStateEnum.VALIDATION_REJECTED);
@@ -321,7 +325,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Validate to publish
-        checkIndicatorsToPublish(ctx, indicatorInProduction);
+        checkIndicatorToPublish(ctx, indicatorInProduction);
 
         // Update state
         indicatorInProduction.setState(IndicatorStateEnum.PUBLISHED);
@@ -356,7 +360,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Validate to archive
-        checkIndicatorsToArchive(ctx, indicatorInDiffusion);
+        checkIndicatorToArchive(ctx, indicatorInDiffusion);
 
         // Update state
         indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
@@ -394,9 +398,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorNewVersion;
     }
 
+    // TODO baseQuantity. Si es de tipo ChangeRate siempre se asocia al propio indicador (tanto para var. anual como interperiódica)
     @Override
     public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkCreateDataSource(indicatorUuid, dataSource, null);
 
@@ -410,7 +415,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Update indicator adding dataSource
         indicatorVersion.addDataSource(dataSource);
         getIndicatorVersionRepository().save(indicatorVersion);
-        
+
         return dataSource;
     }
 
@@ -430,13 +435,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     @Override
     public DataSource updateDataSource(ServiceContext ctx, DataSource dataSource) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkUpdateDataSource(dataSource, null);
 
         // Check indicator state
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
-        
+
         // Update
         return getDataSourceRepository().save(dataSource);
     }
@@ -463,6 +468,31 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
         return indicatorVersion.getDataSources();
+    }
+
+    @Override
+    public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
+
+        // Retrieve
+        QuantityUnit quantityUnit = getQuantityUnitRepository().retrieveQuantityUnit(uuid);
+        if (quantityUnit == null) {
+            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND, uuid);
+        }
+        return quantityUnit;
+    }
+
+    @Override
+    public List<QuantityUnit> findQuantityUnits(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindQuantityUnits(null);
+
+        // Find
+        List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
+        return quantityUnits;
     }
 
     /**
@@ -509,7 +539,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Makes validations to sent to production validation
      * 1) Must exists at least one indicator instance
      */
-    private void checkIndicatorsToSendToProductionValidation(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void checkIndicatorToSendToProductionValidation(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
         // Check indicator has at least one data source
         if (indicatorVersion.getDataSources().size() == 0) {
@@ -521,33 +551,49 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Makes validations to sent to diffusion validation
      * 1) Validations when send to production validation
      */
-    private void checkIndicatorsToSendToDiffusionValidation(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void checkIndicatorToSendToDiffusionValidation(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
-        checkIndicatorsToSendToProductionValidation(ctx, indicatorVersion);
+        checkIndicatorToSendToProductionValidation(ctx, indicatorVersion);
     }
 
     /**
      * Makes validations to publish
      * 1) Validations when send to diffusion validation
+     * 2) If is a fraction or extension, checks numerator and denominator are published
+     * 3) If is a change rate or extension, checks base quantity is published
      */
-    private void checkIndicatorsToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void checkIndicatorToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
-        checkIndicatorsToSendToDiffusionValidation(ctx, indicatorVersion);
+        checkIndicatorToSendToDiffusionValidation(ctx, indicatorVersion);
+
+        if (IndicatorUtils.isFractionOrExtension(indicatorVersion.getQuantity().getQuantityType())) {
+            if (indicatorVersion.getQuantity().getNumerator() != null) {
+                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getNumerator());
+            }
+            if (indicatorVersion.getQuantity().getDenominator() != null) {
+                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getDenominator());
+            }
+        }
+        if (IndicatorUtils.isChangeRateOrExtension(indicatorVersion.getQuantity().getQuantityType())) {
+            if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
+                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getBaseQuantity());
+            }
+        }
     }
 
     /**
      * Makes validations to archive
      * 1) Validations when publish
      */
-    private void checkIndicatorsToArchive(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private void checkIndicatorToArchive(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
-        checkIndicatorsToPublish(ctx, indicatorVersion);
+        checkIndicatorToPublish(ctx, indicatorVersion);
     }
 
     /**
      * Makes validations to reject
      */
-    private void checkIndicatorsToReject(ServiceContext ctx, IndicatorVersion indicatorVersion) {
+    private void checkIndicatorToReject(ServiceContext ctx, IndicatorVersion indicatorVersion) {
 
         // Nothing
     }
@@ -560,11 +606,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         boolean inProduction = IndicatorStateEnum.DRAFT.equals(state) || IndicatorStateEnum.VALIDATION_REJECTED.equals(state) || IndicatorStateEnum.PRODUCTION_VALIDATION.equals(state)
                 || IndicatorStateEnum.DIFFUSION_VALIDATION.equals(state);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), new IndicatorStateEnum[]{
-                IndicatorStateEnum.DRAFT, IndicatorStateEnum.VALIDATION_REJECTED, IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicatorVersion.getIndicator().getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.DRAFT,
+                    IndicatorStateEnum.VALIDATION_REJECTED, IndicatorStateEnum.PRODUCTION_VALIDATION, IndicatorStateEnum.DIFFUSION_VALIDATION});
         }
     }
-    
+
+    /**
+     * Checks that any version of indicator is published
+     */
+    private void checkIndicatorPublished(ServiceContext ctx, Indicator indicator) throws MetamacException {
+        IndicatorVersion publishedIndicatorVersion = retrieveIndicatorStateInDiffusion(ctx, indicator.getUuid(), false);
+        if (publishedIndicatorVersion == null || !IndicatorStateEnum.PUBLISHED.equals(publishedIndicatorVersion.getState())) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+        }
+    }
     private List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
     }

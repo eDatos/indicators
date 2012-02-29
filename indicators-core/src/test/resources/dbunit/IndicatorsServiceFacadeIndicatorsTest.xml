@@ -33,8 +33,11 @@
 				ACRONYM_FK="2"
 	  			COMMENTARY_FK="4"
 	  			NOTES_FK="3"
-				NOTE_URL="http://indicators/1"
+				NOTES_URL="http://indicators/1"
 				SUBJECT_CODE="subjectCode1A"
+				SUBJECT_TITLE_FK="30"
+				CONCEPT_DESCRIPTION_FK="46"
+				QUANTITY_FK="111"
 
 	  			INDICATOR_FK="1"
 	  			STATE="PUBLISHED"
@@ -61,6 +64,34 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_QUANTITIES
+				  	ID="111"
+  					UUID="Quantity-111"
+					QUANTITY_TYPE="CHANGE_RATE"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="2"
+  					DECIMAL_PLACES="3"
+  					MINIMUM="100"
+  					MAXIMUM="200"
+  					IS_PERCENTAGE="1"
+					PERCENTAGE_OF_FK="32"
+  					BASE_VALUE="[null]"
+  					BASE_TIME="[null]"
+  					BASE_LOCATION="[null]"
+  					BASE_QUANTITY_FK="3"
+					UNIT_FK="1"
+					NUMERATOR_FK="3"
+					DENOMINATOR_FK="6"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
 				<TBL_DATA_SOURCES
 						ID="111"
 						UUID="Indicator-1-v1-DataSource-1"
@@ -89,8 +120,10 @@
 	  			COMMENTARY_FK="8"
 	  			INDICATOR_FK="1"
 	  			STATE="DRAFT"
-				NOTE_URL="http://indicators/1"
+				NOTES_URL="http://indicators/1"
 				SUBJECT_CODE="subjectCode1"
+				SUBJECT_TITLE_FK="31"
+				QUANTITY_FK="121"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -113,6 +146,24 @@
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+			
+				<TBL_QUANTITIES
+				  	ID="121"
+  					UUID="Quantity-121"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 				<TBL_DATA_SOURCES
 					ID="121"
@@ -216,8 +267,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="2"
 	  			STATE="DRAFT"
-				NOTE_URL="http://indicators/2"
+				NOTES_URL="http://indicators/2"
 				SUBJECT_CODE="subjectCode2"
+				SUBJECT_TITLE_FK="35"
+				QUANTITY_FK="211"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -240,6 +293,23 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+
+				<TBL_QUANTITIES
+				  	ID="211"
+  					UUID="Quantity-211"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 3											                     		 	-->
@@ -273,8 +343,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="3"
 	  			STATE="PUBLISHED"
-				NOTE_URL="http://indicators/3"
+				NOTES_URL="http://indicators/3"
 				SUBJECT_CODE="subjectCode3"
+				SUBJECT_TITLE_FK="36"
+				QUANTITY_FK="311"
 				
 				PRODUCTION_VALIDATION_DATE="2011-03-03 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -297,6 +369,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
+			
+				<TBL_QUANTITIES
+				  	ID="311"
+  					UUID="Quantity-311"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 				<TBL_DATA_SOURCES
 					ID="311"
@@ -364,9 +454,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="4"
 	  			STATE="PRODUCTION_VALIDATION"
-				NOTE_URL="http://indicators/4"
+				NOTES_URL="http://indicators/4"
 				SUBJECT_CODE="subjectCode4"
-
+				SUBJECT_TITLE_FK="37"
+				QUANTITY_FK="411"
+				
 				PRODUCTION_VALIDATION_DATE="2011-04-04 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
 				PRODUCTION_VALIDATION_USER="user1"
@@ -389,6 +481,23 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
+				<TBL_QUANTITIES
+				  	ID="411"
+  					UUID="Quantity-411"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 				<TBL_DATA_SOURCES
 					ID="411"
 					UUID="Indicator-4-v1-DataSource-1"
@@ -408,7 +517,7 @@
 				/>
 		
 	<!-- **************************************************************************************	-->
-	<!--    INDICATOR 5											                      	-->
+	<!--    INDICATOR 5													                      	-->
 	<!--		- Version 1: diffusion validation												-->
 	<!-- *************************************************************************************	-->
 	<TBL_INDICATORS
@@ -439,8 +548,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="5"
 	  			STATE="DIFFUSION_VALIDATION"
-				NOTE_URL="http://indicators/5"
+				NOTES_URL="http://indicators/5"
 				SUBJECT_CODE="subjectCode5"
+				SUBJECT_TITLE_FK="38"
+				QUANTITY_FK="511"
 				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -463,6 +574,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
+			
+				<TBL_QUANTITIES
+				  	ID="511"
+  					UUID="Quantity-511"
+					QUANTITY_TYPE="FRACTION"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+					NUMERATOR_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 			
 				<TBL_DATA_SOURCES
 					ID="511"
@@ -515,9 +644,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="6"
 	  			STATE="PUBLISHED"
-				NOTE_URL="http://indicators/6"
+				NOTES_URL="http://indicators/6"
 				SUBJECT_CODE="subjectCode6"
-
+				SUBJECT_TITLE_FK="39"
+				QUANTITY_FK="611"
+				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
 				PRODUCTION_VALIDATION_USER="user1"
@@ -540,6 +671,24 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_QUANTITIES
+				  	ID="611"
+  					UUID="Quantity-611"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
 			<TBL_INDICATORS_VERSIONS
 				ID="62"
 				UUID="Indicator-6-v2"
@@ -550,7 +699,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="6"
 	  			STATE="DIFFUSION_VALIDATION"
-				NOTE_URL="http://indicators/6"
+				NOTES_URL="http://indicators/6"
+				SUBJECT_CODE="subjectCode6"
+				SUBJECT_TITLE_FK="45"
+				QUANTITY_FK="621"
 
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
@@ -573,6 +725,24 @@
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>
+			
+				<TBL_QUANTITIES
+				  	ID="621"
+  					UUID="Quantity-621"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 				<TBL_DATA_SOURCES
 					ID="621"
@@ -625,9 +795,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="7"
 	  			STATE="ARCHIVED"
-				NOTE_URL="http://indicators/7"
+				NOTES_URL="http://indicators/7"
 				SUBJECT_CODE="subjectCode7"
-
+				SUBJECT_TITLE_FK="40"
+				QUANTITY_FK="711"
+				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
 				PRODUCTION_VALIDATION_USER="user1"
@@ -650,6 +822,24 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+				<TBL_QUANTITIES
+				  	ID="711"
+  					UUID="Quantity-711"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
 			<TBL_INDICATORS_VERSIONS
 				ID="72"
 				UUID="Indicator-7-v2"
@@ -660,9 +850,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="7"
 	  			STATE="DIFFUSION_VALIDATION"
-				NOTE_URL="http://indicators/7"
+				NOTES_URL="http://indicators/7"
 				SUBJECT_CODE="subjectCode7B"
-
+				SUBJECT_TITLE_FK="41"
+				QUANTITY_FK="721"
+				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
 				PRODUCTION_VALIDATION_USER="user1"
@@ -684,6 +876,24 @@
 				LAST_UPDATED="2011-03-3 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
+			
+				<TBL_QUANTITIES
+				  	ID="721"
+  					UUID="Quantity-721"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 				<TBL_DATA_SOURCES
 					ID="721"
@@ -735,9 +945,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="8"
 	  			STATE="ARCHIVED"
-				NOTE_URL="http://indicators/8"
+				NOTES_URL="http://indicators/8"
 				SUBJECT_CODE="subjectCode8"
-
+				SUBJECT_TITLE_FK="42"
+				QUANTITY_FK="811"
+				
 				PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
 				PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
 				PRODUCTION_VALIDATION_USER="user1"
@@ -759,6 +971,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
+			
+				<TBL_QUANTITIES
+				  	ID="811"
+  					UUID="Quantity-811"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 9											                     		 	-->
@@ -792,9 +1022,11 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="9"
 	  			STATE="VALIDATION_REJECTED"
-				NOTE_URL="http://indicators/9"
+				NOTES_URL="http://indicators/9"
 				SUBJECT_CODE="subjectCode9"
-
+				SUBJECT_TITLE_FK="47"
+				QUANTITY_FK="911"
+				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
 				PRODUCTION_VALIDATION_USER="[null]"
@@ -816,6 +1048,23 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
+				<TBL_QUANTITIES
+				  	ID="911"
+  					UUID="Quantity-911"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 				<TBL_DATA_SOURCES
 					ID="911"
@@ -867,8 +1116,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="10"
 	  			STATE="DRAFT"
-				NOTE_URL="http://indicators/10"
+				NOTES_URL="http://indicators/10"
 				SUBJECT_CODE="subjectCode10"
+				SUBJECT_TITLE_FK="44"
+				QUANTITY_FK="1011"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -891,6 +1142,23 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>										
+			  			
+				<TBL_QUANTITIES
+				  	ID="1011"
+  					UUID="Quantity-1011"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
 			  			
 			  			
 	<!-- **************************************************************************************	-->
@@ -979,6 +1247,27 @@
 						LAST_UPDATED="2011-06-06 05:06:07"
 						LAST_UPDATED_TZ="Europe/London"
 					/>			  			
+			  
+	<!-- ************************************************************************************ -->
+	<!--                                 QUANTITIES UNITS		                              -->
+	<!-- ************************************************************************************ -->
+	<LIS_QUANTITIES_UNITS
+		ID="1"
+ 		UUID="1"
+  		SYMBOL="km"
+  		VERSION="1"
+  		TEXT_FK="33"
+  		SYMBOL_POSITION="END"
+	/>
+	<LIS_QUANTITIES_UNITS
+		ID="2"
+ 		UUID="2"
+  		SYMBOL="[null]"
+  		VERSION="1"
+  		TEXT_FK="34"
+  		SYMBOL_POSITION="START"
+	/>
+  		  
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -1677,5 +1966,237 @@
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="29"
 	/>								
-					
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="30"
+		UUID="IS-30"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="54"
+		LABEL="Área temática 1"
+		LOCALE="es"
+		UUID="IS-30-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="30"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="55"
+		LABEL="Subject 1"
+		LOCALE="en"
+		UUID="IS-30-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="30"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="31"
+		UUID="IS-31"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="56"
+		LABEL="Área temática 1"
+		LOCALE="es"
+		UUID="IS-31-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="31"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="57"
+		LABEL="Subject 1"
+		LOCALE="en"
+		UUID="IS-31-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="31"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="32"
+		UUID="IS-32"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="58"
+		LABEL="Porcentaje de 1"
+		LOCALE="es"
+		UUID="IS-32-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="32"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="59"
+		LABEL="Percentage of 1"
+		LOCALE="en"
+		UUID="IS-32-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="32"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="33"
+		UUID="IS-33"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="60"
+		LABEL="Porcentaje de 1"
+		LOCALE="es"
+		UUID="IS-33-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="33"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="61"
+		LABEL="Percentage of 1"
+		LOCALE="en"
+		UUID="IS-33-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="33"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="34"
+		UUID="IS-34"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="62"
+		LABEL="Porcentaje de 1"
+		LOCALE="es"
+		UUID="IS-34-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="34"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="63"
+		LABEL="Percentage of 1"
+		LOCALE="en"
+		UUID="IS-34-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="34"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="35"
+		UUID="IS-35"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="36"
+		UUID="IS-36"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="37"
+		UUID="IS-37"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="38"
+		UUID="IS-38"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="39"
+		UUID="IS-39"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="40"
+		UUID="IS-40"
+		VERSION="1"
+	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="41"
+		UUID="IS-41"
+		VERSION="1"
+	/>					
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="42"
+		UUID="IS-42"
+		VERSION="1"
+	/>					
+	<TBL_INTERNATIONAL_STRINGS
+		ID="43"
+		UUID="IS-43"
+		VERSION="1"
+	/>					
+	<TBL_INTERNATIONAL_STRINGS
+		ID="44"
+		UUID="IS-44"
+		VERSION="1"
+	/>					
+	<TBL_INTERNATIONAL_STRINGS
+		ID="45"
+		UUID="IS-45"
+		VERSION="1"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="46"
+		UUID="IS-46"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="64"
+		LABEL="Concepto 1"
+		LOCALE="es"
+		UUID="IS-46-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="46"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="65"
+		LABEL="Concept 1"
+		LOCALE="en"
+		UUID="IS-46-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="46"
+	/>								
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="47"
+		UUID="IS-47"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="66"
+		LABEL="1"
+		LOCALE="es"
+		UUID="IS-47-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="47"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="67"
+		LABEL="1"
+		LOCALE="en"
+		UUID="IS-47-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="47"
+	/>								
+							
+
 </dataset>

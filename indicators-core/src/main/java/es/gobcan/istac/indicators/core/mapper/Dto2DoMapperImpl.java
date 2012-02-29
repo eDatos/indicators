@@ -27,12 +27,14 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
@@ -166,7 +168,6 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
 
-    
     @Override
     public IndicatorVersion indicatorDtoToDo(ServiceContext ctx, IndicatorDto source) throws MetamacException {
 
@@ -195,8 +196,13 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATOR.ACRONYM"));
         target.setCommentary(internationalStringToDo(ctx, source.getCommentary(), target.getCommentary(), "INDICATOR.COMMENTARY"));
         target.setSubjectCode(source.getSubjectCode());
+        target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE"));
+        target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), "INDICATOR.CONCEPT_DESCRIPTION"));
         target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), "INDICATOR.NOTES"));
-        target.setNoteUrl(source.getNoteUrl());
+        target.setNotesUrl(source.getNotesUrl());
+
+        // Related entities
+        target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
 
         return target;
     }
@@ -330,6 +336,52 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private DataSourceVariable dataSourceVariableDtoToDo(ServiceContext ctx, DataSourceVariableDto source, DataSourceVariable target) {
         target.setVariable(source.getVariable());
         target.setCategory(source.getCategory());
+        return target;
+    }
+
+    // Note: transforms all metadata regardless of the type to be initialized to null all that do not apply to such quantity
+    // InvocationValidation checks metadata unexpected for each type
+    private Quantity quantityDtoToDo(ServiceContext ctx, QuantityDto source, Quantity target) throws MetamacException {
+
+        if (source == null) {
+            return null;
+        }
+        if (target == null) {
+            target = new Quantity();
+        }
+
+        target.setQuantityType(source.getType());
+        if (source.getUnitUuid() != null) {
+            target.setUnit(indicatorsService.retrieveQuantityUnit(ctx, source.getUnitUuid()));
+        } else {
+            target.setUnit(null);
+        }
+        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setSignificantDigits(source.getSignificantDigits());
+        target.setDecimalPlaces(source.getDecimalPlaces());
+        target.setMinimum(source.getMinimum());
+        target.setMaximum(source.getMaximum());
+        if (source.getNumeratorIndicatorUuid() != null) {
+            target.setNumerator(indicatorsService.retrieveIndicator(ctx, source.getNumeratorIndicatorUuid()));
+        } else {
+            target.setNumerator(null);
+        }
+        if (source.getDenominatorIndicatorUuid() != null) {
+            target.setDenominator(indicatorsService.retrieveIndicator(ctx, source.getDenominatorIndicatorUuid()));
+        } else {
+            target.setDenominator(null);
+        }
+        target.setIsPercentage(source.getIsPercentage());
+        target.setPercentageOf(internationalStringToDo(ctx, source.getPercentageOf(), target.getPercentageOf(), "INDICATOR.QUANTITY.PERCENTAGE_OF"));
+        target.setBaseValue(source.getBaseValue());
+        target.setBaseTime(source.getBaseTime());
+        target.setBaseLocation(source.getBaseLocation()); // TODO será una fk a tabla de valores geográficos
+        if (source.getBaseQuantityIndicatorUuid() != null) {
+            target.setBaseQuantity(indicatorsService.retrieveIndicator(ctx, source.getBaseQuantityIndicatorUuid()));
+        } else {
+            target.setBaseQuantity(null);
+        }
+        
         return target;
     }
 }

@@ -59,6 +59,7 @@ Application Indicators {
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
     		> @DataSourceRepository
+    		> @QuantityUnitRepository
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -83,7 +84,12 @@ Application Indicators {
 	    	@DataSource updateDataSource(@DataSource dataSource) throws MetamacException;
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
-	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;	    	
+	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	
+	    	// Quantity units
+	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
+	    	List<@QuantityUnit> findQuantityUnits() throws MetamacException;
+	    		    	
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."
@@ -282,7 +288,7 @@ Application Indicators {
             	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state);
 			}
 		} 
-		
+			    
 		"Level at indicators system"
         Entity ElementLevel {
         	databaseTable = "TBL_ELEMENTS_LEVELS"
@@ -415,13 +421,17 @@ Application Indicators {
        		"Acronym"
        		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
        		"Subject code"
-			String subjectCode nullable;
+			String subjectCode not nullable;
+       		"Subject title"
+       		- @InternationalString subjectTitle cascade="all" not nullable databaseColumn="SUBJECT_TITLE_FK";
+       		"Concept associated with the indicator"
+       		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
 			"Commentary"
        		- @InternationalString commentary cascade="all" nullable databaseColumn="COMMENTARY_FK";
 			"Notes"
-       		- @InternationalString notes  cascade="all" nullable databaseColumn="NOTES_FK";
-       		"Note url"
-       		String noteUrl nullable;
+       		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
+       		"Notes url"
+       		String notesUrl nullable;
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -443,6 +453,8 @@ Application Indicators {
 			// Relations
 			"Indicator"
 			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
+			"Quantity"
+			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
 			"Data sources"
 			- Bag<@DataSource> dataSources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> indicatorVersion;
 		
@@ -456,6 +468,68 @@ Application Indicators {
 			}
 		}     	
 		
+	    "Metric characteristics of the indicator"
+	    Entity Quantity {
+        	databaseTable = "TBL_QUANTITIES"
+        	hint="idSequence=QUANTITIES"
+        	gap
+
+	    	"Type"
+			- @QuantityTypeEnum quantityType not nullable;
+			"Multiplier of percentage"
+			Integer unitMultiplier not nullable;
+			"Number of significant digits to use when displaying the values of a metric concept"
+			Integer significantDigits nullable;
+			"Number of decimal places to use for displaying the values of a metric concept"
+			Integer decimalPlaces nullable;
+			"Min"
+			Integer minimum nullable;
+			"Max"
+			Integer maximum nullable;
+			"When Quantity is Ratio, true if is a percentage"
+			Boolean isPercentage nullable;
+			"In percentages, descriptive text to display next to number that specifies what this is a percentage of"
+			- @InternationalString percentageOf cascade="all" nullable databaseColumn="PERCENTAGE_OF_FK";
+			
+			"Value base"
+			Integer baseValue nullable;
+			"Temporal value base"
+			String baseTime nullable;
+			"Geographic value base"
+			String baseLocation nullable;
+
+			// Relations
+			"Unit"
+			- @QuantityUnit unit not nullable cascade="none" databaseColumn="UNIT_FK";
+			"Numerator of the fraction"
+			- @Indicator numerator nullable cascade="none" databaseColumn="NUMERATOR_FK";
+			"Denominator of the fraction"
+			- @Indicator denominator nullable cascade="none" databaseColumn="DENOMINATOR_FK";
+			"Base quantity"
+			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
+	    }
+        
+        "Table values for units"
+	    Entity QuantityUnit {
+        	databaseTable = "LIS_QUANTITIES_UNITS"
+        	hint="idSequence=QUANTITIES_UNITS"
+			!auditable
+			
+			"Symbol of unit (example: km)"
+			String symbol nullable;
+			"Position of symbol of unit"
+			- @SymbolPositionEnum symbolPosition not nullable;
+       		"Text of unit"
+       		- @InternationalString text cascade="all" nullable databaseColumn="TEXT_FK";
+       		
+       		Repository QuantityUnitRepository {
+       			findAll;
+            	protected List<@QuantityUnit> findByQuery;
+            	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@QuantityUnit retrieveQuantityUnit(String uuid);
+			}
+        }
+        	    
         BasicType IndicatorVersionInformation {
         	gap
         	"Id into database of IndicatorVersion"
@@ -502,7 +576,7 @@ Application Indicators {
 			String variable not nullable;
 			"Category"
 			String category not nullable;
-        }  	    	
+        }
 	}
 	
 	// ----------------------------------------------------------------
@@ -573,12 +647,18 @@ Application Indicators {
        		- @InternationalStringDto acronym;
        		"Subject code"
 			String subjectCode;
+			"Subject title"
+			- @InternationalStringDto subjectTitle;
+			"Concept"
+       		- @InternationalStringDto conceptDescription;
 			"Commentary"
        		- @InternationalStringDto commentary;
 			"Notes"
        		- @InternationalStringDto notes;
-       		"Note url"
-       		String noteUrl;        
+       		"Notes url"
+       		String notesUrl;
+       		"Quantity"
+       		- @QuantityDto quantity;
        		
        		"Number of version in production"
        		String productionVersion;
@@ -606,7 +686,43 @@ Application Indicators {
 			"User who archived"
 			String archiveUser;       		    
 	    }
-	    
+		
+		"Dto for quantity"
+		DataTransferObject QuantityDto {
+			gap
+			
+			"Type"
+			- @QuantityTypeEnum type;
+			"Unit"
+			String unitUuid;
+			"Multiplier of percentage. Default must be 1"
+			Integer unitMultiplier;
+			"Number of significant digits to use when displaying the values of a metric concept"
+			Integer significantDigits;
+			"Number of decimal places to use for displaying the values of a metric concept"
+			Integer decimalPlaces;
+			"Min"
+			Integer minimum;
+			"Max"
+			Integer maximum;
+			"Indicator denominator of the fraction"
+			String denominatorIndicatorUuid;
+			"Indicator numerator of the fraction"
+			String numeratorIndicatorUuid;
+			"When Quantity is Ratio, true if is a percentage"
+			Boolean isPercentage;
+			"In percentages, descriptive text to display next to number that specifies what this is a percentage of"
+			-@InternationalStringDto percentageOf;
+			"Value base"
+			Integer baseValue;
+			"Temporal value base"
+			String baseTime;
+			"Geographic value base"
+			String baseLocation;
+			"Indicator for base quantity"
+			String baseQuantityIndicatorUuid;
+		}
+
 	    "Dto for dimension"
 	   	DataTransferObject DimensionDto extends @AuditDto {
 			"Unique uuid"
@@ -729,6 +845,24 @@ Application Indicators {
     	enum VersiontTypeEnum {
     		MAJOR,
     		MINOR
+    	}
+    	
+    	"Type of quantity"
+    	enum QuantityTypeEnum {
+    		QUANTITY,
+    		AMOUNT,
+    		MAGNITUDE,
+    		FRACTION,
+    		RATIO,
+    		RATE,
+    		INDEX,
+    		CHANGE_RATE
+    	}
+    	
+    	"Type of symbol position"
+    	enum SymbolPositionEnum {
+    		START,
+    		END
     	}	
 	}
 }

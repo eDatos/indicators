@@ -1193,8 +1193,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
-				NOTE_URL="http://indicators/1"
+				NOTES_URL="http://indicators/1"
 				SUBJECT_CODE="subjectCode1A"
+				SUBJECT_TITLE_FK="42"
+				QUANTITY_FK="111"
 
 	  			INDICATOR_FK="1"
 	  			STATE="PUBLISHED"
@@ -1221,6 +1223,22 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>				
 
+  				<TBL_QUANTITIES
+				  	ID="111"
+  					UUID="Quantity-111"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
   
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 2											                     		 	-->
@@ -1254,8 +1272,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="2"
 	  			STATE="DRAFT"
-				NOTE_URL="http://indicators/2"
+				NOTES_URL="http://indicators/2"
 				SUBJECT_CODE="subjectCode2"
+				SUBJECT_TITLE_FK="43"
+				QUANTITY_FK="211"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -1278,6 +1298,24 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
+			
+				<TBL_QUANTITIES
+				  	ID="211"
+  					UUID="Quantity-211"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
 			
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 3											                     		 	-->
@@ -1311,8 +1349,10 @@
 	  			COMMENTARY_FK="[null]"
 	  			INDICATOR_FK="3"
 	  			STATE="DRAFT"
-				NOTE_URL="http://indicators/3"
+				NOTES_URL="http://indicators/3"
 				SUBJECT_CODE="subjectCode"
+				SUBJECT_TITLE_FK="44"
+				QUANTITY_FK="311"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -1334,7 +1374,46 @@
 				LAST_UPDATED_BY="user2"
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
-			/>					  			
+			/>					  		
+			
+				<TBL_QUANTITIES
+				  	ID="311"
+  					UUID="Quantity-311"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+			  
+	<!-- ************************************************************************************ -->
+	<!--                                 QUANTITIES UNITS		                              -->
+	<!-- ************************************************************************************ -->
+	<LIS_QUANTITIES_UNITS
+		ID="1"
+ 		UUID="1"
+  		SYMBOL="km"
+  		VERSION="1"
+  		TEXT_FK="33"
+  		SYMBOL_POSITION="END"
+	/>
+	<LIS_QUANTITIES_UNITS
+		ID="2"
+ 		UUID="2"
+  		SYMBOL="[null]"
+  		VERSION="1"
+  		TEXT_FK="34"
+  		SYMBOL_POSITION="START"
+	/>
+  		  
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -2320,6 +2399,24 @@
 		UUID="IS-41-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="41"
-	/>													
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="42"
+		UUID="IS-42"
+		VERSION="1"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="43"
+		UUID="IS-43"
+		VERSION="1"
+	/>
+	<TBL_INTERNATIONAL_STRINGS
+		ID="44"
+		UUID="IS-44"
+		VERSION="1"
+	/>
+														
 					
 </dataset>

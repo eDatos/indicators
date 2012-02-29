@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 
 /**
  * Asserts to tests
@@ -38,11 +39,32 @@ public class IndicatorsAsserts {
     public static void assertEqualsIndicator(IndicatorDto expected, IndicatorDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
+        assertEqualsInternationalString(expected.getSubjectTitle(), actual.getSubjectTitle());
         assertEqualsInternationalString(expected.getName(), actual.getName());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
-        assertEquals(expected.getNoteUrl(), actual.getNoteUrl());
+        assertEquals(expected.getNotesUrl(), actual.getNotesUrl());
         assertEqualsInternationalString(expected.getNotes(), actual.getNotes());
         assertEqualsInternationalString(expected.getCommentary(), actual.getCommentary());
+        assertEqualsInternationalString(expected.getConceptDescription(), actual.getConceptDescription());
+        assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
+    }
+    
+    public static void assertEqualsQuantity(QuantityDto expected, QuantityDto actual) {
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getUnitUuid(), actual.getUnitUuid());
+        assertEquals(expected.getUnitMultiplier(), actual.getUnitMultiplier());
+        assertEquals(expected.getSignificantDigits(), actual.getSignificantDigits());
+        assertEquals(expected.getDecimalPlaces(), actual.getDecimalPlaces());
+        assertEquals(expected.getMinimum(), actual.getMinimum());
+        assertEquals(expected.getMaximum(), actual.getMaximum());
+        assertEquals(expected.getNumeratorIndicatorUuid(), actual.getNumeratorIndicatorUuid());
+        assertEquals(expected.getDenominatorIndicatorUuid(), actual.getDenominatorIndicatorUuid());
+        assertEquals(expected.getIsPercentage(), actual.getIsPercentage());
+        assertEqualsInternationalString(expected.getPercentageOf(), actual.getPercentageOf());
+        assertEquals(expected.getBaseValue(), actual.getBaseValue());
+        assertEquals(expected.getBaseTime(), actual.getBaseTime());
+        assertEquals(expected.getBaseLocation(), actual.getBaseLocation());
+        assertEquals(expected.getBaseQuantityIndicatorUuid(), actual.getBaseQuantityIndicatorUuid());
     }
     
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {

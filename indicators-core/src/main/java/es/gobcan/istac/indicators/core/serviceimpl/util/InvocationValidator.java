@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -560,6 +561,27 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveQuantityUnit(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkFindQuantityUnits(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // nothing 
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion.getIndicatorsSystem(), "INDICATORS_SYSTEM", exceptions);
@@ -583,7 +605,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         if (ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularityId()) && ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY"));
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY_GRANULARITY_ID", "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
         }
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
@@ -591,14 +613,67 @@ public class InvocationValidator {
         }
     }
 
-    // TODO revisar qué metadatos son requeridos
-    // TODO Quantity: cuáles son los metadatos obligatorios? Ojo! Depende del tipo de Quantity
-    // TODO Quantity es obligatorio
     private static void checkIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorVersion, "INDICATOR", exceptions);
         ValidationUtils.checkParameterRequired(indicatorVersion.getIndicator(), "INDICATOR", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), "INDICATOR.CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getName(), "INDICATOR.NAME", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), "INDICATOR.SUBJECT_CODE", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE", exceptions);
+        
+        // Quantity
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", exceptions);
+        if (!ValidationUtils.isEmpty(indicatorVersion.getQuantity())) {
+            checkQuantity(indicatorVersion.getQuantity(), exceptions);
+        }
+    }
+
+    private static void checkQuantity(Quantity quantity, List<MetamacExceptionItem> exceptions) {
+        
+        // checks required
+        ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), "INDICATOR.QUANTITY.TYPE", exceptions);
+        ValidationUtils.checkMetadataRequired(quantity.getUnit(), "INDICATOR.QUANTITY.UNIT_UUID", exceptions);
+        ValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), "INDICATOR.QUANTITY.UNIT_MULTIPLIER", exceptions);
+        if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataRequired(quantity.getIsPercentage(), "INDICATOR.QUANTITY.IS_PERCENTAGE", exceptions);
+        }
+        if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
+            if (ValidationUtils.isEmpty(quantity.getBaseValue()) && ValidationUtils.isEmpty(quantity.getBaseTime()) && ValidationUtils.isEmpty(quantity.getBaseLocation())) {
+                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR.QUANTITY.BASE_VALUE", "INDICATOR.QUANTITY.BASE_TIME", "INDICATOR.QUANTITY.BASE_LOCATION"));
+            }
+            // must be filled only one of followings
+            if (!ValidationUtils.isEmpty(quantity.getBaseValue())) {
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), "INDICATOR.QUANTITY.BASE_TIME", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+            } else if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+            }
+        }
+        if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataRequired(quantity.getBaseQuantity(), "INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", exceptions);
+        }
+        
+        // Quantity: checks unexpected
+        if (!IndicatorUtils.isMagnituteOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataEmpty(quantity.getMinimum(), "INDICATOR.QUANTITY.MINIMUM", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getMaximum(), "INDICATOR.QUANTITY.MAXIMUM", exceptions);
+        }
+        if (!IndicatorUtils.isFractionOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataEmpty(quantity.getNumerator(), "INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getDenominator(), "INDICATOR.QUANTITY.DENOMINATOR_INDICATOR_UUID", exceptions);
+        }
+        if (!IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataEmpty(quantity.getIsPercentage(), "INDICATOR.QUANTITY.IS_PERCENTAGE", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getPercentageOf(), "INDICATOR.QUANTITY.PERCENTAGE_OF", exceptions);
+        }
+        if (!IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseValue(), "INDICATOR.QUANTITY.BASE_VALUE", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), "INDICATOR.QUANTITY.BASE_TIME", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), "INDICATOR.QUANTITY.BASE_LOCATION", exceptions);
+        }
+        if (!IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseQuantity(), "INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", exceptions);
+        }
     }
 
     private static void checkDataSource(DataSource dataSource, List<MetamacExceptionItem> exceptions) {

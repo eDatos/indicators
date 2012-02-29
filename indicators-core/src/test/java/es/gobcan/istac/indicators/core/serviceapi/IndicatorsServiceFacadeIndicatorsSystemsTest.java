@@ -2785,8 +2785,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("INDICATOR_INSTANCE.INDICATOR_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TEMPORARY", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(2, e.getExceptionItems().get(2).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.TEMPORARY_GRANULARITY_ID", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.TEMPORARY_VALUE", e.getExceptionItems().get(2).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);

@@ -20,7 +20,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -28,12 +30,11 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators, data sources
- * 
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
+public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
@@ -72,12 +73,33 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
         assertEquals("1.000", indicatorDto.getDiffusionVersion());
         assertEquals("2.000", indicatorDto.getProductionVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
+        assertEquals("subjectCode1A", indicatorDto.getSubjectCode());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getSubjectTitle(), "es", "Área temática 1", "en", "Subject 1");
         assertEquals(IndicatorStateEnum.PUBLISHED, indicatorDto.getState());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getName(), "es", "Nombre Indicator-1-v1", "en", "Name Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getAcronym(), "es", "Acrónimo Indicator-1-v1", "en", "Acronym Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getCommentary(), "es", "Comentario Indicator-1-v1", "en", "Commentary Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getNotes(), "es", "Nota Indicator-1-v1", "en", "Note Indicator-1-v1");
-        assertEquals("http://indicators/1", indicatorDto.getNoteUrl());
+        assertEquals("http://indicators/1", indicatorDto.getNotesUrl());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getConceptDescription(), "es", "Concepto 1", "en", "Concept 1");
+
+        assertNotNull(indicatorDto.getQuantity());
+        assertEquals(QuantityTypeEnum.CHANGE_RATE, indicatorDto.getQuantity().getType());
+        assertEquals("1", indicatorDto.getQuantity().getUnitUuid());
+        assertEquals(Integer.valueOf(10), indicatorDto.getQuantity().getUnitMultiplier());
+        assertEquals(Integer.valueOf(2), indicatorDto.getQuantity().getSignificantDigits());
+        assertEquals(Integer.valueOf(3), indicatorDto.getQuantity().getDecimalPlaces());
+        assertEquals(Integer.valueOf(100), indicatorDto.getQuantity().getMinimum());
+        assertEquals(Integer.valueOf(200), indicatorDto.getQuantity().getMaximum());
+        assertEquals(INDICATOR_3, indicatorDto.getQuantity().getNumeratorIndicatorUuid());
+        assertEquals(INDICATOR_6, indicatorDto.getQuantity().getDenominatorIndicatorUuid());
+        assertEquals(Boolean.TRUE, indicatorDto.getQuantity().getIsPercentage());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getPercentageOf(), "es", "Porcentaje de 1", "en", "Percentage of 1");
+        assertNull(indicatorDto.getQuantity().getBaseValue());
+        assertNull(indicatorDto.getQuantity().getBaseTime());
+        assertNull(indicatorDto.getQuantity().getBaseLocation());
+        assertEquals(INDICATOR_3, indicatorDto.getQuantity().getBaseQuantityIndicatorUuid());
+
         IndicatorsAsserts.assertEqualsDate("2011-01-01 01:02:04", indicatorDto.getCreatedDate());
         IndicatorsAsserts.assertEqualsDate("2011-01-02 02:02:04", indicatorDto.getProductionValidationDate());
         IndicatorsAsserts.assertEqualsDate("2011-01-03 03:02:04", indicatorDto.getDiffusionValidationDate());
@@ -336,16 +358,22 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
-    public void testCreateIndicator() throws Exception {
+    public void testCreateIndicatorQuantity() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNoteUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
 
         // Create
         IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
@@ -379,47 +407,410 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
-    public void testCreateIndicatorCodeRequired() throws Exception {
-
-        IndicatorDto indicatorDto = new IndicatorDto();
-        indicatorDto.setCode(null);
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
-
-        try {
-            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
-            fail("code required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorNameRequired() throws Exception {
+    public void testCreateIndicatorMagnitude() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.MAGNITUDE);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        assertTrue(indicatorDto.getQuantity().isMagnituteOrExtension());
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+    }
+
+    @Test
+    public void testCreateIndicatorFraction() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        assertTrue(indicatorDto.getQuantity().isFractionOrExtension());
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+    }
+
+    @Test
+    public void testCreateIndicatorRatio() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.RATIO);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        assertTrue(indicatorDto.getQuantity().isRatioOrExtension());
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+    }
+
+    @Test
+    public void testCreateIndicatorIndex() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setBaseTime("2011");
+        assertTrue(indicatorDto.getQuantity().isIndexOrExtension());
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+    }
+
+    @Test
+    public void testCreateIndicatorChangeRate() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_10);
+        assertTrue(indicatorDto.getQuantity().isChangeRateOrExtension());
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+    }
+
+    @Test
+    public void testCreateIndicatorParametersRequired() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(null);
         indicatorDto.setName(null);
+        indicatorDto.setSubjectCode(null);
+        indicatorDto.setSubjectTitle(null);
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setUnitMultiplier(null);
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
-            fail("name required");
+            fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(7, e.getExceptionItems().size());
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.NAME", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.NAME", e.getExceptionItems().get(1).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
+            assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
+            assertEquals("INDICATOR.SUBJECT_CODE", e.getExceptionItems().get(2).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
+            assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
+            assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(3).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(4).getCode());
+            assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.TYPE", e.getExceptionItems().get(4).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(5).getCode());
+            assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(5).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(6).getCode());
+            assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.UNIT_MULTIPLIER", e.getExceptionItems().get(6).getMessageParameters()[0]);
+
         }
     }
 
     @Test
-    public void testCreateIndicatorCodeDuplicated() throws Exception {
+    public void testCreateIndicatorChangeRateErrorMetadataRequired() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+
+        // Create
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("parameters required");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorQuantityErrorBaseUnexpected() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
+        indicatorDto.getQuantity().setBaseTime("2011");
+        indicatorDto.getQuantity().setBaseLocation("Spain");
+
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("base location unexpected");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorErrorMetadataUnexpected() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
+        indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
+        indicatorDto.getQuantity().setBaseTime("2011");
+        indicatorDto.getQuantity().setBaseLocation("Spain");
+        indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_5);
+
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("metadatas unexpected");
+        } catch (MetamacException e) {
+            assertEquals(10, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.MINIMUM", e.getExceptionItems().get(0).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.MAXIMUM", e.getExceptionItems().get(1).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(2).getCode());
+            assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", e.getExceptionItems().get(2).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(3).getCode());
+            assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(3).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(4).getCode());
+            assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(4).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(5).getCode());
+            assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.PERCENTAGE_OF", e.getExceptionItems().get(5).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(6).getCode());
+            assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_VALUE", e.getExceptionItems().get(6).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(7).getCode());
+            assertEquals(1, e.getExceptionItems().get(7).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(7).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(8).getCode());
+            assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION", e.getExceptionItems().get(8).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(9).getCode());
+            assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(9).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCreateIndicatorErrorUnitNotExists() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(NOT_EXISTS);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("unit not exits");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorDto.getQuantity().getUnitUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorErrorCodeDuplicated() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
@@ -433,11 +824,17 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
-    public void testCreateIndicatorCodeDuplicatedInsensitive() throws Exception {
+    public void testCreateIndicatorCodeErrorDuplicatedInsensitive() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid("1");
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
@@ -606,7 +1003,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
 
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNoteUrl("aa");
+        indicatorDto.setNotesUrl("aa");
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -647,6 +1044,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
         assertEquals(IndicatorStateEnum.PRODUCTION_VALIDATION, indicatorDto.getState());
 
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -667,6 +1065,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
         assertEquals(IndicatorStateEnum.DIFFUSION_VALIDATION, indicatorDto.getState());
 
         indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -719,7 +1118,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
         String versionNumber = INDICATOR_3_VERSION;
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
         try {
             indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
             fail("Indicator not in production");
@@ -1307,6 +1706,32 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
     }
 
     @Test
+    public void testPublishIndicatorErrorNumeratorNotPublished() throws Exception {
+
+        String uuid = INDICATOR_5;
+
+        // Change indicator to fraction with numerator in draft
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
+        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+
+        // Publish
+        try {
+            indicatorsServiceFacade.publishIndicator(getServiceContext(), uuid);
+            fail("Numerator non published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorDto.getQuantity().getNumeratorIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
+
+    @Test
     public void testArchiveIndicator() throws Exception {
 
         String uuid = INDICATOR_3;
@@ -1881,11 +2306,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest  {
             fail("Query GPE and px changed");
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-            
+
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
             assertEquals("DATA_SOURCE.PX", e.getExceptionItems().get(1).getMessageParameters()[0]);

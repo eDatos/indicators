@@ -36,4 +36,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                   = create("exception.indicators.data_source.not_found");
+
+    // Quantity units
+    public static final CommonServiceExceptionType QUANTITY_UNIT_NOT_FOUND                                 = create("exception.indicators.quantity_unit.not_found");
+
 }
