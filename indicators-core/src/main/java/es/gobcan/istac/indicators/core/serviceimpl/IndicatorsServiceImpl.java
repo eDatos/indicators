@@ -13,12 +13,12 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
-import es.gobcan.istac.indicators.core.serviceimpl.util.IndicatorUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
@@ -163,8 +163,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation
         InvocationValidator.checkUpdateIndicator(indicatorVersion, null);
 
-        // Check indicators system state
+        // Validate indicators system state and linked indicators
         checkIndicatorVersionInProduction(indicatorVersion);
+        checkIndicatorsLinked(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, "INDICATOR.QUANTITY");
 
         // Update
         getIndicatorVersionRepository().save(indicatorVersion);
@@ -403,15 +404,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorNewVersion;
     }
 
-    // TODO baseQuantity. Si es de tipo ChangeRate siempre se asocia al propio indicador (tanto para var. anual como interperiódica)
     @Override
     public DataSource createDataSource(ServiceContext ctx, String indicatorUuid, DataSource dataSource) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkCreateDataSource(indicatorUuid, dataSource, null);
 
-        // Retrieve indicator version and check it is in production
+        // Validate indicators system state and linked indicators
         IndicatorVersion indicatorVersion = retrieveIndicatorStateInProduction(ctx, indicatorUuid, true);
+        checkIndicatorsLinked(dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_RATE.QUANTITY");
+        checkIndicatorsLinked(dataSource.getInterperiodRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_RATE.QUANTITY");
 
         // Create dataSource
         dataSource.setIndicatorVersion(indicatorVersion);
@@ -444,8 +446,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkUpdateDataSource(dataSource, null);
 
-        // Check indicator state
+        // Check indicator state and linked indicators
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
+        checkIndicatorsLinked(dataSource.getAnnualRate().getQuantity(), dataSource.getIndicatorVersion().getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_RATE.QUANTITY");
+        checkIndicatorsLinked(dataSource.getInterperiodRate().getQuantity(), dataSource.getIndicatorVersion().getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_RATE.QUANTITY");
 
         // Update
         return getDataSourceRepository().save(dataSource);
@@ -572,18 +576,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         checkIndicatorToSendToDiffusionValidation(ctx, indicatorVersion);
 
-        if (IndicatorUtils.isFractionOrExtension(indicatorVersion.getQuantity().getQuantityType())) {
-            if (indicatorVersion.getQuantity().getNumerator() != null) {
-                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getNumerator());
-            }
-            if (indicatorVersion.getQuantity().getDenominator() != null) {
-                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getDenominator());
-            }
+        if (indicatorVersion.getQuantity().getNumerator() != null) {
+            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getNumerator());
         }
-        if (IndicatorUtils.isChangeRateOrExtension(indicatorVersion.getQuantity().getQuantityType())) {
-            if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
-                checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getBaseQuantity());
-            }
+        if (indicatorVersion.getQuantity().getDenominator() != null) {
+            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getDenominator());
+        }
+        if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
+            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getBaseQuantity());
         }
     }
 
@@ -628,5 +628,29 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
     private List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
+    }
+
+    /**
+     * Numerator and denominator never must be own indicator.
+     * Base quantity never must be own indicator, except when it is a quantity of a datasource and it is change rate. In this case it always must be own indicator
+     */
+    private void checkIndicatorsLinked(Quantity quantity, String indicatorUuid, Boolean isDataSource, String parameterName) throws MetamacException {
+        if (quantity.getNumerator() != null && quantity.getNumerator().getUuid().equals(indicatorUuid)) {
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".NUMERATOR_INDICATOR_UUID");
+        }
+        if (quantity.getDenominator() != null && quantity.getDenominator().getUuid().equals(indicatorUuid)) {
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".DENOMINATOR_INDICATOR_UUID");
+        }
+        if (quantity.getBaseQuantity() != null) {
+            if (isDataSource) {
+                if (!quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
+                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_QUANTITY_INDICATOR_UUID");
+                }
+            } else {
+                if (quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
+                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_QUANTITY_INDICATOR_UUID");
+                }
+            }
+        }
     }
 }

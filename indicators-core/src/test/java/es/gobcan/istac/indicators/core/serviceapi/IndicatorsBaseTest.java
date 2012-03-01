@@ -10,13 +10,13 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
     @Override
     public void setUpDatabaseTester() throws Exception {
-        removeCyclicDependences(getConnection().getConnection());
+        removeCyclicDependences();
         super.setUpDatabaseTester();
     }
     
     @Override
     public void tearDownDatabaseTester() throws Exception {
-        removeCyclicDependences(getConnection().getConnection());
+        removeCyclicDependences();
         super.tearDownDatabaseTester();
     }
     
@@ -60,7 +60,8 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         return sequences;
     }
     
-    private void removeCyclicDependences(Connection connection) throws Exception {
+    private void removeCyclicDependences() throws Exception {
+        Connection connection = getConnection().getConnection();
         connection.prepareStatement("UPDATE TBL_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
     }
 }

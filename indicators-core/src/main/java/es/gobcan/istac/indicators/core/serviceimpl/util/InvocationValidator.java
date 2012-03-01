@@ -717,9 +717,11 @@ public class InvocationValidator {
             }
             checkQuantity(rateDerivation.getQuantity(), parameterName + ".QUANTITY", exceptions);
             if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType())) {
-                ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getDecimalPlaces(), parameterName + ".QUANTITY.DECIMAL_PLACES", exceptions);            
+                ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getDecimalPlaces(), parameterName + ".QUANTITY.DECIMAL_PLACES", exceptions);
+                if (QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
+                    ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getBaseQuantity(), parameterName + ".QUANTITY.BASE_QUANTITY", exceptions);
+                }
             }
-            // TODO baseQuantity ha de ser el propio indicador
         }
     }
 }

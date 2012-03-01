@@ -1269,6 +1269,28 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateIndicatorsErrorOwnIndicatorLinked() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
+        indicatorDto.getQuantity().setNumeratorIndicatorUuid(uuid);
+
+        // Update
+        try {
+            indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+            fail("Indicator linked");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testSendIndicatorToProductionValidation() throws Exception {
 
         String uuid = INDICATOR_1;
@@ -2219,6 +2241,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
         dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
         dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
         
@@ -2338,7 +2361,105 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testCreateDataSourceErrorBaseQuantityIsNotOwnIndicator() throws Exception {
 
+        String indicatorUuid = INDICATOR_1;
+        String indicatorUuidLinked = INDICATOR_3;
+
+        // Create dataSource
+        DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryGpe("queryGpe1");
+        dataSourceDto.setPx("px1");
+        dataSourceDto.setTemporaryVariable("temporaryVariable1");
+        dataSourceDto.setGeographicVariable("geographicVariable1");
+        DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
+        dataSourceVariableDto1.setVariable("variable1");
+        dataSourceVariableDto1.setCategory("category1");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto1);
+        DataSourceVariableDto dataSourceVariableDto2 = new DataSourceVariableDto();
+        dataSourceVariableDto2.setVariable("variable2");
+        dataSourceVariableDto2.setCategory("category2");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto2);
+        dataSourceDto.setInterperiodRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getInterperiodRate().setMethod("Method1");
+        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+        dataSourceDto.setAnnualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualRate().setMethod("Method2");
+        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuidLinked);
+        
+        try {
+            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
+            fail("Base quantity is not own indicator");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateDataSourceErrorDenominatorMustNotBeOwnIndicator() throws Exception {
+
+        String indicatorUuid = INDICATOR_1;
+        
+        // Create dataSource
+        DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryGpe("queryGpe1");
+        dataSourceDto.setPx("px1");
+        dataSourceDto.setTemporaryVariable("temporaryVariable1");
+        dataSourceDto.setGeographicVariable("geographicVariable1");
+        DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
+        dataSourceVariableDto1.setVariable("variable1");
+        dataSourceVariableDto1.setCategory("category1");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto1);
+        DataSourceVariableDto dataSourceVariableDto2 = new DataSourceVariableDto();
+        dataSourceVariableDto2.setVariable("variable2");
+        dataSourceVariableDto2.setCategory("category2");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto2);
+        dataSourceDto.setInterperiodRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getInterperiodRate().setMethod("Method1");
+        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+        dataSourceDto.setAnnualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualRate().setMethod("Method2");
+        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
+        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
+        
+        try {
+            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
+            fail("Denominator must not be own indicator");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
     @Test
     public void testDeleteDataSource() throws Exception {
 
