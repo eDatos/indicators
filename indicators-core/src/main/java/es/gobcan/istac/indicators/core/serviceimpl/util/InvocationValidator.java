@@ -610,6 +610,12 @@ public class InvocationValidator {
         if (ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularityId()) && ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY_GRANULARITY_ID", "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
         }
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        }
+        if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHIC_VALUE"));
+        }
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.ORDER_IN_LEVEL"));
