@@ -578,6 +578,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Check linked indicators
         // TODO hacer con consulta sql?? rendimiento!?! vale la pena implementar la consulta cuando va a haber pocos datasources por indicador?
         //      ver 'checkQuantityIndicatorsPublished'.
+        //      OJO!! Se podría añadir una columna para facilitar la consulta, con un isPublished si alguna versión está en estado PUBLISHED
         checkQuantityIndicatorsPublished(ctx, indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid());
         for (DataSource dataSource : indicatorVersion.getDataSources()) {
             checkQuantityIndicatorsPublished(ctx, dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
