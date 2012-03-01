@@ -315,7 +315,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
     }
 
-    // TODO comprobar que todos los indicadores tienen alguna versión PUBLISHED
+    // TODO comprobar que todos los indicadores tienen alguna versión PUBLISHED. En código o por consulta sql? Dependiendo de esto, cambiar también la comprobación de la publicación de indicadores (ver checkIndicatorToPublish)
     @Override
     public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
