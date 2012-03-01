@@ -48,4 +48,17 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
         List<Indicator> result = criteria.list();
         return result;
     }
+    
+//    @Override
+//    public Indicator findOneIndicatorNotPublished(List<String> indicatorsUuid) {
+//        Map<String, Object> parameters = new HashMap<String, Object>();
+//        parameters.put("uuid", indicatorsUuid);
+//
+//        // terminar! si se hace la consulta de indicadores no publicados por query en lugar de por código
+//        List<Indicator> result = findByQuery("from Indicator i join i.versions iv where i.uuid in (:uuids) and iv. (i.diffusionVersion is null or )", parameters, 1);
+//        if (result != null && !result.isEmpty()) {
+//            return result.get(0);
+//        }
+//        return null;
+//    }
 }

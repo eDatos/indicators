@@ -576,7 +576,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorToSendToDiffusionValidation(ctx, indicatorVersion);
 
         // Check linked indicators
-        // TODO hacer con consulta sql?? rendimiento!!
+        // TODO hacer con consulta sql?? rendimiento!?! vale la pena implementar la consulta cuando va a haber pocos datasources por indicador?
+        //      ver 'checkQuantityIndicatorsPublished'.
         checkQuantityIndicatorsPublished(ctx, indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid());
         for (DataSource dataSource : indicatorVersion.getDataSources()) {
             checkQuantityIndicatorsPublished(ctx, dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
@@ -595,6 +596,38 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             checkIndicatorPublished(ctx, quantity.getBaseQuantity());
         }
     }
+    
+
+    // TODO pendiente de si esta comprobación se hará por código o consulta sql
+//    private void checkQuantityIndicatorsPublished(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+//
+//        Set<String> indicatorsUuidLinked = null;
+//        
+//        // Quantities of datasources
+//        indicatorsUuidLinked = getDataSourceRepository().findIndicatorsLinkedWithDatasourcesOfAnIndicatorVersion(indicatorVersion.getId());
+//        
+//        // Quantity of indicator
+//        if (indicatorVersion.getQuantity().getNumerator() != null) {
+//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getNumerator().getUuid());
+//        }
+//        if (indicatorVersion.getQuantity().getDenominator() != null) {
+//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getDenominator().getUuid());
+//        }
+//        if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
+//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getBaseQuantity().getUuid());
+//        }
+//        
+//        // Remove possible own indicator, because this can be as base quantity
+//        indicatorsUuidLinked.remove(indicatorVersion.getIndicator().getUuid());
+//        
+//        // Checks published
+//        if (indicatorsUuidLinked.size() != 0) {
+//            IndicatorVersion indicatorVersionLinked = getIndicatorVersionRepository().findOneIndicatorVersionNotPublished(indicatorsUuidLinked.toArray().);
+//            if (indicatorVersionLinked != null) {
+//                throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicatorVersionLinked.getIndicator().getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
+//            }
+//        }
+//    }
     
     /**
      * Makes validations to archive

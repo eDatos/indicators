@@ -27,4 +27,30 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
             return result.get(0);
         }
     }
+
+//    @Override
+//    public Set<String> findIndicatorsLinkedWithDatasourcesOfAnIndicatorVersion(Long indicatorVersionId) {
+//        
+//        Set<String> indicatorsUuidLinked = new HashSet<String>();
+//        
+//        // Important! Queries must be executed separated (we can execute an unique query with numerator, denominator... at time)
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
+//        
+//        return indicatorsUuidLinked;
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    private void findIndicatorsLinkedInColumn(Long indicatorVersionId, String querySql, Set<String> indicatorsUuidLinked) {
+//        Query query = getEntityManager().createQuery(querySql);
+//        query.setParameter("id", indicatorVersionId);
+//        List<String> result = query.getResultList();
+//        for (String indicatorUuidLinked : result) {
+//            indicatorsUuidLinked.add(indicatorUuidLinked);
+//        }
+//    }
 }

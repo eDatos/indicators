@@ -33,28 +33,28 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             return result.get(0);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorVersion> findIndicatorsVersions(IndicatorStateEnum state) {
-        
+
         // Criteria
-        org.hibernate.Session session = (org.hibernate.Session)getEntityManager().getDelegate();
+        org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         Criteria criteria = session.createCriteria(IndicatorVersion.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         if (state != null) {
             criteria.add(Restrictions.eq("state", state));
         }
         criteria.addOrder(Order.asc("id"));
-        
+
         // Find
         List<IndicatorVersion> result = criteria.list();
-        return result;        
+        return result;
     }
 
     @Override
     public IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid) {
-        
+
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", indicatorUuid);
 
