@@ -568,25 +568,34 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     /**
      * Makes validations to publish
      * 1) Validations when send to diffusion validation
-     * 2) If is a fraction or extension, checks numerator and denominator are published
-     * 3) If is a change rate or extension, checks base quantity is published
-     * TODO comprobar que todos los indicadores de los quantities de los datasources están publicados
+     * 2) Checks numerator and denominator are published (for indicator and all datasources)
+     * 3) Checks base quantity is published (if it is not own indicator) (for indicator and all datasources)
      */
     private void checkIndicatorToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
         checkIndicatorToSendToDiffusionValidation(ctx, indicatorVersion);
 
-        if (indicatorVersion.getQuantity().getNumerator() != null) {
-            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getNumerator());
-        }
-        if (indicatorVersion.getQuantity().getDenominator() != null) {
-            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getDenominator());
-        }
-        if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
-            checkIndicatorPublished(ctx, indicatorVersion.getQuantity().getBaseQuantity());
+        // Check linked indicators
+        // TODO hacer con consulta sql?? rendimiento!!
+        checkQuantityIndicatorsPublished(ctx, indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid());
+        for (DataSource dataSource : indicatorVersion.getDataSources()) {
+            checkQuantityIndicatorsPublished(ctx, dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
+            checkQuantityIndicatorsPublished(ctx, dataSource.getInterperiodRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
         }
     }
 
+    private void checkQuantityIndicatorsPublished(ServiceContext ctx, Quantity quantity, String indicatorUuid) throws MetamacException {
+        if (quantity.getNumerator() != null) {
+            checkIndicatorPublished(ctx, quantity.getNumerator());
+        }
+        if (quantity.getDenominator() != null) {
+            checkIndicatorPublished(ctx, quantity.getDenominator());
+        }
+        if (quantity.getBaseQuantity() != null && !quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
+            checkIndicatorPublished(ctx, quantity.getBaseQuantity());
+        }
+    }
+    
     /**
      * Makes validations to archive
      * 1) Validations when publish
