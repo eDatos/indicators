@@ -21,6 +21,11 @@ public interface IndicatorsServiceWrapper {
     /**
      * Retrieves an indicator. If versionNumber is not provided, retrieves last version
      */
+    public IndicatorDto retrieveIndicator(ServiceContext ctx, String code) throws MetamacException;
+    
+    /**
+     * Retrieves an indicator. If versionNumber is not provided, retrieves last version
+     */
     public IndicatorDto retrieveIndicatorByCode(ServiceContext ctx, String code) throws MetamacException;
 
     /**
@@ -71,8 +76,7 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates the location of dimension
      */
-    //TODO: Systemuuid no es necesario, una vez se quite el mock
-    public abstract void updateDimensionLocation(ServiceContext ctx, String uuid, String systemUuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public abstract void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes dimension
@@ -92,8 +96,7 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates the location of indicator instance
      */
-    //TODO: boorar systemuuid cuando se pase al definitivo
-    public abstract void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String systemUuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public abstract void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes indicator instance

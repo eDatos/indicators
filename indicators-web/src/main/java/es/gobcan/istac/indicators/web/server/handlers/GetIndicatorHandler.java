@@ -28,8 +28,8 @@ public class GetIndicatorHandler extends AbstractActionHandler<GetIndicatorActio
     @Override
     public GetIndicatorResult execute(GetIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            String code = action.getCode();
-            return new GetIndicatorResult(service.retrieveIndicatorByCode(ServiceContextHelper.getServiceContext(),code));
+            String uuid = action.getUuid();
+            return new GetIndicatorResult(service.retrieveIndicator(ServiceContextHelper.getServiceContext(),uuid));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

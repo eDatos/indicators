@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client.system.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -16,6 +18,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
@@ -91,6 +94,16 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	@Override
 	public void setIndicatorsSystemStructure(IndicatorsSystemDto indicatosSystem, IndicatorsSystemStructureDto structure) {
 		structurePanel.setIndicatorSystemStructure(indicatosSystem, structure);
+	}
+	
+	@Override
+	public void setIndicatorFromIndicatorInstance(IndicatorDto indicator) {
+	    structurePanel.setIndicatorFromIndicatorInstance(indicator);
+	}
+	
+	@Override
+	public void setIndicators(List<IndicatorDto> indicators) {
+	    structurePanel.setIndicators(indicators);
 	}
 	
 	@Override

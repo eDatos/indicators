@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.web.shared;
 
-import java.util.List;
-
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 
@@ -20,6 +18,6 @@ public class MoveSystemStructureContent {
 	Long targetOrderInLevel;
 	
 	@In(4)
-	List<ElementLevelDto> levels;
+	ElementLevelDto level;
 	
 }

@@ -21,8 +21,8 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
@@ -59,21 +59,20 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	@Override
 	protected void onReset() {
 		super.onReset();
-		retrieveIndicator();
+		retrieveIndicatorByCode();
 	}
 	
-	private void retrieveIndicator() {
-		dispatcher.execute(new GetIndicatorAction(this.indicatorCode), new AsyncCallback<GetIndicatorResult>() {
+	private void retrieveIndicatorByCode() {
+		dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode), new AsyncCallback<GetIndicatorByCodeResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorRetrieve());
 			}
 
 			@Override
-			public void onSuccess(GetIndicatorResult result) {
+			public void onSuccess(GetIndicatorByCodeResult result) {
 				getView().setIndicator(result.getIndicator());
 			}
-			
 		});
 	}
 	
@@ -87,7 +86,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	        
 	        @Override
 	        public void onSuccess(UpdateIndicatorResult result) {
-	            retrieveIndicator();
+	            retrieveIndicatorByCode();
 	        }
 	    });
 	}
@@ -101,7 +100,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	       
 	       @Override
 	        public void onSuccess(UpdateIndicatorResult result) {
-	           retrieveIndicator();
+	           retrieveIndicatorByCode();
 	        }
 	    });
 	}

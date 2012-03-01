@@ -32,10 +32,12 @@ public class IndicatorGeneralPanel extends VLayout {
 	/* View Form */
 	private GroupDynamicForm generalForm; 
 	private GroupDynamicForm identifiersForm;
+	private GroupDynamicForm statusForm; 
 	
 	/* Edit Form*/
 	private GroupDynamicForm identifiersEditionForm;
 	private GroupDynamicForm generalEditionForm;
+	private GroupDynamicForm statusEditionForm; 
 	
 	
 	public IndicatorGeneralPanel() {
@@ -80,6 +82,9 @@ public class IndicatorGeneralPanel extends VLayout {
 	    ViewTextItem staticCode = new ViewTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
 	    ViewTextItem staticUuid = new ViewTextItem(IndicatorsDS.FIELD_UUID, getConstants().indicDetailUuid());
 	    ViewTextItem staticVersion = new ViewTextItem(IndicatorsDS.FIELD_VERSION, getConstants().indicDetailVersion());
+	    
+	    ViewTextItem staticState = new ViewTextItem(IndicatorsDS.FIELD_STATE, getConstants().indicDetailState());
+	    ViewTextItem staticCreatedDate = new ViewTextItem(IndicatorsDS.FIELD_CREATED_DATE, getConstants().indicDetailCreatedDate());
 		
 		// Identifiers Form
 		identifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
@@ -91,9 +96,9 @@ public class IndicatorGeneralPanel extends VLayout {
 		generalForm.setFields(staticInternationalName);
 
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
+		statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
 //		statusForm.setRedrawOnResize(true);
-//		statusForm.setFields(staticFinalItem, staticStartDateItem, staticEndDateItem);
+		statusForm.setFields(staticState, staticCreatedDate);
 		
 		mainFormLayout.addViewCanvas(identifiersForm);
 		mainFormLayout.addViewCanvas(generalForm);
@@ -105,6 +110,8 @@ public class IndicatorGeneralPanel extends VLayout {
 	    ViewTextItem staticCode = new ViewTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
 	    ViewTextItem staticUuid = new ViewTextItem(IndicatorsDS.FIELD_UUID, getConstants().indicDetailUuid());
 	    ViewTextItem staticVersion = new ViewTextItem(IndicatorsDS.FIELD_VERSION, getConstants().indicDetailVersion());
+	    ViewTextItem staticState = new ViewTextItem(IndicatorsDS.FIELD_STATE, getConstants().indicDetailState());
+        ViewTextItem staticCreatedDate = new ViewTextItem(IndicatorsDS.FIELD_CREATED_DATE, getConstants().indicDetailCreatedDate());
 		
 		// Identifiers Form
 		identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
@@ -112,17 +119,18 @@ public class IndicatorGeneralPanel extends VLayout {
 		
 		
 		MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicDetailName());
+		internationalName.setRequired(true);
 		// General Form
 		generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
 		generalEditionForm.setFields(internationalName);
 				
 		// Status Form
-		GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
-		//statusForm.setFields(staticFinalItemEdit, staticStartDateItemEdit, staticEndDateItemEdit);
+		statusEditionForm = new GroupDynamicForm(getConstants().indicDetailStatus());
+		statusEditionForm.setFields(staticState,staticCreatedDate);
 		
 		mainFormLayout.addEditionCanvas(identifiersEditionForm);
 		mainFormLayout.addEditionCanvas(generalEditionForm);
-		mainFormLayout.addEditionCanvas(statusForm);
+		mainFormLayout.addEditionCanvas(statusEditionForm);
 	}
 	
 	public void setIndicator(IndicatorDto indicator) {
@@ -138,12 +146,15 @@ public class IndicatorGeneralPanel extends VLayout {
 	}
 	
 	private void setIndicatorViewMode(IndicatorDto indicator) {
-		/*Actualizamos campos con solo informacion estatica */
+		/*Updating static fields only*/
 	    identifiersForm.setValue(IndicatorsDS.FIELD_CODE, indicator.getCode());
 	    identifiersForm.setValue(IndicatorsDS.FIELD_UUID, indicator.getUuid());
 	    identifiersForm.setValue(IndicatorsDS.FIELD_VERSION, indicator.getVersionNumber());
 	    
 	    generalForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
+	    //TODO: SHow localized string for Enums
+	    statusForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getState().getName());
+	    statusForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
 	}
 	
 	
@@ -154,6 +165,9 @@ public class IndicatorGeneralPanel extends VLayout {
 		identifiersEditionForm.setValue(IndicatorsDS.FIELD_VERSION, indicator.getVersionNumber());
 		
 	    generalEditionForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
+	    
+	    statusEditionForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getState().getName());
+	    statusEditionForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
 	}
 	
     private void saveIndicator() {

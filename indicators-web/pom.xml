@@ -90,6 +90,24 @@
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
 		</dependency>
+		
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
 		<!-- METAMAC -->
 		<dependency>
@@ -103,12 +121,7 @@
 			<artifactId>indicators-core</artifactId>
 			<classifier>client</classifier>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -141,8 +154,10 @@
 					<inplace>true</inplace>
 					<i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
 					<i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
+					<i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
 					<compileSourcesArtifacts>
 						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
+						<artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
 						<artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
 					</compileSourcesArtifacts>
 				</configuration>
@@ -178,6 +193,7 @@
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.0.5</version>
 				<executions>
 					<execution>
 						<id>process</id>

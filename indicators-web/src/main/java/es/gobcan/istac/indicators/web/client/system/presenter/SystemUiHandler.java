@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
-import java.util.List;
-
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -19,9 +17,12 @@ public interface SystemUiHandler extends UiHandlers {
 	void updateIndicatorInstance(IndicatorInstanceDto instance);
 	void deleteIndicatorInstance(IndicatorInstanceDto instance);
 	
-	void moveSystemStructureNodes(String systemUuid, String targetUuid, List<ElementLevelDto> levels, Long newOrder);
+	void moveSystemStructureNodes(String systemUuid, String targetUuid, ElementLevelDto level, Long newOrder);
 	
 	void retrieveIndSystem(String indSystemCode);
 	void retrieveSystemStructure();
+	
+	void retrieveIndicators();
+	void retrieveIndicatorFromIndicatorInstance(String uuid);
 	
 }

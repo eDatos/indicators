@@ -10,6 +10,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class IndicatorInstanceDS extends DataSource {
     public static String FIELD_UUID = "uuid-indinst";
     public static String FIELD_INTERNATIONAL_TITLE = "titleint-indinst";
+    public static String FIELD_INDICATOR_UUID = "ind_uuid-indinst";
     
     public IndicatorInstanceDS() {
         DataSourceIntegerField uuid = new DataSourceIntegerField(FIELD_UUID, getConstants().systemStrucIndInstanceUuid());

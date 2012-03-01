@@ -11,7 +11,9 @@ public class IndicatorsDS extends DataSource {
     public static String FIELD_UUID = "uuid-ind";
     public static String FIELD_CODE = "code-ind";
     public static String FIELD_VERSION = "version-ind";
+    public static String FIELD_STATE = "state-ind";
     public static String FIELD_INTERNATIONAL_NAME= "nameint-ind";
+    public static String FIELD_CREATED_DATE = "created_date-ind";
     
     public IndicatorsDS() {
         DataSourceIntegerField uuid = new DataSourceIntegerField(FIELD_UUID, getConstants().indicDetailIdentifier());

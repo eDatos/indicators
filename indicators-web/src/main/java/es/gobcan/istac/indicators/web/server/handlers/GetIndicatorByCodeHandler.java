@@ -12,30 +12,30 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 
 @Component
-public class GetIndicatorsSystemListHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
-
+public class GetIndicatorByCodeHandler extends AbstractActionHandler<GetIndicatorByCodeAction, GetIndicatorByCodeResult>{
     @Autowired
     private IndicatorsServiceWrapper service;
-
-    public GetIndicatorsSystemListHandler() {
-        super(GetIndicatorsSystemListAction.class);
+    
+    public GetIndicatorByCodeHandler() {
+        super(GetIndicatorByCodeAction.class);
     }
 
     @Override
-    public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorByCodeResult execute(GetIndicatorByCodeAction action, ExecutionContext context) throws ActionException {
         try {
-            return new GetIndicatorsSystemListResult(service.findIndicatorsSystems(ServiceContextHelper.getServiceContext()));
+            String code = action.getCode();
+            return new GetIndicatorByCodeResult(service.retrieveIndicatorByCode(ServiceContextHelper.getServiceContext(),code));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetIndicatorsSystemListAction action, GetIndicatorsSystemListResult result, ExecutionContext context) throws ActionException {
-    }
+    public void undo(GetIndicatorByCodeAction action, GetIndicatorByCodeResult result, ExecutionContext context) throws ActionException {
 
+    }
 }

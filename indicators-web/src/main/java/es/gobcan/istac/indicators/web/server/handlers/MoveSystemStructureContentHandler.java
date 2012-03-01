@@ -1,7 +1,5 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -31,14 +29,12 @@ public class MoveSystemStructureContentHandler extends AbstractActionHandler<Mov
     @Override
     public MoveSystemStructureContentResult execute(MoveSystemStructureContentAction action, ExecutionContext context) throws ActionException {
         try {
-            List<ElementLevelDto> levels = action.getLevels();
+            ElementLevelDto level = action.getLevel();
             Long order = action.getTargetOrderInLevel();
-            for (ElementLevelDto level : levels) {
-                if (level.isDimension()) {
-                    service.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getSystemUuid() , action.getTargetDimensionUuid(), order++);
-                } else if (level.isIndicatorInstance()) {
-                    service.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getSystemUuid() , action.getTargetDimensionUuid(), order++);
-                }
+            if (level.isDimension()) {
+                service.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
+            } else if (level.isIndicatorInstance()) {
+                service.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(), order++);
             }
             return new MoveSystemStructureContentResult();
         } catch (MetamacException e) {

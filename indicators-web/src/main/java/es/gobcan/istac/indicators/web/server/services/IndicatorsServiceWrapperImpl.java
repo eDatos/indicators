@@ -42,6 +42,11 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     }
     
     @Override
+    public IndicatorDto retrieveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+        return indicatorsService.retrieveIndicator(ctx, uuid, null);
+    }
+    
+    @Override
     public IndicatorDto retrieveIndicatorByCode(ServiceContext ctx, String code) throws MetamacException {
         return indicatorsService.retrieveIndicatorByCode(ctx, code, null);
     }
@@ -72,7 +77,10 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     /**
      * Publishes indicator
      */
-    /*public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException;*/
+    /*public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+     *      //TODO: Remember fire event updatePublishedIndicatorsCache
+     * }
+     */
 
     /**
      * Archives indicator
@@ -229,9 +237,8 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     /* (non-Javadoc)
      * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateDimensionLocation(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, java.lang.String, java.lang.String, java.lang.Long)
      */
-    //TODO: Systemuuid no es necesario, una vez se quite el mock
     @Override
-    public void updateDimensionLocation(ServiceContext ctx, String uuid, String systemUuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
         indicatorsService.updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 
@@ -251,7 +258,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
             log.info("Operando sobre sistema sin persistir, se procede a persistir sistema: "+indicatorsSystemDto.getCode());
-            indicatorsService.updateIndicatorsSystem(ctx, indicatorsSystemDto);
+            indicatorsSystemDto = indicatorsService.createIndicatorsSystem(ctx, indicatorsSystemDto);
         }
         return indicatorsService.createIndicatorInstance(ctx,indicatorsSystemDto.getUuid(), indicatorInstanceDto);
     }
@@ -267,9 +274,8 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     /* (non-Javadoc)
      * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateIndicatorInstanceLocation(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, java.lang.String, java.lang.String, java.lang.Long)
      */
-    //TODO: boorar systemuuid cuando se pase al definitivo
     @Override
-    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String systemUuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
         indicatorsService.updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 

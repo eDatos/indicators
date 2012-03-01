@@ -24,6 +24,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
@@ -41,6 +42,10 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
@@ -67,6 +72,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	private String codeLastStructure;
 
 	public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
+	    void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
+	    void setIndicators(List<IndicatorDto> indicators);
 		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
 		void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure);
 		void onDimensionSaved(DimensionDto dimension);
@@ -156,6 +163,36 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	@Override
+	public void retrieveIndicators() {
+	    dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
+	        @Override
+	        public void onFailure(Throwable caught) {
+	            ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorCreate());
+	        }
+	        
+	        @Override
+	        public void onSuccess(GetIndicatorListResult result) {
+	            getView().setIndicators(result.getIndicatorList());
+	        }
+	    });
+	}
+	
+	@Override
+	public void retrieveIndicatorFromIndicatorInstance(String uuid) {
+	    dispatcher.execute(new GetIndicatorAction(uuid), new AsyncCallback<GetIndicatorResult>() {
+	        @Override
+	        public void onFailure(Throwable caught) {
+	            ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorCreate());
+	        }
+	        
+	        @Override
+	        public void onSuccess(GetIndicatorResult result) {
+	            getView().setIndicatorFromIndicatorInstance(result.getIndicator());
+	        }
+	    });
+	}
+	
+	@Override
 	public void createDimension(IndicatorsSystemDto system, DimensionDto dimension) {
 		dispatcher.execute(new CreateDimensionAction(system, dimension), new AsyncCallback<CreateDimensionResult>() {
 			@Override
@@ -240,8 +277,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	@Override
-	public void moveSystemStructureNodes(String systemUuid, String targetUuid, List<ElementLevelDto> levels, Long newOrder) {
-		dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, levels), new AsyncCallback<MoveSystemStructureContentResult>() {
+	public void moveSystemStructureNodes(String systemUuid, String targetUuid, ElementLevelDto level, Long newOrder) {
+		dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, level), new AsyncCallback<MoveSystemStructureContentResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				retrieveSystemStructureNoCache();
