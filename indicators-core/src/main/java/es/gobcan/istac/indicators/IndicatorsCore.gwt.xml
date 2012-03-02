@@ -6,5 +6,6 @@
   <!-- Specify the paths for translatable code -->
   <source path='core/dto/serviceapi'/>
   <source path='core/enume/domain'/>
+  <source path='core/util'/>
   
 </module>
