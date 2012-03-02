@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context debug="5" reloadable="false" >
+	
+			<Resource name="jdbc/IndicatorsDS"
+			auth="Container" type ="javax.sql.DataSource"
+			maxActive="100" maxIdle="30" maxWait="10000"
+			username="rcorrod_indicators"
+			password="rcorrod_indicators"
+			driverClassName="oracle.jdbc.driver.OracleDriver"
+			url="jdbc:oracle:thin:@192.168.1.114:1521:xe"/>
+</Context>

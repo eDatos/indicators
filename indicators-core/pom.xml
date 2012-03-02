@@ -11,10 +11,12 @@
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
 
+	<groupId>es.gobcan.istac.indicators</groupId>
 	<artifactId>indicators-core</artifactId>
 	<packaging>jar</packaging>
 	<name>INDICATORS :: CORE</name>
-
+	<version>0.0.1-SNAPSHOT</version>
+	
 	<dependencies>
 
 		<!-- SPRING -->

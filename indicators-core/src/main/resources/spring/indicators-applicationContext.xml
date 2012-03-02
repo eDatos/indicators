@@ -6,13 +6,13 @@
   <context:annotation-config/>  
 
   <!-- scans for @Components, @Repositories, @Services, ... -->  
-  <context:component-scan base-package="es.gobcan.istac.indicators"> 
+  <context:component-scan base-package="es.gobcan.istac.indicators,org.siemac.metamac.core.common"> 
     <context:exclude-filter type="regex" expression=".*web.*"/> 
   </context:component-scan>  
 
   <!-- import additional spring configuration files -->  
   <import resource="classpath:/spring/include/indicators-entity-manager-factory.xml"/>  
-  <import resource="classpath:/spring/include/indicators/pub-sub.xml"/>  
+  <import resource="classpath:/spring/include/indicators-pub-sub.xml"/>  
   <import resource="classpath:/spring/include/indicators-interceptor.xml"/>  
   <import resource="classpath:/spring/include/indicators-beans.xml"/> 
 </beans>
