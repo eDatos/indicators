@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
@@ -36,6 +37,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
@@ -291,8 +294,26 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		        if (validated) {
 		        	indicator.setCode((String)identifiersEditionForm.getValue(IndicatorsDS.FIELD_CODE));
 		            indicator.setName((InternationalStringDto)generalEditionForm.getValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME));
+		            //TODO: Change this when new fields are added
+		            indicator.setSubjectCode("SUBJECT_CODE_CHANGE_ME");
+		            indicator.setSubjectTitle(createIntString("Subject titulo es"));
+		            QuantityDto quantity = new QuantityDto();
+		            quantity.setType(QuantityTypeEnum.QUANTITY);
+		            quantity.setUnitUuid("1");
+		            indicator.setQuantity(quantity);
 		            IndicatorListViewImpl.this.uiHandlers.createIndicator(indicator);
 		        }
+		    }
+		    
+ 		    //TODO: remove, just mocking
+		    private InternationalStringDto createIntString(String textEs) {
+		        InternationalStringDto intStr = new InternationalStringDto();
+		        LocalisedStringDto localisedString = new LocalisedStringDto();
+		        localisedString.setLocale("es");
+		        localisedString.setLabel(textEs);
+		        intStr.addText(localisedString);
+
+		        return intStr;
 		    }
 		}
 	}
