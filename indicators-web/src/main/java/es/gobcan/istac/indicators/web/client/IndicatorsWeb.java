@@ -4,7 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
 
-import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
 
 /**
