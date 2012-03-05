@@ -17,7 +17,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
@@ -52,7 +52,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
 
         // Save draft version
-        indicatorsSystemVersion.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
         indicatorsSystemVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
@@ -95,9 +95,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkRetrieveIndicatorsSystemPublished(uuid, null);
 
         // Retrieve published version
-        IndicatorsSystemVersion publishedIndicatorsSystemVersion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, false);
-        if (publishedIndicatorsSystemVersion == null || !IndicatorsSystemStateEnum.PUBLISHED.equals(publishedIndicatorsSystemVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+        IndicatorsSystemVersion publishedIndicatorsSystemVersion = retrieveIndicatorsSystemProcStatusInDiffusion(ctx, uuid, false);
+        if (publishedIndicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(publishedIndicatorsSystemVersion.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
         }
 
         return publishedIndicatorsSystemVersion;
@@ -141,11 +141,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Retrieve only published
         IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
         if (indicatorsSystem.getDiffusionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystem.getUuid(), new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
         }
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), indicatorsSystem.getDiffusionVersion().getVersionNumber());
-        if (!IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystem.getUuid(), new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+        if (!IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemVersion.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystem.getUuid(), new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
         }
 
         return indicatorsSystemVersion;
@@ -170,7 +170,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation
         InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
 
-        // Check indicators system state
+        // Check indicators system proc status
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
         
         // Update
@@ -184,7 +184,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkDeleteIndicatorsSystem(uuid, null);
 
         // Retrieve version in production
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, uuid, true);
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, true);
 
         // Delete whole indicators system or only last version
         if (IndicatorsConstants.VERSION_NUMBER_INITIAL.equals(indicatorsSystemVersion.getVersionNumber())) {
@@ -232,7 +232,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkFindIndicatorsSystemsPublished(null);
 
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(null, IndicatorsSystemStateEnum.PUBLISHED);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(null, IndicatorsSystemProcStatusEnum.PUBLISHED);
         
         // Transform
         List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
@@ -250,18 +250,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkSendIndicatorsSystemToProductionValidation(uuid, null);
 
         // Retrieve version in draft
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
         if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemStateEnum.DRAFT.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DRAFT,
-                    IndicatorsSystemStateEnum.VALIDATION_REJECTED});
+                || (!IndicatorsSystemProcStatusEnum.DRAFT.equals(indicatorsSystemInProduction.getProcStatus()) && !IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getProcStatus()))) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DRAFT,
+                    IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED});
         }
 
         // Validate to send to production
         checkIndicatorsSystemToSendToProductionValidation(ctx, indicatorsSystemInProduction);
 
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
+        // Update proc status
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
         indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
@@ -274,16 +274,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkSendIndicatorsSystemToDiffusionValidation(uuid, null);
 
         // Retrieve version in production validation
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PRODUCTION_VALIDATION});
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
+        if (indicatorsSystemInProduction == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION});
         }
 
         // Validate to send to diffusion
         checkIndicatorsSystemToSendToDiffusionValidation(ctx, indicatorsSystemInProduction);
 
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
+        // Update proc status
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
         indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
@@ -295,20 +295,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
 
-        // Retrieve version in production (state can be production or diffusion validation)
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
+        // Retrieve version in production (proc status can be production or diffusion validation)
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
         if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getState()) && !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION
-                        .equals(indicatorsSystemInProduction.getState()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PRODUCTION_VALIDATION,
-                    IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
+                || (!IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus()) && !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION
+                        .equals(indicatorsSystemInProduction.getProcStatus()))) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION,
+                    IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
         }
 
         // Validate to reject
         checkIndicatorsSystemToReject(ctx, indicatorsSystemInProduction);
 
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.VALIDATION_REJECTED);
+        // Update proc status
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED);
         indicatorsSystemInProduction.setProductionValidationDate(null);
         indicatorsSystemInProduction.setProductionValidationUser(null);
         indicatorsSystemInProduction.setDiffusionValidationDate(null);
@@ -323,16 +323,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkPublishIndicatorsSystem(uuid, null);
 
         // Retrieve version in diffusion validation
-        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemStateInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
+        if (indicatorsSystemInProduction == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
         }
 
         // Validate to publish
         checkIndicatorsSystemToPublish(ctx, indicatorsSystemInProduction);
 
-        // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED); 
+        // Update proc status
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PUBLISHED); 
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
@@ -360,20 +360,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         InvocationValidator.checkArchiveIndicatorsSystem(uuid, null);
 
         // Retrieve version published
-        IndicatorsSystemVersion indicatorsSystemInDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, false);
-        if (indicatorsSystemInDiffusion == null || !IndicatorsSystemStateEnum.PUBLISHED.equals(indicatorsSystemInDiffusion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED});
+        IndicatorsSystemVersion indicatorsSystemInDiffusion = retrieveIndicatorsSystemProcStatusInDiffusion(ctx, uuid, false);
+        if (indicatorsSystemInDiffusion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemInDiffusion.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
         }
 
         // Validate to archive
         checkIndicatorsSystemToArchive(ctx, indicatorsSystemInDiffusion);
 
-        // Update state
+        // Update proc status
         IndicatorsSystem indicatorsSystem = indicatorsSystemInDiffusion.getIndicatorsSystem();
         indicatorsSystem.setIsPublished(Boolean.FALSE);
         getIndicatorsSystemRepository().save(indicatorsSystem);
         
-        indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
+        indicatorsSystemInDiffusion.setProcStatus(IndicatorsSystemProcStatusEnum.ARCHIVED);
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInDiffusion);
@@ -387,14 +387,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() != null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, uuid, new IndicatorsSystemStateEnum[]{IndicatorsSystemStateEnum.PUBLISHED,
-                    IndicatorsSystemStateEnum.ARCHIVED});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED,
+                    IndicatorsSystemProcStatusEnum.ARCHIVED});
         }
 
         // Initialize new version, copying values of version in diffusion
-        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemStateInDiffusion(ctx, uuid, true);
+        IndicatorsSystemVersion indicatorsSystemVersionDiffusion = retrieveIndicatorsSystemProcStatusInDiffusion(ctx, uuid, true);
         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
-        indicatorsSystemNewVersion.setState(IndicatorsSystemStateEnum.DRAFT);
+        indicatorsSystemNewVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
 
         // Create
@@ -441,7 +441,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkUpdateDimension(dimension, null);
 
-        // Check indicators system state
+        // Check indicators system proc status
         IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 
@@ -525,7 +525,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkUpdateIndicatorInstance(indicatorInstance, null);
 
-        // Check indicators system state
+        // Check indicators system proc status
         IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 
@@ -603,22 +603,22 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     /**
-     * Checks that the indicators system version is in any state in production
+     * Checks that the indicators system version is in any proc status in production
      */
     private void checkIndicatorsSystemVersionInProduction(IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-        IndicatorsSystemStateEnum state = indicatorsSystemVersion.getState();
-        boolean inProduction = IndicatorsSystemStateEnum.DRAFT.equals(state) || IndicatorsSystemStateEnum.VALIDATION_REJECTED.equals(state)
-                || IndicatorsSystemStateEnum.PRODUCTION_VALIDATION.equals(state) || IndicatorsSystemStateEnum.DIFFUSION_VALIDATION.equals(state);
+        IndicatorsSystemProcStatusEnum procStatus = indicatorsSystemVersion.getProcStatus();
+        boolean inProduction = IndicatorsSystemProcStatusEnum.DRAFT.equals(procStatus) || IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)
+                || IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemStateEnum[]{
-                    IndicatorsSystemStateEnum.DRAFT, IndicatorsSystemStateEnum.VALIDATION_REJECTED, IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, IndicatorsSystemStateEnum.DIFFUSION_VALIDATION});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemProcStatusEnum[]{
+                    IndicatorsSystemProcStatusEnum.DRAFT, IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
         }
     }
 
     /**
      * Retrieves version of an indicators system in production
      */
-    private IndicatorsSystemVersion retrieveIndicatorsSystemStateInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
+    private IndicatorsSystemVersion retrieveIndicatorsSystemProcStatusInProduction(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInProduction) throws MetamacException {
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() == null && !throwsExceptionIfNotExistsInProduction) {
             return null; // to throws an specific exception
@@ -633,7 +633,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     /**
      * Retrieves version of an indicators system in diffusion
      */
-    private IndicatorsSystemVersion retrieveIndicatorsSystemStateInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
+    private IndicatorsSystemVersion retrieveIndicatorsSystemProcStatusInDiffusion(ServiceContext ctx, String uuid, boolean throwsExceptionIfNotExistsInDiffusion) throws MetamacException {
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getDiffusionVersion() == null && !throwsExceptionIfNotExistsInDiffusion) {
             return null; // to throws an specific exception
@@ -711,7 +711,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     private ElementLevel createElementLevel(ServiceContext ctx, String indicatorsSystemUuid, ElementLevel elementLevel) throws MetamacException {
 
         // Retrieve indicators system version and check it is in production
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemStateInProduction(ctx, indicatorsSystemUuid, true);
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemProcStatusInProduction(ctx, indicatorsSystemUuid, true);
 
         if (elementLevel.getParent() == null) {
             // Add to first level in indicators system
@@ -787,7 +787,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         Long orderInLevelBefore = elementLevel.getOrderInLevel();
         elementLevel.setOrderInLevel(orderInLevel);
 
-        // Check indicators system state
+        // Check indicators system proc status
         IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 
@@ -850,7 +850,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     private void deleteElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
 
-        // Check indicators system state
+        // Check indicators system proc status
         IndicatorsSystemVersion indicatorsSystemVersion = elementLevel.getIndicatorsSystemVersion();
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
 

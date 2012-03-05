@@ -50,7 +50,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUriGopestat(source.getUriGopestat());
         target.setObjetive(internationalStringToDto(source.getObjetive()));
         target.setDescription(internationalStringToDto(source.getDescription()));
-        target.setState(source.getState());
+        target.setProcStatus(source.getProcStatus());
         target.setProductionVersion(source.getIndicatorsSystem().getProductionVersion() != null ? source.getIndicatorsSystem().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicatorsSystem().getDiffusionVersion() != null ? source.getIndicatorsSystem().getDiffusionVersion().getVersionNumber() : null);
 
@@ -125,7 +125,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCommentary(internationalStringToDto(source.getCommentary()));
         target.setNotes(internationalStringToDto(source.getNotes()));
         target.setNotesUrl(source.getNotesUrl());
-        target.setState(source.getState());
+        target.setProcStatus(source.getProcStatus());
         target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
 

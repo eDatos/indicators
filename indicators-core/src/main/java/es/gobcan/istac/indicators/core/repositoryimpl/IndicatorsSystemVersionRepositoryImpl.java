@@ -9,8 +9,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 
 /**
  * Repository implementation for IndicatorsSystemVersion
@@ -36,7 +37,7 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, IndicatorsSystemStateEnum state) {
+    public List<IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, IndicatorsSystemProcStatusEnum procStatus) {
         
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session)getEntityManager().getDelegate();
@@ -45,8 +46,8 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
         if (uriGopestat != null) {
             criteria.add(Restrictions.eq("uriGopestat", uriGopestat));
         }
-        if (state != null) {
-            criteria.add(Restrictions.eq("state", state));
+        if (procStatus != null) {
+            criteria.add(Restrictions.eq("procStatus", procStatus));
         }
         criteria.addOrder(Order.asc("id"));
         

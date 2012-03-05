@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 
 /**
  * Repository implementation for IndicatorVersion
@@ -36,14 +36,14 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IndicatorVersion> findIndicatorsVersions(IndicatorStateEnum state) {
+    public List<IndicatorVersion> findIndicatorsVersions(IndicatorProcStatusEnum procStatus) {
 
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         Criteria criteria = session.createCriteria(IndicatorVersion.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (state != null) {
-            criteria.add(Restrictions.eq("state", state));
+        if (procStatus != null) {
+            criteria.add(Restrictions.eq("procStatus", procStatus));
         }
         criteria.addOrder(Order.asc("id"));
 

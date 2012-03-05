@@ -12,7 +12,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED = create("exception.indicators.indicators_system.already_exists.uri_gopestat_duplicated");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND               = create("exception.indicators.indicators_system.production_not_found");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND                = create("exception.indicators.indicators_system.diffusion_not_found");
-    public static final CommonServiceExceptionType INDICATORS_SYSTEM_WRONG_STATE                           = create("exception.indicators.indicators_system.wrong_state");
+    public static final CommonServiceExceptionType INDICATORS_SYSTEM_WRONG_PROC_STATUS                     = create("exception.indicators.indicators_system.wrong_proc_status");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE          = create("exception.indicators.indicators_system.must_have_indicator_instance");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED    = create("exception.indicators.indicators_system.all_indicators_must_be_published");
 
@@ -31,7 +31,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_CODE_DUPLICATED                 = create("exception.indicators.indicator.already_exists.code_duplicated");
     public static final CommonServiceExceptionType INDICATOR_IN_PRODUCTION_NOT_FOUND                       = create("exception.indicators.indicator.production_not_found");
     public static final CommonServiceExceptionType INDICATOR_IN_DIFFUSION_NOT_FOUND                        = create("exception.indicators.indicator.diffusion_not_found");
-    public static final CommonServiceExceptionType INDICATOR_WRONG_STATE                                   = create("exception.indicators.indicator.wrong_state");
+    public static final CommonServiceExceptionType INDICATOR_WRONG_PROC_STATUS                             = create("exception.indicators.indicator.wrong_proc_status");
     public static final CommonServiceExceptionType INDICATOR_MUST_HAVE_DATA_SOURCES                        = create("exception.indicators.indicator.must_have_data_sources");
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS             = create("exception.indicators.indicator.must_not_be_in_indicators_systems");
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR         = create("exception.indicators.indicator.must_not_be_linked_to_other_indicator");

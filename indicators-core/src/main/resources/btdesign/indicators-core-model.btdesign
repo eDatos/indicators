@@ -246,8 +246,8 @@ Application Indicators {
 			databaseTable="TBL_INDIC_SYSTEMS_VERSIONS"
 			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
 			
-			"State"
-			- @IndicatorsSystemStateEnum state not nullable;
+			"Processing status"
+			- @IndicatorsSystemProcStatusEnum procStatus not nullable;
 			String versionNumber not nullable length="10";
        		"Uri of statistic operation in Gopestat"
        		String uriGopestat nullable;
@@ -291,7 +291,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery;
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemStateEnum state);
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemProcStatusEnum procStatus);
 			}
 		} 
 			    
@@ -423,8 +423,8 @@ Application Indicators {
 			databaseTable="TBL_INDICATORS_VERSIONS"
 			hint="idSequence=INDICATORS_VERSIONS"
 			
-			"State"
-			- @IndicatorStateEnum state not nullable;
+			"Processing status"
+			- @IndicatorProcStatusEnum procStatus not nullable;
 			String versionNumber not nullable length="10";
        		"Name"
        		- @InternationalString name cascade="all" not nullable databaseColumn="NAME_FK";
@@ -474,7 +474,7 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
-            	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorStateEnum state);
+            	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorProcStatusEnum procStatus);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
 			}
 		}     	
@@ -626,8 +626,8 @@ Application Indicators {
 			String uuid;
 			"Version number of this indicators system version"	
 			String versionNumber;
-			"State"
-			- @IndicatorsSystemStateEnum state;
+			"Processing status"
+			- @IndicatorsSystemProcStatusEnum procStatus;
 			"Semantic identifier of statistic operation"
        		String code;
        		"Uri of statistic operation in Gopestat"
@@ -672,8 +672,8 @@ Application Indicators {
 			String versionNumber;
 			"Code"
 			String code;
-			"State"
-			- @IndicatorStateEnum state;
+			"Processing status"
+			- @IndicatorProcStatusEnum procStatus;
        		"Name"
        		- @InternationalStringDto name;
        		"Acronym"
@@ -883,8 +883,8 @@ Application Indicators {
 	Module enums {    	
 		basePackage=es.gobcan.istac.indicators.core.enume
 
-		"States of indicators system"
-    	enum IndicatorsSystemStateEnum {
+		"Processing status of indicators system"
+    	enum IndicatorsSystemProcStatusEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
@@ -892,8 +892,8 @@ Application Indicators {
     		PUBLISHED,
     		ARCHIVED
     	}      
-		"States of indicator"
-    	enum IndicatorStateEnum {
+		"Processing status of indicator"
+    	enum IndicatorProcStatusEnum {
     		DRAFT,
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,

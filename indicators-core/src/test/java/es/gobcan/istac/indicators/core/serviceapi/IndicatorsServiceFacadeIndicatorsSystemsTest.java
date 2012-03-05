@@ -25,7 +25,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -91,7 +91,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
         assertEquals("http://indicators-sytems/1", indicatorsSystemDto.getUriGopestat());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getTitle(), "es", "Título IndSys-1-v1", "en", "Title IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getAcronym(), "es", "Acrónimo IndSys-1-v1", "en", "Acronym IndSys-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getDescription(), "es", "Descripción IndSys-1-v1", "en", "Description IndSys-1-v1");
@@ -196,7 +196,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
         assertEquals(uuid, indicatorsSystemDtoPublished.getUuid());
         assertEquals("11.033", indicatorsSystemDtoPublished.getVersionNumber());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoPublished.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoPublished.getProcStatus());
     }
 
     @Test
@@ -207,7 +207,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsSystemDto indicatorsSystemDtoPublished = indicatorsServiceFacade.retrieveIndicatorsSystemPublished(getServiceContext(), uuid);
         assertEquals(uuid, indicatorsSystemDtoPublished.getUuid());
         assertEquals("1.000", indicatorsSystemDtoPublished.getVersionNumber());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoPublished.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoPublished.getProcStatus());
     }
 
     @Test
@@ -220,10 +220,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("No published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -345,10 +345,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("No exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -435,8 +435,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNotNull(indicatorsSystemDtoCreated.getVersionNumber());
         IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), indicatorsSystemDtoCreated.getUuid(),
                 indicatorsSystemDtoCreated.getVersionNumber());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoCreated.getState());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoRetrieved.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoCreated.getProcStatus());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoRetrieved.getProcStatus());
         assertEquals("1.000", indicatorsSystemDtoRetrieved.getProductionVersion());
         assertNull(indicatorsSystemDtoRetrieved.getDiffusionVersion());
         assertNull(indicatorsSystemDtoRetrieved.getProductionValidationDate());
@@ -702,7 +702,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String versionNumber = "2.000";
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
@@ -724,7 +724,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String versionNumber = "1.000";
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
@@ -733,7 +733,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validation
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDtoUpdated.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDtoUpdated.getProcStatus());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
@@ -744,7 +744,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String versionNumber = "1.000";
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
@@ -753,7 +753,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validation
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoUpdated.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoUpdated.getProcStatus());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
@@ -764,7 +764,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String versionNumber = "1.000";
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
 
         indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
@@ -773,7 +773,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Validation
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoUpdated.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoUpdated.getProcStatus());
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
@@ -825,13 +825,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -848,13 +848,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Version 1 not is in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -891,8 +891,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoV2.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoV1.getProcStatus());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoV2.getProcStatus());
         }
 
         // Sends to production validation
@@ -904,8 +904,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
             assertEquals(productionVersion, indicatorsSystemDtoV2.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoV2.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoV1.getProcStatus());
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoV2.getProcStatus());
 
             assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoV2.getProductionValidationDate()));
             assertEquals(getServiceContext2().getUserId(), indicatorsSystemDtoV2.getProductionValidationUser());
@@ -919,7 +919,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testSendIndicatorsSystemToProductionValidationInStateRejected() throws Exception {
+    public void testSendIndicatorsSystemToProductionValidationInProcStatusRejected() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_9;
         String productionVersion = "1.000";
@@ -928,7 +928,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
         }
 
         // Sends to production validation
@@ -939,7 +939,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertNull(indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
     }
 
@@ -971,13 +971,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testSendIndicatorsSystemToProductionValidationErrorWrongState() throws Exception {
+    public void testSendIndicatorsSystemToProductionValidationErrorWrongProcStatus() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
             assertNull(indicatorsSystemDto.getProductionVersion());
         }
 
@@ -986,11 +986,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
 
         }
     }
@@ -1005,7 +1005,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
         // Sends to diffusion validation
@@ -1016,7 +1016,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorsSystemDto.getProductionValidationDate());
             assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
@@ -1044,13 +1044,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testSendIndicatorsSystemToDiffusionValidationErrorWrongStateDraft() throws Exception {
+    public void testSendIndicatorsSystemToDiffusionValidationErrorWrongProcStatusDraft() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1060,22 +1060,22 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not draft");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
 
     @Test
-    public void testSendIndicatorsSystemToDiffusionValidationErrorWrongStatePublished() throws Exception {
+    public void testSendIndicatorsSystemToDiffusionValidationErrorWrongProcStatusPublished() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1085,10 +1085,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not production validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
@@ -1103,7 +1103,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
         // Rejects validation
@@ -1114,7 +1114,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
 
             assertNull(indicatorsSystemDto.getProductionValidationDate());
             assertNull(indicatorsSystemDto.getProductionValidationUser());
@@ -1137,7 +1137,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
         // Rejects validation
@@ -1148,7 +1148,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
         }
     }
 
@@ -1167,13 +1167,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testRejectIndicatorsSystemValidationErrorWrongStateProduction() throws Exception {
+    public void testRejectIndicatorsSystemValidationErrorWrongProcStatusProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1183,22 +1183,22 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
     @Test
-    public void testRejectIndicatorsSystemValidationErrorWrongStateDiffusion() throws Exception {
+    public void testRejectIndicatorsSystemValidationErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1208,11 +1208,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -1226,7 +1226,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(versionNumber, indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
         }
 
         // Publish
@@ -1237,7 +1237,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(versionNumber, indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto.getProductionValidationDate());
             assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
@@ -1262,8 +1262,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersionBefore, indicatorsSystemDtoV1.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoV2.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoV1.getProcStatus());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoV2.getProcStatus());
         }
 
         // Publish
@@ -1287,7 +1287,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("2.000", indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         }
     }
 
@@ -1303,8 +1303,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersionBefore, indicatorsSystemDtoV1.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDtoV1.getState());
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoV2.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDtoV1.getProcStatus());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoV2.getProcStatus());
         }
 
         // Publish
@@ -1328,7 +1328,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("2.000", indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         }
     }
 
@@ -1347,13 +1347,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testPublishIndicatorsSystemErrorWrongStateProduction() throws Exception {
+    public void testPublishIndicatorsSystemErrorWrongProcStatusProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1363,21 +1363,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not diffusion validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
     @Test
-    public void testPublishIndicatorsSystemErrorWrongStateDiffusion() throws Exception {
+    public void testPublishIndicatorsSystemErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1387,10 +1387,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not diffusion validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1450,7 +1450,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
         }
 
         // Archive
@@ -1461,7 +1461,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorsSystemDto.getProductionValidationDate());
             assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
@@ -1486,8 +1486,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorsSystemDtoV1.getProductionVersion());
             assertEquals(diffusionVersion, indicatorsSystemDtoV1.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoV1.getState());
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoV2.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoV1.getProcStatus());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoV2.getProcStatus());
         }
 
         // Archive
@@ -1498,7 +1498,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
             assertEquals(productionVersion, indicatorsSystemDto.getProductionVersion());
             assertEquals(diffusionVersion, indicatorsSystemDto.getDiffusionVersion());
-            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDto.getProcStatus());
         }
     }
 
@@ -1517,13 +1517,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testArchiveIndicatorsSystemErrorWrongStateProduction() throws Exception {
+    public void testArchiveIndicatorsSystemErrorWrongProcStatusProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
             assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1533,22 +1533,22 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
 
     @Test
-    public void testArchiveIndicatorsSystemErrorWrongStateDiffusion() throws Exception {
+    public void testArchiveIndicatorsSystemErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_8;
 
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
-            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemDto.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDto.getProcStatus());
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
         }
@@ -1558,10 +1558,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system is not published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1589,12 +1589,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDtoDiffusion, indicatorsSystemDtoProduction);
 
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoProduction.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoProduction.getProcStatus());
         assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getVersionNumber());
         assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoProduction.getDiffusionVersion());
 
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getProcStatus());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getVersionNumber());
         assertEquals(newVersionExpected, indicatorsSystemDtoDiffusion.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getDiffusionVersion());
@@ -1657,12 +1657,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDtoDiffusion, indicatorsSystemDtoProduction);
 
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemDtoProduction.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDtoProduction.getProcStatus());
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getVersionNumber());
             assertEquals(newVersionExpected, indicatorsSystemDtoProduction.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoProduction.getDiffusionVersion());
 
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getState());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDtoDiffusion.getProcStatus());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getVersionNumber());
             assertEquals(newVersionExpected, indicatorsSystemDtoDiffusion.getProductionVersion());
             assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoDiffusion.getDiffusionVersion());
@@ -1693,11 +1693,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system already exists in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.PUBLISHED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.ARCHIVED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -1709,31 +1709,31 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(9, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(0).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(0).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_2, indicatorsSystemsDto.get(1).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.DRAFT, indicatorsSystemsDto.get(1).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(1).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(2).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_4, indicatorsSystemsDto.get(3).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, indicatorsSystemsDto.get(3).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemsDto.get(3).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_5, indicatorsSystemsDto.get(4).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(4).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(4).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(5).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(5).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(5).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_7, indicatorsSystemsDto.get(6).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(6).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(6).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_8, indicatorsSystemsDto.get(7).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.ARCHIVED, indicatorsSystemsDto.get(7).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemsDto.get(7).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(8).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getProcStatus());
     }
 
     @Test
@@ -1743,13 +1743,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(3, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(0).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(1).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(1).getProcStatus());
 
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
-        assertEquals(IndicatorsSystemStateEnum.PUBLISHED, indicatorsSystemsDto.get(2).getState());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
     }
 
     @Test
@@ -2183,13 +2183,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -2317,13 +2317,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -3084,13 +3084,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -3223,13 +3223,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             fail("Indicators system published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemStateEnum.DRAFT, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemStateEnum.VALIDATION_REJECTED, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
