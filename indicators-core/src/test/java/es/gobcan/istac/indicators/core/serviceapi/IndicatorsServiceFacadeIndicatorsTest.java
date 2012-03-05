@@ -66,8 +66,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
 
     // Quantity units
-    private static String             QUANTITY_UNIT_1 = "1";
-    private static String             QUANTITY_UNIT_2 = "2";
+    private static String             QUANTITY_UNIT_1              = "1";
+    private static String             QUANTITY_UNIT_2              = "2";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -777,7 +777,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(9).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateIndicatorErrorUnitNotExists() throws Exception {
 
@@ -1012,14 +1012,14 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(uuid, indicatorDto.getQuantity().getNumeratorIndicatorUuid());
         assertNull(indicatorDto.getQuantity().getDenominatorIndicatorUuid());
         assertNull(indicatorDto.getQuantity().getBaseQuantityIndicatorUuid());
-                
+
         // Try delete
         try {
             indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
             fail("Indicator is linked to other indicator");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
@@ -1032,7 +1032,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = INDICATOR_2;
         String uuidLinked = INDICATOR_4;
-        
+
         // Links as denominator
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuidLinked, null);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -1041,7 +1041,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(uuid);
         indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(null);
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
-                
+
         // Try delete
         try {
             indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
@@ -1054,13 +1054,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(uuidLinked, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
-    
+
     @Test
     public void testDeleteIndicatorErrorAsQuantityBaseQuantity() throws Exception {
 
         String uuid = INDICATOR_2;
         String uuidLinked = INDICATOR_4;
-        
+
         // Links as base quantity
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuidLinked, null);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -1069,7 +1069,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(uuid);
         indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(null);
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
-                
+
         // Try delete
         try {
             indicatorsServiceFacade.deleteIndicator(getServiceContext(), uuid);
@@ -1836,36 +1836,60 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             fail("Numerator non published");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorDto.getQuantity().getNumeratorIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(1, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
+            assertEquals(indicatorDto.getQuantity().getNumeratorIndicatorUuid(), ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
     @Test
-    public void testPublishIndicatorErrorInDatasourceNumeratorNotPublished() throws Exception {
+    public void testPublishIndicatorErrorInDatasourceNotPublished() throws Exception {
 
         String uuid = INDICATOR_5;
+        String uuidPublished1 = INDICATOR_1;
+        String uuidNotPublished2 = INDICATOR_2;
+        String uuidNotPublished4 = INDICATOR_4;
+        String uuidNotPublished7 = INDICATOR_7;
 
         // Change datasource to fraction with numerator in draft
         List<DataSourceDto> datasources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
-        datasources.get(0).getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        datasources.get(0).getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
-        datasources.get(0).getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        datasources.get(0).getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
-        indicatorsServiceFacade.updateDataSource(getServiceContext(), datasources.get(0));
+        {
+            DataSourceDto dataSourceDto = datasources.get(0);
+            dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished2);
+            dataSourceDto.getAnnualRate().getQuantity().setDenominatorIndicatorUuid(uuidNotPublished7);
+            dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getInterperiodRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished4);
+            dataSourceDto.getInterperiodRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getInterperiodRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+        }
+        {
+            DataSourceDto dataSourceDto = datasources.get(1);
+            dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(uuidPublished1);
+            dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+        }
 
         // Publish
         try {
             indicatorsServiceFacade.publishIndicator(getServiceContext(), uuid);
-            fail("Numerator non published in datasource");
+            fail("Indicators non published in datasource");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_WRONG_STATE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(datasources.get(0).getAnnualRate().getQuantity().getNumeratorIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorStateEnum.PUBLISHED, ((IndicatorStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(3, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
+            assertEquals(uuidNotPublished2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(uuidNotPublished4, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(uuidNotPublished7, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
         }
     }
 
@@ -2178,19 +2202,19 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPx());
         assertEquals("temporary v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporaryVariable());
         assertEquals("geographic v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicVariable());
-        
+
         assertEquals(RateDerivationMethodTypeEnum.CALCULATE, dataSourceDto.getInterperiodRate().getMethodType());
         assertEquals("MethodOfInterperiod", dataSourceDto.getInterperiodRate().getMethod());
         assertEquals(RateDerivationRoundingEnum.UPWARD, dataSourceDto.getInterperiodRate().getRounding());
         assertEquals(QuantityTypeEnum.AMOUNT, dataSourceDto.getInterperiodRate().getQuantity().getType());
         assertEquals(QUANTITY_UNIT_1, dataSourceDto.getInterperiodRate().getQuantity().getUnitUuid());
-        
+
         assertEquals(RateDerivationMethodTypeEnum.LOAD, dataSourceDto.getAnnualRate().getMethodType());
         assertEquals("MethodOfAnnual", dataSourceDto.getAnnualRate().getMethod());
         assertEquals(RateDerivationRoundingEnum.DOWN, dataSourceDto.getAnnualRate().getRounding());
         assertEquals(QuantityTypeEnum.AMOUNT, dataSourceDto.getAnnualRate().getQuantity().getType());
         assertEquals(QUANTITY_UNIT_2, dataSourceDto.getAnnualRate().getQuantity().getUnitUuid());
-        
+
         assertEquals(2, dataSourceDto.getOtherVariables().size());
         assertEquals("variable Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getVariable());
         assertEquals("category Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getCategory());
@@ -2270,7 +2294,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
         dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
-        
+
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
         assertNotNull(dataSourceDtoCreated.getUuid());
@@ -2299,13 +2323,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setAnnualRate(new RateDerivationDto());
         dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        
+
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), INDICATOR_1, dataSourceDto);
             fail("parameters required");
         } catch (MetamacException e) {
             assertEquals(9, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.QUERY_GPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
@@ -2413,7 +2437,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
-
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorsSystemUuid, dataSourceDto);
             fail("Indicator not in production");
@@ -2424,7 +2447,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateDataSourceErrorBaseQuantityIsNotOwnIndicator() throws Exception {
 
@@ -2463,7 +2486,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
         dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuidLinked);
-        
+
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
             fail("Base quantity is not own indicator");
@@ -2479,7 +2502,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testCreateDataSourceErrorDenominatorMustNotBeOwnIndicator() throws Exception {
 
         String indicatorUuid = INDICATOR_1;
-        
+
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
@@ -2512,7 +2535,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
         dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
-        
+
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
             fail("Denominator must not be own indicator");
@@ -2728,7 +2751,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnitDto.getSymbolPosition());
         IndicatorsAsserts.assertEqualsInternationalString(quantityUnitDto.getText(), "es", "Kilómetros", "en", "Kilometers");
 
-
     }
 
     @Test
@@ -2772,12 +2794,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(QUANTITY_UNIT_1, quantityUnits.get(0).getUuid());
         assertEquals("km", quantityUnits.get(0).getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnits.get(0).getSymbolPosition());
-        
+
         assertEquals(QUANTITY_UNIT_2, quantityUnits.get(1).getUuid());
         assertEquals("kg", quantityUnits.get(1).getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.START, quantityUnits.get(1).getSymbolPosition());
     }
-    
+
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";

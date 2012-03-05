@@ -1119,6 +1119,97 @@
 							LAST_UPDATED="2011-01-22 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
 						/>
+						
+						
+				<TBL_DATA_SOURCES
+					ID="512"
+					UUID="Indicator-5-v1-DataSource-2"
+					QUERY_GPE="query-gpe Indicator-5-v1-DataSource-2"
+					PX="px Indicator-5-v1-DataSource-2"
+					TEMPORARY_VARIABLE="temporary v Indicator-5-v1-DataSource-2"
+					GEOGRAPHIC_VARIABLE="geographic v Indicator-5-v1-DataSource-2"
+					INDICATOR_VERSION_FK="51"
+					INTERPERIOD_RATE_FK="5121"
+					ANNUAL_RATE_FK="5122"
+				
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-3 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_RATES_DERIVATIONS
+						ID="5121"
+						UUID="RateDerivation-5121"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="51211"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="51211"
+		  					UUID="Quantity-51211"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+					<TBL_RATES_DERIVATIONS
+						ID="5122"
+						UUID="RateDerivation-5122"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="51221"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="51221"
+		  					UUID="Quantity-51221"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>						
 				
 			
 	<!-- **************************************************************************************	-->

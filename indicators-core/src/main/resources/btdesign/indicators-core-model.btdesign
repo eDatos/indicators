@@ -596,6 +596,7 @@ Application Indicators {
             	delete;
             	protected List<@DataSource> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@DataSource findDataSource(String uuid);
+				List<String> findIndicatorsLinkedWithIndicatorVersion(Long indicatorVersionId);
             }
         }  	   
 

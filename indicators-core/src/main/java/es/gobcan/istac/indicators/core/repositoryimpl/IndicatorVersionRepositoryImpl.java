@@ -58,6 +58,8 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", indicatorUuid);
 
+        // Important! Queries must be executed separately because indicator can have different value of indicator in numerator, denominator..
+        
         // Numerator
         {
             List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.quantity.numerator.uuid = :uuid", parameters, 1);

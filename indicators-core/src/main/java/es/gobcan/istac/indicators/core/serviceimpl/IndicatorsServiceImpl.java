@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -582,59 +583,44 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorToSendToDiffusionValidation(ctx, indicatorVersion);
 
         // Check linked indicators
-        // TODO hacer con consulta sql?? rendimiento!?! vale la pena implementar la consulta cuando va a haber pocos datasources por indicador?
-        //      ver 'checkQuantityIndicatorsPublished'.
-        //      OJO!! Se podría añadir una columna para facilitar la consulta, con un isPublished si alguna versión está en estado PUBLISHED
-        checkQuantityIndicatorsPublished(ctx, indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid());
-        for (DataSource dataSource : indicatorVersion.getDataSources()) {
-            checkQuantityIndicatorsPublished(ctx, dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
-            checkQuantityIndicatorsPublished(ctx, dataSource.getInterperiodRate().getQuantity(), indicatorVersion.getIndicator().getUuid());
-        }
+        checkQuantityIndicatorsPublished(ctx, indicatorVersion);
     }
 
-    private void checkQuantityIndicatorsPublished(ServiceContext ctx, Quantity quantity, String indicatorUuid) throws MetamacException {
-        if (quantity.getNumerator() != null) {
-            checkIndicatorPublished(ctx, quantity.getNumerator());
+    private void checkQuantityIndicatorsPublished(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+
+        List<String> indicatorsUuidLinked = null;
+        
+        // Quantities of datasources
+        indicatorsUuidLinked = getDataSourceRepository().findIndicatorsLinkedWithIndicatorVersion(indicatorVersion.getId());
+        
+        // Quantity of indicator
+        if (indicatorVersion.getQuantity().getNumerator() != null) {
+            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getNumerator().getUuid());
         }
-        if (quantity.getDenominator() != null) {
-            checkIndicatorPublished(ctx, quantity.getDenominator());
+        if (indicatorVersion.getQuantity().getDenominator() != null) {
+            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getDenominator().getUuid());
         }
-        if (quantity.getBaseQuantity() != null && !quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
-            checkIndicatorPublished(ctx, quantity.getBaseQuantity());
+        if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
+            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getBaseQuantity().getUuid());
+        }
+        
+        // Remove possible own indicator, because this can be as base quantity and it is not published yet
+        for (Iterator<String> iterator = indicatorsUuidLinked.iterator(); iterator.hasNext();) {
+            String indicatorUuidLinked = (String) iterator.next();
+            if (indicatorUuidLinked.equals(indicatorVersion.getIndicator().getUuid())) {
+                iterator.remove();
+            }
+        }
+        
+        // Checks published
+        if (indicatorsUuidLinked.size() != 0) {
+            List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuidLinked);
+            if (indicatorsNotPublishedUuid.size() != 0) {
+                String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
+                throw new MetamacException(ServiceExceptionType.INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED, indicatorVersion.getIndicator().getUuid(), indicatorsNotPublishedUuidArray);
+            }
         }
     }
-    
-
-    // TODO pendiente de si esta comprobación se hará por código o consulta sql
-//    private void checkQuantityIndicatorsPublished(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
-//
-//        Set<String> indicatorsUuidLinked = null;
-//        
-//        // Quantities of datasources
-//        indicatorsUuidLinked = getDataSourceRepository().findIndicatorsLinkedWithDatasourcesOfAnIndicatorVersion(indicatorVersion.getId());
-//        
-//        // Quantity of indicator
-//        if (indicatorVersion.getQuantity().getNumerator() != null) {
-//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getNumerator().getUuid());
-//        }
-//        if (indicatorVersion.getQuantity().getDenominator() != null) {
-//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getDenominator().getUuid());
-//        }
-//        if (indicatorVersion.getQuantity().getBaseQuantity() != null) {
-//            indicatorsUuidLinked.add(indicatorVersion.getQuantity().getBaseQuantity().getUuid());
-//        }
-//        
-//        // Remove possible own indicator, because this can be as base quantity
-//        indicatorsUuidLinked.remove(indicatorVersion.getIndicator().getUuid());
-//        
-//        // Checks published
-//        if (indicatorsUuidLinked.size() != 0) {
-//            IndicatorVersion indicatorVersionLinked = getIndicatorVersionRepository().findOneIndicatorVersionNotPublished(indicatorsUuidLinked.toArray().);
-//            if (indicatorVersionLinked != null) {
-//                throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicatorVersionLinked.getIndicator().getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
-//            }
-//        }
-//    }
     
     /**
      * Makes validations to archive
@@ -666,15 +652,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
     }
 
-    /**
-     * Checks that any version of indicator is published
-     */
-    private void checkIndicatorPublished(ServiceContext ctx, Indicator indicator) throws MetamacException {
-        IndicatorVersion publishedIndicatorVersion = retrieveIndicatorStateInDiffusion(ctx, indicator.getUuid(), false);
-        if (publishedIndicatorVersion == null || !IndicatorStateEnum.PUBLISHED.equals(publishedIndicatorVersion.getState())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_STATE, indicator.getUuid(), new IndicatorStateEnum[]{IndicatorStateEnum.PUBLISHED});
-        }
-    }
     private List<Indicator> findIndicators(ServiceContext ctx, String code) throws MetamacException {
         return getIndicatorRepository().findIndicators(code);
     }

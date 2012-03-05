@@ -1,8 +1,11 @@
 package es.gobcan.istac.indicators.core.repositoryimpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -28,29 +31,26 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
         }
     }
 
-//    @Override
-//    public Set<String> findIndicatorsLinkedWithDatasourcesOfAnIndicatorVersion(Long indicatorVersionId) {
-//        
-//        Set<String> indicatorsUuidLinked = new HashSet<String>();
-//        
-//        // Important! Queries must be executed separated (we can execute an unique query with numerator, denominator... at time)
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.annualRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        findIndicatorsLinkedInColumn(indicatorVersionId, "select d.interperiodRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id", indicatorsUuidLinked);
-//        
-//        return indicatorsUuidLinked;
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    private void findIndicatorsLinkedInColumn(Long indicatorVersionId, String querySql, Set<String> indicatorsUuidLinked) {
-//        Query query = getEntityManager().createQuery(querySql);
-//        query.setParameter("id", indicatorVersionId);
-//        List<String> result = query.getResultList();
-//        for (String indicatorUuidLinked : result) {
-//            indicatorsUuidLinked.add(indicatorUuidLinked);
-//        }
-//    }
+    @Override
+    public List<String> findIndicatorsLinkedWithIndicatorVersion(Long indicatorVersionId) {
+
+        List<String> indicatorsUuidLinked = new ArrayList<String>();
+
+        // Important! Queries must be executed separated (Following is executed incorrectly: 1) Join of annualRate and interperiodRate. 2) quantity with null values in numerator, denominator...)
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        return indicatorsUuidLinked;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> findIndicatorsLinkedCommon(Long indicatorVersionId, String querySql) {
+        Query query = getEntityManager().createQuery(querySql);
+        query.setParameter("id", indicatorVersionId);
+        List<String> results = query.getResultList();
+        return results;
+    }
 }

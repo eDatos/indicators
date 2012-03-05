@@ -54,7 +54,7 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid) {
-        Query query = getEntityManager().createQuery("select i.uuid from Indicator i where i.uuid in (:uuids) and i.isPublished = false");
+        Query query = getEntityManager().createQuery("select distinct(i.uuid) from Indicator i where i.uuid in (:uuids) and i.isPublished = false");
         query.setParameter("uuids", indicatorsUuid);
         List<String> result = query.getResultList();
         return result;
