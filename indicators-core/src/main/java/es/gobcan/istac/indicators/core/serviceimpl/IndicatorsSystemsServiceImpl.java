@@ -48,6 +48,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Save indicator
         indicatorsSystem.setDiffusionVersion(null);
+        indicatorsSystem.setIsPublished(Boolean.FALSE);
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
 
         // Save draft version
@@ -332,7 +333,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         checkIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
 
         // Update state
-        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED);
+        indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED); 
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
@@ -345,6 +346,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             getIndicatorsSystemRepository().save(indicatorsSystem);
             getIndicatorsSystemVersionRepository().delete(indicatorDiffusionVersion);
         }
+        indicatorsSystem.setIsPublished(Boolean.TRUE);
         indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemInProduction.getId(), indicatorsSystemInProduction.getVersionNumber()));
         indicatorsSystem.setProductionVersion(null);
 
@@ -368,6 +370,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         checkIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion.getVersionNumber());
 
         // Update state
+        IndicatorsSystem indicatorsSystem = indicatorsSystemInDiffusion.getIndicatorsSystem();
+        indicatorsSystem.setIsPublished(Boolean.FALSE);
+        getIndicatorsSystemRepository().save(indicatorsSystem);
+        
         indicatorsSystemInDiffusion.setState(IndicatorsSystemStateEnum.ARCHIVED);
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
@@ -585,11 +591,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
      */
     private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, null);
-        if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
-            for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
-                if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
-                    throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
+        if (uriGopestat != null) {
+            List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, null);
+            if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
+                for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
+                    if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
+                        throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
+                    }
                 }
             }
         }

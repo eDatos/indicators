@@ -225,9 +225,10 @@ Application Indicators {
             - @IndicatorsSystemVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
             "Version in diffusion"
             - @IndicatorsSystemVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
+            "True if indicator system is published"
+            Boolean isPublished not nullable;
 			"All versions"
 			- Bag<@IndicatorsSystemVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicatorsSystem orderby="versionNumber asc";
-			
 			
 			Repository IndicatorsSystemRepository {
 		   		@IndicatorsSystem save(@IndicatorsSystem entity);
@@ -397,6 +398,8 @@ Application Indicators {
             - @IndicatorVersionInformation productionVersion nullable databaseColumn="PRODUCTION";
             "Version in diffusion"
             - @IndicatorVersionInformation diffusionVersion nullable databaseColumn="DIFFUSION";
+            "True if indicator is published"
+            Boolean isPublished not nullable;
 			"All versions"
 			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";
 			"Indicator instances"

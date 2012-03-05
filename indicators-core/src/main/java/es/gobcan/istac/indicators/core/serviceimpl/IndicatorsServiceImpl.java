@@ -45,6 +45,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Save indicator
         indicator.setDiffusionVersion(null);
+        indicator.setIsPublished(Boolean.FALSE);
         indicator = getIndicatorRepository().save(indicator);
 
         // Save draft version
@@ -347,6 +348,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
         }
+        indicator.setIsPublished(Boolean.TRUE);
         indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
         indicator.setProductionVersion(null);
 
@@ -369,6 +371,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorToArchive(ctx, indicatorInDiffusion);
 
         // Update state
+        Indicator indicator = indicatorInDiffusion.getIndicator();
+        indicator.setIsPublished(Boolean.FALSE);
+        getIndicatorRepository().save(indicator);
+
         indicatorInDiffusion.setState(IndicatorStateEnum.ARCHIVED);
         indicatorInDiffusion.setArchiveDate(new DateTime());
         indicatorInDiffusion.setArchiveUser(ctx.getUserId());
