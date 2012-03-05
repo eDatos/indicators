@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -35,5 +37,14 @@ public class IndicatorInstanceRepositoryImpl extends IndicatorInstanceRepository
         parameters.put("indicatorsSystemVersionNumber", indicatorsSystemVersionNumber);
         List<IndicatorInstance> result = findByQuery("from IndicatorInstance ii where ii.elementLevel.indicatorsSystemVersion.indicatorsSystem.uuid = :indicatorsSystemUuid and ii.elementLevel.indicatorsSystemVersion.versionNumber = :indicatorsSystemVersionNumber", parameters, 1);
         return result != null && !result.isEmpty();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> findIndicatorsLinkedWithIndicatorsSystemVersion(Long indicatorsSystemVersionId) {
+        Query query = getEntityManager().createQuery("select distinct(ii.indicator.uuid) from IndicatorInstance ii where ii.elementLevel.indicatorsSystemVersion.id = :id");
+        query.setParameter("id", indicatorsSystemVersionId);
+        List<String> result = query.getResultList();
+        return result;
     }
 }

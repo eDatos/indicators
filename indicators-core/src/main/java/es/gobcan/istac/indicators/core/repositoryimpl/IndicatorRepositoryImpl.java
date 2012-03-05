@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -48,17 +50,13 @@ public class IndicatorRepositoryImpl extends IndicatorRepositoryBase {
         List<Indicator> result = criteria.list();
         return result;
     }
-    
-//    @Override
-//    public Indicator findOneIndicatorNotPublished(List<String> indicatorsUuid) {
-//        Map<String, Object> parameters = new HashMap<String, Object>();
-//        parameters.put("uuid", indicatorsUuid);
-//
-//        // terminar! si se hace la consulta de indicadores no publicados por query en lugar de por código
-//        List<Indicator> result = findByQuery("from Indicator i join i.versions iv where i.uuid in (:uuids) and iv. (i.diffusionVersion is null or )", parameters, 1);
-//        if (result != null && !result.isEmpty()) {
-//            return result.get(0);
-//        }
-//        return null;
-//    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid) {
+        Query query = getEntityManager().createQuery("select i.uuid from Indicator i where i.uuid in (:uuids) and i.isPublished = false");
+        query.setParameter("uuids", indicatorsUuid);
+        List<String> result = query.getResultList();
+        return result;
+    }
 }

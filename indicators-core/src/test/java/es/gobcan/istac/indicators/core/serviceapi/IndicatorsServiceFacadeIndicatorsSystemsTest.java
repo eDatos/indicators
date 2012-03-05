@@ -40,38 +40,42 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
 
     @Autowired
-    protected IndicatorsServiceFacade        indicatorsServiceFacade;
+    protected IndicatorsServiceFacade indicatorsServiceFacade;
 
-    private static String                    NOT_EXISTS                                  = "not-exists";
+    private static String             NOT_EXISTS                                  = "not-exists";
 
     // Indicators systems
-    private static String                    INDICATORS_SYSTEM_1                         = "IndSys-1";
-    private static String                    INDICATORS_SYSTEM_2                         = "IndSys-2";
-    private static String                    INDICATORS_SYSTEM_3                         = "IndSys-3";
-    private static String                    INDICATORS_SYSTEM_3_VERSION                 = "11.033";
-    private static String                    INDICATORS_SYSTEM_4                         = "IndSys-4";
-    private static String                    INDICATORS_SYSTEM_5                         = "IndSys-5";
-    private static String                    INDICATORS_SYSTEM_6                         = "IndSys-6";
-    private static String                    INDICATORS_SYSTEM_7                         = "IndSys-7";
-    private static String                    INDICATORS_SYSTEM_8                         = "IndSys-8";
-    private static String                    INDICATORS_SYSTEM_9                         = "IndSys-9";
+    private static String             INDICATORS_SYSTEM_1                         = "IndSys-1";
+    private static String             INDICATORS_SYSTEM_2                         = "IndSys-2";
+    private static String             INDICATORS_SYSTEM_3                         = "IndSys-3";
+    private static String             INDICATORS_SYSTEM_3_VERSION                 = "11.033";
+    private static String             INDICATORS_SYSTEM_4                         = "IndSys-4";
+    private static String             INDICATORS_SYSTEM_5                         = "IndSys-5";
+    private static String             INDICATORS_SYSTEM_6                         = "IndSys-6";
+    private static String             INDICATORS_SYSTEM_7                         = "IndSys-7";
+    private static String             INDICATORS_SYSTEM_8                         = "IndSys-8";
+    private static String             INDICATORS_SYSTEM_9                         = "IndSys-9";
 
     // Dimensions
-    private static String                    DIMENSION_NOT_EXISTS                        = "Dim-not-exists";
-    private static String                    DIMENSION_1_INDICATORS_SYSTEM_1_V1          = "IndSys-1-v1-Dimension-1";
-    private static String                    DIMENSION_1_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-1";
-    private static String                    DIMENSION_1A_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1A";
-    private static String                    DIMENSION_1B_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1B";
-    private static String                    DIMENSION_1BA_INDICATORS_SYSTEM_1_V2        = "IndSys-1-v2-Dimension-1BA";
-    private static String                    DIMENSION_2_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-2";
-    private static String                    DIMENSION_1_INDICATORS_SYSTEM_3             = "IndSys-3-v1-Dimension-1";
+    private static String             DIMENSION_NOT_EXISTS                        = "Dim-not-exists";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V1          = "IndSys-1-v1-Dimension-1";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-1";
+    private static String             DIMENSION_1A_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1A";
+    private static String             DIMENSION_1B_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1B";
+    private static String             DIMENSION_1BA_INDICATORS_SYSTEM_1_V2        = "IndSys-1-v2-Dimension-1BA";
+    private static String             DIMENSION_2_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-2";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_3             = "IndSys-3-v1-Dimension-1";
 
     // Indicator instances
-    private static String                    INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1 = "IndSys-1-v1-IInstance-1";
-    private static String                    INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
-    private static String                    INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
-    private static String                    INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
-    private static String                    INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
+    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1 = "IndSys-1-v1-IInstance-1";
+    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
+    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
+
+    // Indicators
+    private static String             INDICATOR_2                                 = "Indicator-2";
+    private static String             INDICATOR_3                                 = "Indicator-3";
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -1363,7 +1367,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-
         }
     }
 
@@ -1388,7 +1391,52 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemStateEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
 
+    @Test
+    public void testPublishIndicatorsSystemErrorIndicatorNotPublished() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_5;
+        String indicatorUuid2 = INDICATOR_2;
+        String indicatorUuid3 = INDICATOR_3;
+
+        // Create indicators instances with indicator not published
+        {
+            // Indicator 2
+            IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+            indicatorInstanceDto.setIndicatorUuid(indicatorUuid2);
+            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+            indicatorInstanceDto.setParentUuid(null);
+            indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
+            indicatorInstanceDto.setGeographicValue("Spain");
+            indicatorInstanceDto.setTemporaryValue("2012");
+            indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
+        }
+        {
+            // Indicator 3
+            IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+            indicatorInstanceDto.setIndicatorUuid(indicatorUuid3);
+            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+            indicatorInstanceDto.setParentUuid(null);
+            indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+            indicatorInstanceDto.setGeographicValue("Spain");
+            indicatorInstanceDto.setTemporaryValue("2012");
+            indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
+        }
+
+        // Publish
+        try {
+            indicatorsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+            fail("Indicators not published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
+            assertEquals(indicatorUuid2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(indicatorUuid3, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -2538,7 +2586,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertNotNull(indicatorInstanceDto);
         assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getUuid());
-        assertEquals("Indicator-2", indicatorInstanceDto.getIndicatorUuid());
+        assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
         assertEquals("Annual", indicatorInstanceDto.getTemporaryGranularityId());
@@ -2588,7 +2636,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator-2");
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
@@ -2623,7 +2671,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator-2");
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
@@ -2800,7 +2848,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator-2");
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicValue("Spain");
         indicatorInstanceDto.setTemporaryValue("2012");
@@ -2889,7 +2937,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // In dimension level
-        indicatorInstanceDto.setIndicatorUuid("Indicator-2");
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setParentUuid(DIMENSION_1B_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
@@ -3014,7 +3062,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
-        
+
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorInstanceDto.getIndicatorUuid(), null);
         assertNotNull(indicatorDto);
 
@@ -3127,7 +3175,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
         assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        assertEquals("Indicator-2", indicatorInstanceDto.getIndicatorUuid());
+        assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         indicatorInstanceDto.setIndicatorUuid("newIndicator");
 
         try {
@@ -3152,7 +3200,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Put parent null
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-        indicatorInstanceDto.setIndicatorUuid("Indicator-2");
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
 
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);

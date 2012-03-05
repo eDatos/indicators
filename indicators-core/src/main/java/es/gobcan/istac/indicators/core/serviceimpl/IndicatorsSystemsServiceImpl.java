@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -258,7 +260,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         // Validate to send to production
-        checkIndicatorsSystemToSendToProductionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
+        checkIndicatorsSystemToSendToProductionValidation(ctx, indicatorsSystemInProduction);
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PRODUCTION_VALIDATION);
@@ -280,7 +282,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         // Validate to send to diffusion
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
+        checkIndicatorsSystemToSendToDiffusionValidation(ctx, indicatorsSystemInProduction);
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.DIFFUSION_VALIDATION);
@@ -305,7 +307,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         // Validate to reject
-        checkIndicatorsSystemToReject(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
+        checkIndicatorsSystemToReject(ctx, indicatorsSystemInProduction);
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.VALIDATION_REJECTED);
@@ -316,7 +318,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
     }
 
-    // TODO comprobar que todos los indicadores tienen alguna versión PUBLISHED. En código o por consulta sql? Dependiendo de esto, cambiar también la comprobación de la publicación de indicadores (ver checkIndicatorToPublish)
     @Override
     public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -330,7 +331,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         // Validate to publish
-        checkIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction.getVersionNumber());
+        checkIndicatorsSystemToPublish(ctx, indicatorsSystemInProduction);
 
         // Update state
         indicatorsSystemInProduction.setState(IndicatorsSystemStateEnum.PUBLISHED); 
@@ -367,7 +368,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         // Validate to archive
-        checkIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion.getVersionNumber());
+        checkIndicatorsSystemToArchive(ctx, indicatorsSystemInDiffusion);
 
         // Update state
         IndicatorsSystem indicatorsSystem = indicatorsSystemInDiffusion.getIndicatorsSystem();
@@ -650,8 +651,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Makes validations to sent to production validation
      * 1) Must exists at least one indicator instance
      */
-    private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+    private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
+        String uuid = indicatorsSystemVersion.getIndicatorsSystem().getUuid();
+        String versionNumber = indicatorsSystemVersion.getVersionNumber();
+        
         // Check exists at least one indicator instance
         if (!getIndicatorInstanceRepository().existAnyIndicatorInstance(uuid, versionNumber)) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid);
@@ -662,33 +666,43 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * Makes validations to sent to diffusion validation
      * 1) Validations when send to production validation
      */
-    private void checkIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+    private void checkIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        checkIndicatorsSystemToSendToProductionValidation(ctx, uuid, versionNumber);
+        checkIndicatorsSystemToSendToProductionValidation(ctx, indicatorsSystemVersion);
     }
 
     /**
      * Makes validations to publish
      * 1) Validations when send to diffusion validation
+     * 2) All indicators have one version PUBLISHED
      */
-    private void checkIndicatorsSystemToPublish(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+    private void checkIndicatorsSystemToPublish(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, versionNumber);
+        // Validation 1
+        checkIndicatorsSystemToSendToDiffusionValidation(ctx, indicatorsSystemVersion);
+        
+        // Validation 2
+        List<String> indicatorsUuid = getIndicatorInstanceRepository().findIndicatorsLinkedWithIndicatorsSystemVersion(indicatorsSystemVersion.getId());
+        List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuid);
+        if (indicatorsNotPublishedUuid.size() != 0) {
+            String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsNotPublishedUuidArray);
+        }
     }
 
     /**
      * Makes validations to archive
      * 1) Validations when publish
      */
-    private void checkIndicatorsSystemToArchive(ServiceContext ctx, String uuid, String versionNumber) throws MetamacException {
+    private void checkIndicatorsSystemToArchive(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        checkIndicatorsSystemToPublish(ctx, uuid, versionNumber);
+        checkIndicatorsSystemToPublish(ctx, indicatorsSystemVersion);
     }
 
     /**
      * Makes validations to reject
      */
-    private void checkIndicatorsSystemToReject(ServiceContext ctx, String uuid, String versionNumber) {
+    private void checkIndicatorsSystemToReject(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         // Nothing
     }

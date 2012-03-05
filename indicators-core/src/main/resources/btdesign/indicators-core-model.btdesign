@@ -18,6 +18,7 @@ Application Indicators {
     		> @DimensionRepository
     		> @IndicatorInstanceRepository
     		> @ElementLevelRepository
+    		> @IndicatorRepository
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -373,6 +374,7 @@ Application Indicators {
             	protected List<@IndicatorInstance> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorInstance findIndicatorInstance(String uuid);
             	Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber);
+            	List<String> findIndicatorsLinkedWithIndicatorsSystemVersion(Long indicatorsSystemVersionId);
             }
         }         
 		
@@ -412,6 +414,7 @@ Application Indicators {
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
             	List<@Indicator> findIndicators(String code);
+            	List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid);
 			}
 		}
 	    
