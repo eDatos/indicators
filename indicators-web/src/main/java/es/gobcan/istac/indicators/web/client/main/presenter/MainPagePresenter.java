@@ -2,6 +2,12 @@ package es.gobcan.istac.indicators.web.client.main.presenter;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.HideMessageEvent;
+import org.siemac.metamac.web.common.client.events.HideMessageEvent.HideMessageHandler;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -16,11 +22,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicators.web.client.events.HideMessageEvent;
-import es.gobcan.istac.indicators.web.client.events.HideMessageEvent.HideMessageHandler;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent.ShowMessageHandler;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler {
 	

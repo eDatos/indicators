@@ -20,8 +20,8 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorStateEnum;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemStateEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class IndDatabase {
@@ -170,7 +170,7 @@ public class IndDatabase {
             }
             system.setUuid(getUuid());
             system.setVersionNumber("1.0");
-            system.setState(IndicatorsSystemStateEnum.DRAFT);
+            system.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
             indicatorsSystems.put(system.getCode(), system);
         } else {
             Double newVersion = Double.parseDouble(system.getVersionNumber()) + 1;
@@ -215,7 +215,7 @@ public class IndDatabase {
             }
             ind.setUuid(getUuid());
             ind.setVersionNumber("1.0");
-            ind.setState(IndicatorStateEnum.DRAFT);
+            ind.setProcStatus(IndicatorProcStatusEnum.DRAFT);
             indicators.put(ind.getCode(), ind);
         } else {
             Double newVersion = Double.parseDouble(ind.getVersionNumber()) + 1;
@@ -426,7 +426,7 @@ public class IndDatabase {
         systemDto.setVersionNumber("1.0");
         systemDto.setCode("SYS" + code);
         systemDto.setTitle(createIntString("Sistema " + code, "System " + code));
-        systemDto.setState(IndicatorsSystemStateEnum.DRAFT);
+        systemDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         return systemDto;
     }
 
@@ -437,7 +437,7 @@ public class IndDatabase {
         indicAux.setCode("IND" + code);
         indicAux.setName(createIntString("Indicador " + code, "Indicator " + code));
         indicAux.setVersionNumber("1.0");
-        indicAux.setState(IndicatorStateEnum.DRAFT);
+        indicAux.setProcStatus(IndicatorProcStatusEnum.DRAFT);
         return indicAux;
     }
 

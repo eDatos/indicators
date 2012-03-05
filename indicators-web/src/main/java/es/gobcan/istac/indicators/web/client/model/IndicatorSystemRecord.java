@@ -13,15 +13,15 @@ public class IndicatorSystemRecord extends Record {
 	}
 	
 	public void setUuid(String uuid) {
-		setAttribute(IndicatorsSystemsDS.FIELD_UUID, uuid);
+		setAttribute(IndicatorsSystemsDS.UUID, uuid);
 	}
 	
 	public void setCode(String code) {
-		setAttribute(IndicatorsSystemsDS.FIELD_CODE, code);
+		setAttribute(IndicatorsSystemsDS.CODE, code);
 	}
 	
 	public void setTitle(String title) {
-		setAttribute(IndicatorsSystemsDS.FIELD_INTERNATIONAL_TITLE,title);
+		setAttribute(IndicatorsSystemsDS.TITLE,title);
 	}
 
 }

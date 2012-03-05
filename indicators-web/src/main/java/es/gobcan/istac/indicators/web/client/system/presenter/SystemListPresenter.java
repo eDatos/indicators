@@ -4,6 +4,9 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -22,8 +25,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 
@@ -84,9 +87,8 @@ public class SystemListPresenter extends Presenter<SystemListPresenter.SystemLis
 		dispatcher.execute(new GetIndicatorsSystemListAction(), new AsyncCallback<GetIndicatorsSystemListResult> () {
 			@Override
 			public void onFailure(Throwable caught) {
-			    ShowMessageEvent.fire(SystemListPresenter.this, caught, getMessages().systemErrorRetrieveList());
+			    ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieveList()), MessageTypeEnum.ERROR);
 			}
-
 			@Override
 			public void onSuccess(GetIndicatorsSystemListResult result) {
 				getView().setIndSystemList(result.getIndicatorsSystemList());

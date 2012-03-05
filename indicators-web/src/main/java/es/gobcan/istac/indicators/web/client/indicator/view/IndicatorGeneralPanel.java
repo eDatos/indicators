@@ -153,7 +153,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	    
 	    generalForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
 	    //TODO: SHow localized string for Enums
-	    statusForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getState().getName());
+	    statusForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getProcStatus().getName()); // TODO Translate!!!
 	    statusForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
 	}
 	
@@ -166,7 +166,7 @@ public class IndicatorGeneralPanel extends VLayout {
 		
 	    generalEditionForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
 	    
-	    statusEditionForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getState().getName());
+	    statusEditionForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getProcStatus().getName()); // TODO Translate!!!
 	    statusEditionForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
 	}
 	

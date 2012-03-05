@@ -27,9 +27,9 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
 	private SystemListUiHandler uiHandlers;
 	
-	
 	private final ListGrid indSystemListGrid;
-	private VLayout vLayout;
+	private VLayout panel;
+	
 	
 	@Inject
 	public SystemListViewImpl() {
@@ -40,31 +40,29 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 		indSystemListGrid.setLeaveScrollbarGap(false);
 		
 		//List
-		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.FIELD_CODE,getConstants().systemListHeaderIdentifier());
+		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.CODE,getConstants().systemListHeaderIdentifier());
 		field1.setAlign(Alignment.LEFT);
-		ListGridField field2 = new ListGridField(IndicatorsSystemsDS.FIELD_INTERNATIONAL_TITLE,getConstants().systemListHeaderTitle());
+		ListGridField field2 = new ListGridField(IndicatorsSystemsDS.TITLE,getConstants().systemListHeaderTitle());
 		indSystemListGrid.setFields(field1,field2);
 		
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[0];
 
 		indSystemListGrid.setData(records);
 		
-		vLayout = new VLayout();
-		vLayout.addMember(indSystemListGrid);
+		panel = new VLayout();
+		panel.addMember(indSystemListGrid);
 		
 		bindEvents();
 	}
 	
 	private void bindEvents() {
-		
 		indSystemListGrid.addRecordClickHandler(new RecordClickHandler() {
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
-				String code = event.getRecord().getAttribute(IndicatorsSystemsDS.FIELD_CODE);
+				String code = event.getRecord().getAttribute(IndicatorsSystemsDS.CODE);
 				uiHandlers.goToIndicatorsSystem(code);
 			}
 		});
-		
 	}
 	
 	@Override
@@ -79,7 +77,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 	
 	@Override
 	public Widget asWidget() {
-		return vLayout;
+		return panel;
 	}
 
 	@Override
@@ -91,7 +89,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 	public List<String> getCodesFromSelected() {
 		List<String> codes = new ArrayList<String>();
 		for (ListGridRecord record : indSystemListGrid.getSelectedRecords()) {
-			codes.add(record.getAttribute(IndicatorsSystemsDS.FIELD_CODE));
+			codes.add(record.getAttribute(IndicatorsSystemsDS.CODE));
 		}
 		return codes;
 	}

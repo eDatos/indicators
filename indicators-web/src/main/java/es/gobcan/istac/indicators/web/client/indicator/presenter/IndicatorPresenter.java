@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -19,8 +22,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
@@ -66,7 +69,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode), new AsyncCallback<GetIndicatorByCodeResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorRetrieve());
+				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
 
 			@Override
@@ -81,7 +84,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorSave());
+	            ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
 	        }
 	        
 	        @Override
@@ -95,7 +98,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
 	       @Override
 	        public void onFailure(Throwable caught) {
-	           ShowMessageEvent.fire(IndicatorPresenter.this, caught, getMessages().indicErrorSave());
+	           ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
 	        }
 	       
 	       @Override

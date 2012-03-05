@@ -10,6 +10,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -19,10 +20,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Visibility;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -184,11 +183,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		
 		public CreateForm() {
 			
-			Label indicatorLabel = new Label();
-			indicatorLabel.setAlign(Alignment.LEFT);
-			indicatorLabel.setOverflow(Overflow.HIDDEN);
-			indicatorLabel.setHeight(40);
-			indicatorLabel.setStyleName("sectionTitle");
+			TitleLabel indicatorLabel = new TitleLabel();
 			indicatorLabel.setContents(getConstants().indicNewTitle());
 			
 			generalPanel = new GeneralPanel();

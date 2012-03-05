@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.main.view;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.widgets.ErrorMessagePanel;
 import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
 
@@ -14,7 +15,6 @@ import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 import es.gobcan.istac.indicators.web.client.widgets.LinksHead;

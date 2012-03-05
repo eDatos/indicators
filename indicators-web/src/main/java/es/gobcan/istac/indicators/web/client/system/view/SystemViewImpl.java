@@ -86,9 +86,9 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	
 	@Override
 	public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
-		indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
-		structurePanel.setIndicatorsSystem(indSystem);
-		generalPanel.setIndicatorsSystem(indSystem);
+	    indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
+	    generalPanel.setIndicatorsSystem(indSystem);
+	    structurePanel.setIndicatorsSystem(indSystem);
 	}
 	
 	@Override

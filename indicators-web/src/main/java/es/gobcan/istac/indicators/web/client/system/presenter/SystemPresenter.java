@@ -4,6 +4,9 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,8 +33,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.enums.MessageTypeEnum;
-import es.gobcan.istac.indicators.web.client.events.ShowMessageEvent;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -131,9 +132,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new GetIndicatorsSystemAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemErrorRetrieve());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
-
 			@Override
 			public void onSuccess(GetIndicatorsSystemResult result) {
 				SystemPresenter.this.indSystem = result.getIndicatorsSystem();
@@ -150,14 +150,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 				@Override
 				public void onFailure(Throwable caught) {
-					ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucErrorRetrieve());
+					ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
 				}
-	
 				@Override
 				public void onSuccess(GetIndicatorsSystemStructureResult result) {
 					getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
 				}
-				
 			});
 		}
 	}
@@ -167,9 +165,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	    dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorCreate());
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
 	        }
-	        
 	        @Override
 	        public void onSuccess(GetIndicatorListResult result) {
 	            getView().setIndicators(result.getIndicatorList());
@@ -182,9 +179,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	    dispatcher.execute(new GetIndicatorAction(uuid), new AsyncCallback<GetIndicatorResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorCreate());
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
 	        }
-	        
 	        @Override
 	        public void onSuccess(GetIndicatorResult result) {
 	            getView().setIndicatorFromIndicatorInstance(result.getIndicator());
@@ -197,9 +193,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new CreateDimensionAction(system, dimension), new AsyncCallback<CreateDimensionResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorCreate());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(CreateDimensionResult result) {
 				retrieveSystemStructureNoCache();
@@ -215,9 +210,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new UpdateDimensionAction(dimension), new AsyncCallback<UpdateDimensionResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorSave());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorSave()), MessageTypeEnum.ERROR);
 			}
-
 			@Override
 			public void onSuccess(UpdateDimensionResult result) {
 				retrieveSystemStructureNoCache();
@@ -231,9 +225,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new DeleteDimensionAction(dimension.getUuid()), new AsyncCallback<DeleteDimensionResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucDimErrorDelete());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorDelete()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(DeleteDimensionResult result) {
 				retrieveSystemStructureNoCache();
@@ -247,9 +240,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new CreateIndicatorInstanceAction(system, instance), new AsyncCallback<CreateIndicatorInstanceResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucIndInstanceErrorCreate());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorCreate()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(CreateIndicatorInstanceResult result) {
 				retrieveSystemStructureNoCache();
@@ -265,9 +257,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new UpdateIndicatorInstanceAction(instance), new AsyncCallback<UpdateIndicatorInstanceResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucIndInstanceErrorSave());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorSave()), MessageTypeEnum.ERROR);
 			}
-
 			@Override
 			public void onSuccess(UpdateIndicatorInstanceResult result) {
 				retrieveSystemStructureNoCache();
@@ -282,9 +273,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			@Override
 			public void onFailure(Throwable caught) {
 				retrieveSystemStructureNoCache();
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucNodesErrorMove());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucNodesErrorMove()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(MoveSystemStructureContentResult result) {
 				retrieveSystemStructureNoCache();
@@ -297,9 +287,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new DeleteIndicatorInstanceAction(instance.getUuid()), new AsyncCallback<DeleteIndicatorInstanceResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucIndInstanceErrorDelete());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorDelete()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(DeleteIndicatorInstanceResult result) {
 				retrieveSystemStructureNoCache();
@@ -313,14 +302,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				ShowMessageEvent.fire(SystemPresenter.this, caught, getMessages().systemStrucErrorRetrieve());
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
-			
 			@Override
 			public void onSuccess(GetIndicatorsSystemStructureResult result) {
 				getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
 			}
-			
 		});
 	}
 }
