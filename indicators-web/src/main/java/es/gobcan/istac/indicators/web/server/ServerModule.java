@@ -4,23 +4,23 @@ import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.spring.HandlerModule;
 
-import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorHandler;
-import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceHandler;
-import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureHandler;
-import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentHandler;
-import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorHandler;
-import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceHandler;
-import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorsSystemHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
@@ -48,27 +48,27 @@ public class ServerModule extends HandlerModule {
 	@Override
 	protected void configureHandlers() {
 		/* System actions */
-		bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemHandler.class);
-		bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListHandler.class);
-		bindHandler(GetIndicatorsSystemAction.class, GetIndicatorsSystemHandler.class);
-		bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureHandler.class);
+		bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
+		bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
+		bindHandler(GetIndicatorsSystemAction.class, GetIndicatorsSystemActionHandler.class);
+		bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
 		
 		/* System structure related actions */
-		bindHandler(CreateDimensionAction.class, CreateDimensionHandler.class);
-		bindHandler(UpdateDimensionAction.class, UpdateDimensionHandler.class);
-		bindHandler(DeleteDimensionAction.class, DeleteDimensionHandler.class);
-		bindHandler(CreateIndicatorInstanceAction.class, CreateIndicatorInstanceHandler.class);
-		bindHandler(UpdateIndicatorInstanceAction.class, UpdateIndicatorInstanceHandler.class);
-		bindHandler(DeleteIndicatorInstanceAction.class, DeleteIndicatorInstanceHandler.class);
-		bindHandler(MoveSystemStructureContentAction.class, MoveSystemStructureContentHandler.class);
+		bindHandler(CreateDimensionAction.class, CreateDimensionActionHandler.class);
+		bindHandler(UpdateDimensionAction.class, UpdateDimensionActionHandler.class);
+		bindHandler(DeleteDimensionAction.class, DeleteDimensionActionHandler.class);
+		bindHandler(CreateIndicatorInstanceAction.class, CreateIndicatorInstanceActionHandler.class);
+		bindHandler(UpdateIndicatorInstanceAction.class, UpdateIndicatorInstanceActionHandler.class);
+		bindHandler(DeleteIndicatorInstanceAction.class, DeleteIndicatorInstanceActionHandler.class);
+		bindHandler(MoveSystemStructureContentAction.class, MoveSystemStructureContentActionHandler.class);
 		
 		/* Indicators actions */
-		bindHandler(CreateIndicatorAction.class, CreateIndicatorHandler.class);
-		bindHandler(UpdateIndicatorAction.class, UpdateIndicatorHandler.class);
-		bindHandler(GetIndicatorListAction.class, GetIndicatorListHandler.class);
-		bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeHandler.class);
-		bindHandler(GetIndicatorAction.class, GetIndicatorHandler.class);
-		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsHandler.class);
+		bindHandler(CreateIndicatorAction.class, CreateIndicatorActionHandler.class);
+		bindHandler(UpdateIndicatorAction.class, UpdateIndicatorActionHandler.class);
+		bindHandler(GetIndicatorListAction.class, GetIndicatorListActionHandler.class);
+		bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
+		bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
+		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
 	}
 	
 }

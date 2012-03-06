@@ -10,34 +10,36 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
-import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 
 @Component
-public class UpdateDimensionHandler extends AbstractActionHandler<UpdateDimensionAction, UpdateDimensionResult> {
-
-    @Autowired
+public class CreateIndicatorActionHandler extends AbstractActionHandler<CreateIndicatorAction, CreateIndicatorResult>{
+    
+    @Autowired 
     private IndicatorsServiceWrapper service;
     
-    public UpdateDimensionHandler() {
-        super(UpdateDimensionAction.class);
+    
+    public CreateIndicatorActionHandler() {
+        super(CreateIndicatorAction.class);
     }
-
+    
     @Override
-    public UpdateDimensionResult execute(UpdateDimensionAction action, ExecutionContext context) throws ActionException {
+    public CreateIndicatorResult execute(CreateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            service.updateDimension(ServiceContextHelper.getServiceContext(), action.getDimension());
-            return new UpdateDimensionResult();
+            IndicatorDto indicatorDto = service.createIndicator(ServiceContextHelper.getServiceContext(), action.getIndicator());
+            return new CreateIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(UpdateDimensionAction action, UpdateDimensionResult result, ExecutionContext context) throws ActionException {
-
+    public void undo(CreateIndicatorAction action, CreateIndicatorResult result, ExecutionContext context) throws ActionException {
+        
     }
 
 }

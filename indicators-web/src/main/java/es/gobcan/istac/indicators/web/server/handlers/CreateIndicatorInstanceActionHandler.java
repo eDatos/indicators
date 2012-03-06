@@ -10,37 +10,36 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
-import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 
 @Component
-public class CreateDimensionHandler extends AbstractActionHandler<CreateDimensionAction, CreateDimensionResult> {
+public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public CreateDimensionHandler() {
-        super(CreateDimensionAction.class);
+    public CreateIndicatorInstanceActionHandler() {
+        super(CreateIndicatorInstanceAction.class);
     }
 
     @Override
-    public CreateDimensionResult execute(CreateDimensionAction action, ExecutionContext context) throws ActionException {
+    public CreateIndicatorInstanceResult execute(CreateIndicatorInstanceAction action, ExecutionContext context) throws ActionException {
         try {
             IndicatorsSystemDto system = action.getIndicatorsSystem();
-            DimensionDto createdDim = service.createDimension(ServiceContextHelper.getServiceContext(),system, action.getDimension());
-            return new CreateDimensionResult(createdDim);
+            IndicatorInstanceDto createdInstance = service.createIndicatorInstance(ServiceContextHelper.getServiceContext(), system, action.getIndicatorInstance());
+            return new CreateIndicatorInstanceResult(createdInstance);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(CreateDimensionAction action, CreateDimensionResult result, ExecutionContext context) throws ActionException {
-
+    public void undo(CreateIndicatorInstanceAction action, CreateIndicatorInstanceResult result, ExecutionContext context) throws ActionException {
     }
 
 }

@@ -16,12 +16,12 @@ import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
 
 @Component
-public class DeleteIndicatorInstanceHandler extends AbstractActionHandler<DeleteIndicatorInstanceAction, DeleteIndicatorInstanceResult> {
+public class DeleteIndicatorInstanceActionHandler extends AbstractActionHandler<DeleteIndicatorInstanceAction, DeleteIndicatorInstanceResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public DeleteIndicatorInstanceHandler() {
+    public DeleteIndicatorInstanceActionHandler() {
         super(DeleteIndicatorInstanceAction.class);
     }
 

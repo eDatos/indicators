@@ -13,33 +13,32 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
 @Component
-public class CreateIndicatorHandler extends AbstractActionHandler<CreateIndicatorAction, CreateIndicatorResult>{
-    
-    @Autowired 
+public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIndicatorAction, UpdateIndicatorResult> {
+
+    @Autowired
     private IndicatorsServiceWrapper service;
     
-    
-    public CreateIndicatorHandler() {
-        super(CreateIndicatorAction.class);
+    public UpdateIndicatorActionHandler() {
+        super(UpdateIndicatorAction.class);
     }
-    
+
     @Override
-    public CreateIndicatorResult execute(CreateIndicatorAction action, ExecutionContext context) throws ActionException {
+    public UpdateIndicatorResult execute(UpdateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = service.createIndicator(ServiceContextHelper.getServiceContext(), action.getIndicator());
-            return new CreateIndicatorResult(indicatorDto);
+            IndicatorDto ind = action.getIndicator();
+            service.updateIndicator(ServiceContextHelper.getServiceContext(),ind);
+            return new UpdateIndicatorResult();
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(CreateIndicatorAction action, CreateIndicatorResult result, ExecutionContext context) throws ActionException {
-        
+    public void undo(UpdateIndicatorAction action, UpdateIndicatorResult result, ExecutionContext context) throws ActionException {
     }
 
 }

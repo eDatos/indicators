@@ -10,32 +10,37 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
+import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
+import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 
 @Component
-public class GetIndicatorByCodeHandler extends AbstractActionHandler<GetIndicatorByCodeAction, GetIndicatorByCodeResult>{
+public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDimensionAction, CreateDimensionResult> {
+
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public GetIndicatorByCodeHandler() {
-        super(GetIndicatorByCodeAction.class);
+    public CreateDimensionActionHandler() {
+        super(CreateDimensionAction.class);
     }
 
     @Override
-    public GetIndicatorByCodeResult execute(GetIndicatorByCodeAction action, ExecutionContext context) throws ActionException {
+    public CreateDimensionResult execute(CreateDimensionAction action, ExecutionContext context) throws ActionException {
         try {
-            String code = action.getCode();
-            return new GetIndicatorByCodeResult(service.retrieveIndicatorByCode(ServiceContextHelper.getServiceContext(),code));
+            IndicatorsSystemDto system = action.getIndicatorsSystem();
+            DimensionDto createdDim = service.createDimension(ServiceContextHelper.getServiceContext(),system, action.getDimension());
+            return new CreateDimensionResult(createdDim);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetIndicatorByCodeAction action, GetIndicatorByCodeResult result, ExecutionContext context) throws ActionException {
+    public void undo(CreateDimensionAction action, CreateDimensionResult result, ExecutionContext context) throws ActionException {
 
     }
+
 }

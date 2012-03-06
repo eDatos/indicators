@@ -34,10 +34,18 @@ public class IndicatorGeneralPanel extends VLayout {
 	/* View Form */
 	private GroupDynamicForm identifiersForm;
 	private GroupDynamicForm contentClassifiersForm; 
+	private GroupDynamicForm contentDescriptorsForm;
+	private GroupDynamicForm productionDescriptorsForm;
+	private GroupDynamicForm diffusionDescriptorsForm;
+	private GroupDynamicForm publicationDescriptorsForm;
 	
 	/* Edit Form*/
 	private GroupDynamicForm identifiersEditionForm;
 	private GroupDynamicForm contentClassifiersEditionForm; 
+	private GroupDynamicForm contentDescriptorsEditionForm;
+	private GroupDynamicForm productionDescriptorsEditionForm;
+	private GroupDynamicForm diffusionDescriptorsEditionForm;
+	private GroupDynamicForm publicationDescriptorsEditionForm;
 	
 	
 	public IndicatorGeneralPanel() {
@@ -61,6 +69,14 @@ public class IndicatorGeneralPanel extends VLayout {
 	        	identifiersEditionForm.setTranslationsShowed(translationsShowed);
 	        	contentClassifiersForm.setTranslationsShowed(translationsShowed);
 	        	contentClassifiersEditionForm.setTranslationsShowed(translationsShowed);
+	        	contentDescriptorsForm.setTranslationsShowed(translationsShowed);
+	        	contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+	        	productionDescriptorsForm.setTranslationsShowed(translationsShowed);
+	        	productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+	        	diffusionDescriptorsForm.setTranslationsShowed(translationsShowed);
+	        	diffusionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+	        	publicationDescriptorsForm.setTranslationsShowed(translationsShowed);
+	        	publicationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 	        }
         });
         
@@ -95,8 +111,41 @@ public class IndicatorGeneralPanel extends VLayout {
 		ViewMultiLanguageTextItem subjectTitle = new ViewMultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
 		contentClassifiersForm.setFields(subjectCode, subjectTitle);
 		
+		// Content Descriptors Form
+		contentDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
+		ViewMultiLanguageTextItem conceptDescription = new ViewMultiLanguageTextItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
+		contentDescriptorsForm.setFields(conceptDescription);
+		
+		// Production Descriptors Form
+		productionDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailProductionDescriptors());
+		ViewTextItem prodVersion = new ViewTextItem(IndicatorDS.PRODUCTION_VERSION, getConstants().indicDetailProductionVersion());
+		ViewTextItem prodValDate = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
+		ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
+		productionDescriptorsForm.setFields(prodVersion, prodValDate, prodValUser);
+		
+		// Diffusion Descriptors Form
+        diffusionDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
+        ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
+        ViewTextItem diffValDate = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_DATE, getConstants().indicDetailDiffusionValidationDate());
+        ViewTextItem diffValUser = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_USER, getConstants().indicDetailDiffusionValidationUser());
+        diffusionDescriptorsForm.setFields(diffVersion, diffValDate, diffValUser);
+		
+        // Publication Descriptors
+        publicationDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
+        ViewTextItem pubFailedDate = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_DATE, getConstants().indicDetailPublicationFailedDate());
+        ViewTextItem pubFailedUser = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_USER, getConstants().indicDetailPublicationFailedUser());
+        ViewTextItem pubDate = new ViewTextItem(IndicatorDS.PUBLICATION_DATE, getConstants().indicDetailPublicationDate());
+        ViewTextItem pubUser = new ViewTextItem(IndicatorDS.PUBLICATION_USER, getConstants().indicDetailPublicationUser());
+        ViewTextItem archDate = new ViewTextItem(IndicatorDS.ARCHIVED_DATE, getConstants().indicDetailArchivedDate());
+        ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
+        publicationDescriptorsForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
+        
 		mainFormLayout.addViewCanvas(identifiersForm);
 		mainFormLayout.addViewCanvas(contentClassifiersForm);
+		mainFormLayout.addViewCanvas(contentDescriptorsForm);
+		mainFormLayout.addViewCanvas(productionDescriptorsForm);
+		mainFormLayout.addViewCanvas(diffusionDescriptorsForm);
+		mainFormLayout.addViewCanvas(publicationDescriptorsForm);
 	}
 	
 	
@@ -120,8 +169,41 @@ public class IndicatorGeneralPanel extends VLayout {
         subjectTitle.setRequired(true);
         contentClassifiersEditionForm.setFields(subjectCode, subjectTitle);
 		
+        // Content Descriptors Form
+        contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
+        MultiLanguageTextItem conceptDescription = new MultiLanguageTextItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
+        contentDescriptorsEditionForm.setFields(conceptDescription);
+        
+        // Production Descriptors Form
+        productionDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailProductionDescriptors());
+        ViewTextItem prodVersion = new ViewTextItem(IndicatorDS.PRODUCTION_VERSION, getConstants().indicDetailProductionVersion());
+        ViewTextItem prodValDate = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_DATE, getConstants().indicDetailProductionValidationDate());
+        ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
+        productionDescriptorsEditionForm.setFields(prodVersion, prodValDate, prodValUser);
+        
+        // Diffusion Descriptors Form
+        diffusionDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
+        ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
+        ViewTextItem diffValDate = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_DATE, getConstants().indicDetailDiffusionValidationDate());
+        ViewTextItem diffValUser = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_USER, getConstants().indicDetailDiffusionValidationUser());
+        diffusionDescriptorsEditionForm.setFields(diffVersion, diffValDate, diffValUser);
+        
+        // Publication Descriptors
+        publicationDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
+        ViewTextItem pubFailedDate = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_DATE, getConstants().indicDetailPublicationFailedDate());
+        ViewTextItem pubFailedUser = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_USER, getConstants().indicDetailPublicationFailedUser());
+        ViewTextItem pubDate = new ViewTextItem(IndicatorDS.PUBLICATION_DATE, getConstants().indicDetailPublicationDate());
+        ViewTextItem pubUser = new ViewTextItem(IndicatorDS.PUBLICATION_USER, getConstants().indicDetailPublicationUser());
+        ViewTextItem archDate = new ViewTextItem(IndicatorDS.ARCHIVED_DATE, getConstants().indicDetailArchivedDate());
+        ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
+        publicationDescriptorsEditionForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
+        
 		mainFormLayout.addEditionCanvas(identifiersEditionForm);
 		mainFormLayout.addEditionCanvas(contentClassifiersEditionForm);
+		mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
+		mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
+		mainFormLayout.addEditionCanvas(diffusionDescriptorsEditionForm);
+		mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
 	}
 	
 	public void setIndicator(IndicatorDto indicatorDto) {
@@ -142,12 +224,33 @@ public class IndicatorGeneralPanel extends VLayout {
 	    identifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
 	    identifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
 	    identifiersForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
-	    identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getName()));
+	    identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
 	    identifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 	    
 	    // Content Classifiers
 	    contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
 	    contentClassifiersForm.setValue(IndicatorDS.SUBJECT_TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getSubjectTitle()));
+	    
+	    // Content Descriptors
+	    contentDescriptorsForm.setValue(IndicatorDS.CONCEPT_DESCRIPTION, RecordUtils.getInternationalStringRecord(indicatorDto.getConceptDescription()));
+	    
+	    // Production Descriptors
+	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
+	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null ? indicatorDto.getProductionValidationDate().toString() : "");
+	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
+	    
+	    // Diffusion Descriptors
+	    diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
+	    diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
+	    diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
+	    
+	    // Publication Descriptors
+	    publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
+	    publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
+	    publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
+	    publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
+	    publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
+	    publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 	}
 	
 	private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
@@ -156,22 +259,45 @@ public class IndicatorGeneralPanel extends VLayout {
 		identifiersEditionForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
 		identifiersEditionForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
 		identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
-		identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getName()));
+		identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
 		identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 		
 	    // Content Classifiers
         contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
         contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getSubjectTitle()));
+        
+        // Content Descriptors
+        contentDescriptorsEditionForm.setValue(IndicatorDS.CONCEPT_DESCRIPTION, RecordUtils.getInternationalStringRecord(indicatorDto.getConceptDescription()));
+        
+        // Production Descriptors
+        productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
+        productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null ? indicatorDto.getProductionValidationDate().toString() : "");
+        productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
+        
+        // Diffusion Descriptors
+        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
+        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
+        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
+        
+        // Publication Descriptors
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 	}
 	
     private void saveIndicator() {
-        if (identifiersEditionForm.validate() && contentClassifiersEditionForm.validate()) {
+        if (identifiersEditionForm.validate() && contentClassifiersEditionForm.validate() && contentDescriptorsEditionForm.validate()) {
             // Identifiers
-            indicator.setName((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.TITLE));
+            indicator.setTitle((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.TITLE));
             indicator.setAcronym((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.ACRONYM));
             // Content Classifiers
             indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT_CODE));
             indicator.setSubjectTitle((InternationalStringDto)contentClassifiersEditionForm.getValue(IndicatorDS.SUBJECT_TITLE));
+            // Content Descriptors
+            indicator.setConceptDescription((InternationalStringDto)contentDescriptorsEditionForm.getValue(IndicatorDS.CONCEPT_DESCRIPTION));
             
             uiHandlers.saveIndicator(indicator);
         }

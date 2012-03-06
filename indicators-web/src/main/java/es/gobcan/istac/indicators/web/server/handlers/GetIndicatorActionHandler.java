@@ -10,35 +10,34 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 
 @Component
-public class GetIndicatorsSystemHandler extends AbstractActionHandler<GetIndicatorsSystemAction, GetIndicatorsSystemResult> {
+public class GetIndicatorActionHandler extends AbstractActionHandler<GetIndicatorAction, GetIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public GetIndicatorsSystemHandler() {
-        super(GetIndicatorsSystemAction.class);
+    public GetIndicatorActionHandler() {
+        super(GetIndicatorAction.class);
     }
 
     @Override
-    public GetIndicatorsSystemResult execute(GetIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorResult execute(GetIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            String code = action.getCode();
-            IndicatorsSystemDto indSys = service.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), code);
-            return new GetIndicatorsSystemResult(indSys);
+            String uuid = action.getUuid();
+            return new GetIndicatorResult(service.retrieveIndicator(ServiceContextHelper.getServiceContext(),uuid));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetIndicatorsSystemAction action, GetIndicatorsSystemResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetIndicatorAction action, GetIndicatorResult result, ExecutionContext context) throws ActionException {
+
     }
 
 }

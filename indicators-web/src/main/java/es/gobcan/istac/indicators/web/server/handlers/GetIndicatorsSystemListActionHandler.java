@@ -10,36 +10,32 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 
 @Component
-public class UpdateIndicatorsSystemHandler extends AbstractActionHandler<UpdateIndicatorsSystemAction, UpdateIndicatorsSystemResult> {
+public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
-    
-    public UpdateIndicatorsSystemHandler() {
-        super(UpdateIndicatorsSystemAction.class);
+
+    public GetIndicatorsSystemListActionHandler() {
+        super(GetIndicatorsSystemListAction.class);
     }
 
     @Override
-    public UpdateIndicatorsSystemResult execute(UpdateIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indSys = action.getIndicatorsSystem();
-            service.updateIndicatorsSystem(ServiceContextHelper.getServiceContext(), indSys);
-            return new UpdateIndicatorsSystemResult();
+            return new GetIndicatorsSystemListResult(service.findIndicatorsSystems(ServiceContextHelper.getServiceContext()));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(UpdateIndicatorsSystemAction action, UpdateIndicatorsSystemResult result, ExecutionContext context) throws ActionException {
-
+    public void undo(GetIndicatorsSystemListAction action, GetIndicatorsSystemListResult result, ExecutionContext context) throws ActionException {
     }
 
 }

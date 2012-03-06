@@ -16,12 +16,12 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
 
 @Component
-public class UpdateIndicatorInstanceHandler extends AbstractActionHandler<UpdateIndicatorInstanceAction, UpdateIndicatorInstanceResult> {
+public class UpdateIndicatorInstanceActionHandler extends AbstractActionHandler<UpdateIndicatorInstanceAction, UpdateIndicatorInstanceResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public UpdateIndicatorInstanceHandler() {
+    public UpdateIndicatorInstanceActionHandler() {
         super(UpdateIndicatorInstanceAction.class);
     }
 

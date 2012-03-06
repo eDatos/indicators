@@ -52,7 +52,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
 	@Override
 	public void setIndicator(IndicatorDto indicator) {
-		this.indicatorLabel.setContents(getLocalisedString(indicator.getName()));
+		this.indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
 		this.generalPanel.setIndicator(indicator);
 	}
 

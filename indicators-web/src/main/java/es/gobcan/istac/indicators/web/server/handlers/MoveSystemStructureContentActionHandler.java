@@ -17,12 +17,12 @@ import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 
 @Component
-public class MoveSystemStructureContentHandler extends AbstractActionHandler<MoveSystemStructureContentAction, MoveSystemStructureContentResult> {
+public class MoveSystemStructureContentActionHandler extends AbstractActionHandler<MoveSystemStructureContentAction, MoveSystemStructureContentResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public MoveSystemStructureContentHandler() {
+    public MoveSystemStructureContentActionHandler() {
         super(MoveSystemStructureContentAction.class);
     }
 

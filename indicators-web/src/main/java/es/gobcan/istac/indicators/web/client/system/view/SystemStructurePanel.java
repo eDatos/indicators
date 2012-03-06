@@ -760,14 +760,14 @@ public class SystemStructurePanel extends VLayout {
         public void setIndicators(List<IndicatorDto> indicators) {
             LinkedHashMap<String,String> indicatorsMap = new LinkedHashMap<String, String>();
             for (IndicatorDto indicator : indicators) {
-                indicatorsMap.put(indicator.getUuid(), getLocalisedString(indicator.getName()));
+                indicatorsMap.put(indicator.getUuid(), getLocalisedString(indicator.getTitle()));
             }
             indicatorsListItem.setValueMap(indicatorsMap);
         }
         
         
         private void setIndicator(IndicatorDto indicator) {
-            form.setValue(FIELD_INDICATOR_NAME, getLocalisedString(indicator.getName()));
+            form.setValue(FIELD_INDICATOR_NAME, getLocalisedString(indicator.getTitle()));
         }
         
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {

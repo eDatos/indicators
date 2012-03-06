@@ -158,7 +158,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
 		int index = 0;
 		for (IndicatorDto ind : indicators) {
-			records[index++] = new IndicatorRecord(ind.getUuid(), ind.getCode(), getLocalisedString(ind.getName()));
+			records[index++] = new IndicatorRecord(ind.getUuid(), ind.getCode(), getLocalisedString(ind.getTitle()));
 		}
 		indicatorList.setData(records);
 	}
@@ -288,7 +288,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		    	validated = generalEditionForm.validate(false) && validated;
 		        if (validated) {
 		        	indicator.setCode((String)identifiersEditionForm.getValue(IndicatorDS.CODE));
-		            indicator.setName((InternationalStringDto)generalEditionForm.getValue(IndicatorDS.TITLE));
+		            indicator.setTitle((InternationalStringDto)generalEditionForm.getValue(IndicatorDS.TITLE));
 		            //TODO: Change this when new fields are added
 		            indicator.setSubjectCode("SUBJECT_CODE_CHANGE_ME");
 		            indicator.setSubjectTitle(createIntString("Subject titulo es"));

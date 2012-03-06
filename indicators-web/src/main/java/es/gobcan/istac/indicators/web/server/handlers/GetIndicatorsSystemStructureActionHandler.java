@@ -17,12 +17,12 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 
 @Component
-public class GetIndicatorsSystemStructureHandler extends AbstractActionHandler<GetIndicatorsSystemStructureAction, GetIndicatorsSystemStructureResult> {
+public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHandler<GetIndicatorsSystemStructureAction, GetIndicatorsSystemStructureResult> {
 
     @Autowired
     private IndicatorsServiceWrapper service;
     
-    public GetIndicatorsSystemStructureHandler() {
+    public GetIndicatorsSystemStructureActionHandler() {
         super(GetIndicatorsSystemStructureAction.class);
     }
 
