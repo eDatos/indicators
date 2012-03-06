@@ -2,12 +2,14 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -17,7 +19,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
-import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsDS;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class IndicatorGeneralPanel extends VLayout {
 	
@@ -30,14 +32,12 @@ public class IndicatorGeneralPanel extends VLayout {
 	private InternationalMainFormLayout mainFormLayout;
 	
 	/* View Form */
-	private GroupDynamicForm generalForm; 
 	private GroupDynamicForm identifiersForm;
-	private GroupDynamicForm statusForm; 
+	private GroupDynamicForm contentClassifiersForm; 
 	
 	/* Edit Form*/
 	private GroupDynamicForm identifiersEditionForm;
-	private GroupDynamicForm generalEditionForm;
-	private GroupDynamicForm statusEditionForm; 
+	private GroupDynamicForm contentClassifiersEditionForm; 
 	
 	
 	public IndicatorGeneralPanel() {
@@ -57,11 +57,11 @@ public class IndicatorGeneralPanel extends VLayout {
 	        @Override
             public void onClick(ClickEvent event) {
 	        	boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
-	        	generalForm.setTranslationsShowed(translationsShowed);
-	        	generalEditionForm.setTranslationsShowed(translationsShowed);
-                generalForm.markForRedraw();
-                generalEditionForm.markForRedraw();
-            }
+	        	identifiersForm.setTranslationsShowed(translationsShowed);
+	        	identifiersEditionForm.setTranslationsShowed(translationsShowed);
+	        	contentClassifiersForm.setTranslationsShowed(translationsShowed);
+	        	contentClassifiersEditionForm.setTranslationsShowed(translationsShowed);
+	        }
         });
         
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
@@ -79,100 +79,100 @@ public class IndicatorGeneralPanel extends VLayout {
 	 * @return
 	 */
 	private void createViewForm() {
-	    ViewTextItem staticCode = new ViewTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
-	    ViewTextItem staticUuid = new ViewTextItem(IndicatorsDS.FIELD_UUID, getConstants().indicDetailUuid());
-	    ViewTextItem staticVersion = new ViewTextItem(IndicatorsDS.FIELD_VERSION, getConstants().indicDetailVersion());
-	    
-	    ViewTextItem staticState = new ViewTextItem(IndicatorsDS.FIELD_STATE, getConstants().indicDetailState());
-	    ViewTextItem staticCreatedDate = new ViewTextItem(IndicatorsDS.FIELD_CREATED_DATE, getConstants().indicDetailCreatedDate());
-		
-		// Identifiers Form
-		identifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
-		identifiersForm.setFields(staticCode, staticUuid, staticVersion);
+	    // Identifiers Form
+	    identifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+	    ViewTextItem code = new ViewTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+	    ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
+	    ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
+	    ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
+	    ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+	    ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
+		identifiersForm.setFields(code, uuid, version, procStatus, title, acronym);
 
-		ViewMultiLanguageTextItem staticInternationalName = new ViewMultiLanguageTextItem(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicDetailName());
-		// General Form
-		generalForm = new GroupDynamicForm(getConstants().indicDetailDetails());
-		generalForm.setFields(staticInternationalName);
-
-		// Status Form
-		statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
-//		statusForm.setRedrawOnResize(true);
-		statusForm.setFields(staticState, staticCreatedDate);
+		// Content Classifiers Form
+		contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
+		ViewTextItem subjectCode = new ViewTextItem(IndicatorDS.SUBJECT_CODE, getConstants().indicDetailSubjectCode());
+		ViewMultiLanguageTextItem subjectTitle = new ViewMultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
+		contentClassifiersForm.setFields(subjectCode, subjectTitle);
 		
 		mainFormLayout.addViewCanvas(identifiersForm);
-		mainFormLayout.addViewCanvas(generalForm);
-		mainFormLayout.addViewCanvas(statusForm);
+		mainFormLayout.addViewCanvas(contentClassifiersForm);
 	}
 	
 	
 	private void createEditionForm() {
-	    ViewTextItem staticCode = new ViewTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
-	    ViewTextItem staticUuid = new ViewTextItem(IndicatorsDS.FIELD_UUID, getConstants().indicDetailUuid());
-	    ViewTextItem staticVersion = new ViewTextItem(IndicatorsDS.FIELD_VERSION, getConstants().indicDetailVersion());
-	    ViewTextItem staticState = new ViewTextItem(IndicatorsDS.FIELD_STATE, getConstants().indicDetailState());
-        ViewTextItem staticCreatedDate = new ViewTextItem(IndicatorsDS.FIELD_CREATED_DATE, getConstants().indicDetailCreatedDate());
-		
-		// Identifiers Form
-		identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
-		identifiersEditionForm.setFields(staticCode, staticUuid, staticVersion);
-		
-		
-		MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicDetailName());
-		internationalName.setRequired(true);
-		// General Form
-		generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
-		generalEditionForm.setFields(internationalName);
+	    // Identifiers Form
+        identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+	    ViewTextItem code = new ViewTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+	    ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
+	    ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
+	    ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
+	    MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+	    title.setRequired(true);
+	    MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
+		identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym);
 				
 		// Status Form
-		statusEditionForm = new GroupDynamicForm(getConstants().indicDetailStatus());
-		statusEditionForm.setFields(staticState,staticCreatedDate);
+		contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
+		RequiredTextItem subjectCode = new RequiredTextItem(IndicatorDS.SUBJECT_CODE, getConstants().indicDetailSubjectCode());
+		subjectCode.setRequired(true);
+        MultiLanguageTextItem subjectTitle = new MultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
+        subjectTitle.setRequired(true);
+        contentClassifiersEditionForm.setFields(subjectCode, subjectTitle);
 		
 		mainFormLayout.addEditionCanvas(identifiersEditionForm);
-		mainFormLayout.addEditionCanvas(generalEditionForm);
-		mainFormLayout.addEditionCanvas(statusEditionForm);
+		mainFormLayout.addEditionCanvas(contentClassifiersEditionForm);
 	}
 	
-	public void setIndicator(IndicatorDto indicator) {
-	    this.indicator = indicator;
+	public void setIndicator(IndicatorDto indicatorDto) {
+	    this.indicator = indicatorDto;
+	    
 		mainFormLayout.setViewMode();
 		
-		setIndicatorViewMode(indicator);
-		setIndicatorEditionMode(indicator);
+		setIndicatorViewMode(indicatorDto);
+		setIndicatorEditionMode(indicatorDto);
 		
 		// Clear errors
 		identifiersEditionForm.clearErrors(true);
-		generalEditionForm.clearErrors(true);
 	}
 	
-	private void setIndicatorViewMode(IndicatorDto indicator) {
-		/*Updating static fields only*/
-	    identifiersForm.setValue(IndicatorsDS.FIELD_CODE, indicator.getCode());
-	    identifiersForm.setValue(IndicatorsDS.FIELD_UUID, indicator.getUuid());
-	    identifiersForm.setValue(IndicatorsDS.FIELD_VERSION, indicator.getVersionNumber());
+	private void setIndicatorViewMode(IndicatorDto indicatorDto) {
+	    // Identifiers Form
+	    identifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
+	    identifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
+	    identifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
+	    identifiersForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
+	    identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getName()));
+	    identifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 	    
-	    generalForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
-	    //TODO: SHow localized string for Enums
-	    statusForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getProcStatus().getName()); // TODO Translate!!!
-	    statusForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
+	    // Content Classifiers
+	    contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
+	    contentClassifiersForm.setValue(IndicatorDS.SUBJECT_TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getSubjectTitle()));
 	}
 	
-	
-	private void setIndicatorEditionMode(IndicatorDto indicator) {
-		/*Actualizamos campos de edicion*/
-		identifiersEditionForm.setValue(IndicatorsDS.FIELD_CODE, indicator.getCode());
-		identifiersEditionForm.setValue(IndicatorsDS.FIELD_UUID, indicator.getUuid());
-		identifiersEditionForm.setValue(IndicatorsDS.FIELD_VERSION, indicator.getVersionNumber());
+	private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
+	    // Identifiers Form
+		identifiersEditionForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
+		identifiersEditionForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
+		identifiersEditionForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
+		identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
+		identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getName()));
+		identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 		
-	    generalEditionForm.setValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME, RecordUtils.getInternationalStringRecord(indicator.getName()));
-	    
-	    statusEditionForm.setValue(IndicatorsDS.FIELD_STATE, indicator.getProcStatus().getName()); // TODO Translate!!!
-	    statusEditionForm.setValue(IndicatorsDS.FIELD_CREATED_DATE, indicator.getCreatedDate());
+	    // Content Classifiers
+        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
+        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getSubjectTitle()));
 	}
 	
     private void saveIndicator() {
-        if (generalEditionForm.validate()) {
-            indicator.setName((InternationalStringDto)generalEditionForm.getValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME));
+        if (identifiersEditionForm.validate() && contentClassifiersEditionForm.validate()) {
+            // Identifiers
+            indicator.setName((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.TITLE));
+            indicator.setAcronym((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.ACRONYM));
+            // Content Classifiers
+            indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT_CODE));
+            indicator.setSubjectTitle((InternationalStringDto)contentClassifiersEditionForm.getValue(IndicatorDS.SUBJECT_TITLE));
+            
             uiHandlers.saveIndicator(indicator);
         }
     }
@@ -180,4 +180,5 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
+    
 }

@@ -45,7 +45,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher) {
 		super(eventBus, view, proxy);
 		this.dispatcher = dispatcher;
-		view.setUiHandlers(this);
+		getView().setUiHandlers(this);
 	}
 	
 	@Override

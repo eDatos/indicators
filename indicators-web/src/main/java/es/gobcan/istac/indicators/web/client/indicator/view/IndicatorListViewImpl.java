@@ -41,7 +41,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
-import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsDS;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 
@@ -75,15 +75,15 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		toolStrip.addButton(deleteIndicatorActor);
 		
 		indicatorList = new ListGrid();
-		IndicatorsDS indicatorsDS = new IndicatorsDS();
-		indicatorList.setDataSource(indicatorsDS);
+		IndicatorDS indicatorDS = new IndicatorDS();
+		indicatorList.setDataSource(indicatorDS);
 		indicatorList.setLeaveScrollbarGap(false);
 		indicatorList.setUseAllDataSourceFields(false);
 		indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		
-		ListGridField fieldCode = new ListGridField(IndicatorsDS.FIELD_CODE, getConstants().indicListHeaderIdentifier());
+		ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
 		fieldCode.setAlign(Alignment.LEFT);
-		ListGridField fieldName = new ListGridField(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicListHeaderName());
+		ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
 		indicatorList.setFields(fieldCode, fieldName);
 		
 		createPanel = new CreateForm();
@@ -125,7 +125,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
 				if (event.getFieldNum() != 0) { //Clicking checkbox will be ignored
-				    String code = event.getRecord().getAttribute(IndicatorsDS.FIELD_CODE);
+				    String code = event.getRecord().getAttribute(IndicatorDS.CODE);
 					uiHandlers.goToIndicator(code);
 				}
 			}
@@ -172,7 +172,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	public List<String> getUuidsFromSelected() {
 		List<String> codes = new ArrayList<String>();
 		for (ListGridRecord record : indicatorList.getSelectedRecords()) {
-			codes.add(record.getAttribute(IndicatorsDS.FIELD_UUID));
+			codes.add(record.getAttribute(IndicatorDS.UUID));
 		}
 		return codes;
 	}
@@ -249,14 +249,14 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 
 			
 			private void createForm() {
-			    RequiredTextItem code = new RequiredTextItem(IndicatorsDS.FIELD_CODE, getConstants().indicDetailIdentifier());
+			    RequiredTextItem code = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
 				
 				// Identifiers Form
 				identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
 				identifiersEditionForm.setFields(code);
 				
 				
-				MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorsDS.FIELD_INTERNATIONAL_NAME, getConstants().indicDetailName());
+				MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
 				internationalName.setRequired(true);
 				// General Form
 				generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
@@ -287,8 +287,8 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		    	boolean validated = identifiersEditionForm.validate();
 		    	validated = generalEditionForm.validate(false) && validated;
 		        if (validated) {
-		        	indicator.setCode((String)identifiersEditionForm.getValue(IndicatorsDS.FIELD_CODE));
-		            indicator.setName((InternationalStringDto)generalEditionForm.getValue(IndicatorsDS.FIELD_INTERNATIONAL_NAME));
+		        	indicator.setCode((String)identifiersEditionForm.getValue(IndicatorDS.CODE));
+		            indicator.setName((InternationalStringDto)generalEditionForm.getValue(IndicatorDS.TITLE));
 		            //TODO: Change this when new fields are added
 		            indicator.setSubjectCode("SUBJECT_CODE_CHANGE_ME");
 		            indicator.setSubjectTitle(createIntString("Subject titulo es"));

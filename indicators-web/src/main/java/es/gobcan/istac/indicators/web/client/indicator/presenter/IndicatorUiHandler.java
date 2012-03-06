@@ -9,4 +9,5 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void createIndicator(IndicatorDto indicator);
     void saveIndicator(IndicatorDto indicator);
+
 }

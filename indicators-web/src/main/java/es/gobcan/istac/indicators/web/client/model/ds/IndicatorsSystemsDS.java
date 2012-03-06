@@ -41,7 +41,7 @@ public class IndicatorsSystemsDS extends DataSource {
         DataSourceIntegerField code = new DataSourceIntegerField(CODE, getConstants().indicDetailIdentifier());
         addField(code);
         
-        DataSourceTextField title = new DataSourceTextField(TITLE, getConstants().indicDetailName());
+        DataSourceTextField title = new DataSourceTextField(TITLE, getConstants().indicDetailTitle());
         addField(title);
         
         setClientOnly(true);

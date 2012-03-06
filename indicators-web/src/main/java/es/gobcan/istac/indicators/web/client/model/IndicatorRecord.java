@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.client.model;
 
 import com.smartgwt.client.data.Record;
 
-import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsDS;
+import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class IndicatorRecord extends Record {
 	
@@ -13,18 +13,19 @@ public class IndicatorRecord extends Record {
 	}
 	
 	public void setUuid(String uuid) {
-		setAttribute(IndicatorsDS.FIELD_UUID, uuid);
+		setAttribute(IndicatorDS.UUID, uuid);
 	}
 	
 	public void setName(String name) {
-		setAttribute(IndicatorsDS.FIELD_INTERNATIONAL_NAME,name);
+		setAttribute(IndicatorDS.TITLE,name);
 	}
 	
 	public void setCode(String code) {
-        setAttribute(IndicatorsDS.FIELD_CODE,code);
+        setAttribute(IndicatorDS.CODE,code);
     }
 
 	public String getUuid() {
-	    return getAttribute(IndicatorsDS.FIELD_UUID);
+	    return getAttribute(IndicatorDS.UUID);
 	}
+	
 }
