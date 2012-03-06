@@ -85,7 +85,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("subjectCode1A", indicatorDto.getSubjectCode());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getSubjectTitle(), "es", "Área temática 1", "en", "Subject 1");
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getName(), "es", "Nombre Indicator-1-v1", "en", "Name Indicator-1-v1");
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getTitle(), "es", "Título Indicator-1-v1", "en", "Title Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getAcronym(), "es", "Acrónimo Indicator-1-v1", "en", "Acronym Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getCommentary(), "es", "Comentario Indicator-1-v1", "en", "Commentary Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getNotes(), "es", "Nota Indicator-1-v1", "en", "Note Indicator-1-v1");
@@ -371,7 +371,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -420,7 +420,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -449,7 +449,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -480,7 +480,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -513,7 +513,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -547,7 +547,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -581,7 +581,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(null);
-        indicatorDto.setName(null);
+        indicatorDto.setTitle(null);
         indicatorDto.setSubjectCode(null);
         indicatorDto.setSubjectTitle(null);
         indicatorDto.setQuantity(new QuantityDto());
@@ -599,7 +599,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.NAME", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("INDICATOR.TITLE", e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
@@ -629,7 +629,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -664,7 +664,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -707,7 +707,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -783,7 +783,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -813,7 +813,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setQuantity(new QuantityDto());
@@ -837,7 +837,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setQuantity(new QuantityDto());
@@ -1091,7 +1091,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
 
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl("aa");
 
@@ -1113,7 +1113,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
 
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -1133,7 +1133,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
 
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
@@ -1154,7 +1154,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
 
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
@@ -1173,7 +1173,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String versionNumber = "2.000";
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-        indicatorDto.getName().getTexts().iterator().next().setLabel("NewLabel");
+        indicatorDto.getTitle().getTexts().iterator().next().setLabel("NewLabel");
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
@@ -1824,7 +1824,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Change indicator to fraction with numerator in draft
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
-        indicatorDto.setName(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);

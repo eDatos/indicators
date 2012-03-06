@@ -194,7 +194,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         // Attributes modifiables
-        target.setName(internationalStringToDo(ctx, source.getName(), target.getName(), "INDICATOR.NAME"));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR.TITLE"));
         target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATOR.ACRONYM"));
         target.setCommentary(internationalStringToDo(ctx, source.getCommentary(), target.getCommentary(), "INDICATOR.COMMENTARY"));
         target.setSubjectCode(source.getSubjectCode());

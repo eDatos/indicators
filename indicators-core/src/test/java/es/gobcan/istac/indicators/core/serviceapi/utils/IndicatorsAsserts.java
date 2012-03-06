@@ -41,7 +41,7 @@ public class IndicatorsAsserts {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
         assertEqualsInternationalString(expected.getSubjectTitle(), actual.getSubjectTitle());
-        assertEqualsInternationalString(expected.getName(), actual.getName());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
         assertEquals(expected.getNotesUrl(), actual.getNotesUrl());
         assertEqualsInternationalString(expected.getNotes(), actual.getNotes());

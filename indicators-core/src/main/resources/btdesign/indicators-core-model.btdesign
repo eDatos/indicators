@@ -426,8 +426,8 @@ Application Indicators {
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus not nullable;
 			String versionNumber not nullable length="10";
-       		"Name"
-       		- @InternationalString name cascade="all" not nullable databaseColumn="NAME_FK";
+       		"Title"
+       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
        		"Acronym"
        		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
        		"Subject code"
@@ -674,8 +674,8 @@ Application Indicators {
 			String code;
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus;
-       		"Name"
-       		- @InternationalStringDto name;
+       		"Title"
+       		- @InternationalStringDto title;
        		"Acronym"
        		- @InternationalStringDto acronym;
        		"Subject code"

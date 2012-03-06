@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -46,7 +47,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
         indicatorVersion.getIndicator().setCode(IndicatorsMocks.mockString(10));
-        indicatorVersion.setName(new InternationalString());
+        indicatorVersion.setTitle(new InternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorVersion.setSubjectTitle(new InternationalString());
         indicatorVersion.setQuantity(new Quantity());

@@ -40,7 +40,7 @@ public class DoCopyUtils {
      */
     public static IndicatorVersion copy(IndicatorVersion source) {
         IndicatorVersion target = new IndicatorVersion();
-        target.setName(copy(source.getName()));
+        target.setTitle(copy(source.getTitle()));
         target.setAcronym(copy(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(copy(source.getSubjectTitle()));

@@ -30,7 +30,7 @@
 				ID="11"
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="1"
+				TITLE_FK="1"
 				ACRONYM_FK="2"
 	  			COMMENTARY_FK="4"
 	  			NOTES_FK="3"
@@ -187,7 +187,7 @@
 				ID="12"
 				UUID="Indicator-1-v2"
 				VERSION_NUMBER="2.000"
-				NAME_FK="5"
+				TITLE_FK="5"
 				ACRONYM_FK="6"
 	  			NOTES_FK="7"
 	  			COMMENTARY_FK="8"
@@ -549,7 +549,7 @@
 				ID="21"
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="9"
+				TITLE_FK="9"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -626,7 +626,7 @@
 				ID="31"
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="11.033"
-				NAME_FK="10"
+				TITLE_FK="10"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -810,7 +810,7 @@
 				ID="41"
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="11"
+				TITLE_FK="11"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -979,7 +979,7 @@
 				ID="51"
 				UUID="Indicator-5-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="12"
+				TITLE_FK="12"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1240,7 +1240,7 @@
 				ID="61"
 				UUID="Indicator-6-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="13"
+				TITLE_FK="13"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1295,7 +1295,7 @@
 				ID="62"
 				UUID="Indicator-6-v2"
 				VERSION_NUMBER="2.000"
-				NAME_FK="14"
+				TITLE_FK="14"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1465,7 +1465,7 @@
 				ID="71"
 				UUID="Indicator-7-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="15"
+				TITLE_FK="15"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1520,7 +1520,7 @@
 				ID="72"
 				UUID="Indicator-7-v2"
 				VERSION_NUMBER="2.000"
-				NAME_FK="16"
+				TITLE_FK="16"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1689,7 +1689,7 @@
 				ID="81"
 				UUID="Indicator-8-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="17"
+				TITLE_FK="17"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1767,7 +1767,7 @@
 				ID="91"
 				UUID="Indicator-9-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="18"
+				TITLE_FK="18"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -1935,7 +1935,7 @@
 				ID="101"
 				UUID="Indicator-10-v1"
 				VERSION_NUMBER="1.000"
-				NAME_FK="29"
+				TITLE_FK="29"
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTARY_FK="[null]"
@@ -2106,7 +2106,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="1"
-		LABEL="Nombre Indicator-1-v1"
+		LABEL="Título Indicator-1-v1"
 		LOCALE="es"
 		UUID="IS-1-LS-1"
 		VERSION="1"
@@ -2114,7 +2114,7 @@
 	/>	
 	<TBL_LOCALISED_STRINGS
 		ID="2"
-		LABEL="Name Indicator-1-v1"
+		LABEL="Title Indicator-1-v1"
 		LOCALE="en"
 		UUID="IS-1-LS-2"
 		VERSION="1"
@@ -2201,7 +2201,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="9"
-		LABEL="Nombre Indicator-1-v2"
+		LABEL="Título Indicator-1-v2"
 		LOCALE="es"
 		UUID="IS-5-LS-1"
 		VERSION="1"
@@ -2210,7 +2210,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="10"
-		LABEL="Name Indicator-1-v2"
+		LABEL="Title Indicator-1-v2"
 		LOCALE="en"
 		UUID="IS-5-LS-2"
 		VERSION="1"
@@ -2297,7 +2297,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="17"
-		LABEL="Name Indicator-2-v1"
+		LABEL="Title Indicator-2-v1"
 		LOCALE="es"
 		UUID="IS-9-LS-1"
 		VERSION="1"
@@ -2306,7 +2306,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="18"
-		LABEL="Name Indicator-2-v1"
+		LABEL="Title Indicator-2-v1"
 		LOCALE="en"
 		UUID="IS-9-LS-2"
 		VERSION="1"
@@ -2321,7 +2321,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="19"
-		LABEL="Nombre Indicator-3-v1"
+		LABEL="Título Indicator-3-v1"
 		LOCALE="es"
 		UUID="IS-10-LS-1"
 		VERSION="1"
@@ -2330,7 +2330,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="20"
-		LABEL="Name Indicator-3-v1"
+		LABEL="Title Indicator-3-v1"
 		LOCALE="en"
 		UUID="IS-10-LS-2"
 		VERSION="1"
@@ -2345,7 +2345,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="21"
-		LABEL="Nombre Indicator-4-v1"
+		LABEL="Título Indicator-4-v1"
 		LOCALE="es"
 		UUID="IS-11-LS-1"
 		VERSION="1"
@@ -2354,7 +2354,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="22"
-		LABEL="Name Indicator-4-v1"
+		LABEL="Title Indicator-4-v1"
 		LOCALE="en"
 		UUID="IS-11-LS-2"
 		VERSION="1"
@@ -2369,7 +2369,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="23"
-		LABEL="Nombre Indicator-5-v1"
+		LABEL="Título Indicator-5-v1"
 		LOCALE="es"
 		UUID="IS-12-LS-1"
 		VERSION="1"
@@ -2378,7 +2378,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="24"
-		LABEL="Name Indicator-5-v1"
+		LABEL="Title Indicator-5-v1"
 		LOCALE="en"
 		UUID="IS-12-LS-2"
 		VERSION="1"
@@ -2393,7 +2393,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="23"
-		LABEL="Nombre Indicator-6-v1"
+		LABEL="Título Indicator-6-v1"
 		LOCALE="es"
 		UUID="IS-13-LS-1"
 		VERSION="1"
@@ -2402,7 +2402,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="24"
-		LABEL="Name Indicator-6-v1"
+		LABEL="Title Indicator-6-v1"
 		LOCALE="en"
 		UUID="IS-13-LS-2"
 		VERSION="1"
@@ -2417,7 +2417,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="23"
-		LABEL="Nombre Indicator-6-v1"
+		LABEL="Título Indicator-6-v1"
 		LOCALE="es"
 		UUID="IS-14-LS-1"
 		VERSION="1"
@@ -2426,7 +2426,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="24"
-		LABEL="Name Indicator-6-v1"
+		LABEL="Title Indicator-6-v1"
 		LOCALE="en"
 		UUID="IS-14-LS-2"
 		VERSION="1"
@@ -2441,7 +2441,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="25"
-		LABEL="Nombre Indicator-7-v1"
+		LABEL="Título Indicator-7-v1"
 		LOCALE="es"
 		UUID="IS-15-LS-1"
 		VERSION="1"
@@ -2450,7 +2450,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="26"
-		LABEL="Name Indicator-7-v1"
+		LABEL="Title Indicator-7-v1"
 		LOCALE="en"
 		UUID="IS-15-LS-2"
 		VERSION="1"
@@ -2465,7 +2465,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="27"
-		LABEL="Nombre Indicator-7-v1"
+		LABEL="Título Indicator-7-v1"
 		LOCALE="es"
 		UUID="IS-16-LS-1"
 		VERSION="1"
@@ -2474,7 +2474,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="28"
-		LABEL="Name Indicator-7-v1"
+		LABEL="Title Indicator-7-v1"
 		LOCALE="en"
 		UUID="IS-16-LS-2"
 		VERSION="1"
@@ -2489,7 +2489,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="29"
-		LABEL="Nombre Indicator-8-v1"
+		LABEL="Título Indicator-8-v1"
 		LOCALE="es"
 		UUID="IS-17-LS-1"
 		VERSION="1"
@@ -2498,7 +2498,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="30"
-		LABEL="Name Indicator-8-v1"
+		LABEL="Title Indicator-8-v1"
 		LOCALE="en"
 		UUID="IS-17-LS-2"
 		VERSION="1"
@@ -2513,7 +2513,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="31"
-		LABEL="Nombre"
+		LABEL="Título"
 		LOCALE="es"
 		UUID="IS-18-LS-1"
 		VERSION="1"
@@ -2522,7 +2522,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="32"
-		LABEL="Name"
+		LABEL="Title"
 		LOCALE="en"
 		UUID="IS-18-LS-2"
 		VERSION="1"
@@ -2537,7 +2537,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="33"
-		LABEL="Nombre"
+		LABEL="Título"
 		LOCALE="es"
 		UUID="IS-19-LS-1"
 		VERSION="1"
@@ -2546,7 +2546,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="34"
-		LABEL="Name"
+		LABEL="Title"
 		LOCALE="en"
 		UUID="IS-19-LS-2"
 		VERSION="1"
@@ -2561,7 +2561,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="35"
-		LABEL="Nombre Indicator-1-v2-DataSource-1"
+		LABEL="Título Indicator-1-v2-DataSource-1"
 		LOCALE="es"
 		UUID="IS-20-LS-1"
 		VERSION="1"
@@ -2570,7 +2570,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="36"
-		LABEL="Name Indicator-1-v2-DataSource-1"
+		LABEL="Title Indicator-1-v2-DataSource-1"
 		LOCALE="en"
 		UUID="IS-20-LS-2"
 		VERSION="1"
@@ -2585,7 +2585,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="37"
-		LABEL="Nombre Indicator-1-v2-DataSource-1A"
+		LABEL="Título Indicator-1-v2-DataSource-1A"
 		LOCALE="es"
 		UUID="IS-21-LS-1"
 		VERSION="1"
@@ -2594,7 +2594,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="38"
-		LABEL="Name Indicator-1-v2-DataSource-1A"
+		LABEL="Title Indicator-1-v2-DataSource-1A"
 		LOCALE="en"
 		UUID="IS-21-LS-2"
 		VERSION="1"
@@ -2609,7 +2609,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="39"
-		LABEL="Nombre Indicator-1-v2-DataSource-1B"
+		LABEL="Título Indicator-1-v2-DataSource-1B"
 		LOCALE="es"
 		UUID="IS-22-LS-1"
 		VERSION="1"
@@ -2618,7 +2618,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="40"
-		LABEL="Name Indicator-1-v2-DataSource-1B"
+		LABEL="Title Indicator-1-v2-DataSource-1B"
 		LOCALE="en"
 		UUID="IS-22-LS-2"
 		VERSION="1"
@@ -2633,7 +2633,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="41"
-		LABEL="Nombre Indicator-1-v2-DataSource-1BA"
+		LABEL="Título Indicator-1-v2-DataSource-1BA"
 		LOCALE="es"
 		UUID="IS-23-LS-1"
 		VERSION="1"
@@ -2642,7 +2642,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="42"
-		LABEL="Name Indicator-1-v2-DataSource-1BA"
+		LABEL="Title Indicator-1-v2-DataSource-1BA"
 		LOCALE="en"
 		UUID="IS-23-LS-2"
 		VERSION="1"
@@ -2657,7 +2657,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="43"
-		LABEL="Nombre Indicator-1-v2-DataSource-2"
+		LABEL="Título Indicator-1-v2-DataSource-2"
 		LOCALE="es"
 		UUID="IS-24-LS-1"
 		VERSION="1"
@@ -2666,7 +2666,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="44"
-		LABEL="Name Indicator-1-v2-DataSource-2"
+		LABEL="Title Indicator-1-v2-DataSource-2"
 		LOCALE="en"
 		UUID="IS-24-LS-2"
 		VERSION="1"
@@ -2681,7 +2681,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="45"
-		LABEL="Nombre Indicator-3-v1-DataSource-1"
+		LABEL="Título Indicator-3-v1-DataSource-1"
 		LOCALE="es"
 		UUID="IS-25-LS-1"
 		VERSION="1"
@@ -2690,7 +2690,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="46"
-		LABEL="Name Indicator-3-v1-DataSource-1"
+		LABEL="Title Indicator-3-v1-DataSource-1"
 		LOCALE="en"
 		UUID="IS-25-LS-2"
 		VERSION="1"
@@ -2705,7 +2705,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="47"
-		LABEL="Nombre"
+		LABEL="Título"
 		LOCALE="es"
 		UUID="IS-26-LS-1"
 		VERSION="1"
@@ -2714,7 +2714,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="28"
-		LABEL="Name"
+		LABEL="Title"
 		LOCALE="en"
 		UUID="IS-26-LS-2"
 		VERSION="1"
@@ -2729,7 +2729,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="48"
-		LABEL="Nombre Indicator-3-v1-DataSource-1A"
+		LABEL="Título Indicator-3-v1-DataSource-1A"
 		LOCALE="es"
 		UUID="IS-27-LS-1"
 		VERSION="1"
@@ -2738,7 +2738,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="49"
-		LABEL="Name Indicator-3-v1-DataSource-1A"
+		LABEL="Title Indicator-3-v1-DataSource-1A"
 		LOCALE="en"
 		UUID="IS-27-LS-2"
 		VERSION="1"
@@ -2753,7 +2753,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="50"
-		LABEL="Nombre"
+		LABEL="Título"
 		LOCALE="es"
 		UUID="IS-28-LS-1"
 		VERSION="1"
@@ -2762,7 +2762,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="51"
-		LABEL="Name"
+		LABEL="Title"
 		LOCALE="en"
 		UUID="IS-28-LS-2"
 		VERSION="1"
@@ -2777,7 +2777,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="52"
-		LABEL="Nombre"
+		LABEL="Título"
 		LOCALE="es"
 		UUID="IS-29-LS-1"
 		VERSION="1"
@@ -2786,7 +2786,7 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="53"
-		LABEL="Name"
+		LABEL="Title"
 		LOCALE="en"
 		UUID="IS-29-LS-2"
 		VERSION="1"
