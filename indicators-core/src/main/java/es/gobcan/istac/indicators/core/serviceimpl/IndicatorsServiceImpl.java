@@ -160,7 +160,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    public IndicatorVersion updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
         // Validation
         InvocationValidator.checkUpdateIndicator(indicatorVersion, null);
@@ -170,7 +170,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkIndicatorsLinked(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, "INDICATOR.QUANTITY");
 
         // Update
-        getIndicatorVersionRepository().save(indicatorVersion);
+        indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
+        return indicatorVersion;
     }
 
     @Override
@@ -250,7 +251,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkSendIndicatorToProductionValidation(uuid, null);
@@ -268,11 +269,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorInProduction.setProductionValidationDate(new DateTime());
         indicatorInProduction.setProductionValidationUser(ctx.getUserId());
-        getIndicatorVersionRepository().save(indicatorInProduction);
+        indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
+        
+        return indicatorInProduction;
     }
 
     @Override
-    public void sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkSendIndicatorToDiffusionValidation(uuid, null);
@@ -290,11 +293,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorInProduction.setDiffusionValidationDate(new DateTime());
         indicatorInProduction.setDiffusionValidationUser(ctx.getUserId());
-        getIndicatorVersionRepository().save(indicatorInProduction);
+        indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
+        
+        return indicatorInProduction;
     }
 
     @Override
-    public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkRejectIndicatorValidation(uuid, null);
@@ -315,12 +320,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProductionValidationUser(null);
         indicatorInProduction.setDiffusionValidationDate(null);
         indicatorInProduction.setDiffusionValidationUser(null);
-        getIndicatorVersionRepository().save(indicatorInProduction);
+        indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
+        
+        return indicatorInProduction;
     }
 
     // TODO Implica realizar también INDICADORES-CU-6
     @Override
-    public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkPublishIndicator(uuid, null);
@@ -339,7 +346,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
-        getIndicatorVersionRepository().save(indicatorInProduction);
+        indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         Indicator indicator = indicatorInProduction.getIndicator();
         // Remove possible last version in diffusion
@@ -354,10 +361,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setProductionVersion(null);
 
         getIndicatorRepository().save(indicator);
+        
+        return indicatorInProduction;
     }
 
     @Override
-    public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkArchiveIndicator(uuid, null);
@@ -379,7 +388,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInDiffusion.setProcStatus(IndicatorProcStatusEnum.ARCHIVED);
         indicatorInDiffusion.setArchiveDate(new DateTime());
         indicatorInDiffusion.setArchiveUser(ctx.getUserId());
-        getIndicatorVersionRepository().save(indicatorInDiffusion);
+        indicatorInDiffusion = getIndicatorVersionRepository().save(indicatorInDiffusion);
+        
+        return indicatorInDiffusion;
     }
 
     @Override

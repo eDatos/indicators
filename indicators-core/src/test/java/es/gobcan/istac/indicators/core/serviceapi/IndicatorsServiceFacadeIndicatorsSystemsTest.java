@@ -709,10 +709,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorsSystemDto.setUriGopestat("newUri");
 
         // Update
-        indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
+        
         // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
+        indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
         assertTrue(indicatorsSystemDtoUpdated.getLastUpdated().after(indicatorsSystemDtoUpdated.getCreatedDate()));
     }
@@ -896,9 +897,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Sends to production validation
-        indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoV2Updated = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
 
-        // Validation
+        // Validation 
+        {
+            assertEquals(diffusionVersion, indicatorsSystemDtoV2Updated.getDiffusionVersion());
+            assertEquals(productionVersion, indicatorsSystemDtoV2Updated.getProductionVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDtoV2Updated.getProcStatus());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoV2Updated.getProductionValidationDate()));
+            assertEquals(getServiceContext2().getUserId(), indicatorsSystemDtoV2Updated.getProductionValidationUser());
+        }
         {
             IndicatorsSystemDto indicatorsSystemDtoV1 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, diffusionVersion);
             IndicatorsSystemDto indicatorsSystemDtoV2 = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, productionVersion);
@@ -1009,9 +1017,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Sends to diffusion validation
-        indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoV1Updated = indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoV1Updated.getProcStatus());
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorsSystemDtoV1Updated.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDtoV1Updated.getProductionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoV1Updated.getDiffusionValidationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoV1Updated.getDiffusionValidationUser());
+            
+        }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
@@ -1107,9 +1123,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Rejects validation
-        indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
-
+        IndicatorsSystemDto indicatorsSystemDtoV1Updated = indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+        
         // Validation
+        {
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDtoV1Updated.getProcStatus());
+
+            assertNull(indicatorsSystemDtoV1Updated.getProductionValidationDate());
+            assertNull(indicatorsSystemDtoV1Updated.getProductionValidationUser());
+            assertNull(indicatorsSystemDtoV1Updated.getDiffusionValidationDate());
+            assertNull(indicatorsSystemDtoV1Updated.getDiffusionValidationUser());
+            assertNull(indicatorsSystemDtoV1Updated.getPublicationDate());
+            assertNull(indicatorsSystemDtoV1Updated.getPublicationUser());
+            assertNull(indicatorsSystemDtoV1Updated.getArchiveDate());
+            assertNull(indicatorsSystemDtoV1Updated.getArchiveUser());
+        }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
@@ -1230,9 +1258,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Publish
-        indicatorsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDto1Updated = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(null, indicatorsSystemDto1Updated.getProductionVersion());
+            assertEquals(versionNumber, indicatorsSystemDto1Updated.getDiffusionVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto1Updated.getProcStatus());
+            IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto1Updated.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto1Updated.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorsSystemDto1Updated.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDto1Updated.getDiffusionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto1Updated.getPublicationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDto1Updated.getPublicationUser());
+            assertNull(indicatorsSystemDto1Updated.getArchiveDate());
+            assertNull(indicatorsSystemDto1Updated.getArchiveUser());        }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
@@ -1454,9 +1494,23 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Archive
-        indicatorsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.archiveIndicatorsSystem(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(null, indicatorsSystemDtoUpdated.getProductionVersion());
+            assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDtoUpdated.getDiffusionVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemDtoUpdated.getProcStatus());
+
+            IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorsSystemDtoUpdated.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDtoUpdated.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 03:02:04", indicatorsSystemDtoUpdated.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDtoUpdated.getDiffusionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-05-05 04:02:04", indicatorsSystemDtoUpdated.getPublicationDate());
+            assertEquals("user3", indicatorsSystemDtoUpdated.getPublicationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoUpdated.getArchiveDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoUpdated.getArchiveUser());
+        }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
@@ -2261,10 +2315,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
-        indicatorsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
+        DimensionDto dimensionDtoUpdated = indicatorsServiceFacade.updateDimension(getServiceContext(), dimensionDto);
 
         // Validation
-        DimensionDto dimensionDtoUpdated = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoUpdated);
+        dimensionDtoUpdated = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         IndicatorsAsserts.assertEqualsDimension(dimensionDto, dimensionDtoUpdated);
     }
 
@@ -2361,10 +2416,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentBeforeUuid, dimensionDto.getParentUuid());
 
         // Update location
-        indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, dimensionDtoChanged.getParentUuid());
+        dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentTargetUuid, dimensionDtoChanged.getParentUuid());
 
         // Validate source
@@ -2445,10 +2501,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentBeforeUuid, dimensionDto.getParentUuid());
 
         // Update location
-        indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, dimensionDtoChanged.getParentUuid());
+        dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertEquals(parentTargetUuid, dimensionDtoChanged.getParentUuid());
 
         // Validate source
@@ -2481,10 +2538,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(2), dimensionDto.getOrderInLevel());
 
         // Update location
-        indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentUuid(), Long.valueOf(4));
+        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.updateDimensionLocation(getServiceContext(), uuid, dimensionDto.getParentUuid(), Long.valueOf(4));
 
         // Validate dimension
-        DimensionDto dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
+        assertNull(dimensionDtoChanged.getParentUuid());
+        assertEquals(Long.valueOf(4), dimensionDtoChanged.getOrderInLevel());
+        dimensionDtoChanged = indicatorsServiceFacade.retrieveDimension(getServiceContext(), uuid);
         assertNull(dimensionDtoChanged.getParentUuid());
         assertEquals(Long.valueOf(4), dimensionDtoChanged.getOrderInLevel());
 
@@ -3160,10 +3219,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
-        indicatorsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
+        IndicatorInstanceDto indicatorInstanceDtoUpdated = indicatorsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
 
         // Validation
-        IndicatorInstanceDto indicatorInstanceDtoUpdated = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoUpdated);
+        indicatorInstanceDtoUpdated = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoUpdated);
     }
 
@@ -3267,10 +3327,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(parentBeforeUuid, indicatorInstanceDto.getParentUuid());
 
         // Update location
-        indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, parentTargetUuid, Long.valueOf(1));
 
         // Validate indicatorInstance
-        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentTargetUuid, indicatorInstanceDtoChanged.getParentUuid());
+        indicatorInstanceDtoChanged = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
         assertEquals(parentTargetUuid, indicatorInstanceDtoChanged.getParentUuid());
 
         // Validate source
@@ -3419,10 +3480,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
 
         // Update location
-        indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, indicatorInstanceDto.getParentUuid(), Long.valueOf(1));
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContext(), uuid, indicatorInstanceDto.getParentUuid(), Long.valueOf(1));
 
         // Validate indicatorInstance
-        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
+        assertEquals(parentUuid, indicatorInstanceDtoChanged.getParentUuid());
+        assertEquals(Long.valueOf(1), indicatorInstanceDtoChanged.getOrderInLevel());
+        indicatorInstanceDtoChanged = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
         assertEquals(parentUuid, indicatorInstanceDtoChanged.getParentUuid());
         assertEquals(Long.valueOf(1), indicatorInstanceDtoChanged.getOrderInLevel());
 

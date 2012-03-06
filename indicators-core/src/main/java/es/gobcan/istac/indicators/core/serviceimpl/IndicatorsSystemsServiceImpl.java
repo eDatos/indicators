@@ -165,7 +165,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    public IndicatorsSystemVersion updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         // Validation
         InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
@@ -174,7 +174,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
         
         // Update
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
+        indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
+        
+        return indicatorsSystemVersion;
     }
 
     @Override
@@ -244,7 +246,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkSendIndicatorsSystemToProductionValidation(uuid, null);
@@ -264,11 +266,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
         indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        
+        return indicatorsSystemInProduction;
     }
 
     @Override
-    public void sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkSendIndicatorsSystemToDiffusionValidation(uuid, null);
@@ -286,11 +290,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
         indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        
+        return indicatorsSystemInProduction;
     }
 
     @Override
-    public void rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
@@ -313,11 +319,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setProductionValidationUser(null);
         indicatorsSystemInProduction.setDiffusionValidationDate(null);
         indicatorsSystemInProduction.setDiffusionValidationUser(null);
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        
+        return indicatorsSystemInProduction;
     }
 
     @Override
-    public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkPublishIndicatorsSystem(uuid, null);
@@ -335,7 +343,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PUBLISHED); 
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+        indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
 
         IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
         // Remove possible last version in diffusion
@@ -351,10 +359,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Update indicators system
         getIndicatorsSystemRepository().save(indicatorsSystem);
+        
+        return indicatorsSystemInProduction;
     }
 
     @Override
-    public void archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkArchiveIndicatorsSystem(uuid, null);
@@ -376,7 +386,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInDiffusion.setProcStatus(IndicatorsSystemProcStatusEnum.ARCHIVED);
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
-        getIndicatorsSystemVersionRepository().save(indicatorsSystemInDiffusion);
+        indicatorsSystemInDiffusion = getIndicatorsSystemVersionRepository().save(indicatorsSystemInDiffusion);
+        
+        return indicatorsSystemInDiffusion;
     }
 
     @Override
@@ -450,14 +462,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+    public Dimension updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkUpdateDimensionLocation(uuid, parentTargetUuid, orderInLevel, null);
 
         // Update location
         ElementLevel elementLevel = retrieveDimension(ctx, uuid).getElementLevel();
-        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        elementLevel = updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        
+        return elementLevel.getDimension();
     }
 
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
@@ -534,14 +548,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+    public IndicatorInstance updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkUpdateIndicatorInstanceLocation(uuid, parentTargetUuid, orderInLevel, null);
 
         // Update location
         ElementLevel elementLevel = retrieveIndicatorInstance(ctx, uuid).getElementLevel();
-        updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        elementLevel = updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
+        
+        return elementLevel.getIndicatorInstance();
     }
 
     @Override
@@ -781,7 +797,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
     }
 
-    private void updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+    private ElementLevel updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String parentTargetUuid, Long orderInLevel) throws MetamacException {
 
         // Change order
         Long orderInLevelBefore = elementLevel.getOrderInLevel();
@@ -837,15 +853,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 elementLevel.setIndicatorsSystemVersionFirstLevel(null);
                 elementLevel.setParent(parentTarget);
             }
-            updateElementLevel(elementLevel);
+            elementLevel = updateElementLevel(elementLevel);
         } else {
             // Same parent, only changes order
             // Check order is correct and update orders
             List<ElementLevel> elementsInLevel = elementLevel.getParent() != null ? elementLevel.getParent().getChildren() : elementLevel.getIndicatorsSystemVersionFirstLevel()
                     .getChildrenFirstLevel();
             updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
-            updateElementLevel(elementLevel);
+            elementLevel = updateElementLevel(elementLevel);
         }
+        
+        return elementLevel;
     }
 
     private void deleteElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {

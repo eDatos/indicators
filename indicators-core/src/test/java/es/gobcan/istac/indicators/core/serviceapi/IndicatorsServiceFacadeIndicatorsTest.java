@@ -1096,10 +1096,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setNotesUrl("aa");
 
         // Update
-        indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
-
+        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoUpdated);
+        
         // Validation
-        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+        indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoUpdated);
         assertTrue(indicatorDtoUpdated.getLastUpdated().after(indicatorDtoUpdated.getCreatedDate()));
     }
@@ -1307,13 +1308,29 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Sends to production validation
-        indicatorsServiceFacade.sendIndicatorToProductionValidation(getServiceContext2(), uuid);
+        IndicatorDto indicatorDtoV2Updated = indicatorsServiceFacade.sendIndicatorToProductionValidation(getServiceContext2(), uuid);
 
         // Validation
+        {
+            assertEquals(diffusionVersion, indicatorDtoV2Updated.getDiffusionVersion());
+            assertEquals(productionVersion, indicatorDtoV2Updated.getProductionVersion());
+            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDtoV2Updated.getProcStatus());
+
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDtoV2Updated.getProductionValidationDate()));
+            assertEquals(getServiceContext2().getUserId(), indicatorDtoV2Updated.getProductionValidationUser());
+            assertNull(indicatorDtoV2Updated.getDiffusionValidationDate());
+            assertNull(indicatorDtoV2Updated.getDiffusionValidationUser());
+            assertNull(indicatorDtoV2Updated.getPublicationDate());
+            assertNull(indicatorDtoV2Updated.getPublicationUser());
+            assertNull(indicatorDtoV2Updated.getArchiveDate());
+            assertNull(indicatorDtoV2Updated.getArchiveUser());
+        }
         {
             IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
             assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(productionVersion, indicatorDtoV1.getProductionVersion());
+            assertEquals(diffusionVersion, indicatorDtoV2.getDiffusionVersion());
             assertEquals(productionVersion, indicatorDtoV2.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDtoV2.getProcStatus());
@@ -1432,9 +1449,23 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Sends to diffusion validation
-        indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
+        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.sendIndicatorToDiffusionValidation(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(null, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals("1.000", indicatorDtoV1Updated.getProductionVersion());
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDtoV1Updated.getProcStatus());
+
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 01:02:04", indicatorDtoV1Updated.getProductionValidationDate());
+            assertEquals("user1", indicatorDtoV1Updated.getProductionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDtoV1Updated.getDiffusionValidationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorDtoV1Updated.getDiffusionValidationUser());
+            assertNull(indicatorDtoV1Updated.getPublicationDate());
+            assertNull(indicatorDtoV1Updated.getPublicationUser());
+            assertNull(indicatorDtoV1Updated.getArchiveDate());
+            assertNull(indicatorDtoV1Updated.getArchiveUser());
+        }
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getDiffusionVersion());
@@ -1528,13 +1559,27 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Rejects validation
-        indicatorsServiceFacade.rejectIndicatorValidation(getServiceContext(), uuid);
+        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.rejectIndicatorValidation(getServiceContext(), uuid);
 
         // Validation
         {
+            assertEquals(null, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals(versionNumber, indicatorDtoV1Updated.getProductionVersion());
+            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDtoV1Updated.getProcStatus());
+
+            assertNull(indicatorDtoV1Updated.getProductionValidationDate());
+            assertNull(indicatorDtoV1Updated.getProductionValidationUser());
+            assertNull(indicatorDtoV1Updated.getDiffusionValidationDate());
+            assertNull(indicatorDtoV1Updated.getDiffusionValidationUser());
+            assertNull(indicatorDtoV1Updated.getPublicationDate());
+            assertNull(indicatorDtoV1Updated.getPublicationUser());
+            assertNull(indicatorDtoV1Updated.getArchiveDate());
+            assertNull(indicatorDtoV1Updated.getArchiveUser());
+        }
+        {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getDiffusionVersion());
-            assertEquals("1.000", indicatorDto.getProductionVersion());
+            assertEquals(versionNumber, indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
 
             assertNull(indicatorDto.getProductionValidationDate());
@@ -1651,9 +1696,23 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Publish
-        indicatorsServiceFacade.publishIndicator(getServiceContext(), uuid);
+        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.publishIndicator(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(null, indicatorDtoV1Updated.getProductionVersion());
+            assertEquals(versionNumber, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1Updated.getProcStatus());
+
+            IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorDtoV1Updated.getProductionValidationDate());
+            assertEquals("user1", indicatorDtoV1Updated.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorDtoV1Updated.getDiffusionValidationDate());
+            assertEquals("user2", indicatorDtoV1Updated.getDiffusionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDtoV1Updated.getPublicationDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorDtoV1Updated.getPublicationUser());
+            assertNull(indicatorDtoV1Updated.getArchiveDate());
+            assertNull(indicatorDtoV1Updated.getArchiveUser());
+        }
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getProductionVersion());
@@ -1907,9 +1966,23 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Archive
-        indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+        IndicatorDto indicatorDtoUpdated =indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
 
         // Validation
+        {
+            assertEquals(null, indicatorDtoUpdated.getProductionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoUpdated.getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDtoUpdated.getProcStatus());
+
+            IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorDtoUpdated.getProductionValidationDate());
+            assertEquals("user1", indicatorDtoUpdated.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-04-04 03:02:04", indicatorDtoUpdated.getDiffusionValidationDate());
+            assertEquals("user2", indicatorDtoUpdated.getDiffusionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-05-05 04:02:04", indicatorDtoUpdated.getPublicationDate());
+            assertEquals("user3", indicatorDtoUpdated.getPublicationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorDtoUpdated.getArchiveDate()));
+            assertEquals(getServiceContext().getUserId(), indicatorDtoUpdated.getArchiveUser());
+        }
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getProductionVersion());
@@ -2654,10 +2727,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.addOtherVariable(dataSourceVariableDto3);
 
         // Update
-        indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
+        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
 
         // Validation
-        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
+        dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
         assertEquals(3, dataSourceDtoUpdated.getOtherVariables().size());
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
     }

@@ -116,38 +116,67 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
     }
 
-    public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
+    public IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
 
         // Transform
         IndicatorsSystemVersion indicatorsSystemVersion = dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto);
 
         // Update
-        getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+        indicatorsSystemVersion = getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+
+        // Transform to Dto
+        indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
-    public void sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsSystemsService().sendIndicatorsSystemToProductionValidation(ctx, uuid);
+    public IndicatorsSystemDto sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().sendIndicatorsSystemToProductionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
-    public void sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsSystemsService().sendIndicatorsSystemToDiffusionValidation(ctx, uuid);
+    public IndicatorsSystemDto sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().sendIndicatorsSystemToDiffusionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
-    public void rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsSystemsService().rejectIndicatorsSystemValidation(ctx, uuid);
+    public IndicatorsSystemDto rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
-    public void publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsSystemsService().publishIndicatorsSystem(ctx, uuid);
+    public IndicatorsSystemDto publishIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().publishIndicatorsSystem(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
-    public void archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsSystemsService().archiveIndicatorsSystem(ctx, uuid);
+    public IndicatorsSystemDto archiveIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().archiveIndicatorsSystem(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
     }
 
     @Override
@@ -199,7 +228,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Create dimension
         dimension = getIndicatorsSystemsService().createDimension(ctx, indicatorsSystemUuid, dimension);
-        
+
         // Transform to Dto to return
         dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
         return dimensionDto;
@@ -237,18 +266,28 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
+    public DimensionDto updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
 
         // Transform
         Dimension dimension = dto2DoMapper.dimensionDtoToDo(ctx, dimensionDto);
-        
+
         // Update
-        getIndicatorsSystemsService().updateDimension(ctx, dimension);
+        dimension = getIndicatorsSystemsService().updateDimension(ctx, dimension);
+
+        // Transform to Dto
+        dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
+        return dimensionDto;
     }
 
     @Override
-    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        getIndicatorsSystemsService().updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+    public DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+        
+        // Update
+        Dimension dimension = getIndicatorsSystemsService().updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+
+        // Transform to Dto
+        DimensionDto dimensionDto = do2DtoMapper.dimensionDoToDto(dimension);
+        return dimensionDto;
     }
 
     @Override
@@ -259,7 +298,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Create indicator instance
         indicatorInstance = getIndicatorsSystemsService().createIndicatorInstance(ctx, indicatorsSystemUuid, indicatorInstance);
-        
+
         // Transform to Dto to return
         indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
         return indicatorInstanceDto;
@@ -297,18 +336,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
+    public IndicatorInstanceDto updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
 
         // Transform
         IndicatorInstance indicatorInstance = dto2DoMapper.indicatorInstanceDtoToDo(ctx, indicatorInstanceDto);
-        
+
         // Update
-        getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
+        indicatorInstance = getIndicatorsSystemsService().updateIndicatorInstance(ctx, indicatorInstance);
+
+        // Transform to Dto
+        indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
+        return indicatorInstanceDto;
     }
 
     @Override
-    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        getIndicatorsSystemsService().updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+    public IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+        
+        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+        
+        // Transform to Dto
+        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
+        return indicatorInstanceDto;
     }
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
@@ -369,38 +417,67 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsService().deleteIndicator(ctx, uuid);
     }
 
-    public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
+    public IndicatorDto updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
         // Transform
         IndicatorVersion indicatorVersion = dto2DoMapper.indicatorDtoToDo(ctx, indicatorDto);
 
         // Update
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+        indicatorVersion = getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+
+        // Transform to Dto
+        indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
-    public void sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsService().sendIndicatorToProductionValidation(ctx, uuid);
+    public IndicatorDto sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToProductionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
-    public void sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsService().sendIndicatorToDiffusionValidation(ctx, uuid);
+    public IndicatorDto sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToDiffusionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
-    public void rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsService().rejectIndicatorValidation(ctx, uuid);
+    public IndicatorDto rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
-    public void publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsService().publishIndicator(ctx, uuid);
+    public IndicatorDto publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().publishIndicator(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
-    public void archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        getIndicatorsService().archiveIndicator(ctx, uuid);
+    public IndicatorDto archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().archiveIndicator(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
     }
 
     @Override
@@ -449,7 +526,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Transform
         DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto);
-        
+
         // Create
         dataSource = getIndicatorsService().createDataSource(ctx, indicatorUuid, dataSource);
 
@@ -490,15 +567,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
+    public DataSourceDto updateDataSource(ServiceContext ctx, DataSourceDto dataSourceDto) throws MetamacException {
 
         // Transform and update
         DataSource dataSource = dto2DoMapper.dataSourceDtoToDo(ctx, dataSourceDto);
-        
+
         // Update
-        getIndicatorsService().updateDataSource(ctx, dataSource);
+        dataSource = getIndicatorsService().updateDataSource(ctx, dataSource);
+
+        // Transform
+        dataSourceDto = do2DtoMapper.dataSourceDoToDto(dataSource);
+        return dataSourceDto;
     }
-    
+
     @Override
     public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
 
