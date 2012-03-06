@@ -122,7 +122,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSubjectTitle(internationalStringToDto(source.getSubjectTitle()));
         target.setQuantity(quantityDoToDto(source.getQuantity()));
         target.setConceptDescription(internationalStringToDto(source.getConceptDescription()));
-        target.setCommentary(internationalStringToDto(source.getCommentary()));
+        target.setComments(internationalStringToDto(source.getComments()));
         target.setNotes(internationalStringToDto(source.getNotes()));
         target.setNotesUrl(source.getNotesUrl());
         target.setProcStatus(source.getProcStatus());

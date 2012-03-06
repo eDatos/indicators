@@ -436,8 +436,8 @@ Application Indicators {
        		- @InternationalString subjectTitle cascade="all" not nullable databaseColumn="SUBJECT_TITLE_FK";
        		"Concept associated with the indicator"
        		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
-			"Commentary"
-       		- @InternationalString commentary cascade="all" nullable databaseColumn="COMMENTARY_FK";
+			"Comments"
+       		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
 			"Notes"
        		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
        		"Notes url"
@@ -684,8 +684,8 @@ Application Indicators {
 			- @InternationalStringDto subjectTitle;
 			"Concept"
        		- @InternationalStringDto conceptDescription;
-			"Commentary"
-       		- @InternationalStringDto commentary;
+			"Comments"
+       		- @InternationalStringDto comments;
 			"Notes"
        		- @InternationalStringDto notes;
        		"Notes url"

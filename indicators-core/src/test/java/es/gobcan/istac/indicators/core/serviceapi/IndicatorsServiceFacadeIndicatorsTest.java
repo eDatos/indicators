@@ -87,7 +87,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getTitle(), "es", "Título Indicator-1-v1", "en", "Title Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getAcronym(), "es", "Acrónimo Indicator-1-v1", "en", "Acronym Indicator-1-v1");
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getCommentary(), "es", "Comentario Indicator-1-v1", "en", "Commentary Indicator-1-v1");
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getComments(), "es", "Comentario Indicator-1-v1", "en", "Comments Indicator-1-v1");
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getNotes(), "es", "Nota Indicator-1-v1", "en", "Note Indicator-1-v1");
         assertEquals("http://indicators/1", indicatorDto.getNotesUrl());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getConceptDescription(), "es", "Concepto 1", "en", "Concept 1");
@@ -375,7 +375,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -424,7 +424,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -453,7 +453,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -484,7 +484,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -517,7 +517,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -551,7 +551,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -633,7 +633,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -668,7 +668,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -711,7 +711,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
@@ -787,7 +787,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentary(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());

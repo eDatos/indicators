@@ -47,7 +47,7 @@ public class DoCopyUtils {
         target.setNotesUrl(source.getNotesUrl());
         target.setNotes(copy(source.getNotes()));
         target.setConceptDescription(copy(source.getConceptDescription()));
-        target.setCommentary(copy(source.getCommentary()));
+        target.setComments(copy(source.getComments()));
         target.setQuantity(copy(source.getQuantity()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
 
