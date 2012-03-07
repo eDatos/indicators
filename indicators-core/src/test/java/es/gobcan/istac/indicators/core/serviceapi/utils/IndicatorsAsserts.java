@@ -43,9 +43,10 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getSubjectTitle(), actual.getSubjectTitle());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
-        assertEquals(expected.getNotesUrl(), actual.getNotesUrl());
         assertEqualsInternationalString(expected.getNotes(), actual.getNotes());
+        assertEquals(expected.getNotesUrl(), actual.getNotesUrl());
         assertEqualsInternationalString(expected.getComments(), actual.getComments());
+        assertEquals(expected.getCommentsUrl(), actual.getCommentsUrl());
         assertEqualsInternationalString(expected.getConceptDescription(), actual.getConceptDescription());
         assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
     }

@@ -437,6 +437,8 @@ Application Indicators {
        		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
 			"Comments"
        		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
+			"Comments url"
+       		String commentsUrl nullable;
 			"Notes"
        		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
        		"Notes url"
@@ -685,6 +687,8 @@ Application Indicators {
        		- @InternationalStringDto conceptDescription;
 			"Comments"
        		- @InternationalStringDto comments;
+			"Comments url"
+       		String commentsUrl;
 			"Notes"
        		- @InternationalStringDto notes;
        		"Notes url"

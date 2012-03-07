@@ -83,7 +83,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "1.000";
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-
+        
         assertNotNull(indicatorsSystemDto);
         assertEquals(uuid, indicatorsSystemDto.getUuid());
         assertEquals(versionNumber, indicatorsSystemDto.getVersionNumber());
