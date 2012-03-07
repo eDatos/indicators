@@ -31,7 +31,7 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates metadata of an indicator. This version can not be published or archived
      */
-    public abstract void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
+    public abstract IndicatorDto updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
 
     /**
      * Deletes a version of an indicator. Version to remove must be not published nor archived
@@ -46,7 +46,7 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates metadata of an indicators system. This version can not be published or archived
      */
-    public abstract void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
+    public abstract IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 
     /**
      * Retrieves an indicators system by code. Retrieves last version
@@ -71,12 +71,12 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates metadata of dimension
      */
-    public abstract void updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
+    public abstract DimensionDto updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
 
     /**
      * Updates the location of dimension
      */
-    public abstract void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public abstract DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes dimension
@@ -91,12 +91,12 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates metadata of indicator instance
      */
-    public abstract void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
+    public abstract IndicatorInstanceDto updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 
     /**
      * Updates the location of indicator instance
      */
-    public abstract void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public abstract IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes indicator instance

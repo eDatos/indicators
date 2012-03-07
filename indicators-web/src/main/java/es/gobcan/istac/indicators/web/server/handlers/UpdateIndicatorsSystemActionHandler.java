@@ -29,9 +29,8 @@ public class UpdateIndicatorsSystemActionHandler extends AbstractActionHandler<U
     @Override
     public UpdateIndicatorsSystemResult execute(UpdateIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indSys = action.getIndicatorsSystem();
-            service.updateIndicatorsSystem(ServiceContextHelper.getServiceContext(), indSys);
-            return new UpdateIndicatorsSystemResult();
+            IndicatorsSystemDto indicatorsSystemDto = service.updateIndicatorsSystem(ServiceContextHelper.getServiceContext(), action.getIndicatorsSystemToUpdate());
+            return new UpdateIndicatorsSystemResult(indicatorsSystemDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

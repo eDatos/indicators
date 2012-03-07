@@ -25,20 +25,14 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     @Autowired
     private IndicatorsServiceFacade indicatorsService;
     
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#createIndicator(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto)
-     */
     @Override
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
         return indicatorsService.createIndicator(ctx, indicatorDto);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateIndicator(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto)
-     */
     @Override
-    public void updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
-        indicatorsService.updateIndicator(ctx, indicatorDto);
+    public IndicatorDto updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
+        return indicatorsService.updateIndicator(ctx, indicatorDto);
     }
     
     @Override
@@ -51,9 +45,6 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return indicatorsService.retrieveIndicatorByCode(ctx, code, null);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#deleteIndicator(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String)
-     */
     @Override
     public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException {
         indicatorsService.deleteIndicator(ctx, uuid);
@@ -92,9 +83,6 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
      */
     /*public IndicatorDto versioningIndicator(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException;*/
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#findIndicators(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext)
-     */
     @Override
     public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
         return indicatorsService.findIndicators(ctx);
@@ -131,12 +119,9 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
 //    public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateIndicatorsSystem(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto)
-     */
     @Override
-    public void updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
-        indicatorsService.updateIndicatorsSystem(ctx, indicatorsSystemDto);
+    public IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
+        return indicatorsService.updateIndicatorsSystem(ctx, indicatorsSystemDto);
     }
 
     /**
@@ -144,9 +129,6 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
      */
 //    public IndicatorsSystemDto retrieveIndicatorsSystemPublished(ServiceContext ctx, String uuid) throws MetamacException;
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#retrieveIndicatorsSystemByCode(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String)
-     */
     @Override
     public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code) throws MetamacException {
         return indicatorsService.retrieveIndicatorsSystemByCode(ctx, code, null);
@@ -201,9 +183,6 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
      */
 //    public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException;
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#retrieveIndicatorsSystemStructure(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, java.lang.String)
-     */
     @Override
     public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructureByCode(ServiceContext ctx, String code) throws MetamacException {
         IndicatorsSystemDto system = indicatorsService.retrieveIndicatorsSystemByCode(ctx,code,null);
@@ -214,9 +193,6 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return structure;
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#createDimension(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto)
-     */
     @Override
     public DimensionDto createDimension(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, DimensionDto dimensionDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
@@ -226,34 +202,21 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return indicatorsService.createDimension(ctx,indicatorsSystemDto.getUuid(), dimensionDto);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateDimension(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto)
-     */
     @Override
-    public void updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
-        indicatorsService.updateDimension(ctx, dimensionDto);
+    public DimensionDto updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException {
+        return indicatorsService.updateDimension(ctx, dimensionDto);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateDimensionLocation(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, java.lang.String, java.lang.String, java.lang.Long)
-     */
     @Override
-    public void updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        indicatorsService.updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+    public DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+        return indicatorsService.updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 
-
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#deleteDimension(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String)
-     */
     @Override
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
         indicatorsService.deleteDimension(ctx, uuid);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#createIndicatorInstance(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto)
-     */
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
@@ -263,25 +226,16 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return indicatorsService.createIndicatorInstance(ctx,indicatorsSystemDto.getUuid(), indicatorInstanceDto);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateIndicatorInstance(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto)
-     */
     @Override
-    public void updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
-        indicatorsService.updateIndicatorInstance(ctx, indicatorInstanceDto);
+    public IndicatorInstanceDto updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
+        return indicatorsService.updateIndicatorInstance(ctx, indicatorInstanceDto);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#updateIndicatorInstanceLocation(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String, java.lang.String, java.lang.String, java.lang.Long)
-     */
     @Override
-    public void updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        indicatorsService.updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
+    public IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
+        return indicatorsService.updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
     }
 
-    /* (non-Javadoc)
-     * @see es.gobcan.istac.indicators.web.server.services.IndicatorsSystemsServiceWrapper#deleteIndicatorInstance(org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext, java.lang.String)
-     */
     @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
         indicatorsService.deleteIndicatorInstance(ctx, uuid);

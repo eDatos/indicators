@@ -18,7 +18,6 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 @Component
 public class DeleteDimensionActionHandler extends AbstractActionHandler<DeleteDimensionAction, DeleteDimensionResult> {
 
-
     @Autowired
     private IndicatorsServiceWrapper service;
     
