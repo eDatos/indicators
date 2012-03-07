@@ -8,8 +8,10 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -38,6 +40,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	private GroupDynamicForm productionDescriptorsForm;
 	private GroupDynamicForm diffusionDescriptorsForm;
 	private GroupDynamicForm publicationDescriptorsForm;
+	private GroupDynamicForm annotationsForm;
 	
 	/* Edit Form*/
 	private GroupDynamicForm identifiersEditionForm;
@@ -46,6 +49,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	private GroupDynamicForm productionDescriptorsEditionForm;
 	private GroupDynamicForm diffusionDescriptorsEditionForm;
 	private GroupDynamicForm publicationDescriptorsEditionForm;
+	private GroupDynamicForm annotationsEditionForm;
 	
 	
 	public IndicatorGeneralPanel() {
@@ -77,6 +81,8 @@ public class IndicatorGeneralPanel extends VLayout {
 	        	diffusionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 	        	publicationDescriptorsForm.setTranslationsShowed(translationsShowed);
 	        	publicationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+	        	annotationsForm.setTranslationsShowed(translationsShowed);
+	        	annotationsEditionForm.setTranslationsShowed(translationsShowed);
 	        }
         });
         
@@ -130,7 +136,7 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem diffValUser = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_USER, getConstants().indicDetailDiffusionValidationUser());
         diffusionDescriptorsForm.setFields(diffVersion, diffValDate, diffValUser);
 		
-        // Publication Descriptors
+        // Publication Descriptors Form
         publicationDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
         ViewTextItem pubFailedDate = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_DATE, getConstants().indicDetailPublicationFailedDate());
         ViewTextItem pubFailedUser = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_USER, getConstants().indicDetailPublicationFailedUser());
@@ -140,12 +146,19 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
         publicationDescriptorsForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
         
+        // Annotations Form
+        annotationsForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
+        ViewMultiLanguageTextAndUrlItem notes = new ViewMultiLanguageTextAndUrlItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
+        ViewMultiLanguageTextAndUrlItem comments = new ViewMultiLanguageTextAndUrlItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
+        annotationsForm.setFields(notes, comments);
+        
 		mainFormLayout.addViewCanvas(identifiersForm);
 		mainFormLayout.addViewCanvas(contentClassifiersForm);
 		mainFormLayout.addViewCanvas(contentDescriptorsForm);
 		mainFormLayout.addViewCanvas(productionDescriptorsForm);
 		mainFormLayout.addViewCanvas(diffusionDescriptorsForm);
 		mainFormLayout.addViewCanvas(publicationDescriptorsForm);
+		mainFormLayout.addViewCanvas(annotationsForm);
 	}
 	
 	
@@ -198,12 +211,19 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
         publicationDescriptorsEditionForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
         
+        // Annotations Form
+        annotationsEditionForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
+        MultiLanguageTextAndUrlItem notes = new MultiLanguageTextAndUrlItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
+        MultiLanguageTextAndUrlItem comments = new MultiLanguageTextAndUrlItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
+        annotationsEditionForm.setFields(notes, comments);
+        
 		mainFormLayout.addEditionCanvas(identifiersEditionForm);
 		mainFormLayout.addEditionCanvas(contentClassifiersEditionForm);
 		mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(diffusionDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
+		mainFormLayout.addEditionCanvas(annotationsEditionForm);
 	}
 	
 	public void setIndicator(IndicatorDto indicatorDto) {
@@ -251,6 +271,11 @@ public class IndicatorGeneralPanel extends VLayout {
 	    publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
 	    publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
 	    publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
+	    
+	    // Annotations
+	    ((ViewMultiLanguageTextAndUrlItem)annotationsForm.getItem(IndicatorDS.NOTES)).setValue(indicatorDto.getNotes(), indicatorDto.getNotesUrl());
+	    ((ViewMultiLanguageTextAndUrlItem)annotationsForm.getItem(IndicatorDS.COMMENTS)).setValue(indicatorDto.getComments(), indicatorDto.getCommentsUrl()); 
+	    
 	}
 	
 	private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
@@ -286,6 +311,11 @@ public class IndicatorGeneralPanel extends VLayout {
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
+        
+        // Annotations
+        ((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.NOTES)).setValue(indicatorDto.getNotes(), indicatorDto.getNotesUrl());
+        ((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).setValue(indicatorDto.getComments(), indicatorDto.getCommentsUrl());
+
 	}
 	
     private void saveIndicator() {
@@ -298,6 +328,11 @@ public class IndicatorGeneralPanel extends VLayout {
             indicator.setSubjectTitle((InternationalStringDto)contentClassifiersEditionForm.getValue(IndicatorDS.SUBJECT_TITLE));
             // Content Descriptors
             indicator.setConceptDescription((InternationalStringDto)contentDescriptorsEditionForm.getValue(IndicatorDS.CONCEPT_DESCRIPTION));
+            // Annotations
+            indicator.setNotes(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.NOTES)).getTextValue());
+            indicator.setNotesUrl(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.NOTES)).getUrlValue());
+            indicator.setComments(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).getTextValue());
+            indicator.setCommentsUrl(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).getUrlValue());
             
             uiHandlers.saveIndicator(indicator);
         }

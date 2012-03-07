@@ -39,7 +39,6 @@ public class IndicatorDS extends DataSource {
     public static String ARCHIVED_USER = "ind-arch-user";
     // ANNOTATIONS
     public static String NOTES = "ind-notes";
-    public static String NOTES_URL = "ind-notes-url";
     public static String COMMENTS = "ind-comments";
     
     
