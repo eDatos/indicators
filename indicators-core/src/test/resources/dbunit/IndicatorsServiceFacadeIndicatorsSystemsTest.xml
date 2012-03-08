@@ -1417,7 +1417,7 @@
  		UUID="1"
   		SYMBOL="km"
   		VERSION="1"
-  		TEXT_FK="33"
+  		TITLE_FK="33"
   		SYMBOL_POSITION="END"
 	/>
 	<LIS_QUANTITIES_UNITS
@@ -1425,7 +1425,7 @@
  		UUID="2"
   		SYMBOL="[null]"
   		VERSION="1"
-  		TEXT_FK="34"
+  		TITLE_FK="34"
   		SYMBOL_POSITION="START"
 	/>
   		  

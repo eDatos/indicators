@@ -184,7 +184,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setSymbol(source.getSymbol());
         target.setSymbolPosition(source.getSymbolPosition());
-        target.setText(internationalStringToDto(source.getText()));
+        target.setTitle(internationalStringToDto(source.getTitle()));
         
         return target;
     }

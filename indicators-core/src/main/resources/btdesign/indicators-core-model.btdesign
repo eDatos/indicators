@@ -538,27 +538,6 @@ Application Indicators {
 			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
 	    }
 	    
-        "Table values for units"
-	    Entity QuantityUnit {
-        	databaseTable = "LIS_QUANTITIES_UNITS"
-        	hint="idSequence=QUANTITIES_UNITS"
-			!auditable
-			
-			"Symbol of unit (example: km)"
-			String symbol nullable;
-			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition not nullable;
-       		"Text of unit"
-       		- @InternationalString text cascade="all" nullable databaseColumn="TEXT_FK";
-       		
-       		Repository QuantityUnitRepository {
-       			findAll;
-            	protected List<@QuantityUnit> findByQuery;
-            	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@QuantityUnit retrieveQuantityUnit(String uuid);
-			}
-        }
-        	    
         BasicType IndicatorVersionInformation {
         	gap
         	"Id into database of IndicatorVersion"
@@ -610,6 +589,27 @@ Application Indicators {
 			String variable not nullable;
 			"Category"
 			String category not nullable;
+        }
+        
+        "Table values for quantity units"
+	    Entity QuantityUnit {
+        	databaseTable = "LIS_QUANTITIES_UNITS"
+        	hint="idSequence=QUANTITIES_UNITS"
+			!auditable
+			
+			"Symbol of unit (example: km)"
+			String symbol nullable;
+			"Position of symbol of unit"
+			- @QuantityUnitSymbolPositionEnum symbolPosition not nullable;
+       		"Title of unit"
+       		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		
+       		Repository QuantityUnitRepository {
+       			findAll;
+            	protected List<@QuantityUnit> findByQuery;
+            	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@QuantityUnit retrieveQuantityUnit(String uuid);
+			}
         }
 	}
 	
@@ -874,8 +874,8 @@ Application Indicators {
 			String symbol;
 			"Position of symbol of unit"
 			- @QuantityUnitSymbolPositionEnum symbolPosition;
-       		"Text of unit"
-       		- @InternationalStringDto text;
+       		"Title of unit"
+       		- @InternationalStringDto title;
     	}
 	}
 	

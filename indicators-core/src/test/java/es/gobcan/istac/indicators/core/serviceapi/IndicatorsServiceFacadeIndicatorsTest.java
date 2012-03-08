@@ -2834,7 +2834,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(uuid, quantityUnitDto.getUuid());
         assertEquals("km", quantityUnitDto.getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnitDto.getSymbolPosition());
-        IndicatorsAsserts.assertEqualsInternationalString(quantityUnitDto.getText(), "es", "Kilómetros", "en", "Kilometers");
+        IndicatorsAsserts.assertEqualsInternationalString(quantityUnitDto.getTitle(), "es", "Kilómetros", "en", "Kilometers");
 
     }
 
