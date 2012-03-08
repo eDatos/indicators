@@ -24,11 +24,11 @@ public class QuantityDto extends QuantityDtoBase {
     }
 
     public Boolean isQuantityOrExtension(QuantityTypeEnum type) {
-        return QuantityTypeEnum.QUANTITY.equals(type);
+        return IndicatorUtils.isQuantityOrExtension(getType());
     }
 
     public Boolean isAmountOrExtension(QuantityTypeEnum type) {
-        return QuantityTypeEnum.AMOUNT.equals(type);
+        return IndicatorUtils.isAmountOrExtension(getType());
     }
     
     public Boolean isMagnituteOrExtension() {
