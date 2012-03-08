@@ -21,6 +21,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
+import es.gobcan.istac.indicators.core.util.TemporaryGranularityUtils;
 
 public class InvocationValidator {
 
@@ -613,6 +614,11 @@ public class InvocationValidator {
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        }
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
+            if (!TemporaryGranularityUtils.isTemporaryGranularity(indicatorInstance.getTemporaryValue())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+            }
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicValue())) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHIC_VALUE"));

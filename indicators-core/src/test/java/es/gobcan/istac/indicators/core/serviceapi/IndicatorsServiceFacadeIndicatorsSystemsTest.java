@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +33,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
+import es.gobcan.istac.indicators.core.util.TemporaryGranularityUtils;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators systems, dimensions, indicators instances
@@ -84,7 +87,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATORS_SYSTEM_1;
         String versionNumber = "1.000";
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        
+
         assertNotNull(indicatorsSystemDto);
         assertEquals(uuid, indicatorsSystemDto.getUuid());
         assertEquals(versionNumber, indicatorsSystemDto.getVersionNumber());
@@ -711,7 +714,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Update
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-        
+
         // Validation
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
         indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
@@ -900,7 +903,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Sends to production validation
         IndicatorsSystemDto indicatorsSystemDtoV2Updated = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContext2(), uuid);
 
-        // Validation 
+        // Validation
         {
             assertEquals(diffusionVersion, indicatorsSystemDtoV2Updated.getDiffusionVersion());
             assertEquals(productionVersion, indicatorsSystemDtoV2Updated.getProductionVersion());
@@ -1027,7 +1030,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("user1", indicatorsSystemDtoV1Updated.getProductionValidationUser());
             assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoV1Updated.getDiffusionValidationDate()));
             assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoV1Updated.getDiffusionValidationUser());
-            
+
         }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
@@ -1125,7 +1128,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Rejects validation
         IndicatorsSystemDto indicatorsSystemDtoV1Updated = indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
-        
+
         // Validation
         {
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDtoV1Updated.getProcStatus());
@@ -1273,7 +1276,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto1Updated.getPublicationDate()));
             assertEquals(getServiceContext().getUserId(), indicatorsSystemDto1Updated.getPublicationUser());
             assertNull(indicatorsSystemDto1Updated.getArchiveDate());
-            assertNull(indicatorsSystemDto1Updated.getArchiveUser());        }
+            assertNull(indicatorsSystemDto1Updated.getArchiveUser());
+        }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
@@ -2950,6 +2954,30 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+    public void testCreateIndicatorInstanceErrorTemporaryValueIncorrect() throws Exception {
+
+        // Create indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicValue("Spain");
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
+
+        indicatorInstanceDto.setTemporaryValue("2012a");
+
+        try {
+            indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+            fail("temporary value incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR_INSTANCE.TEMPORARY_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testCreateIndicatorInstanceErrorIndicatorNotExists() throws Exception {
 
         // Create indicator instance
@@ -3530,6 +3558,68 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+
+    @Test
+    public void testValidateTemporaryGranularities() throws Exception {
+
+        // Valid
+
+        for (int i = 0; i <= 1999; i++) {
+            // Yearly
+            String year = String.valueOf(1000 + i);
+            assertTrue(year, TemporaryGranularityUtils.isTemporaryGranularity(year));
+
+            // Biyearly
+            for (int j = 1; j <= 2; j++) {
+                String biyear = year + "H" + String.valueOf(j);
+                assertTrue(biyear, TemporaryGranularityUtils.isTemporaryGranularity(biyear));
+            }
+            // Quaterly
+            for (int j = 1; j <= 4; j++) {
+                String quater = year + "Q" + String.valueOf(j);
+                assertTrue(quater, TemporaryGranularityUtils.isTemporaryGranularity(quater));
+            }
+            for (int j = 1; j <= 12; j++) {
+                String month = StringUtils.leftPad(String.valueOf(j), 2, "0");
+                String monthly = year + "M" + month;
+                // Monthly
+                assertTrue(monthly, TemporaryGranularityUtils.isTemporaryGranularity(monthly));
+                // Daily
+                for (int k = 1; k <= 31; k++) {
+                    String day = year + month + StringUtils.leftPad(String.valueOf(k), 2, "0");
+                    assertTrue(day, TemporaryGranularityUtils.isTemporaryGranularity(day));
+                }
+            }
+            // Weekly
+            for (int j = 1; j <= 52; j++) {
+                String week = year + "W" + StringUtils.leftPad(String.valueOf(j), 2, "0");
+                assertTrue(week, TemporaryGranularityUtils.isTemporaryGranularity(week));
+            }
+        }
+
+        // Invalid
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("912"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("3000"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012q1"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012Q00"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012Q0"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012Q5"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012m1"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012M111"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012M1"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012M14"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012w1"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012W111"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012W1"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012W53"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012W60"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("20121"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("201212"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("2012121"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("201211223"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("afas"));
+        assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("201 2"));
     }
 
     @Override
