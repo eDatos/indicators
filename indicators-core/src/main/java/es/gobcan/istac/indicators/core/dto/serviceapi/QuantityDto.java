@@ -32,7 +32,7 @@ public class QuantityDto extends QuantityDtoBase {
     }
     
     public Boolean isMagnituteOrExtension() {
-        return IndicatorUtils.isMagnituteOrExtension(getType());
+        return IndicatorUtils.isMagnitudeOrExtension(getType());
     }
     
     public Boolean isFractionOrExtension() {

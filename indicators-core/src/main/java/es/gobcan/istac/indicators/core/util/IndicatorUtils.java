@@ -23,7 +23,7 @@ public class IndicatorUtils  {
         return QuantityTypeEnum.AMOUNT.equals(type);
     }
     
-    public static Boolean isMagnituteOrExtension(QuantityTypeEnum type) {
+    public static Boolean isMagnitudeOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.MAGNITUDE.equals(type) || isFractionOrExtension(type);
     }
     

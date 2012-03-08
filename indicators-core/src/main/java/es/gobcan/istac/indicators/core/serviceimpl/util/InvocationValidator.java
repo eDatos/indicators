@@ -664,7 +664,7 @@ public class InvocationValidator {
         }
         
         // Quantity: checks unexpected
-        if (!IndicatorUtils.isMagnituteOrExtension(quantity.getQuantityType())) {
+        if (!IndicatorUtils.isMagnitudeOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataEmpty(quantity.getMinimum(), parameterName + ".MINIMUM", exceptions);
             ValidationUtils.checkMetadataEmpty(quantity.getMaximum(), parameterName + ".MAXIMUM", exceptions);
         }
