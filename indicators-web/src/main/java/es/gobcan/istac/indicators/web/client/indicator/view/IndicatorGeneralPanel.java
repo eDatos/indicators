@@ -22,6 +22,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
+import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
 
 public class IndicatorGeneralPanel extends VLayout {
 	
@@ -38,6 +40,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	private GroupDynamicForm contentClassifiersForm; 
 	private GroupDynamicForm contentDescriptorsForm;
 	private GroupDynamicForm productionDescriptorsForm;
+	private ViewQuantityForm quantityForm;
 	private GroupDynamicForm diffusionDescriptorsForm;
 	private GroupDynamicForm publicationDescriptorsForm;
 	private GroupDynamicForm annotationsForm;
@@ -47,6 +50,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	private GroupDynamicForm contentClassifiersEditionForm; 
 	private GroupDynamicForm contentDescriptorsEditionForm;
 	private GroupDynamicForm productionDescriptorsEditionForm;
+	private QuantityForm quantityEditionForm;
 	private GroupDynamicForm diffusionDescriptorsEditionForm;
 	private GroupDynamicForm publicationDescriptorsEditionForm;
 	private GroupDynamicForm annotationsEditionForm;
@@ -65,6 +69,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	}
 	
 	private void bindEvents() {
+	    // Show/Hide Translations
 	    mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
 	        @Override
             public void onClick(ClickEvent event) {
@@ -77,6 +82,8 @@ public class IndicatorGeneralPanel extends VLayout {
 	        	contentDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 	        	productionDescriptorsForm.setTranslationsShowed(translationsShowed);
 	        	productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+	        	quantityForm.setTranslationsShowed(translationsShowed);
+	        	quantityEditionForm.setTranslationsShowed(translationsShowed);
 	        	diffusionDescriptorsForm.setTranslationsShowed(translationsShowed);
 	        	diffusionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 	        	publicationDescriptorsForm.setTranslationsShowed(translationsShowed);
@@ -86,13 +93,13 @@ public class IndicatorGeneralPanel extends VLayout {
 	        }
         });
         
+	    // Save
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 saveIndicator();
             }
         });
-
 	}
 	
 	/**
@@ -129,6 +136,9 @@ public class IndicatorGeneralPanel extends VLayout {
 		ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
 		productionDescriptorsForm.setFields(prodVersion, prodValDate, prodValUser);
 		
+		// Quantity Form
+		quantityForm = new ViewQuantityForm(getConstants().indicDetailQuantity());
+		
 		// Diffusion Descriptors Form
         diffusionDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
         ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
@@ -156,6 +166,7 @@ public class IndicatorGeneralPanel extends VLayout {
 		mainFormLayout.addViewCanvas(contentClassifiersForm);
 		mainFormLayout.addViewCanvas(contentDescriptorsForm);
 		mainFormLayout.addViewCanvas(productionDescriptorsForm);
+		mainFormLayout.addViewCanvas(quantityForm);
 		mainFormLayout.addViewCanvas(diffusionDescriptorsForm);
 		mainFormLayout.addViewCanvas(publicationDescriptorsForm);
 		mainFormLayout.addViewCanvas(annotationsForm);
@@ -194,6 +205,9 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem prodValUser = new ViewTextItem(IndicatorDS.PRODUCTION_VALIDATION_USER, getConstants().indicDetailProductionValidationUser());
         productionDescriptorsEditionForm.setFields(prodVersion, prodValDate, prodValUser);
         
+        // Quantity Form
+        quantityEditionForm = new QuantityForm(getConstants().indicDetailQuantity());
+        
         // Diffusion Descriptors Form
         diffusionDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
         ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
@@ -221,6 +235,7 @@ public class IndicatorGeneralPanel extends VLayout {
 		mainFormLayout.addEditionCanvas(contentClassifiersEditionForm);
 		mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
+		mainFormLayout.addEditionCanvas(quantityEditionForm);
 		mainFormLayout.addEditionCanvas(diffusionDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(publicationDescriptorsEditionForm);
 		mainFormLayout.addEditionCanvas(annotationsEditionForm);
@@ -258,6 +273,9 @@ public class IndicatorGeneralPanel extends VLayout {
 	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
 	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null ? indicatorDto.getProductionValidationDate().toString() : "");
 	    productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
+	    
+	    // Quantity
+	    quantityForm.setValue(indicatorDto.getQuantity());
 	    
 	    // Diffusion Descriptors
 	    diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
@@ -299,6 +317,9 @@ public class IndicatorGeneralPanel extends VLayout {
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null ? indicatorDto.getProductionValidationDate().toString() : "");
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
         
+        // Quantity
+        quantityEditionForm.setValue(indicatorDto.getQuantity());
+        
         // Diffusion Descriptors
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
@@ -319,7 +340,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	}
 	
     private void saveIndicator() {
-        if (identifiersEditionForm.validate() && contentClassifiersEditionForm.validate() && contentDescriptorsEditionForm.validate()) {
+        if (identifiersEditionForm.validate(false) && contentClassifiersEditionForm.validate(false) && contentDescriptorsEditionForm.validate(false) && quantityEditionForm.validate(false)) {
             // Identifiers
             indicator.setTitle((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.TITLE));
             indicator.setAcronym((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.ACRONYM));
@@ -328,6 +349,8 @@ public class IndicatorGeneralPanel extends VLayout {
             indicator.setSubjectTitle((InternationalStringDto)contentClassifiersEditionForm.getValue(IndicatorDS.SUBJECT_TITLE));
             // Content Descriptors
             indicator.setConceptDescription((InternationalStringDto)contentDescriptorsEditionForm.getValue(IndicatorDS.CONCEPT_DESCRIPTION));
+            // Quantity
+            indicator.setQuantity(quantityEditionForm.getValue());
             // Annotations
             indicator.setNotes(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.NOTES)).getTextValue());
             indicator.setNotesUrl(((MultiLanguageTextAndUrlItem)annotationsEditionForm.getItem(IndicatorDS.NOTES)).getUrlValue());

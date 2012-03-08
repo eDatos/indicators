@@ -43,26 +43,26 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	
 	@Inject
 	public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher) {
-		super(eventBus, view, proxy);
-		this.dispatcher = dispatcher;
-		getView().setUiHandlers(this);
+	    super(eventBus, view, proxy);
+	    this.dispatcher = dispatcher;
+	    getView().setUiHandlers(this);
 	}
-	
+
 	@Override
 	protected void revealInParent() {
-		RevealContentEvent.fire(this, MainPagePresenter.CONTENT_SLOT, this);
+	    RevealContentEvent.fire(this, MainPagePresenter.CONTENT_SLOT, this);
 	}
-	
+
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
-		super.prepareFromRequest(request);
-		indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
+	    super.prepareFromRequest(request);
+	    indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
 	}
-	
+
 	@Override
 	protected void onReset() {
-		super.onReset();
-		retrieveIndicatorByCode();
+	    super.onReset();
+	    retrieveIndicatorByCode();
 	}
 	
 	private void retrieveIndicatorByCode() {
@@ -71,7 +71,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
-
 			@Override
 			public void onSuccess(GetIndicatorByCodeResult result) {
 				getView().setIndicator(result.getIndicator());
@@ -86,24 +85,23 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	        public void onFailure(Throwable caught) {
 	            ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
 	        }
-	        
+
 	        @Override
 	        public void onSuccess(UpdateIndicatorResult result) {
 	            retrieveIndicatorByCode();
 	        }
 	    });
 	}
-	
+
 	public void saveIndicator(IndicatorDto indicator) {
 	    dispatcher.execute(new UpdateIndicatorAction(indicator), new AsyncCallback<UpdateIndicatorResult>() {
-	       @Override
+	        @Override
 	        public void onFailure(Throwable caught) {
-	           ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
+	            ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
 	        }
-	       
-	       @Override
+	        @Override
 	        public void onSuccess(UpdateIndicatorResult result) {
-	           retrieveIndicatorByCode();
+	            getView().setIndicator(result.getIndicatorDto());
 	        }
 	    });
 	}
