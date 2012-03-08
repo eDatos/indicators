@@ -21,7 +21,7 @@ public class TemporaryGranularityUtils {
     private static Pattern pattern                      = Pattern.compile("^" + TEMPORAL_GRANULARITY_PATTERN + "$");
 
     /**
-     * Validate temporary granularity is valid.
+     * Validate temporary value is valid
      * Posibilities:
      * - Yearly: yyyy (Example: 1999)
      * - Biyearly: yyyyHs (Example: 1999H1)
@@ -34,5 +34,15 @@ public class TemporaryGranularityUtils {
         Matcher matching = pattern.matcher(value);
         Boolean isValid = matching.matches();
         return isValid;
+    }
+    
+    /**
+     * Compare two temporary values. These values must be refered to same granularity
+     * TODO comprobar que tienen la misma granularidad?
+     * 
+     * @return 0 if are equals; a value less than 0 if this value1 is less than value2; a value greater than 0 if this value1 is less than value2
+     */
+    public static int compareTo(String value1, String value2) {
+        return value1.compareTo(value2);
     }
 }

@@ -3564,7 +3564,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testValidateTemporaryGranularities() throws Exception {
 
         // Valid
-
         for (int i = 0; i <= 1999; i++) {
             // Yearly
             String year = String.valueOf(1000 + i);
@@ -3620,6 +3619,36 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("201211223"));
         assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("afas"));
         assertFalse(TemporaryGranularityUtils.isTemporaryGranularity("201 2"));
+    }
+
+    @Test
+    public void testCompareTemporaryGranularities() throws Exception {
+        
+        // Equals
+        assertTrue(TemporaryGranularityUtils.compareTo("2012", "2012") == 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012H2", "2012H2") == 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012Q1", "2012Q1") == 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012M02", "2012M02") == 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("20120102", "20120102") == 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012W51", "2012W51") == 0);
+        
+        // Less
+        assertTrue(TemporaryGranularityUtils.compareTo("2011", "2012") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012H1", "2012H2") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2011H2", "2012H2") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012Q2", "2012Q3") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2011Q1", "2012Q1") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012M01", "2012M02") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2011M01", "2012M02") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("20120102", "20120202") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("20120102", "20120103") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2012W01", "2012W51") < 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2011W51", "2012W51") < 0);
+        
+        // Greater
+        assertTrue(TemporaryGranularityUtils.compareTo("2013", "2012") > 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("2013H1", "2012H2") > 0);
+        assertTrue(TemporaryGranularityUtils.compareTo("20130102", "20120103") > 0);
     }
 
     @Override
