@@ -95,7 +95,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());
-        target.setTemporaryGranularityId(source.getTemporaryGranularityId());
+        target.setTemporaryGranularity(source.getTemporaryGranularity());
         target.setTemporaryValue(source.getTemporaryValue());
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());

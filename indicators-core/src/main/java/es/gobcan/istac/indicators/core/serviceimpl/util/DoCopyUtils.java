@@ -137,7 +137,7 @@ public class DoCopyUtils {
         target.setIndicator(source.getIndicator());
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());
-        target.setTemporaryGranularityId(source.getTemporaryGranularityId());
+        target.setTemporaryGranularity(source.getTemporaryGranularity());
         target.setTemporaryValue(source.getTemporaryValue());
 
         return target;

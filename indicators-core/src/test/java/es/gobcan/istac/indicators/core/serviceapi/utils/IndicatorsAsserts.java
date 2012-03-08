@@ -107,7 +107,7 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getGeographicGranularityId(), actual.getGeographicGranularityId());
         assertEquals(expected.getGeographicValue(), actual.getGeographicValue());
-        assertEquals(expected.getTemporaryGranularityId(), actual.getTemporaryGranularityId());
+        assertEquals(expected.getTemporaryGranularity(), actual.getTemporaryGranularity());
         assertEquals(expected.getTemporaryValue(), actual.getTemporaryValue());
     }
 }

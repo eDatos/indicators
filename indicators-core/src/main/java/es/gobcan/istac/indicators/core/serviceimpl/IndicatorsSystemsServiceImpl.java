@@ -506,6 +506,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     // TODO atributos de granularidadesId como foreign keys a las tablas de granularidades?
+    // TODO Enum granularidades temporales: falta semestres? Pte Alberto
     @Override
     public IndicatorInstance createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstance indicatorInstance) throws MetamacException {
 

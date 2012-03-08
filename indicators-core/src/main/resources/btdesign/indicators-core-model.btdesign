@@ -353,7 +353,7 @@ Application Indicators {
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
         	"Temporary granularity"
-        	String temporaryGranularityId nullable;
+        	- @TemporaryGranularityEnum temporaryGranularity nullable;
         	"Temporary value"
         	String temporaryValue nullable;
         	"Geographic granularity"
@@ -775,7 +775,7 @@ Application Indicators {
 			"Indicator"
 			String indicatorUuid;
         	"Temporary granularity"
-        	String temporaryGranularityId;
+        	- @TemporaryGranularityEnum temporaryGranularity;
         	"Temporary value"
         	String temporaryValue;
         	"Geographic granularity"
@@ -939,6 +939,15 @@ Application Indicators {
     	enum RateDerivationRoundingEnum {
     		UPWARD,
     		DOWN
+    	}
+    	
+    	"Temporary granularities"
+    	enum TemporaryGranularityEnum {
+    		YEARLY,
+    		QUATERLY,
+    		MONTHLY,
+    		WEEKLY,
+    		DAILY
     	}		
 	}
 }

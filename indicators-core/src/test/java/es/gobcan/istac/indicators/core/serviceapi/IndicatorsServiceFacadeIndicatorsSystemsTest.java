@@ -26,6 +26,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TemporaryGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -2648,7 +2649,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
-        assertEquals("Annual", indicatorInstanceDto.getTemporaryGranularityId());
+        assertEquals(TemporaryGranularityEnum.YEARLY, indicatorInstanceDto.getTemporaryGranularity());
         assertNull(indicatorInstanceDto.getTemporaryValue());
         assertEquals("Countries", indicatorInstanceDto.getGeographicGranularityId());
         assertNull(indicatorInstanceDto.getGeographicValue());
@@ -2735,7 +2736,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicGranularityId("countries");
-        indicatorInstanceDto.setTemporaryGranularityId("days");
+        indicatorInstanceDto.setTemporaryGranularity(TemporaryGranularityEnum.DAILY);
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2876,7 +2877,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid(null);
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(null);
-        indicatorInstanceDto.setTemporaryGranularityId(null);
+        indicatorInstanceDto.setTemporaryGranularity(null);
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
             fail("parameters required");
@@ -2893,7 +2894,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(2, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TEMPORARY_GRANULARITY_ID", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.TEMPORARY_GRANULARITY", e.getExceptionItems().get(2).getMessageParameters()[0]);
             assertEquals("INDICATOR_INSTANCE.TEMPORARY_VALUE", e.getExceptionItems().get(2).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());

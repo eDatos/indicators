@@ -608,10 +608,10 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorInstance.getElementLevel(), "INDICATOR_INSTANCE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
-        if (ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularityId()) && ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY_GRANULARITY_ID", "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        if (ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY_GRANULARITY", "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicValue())) {

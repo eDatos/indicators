@@ -154,7 +154,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
         target.setGeographicGranularityId(source.getGeographicGranularityId());
         target.setGeographicValue(source.getGeographicValue());
-        target.setTemporaryGranularityId(source.getTemporaryGranularityId());
+        target.setTemporaryGranularity(source.getTemporaryGranularity());
         target.setTemporaryValue(source.getTemporaryValue());
 
         // Related entities
