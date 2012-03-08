@@ -9,21 +9,22 @@ import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.AnimationEffect;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 import es.gobcan.istac.indicators.web.client.widgets.LinksHead;
 
-public class MainPageViewImpl extends ViewImpl implements MainPagePresenter.MainView {
+public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainView {
 	
 	private static final int NORTH_HEIGHT = 85;
 	
-	private VLayout panel; // MAIN
+	private VLayout panel;
 	private VLayout northLayout;
 	private HLayout southLayout;
 	private HLayout footerLayout;

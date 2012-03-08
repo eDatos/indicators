@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.main.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+
 import java.util.List;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
@@ -10,11 +12,15 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageH
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
@@ -22,13 +28,20 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
+import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
+import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
+import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
-public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler {
+public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers {
 	
+    private final DispatchAsync dispatcher;
+    
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> CONTENT_SLOT = new Type<RevealContentHandler<?>>();
 	
-	public interface MainView extends View{
+	public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
 		void showMessage(List<String> messages, MessageTypeEnum type);
 		void hideMessages();
 	}
@@ -38,8 +51,10 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 	public interface MainProxy extends Proxy<MainPagePresenter>, Place {}
 	
 	@Inject
-	public MainPagePresenter(EventBus eventBus, MainView view, MainProxy proxy) {
-		super(eventBus,view,proxy);
+	public MainPagePresenter(EventBus eventBus, MainView view, MainProxy proxy, DispatchAsync dispatcher) {
+		super(eventBus, view, proxy);
+		getView().setUiHandlers(this);
+		this.dispatcher = dispatcher;
 	}
 
 	@Override
@@ -51,6 +66,14 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(ShowMessageEvent.getType(), this);
+		// TODO Is this the proper place to load value lists?
+		loadQuantityUnits();
+	}
+	
+	@Override
+	protected void onReset() {
+	    super.onReset();
+	    hideMessages();
 	}
 	
 	@Override
@@ -58,9 +81,27 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 		getView().showMessage(event.getMessages(), event.getMessageType());
 	}
 	
-	@Override
-	public void onHideMessage(HideMessageEvent event) {
-		getView().hideMessages();
+    @ProxyEvent
+    @Override
+    public void onHideMessage(HideMessageEvent event) {
+        hideMessages();
+    }
+    
+    private void hideMessages() {
+        getView().hideMessages();
+    }
+	
+	private void loadQuantityUnits() {
+	    dispatcher.execute(new GetQuantityUnitsListAction(), new AsyncCallback<GetQuantityUnitsListResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingQuantityUnits()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetQuantityUnitsListResult result) {
+                UpdateQuantityUnitsEvent.fire(MainPagePresenter.this, result.getQuantityUnits());
+            }}
+	    );
 	}
 
 }

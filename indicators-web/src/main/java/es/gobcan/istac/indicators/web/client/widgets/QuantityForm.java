@@ -2,6 +2,9 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -17,6 +20,7 @@ import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.QuantityFormUtils;
@@ -151,6 +155,14 @@ public class QuantityForm extends BaseQuantityForm {
         return quantityDto;
     }
     
-    
+    @Override
+    public void setQuantityUnits(List<QuantityUnitDto> units) {
+        super.setQuantityUnits(units);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (QuantityUnitDto unit : units) {
+            valueMap.put(unit.getUuid(), unit.getSymbol());
+        }
+        ((RequiredSelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
+    }
     
 }

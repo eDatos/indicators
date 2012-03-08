@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
+import java.util.List;
+
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -13,6 +15,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
@@ -24,7 +27,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 	
 	@Inject
 	public IndicatorViewImpl(IndicatorGeneralPanel genPanel) {
-		
 		this.generalPanel = genPanel;
 		
 		indicatorLabel = new TitleLabel();
@@ -52,8 +54,13 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
 	@Override
 	public void setIndicator(IndicatorDto indicator) {
-		this.indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
-		this.generalPanel.setIndicator(indicator);
+		indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
+		generalPanel.setIndicator(indicator);
 	}
+
+    @Override
+    public void setQuantityUnits(List<QuantityUnitDto> units) {
+        generalPanel.setQuantityUnits(units);
+    }
 
 }

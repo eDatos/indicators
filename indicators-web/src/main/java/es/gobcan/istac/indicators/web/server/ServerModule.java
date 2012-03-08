@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHand
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
@@ -33,6 +34,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
@@ -69,6 +71,7 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
 		bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
 		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
+		bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
 	}
 	
 }

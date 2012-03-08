@@ -15,6 +15,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
 @Component
@@ -220,7 +221,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
-            log.info("Operando sobre sistema sin persistir, se procede a persistir sistema: "+indicatorsSystemDto.getCode());
+            log.info("Working without persisting. Indicator with code " + indicatorsSystemDto.getCode() + " is going to be persisted");
             indicatorsSystemDto = indicatorsService.createIndicatorsSystem(ctx, indicatorsSystemDto);
         }
         return indicatorsService.createIndicatorInstance(ctx,indicatorsSystemDto.getUuid(), indicatorInstanceDto);
@@ -239,6 +240,11 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
         indicatorsService.deleteIndicatorInstance(ctx, uuid);
+    }
+
+    @Override
+    public List<QuantityUnitDto> getQuantityUnits(ServiceContext ctx) throws MetamacException {
+        return indicatorsService.findQuantityUnits(ctx);
     }
 
 }

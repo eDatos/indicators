@@ -8,6 +8,7 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 
@@ -72,7 +73,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : "");
             setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityDto.getType() != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityDto.getType().toString()) : "");
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
+            setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitSymbol(quantityDto.getUnitUuid()));
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits() != null ? quantityDto.getSignificantDigits().toString() : "");
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
@@ -89,6 +90,17 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
+    }
+    
+    private String getQuantityUnitSymbol(String unitUuid) {
+        if (unitUuid != null) {
+            for (QuantityUnitDto unit : quantityUnitDtos) {
+                if (unitUuid.equals(unit.getUuid())) {
+                    return unit.getSymbol();
+                }
+            }
+        }
+        return "";
     }
     
 }

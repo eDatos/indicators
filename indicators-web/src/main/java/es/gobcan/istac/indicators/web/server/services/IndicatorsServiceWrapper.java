@@ -10,13 +10,14 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 
 public interface IndicatorsServiceWrapper {
 
     /**
      * Creates an indicator
      */
-    public abstract IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
+    public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
     
     /**
      * Retrieves an indicator. If versionNumber is not provided, retrieves last version
@@ -31,76 +32,78 @@ public interface IndicatorsServiceWrapper {
     /**
      * Updates metadata of an indicator. This version can not be published or archived
      */
-    public abstract IndicatorDto updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
+    public IndicatorDto updateIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException;
 
     /**
      * Deletes a version of an indicator. Version to remove must be not published nor archived
      */
-    public abstract void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException;
+    public void deleteIndicator(ServiceContext ctx, String uuid) throws MetamacException;
 
     /**
      * Finds indicators. Retrieves last versions
      */
-    public abstract List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException;
+    public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException;
 
     /**
      * Updates metadata of an indicators system. This version can not be published or archived
      */
-    public abstract IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
+    public IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException;
 
     /**
      * Retrieves an indicators system by code. Retrieves last version
      */
-    public abstract IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code) throws MetamacException;
+    public IndicatorsSystemDto retrieveIndicatorsSystemByCode(ServiceContext ctx, String code) throws MetamacException;
 
     /**
      * Finds indicators systems. Retrieves last versions
      */
-    public abstract List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException;
+    public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException;
 
     /**
      * Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version
      */
-    public abstract IndicatorsSystemStructureDto retrieveIndicatorsSystemStructureByCode(ServiceContext ctx, String code) throws MetamacException;
+    public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructureByCode(ServiceContext ctx, String code) throws MetamacException;
 
     /**
      * Creates a dimension
      */
-    public abstract DimensionDto createDimension(ServiceContext ctx, IndicatorsSystemDto indicatorsSystem, DimensionDto dimensionDto) throws MetamacException;
+    public DimensionDto createDimension(ServiceContext ctx, IndicatorsSystemDto indicatorsSystem, DimensionDto dimensionDto) throws MetamacException;
 
     /**
      * Updates metadata of dimension
      */
-    public abstract DimensionDto updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
+    public DimensionDto updateDimension(ServiceContext ctx, DimensionDto dimensionDto) throws MetamacException;
 
     /**
      * Updates the location of dimension
      */
-    public abstract DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes dimension
      */
-    public abstract void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException;
+    public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException;
 
     /**
      * Creates a indicator instance
      */
-    public abstract IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
+    public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 
     /**
      * Updates metadata of indicator instance
      */
-    public abstract IndicatorInstanceDto updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
+    public IndicatorInstanceDto updateIndicatorInstance(ServiceContext ctx, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException;
 
     /**
      * Updates the location of indicator instance
      */
-    public abstract IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
+    public IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 
     /**
      * Deletes indicator instance
      */
-    public abstract void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException;
+    public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException;
 
+    public List<QuantityUnitDto> getQuantityUnits(ServiceContext ctx) throws MetamacException;
+    
 }

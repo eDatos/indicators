@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import java.util.List;
+
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
@@ -14,14 +16,18 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
+import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
@@ -29,17 +35,18 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
-public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler {
+public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler, UpdateQuantityUnitsHandler {
 	private DispatchAsync dispatcher;
 	private String indicatorCode;
 	
+	@ProxyCodeSplit
+    @NameToken(NameTokens.indicatorPage)
+    public interface IndicatorProxy extends Proxy<IndicatorPresenter>, Place {}
+	
 	public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
 		void setIndicator(IndicatorDto indicator);
+		void setQuantityUnits(List<QuantityUnitDto> units);
 	}
-	
-	@ProxyCodeSplit
-	@NameToken(NameTokens.indicatorPage)
-	public interface IndicatorProxy extends Proxy<IndicatorPresenter>, Place {}
 	
 	@Inject
 	public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher) {
@@ -105,5 +112,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	        }
 	    });
 	}
+
+	@ProxyEvent
+    @Override
+    public void onUpdateQuantityUnits(UpdateQuantityUnitsEvent event) {
+        getView().setQuantityUnits(event.getQuantityUnits());
+    }
 
 }

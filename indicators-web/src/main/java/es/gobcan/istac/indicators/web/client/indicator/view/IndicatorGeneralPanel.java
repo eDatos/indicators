@@ -4,6 +4,8 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -20,6 +22,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
@@ -363,6 +366,11 @@ public class IndicatorGeneralPanel extends VLayout {
     
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+    
+    public void setQuantityUnits(List<QuantityUnitDto> units) {
+        quantityForm.setQuantityUnits(units);
+        quantityEditionForm.setQuantityUnits(units);
     }
     
 }
