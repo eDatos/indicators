@@ -21,7 +21,7 @@ public class TemporalVariableUtils {
     private static Pattern pattern                      = Pattern.compile("^" + TEMPORAL_GRANULARITY_PATTERN + "$");
 
     /**
-     * Validate temporal value is valid
+     * Checks if a temporal value is valid
      * Posibilities:
      * - Yearly: yyyy (Example: 1999)
      * - Biyearly: yyyyHs (Example: 1999H1)
@@ -30,7 +30,7 @@ public class TemporalVariableUtils {
      * - Weekly: yyyyWss (Example: 1999W51).
      * - Daily: yyyymmdd (Example: 19990101)
      */
-    public static Boolean isTemporalGranularity(String value) {
+    public static Boolean isTemporalValue(String value) {
         Matcher matching = pattern.matcher(value);
         Boolean isValid = matching.matches();
         return isValid;
