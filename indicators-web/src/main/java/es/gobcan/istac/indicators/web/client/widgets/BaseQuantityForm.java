@@ -11,6 +11,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
@@ -21,10 +22,15 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class BaseQuantityForm extends GroupDynamicForm {
     
+    protected List<IndicatorDto> indicatorDtos;
     protected List<QuantityUnitDto> quantityUnitDtos;
     
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
+    }
+    
+    public void setIndicators(List<IndicatorDto> indicatorDtos) {
+        this.indicatorDtos = indicatorDtos;
     }
     
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -37,7 +43,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         String baseLocation = quantityDto.getBaseLocation();
         if (baseTime != null && !baseTime.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_TIME;
-        } else if (baseLocation != null && !baseTime.isEmpty()) {
+        } else if (baseLocation != null && !baseLocation.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_LOCATION;
         } else if (baseValue != null) {
             return QuantityIndexBaseTypeEnum.BASE_VALUE;

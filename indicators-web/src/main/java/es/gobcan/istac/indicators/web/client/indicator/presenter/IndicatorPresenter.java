@@ -32,6 +32,8 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
@@ -46,6 +48,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
 		void setIndicator(IndicatorDto indicator);
 		void setQuantityUnits(List<QuantityUnitDto> units);
+		void setIndicatorList(List<IndicatorDto> indicators);
 	}
 	
 	@Inject
@@ -80,7 +83,18 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 			}
 			@Override
 			public void onSuccess(GetIndicatorByCodeResult result) {
-				getView().setIndicator(result.getIndicator());
+			    final IndicatorDto indicatorDto = result.getIndicator();
+				dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onSuccess(GetIndicatorListResult result) {
+                        getView().setIndicatorList(result.getIndicatorList());
+                        getView().setIndicator(indicatorDto);
+                    }
+                });
 			}
 		});
 	}
@@ -108,7 +122,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	        }
 	        @Override
 	        public void onSuccess(UpdateIndicatorResult result) {
-	            getView().setIndicator(result.getIndicatorDto());
+	           getView().setIndicator(result.getIndicatorDto());
 	        }
 	    });
 	}

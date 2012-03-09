@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,9 +17,11 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
@@ -29,6 +32,8 @@ import es.gobcan.istac.indicators.web.client.utils.QuantityFormUtils;
 public class QuantityForm extends BaseQuantityForm {
     
     private QuantityDto quantityDto;
+    private IndicatorDto indicatorDto;
+    
     
     public QuantityForm(String groupTitle) {
         super(groupTitle);
@@ -65,9 +70,11 @@ public class QuantityForm extends BaseQuantityForm {
         
         SelectItem denominatorUuid = new SelectItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
         denominatorUuid.setShowIfCondition(getDenominatorIfFunction());
+        denominatorUuid.setValidators(getIndicatorSelectedValidator());
         
         SelectItem numeratorUuid = new SelectItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
         numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
+        numeratorUuid.setValidators(getIndicatorSelectedValidator());
         
         CustomCheckboxItem isPercentange = new CustomCheckboxItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(getIsPercentageIfFunction());
@@ -98,6 +105,8 @@ public class QuantityForm extends BaseQuantityForm {
         SelectItem baseQuantityIndUuid = new SelectItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setRequired(true);
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
+        baseQuantityIndUuid.setValidators(getIndicatorSelectedValidator());
+        
         
         setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
     }
@@ -145,7 +154,7 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setMinimum(getItem(IndicatorDS.QUANTITY_MINIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MINIMUM) != null ? (Integer)getValue(IndicatorDS.QUANTITY_MINIMUM) : null) : null);
         quantityDto.setMaximum(getItem(IndicatorDS.QUANTITY_MAXIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MAXIMUM) != null ? (Integer)getValue(IndicatorDS.QUANTITY_MAXIMUM) : null) : null);
         quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID) : null);
-        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID) : null);
+        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID) : null);
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean.valueOf((Boolean)getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)): false) : null);
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem)getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
         quantityDto.setBaseValue(getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer)getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
@@ -156,6 +165,18 @@ public class QuantityForm extends BaseQuantityForm {
     }
     
     @Override
+    public void setIndicators(List<IndicatorDto> indicators) {
+        super.setIndicators(indicators);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (IndicatorDto indicatorDto : indicators) {
+            valueMap.put(indicatorDto.getUuid(), indicatorDto.getCode());
+        }
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
+    }
+    
+    @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         super.setQuantityUnits(units);
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
@@ -163,6 +184,21 @@ public class QuantityForm extends BaseQuantityForm {
             valueMap.put(unit.getUuid(), unit.getSymbol());
         }
         ((RequiredSelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
+    }
+    
+    public void setIndicator(IndicatorDto indicatorDto) {
+        this.indicatorDto = indicatorDto;
+    }
+    
+    private CustomValidator getIndicatorSelectedValidator() {
+        CustomValidator validator = new CustomValidator() {
+            @Override
+            protected boolean condition(Object value) {
+                return (value != null && value.equals(indicatorDto.getUuid())) ? false : true;
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        return validator;
     }
     
 }

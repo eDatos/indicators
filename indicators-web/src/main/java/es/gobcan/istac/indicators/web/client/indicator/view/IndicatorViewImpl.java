@@ -63,4 +63,9 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         generalPanel.setQuantityUnits(units);
     }
 
+    @Override
+    public void setIndicatorList(List<IndicatorDto> indicators) {
+        generalPanel.setIndicatorList(indicators);
+    }
+
 }

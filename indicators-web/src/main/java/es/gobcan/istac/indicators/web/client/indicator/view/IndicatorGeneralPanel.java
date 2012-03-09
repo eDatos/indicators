@@ -321,6 +321,7 @@ public class IndicatorGeneralPanel extends VLayout {
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
         
         // Quantity
+        quantityEditionForm.setIndicator(indicatorDto);
         quantityEditionForm.setValue(indicatorDto.getQuantity());
         
         // Diffusion Descriptors
@@ -371,6 +372,11 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         quantityForm.setQuantityUnits(units);
         quantityEditionForm.setQuantityUnits(units);
+    }
+    
+    public void setIndicatorList(List<IndicatorDto> indicatorDtos) {
+        quantityForm.setIndicators(indicatorDtos);
+        quantityEditionForm.setIndicators(indicatorDtos);
     }
     
 }
