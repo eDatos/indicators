@@ -69,6 +69,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             QUANTITY_UNIT_1              = "1";
     private static String             QUANTITY_UNIT_2              = "2";
 
+    // Geographical values
+    private static String             GEOGRAPHICAL_VALUE_1         = "1";
+
     @Test
     public void testRetrieveIndicator() throws Exception {
 
@@ -107,7 +110,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getPercentageOf(), "es", "Porcentaje de 1", "en", "Percentage of 1");
         assertNull(indicatorDto.getQuantity().getBaseValue());
         assertNull(indicatorDto.getQuantity().getBaseTime());
-        assertNull(indicatorDto.getQuantity().getBaseLocation());
+        assertNull(indicatorDto.getQuantity().getBaseLocationUuid());
         assertEquals(INDICATOR_3, indicatorDto.getQuantity().getBaseQuantityIndicatorUuid());
 
         IndicatorsAsserts.assertEqualsDate("2011-01-01 01:02:04", indicatorDto.getCreatedDate());
@@ -693,7 +696,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
-        indicatorDto.getQuantity().setBaseLocation("Spain");
+        indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
@@ -707,7 +710,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -737,7 +740,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
-        indicatorDto.getQuantity().setBaseLocation("Spain");
+        indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
         indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_5);
 
         try {
@@ -780,7 +783,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION", e.getExceptionItems().get(8).getMessageParameters()[0]);
+            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION_UUID", e.getExceptionItems().get(8).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
@@ -1109,7 +1112,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Update
         IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoUpdated);
-        
+
         // Validation
         indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoUpdated);
@@ -1977,7 +1980,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Archive
-        IndicatorDto indicatorDtoUpdated =indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
+        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.archiveIndicator(getServiceContext(), uuid);
 
         // Validation
         {
@@ -2630,6 +2633,58 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+
+    @Test
+    public void testCreateDataSourceErrorBaseLocationNotExists() throws Exception {
+
+        String indicatorUuid = INDICATOR_1;
+        String indicatorUuidLinked = INDICATOR_3;
+
+        // Create dataSource
+        DataSourceDto dataSourceDto = new DataSourceDto();
+        dataSourceDto.setQueryGpe("queryGpe1");
+        dataSourceDto.setPx("px1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
+        DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
+        dataSourceVariableDto1.setVariable("variable1");
+        dataSourceVariableDto1.setCategory("category1");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto1);
+        DataSourceVariableDto dataSourceVariableDto2 = new DataSourceVariableDto();
+        dataSourceVariableDto2.setVariable("variable2");
+        dataSourceVariableDto2.setCategory("category2");
+        dataSourceDto.addOtherVariable(dataSourceVariableDto2);
+        dataSourceDto.setInterperiodRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getInterperiodRate().setMethod("Method1");
+        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+        dataSourceDto.setAnnualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualRate().setMethod("Method2");
+        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.INDEX);
+        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualRate().getQuantity().setBaseLocationUuid(NOT_EXISTS);
+
+        try {
+            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
+            fail("Base location not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(dataSourceDto.getAnnualRate().getQuantity().getBaseLocationUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+
+    }
+
     @Test
     public void testDeleteDataSource() throws Exception {
 

@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.util;
+package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -79,7 +79,7 @@
 					PERCENTAGE_OF_FK="32"
   					BASE_VALUE="[null]"
   					BASE_TIME="[null]"
-  					BASE_LOCATION="[null]"
+  					BASE_LOCATION_FK="[null]"
   					BASE_QUANTITY_FK="3"
 					UNIT_FK="1"
 					NUMERATOR_FK="3"
@@ -2073,8 +2073,8 @@
 						UUID="IndSys-1-v1-IInstance-1"
 						TEMPORAL_GRANULARITY="YEARLY"
 						TEMPORAL_VALUE="[null]"
-						GEOGRAPHICAL_GRANULARITY_ID="Countries"
-						GEOGRAPHICAL_VALUE="[null]"
+						GEOGRAPHICAL_GRANULARITY_FK="1"
+						GEOGRAPHICAL_VALUE_FK="[null]"
 						TITLE_FK="28"
 						INDICATOR_FK="10"
 						
@@ -2107,7 +2107,72 @@
   		SYMBOL_POSITION="START"
 	/>
   		  
-			  
+	<!-- ************************************************************************************ -->
+	<!--                                 GEOGRAPHICAL VALUES	                              -->
+	<!-- ************************************************************************************ -->
+	<LIS_GEOGR_VALUES
+		ID="1"
+ 		UUID="1"
+ 		CODE="ES"
+ 		LATITUDE="998612325.5656233"
+ 		LONGITUDE="-15632112156.45456464565"
+  		TITLE_FK="43"
+  		GRANULARITY_FK="1"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_VALUES
+		ID="2"
+ 		UUID="2"
+ 		CODE="EN-LN"
+ 		LATITUDE="12.232511"
+ 		LONGITUDE="51232.254112"
+  		TITLE_FK="44"
+  		GRANULARITY_FK="2"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_VALUES
+		ID="3"
+ 		UUID="3"
+ 		CODE="FR"
+ 		LATITUDE="898612325.5656233"
+ 		LONGITUDE="-25632112156.45456464565"
+  		TITLE_FK="[null]"
+  		GRANULARITY_FK="1"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_VALUES
+		ID="4"
+ 		UUID="4"
+ 		CODE="ES-MD"
+ 		LATITUDE="22.232511"
+ 		LONGITUDE="41232.254112"
+  		TITLE_FK="[null]"
+  		GRANULARITY_FK="2"
+  		VERSION="1"
+	/>
+	
+	<!-- ************************************************************************************ -->
+	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->
+	<!-- ************************************************************************************ -->
+	<LIS_GEOGR_GRANULARITIES
+		ID="1"
+ 		UUID="1"
+ 		CODE="COUNTRIES"
+  		TITLE_FK="45"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_GRANULARITIES
+		ID="2"
+ 		UUID="2"
+ 		CODE="MUNICIPALITIES"
+  		TITLE_FK="46"
+  		VERSION="1"
+	/>  		  
+  		  		  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
 	<!-- ************************************************************************************ -->

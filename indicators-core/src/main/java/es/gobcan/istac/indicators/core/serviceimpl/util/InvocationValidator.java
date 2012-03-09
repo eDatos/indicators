@@ -21,7 +21,6 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
-import es.gobcan.istac.indicators.core.util.TemporalVariableUtils;
 
 public class InvocationValidator {
 
@@ -659,12 +658,12 @@ public class InvocationValidator {
             exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
-            if (!TemporalVariableUtils.isTemporalGranularity(indicatorInstance.getTemporalValue())) {
+            if (!TemporalVariableUtils.isTemporalValue(indicatorInstance.getTemporalValue())) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
             }
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicalValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHICAL_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicalValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHICAL_VALUE_UUID"));
         }
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
@@ -698,14 +697,14 @@ public class InvocationValidator {
         }
         if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
             if (ValidationUtils.isEmpty(quantity.getBaseValue()) && ValidationUtils.isEmpty(quantity.getBaseTime()) && ValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName + ".BASE_LOCATION"));
+                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName + ".BASE_LOCATION_UUID"));
             }
             // must be filled only one of followings
             if (!ValidationUtils.isEmpty(quantity.getBaseValue())) {
                 ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), parameterName + ".BASE_TIME", exceptions);
-                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION_UUID", exceptions);
             } else if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
-                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
+                ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION_UUID", exceptions);
             }
         }
         if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
@@ -728,7 +727,7 @@ public class InvocationValidator {
         if (!IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataEmpty(quantity.getBaseValue(), parameterName + ".BASE_VALUE", exceptions);
             ValidationUtils.checkMetadataEmpty(quantity.getBaseTime(), parameterName + ".BASE_TIME", exceptions);
-            ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION", exceptions);
+            ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION_UUID", exceptions);
         }
         if (!IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataEmpty(quantity.getBaseQuantity(), parameterName + ".BASE_QUANTITY_INDICATOR_UUID", exceptions);

@@ -65,7 +65,7 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getPercentageOf(), actual.getPercentageOf());
         assertEquals(expected.getBaseValue(), actual.getBaseValue());
         assertEquals(expected.getBaseTime(), actual.getBaseTime());
-        assertEquals(expected.getBaseLocation(), actual.getBaseLocation());
+        assertEquals(expected.getBaseLocationUuid(), actual.getBaseLocationUuid());
         assertEquals(expected.getBaseQuantityIndicatorUuid(), actual.getBaseQuantityIndicatorUuid());
     }
     
@@ -105,8 +105,8 @@ public class IndicatorsAsserts {
     public static void assertEqualsIndicatorInstance(IndicatorInstanceDto expected, IndicatorInstanceDto actual) {
         assertEquals(expected.getIndicatorUuid(), actual.getIndicatorUuid());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getGeographicalGranularityId(), actual.getGeographicalGranularityId());
-        assertEquals(expected.getGeographicalValue(), actual.getGeographicalValue());
+        assertEquals(expected.getGeographicalGranularityUuid(), actual.getGeographicalGranularityUuid());
+        assertEquals(expected.getGeographicalValueUuid(), actual.getGeographicalValueUuid());
         assertEquals(expected.getTemporalGranularity(), actual.getTemporalGranularity());
         assertEquals(expected.getTemporalValue(), actual.getTemporalValue());
     }

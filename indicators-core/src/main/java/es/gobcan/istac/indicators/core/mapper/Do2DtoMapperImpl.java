@@ -82,33 +82,33 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
-        
+
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
-        
+
         return target;
     }
-    
+
     @Override
     public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source) {
         IndicatorInstanceDto target = new IndicatorInstanceDto();
         target.setUuid(source.getUuid());
         target.setIndicatorUuid(source.getIndicator().getUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        target.setGeographicalGranularityId(source.getGeographicalGranularityId());
-        target.setGeographicalValue(source.getGeographicalValue());
+        target.setGeographicalGranularityUuid(source.getGeographicalGranularity() != null ? source.getGeographicalGranularity().getUuid() : null);
+        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
         target.setTemporalGranularity(source.getTemporalGranularity());
         target.setTemporalValue(source.getTemporalValue());
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
-        
+
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
-        
+
         return target;
     }
 
@@ -150,7 +150,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-    
+
     @Override
     public DataSourceDto dataSourceDoToDto(DataSource source) {
         DataSourceDto target = new DataSourceDto();
@@ -162,15 +162,15 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));
         target.setAnnualRate(rateDerivationDoToDto(source.getAnnualRate()));
-        
+
         target.setCreatedBy(source.getCreatedBy());
         target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
-        
+
         return target;
     }
-    
+
     @Override
     public List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources) {
         List<ElementLevelDto> targets = new ArrayList<ElementLevelDto>();
@@ -189,24 +189,24 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSymbol(source.getSymbol());
         target.setSymbolPosition(source.getSymbolPosition());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        
+
         return target;
     }
-    
+
     // Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
     public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source) {
 
         GeographicalValueDto target = new GeographicalValueDto();
         target.setUuid(source.getUuid());
-        target.setCode(source.getCode());        
+        target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGranularityUuid(source.getGranularity().getUuid());
-//        target.setLatitude(source.getLatitude());
-//        target.setLongitude(source.getLongitude());
+        // target.setLatitude(source.getLatitude());
+        // target.setLongitude(source.getLongitude());
         target.setLatitude(Double.valueOf(source.getLatitude()));
         target.setLongitude(Double.valueOf(source.getLongitude()));
-        
+
         return target;
     }
 
@@ -217,7 +217,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        
+
         return target;
     }
 
@@ -233,7 +233,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return target;
     }
-    
+
     private List<DataSourceVariableDto> dataSourceVariableDoToDto(List<DataSourceVariable> sources) {
         List<DataSourceVariableDto> targets = new ArrayList<DataSourceVariableDto>();
         for (DataSourceVariable source : sources) {
@@ -276,9 +276,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return source.toDate();
     }
-    
+
     // Note: transforms all metadata regardless of the type
-    //       InvocationValidation checks metadata unexpected for each type
+    // InvocationValidation checks metadata unexpected for each type
     private QuantityDto quantityDoToDto(Quantity source) {
         if (source == null) {
             return null;
@@ -292,23 +292,17 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setDecimalPlaces(source.getDecimalPlaces());
         target.setMinimum(source.getMinimum());
         target.setMaximum(source.getMaximum());
-        if (source.getNumerator() != null) {
-            target.setNumeratorIndicatorUuid(source.getNumerator().getUuid());
-        }
-        if (source.getDenominator() != null) {
-            target.setDenominatorIndicatorUuid(source.getDenominator().getUuid());
-        }
+        target.setNumeratorIndicatorUuid(source.getNumerator() != null ? source.getNumerator().getUuid() : null);
+        target.setDenominatorIndicatorUuid(source.getDenominator() != null ? source.getDenominator().getUuid() : null);
         target.setIsPercentage(source.getIsPercentage());
         target.setPercentageOf(internationalStringToDto(source.getPercentageOf()));
-        target.setBaseValue(source.getBaseValue());    
-        target.setBaseTime(source.getBaseTime());    
-        target.setBaseLocation(source.getBaseLocation()); // TODO será una fk a tabla de valores geográficos
-        if (source.getBaseQuantity() != null) {
-            target.setBaseQuantityIndicatorUuid(source.getBaseQuantity().getUuid());
-        }
+        target.setBaseValue(source.getBaseValue());
+        target.setBaseTime(source.getBaseTime());
+        target.setBaseLocationUuid(source.getBaseLocation() != null ? source.getBaseLocation().getUuid() : null);
+        target.setBaseQuantityIndicatorUuid(source.getBaseQuantity() != null ? source.getBaseQuantity().getUuid() : null);
+
         return target;
     }
-    
     private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
         if (source == null) {
             return null;
@@ -318,7 +312,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setMethod(source.getMethod());
         target.setQuantity(quantityDoToDto(source.getQuantity()));
         target.setRounding(source.getRounding());
-        
+
         return target;
     }
 }

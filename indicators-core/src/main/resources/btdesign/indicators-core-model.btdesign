@@ -378,16 +378,16 @@ Application Indicators {
         	- @TemporalGranularityEnum temporalGranularity nullable;
         	"Temporal value"
         	String temporalValue nullable;
-        	"Geographical granularity"
-			String geographicalGranularityId nullable;
-        	"Geographical value"
-			String geographicalValue nullable;
 			
 			// Relations
             "Element level"
             - @ElementLevel elementLevel cascade="none" not nullable inverse <-> indicatorInstance;
         	"Indicator"
 			- @Indicator indicator cascade="none" not nullable databaseColumn="INDICATOR_FK" <-> indicatorsInstances;
+            "Geographical granularity"
+			- @GeographicalGranularity geographicalGranularity cascade="none" nullable databaseColumn="GEOGRAPHICAL_GRANULARITY_FK";
+            "Geographical value"
+			- @GeographicalValue geographicalValue cascade="none" nullable databaseColumn="GEOGRAPHICAL_VALUE_FK";
             
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {
@@ -529,9 +529,7 @@ Application Indicators {
 			Integer baseValue nullable;
 			"Temporal value base"
 			String baseTime nullable;
-			"Geographical value base"
-			String baseLocation nullable;
-
+			
 			// Relations
 			"Unit"
 			- @QuantityUnit unit not nullable cascade="none" databaseColumn="UNIT_FK";
@@ -541,6 +539,8 @@ Application Indicators {
 			- @Indicator denominator nullable cascade="none" databaseColumn="DENOMINATOR_FK";
 			"Base quantity"
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
+            "Geographical value base"
+			- @GeographicalValue baseLocation cascade="none" nullable databaseColumn="BASE_LOCATION_FK";
 	    }
 	    
 	    "Metric characteristics of a data source of indicator"
@@ -848,9 +848,9 @@ Application Indicators {
         	"Temporal value"
         	String temporalValue;
         	"Geographical granularity"
-			String geographicalGranularityId;
+			String geographicalGranularityUuid;
         	"Geographical value"
-			String geographicalValue;
+			String geographicalValueUuid;
 			
             "Order in level"
 			Long orderInLevel;
@@ -918,7 +918,7 @@ Application Indicators {
 			"Temporal value base"
 			String baseTime;
 			"Geographical value base"
-			String baseLocation;
+			String baseLocationUuid;
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
 		}

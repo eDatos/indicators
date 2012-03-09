@@ -35,7 +35,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-import es.gobcan.istac.indicators.core.util.TemporalVariableUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.TemporalVariableUtils;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators systems, dimensions, indicators instances
@@ -1466,7 +1466,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-            indicatorInstanceDto.setGeographicalValue("Spain");
+            indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
             indicatorInstanceDto.setTemporalValue("2012");
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
         }
@@ -1477,7 +1477,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-            indicatorInstanceDto.setGeographicalValue("Spain");
+            indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
             indicatorInstanceDto.setTemporalValue("2012");
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
         }
@@ -2667,8 +2667,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
         assertEquals(TemporalGranularityEnum.YEARLY, indicatorInstanceDto.getTemporalGranularity());
         assertNull(indicatorInstanceDto.getTemporalValue());
-        assertEquals("Countries", indicatorInstanceDto.getGeographicalGranularityId());
-        assertNull(indicatorInstanceDto.getGeographicalValue());
+        assertEquals(GEOGRAPHICAL_GRANULARITY_1, indicatorInstanceDto.getGeographicalGranularityUuid());
+        assertNull(indicatorInstanceDto.getGeographicalValueUuid());
         IndicatorsAsserts.assertEqualsDate("2011-05-05 01:02:04", indicatorInstanceDto.getCreatedDate());
         assertEquals("user1", indicatorInstanceDto.getCreatedBy());
         IndicatorsAsserts.assertEqualsDate("2011-06-06 05:06:07", indicatorInstanceDto.getLastUpdated());
@@ -2716,7 +2716,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2751,7 +2751,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        indicatorInstanceDto.setGeographicalGranularityId("countries");
+        indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
         indicatorInstanceDto.setTemporalGranularity(TemporalGranularityEnum.DAILY);
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2788,7 +2788,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2926,7 +2926,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MAX_VALUE);
@@ -2949,7 +2949,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MIN_VALUE);
@@ -2972,7 +2972,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2990,6 +2990,29 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+    public void testCreateIndicatorInstanceErrorGeographicValueNotExists() throws Exception {
+
+        // Create indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setGeographicalValueUuid(NOT_EXISTS);
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
+
+        try {
+            indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+            fail("Geographic value not exits");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorInstanceDto.getGeographicalValueUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testCreateIndicatorInstanceErrorIndicatorNotExists() throws Exception {
 
         // Create indicator instance
@@ -2998,7 +3021,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
 
         // Root level
@@ -3022,7 +3045,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
 
         // Root level
@@ -3057,7 +3080,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3079,7 +3102,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3101,7 +3124,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_NOT_EXISTS);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3123,7 +3146,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValue("Spain");
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         indicatorInstanceDto.setTemporalValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3258,6 +3281,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), uuid);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
+        indicatorInstanceDto.setGeographicalValueUuid(null);
 
         // Update
         IndicatorInstanceDto indicatorInstanceDtoUpdated = indicatorsServiceFacade.updateIndicatorInstance(getServiceContext(), indicatorInstanceDto);
@@ -3579,58 +3604,58 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         for (int i = 0; i <= 1999; i++) {
             // Yearly
             String year = String.valueOf(1000 + i);
-            assertTrue(year, TemporalVariableUtils.isTemporalGranularity(year));
+            assertTrue(year, TemporalVariableUtils.isTemporalValue(year));
 
             // Biyearly
             for (int j = 1; j <= 2; j++) {
                 String biyear = year + "H" + String.valueOf(j);
-                assertTrue(biyear, TemporalVariableUtils.isTemporalGranularity(biyear));
+                assertTrue(biyear, TemporalVariableUtils.isTemporalValue(biyear));
             }
             // Quarterly
             for (int j = 1; j <= 4; j++) {
                 String quarter = year + "Q" + String.valueOf(j);
-                assertTrue(quarter, TemporalVariableUtils.isTemporalGranularity(quarter));
+                assertTrue(quarter, TemporalVariableUtils.isTemporalValue(quarter));
             }
             for (int j = 1; j <= 12; j++) {
                 String month = StringUtils.leftPad(String.valueOf(j), 2, "0");
                 String monthly = year + "M" + month;
                 // Monthly
-                assertTrue(monthly, TemporalVariableUtils.isTemporalGranularity(monthly));
+                assertTrue(monthly, TemporalVariableUtils.isTemporalValue(monthly));
                 // Daily
                 for (int k = 1; k <= 31; k++) {
                     String day = year + month + StringUtils.leftPad(String.valueOf(k), 2, "0");
-                    assertTrue(day, TemporalVariableUtils.isTemporalGranularity(day));
+                    assertTrue(day, TemporalVariableUtils.isTemporalValue(day));
                 }
             }
             // Weekly
             for (int j = 1; j <= 52; j++) {
                 String week = year + "W" + StringUtils.leftPad(String.valueOf(j), 2, "0");
-                assertTrue(week, TemporalVariableUtils.isTemporalGranularity(week));
+                assertTrue(week, TemporalVariableUtils.isTemporalValue(week));
             }
         }
 
         // Invalid
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("912"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("3000"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012q1"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012Q00"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012Q0"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012Q5"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012m1"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012M111"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012M1"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012M14"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012w1"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012W111"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012W1"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012W53"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012W60"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("20121"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("201212"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("2012121"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("201211223"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("afas"));
-        assertFalse(TemporalVariableUtils.isTemporalGranularity("201 2"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("912"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("3000"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012q1"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q00"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q0"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q5"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012m1"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012M111"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012M1"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012M14"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012w1"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012W111"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012W1"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012W53"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012W60"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("20121"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("201212"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("2012121"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("201211223"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("afas"));
+        assertFalse(TemporalVariableUtils.isTemporalValue("201 2"));
     }
 
     @Test

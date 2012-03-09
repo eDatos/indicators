@@ -152,8 +152,17 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
-        target.setGeographicalGranularityId(source.getGeographicalGranularityId());
-        target.setGeographicalValue(source.getGeographicalValue());
+
+        if (source.getGeographicalGranularityUuid() != null) {
+            target.setGeographicalGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGeographicalGranularityUuid()));
+        } else {
+            target.setGeographicalGranularity(null);
+        }
+        if (source.getGeographicalValueUuid() != null) {
+            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValueUuid()));
+        } else {
+            target.setGeographicalValue(null);
+        }
         target.setTemporalGranularity(source.getTemporalGranularity());
         target.setTemporalValue(source.getTemporalValue());
 
@@ -262,7 +271,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setMethod(source.getMethod());
         target.setRounding(source.getRounding());
         target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
-        
+
         return target;
     }
 
@@ -399,13 +408,18 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setPercentageOf(internationalStringToDo(ctx, source.getPercentageOf(), target.getPercentageOf(), "INDICATOR.QUANTITY.PERCENTAGE_OF"));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
-        target.setBaseLocation(source.getBaseLocation()); // TODO será una fk a tabla de valores geográficos
+
+        if (source.getBaseLocationUuid() != null) {
+            target.setBaseLocation(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getBaseLocationUuid()));
+        } else {
+            target.setBaseLocation(null);
+        }
         if (source.getBaseQuantityIndicatorUuid() != null) {
             target.setBaseQuantity(indicatorsService.retrieveIndicator(ctx, source.getBaseQuantityIndicatorUuid()));
         } else {
             target.setBaseQuantity(null);
         }
-        
+
         return target;
     }
 }
