@@ -3586,10 +3586,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
                 String biyear = year + "H" + String.valueOf(j);
                 assertTrue(biyear, TemporaryGranularityUtils.isTemporaryGranularity(biyear));
             }
-            // Quaterly
+            // Quarterly
             for (int j = 1; j <= 4; j++) {
-                String quater = year + "Q" + String.valueOf(j);
-                assertTrue(quater, TemporaryGranularityUtils.isTemporaryGranularity(quater));
+                String quarter = year + "Q" + String.valueOf(j);
+                assertTrue(quarter, TemporaryGranularityUtils.isTemporaryGranularity(quarter));
             }
             for (int j = 1; j <= 12; j++) {
                 String month = StringUtils.leftPad(String.valueOf(j), 2, "0");
