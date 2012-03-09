@@ -58,7 +58,7 @@ Application Indicators {
 	    	
 	    	// Geographic values
 	    	@GeographicValue retrieveGeographicValue(String uuid) throws MetamacException;
-	    	List<@GeographicValue> findGeographicValues() throws MetamacException;
+	    	List<@GeographicValue> findGeographicValues(String geographicGranularityUuid) throws MetamacException;
 
 	    	// Geographic granularities
 	    	@GeographicGranularity retrieveGeographicGranularity(String uuid) throws MetamacException;
@@ -170,11 +170,15 @@ Application Indicators {
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 
 	    	// GEOGRAPHIC VALUES
+	    	"Retrieves geographic value"
 	    	@GeographicValueDto retrieveGeographicValue(String uuid) throws MetamacException;
-	    	List<@GeographicValueDto> findGeographicValues() throws MetamacException;
+	    	"Find geographic values. Optionally, can specify geographic granularity"
+	    	List<@GeographicValueDto> findGeographicValues(String geographicGranularityUuid) throws MetamacException;
 
 	    	// GEOGRAPHIC GRANULARITIES
+	    	"Retrieves geographic granularity"
 	    	@GeographicGranularityDto retrieveGeographicGranularity(String uuid) throws MetamacException;
+	    	"Retrieves all geographic granularities"
 	    	List<@GeographicGranularityDto> findGeographicGranularities() throws MetamacException;
 	    	
 	    	// INDICATORS
@@ -653,6 +657,7 @@ Application Indicators {
             	protected List<@GeographicValue> findByQuery;
             	protected List<@GeographicValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@GeographicValue retrieveGeographicValue(String uuid);
+            	List<@GeographicValue> findGeographicValues(String geographicGranularityUuid);
 			}
         }
         

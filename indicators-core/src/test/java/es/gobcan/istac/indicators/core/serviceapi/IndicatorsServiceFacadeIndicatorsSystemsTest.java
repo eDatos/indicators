@@ -82,7 +82,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     // Geographic values
     private static String             GEOGRAPHIC_VALUE_1                          = "1";
     private static String             GEOGRAPHIC_VALUE_2                          = "2";
-
+    private static String             GEOGRAPHIC_VALUE_3                          = "3";
+    private static String             GEOGRAPHIC_VALUE_4                          = "4";
+    
     // Geographic granularities
     private static String             GEOGRAPHIC_GRANULARITY_1                    = "1";
     private static String             GEOGRAPHIC_GRANULARITY_2                    = "2";
@@ -3711,13 +3713,31 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     public void testFindGeographicValues() throws Exception {
 
-        List<GeographicValueDto> geographicValues = indicatorsServiceFacade.findGeographicValues(getServiceContext());
-        assertEquals(2, geographicValues.size());
-
-        assertEquals(GEOGRAPHIC_VALUE_1, geographicValues.get(0).getUuid());
-        assertEquals("ES", geographicValues.get(0).getCode());
-        assertEquals(GEOGRAPHIC_VALUE_2, geographicValues.get(1).getUuid());
-        assertEquals("EN-LN", geographicValues.get(1).getCode());
+        // All
+        {
+            List<GeographicValueDto> geographicValues = indicatorsServiceFacade.findGeographicValues(getServiceContext(), null);
+            assertEquals(4, geographicValues.size());
+    
+            assertEquals(GEOGRAPHIC_VALUE_1, geographicValues.get(0).getUuid());
+            assertEquals("ES", geographicValues.get(0).getCode());
+            assertEquals(GEOGRAPHIC_VALUE_2, geographicValues.get(1).getUuid());
+            assertEquals("EN-LN", geographicValues.get(1).getCode());
+            assertEquals(GEOGRAPHIC_VALUE_3, geographicValues.get(2).getUuid());
+            assertEquals("FR", geographicValues.get(2).getCode());
+            assertEquals(GEOGRAPHIC_VALUE_4, geographicValues.get(3).getUuid());
+            assertEquals("ES-MD", geographicValues.get(3).getCode());
+        }
+        
+        // By granularity
+        {
+            List<GeographicValueDto> geographicValues = indicatorsServiceFacade.findGeographicValues(getServiceContext(), GEOGRAPHIC_GRANULARITY_1);
+            assertEquals(2, geographicValues.size());
+    
+            assertEquals(GEOGRAPHIC_VALUE_1, geographicValues.get(0).getUuid());
+            assertEquals("ES", geographicValues.get(0).getCode());
+            assertEquals(GEOGRAPHIC_VALUE_3, geographicValues.get(1).getUuid());
+            assertEquals("FR", geographicValues.get(1).getCode());
+        }
     }
 
     @Test

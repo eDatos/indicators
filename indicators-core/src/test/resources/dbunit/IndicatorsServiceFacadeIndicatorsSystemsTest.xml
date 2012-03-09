@@ -1453,6 +1453,28 @@
   		GRANULARITY_FK="2"
   		VERSION="1"
 	/>
+
+	<LIS_GEOGR_VALUES
+		ID="3"
+ 		UUID="3"
+ 		CODE="FR"
+ 		LATITUDE="898612325.5656233"
+ 		LONGITUDE="-25632112156.45456464565"
+  		TITLE_FK="[null]"
+  		GRANULARITY_FK="1"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_VALUES
+		ID="4"
+ 		UUID="4"
+ 		CODE="ES-MD"
+ 		LATITUDE="22.232511"
+ 		LONGITUDE="41232.254112"
+  		TITLE_FK="[null]"
+  		GRANULARITY_FK="2"
+  		VERSION="1"
+	/>
 	
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHIC GRANULARITIES                             -->
