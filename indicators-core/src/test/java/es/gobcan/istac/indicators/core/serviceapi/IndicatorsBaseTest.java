@@ -36,6 +36,8 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("TBL_RATES_DERIVATIONS");
         tables.add("TBL_QUANTITIES");
         tables.add("LIS_QUANTITIES_UNITS");
+        tables.add("LIS_GEOGR_VALUES");
+        tables.add("LIS_GEOGR_GRANULARITIES");
         tables.add("TBL_INTERNATIONAL_STRINGS");
         return tables;
     }
@@ -57,6 +59,9 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_RATES_DERIVATIONS");
         sequences.add("SEQ_QUANTITIES");
         sequences.add("SEQ_QUANTITIES_UNITS");
+        sequences.add("SEQ_GEOGR_VALUES");
+        sequences.add("SEQ_GEOGR_GRANULARITIES");
+
         return sequences;
     }
     

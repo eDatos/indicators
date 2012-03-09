@@ -19,6 +19,8 @@ Application Indicators {
     		> @IndicatorInstanceRepository
     		> @ElementLevelRepository
     		> @IndicatorRepository
+    		> @GeographicValueRepository
+    		> @GeographicGranularityRepository
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -53,6 +55,14 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	
+	    	// Geographic values
+	    	@GeographicValue retrieveGeographicValue(String uuid) throws MetamacException;
+	    	List<@GeographicValue> findGeographicValues() throws MetamacException;
+
+	    	// Geographic granularities
+	    	@GeographicGranularity retrieveGeographicGranularity(String uuid) throws MetamacException;
+	    	List<@GeographicGranularity> findGeographicGranularities() throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -158,6 +168,14 @@ Application Indicators {
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	"Retrieves all indicators instances of a indicators system regardless of the level"
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+
+	    	// GEOGRAPHIC VALUES
+	    	@GeographicValueDto retrieveGeographicValue(String uuid) throws MetamacException;
+	    	List<@GeographicValueDto> findGeographicValues() throws MetamacException;
+
+	    	// GEOGRAPHIC GRANULARITIES
+	    	@GeographicGranularityDto retrieveGeographicGranularity(String uuid) throws MetamacException;
+	    	List<@GeographicGranularityDto> findGeographicGranularities() throws MetamacException;
 	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -611,6 +629,52 @@ Application Indicators {
             	@QuantityUnit retrieveQuantityUnit(String uuid);
 			}
         }
+        
+        "Table values for geographic values"
+	    Entity GeographicValue {
+        	databaseTable = "LIS_GEOGR_VALUES"
+        	hint="idSequence=GEOGR_VALUES"
+			!auditable
+			gap
+			
+			"Code"
+			String code not nullable;
+       		"Title"
+       		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		"Granularity"
+			- @GeographicGranularity granularity cascade="none" not nullable databaseColumn="GRANULARITY_FK";
+       		"Latitude"
+       		String latitude nullable;
+       		"Longitude"
+       		String longitude nullable;
+       		
+       		Repository GeographicValueRepository {
+       			findAll;
+            	protected List<@GeographicValue> findByQuery;
+            	protected List<@GeographicValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@GeographicValue retrieveGeographicValue(String uuid);
+			}
+        }
+        
+        "Table values for geographic granularities"
+	    Entity GeographicGranularity {
+        	databaseTable = "LIS_GEOGR_GRANULARITIES"
+        	hint="idSequence=GEOGR_GRANULARITIES"
+			!auditable
+			gap
+			
+			"Code"
+			String code not nullable;
+       		"Title"
+       		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		
+       		Repository GeographicGranularityRepository {
+       			findAll;
+            	protected List<@GeographicGranularity> findByQuery;
+            	protected List<@GeographicGranularity> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@GeographicGranularity retrieveGeographicGranularity(String uuid);
+			}
+        }
 	}
 	
 	// ----------------------------------------------------------------
@@ -877,6 +941,33 @@ Application Indicators {
        		"Title of unit"
        		- @InternationalStringDto title;
     	}
+    	
+    	"Dto for geographic values"
+    	DataTransferObject GeographicValueDto {
+	   		"Uuid"
+	   		String uuid;
+	   		"Code"
+			String code;
+       		"Title"
+       		- @InternationalStringDto title;
+       		"Granularity"
+			String granularityUuid;
+       		"Latitude"
+       		Double latitude;
+       		"Longitude"
+       		Double longitude;
+    	}
+
+    	"Dto for geographic granularities"
+    	DataTransferObject GeographicGranularityDto {
+	   		"Uuid"
+	   		String uuid;
+	   		"Code"
+			String code;
+       		"Title"
+       		- @InternationalStringDto title;
+    	}
+
 	}
 	
 	// ----------------------------------------------------------------

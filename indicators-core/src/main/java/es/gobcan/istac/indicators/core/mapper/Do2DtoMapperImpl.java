@@ -17,6 +17,8 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -27,6 +29,8 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -189,6 +193,34 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         return target;
     }
     
+    // Latitud y longitud como doubles. Ver txt en el escritorio
+    @Override
+    public GeographicValueDto geographicValueDoToDto(GeographicValue source) {
+
+        GeographicValueDto target = new GeographicValueDto();
+        target.setUuid(source.getUuid());
+        target.setCode(source.getCode());        
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setGranularityUuid(source.getGranularity().getUuid());
+//        target.setLatitude(source.getLatitude());
+//        target.setLongitude(source.getLongitude());
+        target.setLatitude(Double.valueOf(source.getLatitude()));
+        target.setLongitude(Double.valueOf(source.getLongitude()));
+        
+        return target;
+    }
+
+    @Override
+    public GeographicGranularityDto geographicGranularityDoToDto(GeographicGranularity source) {
+
+        GeographicGranularityDto target = new GeographicGranularityDto();
+        target.setUuid(source.getUuid());
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        
+        return target;
+    }
+
     private ElementLevelDto elementLevelDoToDto(ElementLevel source) {
         ElementLevelDto target = new ElementLevelDto();
         if (source.getDimension() != null) {

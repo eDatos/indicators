@@ -1429,6 +1429,49 @@
   		SYMBOL_POSITION="START"
 	/>
   		  
+	<!-- ************************************************************************************ -->
+	<!--                                 GEOGRAPHIC VALUES		                              -->
+	<!-- ************************************************************************************ -->
+	<LIS_GEOGR_VALUES
+		ID="1"
+ 		UUID="1"
+ 		CODE="ES"
+ 		LATITUDE="998612325.5656233"
+ 		LONGITUDE="-15632112156.45456464565"
+  		TITLE_FK="43"
+  		GRANULARITY_FK="1"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_VALUES
+		ID="2"
+ 		UUID="2"
+ 		CODE="EN-LN"
+ 		LATITUDE="12.232511"
+ 		LONGITUDE="51232.254112"
+  		TITLE_FK="44"
+  		GRANULARITY_FK="2"
+  		VERSION="1"
+	/>
+	
+	<!-- ************************************************************************************ -->
+	<!--                                 GEOGRAPHIC GRANULARITIES                             -->
+	<!-- ************************************************************************************ -->
+	<LIS_GEOGR_GRANULARITIES
+		ID="1"
+ 		UUID="1"
+ 		CODE="COUNTRIES"
+  		TITLE_FK="45"
+  		VERSION="1"
+	/>
+
+	<LIS_GEOGR_GRANULARITIES
+		ID="2"
+ 		UUID="2"
+ 		CODE="MUNICIPALITIES"
+  		TITLE_FK="46"
+  		VERSION="1"
+	/>  		  
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -2432,6 +2475,99 @@
 		UUID="IS-44"
 		VERSION="1"
 	/>
+
+	<TBL_INTERNATIONAL_STRINGS
+		ID="43"
+		UUID="IS-43"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="78"
+		LABEL="España"
+		LOCALE="es"
+		UUID="IS-43-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="43"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="79"
+		LABEL="Spain"
+		LOCALE="en"
+		UUID="IS-43-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="43"
+	/>		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="44"
+		UUID="IS-44"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="80"
+		LABEL="Londres"
+		LOCALE="es"
+		UUID="IS-44-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="44"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="81"
+		LABEL="London"
+		LOCALE="en"
+		UUID="IS-44-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="44"
+	/>		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="45"
+		UUID="IS-45"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="82"
+		LABEL="Países"
+		LOCALE="es"
+		UUID="IS-45-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="45"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="83"
+		LABEL="Countries"
+		LOCALE="en"
+		UUID="IS-45-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="45"
+	/>		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="46"
+		UUID="IS-46"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="84"
+		LABEL="Municipios"
+		LOCALE="es"
+		UUID="IS-46-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="46"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="85"
+		LABEL="Municipalities"
+		LOCALE="en"
+		UUID="IS-46-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="46"
+	/>		
 														
 					
 </dataset>

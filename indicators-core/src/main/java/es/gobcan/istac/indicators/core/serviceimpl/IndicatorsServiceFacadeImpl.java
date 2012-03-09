@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -358,6 +362,59 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
         return indicatorInstanceDto;
     }
+
+    @Override
+    public GeographicValueDto retrieveGeographicValue(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Retrieve
+        GeographicValue geographicValue = getIndicatorsSystemsService().retrieveGeographicValue(ctx, uuid);
+
+        // Transform
+        GeographicValueDto geographicValueDto = do2DtoMapper.geographicValueDoToDto(geographicValue);
+        return geographicValueDto;
+    }
+
+    @Override
+    public List<GeographicValueDto> findGeographicValues(ServiceContext ctx) throws MetamacException {
+
+        // Retrieve geographicValues
+        List<GeographicValue> geographicValues = getIndicatorsSystemsService().findGeographicValues(ctx);
+
+        // Transform
+        List<GeographicValueDto> geographicValuesDto = new ArrayList<GeographicValueDto>();
+        for (GeographicValue geographicValue : geographicValues) {
+            geographicValuesDto.add(do2DtoMapper.geographicValueDoToDto(geographicValue));
+        }
+
+        return geographicValuesDto;
+    }
+    
+    @Override
+    public GeographicGranularityDto retrieveGeographicGranularity(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Retrieve
+        GeographicGranularity geographicGranularity = getIndicatorsSystemsService().retrieveGeographicGranularity(ctx, uuid);
+
+        // Transform
+        GeographicGranularityDto geographicGranularityDto = do2DtoMapper.geographicGranularityDoToDto(geographicGranularity);
+        return geographicGranularityDto;
+    }
+
+    @Override
+    public List<GeographicGranularityDto> findGeographicGranularities(ServiceContext ctx) throws MetamacException {
+
+        // Retrieve geographicGranularitys
+        List<GeographicGranularity> geographicGranularitys = getIndicatorsSystemsService().findGeographicGranularities(ctx);
+
+        // Transform
+        List<GeographicGranularityDto> geographicGranularitysDto = new ArrayList<GeographicGranularityDto>();
+        for (GeographicGranularity geographicGranularity : geographicGranularitys) {
+            geographicGranularitysDto.add(do2DtoMapper.geographicGranularityDoToDto(geographicGranularity));
+        }
+
+        return geographicGranularitysDto;
+    }
+
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 

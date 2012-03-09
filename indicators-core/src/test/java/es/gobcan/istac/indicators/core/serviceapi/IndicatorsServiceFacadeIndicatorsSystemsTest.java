@@ -23,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -76,6 +78,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
     private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
+
+    // Geographic values
+    private static String             GEOGRAPHIC_VALUE_1                          = "1";
+    private static String             GEOGRAPHIC_VALUE_2                          = "2";
+
+    // Geographic granularities
+    private static String             GEOGRAPHIC_GRANULARITY_1                    = "1";
+    private static String             GEOGRAPHIC_GRANULARITY_2                    = "2";
 
     // Indicators
     private static String             INDICATOR_2                                 = "Indicator-2";
@@ -3623,7 +3633,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     public void testCompareTemporaryGranularities() throws Exception {
-        
+
         // Equals
         assertTrue(TemporaryGranularityUtils.compareTo("2012", "2012") == 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2012H2", "2012H2") == 0);
@@ -3631,7 +3641,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TemporaryGranularityUtils.compareTo("2012M02", "2012M02") == 0);
         assertTrue(TemporaryGranularityUtils.compareTo("20120102", "20120102") == 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2012W51", "2012W51") == 0);
-        
+
         // Less
         assertTrue(TemporaryGranularityUtils.compareTo("2011", "2012") < 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2012H1", "2012H2") < 0);
@@ -3644,11 +3654,127 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TemporaryGranularityUtils.compareTo("20120102", "20120103") < 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2012W01", "2012W51") < 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2011W51", "2012W51") < 0);
-        
+
         // Greater
         assertTrue(TemporaryGranularityUtils.compareTo("2013", "2012") > 0);
         assertTrue(TemporaryGranularityUtils.compareTo("2013H1", "2012H2") > 0);
         assertTrue(TemporaryGranularityUtils.compareTo("20130102", "20120103") > 0);
+    }
+
+    @Test
+    public void testRetrieveGeographicValue() throws Exception {
+
+        String uuid = GEOGRAPHIC_VALUE_1;
+        GeographicValueDto geographicValueDto = indicatorsServiceFacade.retrieveGeographicValue(getServiceContext(), uuid);
+
+        assertNotNull(geographicValueDto);
+        assertEquals(uuid, geographicValueDto.getUuid());
+        assertEquals("ES", geographicValueDto.getCode());
+        assertEquals(GEOGRAPHIC_GRANULARITY_1, geographicValueDto.getGranularityUuid());
+        assertEquals(Double.valueOf(998612325.5656233), geographicValueDto.getLatitude());
+        assertEquals(Double.valueOf(-15632112156.45456464565), geographicValueDto.getLongitude());
+        IndicatorsAsserts.assertEqualsInternationalString(geographicValueDto.getTitle(), "es", "España", "en", "Spain");
+    }
+
+    @Test
+    public void testRetrieveGeographicValueErrorParameterRequired() throws Exception {
+
+        String uuid = null;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicValue(getServiceContext(), uuid);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicValueErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicValue(getServiceContext(), uuid);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHIC_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testFindGeographicValues() throws Exception {
+
+        List<GeographicValueDto> geographicValues = indicatorsServiceFacade.findGeographicValues(getServiceContext());
+        assertEquals(2, geographicValues.size());
+
+        assertEquals(GEOGRAPHIC_VALUE_1, geographicValues.get(0).getUuid());
+        assertEquals("ES", geographicValues.get(0).getCode());
+        assertEquals(GEOGRAPHIC_VALUE_2, geographicValues.get(1).getUuid());
+        assertEquals("EN-LN", geographicValues.get(1).getCode());
+    }
+
+    @Test
+    public void testRetrieveGeographicGranularity() throws Exception {
+
+        String uuid = GEOGRAPHIC_GRANULARITY_2;
+        GeographicGranularityDto geographicGranularityDto = indicatorsServiceFacade.retrieveGeographicGranularity(getServiceContext(), uuid);
+
+        assertNotNull(geographicGranularityDto);
+        assertEquals(uuid, geographicGranularityDto.getUuid());
+        assertEquals("MUNICIPALITIES", geographicGranularityDto.getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(geographicGranularityDto.getTitle(), "es", "Municipios", "en", "Municipalities");
+    }
+
+    @Test
+    public void testRetrieveGeographicGranularityErrorParameterRequired() throws Exception {
+
+        String uuid = null;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicGranularity(getServiceContext(), uuid);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicGranularityErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicGranularity(getServiceContext(), uuid);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHIC_GRANULARITY_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testFindGeographicGranularities() throws Exception {
+
+        List<GeographicGranularityDto> geographicGranularities = indicatorsServiceFacade.findGeographicGranularities(getServiceContext());
+        assertEquals(2, geographicGranularities.size());
+
+        assertEquals(GEOGRAPHIC_GRANULARITY_1, geographicGranularities.get(0).getUuid());
+        assertEquals("COUNTRIES", geographicGranularities.get(0).getCode());
+
+        assertEquals(GEOGRAPHIC_GRANULARITY_2, geographicGranularities.get(1).getUuid());
+        assertEquals("MUNICIPALITIES", geographicGranularities.get(1).getCode());
     }
 
     @Override

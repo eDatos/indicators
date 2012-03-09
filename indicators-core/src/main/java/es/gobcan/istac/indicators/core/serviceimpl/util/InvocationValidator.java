@@ -587,6 +587,48 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveGeographicValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkFindGeographicValues(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // nothing 
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveGeographicGranularity(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkFindGeographicGranularities(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // nothing 
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion.getIndicatorsSystem(), "INDICATORS_SYSTEM", exceptions);
