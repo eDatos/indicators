@@ -1041,7 +1041,7 @@ Application Indicators {
     	enum TemporaryGranularityEnum {
     		YEARLY,
     		BIYEARLY,
-    		QUATERLY,
+    		QUARTERLY,
     		MONTHLY,
     		WEEKLY,
     		DAILY
