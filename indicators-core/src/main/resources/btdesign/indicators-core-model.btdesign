@@ -19,8 +19,8 @@ Application Indicators {
     		> @IndicatorInstanceRepository
     		> @ElementLevelRepository
     		> @IndicatorRepository
-    		> @GeographicValueRepository
-    		> @GeographicGranularityRepository
+    		> @GeographicalValueRepository
+    		> @GeographicalGranularityRepository
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -56,13 +56,13 @@ Application Indicators {
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
-	    	// Geographic values
-	    	@GeographicValue retrieveGeographicValue(String uuid) throws MetamacException;
-	    	List<@GeographicValue> findGeographicValues(String geographicGranularityUuid) throws MetamacException;
+	    	// Geographical values
+	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
+	    	List<@GeographicalValue> findGeographicalValues(String geographicalGranularityUuid) throws MetamacException;
 
-	    	// Geographic granularities
-	    	@GeographicGranularity retrieveGeographicGranularity(String uuid) throws MetamacException;
-	    	List<@GeographicGranularity> findGeographicGranularities() throws MetamacException;
+	    	// Geographical granularities
+	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
+	    	List<@GeographicalGranularity> findGeographicalGranularities() throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -169,17 +169,17 @@ Application Indicators {
 	    	"Retrieves all indicators instances of a indicators system regardless of the level"
 	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 
-	    	// GEOGRAPHIC VALUES
-	    	"Retrieves geographic value"
-	    	@GeographicValueDto retrieveGeographicValue(String uuid) throws MetamacException;
-	    	"Find geographic values. Optionally, can specify geographic granularity"
-	    	List<@GeographicValueDto> findGeographicValues(String geographicGranularityUuid) throws MetamacException;
+	    	// GEOGRAPHICAL VALUES
+	    	"Retrieves geographical value"
+	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
+	    	"Find geographical values. Optionally, can specify geographical granularity"
+	    	List<@GeographicalValueDto> findGeographicalValues(String geographicalGranularityUuid) throws MetamacException;
 
-	    	// GEOGRAPHIC GRANULARITIES
-	    	"Retrieves geographic granularity"
-	    	@GeographicGranularityDto retrieveGeographicGranularity(String uuid) throws MetamacException;
-	    	"Retrieves all geographic granularities"
-	    	List<@GeographicGranularityDto> findGeographicGranularities() throws MetamacException;
+	    	// GEOGRAPHICAL GRANULARITIES
+	    	"Retrieves geographical granularity"
+	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
+	    	"Retrieves all geographical granularities"
+	    	List<@GeographicalGranularityDto> findGeographicalGranularities() throws MetamacException;
 	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -374,14 +374,14 @@ Application Indicators {
         	       		
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
-        	"Temporary granularity"
-        	- @TemporaryGranularityEnum temporaryGranularity nullable;
-        	"Temporary value"
-        	String temporaryValue nullable;
-        	"Geographic granularity"
-			String geographicGranularityId nullable;
-        	"Geographic value"
-			String geographicValue nullable;
+        	"Temporal granularity"
+        	- @TemporalGranularityEnum temporalGranularity nullable;
+        	"Temporal value"
+        	String temporalValue nullable;
+        	"Geographical granularity"
+			String geographicalGranularityId nullable;
+        	"Geographical value"
+			String geographicalValue nullable;
 			
 			// Relations
             "Element level"
@@ -529,7 +529,7 @@ Application Indicators {
 			Integer baseValue nullable;
 			"Temporal value base"
 			String baseTime nullable;
-			"Geographic value base"
+			"Geographical value base"
 			String baseLocation nullable;
 
 			// Relations
@@ -577,10 +577,10 @@ Application Indicators {
 			String queryGpe not nullable;
 			"Px"
 			String px not nullable;
-			"Temporary variable"
-			String temporaryVariable not nullable;
-			"Geographic variable"
-			String geographicVariable not nullable;
+			"Temporal variable"
+			String temporalVariable not nullable;
+			"Geographical variable"
+			String geographicalVariable not nullable;
 			"Other variables fixing one category"
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			
@@ -634,8 +634,8 @@ Application Indicators {
 			}
         }
         
-        "Table values for geographic values"
-	    Entity GeographicValue {
+        "Table values for geographical values"
+	    Entity GeographicalValue {
         	databaseTable = "LIS_GEOGR_VALUES"
         	hint="idSequence=GEOGR_VALUES"
 			!auditable
@@ -646,23 +646,23 @@ Application Indicators {
        		"Title"
        		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
        		"Granularity"
-			- @GeographicGranularity granularity cascade="none" not nullable databaseColumn="GRANULARITY_FK";
+			- @GeographicalGranularity granularity cascade="none" not nullable databaseColumn="GRANULARITY_FK";
        		"Latitude"
        		String latitude nullable;
        		"Longitude"
        		String longitude nullable;
        		
-       		Repository GeographicValueRepository {
+       		Repository GeographicalValueRepository {
        			findAll;
-            	protected List<@GeographicValue> findByQuery;
-            	protected List<@GeographicValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@GeographicValue retrieveGeographicValue(String uuid);
-            	List<@GeographicValue> findGeographicValues(String geographicGranularityUuid);
+            	protected List<@GeographicalValue> findByQuery;
+            	protected List<@GeographicalValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@GeographicalValue retrieveGeographicalValue(String uuid);
+            	List<@GeographicalValue> findGeographicalValues(String geographicalGranularityUuid);
 			}
         }
         
-        "Table values for geographic granularities"
-	    Entity GeographicGranularity {
+        "Table values for geographical granularities"
+	    Entity GeographicalGranularity {
         	databaseTable = "LIS_GEOGR_GRANULARITIES"
         	hint="idSequence=GEOGR_GRANULARITIES"
 			!auditable
@@ -673,11 +673,11 @@ Application Indicators {
        		"Title"
        		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
        		
-       		Repository GeographicGranularityRepository {
+       		Repository GeographicalGranularityRepository {
        			findAll;
-            	protected List<@GeographicGranularity> findByQuery;
-            	protected List<@GeographicGranularity> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@GeographicGranularity retrieveGeographicGranularity(String uuid);
+            	protected List<@GeographicalGranularity> findByQuery;
+            	protected List<@GeographicalGranularity> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@GeographicalGranularity retrieveGeographicalGranularity(String uuid);
 			}
         }
 	}
@@ -815,10 +815,10 @@ Application Indicators {
 			String queryGpe;
 			"Px"
 			String px;
-			"Temporary variable"
-			String temporaryVariable;
-			"Geographic variable"
-			String geographicVariable;
+			"Temporal variable"
+			String temporalVariable;
+			"Geographical variable"
+			String geographicalVariable;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
 			"Interperiod rate"
@@ -843,14 +843,14 @@ Application Indicators {
 			- @InternationalStringDto title;
 			"Indicator"
 			String indicatorUuid;
-        	"Temporary granularity"
-        	- @TemporaryGranularityEnum temporaryGranularity;
-        	"Temporary value"
-        	String temporaryValue;
-        	"Geographic granularity"
-			String geographicGranularityId;
-        	"Geographic value"
-			String geographicValue;
+        	"Temporal granularity"
+        	- @TemporalGranularityEnum temporalGranularity;
+        	"Temporal value"
+        	String temporalValue;
+        	"Geographical granularity"
+			String geographicalGranularityId;
+        	"Geographical value"
+			String geographicalValue;
 			
             "Order in level"
 			Long orderInLevel;
@@ -917,7 +917,7 @@ Application Indicators {
 			Integer baseValue;
 			"Temporal value base"
 			String baseTime;
-			"Geographic value base"
+			"Geographical value base"
 			String baseLocation;
 			"Indicator for base quantity"
 			String baseQuantityIndicatorUuid;
@@ -947,8 +947,8 @@ Application Indicators {
        		- @InternationalStringDto title;
     	}
     	
-    	"Dto for geographic values"
-    	DataTransferObject GeographicValueDto {
+    	"Dto for geographical values"
+    	DataTransferObject GeographicalValueDto {
 	   		"Uuid"
 	   		String uuid;
 	   		"Code"
@@ -963,8 +963,8 @@ Application Indicators {
        		Double longitude;
     	}
 
-    	"Dto for geographic granularities"
-    	DataTransferObject GeographicGranularityDto {
+    	"Dto for geographical granularities"
+    	DataTransferObject GeographicalGranularityDto {
 	   		"Uuid"
 	   		String uuid;
 	   		"Code"
@@ -1037,11 +1037,11 @@ Application Indicators {
     		DOWN
     	}
     	
-    	"Temporary granularities"
-    	enum TemporaryGranularityEnum {
+    	"Temporal granularities"
+    	enum TemporalGranularityEnum {
     		YEARLY,
     		BIYEARLY,
-    		QUARTERLY,
+    		QUATERLY,
     		MONTHLY,
     		WEEKLY,
     		DAILY

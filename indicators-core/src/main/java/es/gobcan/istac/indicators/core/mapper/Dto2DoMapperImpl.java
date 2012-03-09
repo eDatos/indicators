@@ -152,10 +152,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
-        target.setGeographicGranularityId(source.getGeographicGranularityId());
-        target.setGeographicValue(source.getGeographicValue());
-        target.setTemporaryGranularity(source.getTemporaryGranularity());
-        target.setTemporaryValue(source.getTemporaryValue());
+        target.setGeographicalGranularityId(source.getGeographicalGranularityId());
+        target.setGeographicalValue(source.getGeographicalValue());
+        target.setTemporalGranularity(source.getTemporalGranularity());
+        target.setTemporalValue(source.getTemporalValue());
 
         // Related entities
         if (source.getParentUuid() != null) {
@@ -235,8 +235,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         // Metadata modifiable
-        target.setTemporaryVariable(source.getTemporaryVariable());
-        target.setGeographicVariable(source.getGeographicVariable());
+        target.setTemporalVariable(source.getTemporalVariable());
+        target.setGeographicalVariable(source.getGeographicalVariable());
 
         // Related entities
         target.setInterperiodRate(rateDerivationDtoToDo(ctx, source.getInterperiodRate(), target.getInterperiodRate()));

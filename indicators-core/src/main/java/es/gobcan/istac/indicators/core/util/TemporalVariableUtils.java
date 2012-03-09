@@ -4,9 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utilities to temporary granularities
+ * Utilities to temporal variables
  */
-public class TemporaryGranularityUtils {
+public class TemporalVariableUtils {
 
     private static String  YEAR_PATTERN                 = "[1-2]\\d{3}";
     private static String  YEARLY_PATTERN               = YEAR_PATTERN;
@@ -21,7 +21,7 @@ public class TemporaryGranularityUtils {
     private static Pattern pattern                      = Pattern.compile("^" + TEMPORAL_GRANULARITY_PATTERN + "$");
 
     /**
-     * Validate temporary value is valid
+     * Validate temporal value is valid
      * Posibilities:
      * - Yearly: yyyy (Example: 1999)
      * - Biyearly: yyyyHs (Example: 1999H1)
@@ -30,14 +30,14 @@ public class TemporaryGranularityUtils {
      * - Weekly: yyyyWss (Example: 1999W51).
      * - Daily: yyyymmdd (Example: 19990101)
      */
-    public static Boolean isTemporaryGranularity(String value) {
+    public static Boolean isTemporalGranularity(String value) {
         Matcher matching = pattern.matcher(value);
         Boolean isValid = matching.matches();
         return isValid;
     }
 
     /**
-     * Compare two temporary values. These values must be refered to same granularity
+     * Compare two temporal values. These values must be refered to same granularity
      * TODO comprobar que tienen la misma granularidad?
      * 
      * @return 0 if are equals; a value less than 0 if this value1 is less than value2; a value greater than 0 if this value1 is less than value2

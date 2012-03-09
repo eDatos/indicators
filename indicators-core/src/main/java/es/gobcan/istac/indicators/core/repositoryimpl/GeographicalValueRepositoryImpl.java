@@ -9,21 +9,21 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import es.gobcan.istac.indicators.core.domain.GeographicValue;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 
 /**
- * Repository implementation for GeographicValue
+ * Repository implementation for GeographicalValue
  */
-@Repository("geographicValueRepository")
-public class GeographicValueRepositoryImpl extends GeographicValueRepositoryBase {
+@Repository("geographicalValueRepository")
+public class GeographicalValueRepositoryImpl extends GeographicalValueRepositoryBase {
 
-    public GeographicValueRepositoryImpl() {
+    public GeographicalValueRepositoryImpl() {
     }
 
-    public GeographicValue retrieveGeographicValue(String uuid) {
+    public GeographicalValue retrieveGeographicalValue(String uuid) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("uuid", uuid);
-        List<GeographicValue> result = findByQuery("from GeographicValue gv where gv.uuid = :uuid", parameters, 1);
+        List<GeographicalValue> result = findByQuery("from GeographicalValue gv where gv.uuid = :uuid", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;
         } else {
@@ -33,20 +33,20 @@ public class GeographicValueRepositoryImpl extends GeographicValueRepositoryBase
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<GeographicValue> findGeographicValues(String geographicGranularityUuid) {
+    public List<GeographicalValue> findGeographicalValues(String geographicalGranularityUuid) {
 
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
-        Criteria criteria = session.createCriteria(GeographicValue.class);
+        Criteria criteria = session.createCriteria(GeographicalValue.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (geographicGranularityUuid != null) {
+        if (geographicalGranularityUuid != null) {
             criteria.createAlias("granularity", "gr");
-            criteria.add(Restrictions.eq("gr.uuid", geographicGranularityUuid));
+            criteria.add(Restrictions.eq("gr.uuid", geographicalGranularityUuid));
         }
         criteria.addOrder(Order.asc("id"));
 
         // Find
-        List<GeographicValue> result = criteria.list();
+        List<GeographicalValue> result = criteria.list();
         return result;
     }
 }

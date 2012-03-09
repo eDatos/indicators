@@ -17,8 +17,8 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
-import es.gobcan.istac.indicators.core.domain.GeographicGranularity;
-import es.gobcan.istac.indicators.core.domain.GeographicValue;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -29,8 +29,8 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicValueDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -97,10 +97,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setIndicatorUuid(source.getIndicator().getUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
-        target.setGeographicGranularityId(source.getGeographicGranularityId());
-        target.setGeographicValue(source.getGeographicValue());
-        target.setTemporaryGranularity(source.getTemporaryGranularity());
-        target.setTemporaryValue(source.getTemporaryValue());
+        target.setGeographicalGranularityId(source.getGeographicalGranularityId());
+        target.setGeographicalValue(source.getGeographicalValue());
+        target.setTemporalGranularity(source.getTemporalGranularity());
+        target.setTemporalValue(source.getTemporalValue());
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
         
@@ -157,8 +157,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setQueryGpe(source.getQueryGpe());
         target.setPx(source.getPx());
-        target.setTemporaryVariable(source.getTemporaryVariable());
-        target.setGeographicVariable(source.getGeographicVariable());
+        target.setTemporalVariable(source.getTemporalVariable());
+        target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));
         target.setAnnualRate(rateDerivationDoToDto(source.getAnnualRate()));
@@ -195,9 +195,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     
     // Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
-    public GeographicValueDto geographicValueDoToDto(GeographicValue source) {
+    public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source) {
 
-        GeographicValueDto target = new GeographicValueDto();
+        GeographicalValueDto target = new GeographicalValueDto();
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());        
         target.setTitle(internationalStringToDto(source.getTitle()));
@@ -211,9 +211,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
 
     @Override
-    public GeographicGranularityDto geographicGranularityDoToDto(GeographicGranularity source) {
+    public GeographicalGranularityDto geographicalGranularityDoToDto(GeographicalGranularity source) {
 
-        GeographicGranularityDto target = new GeographicGranularityDto();
+        GeographicalGranularityDto target = new GeographicalGranularityDto();
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));

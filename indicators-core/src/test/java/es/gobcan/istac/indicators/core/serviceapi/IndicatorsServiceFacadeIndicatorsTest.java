@@ -2135,8 +2135,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, dataSources.size());
             assertEquals("query-gpe Indicator-3-v1-DataSource-1", dataSources.get(0).getQueryGpe());
             assertEquals("px Indicator-3-v1-DataSource-1", dataSources.get(0).getPx());
-            assertEquals("temporary v Indicator-3-v1-DataSource-1", dataSources.get(0).getTemporaryVariable());
-            assertEquals("geographic v Indicator-3-v1-DataSource-1", dataSources.get(0).getGeographicVariable());
+            assertEquals("temporal v Indicator-3-v1-DataSource-1", dataSources.get(0).getTemporalVariable());
+            assertEquals("geographical v Indicator-3-v1-DataSource-1", dataSources.get(0).getGeographicalVariable());
             assertEquals(1, dataSources.get(0).getOtherVariables().size());
             assertEquals("variable Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getVariable());
             assertEquals("category Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getCategory());
@@ -2284,8 +2284,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourceDto.getUuid());
         assertEquals("query-gpe Indicator-1-v2-DataSource-1", dataSourceDto.getQueryGpe());
         assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPx());
-        assertEquals("temporary v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporaryVariable());
-        assertEquals("geographic v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicVariable());
+        assertEquals("temporal v Indicator-1-v2-DataSource-1", dataSourceDto.getTemporalVariable());
+        assertEquals("geographical v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicalVariable());
 
         assertEquals(RateDerivationMethodTypeEnum.CALCULATE, dataSourceDto.getInterperiodRate().getMethodType());
         assertEquals("MethodOfInterperiod", dataSourceDto.getInterperiodRate().getMethod());
@@ -2350,8 +2350,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -2401,8 +2401,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe(null);
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setInterperiodRate(new RateDerivationDto());
         dataSourceDto.setAnnualRate(new RateDerivationDto());
         dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
@@ -2460,8 +2460,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setInterperiodRate(new RateDerivationDto());
         dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getInterperiodRate().setMethod("Method1");
@@ -2500,8 +2500,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setInterperiodRate(new RateDerivationDto());
         dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getInterperiodRate().setMethod("Method1");
@@ -2542,8 +2542,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -2591,8 +2591,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setQueryGpe("queryGpe1");
         dataSourceDto.setPx("px1");
-        dataSourceDto.setTemporaryVariable("temporaryVariable1");
-        dataSourceDto.setGeographicVariable("geographicVariable1");
+        dataSourceDto.setTemporalVariable("temporalVariable1");
+        dataSourceDto.setGeographicalVariable("geographicalVariable1");
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -2730,7 +2730,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
-        dataSourceDto.setTemporaryVariable("newTemporary");
+        dataSourceDto.setTemporalVariable("newTemporal");
         dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
         DataSourceVariableDto dataSourceVariableDto3 = new DataSourceVariableDto();
         dataSourceVariableDto3.setVariable("variable3new");

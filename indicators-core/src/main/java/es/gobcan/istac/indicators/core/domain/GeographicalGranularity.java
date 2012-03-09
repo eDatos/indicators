@@ -5,13 +5,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * Table values for geographic granularities
+ * Table values for geographical granularities
  */
 @Entity
 @Table(name = "LIS_GEOGR_GRANULARITIES", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
-public class GeographicGranularity extends GeographicGranularityBase {
+public class GeographicalGranularity extends GeographicalGranularityBase {
     private static final long serialVersionUID = 1L;
 
-    public GeographicGranularity() {
+    public GeographicalGranularity() {
     }
 }

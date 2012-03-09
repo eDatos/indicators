@@ -21,7 +21,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
-import es.gobcan.istac.indicators.core.util.TemporaryGranularityUtils;
+import es.gobcan.istac.indicators.core.util.TemporalVariableUtils;
 
 public class InvocationValidator {
 
@@ -587,7 +587,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveGeographicValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveGeographicalValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -598,7 +598,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindGeographicValues(List<MetamacExceptionItem> exceptions, String geographicGranularityUuid) throws MetamacException {
+    public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, String geographicalGranularityUuid) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -608,7 +608,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
     
-    public static void checkRetrieveGeographicGranularity(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveGeographicalGranularity(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -619,7 +619,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindGeographicGranularities(List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindGeographicalGranularities(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -651,19 +651,20 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorInstance.getElementLevel(), "INDICATOR_INSTANCE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
-        if (ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORARY_GRANULARITY", "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        if (ValidationUtils.isEmpty(indicatorInstance.getTemporalGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
+            // TODO ¿cómo poner si es requerido uno de ellos?
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORAL_GRANULARITY", "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporalGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporaryValue())) {
-            if (!TemporaryGranularityUtils.isTemporaryGranularity(indicatorInstance.getTemporaryValue())) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TEMPORARY_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
+            if (!TemporalVariableUtils.isTemporalGranularity(indicatorInstance.getTemporalValue())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
             }
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHIC_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularityId()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicalValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHICAL_VALUE"));
         }
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
@@ -738,8 +739,8 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getTemporaryVariable(), "DATA_SOURCE.TEMPORARY_VARIABLE", exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getGeographicVariable(), "DATA_SOURCE.GEOGRAPHIC_VARIABLE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getTemporalVariable(), "DATA_SOURCE.TEMPORAL_VARIABLE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getGeographicalVariable(), "DATA_SOURCE.GEOGRAPHICAL_VARIABLE", exceptions);
         checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
         checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
     }

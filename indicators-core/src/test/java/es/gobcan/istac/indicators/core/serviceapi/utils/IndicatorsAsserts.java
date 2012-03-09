@@ -72,8 +72,8 @@ public class IndicatorsAsserts {
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
         assertEquals(expected.getQueryGpe(), actual.getQueryGpe());
         assertEquals(expected.getPx(), actual.getPx());
-        assertEquals(expected.getTemporaryVariable(), actual.getTemporaryVariable());
-        assertEquals(expected.getGeographicVariable(), actual.getGeographicVariable());
+        assertEquals(expected.getTemporalVariable(), actual.getTemporalVariable());
+        assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
         
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
@@ -105,9 +105,9 @@ public class IndicatorsAsserts {
     public static void assertEqualsIndicatorInstance(IndicatorInstanceDto expected, IndicatorInstanceDto actual) {
         assertEquals(expected.getIndicatorUuid(), actual.getIndicatorUuid());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getGeographicGranularityId(), actual.getGeographicGranularityId());
-        assertEquals(expected.getGeographicValue(), actual.getGeographicValue());
-        assertEquals(expected.getTemporaryGranularity(), actual.getTemporaryGranularity());
-        assertEquals(expected.getTemporaryValue(), actual.getTemporaryValue());
+        assertEquals(expected.getGeographicalGranularityId(), actual.getGeographicalGranularityId());
+        assertEquals(expected.getGeographicalValue(), actual.getGeographicalValue());
+        assertEquals(expected.getTemporalGranularity(), actual.getTemporalGranularity());
+        assertEquals(expected.getTemporalValue(), actual.getTemporalValue());
     }
 }

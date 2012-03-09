@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
-import es.gobcan.istac.indicators.core.domain.GeographicGranularity;
-import es.gobcan.istac.indicators.core.domain.GeographicValue;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -597,53 +597,53 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     
     // Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
-    public GeographicValue retrieveGeographicValue(ServiceContext ctx, String uuid) throws MetamacException {
+    public GeographicalValue retrieveGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRetrieveGeographicValue(uuid, null);
+        InvocationValidator.checkRetrieveGeographicalValue(uuid, null);
 
         // Retrieve
-        GeographicValue geographicValue = getGeographicValueRepository().retrieveGeographicValue(uuid);
-        if (geographicValue == null) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHIC_VALUE_NOT_FOUND, uuid);
+        GeographicalValue geographicalValue = getGeographicalValueRepository().retrieveGeographicalValue(uuid);
+        if (geographicalValue == null) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND, uuid);
         }
-        return geographicValue;
+        return geographicalValue;
     }
 
     @Override
-    public List<GeographicValue> findGeographicValues(ServiceContext ctx, String geographicGranularityUuid) throws MetamacException {
+    public List<GeographicalValue> findGeographicalValues(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindGeographicValues(null, geographicGranularityUuid);
+        InvocationValidator.checkFindGeographicalValues(null, geographicalGranularityUuid);
 
         // Find
-        List<GeographicValue> geographicValues = getGeographicValueRepository().findGeographicValues(geographicGranularityUuid);
-        return geographicValues;
+        List<GeographicalValue> geographicalValues = getGeographicalValueRepository().findGeographicalValues(geographicalGranularityUuid);
+        return geographicalValues;
     }
 
     @Override
-    public GeographicGranularity retrieveGeographicGranularity(ServiceContext ctx, String uuid) throws MetamacException {
+    public GeographicalGranularity retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRetrieveGeographicGranularity(uuid, null);
+        InvocationValidator.checkRetrieveGeographicalGranularity(uuid, null);
 
         // Retrieve
-        GeographicGranularity geographicGranularity = getGeographicGranularityRepository().retrieveGeographicGranularity(uuid);
-        if (geographicGranularity == null) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHIC_GRANULARITY_NOT_FOUND, uuid);
+        GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().retrieveGeographicalGranularity(uuid);
+        if (geographicalGranularity == null) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_NOT_FOUND, uuid);
         }
-        return geographicGranularity;
+        return geographicalGranularity;
     }
 
     @Override
-    public List<GeographicGranularity> findGeographicGranularities(ServiceContext ctx) throws MetamacException {
+    public List<GeographicalGranularity> findGeographicalGranularities(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindGeographicGranularities(null);
+        InvocationValidator.checkFindGeographicalGranularities(null);
 
         // Find
-        List<GeographicGranularity> geographicGranularitys = getGeographicGranularityRepository().findAll();
-        return geographicGranularitys;
+        List<GeographicalGranularity> geographicalGranularitys = getGeographicalGranularityRepository().findAll();
+        return geographicalGranularitys;
     }
 
 

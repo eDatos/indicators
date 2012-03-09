@@ -5,13 +5,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * Table values for geographic values
+ * Table values for geographical values
  */
 @Entity
 @Table(name = "LIS_GEOGR_VALUES", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
-public class GeographicValue extends GeographicValueBase {
+public class GeographicalValue extends GeographicalValueBase {
     private static final long serialVersionUID = 1L;
 
-    protected GeographicValue() {
+    protected GeographicalValue() {
     }
 }

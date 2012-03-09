@@ -25,11 +25,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND_WITH_CODE                           = create("exception.indicators.indicator.not_found_code");
     public static final CommonServiceExceptionType INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL   = create("exception.indicators.indicator_instance.already_exists.indicator_in_same_level");
 
-    // Geographic values
-    public static final CommonServiceExceptionType GEOGRAPHIC_VALUE_NOT_FOUND                              = create("exception.indicators.geographic_value.not_found");
+    // Geographical values
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_NOT_FOUND                            = create("exception.indicators.geographical_value.not_found");
 
-    // Geographic granularities
-    public static final CommonServiceExceptionType GEOGRAPHIC_GRANULARITY_NOT_FOUND                        = create("exception.indicators.geographic_granularity.not_found");
+    // Geographical granularities
+    public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND                      = create("exception.indicators.geographical_granularity.not_found");
 
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                     = create("exception.indicators.indicator.not_found");
