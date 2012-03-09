@@ -18,3 +18,7 @@ alter sequence SEQ_I18NSTRS increment by 1;
 alter sequence SEQ_L10NSTRS increment by 4;
 select SEQ_L10NSTRS.nextval from dual;
 alter sequence SEQ_L10NSTRS increment by 1;
+
+alter sequence SEQ_QUANTITIES_UNITS increment by 2;
+select SEQ_QUANTITIES_UNITS.nextval from dual;
+alter sequence SEQ_QUANTITIES_UNITS increment by 1;
