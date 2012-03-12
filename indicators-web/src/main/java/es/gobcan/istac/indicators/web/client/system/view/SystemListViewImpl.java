@@ -6,11 +6,12 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -27,17 +28,16 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
 	private SystemListUiHandler uiHandlers;
 	
-	private final ListGrid indSystemListGrid;
+	private final BaseCustomListGrid indSystemListGrid;
 	private VLayout panel;
 	
 	
 	@Inject
 	public SystemListViewImpl() {
-		indSystemListGrid = new ListGrid();
+		indSystemListGrid = new BaseCustomListGrid();
 		IndicatorsSystemsDS datasource = new IndicatorsSystemsDS();
 		indSystemListGrid.setDataSource(datasource);
 		indSystemListGrid.setUseAllDataSourceFields(false);
-		indSystemListGrid.setLeaveScrollbarGap(false);
 		
 		//List
 		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.CODE,getConstants().systemListHeaderIdentifier());
