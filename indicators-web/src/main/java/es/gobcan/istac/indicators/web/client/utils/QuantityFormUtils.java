@@ -1,41 +1,15 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
-
-import java.util.LinkedHashMap;
-
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 
 public class QuantityFormUtils {
 
-    /**
-     * Returns ValueMap for {@link QuantityTypeEnum}
-     * 
-     * @return
-     */
-    public static LinkedHashMap<String, String> getQuantityValueMap() {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (QuantityTypeEnum type : QuantityTypeEnum.values()) {
-            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + type.getName()));
-        }
-        return valueMap;
-    }
-    
-    public static LinkedHashMap<String, String> getQuantityIndexBaseMap() {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (QuantityIndexBaseTypeEnum type : QuantityIndexBaseTypeEnum.values()) {
-            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityIndexBaseTypeEnum() + type.getName()));
-        }
-        return valueMap;
-    }
-    
     // 
     // FormItemIfFunctions
     //
