@@ -8,16 +8,22 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 
 
 public class IndicatorInstanceDS extends DataSource {
-    public static String FIELD_UUID = "uuid-indinst";
-    public static String FIELD_INTERNATIONAL_TITLE = "titleint-indinst";
-    public static String FIELD_INDICATOR_UUID = "ind_uuid-indinst";
+    
+    public static String UUID = "inst-uuid";
+    public static String TITLE = "inst-titleint";
+    public static String IND_UUID = "inst-ind-uuid";
+    public static String TEMPORAL_VALUE = "inst-temp";
+    public static String TEMPORAL_GRANULARITY = "inst-temp-gran";
+    public static String GEOGRAPHICAL_VALUE = "inst-geo";
+    public static String GEOGRAPHICAL_GRANULARITY = "inst-geo-gran";
+    
     
     public IndicatorInstanceDS() {
-        DataSourceIntegerField uuid = new DataSourceIntegerField(FIELD_UUID, getConstants().systemStrucIndInstanceUuid());
+        DataSourceIntegerField uuid = new DataSourceIntegerField(UUID, getConstants().systemStrucIndInstanceUuid());
         uuid.setPrimaryKey(true);
         addField(uuid);
         
-        DataSourceTextField title = new DataSourceTextField(FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucIndInstanceTitleField());
+        DataSourceTextField title = new DataSourceTextField(TITLE, getConstants().systemStrucIndInstanceTitleField());
         addField(title);
     }
 
