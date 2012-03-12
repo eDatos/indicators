@@ -30,12 +30,12 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TemporalGranularityEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
-import es.gobcan.istac.indicators.core.serviceimpl.util.TemporalVariableUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 
 /**
  * Test to IndicatorsServiceFacade. Testing: indicators systems, dimensions, indicators instances
@@ -1467,7 +1467,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
             indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-            indicatorInstanceDto.setTemporalValue("2012");
+            indicatorInstanceDto.setTimeValue("2012");
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
         }
         {
@@ -1478,7 +1478,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
             indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-            indicatorInstanceDto.setTemporalValue("2012");
+            indicatorInstanceDto.setTimeValue("2012");
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuid, indicatorInstanceDto);
         }
 
@@ -2665,8 +2665,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
-        assertEquals(TemporalGranularityEnum.YEARLY, indicatorInstanceDto.getTemporalGranularity());
-        assertNull(indicatorInstanceDto.getTemporalValue());
+        assertEquals(TimeGranularityEnum.YEARLY, indicatorInstanceDto.getTimeGranularity());
+        assertNull(indicatorInstanceDto.getTimeValue());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, indicatorInstanceDto.getGeographicalGranularityUuid());
         assertNull(indicatorInstanceDto.getGeographicalValueUuid());
         IndicatorsAsserts.assertEqualsDate("2011-05-05 01:02:04", indicatorInstanceDto.getCreatedDate());
@@ -2717,7 +2717,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2752,7 +2752,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
-        indicatorInstanceDto.setTemporalGranularity(TemporalGranularityEnum.DAILY);
+        indicatorInstanceDto.setTimeGranularity(TimeGranularityEnum.DAILY);
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2789,7 +2789,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2826,7 +2826,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2863,7 +2863,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2893,7 +2893,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid(null);
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(null);
-        indicatorInstanceDto.setTemporalGranularity(null);
+        indicatorInstanceDto.setTimeGranularity(null);
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
             fail("parameters required");
@@ -2910,8 +2910,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(2, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TEMPORAL_GRANULARITY", e.getExceptionItems().get(2).getMessageParameters()[0]);
-            assertEquals("INDICATOR_INSTANCE.TEMPORAL_VALUE", e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals("INDICATOR_INSTANCE.TIME_GRANULARITY", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.TIME_VALUE", e.getExceptionItems().get(2).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
@@ -2927,7 +2927,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MAX_VALUE);
 
@@ -2950,7 +2950,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MIN_VALUE);
 
@@ -2966,7 +2966,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testCreateIndicatorInstanceErrorTemporalValueIncorrect() throws Exception {
+    public void testCreateIndicatorInstanceErrorTimeValueIncorrect() throws Exception {
 
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -2976,16 +2976,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
-        indicatorInstanceDto.setTemporalValue("2012a");
+        indicatorInstanceDto.setTimeValue("2012a");
 
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContext(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
-            fail("Temporal value incorrect");
+            fail("Time value incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TEMPORAL_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATOR_INSTANCE.TIME_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2996,7 +2996,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setGeographicalValueUuid(NOT_EXISTS);
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3022,7 +3022,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         // Root level
         try {
@@ -3046,7 +3046,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
 
         // Root level
         try {
@@ -3081,7 +3081,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         try {
@@ -3103,7 +3103,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3125,7 +3125,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_NOT_EXISTS);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3147,7 +3147,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTemporalValue("2012");
+        indicatorInstanceDto.setTimeValue("2012");
         indicatorInstanceDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3598,94 +3598,94 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testValidateTemporalGranularities() throws Exception {
+    public void testValidateTimeGranularities() throws Exception {
 
         // Valid
         for (int i = 0; i <= 1999; i++) {
             // Yearly
             String year = String.valueOf(1000 + i);
-            assertTrue(year, TemporalVariableUtils.isTemporalValue(year));
+            assertTrue(year, TimeVariableUtils.isTimeValue(year));
 
             // Biyearly
             for (int j = 1; j <= 2; j++) {
                 String biyear = year + "H" + String.valueOf(j);
-                assertTrue(biyear, TemporalVariableUtils.isTemporalValue(biyear));
+                assertTrue(biyear, TimeVariableUtils.isTimeValue(biyear));
             }
             // Quarterly
             for (int j = 1; j <= 4; j++) {
                 String quarter = year + "Q" + String.valueOf(j);
-                assertTrue(quarter, TemporalVariableUtils.isTemporalValue(quarter));
+                assertTrue(quarter, TimeVariableUtils.isTimeValue(quarter));
             }
             for (int j = 1; j <= 12; j++) {
                 String month = StringUtils.leftPad(String.valueOf(j), 2, "0");
                 String monthly = year + "M" + month;
                 // Monthly
-                assertTrue(monthly, TemporalVariableUtils.isTemporalValue(monthly));
+                assertTrue(monthly, TimeVariableUtils.isTimeValue(monthly));
                 // Daily
                 for (int k = 1; k <= 31; k++) {
                     String day = year + month + StringUtils.leftPad(String.valueOf(k), 2, "0");
-                    assertTrue(day, TemporalVariableUtils.isTemporalValue(day));
+                    assertTrue(day, TimeVariableUtils.isTimeValue(day));
                 }
             }
             // Weekly
             for (int j = 1; j <= 52; j++) {
                 String week = year + "W" + StringUtils.leftPad(String.valueOf(j), 2, "0");
-                assertTrue(week, TemporalVariableUtils.isTemporalValue(week));
+                assertTrue(week, TimeVariableUtils.isTimeValue(week));
             }
         }
 
         // Invalid
-        assertFalse(TemporalVariableUtils.isTemporalValue("912"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("3000"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012q1"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q00"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q0"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012Q5"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012m1"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012M111"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012M1"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012M14"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012w1"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012W111"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012W1"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012W53"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012W60"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("20121"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("201212"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("2012121"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("201211223"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("afas"));
-        assertFalse(TemporalVariableUtils.isTemporalValue("201 2"));
+        assertFalse(TimeVariableUtils.isTimeValue("912"));
+        assertFalse(TimeVariableUtils.isTimeValue("3000"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012q1"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012Q00"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012Q0"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012Q5"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012m1"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012M111"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012M1"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012M14"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012w1"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012W111"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012W1"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012W53"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012W60"));
+        assertFalse(TimeVariableUtils.isTimeValue("20121"));
+        assertFalse(TimeVariableUtils.isTimeValue("201212"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012121"));
+        assertFalse(TimeVariableUtils.isTimeValue("201211223"));
+        assertFalse(TimeVariableUtils.isTimeValue("afas"));
+        assertFalse(TimeVariableUtils.isTimeValue("201 2"));
     }
 
     @Test
-    public void testCompareTemporalGranularities() throws Exception {
+    public void testCompareTimeGranularities() throws Exception {
 
         // Equals
-        assertTrue(TemporalVariableUtils.compareTo("2012", "2012") == 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012H2", "2012H2") == 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012Q1", "2012Q1") == 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012M02", "2012M02") == 0);
-        assertTrue(TemporalVariableUtils.compareTo("20120102", "20120102") == 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012W51", "2012W51") == 0);
+        assertTrue(TimeVariableUtils.compareTo("2012", "2012") == 0);
+        assertTrue(TimeVariableUtils.compareTo("2012H2", "2012H2") == 0);
+        assertTrue(TimeVariableUtils.compareTo("2012Q1", "2012Q1") == 0);
+        assertTrue(TimeVariableUtils.compareTo("2012M02", "2012M02") == 0);
+        assertTrue(TimeVariableUtils.compareTo("20120102", "20120102") == 0);
+        assertTrue(TimeVariableUtils.compareTo("2012W51", "2012W51") == 0);
 
         // Less
-        assertTrue(TemporalVariableUtils.compareTo("2011", "2012") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012H1", "2012H2") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2011H2", "2012H2") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012Q2", "2012Q3") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2011Q1", "2012Q1") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012M01", "2012M02") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2011M01", "2012M02") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("20120102", "20120202") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("20120102", "20120103") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2012W01", "2012W51") < 0);
-        assertTrue(TemporalVariableUtils.compareTo("2011W51", "2012W51") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011", "2012") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2012H1", "2012H2") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011H2", "2012H2") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2012Q2", "2012Q3") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011Q1", "2012Q1") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2012M01", "2012M02") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011M01", "2012M02") < 0);
+        assertTrue(TimeVariableUtils.compareTo("20120102", "20120202") < 0);
+        assertTrue(TimeVariableUtils.compareTo("20120102", "20120103") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2012W01", "2012W51") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011W51", "2012W51") < 0);
 
         // Greater
-        assertTrue(TemporalVariableUtils.compareTo("2013", "2012") > 0);
-        assertTrue(TemporalVariableUtils.compareTo("2013H1", "2012H2") > 0);
-        assertTrue(TemporalVariableUtils.compareTo("20130102", "20120103") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2013", "2012") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2013H1", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareTo("20130102", "20120103") > 0);
     }
 
     @Test

@@ -163,8 +163,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target.setGeographicalValue(null);
         }
-        target.setTemporalGranularity(source.getTemporalGranularity());
-        target.setTemporalValue(source.getTemporalValue());
+        target.setTimeGranularity(source.getTimeGranularity());
+        target.setTimeValue(source.getTimeValue());
 
         // Related entities
         if (source.getParentUuid() != null) {
@@ -244,7 +244,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         // Metadata modifiable
-        target.setTemporalVariable(source.getTemporalVariable());
+        target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalVariable(source.getGeographicalVariable());
 
         // Related entities

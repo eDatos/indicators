@@ -374,10 +374,10 @@ Application Indicators {
         	       		
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
-        	"Temporal granularity"
-        	- @TemporalGranularityEnum temporalGranularity nullable;
-        	"Temporal value"
-        	String temporalValue nullable;
+        	"Time granularity"
+        	- @TimeGranularityEnum timeGranularity nullable;
+        	"Time value"
+        	String timeValue nullable;
 			
 			// Relations
             "Element level"
@@ -527,7 +527,7 @@ Application Indicators {
 			
 			"Value base"
 			Integer baseValue nullable;
-			"Temporal value base"
+			"Time value base"
 			String baseTime nullable;
 			
 			// Relations
@@ -577,8 +577,8 @@ Application Indicators {
 			String queryGpe not nullable;
 			"Px"
 			String px not nullable;
-			"Temporal variable"
-			String temporalVariable not nullable;
+			"Time variable"
+			String timeVariable not nullable;
 			"Geographical variable"
 			String geographicalVariable not nullable;
 			"Other variables fixing one category"
@@ -815,8 +815,8 @@ Application Indicators {
 			String queryGpe;
 			"Px"
 			String px;
-			"Temporal variable"
-			String temporalVariable;
+			"Time variable"
+			String timeVariable;
 			"Geographical variable"
 			String geographicalVariable;
 			"Other variables fixing one category"
@@ -843,10 +843,10 @@ Application Indicators {
 			- @InternationalStringDto title;
 			"Indicator"
 			String indicatorUuid;
-        	"Temporal granularity"
-        	- @TemporalGranularityEnum temporalGranularity;
-        	"Temporal value"
-        	String temporalValue;
+        	"Time granularity"
+        	- @TimeGranularityEnum timeGranularity;
+        	"Time value"
+        	String timeValue;
         	"Geographical granularity"
 			String geographicalGranularityUuid;
         	"Geographical value"
@@ -915,7 +915,7 @@ Application Indicators {
 			-@InternationalStringDto percentageOf;
 			"Value base"
 			Integer baseValue;
-			"Temporal value base"
+			"Time value base"
 			String baseTime;
 			"Geographical value base"
 			String baseLocationUuid;
@@ -1037,8 +1037,8 @@ Application Indicators {
     		DOWN
     	}
     	
-    	"Temporal granularities"
-    	enum TemporalGranularityEnum {
+    	"Time granularities"
+    	enum TimeGranularityEnum {
     		YEARLY,
     		BIYEARLY,
     		QUARTERLY,

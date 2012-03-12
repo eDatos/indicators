@@ -137,8 +137,8 @@ public class DoCopyUtils {
         target.setIndicator(source.getIndicator());
         target.setGeographicalGranularity(source.getGeographicalGranularity());
         target.setGeographicalValue(source.getGeographicalValue());
-        target.setTemporalGranularity(source.getTemporalGranularity());
-        target.setTemporalValue(source.getTemporalValue());
+        target.setTimeGranularity(source.getTimeGranularity());
+        target.setTimeValue(source.getTimeValue());
 
         return target;
     }
@@ -163,7 +163,7 @@ public class DoCopyUtils {
         DataSource target = new DataSource();
         target.setQueryGpe(source.getQueryGpe());
         target.setPx(source.getPx());
-        target.setTemporalVariable(source.getTemporalVariable());
+        target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         target.setInterperiodRate(copyRateDerivation(source.getInterperiodRate()));

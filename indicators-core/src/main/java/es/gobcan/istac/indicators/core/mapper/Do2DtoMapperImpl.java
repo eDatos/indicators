@@ -99,8 +99,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGeographicalGranularityUuid(source.getGeographicalGranularity() != null ? source.getGeographicalGranularity().getUuid() : null);
         target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
-        target.setTemporalGranularity(source.getTemporalGranularity());
-        target.setTemporalValue(source.getTemporalValue());
+        target.setTimeGranularity(source.getTimeGranularity());
+        target.setTimeValue(source.getTimeValue());
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
 
@@ -157,7 +157,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setQueryGpe(source.getQueryGpe());
         target.setPx(source.getPx());
-        target.setTemporalVariable(source.getTemporalVariable());
+        target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));

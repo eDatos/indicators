@@ -72,7 +72,7 @@ public class IndicatorsAsserts {
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
         assertEquals(expected.getQueryGpe(), actual.getQueryGpe());
         assertEquals(expected.getPx(), actual.getPx());
-        assertEquals(expected.getTemporalVariable(), actual.getTemporalVariable());
+        assertEquals(expected.getTimeVariable(), actual.getTimeVariable());
         assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
         
@@ -107,7 +107,7 @@ public class IndicatorsAsserts {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getGeographicalGranularityUuid(), actual.getGeographicalGranularityUuid());
         assertEquals(expected.getGeographicalValueUuid(), actual.getGeographicalValueUuid());
-        assertEquals(expected.getTemporalGranularity(), actual.getTemporalGranularity());
-        assertEquals(expected.getTemporalValue(), actual.getTemporalValue());
+        assertEquals(expected.getTimeGranularity(), actual.getTimeGranularity());
+        assertEquals(expected.getTimeValue(), actual.getTimeValue());
     }
 }

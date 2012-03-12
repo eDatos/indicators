@@ -650,16 +650,16 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(indicatorInstance.getElementLevel(), "INDICATOR_INSTANCE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
-        if (ValidationUtils.isEmpty(indicatorInstance.getTemporalGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
+        if (ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
             // TODO ¿cómo poner si es requerido uno de ellos?
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TEMPORAL_GRANULARITY", "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TIME_GRANULARITY", "INDICATOR_INSTANCE.TIME_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporalGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
+            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TIME_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTemporalValue())) {
-            if (!TemporalVariableUtils.isTemporalValue(indicatorInstance.getTemporalValue())) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TEMPORAL_VALUE"));
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
+            if (!TimeVariableUtils.isTimeValue(indicatorInstance.getTimeValue())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TIME_VALUE"));
             }
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicalValue())) {
@@ -738,7 +738,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getTemporalVariable(), "DATA_SOURCE.TEMPORAL_VARIABLE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getTimeVariable(), "DATA_SOURCE.TIME_VARIABLE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getGeographicalVariable(), "DATA_SOURCE.GEOGRAPHICAL_VARIABLE", exceptions);
         checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
         checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
