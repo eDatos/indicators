@@ -61,9 +61,35 @@ NOT NULL«ENDIF»,
         @javax.persistence.GeneratedValue(strategy=javax.persistence.GenerationType.SEQUENCE,
             generator="«getDomainObject().getHint('idSequence')»")
         @javax.persistence.Column(name="«getDatabaseName()»")
+    «ELSEIF getDomainObject().hasHint("strategy") && getDomainObject().getHint("strategy") == "IDENTITY"»
+    	@javax.persistence.Id
+	    @javax.persistence.GeneratedValue(strategy=javax.persistence.GenerationType.IDENTITY)
+	    @javax.persistence.Column(name="«getDatabaseName()»")
     «ELSE»
     	«targetDef.proceed()»
     «ENDIF»
+«ENDAROUND»
+
+«REM»Skip script database generation for table views«ENDREM»
+«AROUND templates::db::OracleDDL::createTable FOR DomainObject»
+    «IF name != "Subject" -»
+    	«targetDef.proceed() -»
+    «ENDIF -»
+«ENDAROUND»
+«AROUND templates::db::OracleDDL::dropTable FOR DomainObject»
+    «IF name != "Subject" -»
+    	«targetDef.proceed() -»
+    «ENDIF -»
+«ENDAROUND»
+«AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
+    «IF name != "Subject" -»
+    	«targetDef.proceed() -»
+    «ENDIF -»
+«ENDAROUND»
+«AROUND templates::db::OracleDDL::idPrimaryKey FOR DomainObject»
+	«IF name != "Subject" -»
+		«targetDef.proceed() -»
+	«ENDIF -»
 «ENDAROUND»
 
 «AROUND templates::domain::DomainObject::dataTransferObjectHook FOR DataTransferObject-»

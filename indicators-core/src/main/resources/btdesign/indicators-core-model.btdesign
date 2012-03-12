@@ -71,6 +71,7 @@ Application Indicators {
     		> @IndicatorVersionRepository
     		> @DataSourceRepository
     		> @QuantityUnitRepository
+    		> @SubjectRepository
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -100,6 +101,10 @@ Application Indicators {
 	    	// Quantity units
 	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	List<@QuantityUnit> findQuantityUnits() throws MetamacException;
+	    	
+	    	// Subjects
+	    	@Subject retrieveSubject(String uuid) throws MetamacException;
+	    	List<@Subject> findSubjects() throws MetamacException;
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."
@@ -226,8 +231,15 @@ Application Indicators {
 	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
 	    	// QUANTITY UNITS
+	    	"Retrieves quantity unit"
 	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
+	    	"Find all quantity units"
 	    	List<@QuantityUnitDto> findQuantityUnits() throws MetamacException;
+	    	
+			// SUBJECTS
+	    	@SubjectDto retrieveSubject(String uuid) throws MetamacException;
+	    	List<@SubjectDto> findSubjects() throws MetamacException;
+	    	
 	    }
 
 	    // ----------------------------------------------------------------
@@ -680,6 +692,26 @@ Application Indicators {
             	@GeographicalGranularity retrieveGeographicalGranularity(String uuid);
 			}
         }
+        
+        "Table values for subjects. It is a table view of an already existing table"
+	    Entity Subject {
+        	databaseTable = "TV_CATALOGO_OPERACION_ESTADIST"
+			!auditable
+			!optimisticLocking
+			hint="strategy=IDENTITY"
+			
+			"Id"
+			String id not nullable databaseColumn="ID_CATALOGO" length="15" key;
+       		"Description"
+       		String description not nullable databaseColumn="DESCRIPCION" length="200";
+       		
+       		Repository SubjectRepository {
+            	protected List<@Subject> findByQuery;
+            	protected List<@Subject> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@Subject retrieveSubject(String uuid);
+            	List<@Subject> findSubjects;
+			}
+        }
 	}
 	
 	// ----------------------------------------------------------------
@@ -972,7 +1004,14 @@ Application Indicators {
        		"Title"
        		- @InternationalStringDto title;
     	}
-
+    	
+    	"Dto for subjects"
+    	DataTransferObject SubjectDto {
+	   		"Uuid"
+	   		String uuid;
+			"Description"
+			- @InternationalStringDto description;
+    	}
 	}
 	
 	// ----------------------------------------------------------------

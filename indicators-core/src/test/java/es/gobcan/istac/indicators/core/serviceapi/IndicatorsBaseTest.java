@@ -39,6 +39,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("LIS_GEOGR_VALUES");
         tables.add("LIS_GEOGR_GRANULARITIES");
         tables.add("TBL_INTERNATIONAL_STRINGS");
+        tables.add("TV_CATALOGO_OPERACION_ESTADIST");
         return tables;
     }
 

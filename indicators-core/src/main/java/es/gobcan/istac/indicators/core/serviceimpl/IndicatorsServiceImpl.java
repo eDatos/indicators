@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -520,6 +521,31 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Find
         List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
         return quantityUnits;
+    }
+    
+    @Override
+    public Subject retrieveSubject(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveSubject(uuid, null);
+
+        // Retrieve
+        Subject subject = getSubjectRepository().retrieveSubject(uuid);
+        if (subject == null) {
+            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, uuid);
+        }
+        return subject;
+    }
+
+    @Override
+    public List<Subject> findSubjects(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindSubjects(null);
+
+        // Find
+        List<Subject> subjects = getSubjectRepository().findSubjects();
+        return subjects;
     }
 
     /**

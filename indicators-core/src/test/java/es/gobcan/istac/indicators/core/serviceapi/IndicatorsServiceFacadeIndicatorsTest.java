@@ -23,6 +23,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
@@ -71,6 +72,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     // Geographical values
     private static String             GEOGRAPHICAL_VALUE_1         = "1";
+
+    // Subjects
+    private static String             SUBJECT_1                    = "1";
+    private static String             SUBJECT_2                    = "2";
+    private static String             SUBJECT_3                    = "3";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -2938,6 +2944,60 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(QUANTITY_UNIT_2, quantityUnits.get(1).getUuid());
         assertEquals("kg", quantityUnits.get(1).getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.START, quantityUnits.get(1).getSymbolPosition());
+    }
+
+    @Test
+    public void testRetrieveSubject() throws Exception {
+
+        String uuid = SUBJECT_1;
+        SubjectDto subjectDto = indicatorsServiceFacade.retrieveSubject(getServiceContext(), uuid);
+
+        assertNotNull(subjectDto);
+        assertEquals(uuid, subjectDto.getUuid());
+        IndicatorsAsserts.assertEqualsInternationalString(subjectDto.getDescription(), "es", "Área temática 1", null, null);
+    }
+
+    @Test
+    public void testRetrieveSubjectErrorParameterRequired() throws Exception {
+
+        String uuid = null;
+
+        try {
+            indicatorsServiceFacade.retrieveSubject(getServiceContext(), uuid);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveSubjectErrorNotExists() throws Exception {
+
+        String uuid = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveSubject(getServiceContext(), uuid);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SUBJECT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testFindSubjects() throws Exception {
+
+        List<SubjectDto> subjects = indicatorsServiceFacade.findSubjects(getServiceContext());
+        assertEquals(3, subjects.size());
+
+        assertEquals(SUBJECT_1, subjects.get(0).getUuid());
+        assertEquals(SUBJECT_2, subjects.get(1).getUuid());
+        assertEquals(SUBJECT_3, subjects.get(2).getUuid());
     }
 
     @Override

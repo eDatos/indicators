@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -26,6 +27,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
@@ -661,5 +663,31 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
 
         return quantityUnitsDto;
+    }
+    
+    @Override
+    public SubjectDto retrieveSubject(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Retrieve
+        Subject subject = getIndicatorsService().retrieveSubject(ctx, uuid);
+
+        // Transform
+        SubjectDto subjectDto = do2DtoMapper.subjectDoToDto(subject);
+        return subjectDto;
+    }
+
+    @Override
+    public List<SubjectDto> findSubjects(ServiceContext ctx) throws MetamacException {
+
+        // Retrieve subjects
+        List<Subject> subjects = getIndicatorsService().findSubjects(ctx);
+
+        // Transform
+        List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
+        for (Subject subject : subjects) {
+            subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
+        }
+
+        return subjectsDto;
     }
 }

@@ -25,6 +25,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -37,6 +38,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -192,8 +194,24 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
+    
+    @Override
+    public SubjectDto subjectDoToDto(Subject source) {
 
-    // Latitud y longitud como doubles. Ver txt en el escritorio
+        SubjectDto target = new SubjectDto();
+        target.setUuid(source.getId());
+        
+        InternationalStringDto description = new InternationalStringDto();
+        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+        localisedStringDto.setLabel(source.getDescription());
+        localisedStringDto.setLocale("es"); // description only in spanish
+        description.addText(localisedStringDto);
+        target.setDescription(description);
+        
+        return target;
+    }
+
+    // TODO Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
     public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source) {
 
