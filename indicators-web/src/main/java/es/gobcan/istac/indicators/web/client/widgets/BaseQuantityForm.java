@@ -40,7 +40,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {
         Integer baseValue = quantityDto.getBaseValue();
         String baseTime = quantityDto.getBaseTime();
-        String baseLocation = quantityDto.getBaseLocation();
+        String baseLocation = quantityDto.getBaseLocationUuid();
         if (baseTime != null && !baseTime.isEmpty()) {
             return QuantityIndexBaseTypeEnum.BASE_TIME;
         } else if (baseLocation != null && !baseLocation.isEmpty()) {

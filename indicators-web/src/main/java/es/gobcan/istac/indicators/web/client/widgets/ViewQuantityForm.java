@@ -87,7 +87,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getIndexBaseType(quantityDto));
             setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, quantityDto.getBaseLocation());
+            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, quantityDto.getBaseLocationUuid());
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getIndicatorCode(quantityDto.getBaseQuantityIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }

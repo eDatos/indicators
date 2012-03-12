@@ -26,7 +26,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
-import es.gobcan.istac.indicators.web.client.utils.QuantityFormUtils;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 
 public class QuantityForm extends BaseQuantityForm {
@@ -39,7 +39,7 @@ public class QuantityForm extends BaseQuantityForm {
         super(groupTitle);
         
         RequiredSelectItem type = new RequiredSelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
-        type.setValueMap(QuantityFormUtils.getQuantityValueMap());
+        type.setValueMap(CommonUtils.getQuantityValueMap());
         type.addChangedHandler(new ChangedHandler() {
             @Override
             public void onChanged(ChangedEvent event) {
@@ -138,7 +138,7 @@ public class QuantityForm extends BaseQuantityForm {
                 setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue());
             }
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, quantityDto.getBaseLocation());
+            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, quantityDto.getBaseLocationUuid());
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
@@ -159,7 +159,7 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem)getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
         quantityDto.setBaseValue(getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer)getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
-        quantityDto.setBaseLocation(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_LOCATION) : null);
+        quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_LOCATION) : null);
         quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID) : null);
         return quantityDto;
     }
@@ -167,10 +167,7 @@ public class QuantityForm extends BaseQuantityForm {
     @Override
     public void setIndicators(List<IndicatorDto> indicators) {
         super.setIndicators(indicators);
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (IndicatorDto indicatorDto : indicators) {
-            valueMap.put(indicatorDto.getUuid(), indicatorDto.getCode());
-        }
+        LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
         ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
         ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
         ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
