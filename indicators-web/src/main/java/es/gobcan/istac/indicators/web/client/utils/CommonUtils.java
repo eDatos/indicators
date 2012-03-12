@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TemporalGranularityEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
@@ -27,7 +29,7 @@ public class CommonUtils {
     
     public static LinkedHashMap<String, String> getTimeGranularityValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
-        for (TemporalGranularityEnum type : TemporalGranularityEnum.values()) {
+        for (TimeGranularityEnum type : TimeGranularityEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
         }
         return valueMap;
@@ -57,10 +59,27 @@ public class CommonUtils {
         return valueMap;
     }
     
-    public static LinkedHashMap<String, String> getGeographicalSelectionTypeMap() {
+    public static LinkedHashMap<String, String> getGeographicalSelectionTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (GeographicalSelectionTypeEnum type : GeographicalSelectionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().geographicalSelectionTypeEnum() + type.getName()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getGeographicalGranularituesValueMap(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
+            valueMap.put(geographicalGranularityDto.getUuid(), InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getGeographicalValuesValueMap(List<GeographicalValueDto> geographicalValueDtos) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
+            valueMap.put(geographicalValueDto.getUuid(), InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
         }
         return valueMap;
     }
