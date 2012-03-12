@@ -7,6 +7,8 @@ import java.util.List;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent.HideMessageHandler;
+import org.siemac.metamac.web.common.client.events.SetTitleEvent;
+import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
 
@@ -34,7 +36,7 @@ import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
-public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers {
+public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers, SetTitleHandler {
 	
     private final DispatchAsync dispatcher;
     
@@ -44,6 +46,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 	public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
 		void showMessage(List<String> messages, MessageTypeEnum type);
 		void hideMessages();
+		void setTitle(String title);
 	}
 	
 	@ProxyStandard
@@ -103,5 +106,11 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             }}
 	    );
 	}
+
+	@ProxyEvent
+    @Override
+    public void onSetTitle(SetTitleEvent event) {
+        getView().setTitle(event.getTitle());        
+    }
 
 }

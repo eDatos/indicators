@@ -126,4 +126,9 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
 		successMessagePanel.hide();
 		errorMessagePanel.hide();
 	}
+
+    @Override
+    public void setTitle(String title) {
+        masterHead.setTitleLabel(title);
+    }
 }
