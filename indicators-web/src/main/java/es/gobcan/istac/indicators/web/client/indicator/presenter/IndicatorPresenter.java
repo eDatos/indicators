@@ -1,10 +1,12 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
 import com.google.gwt.event.shared.EventBus;
@@ -72,6 +74,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 	@Override
 	protected void onReset() {
 	    super.onReset();
+	    SetTitleEvent.fire(IndicatorPresenter.this, getConstants().indicators());
 	    retrieveIndicatorByCode();
 	}
 	

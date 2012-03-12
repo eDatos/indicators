@@ -1,10 +1,12 @@
 package es.gobcan.istac.indicators.web.client.system.presenter;
 
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
 import com.google.gwt.event.shared.EventBus;
@@ -108,6 +110,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	@Override
 	protected void onReset() {
 		super.onReset();
+		SetTitleEvent.fire(SystemPresenter.this, getConstants().indicatorSystems());
 	}
 	
 	@Override
@@ -262,7 +265,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			@Override
 			public void onSuccess(UpdateIndicatorInstanceResult result) {
 				retrieveSystemStructureNoCache();
-				getView().onIndicatorInstanceSaved(instance);
+				getView().onIndicatorInstanceSaved(result.getIndicatorInstance());
 			}
 		});
 	}
