@@ -34,8 +34,9 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	private Tab structureTab;
 	
 	//Panels
-	private SystemStructurePanel structurePanel;
 	private SystemGeneralPanel generalPanel;
+	private SystemStructurePanel structurePanel;
+	
 	
 	@Inject
 	public SystemViewImpl() {
