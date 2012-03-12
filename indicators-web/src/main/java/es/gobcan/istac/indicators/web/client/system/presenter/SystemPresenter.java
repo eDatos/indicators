@@ -220,7 +220,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 	@Override
 	public void updateDimension(DimensionDto dimension) {
-		final DimensionDto dim = dimension;
 		dispatcher.execute(new UpdateDimensionAction(dimension), new AsyncCallback<UpdateDimensionResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -229,7 +228,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			@Override
 			public void onSuccess(UpdateDimensionResult result) {
 				retrieveSystemStructureNoCache();
-				getView().onDimensionSaved(dim);
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimSaved()), MessageTypeEnum.SUCCESS);
+				getView().onDimensionSaved(result.getDimension());
 			}
 		});
 	}
@@ -276,6 +276,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			@Override
 			public void onSuccess(UpdateIndicatorInstanceResult result) {
 				retrieveSystemStructureNoCache();
+				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceSaved()), MessageTypeEnum.SUCCESS);
 				getView().onIndicatorInstanceSaved(result.getIndicatorInstance());
 			}
 		});

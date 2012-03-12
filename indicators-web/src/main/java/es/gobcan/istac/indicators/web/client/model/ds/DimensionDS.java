@@ -8,15 +8,16 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 
 
 public class DimensionDS extends DataSource {
-    public static String FIELD_UUID = "uuid-dim";
-    public static String FIELD_INTERNATIONAL_TITLE= "titleint-dim";
+    
+    public static String UUID = "uuid-dim";
+    public static String TITLE = "titleint-dim";
     
     public DimensionDS() {
-        DataSourceIntegerField uuid = new DataSourceIntegerField(FIELD_UUID, getConstants().systemStrucDimUuid());
+        DataSourceIntegerField uuid = new DataSourceIntegerField(UUID, getConstants().systemStrucDimUuid());
         uuid.setPrimaryKey(true);
         addField(uuid);
         
-        DataSourceTextField title = new DataSourceTextField(FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucDimTitleField());
+        DataSourceTextField title = new DataSourceTextField(TITLE, getConstants().systemStrucDimTitleField());
         addField(title);
     }
 

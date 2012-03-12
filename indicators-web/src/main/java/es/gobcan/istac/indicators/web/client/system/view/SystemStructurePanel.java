@@ -236,7 +236,7 @@ public class SystemStructurePanel extends HLayout {
 	
 	public void onDimensionSaved(DimensionDto dimension) {
 		selectDimension(dimension);
-		dimensionPanel.onDimensionSaved();
+		dimensionPanel.onDimensionSaved(dimension);
 	}
 	
 	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
@@ -565,6 +565,7 @@ public class SystemStructurePanel extends HLayout {
 	}
 	
 	private class DimensionPanel extends VLayout {
+	    
 		private InternationalMainFormLayout mainFormLayout;
 		
 		private GroupDynamicForm form;
@@ -586,15 +587,16 @@ public class SystemStructurePanel extends HLayout {
             bindEvents();
         }
         
-        public void onDimensionSaved() {
+        public void onDimensionSaved(DimensionDto dimensionDto) {
 			mainFormLayout.setViewMode();
+			setDimension(dimensionDto);
 		}
 
 		private void bindEvents() {
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (editForm.validate()) {
+                    if (editForm.validate(false)) {
                         DimensionDto dim = null;
                         if (selectedDimension != null) {
                             dim = fillDimension(selectedDimension);
@@ -602,7 +604,6 @@ public class SystemStructurePanel extends HLayout {
                             dim = fillDimension(new DimensionDto());
                         }
                         SystemStructurePanel.this.saveDimension(dim);
-                        setDimension(dim);
                     }
                 }
             });
@@ -624,11 +625,11 @@ public class SystemStructurePanel extends HLayout {
            	});
         }
         
-        public void setDimension(DimensionDto dim) {
-            createMode = dim.getUuid() == null;
-            mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle() + ": " + InternationalStringUtils.getLocalisedString(dim.getTitle()));
-            setDimensionView(dim);
-            setDimensionEdit(dim);
+        public void setDimension(DimensionDto dimensionDto) {
+            createMode = dimensionDto.getUuid() == null;
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle() + ": " + InternationalStringUtils.getLocalisedString(dimensionDto.getTitle()));
+            setDimensionView(dimensionDto);
+            setDimensionEdit(dimensionDto);
             this.markForRedraw();
         }
         
@@ -647,30 +648,30 @@ public class SystemStructurePanel extends HLayout {
         }
         
         private DimensionDto fillDimension(DimensionDto dim) {
-            dim.setTitle((InternationalStringDto)(editForm.getValue(DimensionDS.FIELD_INTERNATIONAL_TITLE)));
+            dim.setTitle((InternationalStringDto)(editForm.getValue(DimensionDS.TITLE)));
             return dim;
         }
         
         private void setDimensionView(DimensionDto dim) {
-        	form.setValue(DimensionDS.FIELD_INTERNATIONAL_TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+        	form.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
         }
         
         private void setDimensionEdit(DimensionDto dim) {
-        	editForm.setValue(DimensionDS.FIELD_INTERNATIONAL_TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+        	editForm.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
         }
         
         private void createViewForm() {
         	form = new GroupDynamicForm(getConstants().systemStrucDimTitle());
-            ViewMultiLanguageTextItem staticName = new ViewMultiLanguageTextItem(DimensionDS.FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucDimName());
-            form.setFields(staticName);
+            ViewMultiLanguageTextItem name = new ViewMultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName());
+            form.setFields(name);
             mainFormLayout.addViewCanvas(form);
         }
         
         private void createEditForm() {
             editForm = new GroupDynamicForm(getConstants().systemStrucDimTitle());
-            MultiLanguageTextItem editName = new MultiLanguageTextItem(DimensionDS.FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucDimName());
-            editName.setRequired(true);
-            editForm.setFields(editName);
+            MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName());
+            name.setRequired(true);
+            editForm.setFields(name);
             mainFormLayout.addEditionCanvas(editForm);
         }
 	}
@@ -790,7 +791,7 @@ public class SystemStructurePanel extends HLayout {
         }
         
         private void setIndicator(IndicatorDto indicator) {
-            form.setValue(IndicatorInstanceDS.IND_TITLE, getLocalisedString(indicator.getTitle()));
+            form.setValue(IndicatorInstanceDS.IND_TITLE, indicator.getCode() + " - " + getLocalisedString(indicator.getTitle()));
         }
         
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
