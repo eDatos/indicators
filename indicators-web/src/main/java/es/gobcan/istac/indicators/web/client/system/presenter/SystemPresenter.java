@@ -20,6 +20,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -29,12 +30,16 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
+import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -45,6 +50,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
@@ -60,7 +67,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
 
-public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler {
+public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler, UpdateGeographicalGranularitiesHandler {
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> GENERAL_SLOT = new Type<RevealContentHandler<?>>();
@@ -75,13 +82,17 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	private String codeLastStructure;
 
 	public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
+	    void init();
+	    
 	    void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
 	    void setIndicators(List<IndicatorDto> indicators);
 		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
 		void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure);
 		void onDimensionSaved(DimensionDto dimension);
 		void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
-		void init();
+		
+		void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos);
+		void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
 	}
 	
 	@ProxyCodeSplit
@@ -313,4 +324,25 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			}
 		});
 	}
+	
+	@Override
+	public void retrieveGeographicalValues(String geographicalGranularityUuid) {
+	    dispatcher.execute(new GetGeographicalValuesAction(geographicalGranularityUuid), new AsyncCallback<GetGeographicalValuesResult>() {
+	        @Override
+	        public void onFailure(Throwable caught) {
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingGeographicalValues()), MessageTypeEnum.ERROR);
+	        }
+	        @Override
+	        public void onSuccess(GetGeographicalValuesResult result) {
+	            getView().setGeographicalValues(result.getGeographicalValueDtos());
+	        }
+	    });
+	}
+
+	@ProxyEvent
+    @Override
+    public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
+        getView().setGeographicalGranularities(event.getGeographicalGranularities());
+    }
+   
 }

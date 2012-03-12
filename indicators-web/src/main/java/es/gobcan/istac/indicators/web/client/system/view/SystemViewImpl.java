@@ -18,6 +18,8 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -122,6 +124,16 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
 		structurePanel.onIndicatorInstanceSaved(instance);
 	}
+
+    @Override
+    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        structurePanel.setGeographicalGranularities(geographicalGranularityDtos);
+    }
+
+    @Override
+    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
+        structurePanel.setGeographicalValues(geographicalValueDtos);
+    }
 	
 }
 

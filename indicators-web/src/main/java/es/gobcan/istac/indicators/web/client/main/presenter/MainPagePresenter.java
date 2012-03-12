@@ -30,9 +30,12 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
@@ -71,6 +74,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 		addRegisteredHandler(ShowMessageEvent.getType(), this);
 		// TODO Is this the proper place to load value lists?
 		loadQuantityUnits();
+		loadGeographicalGranularities();
 	}
 	
 	@Override
@@ -106,7 +110,20 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             }}
 	    );
 	}
-
+	
+	private void loadGeographicalGranularities() {
+	    dispatcher.execute(new GetGeographicalGranularitiesAction(), new AsyncCallback<GetGeographicalGranularitiesResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingGeographicalGranularities()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetGeographicalGranularitiesResult result) {
+                UpdateGeographicalGranularitiesEvent.fire(MainPagePresenter.this, result.getGeographicalGranularityDtos());
+            }}
+	    );
+	}
+	
 	@ProxyEvent
     @Override
     public void onSetTitle(SetTitleEvent event) {
