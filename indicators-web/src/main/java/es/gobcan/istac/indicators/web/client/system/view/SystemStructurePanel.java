@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.Collections;
@@ -17,19 +18,25 @@ import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DragDataAction;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -60,19 +67,24 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.enume.domain.TemporalGranularityEnum;
+import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.DimensionDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorInstanceDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNode;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
-public class SystemStructurePanel extends VLayout {
+public class SystemStructurePanel extends HLayout {
 	
 	private SystemUiHandler uiHandlers;
 	private IndicatorsSystemDto system;
 	
 	private EditableTreePanel treePanelEdit;
+	
 	private DimensionPanel dimensionPanel;
 	private IndicatorInstancePanel indicatorInstPanel;
+	
 	private DeleteConfirmationWindow dimensionDeleteConfirm;
 	private DeleteConfirmationWindow indInstanceDeleteConfirm;
 	
@@ -81,22 +93,30 @@ public class SystemStructurePanel extends VLayout {
 	
 	private IndicatorInstanceDto selectedIndInstance;
 	
+	
 	public SystemStructurePanel() {
 		super();
 		
-		this.treePanelEdit = new EditableTreePanel();
+		treePanelEdit = new EditableTreePanel();
+		treePanelEdit.setMargin(15);
 		
-		this.dimensionPanel = new DimensionPanel();
-		this.dimensionPanel.hide();
-		this.indicatorInstPanel = new IndicatorInstancePanel(); 
-		this.indicatorInstPanel.hide();
+		dimensionPanel = new DimensionPanel();
+		dimensionPanel.setVisibility(Visibility.HIDDEN);
+		
+		indicatorInstPanel = new IndicatorInstancePanel(); 
+		indicatorInstPanel.setVisibility(Visibility.HIDDEN);
 		
 		dimensionDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucDimDeleteConfirm());
 		indInstanceDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucIndInstanceDeleteConfirm());
 		
+		VLayout formLayout = new VLayout();
+		formLayout.setMargin(15);
+		formLayout.addMember(dimensionPanel);
+		formLayout.addMember(indicatorInstPanel);
+		
 		this.addMember(treePanelEdit);
-		this.addMember(dimensionPanel);
-		this.addMember(indicatorInstPanel);
+		this.addMember(formLayout);
+		
 		bindEvents();
 	}
 	
@@ -108,7 +128,6 @@ public class SystemStructurePanel extends VLayout {
 				uiHandlers.deleteDimension(selectedDimension);
 			}
 		});
-		
 		indInstanceDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -191,23 +210,23 @@ public class SystemStructurePanel extends VLayout {
 		boolean creating = (selectedDimension == null);
 		selectedDimension = dim;
 		if (creating) {
-			dim.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); //whether is root's child or dimension's
-			dim.setOrderInLevel(1L); //First child in parent
+			dim.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
+			dim.setOrderInLevel(1L); // First child in parent
 			uiHandlers.createDimension(system, dim);
 		} else {
 			uiHandlers.updateDimension(dim);
 		}
 	}
 	
-	private void saveIndicatorInstance(IndicatorInstanceDto inst) {
+	private void saveIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
 		boolean creating = (selectedIndInstance == null || selectedIndInstance.getUuid() == null);
-		selectedIndInstance = inst;
+		selectedIndInstance = indicatorInstanceDto;
 		if (creating) {
-			inst.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); //whether is root's child or dimension's
-			inst.setOrderInLevel(1L); //First child in parent
-			uiHandlers.createIndicatorInstance(system, inst);
+			indicatorInstanceDto.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
+			indicatorInstanceDto.setOrderInLevel(1L); // First child in parent
+			uiHandlers.createIndicatorInstance(system, indicatorInstanceDto);
 		} else {
-			uiHandlers.updateIndicatorInstance(inst);
+			uiHandlers.updateIndicatorInstance(indicatorInstanceDto);
 		}
 	}
 	
@@ -218,7 +237,7 @@ public class SystemStructurePanel extends VLayout {
 	
 	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
 		selectIndicatorInstance(instance);
-		indicatorInstPanel.onIndicatorInstanceSaved();
+		indicatorInstPanel.onIndicatorInstanceSaved(instance);
 	}
 	
 	private void hidePanels() {
@@ -247,7 +266,7 @@ public class SystemStructurePanel extends VLayout {
 		
 		public TreePanel() {
 			super();
-			this.setHeight(400);
+			this.setHeight(600);
 			falseRoot = new IndSystemContentNode(FALSE_ROOT_NODE_ID.toString(), "", ROOT_NODE_ID.toString(), null);
 			
 			tree = new Tree();
@@ -256,7 +275,6 @@ public class SystemStructurePanel extends VLayout {
 			tree.setIdField(IndSystemContentNode.ATTR_ID);
 			tree.setParentIdField(IndSystemContentNode.ATTR_PARENT);
 		    tree.setRootValue(ROOT_NODE_ID.toString());  
-
 
 			treeGrid = new TreeGrid();  
 			treeGrid.setShowHeader(false);
@@ -300,11 +318,11 @@ public class SystemStructurePanel extends VLayout {
 		}
 		
 		public void setIndicatorSystemStructure(IndicatorsSystemStructureDto structure) {
-			//Clear the tree
+			// Clear the tree
 			tree.removeList(tree.getAllNodes());
 			sourceMapping.clear();
 
-			//Build nodes recursevely
+			// Build nodes recursively
 			tree.add(falseRoot,"/");
 			if (structure != null) {
 			    List<ElementLevelDto> children = buildChildrenList(structure.getElements());
@@ -352,6 +370,7 @@ public class SystemStructurePanel extends VLayout {
 	    
         public EditableTreePanel() {
             super();
+            treeGrid.setLeaveScrollbarGap(false);
             treeGrid.setCanReorderRecords(true);  
             treeGrid.setCanAcceptDroppedRecords(true);  
             treeGrid.setCanDragRecordsOut(false);  
@@ -405,28 +424,28 @@ public class SystemStructurePanel extends VLayout {
 				public void onFolderDrop(FolderDropEvent event) {
 					TreeNode dropFolder = event.getFolder();
 					TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
-					int position = event.getIndex(); //absolute position
+					int position = event.getIndex(); // Absolute position
 					if (isDroppable(dropFolder)) {
 	                    TreeNode[] siblings = treeGrid.getData().getChildren(dropFolder);
 					    
-					    //We find out position of node under dropFolder
-					    int relPosition = position;        //use to update position
+					    // We find out position of node under dropFolder
+					    int relPosition = position;        // Use to update position
 					    int pos = -1;
 				        for (int i = 0; i < siblings.length; i++) {
 				            if (siblings[i] == droppedNode) {
 				                pos = i;
 				            }
 				        }
-				        if (pos >= 0 && pos < position) { //if moved node is before final position, the position must be updated
+				        if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
 				            relPosition--;
 				        }
 					    
 						ElementLevelDto level = ((IndSystemContentNode)droppedNode).getSource();
-						//Get drop folder, finding out target dimension/root 
+						// Get drop folder, finding out target dimension/root 
 						IndSystemContentNode nodeParent = (IndSystemContentNode)(dropFolder);
 						String targetUuid = nodeParent.isRoot() ? null : nodeParent.getId();
 						
-						Long order = relPosition + 1L; //relative position starts at 0, order at 1
+						Long order = relPosition + 1L; // Relative position starts at 0, order at 1
 
 						uiHandlers.moveSystemStructureNodes(system.getUuid(), targetUuid, level, order);
 					}
@@ -435,7 +454,7 @@ public class SystemStructurePanel extends VLayout {
 			});
             
             treeGrid.addFolderOpenedHandler(new FolderOpenedHandler() {
-                //This method is used to save the open state
+                // This method is used to save the open state
 				@Override
 				public void onFolderOpened(FolderOpenedEvent event) {
 					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -462,7 +481,7 @@ public class SystemStructurePanel extends VLayout {
         }
        
         private boolean isDroppable(TreeNode dropFolder) {
-        	if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) {	//Replacing false root is not allowed
+        	if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) { // Replacing false root is not allowed
 				return false;
 			}
         	return true;
@@ -531,13 +550,11 @@ public class SystemStructurePanel extends VLayout {
             return menu;
         }
         
-        
 	}
 	
 	private class DimensionPanel extends VLayout {
 		private InternationalMainFormLayout mainFormLayout;
 		
-		private Label titleLabel;
 		private GroupDynamicForm form;
 		private GroupDynamicForm editForm;
 		
@@ -545,21 +562,14 @@ public class SystemStructurePanel extends VLayout {
 		
         public DimensionPanel() {
             mainFormLayout = new InternationalMainFormLayout();
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle());
             mainFormLayout.setMargin(0);
-            
-            titleLabel = new Label();
-            titleLabel.setAlign(Alignment.LEFT);
-            titleLabel.setOverflow(Overflow.HIDDEN);
-            titleLabel.setHeight(40);
-            titleLabel.setStyleName("sectionTitle");
-            titleLabel.setContents(getConstants().systemStrucDimTitle());
             
             createViewForm();
             createEditForm();
             
-            this.addMember(titleLabel);
             this.addMember(mainFormLayout);
-            //init
+            // Init
             createMode = false;
             bindEvents();
         }
@@ -604,14 +614,14 @@ public class SystemStructurePanel extends VLayout {
         
         public void setDimension(DimensionDto dim) {
             createMode = dim.getUuid() == null;
-            titleLabel.setContents(getConstants().systemStrucDimTitle()+": "+InternationalStringUtils.getLocalisedString(dim.getTitle()));
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle() + ": " + InternationalStringUtils.getLocalisedString(dim.getTitle()));
             setDimensionView(dim);
             setDimensionEdit(dim);
             this.markForRedraw();
         }
         
         public void resetTitle() {
-            titleLabel.setContents(getConstants().systemStrucDimTitle()+":");
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle());
         }
         
         public void setEditionMode() {
@@ -654,65 +664,53 @@ public class SystemStructurePanel extends VLayout {
 	}
 	
 	private class IndicatorInstancePanel extends VLayout {
-	    private static final String FIELD_INDICATOR_NAME = "ind_name-indinst";
 	    
         private InternationalMainFormLayout mainFormLayout;
-        private Label titleLabel;
         private GroupDynamicForm form; 
-        private GroupDynamicForm editForm;
+        private GroupDynamicForm editionForm;
         private boolean createMode;
-        
-        private SelectItem indicatorsListItem;
         
         public IndicatorInstancePanel() {
             mainFormLayout = new InternationalMainFormLayout();
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
             mainFormLayout.setMargin(0);
-            
-            titleLabel = new Label();
-            titleLabel.setAlign(Alignment.LEFT);
-            titleLabel.setOverflow(Overflow.HIDDEN);
-            titleLabel.setHeight(40);
-            titleLabel.setStyleName("sectionTitle");
-            titleLabel.setTitle(getConstants().systemStrucIndInstanceTitle());
             
             createViewForm();
             createEditForm();
             
-            this.addMember(titleLabel);
             this.addMember(mainFormLayout);
-            //init
+            // Init
             createMode = false;
             bindEvents();
         }
         
-        public void onIndicatorInstanceSaved() {
+        public void onIndicatorInstanceSaved(IndicatorInstanceDto indicatorInstance) {
 			mainFormLayout.setViewMode();
+			setIndicatorInstance(indicatorInstance);
 		}
         
         private void bindEvents() {
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (editForm.validate()) {
-                        IndicatorInstanceDto inst = null;
+                    if (editionForm.validate(false)) {
+                        IndicatorInstanceDto indicatorInstanceDto = null;
                         if (selectedIndInstance != null) {
-                            inst = fillIndicatorInstance(selectedIndInstance);
+                            indicatorInstanceDto = fillIndicatorInstance(selectedIndInstance);
                         } else {
-                            inst = fillIndicatorInstance(new IndicatorInstanceDto());
+                            indicatorInstanceDto = fillIndicatorInstance(new IndicatorInstanceDto());
                         }
-                        SystemStructurePanel.this.saveIndicatorInstance(inst);
-                        setIndicatorInstance(inst);
+                        SystemStructurePanel.this.saveIndicatorInstance(indicatorInstanceDto);
                     }
                 }
             });
-            
            
         	mainFormLayout.getTranslateToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
 					form.setTranslationsShowed(translationsShowed);
-					editForm.setTranslationsShowed(translationsShowed);
+					editionForm.setTranslationsShowed(translationsShowed);
 				}
 			});
             mainFormLayout.getCancelToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -726,7 +724,7 @@ public class SystemStructurePanel extends VLayout {
         }
         
         public void resetTitle() {
-            titleLabel.setContents(getConstants().systemStrucIndInstanceTitle()+":");
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
         }
         
         public void setEditionMode() {
@@ -736,65 +734,142 @@ public class SystemStructurePanel extends VLayout {
         public void clearForms() {
             createMode = true;
         	form.clearValues();
-        	editForm.clearValues();
+        	editionForm.clearValues();
         }
         
-        private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto inst) {
-        	inst.setTitle((InternationalStringDto)(editForm.getValue(IndicatorInstanceDS.FIELD_INTERNATIONAL_TITLE)));
-        	inst.setIndicatorUuid(editForm.getValueAsString(IndicatorInstanceDS.FIELD_INDICATOR_UUID));
-        	//TODO: just until temporary values table is ready to use
-        	inst.setTemporaryGranularityId("TEMP_GRAN_ID_CHANGEME");
-        	return inst;
+        private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
+        	indicatorInstanceDto.setTitle((InternationalStringDto)(editionForm.getValue(IndicatorInstanceDS.TITLE)));
+        	indicatorInstanceDto.setIndicatorUuid(editionForm.getValueAsString(IndicatorInstanceDS.IND_UUID));
+        	indicatorInstanceDto.setTemporalGranularity(editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TemporalGranularityEnum.valueOf(editionForm.getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
+        	indicatorInstanceDto.setTemporalValue(editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
+        	return indicatorInstanceDto;
         }
         
         public void setIndicatorInstance(IndicatorInstanceDto indInst) {
             createMode = indInst.getUuid() == null;
-            titleLabel.setContents(getConstants().systemStrucIndInstanceTitle()+": "+InternationalStringUtils.getLocalisedString(indInst.getTitle()));
+            mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle() + ": " + InternationalStringUtils.getLocalisedString(indInst.getTitle()));
             //We need indicators in order to fill select item
             uiHandlers.retrieveIndicators();
             setIndicatorInstanceView(indInst);
             setIndicatorInstanceEdit(indInst);
         }
         
-        
         public void setIndicators(List<IndicatorDto> indicators) {
-            LinkedHashMap<String,String> indicatorsMap = new LinkedHashMap<String, String>();
-            for (IndicatorDto indicator : indicators) {
-                indicatorsMap.put(indicator.getUuid(), getLocalisedString(indicator.getTitle()));
-            }
-            indicatorsListItem.setValueMap(indicatorsMap);
+            LinkedHashMap<String,String> indicatorsMap = CommonUtils.getIndicatorsValueMap(indicators);
+            ((SelectItem)editionForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
         }
         
-        
         private void setIndicator(IndicatorDto indicator) {
-            form.setValue(FIELD_INDICATOR_NAME, getLocalisedString(indicator.getTitle()));
+            form.setValue(IndicatorInstanceDS.IND_TITLE, getLocalisedString(indicator.getTitle()));
         }
         
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
-        	form.setValue(IndicatorInstanceDS.FIELD_INTERNATIONAL_TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        	form.setValue(FIELD_INDICATOR_NAME, "");
+        	form.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+        	form.setValue(IndicatorInstanceDS.IND_TITLE, "");
+        	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
+        	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
+        	form.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTemporalGranularity() != null ? (getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + indInst.getTemporalGranularity().getName())) : "");
+        	form.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTemporalValue());
+        	    
+        	form.markForRedraw();
         }
         
         private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
-        	editForm.setValue(IndicatorInstanceDS.FIELD_INTERNATIONAL_TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        	editForm.setValue(IndicatorInstanceDS.FIELD_INDICATOR_UUID, indInst.getIndicatorUuid());
+        	editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+        	editionForm.setValue(IndicatorInstanceDS.IND_UUID, indInst.getIndicatorUuid());
+        	editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
+        	editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
+        	editionForm.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTemporalGranularity() != null ? indInst.getTemporalGranularity().toString() : "");
+        	editionForm.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTemporalValue());
         }
         
         private void createViewForm() {
             form = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
-            ViewMultiLanguageTextItem staticName = new ViewMultiLanguageTextItem(IndicatorInstanceDS.FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucIndInstanceTitleField());
-            StaticTextItem indicatorNameItem = new StaticTextItem(FIELD_INDICATOR_NAME, getConstants().systemStrucIndInstanceIndicator());
-            form.setFields(staticName,indicatorNameItem);
+            
+            ViewMultiLanguageTextItem name = new ViewMultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
+            
+            ViewTextItem indicatorNameItem = new ViewTextItem(IndicatorInstanceDS.IND_TITLE, getConstants().systemStrucIndInstanceIndicator());
+            
+            ViewTextItem timeSelection = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
+            timeSelection.setVisible(false);
+            
+            ViewTextItem timeSelectionText = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getConstants().instanceTimeSelection());
+            
+            ViewTextItem timeGranularityItem = new ViewTextItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
+            timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction());
+            
+            ViewTextItem timeValue = new ViewTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
+            timeValue.setShowIfCondition(getTimeValueIfFunction());
+            
+            form.setFields(name,indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue);
             mainFormLayout.addViewCanvas(form);
         }
         
         private void createEditForm() {
-            editForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
-            MultiLanguageTextItem editName = new MultiLanguageTextItem(IndicatorInstanceDS.FIELD_INTERNATIONAL_TITLE, getConstants().systemStrucIndInstanceTitleField());
-            indicatorsListItem = new SelectItem(IndicatorInstanceDS.FIELD_INDICATOR_UUID, getConstants().systemStrucIndInstanceIndicator());
-            editForm.setFields(editName,indicatorsListItem);
-            mainFormLayout.addEditionCanvas(editForm);
+            editionForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
+            
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
+            name.setRequired(true);
+            
+            RequiredSelectItem indicatorsItem = new RequiredSelectItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
+            
+            RequiredSelectItem timeSelectionType = new RequiredSelectItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
+            timeSelectionType.setValueMap(CommonUtils.getTimeSelectionTypeMap());
+            timeSelectionType.addChangedHandler(new ChangedHandler() {
+                @Override
+                public void onChanged(ChangedEvent event) {
+                    editionForm.markForRedraw();
+                }
+            });
+            
+            RequiredSelectItem timeGranularityItem = new RequiredSelectItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
+            timeGranularityItem.setValueMap(CommonUtils.getTimeGranularityValueMap());
+            timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction());
+            
+            RequiredTextItem timeValue = new RequiredTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
+            timeValue.setShowIfCondition(getTimeValueIfFunction());
+            
+            editionForm.setFields(name, indicatorsItem, timeSelectionType, timeGranularityItem, timeValue);
+            mainFormLayout.addEditionCanvas(editionForm);
+        }
+        
+        private FormItemIfFunction getTimeGranularityIfFunction() {
+            return new FormItemIfFunction() {
+                @Override
+                public boolean execute(FormItem item, Object value, DynamicForm form) {
+                    String type = form.getValueAsString(IndicatorInstanceDS.TIME_SELECTION_TYPE);
+                    return (type != null && TimeSelectionTypeEnum.GRANULARITY.toString().equals(type)) ? true : false;
+                }
+            };
+        }
+        
+        private FormItemIfFunction getTimeValueIfFunction() {
+            return new FormItemIfFunction() {
+                @Override
+                public boolean execute(FormItem item, Object value, DynamicForm form) {
+                    String type = form.getValueAsString(IndicatorInstanceDS.TIME_SELECTION_TYPE);
+                    return (type != null && TimeSelectionTypeEnum.VALUE.toString().equals(type)) ? true : false;
+                }
+            };
+        }
+        
+        private String getTimeSelectionType(IndicatorInstanceDto indicatorInstanceDto) {
+            TimeSelectionTypeEnum type = getTimeSelectionTypeEnum(indicatorInstanceDto);
+            if (type != null) {
+                return getCoreMessages().getString(getCoreMessages().timeSelectionTypeEnum() + type.getName());
+            }
+            return "";
+        }
+        
+        private TimeSelectionTypeEnum getTimeSelectionTypeEnum(IndicatorInstanceDto indicatorInstanceDto) {
+            if (indicatorInstanceDto.getTemporalValue() != null && !indicatorInstanceDto.getTemporalValue().isEmpty()) {
+                return TimeSelectionTypeEnum.VALUE;
+            } else if (indicatorInstanceDto.getTemporalGranularity() != null) { 
+                return TimeSelectionTypeEnum.GRANULARITY;
+            }
+            return null;
         }
 
     }
+
 }

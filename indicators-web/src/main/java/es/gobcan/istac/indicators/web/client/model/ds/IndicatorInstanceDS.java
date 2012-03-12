@@ -12,8 +12,11 @@ public class IndicatorInstanceDS extends DataSource {
     public static String UUID = "inst-uuid";
     public static String TITLE = "inst-titleint";
     public static String IND_UUID = "inst-ind-uuid";
-    public static String TEMPORAL_VALUE = "inst-temp";
-    public static String TEMPORAL_GRANULARITY = "inst-temp-gran";
+    public static String IND_TITLE = "inst-ind-title";
+    public static String TIME_SELECTION_TYPE = "inst-time-sel";
+    public static String TIME_VALUE = "inst-temp";
+    public static String TIME_GRANULARITY = "inst-temp-gran";
+    public static String GEOGRAPHICAL_SELECTION_TYPE = "inst-geo-sel";
     public static String GEOGRAPHICAL_VALUE = "inst-geo";
     public static String GEOGRAPHICAL_GRANULARITY = "inst-geo-gran";
     

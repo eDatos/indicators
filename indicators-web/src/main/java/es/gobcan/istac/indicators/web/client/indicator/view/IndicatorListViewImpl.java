@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
+import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -24,7 +25,6 @@ import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -52,7 +52,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	private ToolStripButton newIndicatorActor;
 	private ToolStripButton deleteIndicatorActor;
 	
-	private ListGrid indicatorList;
+	private BaseCustomListGrid indicatorList;
 	
 	//New indicator
 	private CreateForm createPanel;
@@ -74,10 +74,9 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		toolStrip.addButton(newIndicatorActor);
 		toolStrip.addButton(deleteIndicatorActor);
 		
-		indicatorList = new ListGrid();
+		indicatorList = new BaseCustomListGrid();
 		IndicatorDS indicatorDS = new IndicatorDS();
 		indicatorList.setDataSource(indicatorDS);
-		indicatorList.setLeaveScrollbarGap(false);
 		indicatorList.setUseAllDataSourceFields(false);
 		indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		
