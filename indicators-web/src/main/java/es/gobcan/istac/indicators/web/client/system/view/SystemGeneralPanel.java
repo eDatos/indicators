@@ -35,7 +35,7 @@ public class SystemGeneralPanel extends VLayout {
 		    @Override
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
-                productionForm.setTranslationsShowed(translationsShowed);
+                identifiersForm.setTranslationsShowed(translationsShowed);
             }
         });
 		createViewForm();
