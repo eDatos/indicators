@@ -6,6 +6,8 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -105,5 +107,9 @@ public interface IndicatorsServiceWrapper {
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException;
 
     public List<QuantityUnitDto> getQuantityUnits(ServiceContext ctx) throws MetamacException;
+    
+    public List<GeographicalGranularityDto> getGeographicalGranularities(ServiceContext ctx) throws MetamacException;
+    
+    public List<GeographicalValueDto> getGeographicalValues(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException;
     
 }

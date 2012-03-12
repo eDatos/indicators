@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
@@ -245,6 +247,16 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     @Override
     public List<QuantityUnitDto> getQuantityUnits(ServiceContext ctx) throws MetamacException {
         return indicatorsService.findQuantityUnits(ctx);
+    }
+
+    @Override
+    public List<GeographicalGranularityDto> getGeographicalGranularities(ServiceContext ctx) throws MetamacException {
+        return indicatorsService.findGeographicalGranularities(ctx);
+    }
+
+    @Override
+    public List<GeographicalValueDto> getGeographicalValues(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException {
+        return indicatorsService.findGeographicalValues(ctx, geographicalGranularityUuid);
     }
 
 }

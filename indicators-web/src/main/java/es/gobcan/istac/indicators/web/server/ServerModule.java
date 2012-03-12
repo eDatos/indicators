@@ -10,8 +10,10 @@ import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceAct
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
@@ -28,6 +30,8 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
@@ -72,6 +76,8 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
 		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
 		bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
+		bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
+		bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
 	}
 	
 }
