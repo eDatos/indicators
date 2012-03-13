@@ -56,8 +56,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
@@ -143,13 +143,13 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	
 	@Override
 	public void retrieveIndSystem(String indSystemCode) {
-		dispatcher.execute(new GetIndicatorsSystemAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemResult>() {
+		dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemByCodeResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
 			@Override
-			public void onSuccess(GetIndicatorsSystemResult result) {
+			public void onSuccess(GetIndicatorsSystemByCodeResult result) {
 				SystemPresenter.this.indSystem = result.getIndicatorsSystem();
 				getView().setIndicatorsSystem(result.getIndicatorsSystem());
 			}

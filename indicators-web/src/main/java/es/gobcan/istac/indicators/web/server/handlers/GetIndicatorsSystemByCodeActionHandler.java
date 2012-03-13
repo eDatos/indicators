@@ -13,32 +13,32 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 
 @Component
-public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemAction, GetIndicatorsSystemResult> {
+public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemByCodeAction, GetIndicatorsSystemByCodeResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
     
     
     public GetIndicatorsSystemByCodeActionHandler() {
-        super(GetIndicatorsSystemAction.class);
+        super(GetIndicatorsSystemByCodeAction.class);
     }
 
     @Override
-    public GetIndicatorsSystemResult execute(GetIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorsSystemByCodeResult execute(GetIndicatorsSystemByCodeAction action, ExecutionContext context) throws ActionException {
         try {
             IndicatorsSystemDto indSys = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
-            return new GetIndicatorsSystemResult(indSys);
+            return new GetIndicatorsSystemByCodeResult(indSys);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetIndicatorsSystemAction action, GetIndicatorsSystemResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetIndicatorsSystemByCodeAction action, GetIndicatorsSystemByCodeResult result, ExecutionContext context) throws ActionException {
     }
 
 }
