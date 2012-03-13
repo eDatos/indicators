@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import es.gobcan.istac.indicators.core.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 

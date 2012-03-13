@@ -7,5 +7,6 @@
   <source path='core/dto/serviceapi'/>
   <source path='core/enume/domain'/>
   <source path='core/util'/>
+  <source path='core/constants'/>
   
 </module>
