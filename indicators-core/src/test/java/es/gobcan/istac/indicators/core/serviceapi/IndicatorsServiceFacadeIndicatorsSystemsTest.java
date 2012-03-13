@@ -3689,6 +3689,56 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+    public void testCompareTimeGranularitiesErrorTimeValueIncorrect() throws Exception {
+        try {
+            TimeVariableUtils.compareTo("2010xx", "2010H2");
+            fail("time incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("2010xx", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testCompareTimeGranularitiesErrorDifferentGranularities() throws Exception {
+        try {
+            TimeVariableUtils.compareTo("2010", "2010H2");
+            fail("granularities different");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("2010H2", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testGuessTimeGranularity() throws Exception {
+
+        assertEquals(TimeGranularityEnum.YEARLY, TimeVariableUtils.guessTimeGranularity("2012"));
+        assertEquals(TimeGranularityEnum.BIYEARLY, TimeVariableUtils.guessTimeGranularity("2012H2"));
+        assertEquals(TimeGranularityEnum.QUARTERLY, TimeVariableUtils.guessTimeGranularity("2012Q1"));
+        assertEquals(TimeGranularityEnum.MONTHLY, TimeVariableUtils.guessTimeGranularity("2012M02"));
+        assertEquals(TimeGranularityEnum.DAILY, TimeVariableUtils.guessTimeGranularity("20120102"));
+        assertEquals(TimeGranularityEnum.WEEKLY, TimeVariableUtils.guessTimeGranularity("2012W51"));
+    }
+
+    @Test
+    public void testGuessTimeGranularityErrorTimeValueIncorrect() throws Exception {
+        try {
+            TimeVariableUtils.guessTimeGranularity("2012W51xx");
+            fail("time incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("2012W51xx", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testRetrieveGeographicalValue() throws Exception {
 
         String uuid = GEOGRAPHICAL_VALUE_1;
