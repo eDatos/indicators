@@ -17,8 +17,9 @@ public class IndicatorDS extends DataSource {
     public static String TITLE = "ind-title";
     public static String ACRONYM = "ind-acron";
     // CONTENT CLASSIFIERS
-    public static String SUBJECT_CODE = "ind-op-code";
-    public static String SUBJECT_TITLE = "ind-op-title";
+    public static String SUBJECT = "ind-sub";
+    public static String SUBJECT_CODE = "ind-sub-code";
+    public static String SUBJECT_TITLE = "ind-sub-title";
     // CONTENT DESCRIPTORS
     public static String CONCEPT_DESCRIPTION = "ind-concept";
     // PRODUCTION DESCRIPTORS

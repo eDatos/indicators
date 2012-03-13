@@ -10,6 +10,7 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
@@ -81,6 +82,14 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
             valueMap.put(geographicalValueDto.getUuid(), InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (SubjectDto subjectDto : subjectDtos) {
+            valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getDescription()));
         }
         return valueMap;
     }
