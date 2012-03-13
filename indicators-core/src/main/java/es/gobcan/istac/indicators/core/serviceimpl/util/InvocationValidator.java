@@ -727,6 +727,11 @@ public class InvocationValidator {
             } else if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
                 ValidationUtils.checkMetadataEmpty(quantity.getBaseLocation(), parameterName + ".BASE_LOCATION_UUID", exceptions);
             }
+            if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
+                if (!TimeVariableUtils.isTimeValue(quantity.getBaseTime())) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT,  parameterName + ".BASE_TIME"));
+                }
+            }
         }
         if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataRequired(quantity.getBaseQuantity(), parameterName + ".BASE_QUANTITY_INDICATOR_UUID", exceptions);

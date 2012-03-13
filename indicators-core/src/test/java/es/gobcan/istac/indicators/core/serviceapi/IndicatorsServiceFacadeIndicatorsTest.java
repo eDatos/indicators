@@ -924,6 +924,35 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testCreateIndicatorErrorBaseTimeIncorrect() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
+        indicatorDto.getQuantity().setBaseTime("2011xx");
+
+        // Create
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("base time incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Test
     public void testDeleteIndicator() throws Exception {
