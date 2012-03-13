@@ -7,9 +7,13 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 
 public interface IndicatorListUiHandler extends UiHandlers {
-	void createIndicator(IndicatorDto indicator);
+	
+    void createIndicator(IndicatorDto indicator);
 	void deleteIndicators(List<String> uuids);
 	
 	void goToIndicator(String code);
 	void reloadIndicatorList();
+	
+	void retrieveSubjectsList();
+	
 }
