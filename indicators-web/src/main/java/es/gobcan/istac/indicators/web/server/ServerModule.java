@@ -19,6 +19,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeA
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
@@ -39,6 +40,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
@@ -53,6 +55,7 @@ public class ServerModule extends HandlerModule {
     
 	@Override
 	protected void configureHandlers() {
+	    
 		/* System actions */
 		bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
 		bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
@@ -75,9 +78,12 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
 		bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
 		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
+		
 		bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
 		bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
 		bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
+		bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
+		
 	}
 	
 }

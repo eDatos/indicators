@@ -5,12 +5,13 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+
 
 @GenDispatch(isSecure = false)
-public class GetQuantityUnitsList {
+public class GetSubjectsList {
 
     @Out(1)
-    List<QuantityUnitDto> quantityUnits;
+    List<SubjectDto> subjectDtos;
     
 }
