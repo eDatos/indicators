@@ -4,8 +4,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
@@ -30,8 +28,6 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class NewIndicatorWindow extends CustomWindow {
 
-    private Logger logger = Logger.getLogger(NewIndicatorWindow.class.getName());
-    
     private static final String FIELD_SAVE = "save-ind";
     
     private CustomDynamicForm form;
@@ -66,7 +62,7 @@ public class NewIndicatorWindow extends CustomWindow {
         indicatorDto.setCode(form.getValueAsString(IndicatorDS.CODE));
         indicatorDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(IndicatorDS.TITLE)));
         indicatorDto.setSubjectCode(form.getValueAsString(IndicatorDS.SUBJECT));
-        indicatorDto.setSubjectTitle(getSubjectTitle(form.getValueAsString(IndicatorDS.SUBJECT)));
+        indicatorDto.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, form.getValueAsString(IndicatorDS.SUBJECT)));
         // TODO Do no set quantity (must be not required)
         QuantityDto quantity = new QuantityDto();
         quantity.setType(QuantityTypeEnum.QUANTITY);
@@ -83,18 +79,6 @@ public class NewIndicatorWindow extends CustomWindow {
         this.subjectDtos = subjectDtos;
         LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
         ((SelectItem)form.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
-    }
-    
-    private InternationalStringDto getSubjectTitle(String code) {
-        if (code != null) {
-            for (SubjectDto subjectDto : subjectDtos) {
-                if (code.equals(subjectDto.getCode())) {
-                    return subjectDto.getDescription();
-                }
-            }
-        }
-        logger.log(Level.WARNING, "Subject title not found. Subject code: " + code);
-        return null;
     }
     
 }

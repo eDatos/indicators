@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -92,6 +93,17 @@ public class CommonUtils {
             valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getDescription()));
         }
         return valueMap;
+    }
+    
+    public static InternationalStringDto getSubjectTitleFromCode(List<SubjectDto> subjectDtos, String code) {
+        if (code != null) {
+            for (SubjectDto subjectDto : subjectDtos) {
+                if (code.equals(subjectDto.getCode())) {
+                    return subjectDto.getDescription();
+                }
+            }
+        }
+        return null;
     }
     
 }

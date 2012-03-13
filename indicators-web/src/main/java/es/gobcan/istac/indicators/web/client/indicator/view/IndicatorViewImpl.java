@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
@@ -66,6 +67,11 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setIndicatorList(List<IndicatorDto> indicators) {
         generalPanel.setIndicatorList(indicators);
+    }
+
+    @Override
+    public void setSubjectsList(List<SubjectDto> subjectDtos) {
+        generalPanel.setSubjectsList(subjectDtos);
     }
 
 }

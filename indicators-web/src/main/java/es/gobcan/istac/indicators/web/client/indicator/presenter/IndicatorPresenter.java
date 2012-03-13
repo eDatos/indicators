@@ -26,6 +26,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
@@ -36,6 +37,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
@@ -51,6 +54,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		void setIndicator(IndicatorDto indicator);
 		void setQuantityUnits(List<QuantityUnitDto> units);
 		void setIndicatorList(List<IndicatorDto> indicators);
+		void setSubjectsList(List<SubjectDto> subjectDtos);
 	}
 	
 	@Inject
@@ -119,6 +123,20 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     @Override
     public void onUpdateQuantityUnits(UpdateQuantityUnitsEvent event) {
         getView().setQuantityUnits(event.getQuantityUnits());
+    }
+
+    @Override
+    public void retrieveSubjects() {
+        dispatcher.execute(new GetSubjectsListAction(), new AsyncCallback<GetSubjectsListResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingSubjects()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetSubjectsListResult result) {
+                getView().setSubjectsList(result.getSubjectDtos());
+            }}
+        );
     }
 
 }

@@ -4,6 +4,7 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
@@ -12,19 +13,22 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
 
@@ -57,6 +61,8 @@ public class IndicatorGeneralPanel extends VLayout {
 	private GroupDynamicForm diffusionDescriptorsEditionForm;
 	private GroupDynamicForm publicationDescriptorsEditionForm;
 	private GroupDynamicForm annotationsEditionForm;
+	
+	private List<SubjectDto> subjectDtos;
 	
 	
 	public IndicatorGeneralPanel() {
@@ -96,6 +102,14 @@ public class IndicatorGeneralPanel extends VLayout {
 	        }
         });
         
+	    // Edit
+	    mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.retrieveSubjects();
+            }
+        });
+	    
 	    // Save
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
             @Override
@@ -190,11 +204,8 @@ public class IndicatorGeneralPanel extends VLayout {
 				
 		// Status Form
 		contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
-		RequiredTextItem subjectCode = new RequiredTextItem(IndicatorDS.SUBJECT_CODE, getConstants().indicDetailSubjectCode());
-		subjectCode.setRequired(true);
-        MultiLanguageTextItem subjectTitle = new MultiLanguageTextItem(IndicatorDS.SUBJECT_TITLE, getConstants().indicDetailSubjectTitle());
-        subjectTitle.setRequired(true);
-        contentClassifiersEditionForm.setFields(subjectCode, subjectTitle);
+		RequiredSelectItem subject = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
+        contentClassifiersEditionForm.setFields(subject);
 		
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
@@ -349,8 +360,8 @@ public class IndicatorGeneralPanel extends VLayout {
             indicator.setTitle((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.TITLE));
             indicator.setAcronym((InternationalStringDto)identifiersEditionForm.getValue(IndicatorDS.ACRONYM));
             // Content Classifiers
-            indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT_CODE));
-            indicator.setSubjectTitle((InternationalStringDto)contentClassifiersEditionForm.getValue(IndicatorDS.SUBJECT_TITLE));
+            indicator.setSubjectCode(contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT));
+            indicator.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, contentClassifiersEditionForm.getValueAsString(IndicatorDS.SUBJECT)));
             // Content Descriptors
             indicator.setConceptDescription((InternationalStringDto)contentDescriptorsEditionForm.getValue(IndicatorDS.CONCEPT_DESCRIPTION));
             // Quantity
@@ -377,6 +388,12 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setIndicatorList(List<IndicatorDto> indicatorDtos) {
         quantityForm.setIndicators(indicatorDtos);
         quantityEditionForm.setIndicators(indicatorDtos);
+    }
+    
+    public void setSubjectsList(List<SubjectDto> subjectDtos) {
+        this.subjectDtos = subjectDtos;
+        LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
+        ((SelectItem)contentClassifiersEditionForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
     }
     
 }
