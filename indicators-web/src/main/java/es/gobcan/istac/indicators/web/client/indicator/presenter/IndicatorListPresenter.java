@@ -27,6 +27,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
@@ -37,6 +38,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
+import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 	
@@ -47,6 +50,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 	
 	public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 		void setIndicatorList(List<IndicatorDto> indicatorList);
+		void setSubjects(List<SubjectDto> subjectDtos);
 	}
 	
 	@ProxyCodeSplit
@@ -129,5 +133,19 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 			}
 		});
 	}
+
+    @Override
+    public void retrieveSubjectsList() {
+        dispatcher.execute(new GetSubjectsListAction(), new AsyncCallback<GetSubjectsListResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingSubjects()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetSubjectsListResult result) {
+                getView().setSubjects(result.getSubjectDtos());
+            }
+        });
+    }
 	
 }
