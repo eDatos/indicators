@@ -35,7 +35,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     // TODO Búsquedas por subjectCode
     // TODO Metadato 'base_time': corresponde a un valor time siguiendo el formato para valores temporales.
-    // TODO Metadato 'baseLocation': corresponde a un valor de la tabla de valores geográficos (foreign key)
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 

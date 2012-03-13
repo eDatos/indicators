@@ -1205,7 +1205,7 @@
 	  			COMMENTS_URL="http://indicators/comments/1"
 				NOTES_FK="[null]"
 	  			NOTES_URL="http://indicators/1"
-				SUBJECT_CODE="subjectCode1A"
+				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="42"
 				QUANTITY_FK="111"
 
@@ -1286,7 +1286,7 @@
 				INDICATOR_FK="2"
 	  			PROC_STATUS="DRAFT"
 				NOTES_URL="http://indicators/2"
-				SUBJECT_CODE="subjectCode2"
+				SUBJECT_CODE="2"
 				SUBJECT_TITLE_FK="43"
 				QUANTITY_FK="211"
 				
@@ -1365,7 +1365,7 @@
 				INDICATOR_FK="3"
 	  			PROC_STATUS="DRAFT"
 				NOTES_URL="http://indicators/3"
-				SUBJECT_CODE="subjectCode"
+				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="44"
 				QUANTITY_FK="311"
 				
@@ -1438,7 +1438,7 @@
  		CODE="ES"
  		LATITUDE="998612325.5656233"
  		LONGITUDE="-15632112156.45456464565"
-  		TITLE_FK="43"
+  		TITLE_FK="47"
   		GRANULARITY_FK="1"
   		VERSION="1"
 	/>
@@ -1449,7 +1449,7 @@
  		CODE="EN-LN"
  		LATITUDE="12.232511"
  		LONGITUDE="51232.254112"
-  		TITLE_FK="44"
+  		TITLE_FK="48"
   		GRANULARITY_FK="2"
   		VERSION="1"
 	/>
@@ -1494,6 +1494,25 @@
   		TITLE_FK="46"
   		VERSION="1"
 	/>  		  
+	
+	<!-- ************************************************************************************ -->
+	<!--                                 SUBJECTS				                              -->
+	<!-- ************************************************************************************ -->
+	<TV_CATALOGO_OPERACION_ESTADIST
+		ID_CATALOGO="1"
+		DESCRIPCION="Área temática 1"
+	/>
+	
+	<TV_CATALOGO_OPERACION_ESTADIST
+		ID_CATALOGO="2"
+		DESCRIPCION="Área temática 2"
+	/>
+	
+	<TV_CATALOGO_OPERACION_ESTADIST
+		ID_CATALOGO="3"
+		DESCRIPCION="Área temática 3"
+	/>
+	
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -2487,40 +2506,30 @@
 		VERSION="1"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
-		ID="43"
-		UUID="IS-43"
-		VERSION="1"
-	/>
-	<TBL_INTERNATIONAL_STRINGS
-		ID="44"
-		UUID="IS-44"
-		VERSION="1"
-	/>
-
-	<TBL_INTERNATIONAL_STRINGS
-		ID="43"
-		UUID="IS-43"
-		VERSION="1"
-	/>
-	
 	<TBL_LOCALISED_STRINGS
 		ID="78"
-		LABEL="España"
+		LABEL="Área temática 1"
 		LOCALE="es"
-		UUID="IS-43-LS-1"
+		UUID="IS-42-LS-2"
 		VERSION="1"
-		INTERNATIONAL_STRING_FK="43"
+		INTERNATIONAL_STRING_FK="42"
+	/>
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="43"
+		UUID="IS-43"
+		VERSION="1"
 	/>
 	
 	<TBL_LOCALISED_STRINGS
 		ID="79"
-		LABEL="Spain"
-		LOCALE="en"
+		LABEL="Área temática 2"
+		LOCALE="es"
 		UUID="IS-43-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="43"
-	/>		
+	/>
+	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="44"
 		UUID="IS-44"
@@ -2529,21 +2538,13 @@
 	
 	<TBL_LOCALISED_STRINGS
 		ID="80"
-		LABEL="Londres"
+		LABEL="Área temática 1"
 		LOCALE="es"
-		UUID="IS-44-LS-1"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="44"
-	/>
-	
-	<TBL_LOCALISED_STRINGS
-		ID="81"
-		LABEL="London"
-		LOCALE="en"
 		UUID="IS-44-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="44"
-	/>		
+	/>
+
 	<TBL_INTERNATIONAL_STRINGS
 		ID="45"
 		UUID="IS-45"
@@ -2551,7 +2552,7 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="82"
+		ID="81"
 		LABEL="Países"
 		LOCALE="es"
 		UUID="IS-45-LS-1"
@@ -2560,13 +2561,14 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="83"
+		ID="82"
 		LABEL="Countries"
 		LOCALE="en"
 		UUID="IS-45-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="45"
 	/>		
+	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="46"
 		UUID="IS-46"
@@ -2574,7 +2576,7 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="84"
+		ID="83"
 		LABEL="Municipios"
 		LOCALE="es"
 		UUID="IS-46-LS-1"
@@ -2583,13 +2585,60 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="85"
+		ID="84"
 		LABEL="Municipalities"
 		LOCALE="en"
 		UUID="IS-46-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="46"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="47"
+		UUID="IS-47"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="85"
+		LABEL="España"
+		LOCALE="es"
+		UUID="IS-47-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="47"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="86"
+		LABEL="Spain"
+		LOCALE="en"
+		UUID="IS-47-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="47"
 	/>		
-														
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="48"
+		UUID="IS-48"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="87"
+		LABEL="Londres"
+		LOCALE="es"
+		UUID="IS-48-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="48"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="88"
+		LABEL="London"
+		LOCALE="en"
+		UUID="IS-48-LS-2"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="48"
+	/>														
 					
 </dataset>

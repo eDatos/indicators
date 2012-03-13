@@ -36,7 +36,7 @@
 	  			COMMENTS_URL="http://indicators/comments/1"
 	  			NOTES_FK="3"
 				NOTES_URL="http://indicators/1"
-				SUBJECT_CODE="subjectCode1A"
+				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="30"
 				CONCEPT_DESCRIPTION_FK="46"
 				QUANTITY_FK="111"
@@ -99,7 +99,7 @@
 						UUID="Indicator-1-v1-DataSource-1"
 						QUERY_GPE="query-gpe Indicator-1-v1-DataSource-1"
 						PX="px Indicator-1-v1-DataSource-1"
-						TIME_VARIABLE="time vIndicator-1-v1-DataSource-1"
+						TIME_VARIABLE="time v Indicator-1-v1-DataSource-1"
 						GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v1-DataSource-1"
 						INDICATOR_VERSION_FK="11"
 						INTERPERIOD_RATE_FK="1111"
@@ -196,7 +196,7 @@
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="DRAFT"
 				NOTES_URL="http://indicators/1"
-				SUBJECT_CODE="subjectCode1"
+				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="31"
 				QUANTITY_FK="121"
 
@@ -245,7 +245,7 @@
 					UUID="Indicator-1-v2-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-1-v2-DataSource-1"
 					PX="px Indicator-1-v2-DataSource-1"
-					TIME_VARIABLE="time vIndicator-1-v2-DataSource-1"
+					TIME_VARIABLE="time v Indicator-1-v2-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-1"
 					INDICATOR_VERSION_FK="12"
 					INTERPERIOD_RATE_FK="1211"
@@ -439,7 +439,7 @@
 					UUID="Indicator-1-v2-DataSource-2"
 					QUERY_GPE="query-gpe Indicator-1-v2-DataSource-2"
 					PX="px Indicator-1-v2-DataSource-2"
-					TIME_VARIABLE="time vIndicator-1-v2-DataSource-2"
+					TIME_VARIABLE="time v Indicator-1-v2-DataSource-2"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-2"
 					INDICATOR_VERSION_FK="12"
 					INTERPERIOD_RATE_FK="1221"
@@ -559,7 +559,7 @@
 	  			INDICATOR_FK="2"
 	  			PROC_STATUS="DRAFT"
 				NOTES_URL="http://indicators/2"
-				SUBJECT_CODE="subjectCode2"
+				SUBJECT_CODE="2"
 				SUBJECT_TITLE_FK="35"
 				QUANTITY_FK="211"
 				
@@ -637,7 +637,7 @@
 	  			INDICATOR_FK="3"
 	  			PROC_STATUS="PUBLISHED"
 				NOTES_URL="http://indicators/3"
-				SUBJECT_CODE="subjectCode3"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="36"
 				QUANTITY_FK="311"
 				
@@ -686,7 +686,7 @@
 					UUID="Indicator-3-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-3-v1-DataSource-1"
 					PX="px Indicator-3-v1-DataSource-1"
-					TIME_VARIABLE="time vIndicator-3-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-3-v1-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-3-v1-DataSource-1"
 					INDICATOR_VERSION_FK="31"
 					INTERPERIOD_RATE_FK="3111"
@@ -822,7 +822,7 @@
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="PRODUCTION_VALIDATION"
 				NOTES_URL="http://indicators/4"
-				SUBJECT_CODE="subjectCode4"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="37"
 				QUANTITY_FK="411"
 				
@@ -871,7 +871,7 @@
 					UUID="Indicator-4-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-4-v1-DataSource-1"
 					PX="px Indicator-4-v1-DataSource-1"
-					TIME_VARIABLE="time vIndicator-4-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-4-v1-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-4-v1-DataSource-1"
 					INDICATOR_VERSION_FK="41"
 					INTERPERIOD_RATE_FK="4111"
@@ -992,7 +992,7 @@
 	  			INDICATOR_FK="5"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
 				NOTES_URL="http://indicators/5"
-				SUBJECT_CODE="subjectCode5"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="38"
 				QUANTITY_FK="511"
 				
@@ -1041,7 +1041,7 @@
 					UUID="Indicator-5-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-5-v1-DataSource-1"
 					PX="px Indicator-5-v1-DataSource-1"
-					TIME_VARIABLE="time vIndicator-5-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-5-v1-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-1"
 					INDICATOR_VERSION_FK="51"
 					INTERPERIOD_RATE_FK="5111"
@@ -1132,7 +1132,7 @@
 					UUID="Indicator-5-v1-DataSource-2"
 					QUERY_GPE="query-gpe Indicator-5-v1-DataSource-2"
 					PX="px Indicator-5-v1-DataSource-2"
-					TIME_VARIABLE="time vIndicator-5-v1-DataSource-2"
+					TIME_VARIABLE="time v Indicator-5-v1-DataSource-2"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-2"
 					INDICATOR_VERSION_FK="51"
 					INTERPERIOD_RATE_FK="5121"
@@ -1254,7 +1254,7 @@
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="PUBLISHED"
 				NOTES_URL="http://indicators/6"
-				SUBJECT_CODE="subjectCode6"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="39"
 				QUANTITY_FK="611"
 				
@@ -1310,7 +1310,7 @@
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
 				NOTES_URL="http://indicators/6"
-				SUBJECT_CODE="subjectCode6"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="45"
 				QUANTITY_FK="621"
 
@@ -1359,7 +1359,7 @@
 					UUID="Indicator-6-v2-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-6-v2-DataSource-1"
 					PX="px Indicator-6-v2-DataSource-1"
-					TIME_VARIABLE="time vIndicator-6-v2-DataSource-1"
+					TIME_VARIABLE="time v Indicator-6-v2-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-6-v2-DataSource-1"
 					INDICATOR_VERSION_FK="62"
 					INTERPERIOD_RATE_FK="6211"
@@ -1481,7 +1481,7 @@
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="ARCHIVED"
 				NOTES_URL="http://indicators/7"
-				SUBJECT_CODE="subjectCode7"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="40"
 				QUANTITY_FK="711"
 				
@@ -1537,7 +1537,7 @@
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
 				NOTES_URL="http://indicators/7"
-				SUBJECT_CODE="subjectCode7B"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="41"
 				QUANTITY_FK="721"
 				
@@ -1586,7 +1586,7 @@
 					UUID="Indicator-7-v2-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-7-v2-DataSource-1"
 					PX="px Indicator-7-v2-DataSource-1"
-					TIME_VARIABLE="time vIndicator-7-v2-DataSource-1"
+					TIME_VARIABLE="time v Indicator-7-v2-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-7-v2-DataSource-1"
 					INDICATOR_VERSION_FK="72"
 					INTERPERIOD_RATE_FK="7211"
@@ -1707,7 +1707,7 @@
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="ARCHIVED"
 				NOTES_URL="http://indicators/8"
-				SUBJECT_CODE="subjectCode8"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="42"
 				QUANTITY_FK="811"
 				
@@ -1786,7 +1786,7 @@
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="VALIDATION_REJECTED"
 				NOTES_URL="http://indicators/9"
-				SUBJECT_CODE="subjectCode9"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="47"
 				QUANTITY_FK="911"
 				
@@ -1834,7 +1834,7 @@
 					UUID="Indicator-9-v1-DataSource-1"
 					QUERY_GPE="query-gpe Indicator-9-v1-DataSource-1"
 					PX="px Indicator-9-v1-DataSource-1"
-					TIME_VARIABLE="time vIndicator-9-v1-DataSource-1"
+					TIME_VARIABLE="time v Indicator-9-v1-DataSource-1"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-9-v1-DataSource-1"
 					INDICATOR_VERSION_FK="91"
 					INTERPERIOD_RATE_FK="9111"
@@ -1955,7 +1955,7 @@
 	  			INDICATOR_FK="10"
 	  			PROC_STATUS="DRAFT"
 				NOTES_URL="http://indicators/10"
-				SUBJECT_CODE="subjectCode10"
+				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="44"
 				QUANTITY_FK="1011"
 				
@@ -2902,16 +2902,7 @@
 		UUID="IS-30-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="30"
-	/>
-	
-	<TBL_LOCALISED_STRINGS
-		ID="55"
-		LABEL="Subject 1"
-		LOCALE="en"
-		UUID="IS-30-LS-2"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="30"
-	/>								
+	/>							
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="31"
@@ -2926,16 +2917,7 @@
 		UUID="IS-31-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="31"
-	/>
-	
-	<TBL_LOCALISED_STRINGS
-		ID="57"
-		LABEL="Subject 1"
-		LOCALE="en"
-		UUID="IS-31-LS-2"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="31"
-	/>								
+	/>							
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="32"
@@ -3014,11 +2996,29 @@
 		UUID="IS-35"
 		VERSION="1"
 	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="64"
+		LABEL="Área temática 2"
+		LOCALE="es"
+		UUID="IS-35-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="35"
+	/>
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="36"
 		UUID="IS-36"
 		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="65"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-36-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="36"
 	/>
 
 	<TBL_INTERNATIONAL_STRINGS
@@ -3026,12 +3026,30 @@
 		UUID="IS-37"
 		VERSION="1"
 	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="66"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-37-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="37"
+	/>
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="38"
 		UUID="IS-38"
 		VERSION="1"
 	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="67"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-38-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="38"
+	/>	
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="39"
@@ -3039,38 +3057,104 @@
 		VERSION="1"
 	/>
 
+	<TBL_LOCALISED_STRINGS
+		ID="68"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-39-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="39"
+	/>	
+	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="40"
 		UUID="IS-40"
 		VERSION="1"
 	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="69"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-40-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="40"
+	/>	
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="41"
 		UUID="IS-41"
 		VERSION="1"
-	/>					
+	/>		
+	
+	<TBL_LOCALISED_STRINGS
+		ID="70"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-41-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="41"
+	/>				
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="42"
 		UUID="IS-42"
 		VERSION="1"
-	/>					
+	/>		
+	
+	<TBL_LOCALISED_STRINGS
+		ID="71"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-42-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="42"
+	/>	
+				
 	<TBL_INTERNATIONAL_STRINGS
 		ID="43"
 		UUID="IS-43"
 		VERSION="1"
-	/>					
+	/>			
+	
+	<TBL_LOCALISED_STRINGS
+		ID="72"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-43-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="43"
+	/>	
+			
 	<TBL_INTERNATIONAL_STRINGS
 		ID="44"
 		UUID="IS-44"
 		VERSION="1"
-	/>					
+	/>		
+	
+	<TBL_LOCALISED_STRINGS
+		ID="73"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-44-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="44"
+	/>	
+				
 	<TBL_INTERNATIONAL_STRINGS
 		ID="45"
 		UUID="IS-45"
 		VERSION="1"
 	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="74"
+		LABEL="Área temática 3"
+		LOCALE="es"
+		UUID="IS-45-LS-1"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="45"
+	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="46"
@@ -3079,7 +3163,7 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="64"
+		ID="75"
 		LABEL="Concepto 1"
 		LOCALE="es"
 		UUID="IS-46-LS-1"
@@ -3088,7 +3172,7 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="65"
+		ID="76"
 		LABEL="Concept 1"
 		LOCALE="en"
 		UUID="IS-46-LS-2"
@@ -3103,22 +3187,13 @@
 	/>
 	
 	<TBL_LOCALISED_STRINGS
-		ID="66"
-		LABEL="1"
+		ID="77"
+		LABEL="Área temática 3"
 		LOCALE="es"
 		UUID="IS-47-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="47"
-	/>
-	
-	<TBL_LOCALISED_STRINGS
-		ID="67"
-		LABEL="1"
-		LOCALE="en"
-		UUID="IS-47-LS-2"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="47"
-	/>								
+	/>							
 							
 
 </dataset>

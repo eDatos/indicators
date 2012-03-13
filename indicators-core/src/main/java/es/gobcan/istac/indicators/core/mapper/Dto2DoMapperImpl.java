@@ -18,6 +18,7 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
@@ -29,6 +30,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
@@ -207,11 +209,22 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATOR.ACRONYM"));
         target.setComments(internationalStringToDo(ctx, source.getComments(), target.getComments(), "INDICATOR.COMMENTS"));
         target.setCommentsUrl(source.getCommentsUrl());
-        target.setSubjectCode(source.getSubjectCode());
-        target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE"));
         target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), "INDICATOR.CONCEPT_DESCRIPTION"));
         target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), "INDICATOR.NOTES"));
         target.setNotesUrl(source.getNotesUrl());
+
+        if (source.getSubjectCode() != null) {
+            // Although subject is not saved as a relation to table view, it is necessary validate it exists and same description is provided
+            Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
+            if (source.getSubjectTitle() != null && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getDescription().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
+                throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR.SUBJECT_TITLE");
+            }
+            target.setSubjectCode(source.getSubjectCode());
+            target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE"));
+        } else {
+            target.setSubjectCode(null);
+            target.setSubjectTitle(null);
+        }
 
         // Related entities
         target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
