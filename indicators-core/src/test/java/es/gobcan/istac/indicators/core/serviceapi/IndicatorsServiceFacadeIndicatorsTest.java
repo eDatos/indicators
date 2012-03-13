@@ -2999,11 +2999,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testRetrieveSubject() throws Exception {
 
-        String uuid = SUBJECT_1;
-        SubjectDto subjectDto = indicatorsServiceFacade.retrieveSubject(getServiceContext(), uuid);
+        String code = SUBJECT_1;
+        SubjectDto subjectDto = indicatorsServiceFacade.retrieveSubject(getServiceContext(), code);
 
         assertNotNull(subjectDto);
-        assertEquals(uuid, subjectDto.getUuid());
+        assertEquals(code, subjectDto.getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjectDto.getDescription(), "es", "Área temática 1", null, null);
     }
 
@@ -3045,9 +3045,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         List<SubjectDto> subjects = indicatorsServiceFacade.findSubjects(getServiceContext());
         assertEquals(3, subjects.size());
 
-        assertEquals(SUBJECT_1, subjects.get(0).getUuid());
-        assertEquals(SUBJECT_2, subjects.get(1).getUuid());
-        assertEquals(SUBJECT_3, subjects.get(2).getUuid());
+        assertEquals(SUBJECT_1, subjects.get(0).getCode());
+        assertEquals(SUBJECT_2, subjects.get(1).getCode());
+        assertEquals(SUBJECT_3, subjects.get(2).getCode());
     }
 
     @Override

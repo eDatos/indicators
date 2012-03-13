@@ -200,7 +200,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public SubjectDto subjectDoToDto(Subject source) {
 
         SubjectDto target = new SubjectDto();
-        target.setUuid(source.getId());
+        target.setCode(source.getId());
         
         InternationalStringDto description = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();

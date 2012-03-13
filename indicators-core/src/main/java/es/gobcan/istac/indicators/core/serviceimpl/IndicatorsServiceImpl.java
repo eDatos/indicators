@@ -523,15 +523,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
     
     @Override
-    public Subject retrieveSubject(ServiceContext ctx, String uuid) throws MetamacException {
+    public Subject retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRetrieveSubject(uuid, null);
+        InvocationValidator.checkRetrieveSubject(code, null);
 
         // Retrieve
-        Subject subject = getSubjectRepository().retrieveSubject(uuid);
+        Subject subject = getSubjectRepository().retrieveSubject(code);
         if (subject == null) {
-            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, uuid);
+            throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, code);
         }
         return subject;
     }

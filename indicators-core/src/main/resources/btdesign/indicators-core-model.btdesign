@@ -103,7 +103,7 @@ Application Indicators {
 	    	List<@QuantityUnit> findQuantityUnits() throws MetamacException;
 	    	
 	    	// Subjects
-	    	@Subject retrieveSubject(String uuid) throws MetamacException;
+	    	@Subject retrieveSubject(String code) throws MetamacException;
 	    	List<@Subject> findSubjects() throws MetamacException;
     	}   	
 	    
@@ -237,7 +237,9 @@ Application Indicators {
 	    	List<@QuantityUnitDto> findQuantityUnits() throws MetamacException;
 	    	
 			// SUBJECTS
-	    	@SubjectDto retrieveSubject(String uuid) throws MetamacException;
+			"Retrieves subject"
+	    	@SubjectDto retrieveSubject(String code) throws MetamacException;
+	    	"Find all subjects"
 	    	List<@SubjectDto> findSubjects() throws MetamacException;
 	    	
 	    }
@@ -708,7 +710,7 @@ Application Indicators {
        		Repository SubjectRepository {
             	protected List<@Subject> findByQuery;
             	protected List<@Subject> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@Subject retrieveSubject(String uuid);
+            	@Subject retrieveSubject(String code);
             	List<@Subject> findSubjects;
 			}
         }
@@ -1007,8 +1009,8 @@ Application Indicators {
     	
     	"Dto for subjects"
     	DataTransferObject SubjectDto {
-	   		"Uuid"
-	   		String uuid;
+	   		"Code"
+	   		String code;
 			"Description"
 			- @InternationalStringDto description;
     	}

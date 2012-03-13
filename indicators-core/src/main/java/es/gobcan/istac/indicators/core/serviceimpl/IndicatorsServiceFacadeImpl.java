@@ -666,10 +666,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
     
     @Override
-    public SubjectDto retrieveSubject(ServiceContext ctx, String uuid) throws MetamacException {
+    public SubjectDto retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
 
         // Retrieve
-        Subject subject = getIndicatorsService().retrieveSubject(ctx, uuid);
+        Subject subject = getIndicatorsService().retrieveSubject(ctx, code);
 
         // Transform
         SubjectDto subjectDto = do2DtoMapper.subjectDoToDto(subject);

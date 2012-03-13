@@ -16,9 +16,9 @@ public class SubjectRepositoryImpl extends SubjectRepositoryBase {
     public SubjectRepositoryImpl() {
     }
 
-    public Subject retrieveSubject(String id) {
+    public Subject retrieveSubject(String code) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("id", id);
+        parameters.put("id", code);
         List<Subject> result = findByQuery("from Subject s where s.id = :id", parameters, 1);
         if (result == null || result.isEmpty()) {
             return null;

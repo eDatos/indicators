@@ -586,13 +586,13 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveSubject(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveSubject(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
+        ValidationUtils.checkParameterRequired(code, "CODE", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
