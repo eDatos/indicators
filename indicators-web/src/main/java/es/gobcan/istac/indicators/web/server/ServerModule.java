@@ -15,7 +15,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActio
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
@@ -56,7 +56,7 @@ public class ServerModule extends HandlerModule {
 		/* System actions */
 		bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
 		bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
-		bindHandler(GetIndicatorsSystemAction.class, GetIndicatorsSystemActionHandler.class);
+		bindHandler(GetIndicatorsSystemAction.class, GetIndicatorsSystemByCodeActionHandler.class);
 		bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
 		
 		/* System structure related actions */

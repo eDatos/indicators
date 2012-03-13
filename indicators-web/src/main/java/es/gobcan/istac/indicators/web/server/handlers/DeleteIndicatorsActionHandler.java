@@ -10,8 +10,8 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
 
@@ -19,7 +19,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
 public class DeleteIndicatorsActionHandler extends AbstractActionHandler<DeleteIndicatorsAction, DeleteIndicatorsResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+
     
     public DeleteIndicatorsActionHandler() {
         super(DeleteIndicatorsAction.class);
@@ -29,7 +30,7 @@ public class DeleteIndicatorsActionHandler extends AbstractActionHandler<DeleteI
     public DeleteIndicatorsResult execute(DeleteIndicatorsAction action, ExecutionContext context) throws ActionException {
         try {
             for (String uuid : action.getUuids()) {
-                service.deleteIndicator(ServiceContextHelper.getServiceContext(),uuid);
+                indicatorsServiceFacade.deleteIndicator(ServiceContextHelper.getServiceContext(),uuid);
             }
             return new DeleteIndicatorsResult();
         } catch (MetamacException e) {

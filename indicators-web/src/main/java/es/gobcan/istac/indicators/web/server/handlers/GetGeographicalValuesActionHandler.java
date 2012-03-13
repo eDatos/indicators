@@ -13,8 +13,8 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 
@@ -23,7 +23,7 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 public class GetGeographicalValuesActionHandler extends AbstractActionHandler<GetGeographicalValuesAction, GetGeographicalValuesResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper indicatorsServiceWrapper;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
  
     
     public GetGeographicalValuesActionHandler() {
@@ -33,7 +33,7 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
     @Override
     public GetGeographicalValuesResult execute(GetGeographicalValuesAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceWrapper.getGeographicalValues(ServiceContextHelper.getServiceContext(), action.getGeographicalGranularityUuid());
+            List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), action.getGeographicalGranularityUuid());
             return new GetGeographicalValuesResult(geographicalValuesDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

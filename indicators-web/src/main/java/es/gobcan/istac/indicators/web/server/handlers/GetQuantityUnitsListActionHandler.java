@@ -13,8 +13,8 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
@@ -23,7 +23,8 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<GetQuantityUnitsListAction, GetQuantityUnitsListResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper indicatorsServiceWrapper;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
     
     public GetQuantityUnitsListActionHandler() {
         super(GetQuantityUnitsListAction.class);
@@ -32,7 +33,7 @@ public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<Get
     @Override
     public GetQuantityUnitsListResult execute(GetQuantityUnitsListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceWrapper.getQuantityUnits(ServiceContextHelper.getServiceContext());
+            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.findQuantityUnits(ServiceContextHelper.getServiceContext());
             return new GetQuantityUnitsListResult(quantityUnitDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

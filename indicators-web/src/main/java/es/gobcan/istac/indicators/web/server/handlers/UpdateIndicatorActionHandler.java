@@ -11,8 +11,8 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
@@ -20,7 +20,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIndicatorAction, UpdateIndicatorResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
     
     public UpdateIndicatorActionHandler() {
         super(UpdateIndicatorAction.class);
@@ -29,7 +30,7 @@ public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIn
     @Override
     public UpdateIndicatorResult execute(UpdateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = service.updateIndicator(ServiceContextHelper.getServiceContext(),action.getIndicatorToUpdate());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.updateIndicator(ServiceContextHelper.getServiceContext(),action.getIndicatorToUpdate());
             return new UpdateIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

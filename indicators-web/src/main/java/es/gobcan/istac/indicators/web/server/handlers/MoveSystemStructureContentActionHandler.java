@@ -11,8 +11,8 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 
@@ -20,7 +20,8 @@ import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 public class MoveSystemStructureContentActionHandler extends AbstractActionHandler<MoveSystemStructureContentAction, MoveSystemStructureContentResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
     
     public MoveSystemStructureContentActionHandler() {
         super(MoveSystemStructureContentAction.class);
@@ -32,9 +33,9 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
             ElementLevelDto level = action.getLevel();
             Long order = action.getTargetOrderInLevel();
             if (level.isDimension()) {
-                service.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
+                indicatorsServiceFacade.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
             } else if (level.isIndicatorInstance()) {
-                service.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(), order++);
+                indicatorsServiceFacade.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(), order++);
             }
             return new MoveSystemStructureContentResult();
         } catch (MetamacException e) {
@@ -46,4 +47,5 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
     public void undo(MoveSystemStructureContentAction action, MoveSystemStructureContentResult result, ExecutionContext context) throws ActionException {
 
     }
+    
 }

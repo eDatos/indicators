@@ -11,8 +11,8 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 
@@ -20,7 +20,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 public class UpdateDimensionActionHandler extends AbstractActionHandler<UpdateDimensionAction, UpdateDimensionResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
     
     public UpdateDimensionActionHandler() {
         super(UpdateDimensionAction.class);
@@ -29,7 +30,7 @@ public class UpdateDimensionActionHandler extends AbstractActionHandler<UpdateDi
     @Override
     public UpdateDimensionResult execute(UpdateDimensionAction action, ExecutionContext context) throws ActionException {
         try {
-            DimensionDto dimensionDto = service.updateDimension(ServiceContextHelper.getServiceContext(), action.getDimensionToUpdate());
+            DimensionDto dimensionDto = indicatorsServiceFacade.updateDimension(ServiceContextHelper.getServiceContext(), action.getDimensionToUpdate());
             return new UpdateDimensionResult(dimensionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

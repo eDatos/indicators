@@ -22,6 +22,7 @@ public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHan
     @Autowired
     private IndicatorsServiceWrapper service;
     
+    
     public GetIndicatorsSystemStructureActionHandler() {
         super(GetIndicatorsSystemStructureAction.class);
     }

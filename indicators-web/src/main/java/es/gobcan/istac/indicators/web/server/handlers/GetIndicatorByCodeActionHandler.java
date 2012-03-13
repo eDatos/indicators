@@ -10,15 +10,17 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 
 @Component
 public class GetIndicatorByCodeActionHandler extends AbstractActionHandler<GetIndicatorByCodeAction, GetIndicatorByCodeResult>{
+    
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
     
     public GetIndicatorByCodeActionHandler() {
         super(GetIndicatorByCodeAction.class);
@@ -27,8 +29,8 @@ public class GetIndicatorByCodeActionHandler extends AbstractActionHandler<GetIn
     @Override
     public GetIndicatorByCodeResult execute(GetIndicatorByCodeAction action, ExecutionContext context) throws ActionException {
         try {
-            String code = action.getCode();
-            return new GetIndicatorByCodeResult(service.retrieveIndicatorByCode(ServiceContextHelper.getServiceContext(),code));
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
+            return new GetIndicatorByCodeResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

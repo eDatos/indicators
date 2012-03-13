@@ -10,8 +10,8 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 
@@ -19,7 +19,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 public class DeleteDimensionActionHandler extends AbstractActionHandler<DeleteDimensionAction, DeleteDimensionResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
     
     public DeleteDimensionActionHandler() {
         super(DeleteDimensionAction.class);
@@ -28,7 +29,7 @@ public class DeleteDimensionActionHandler extends AbstractActionHandler<DeleteDi
     @Override
     public DeleteDimensionResult execute(DeleteDimensionAction action, ExecutionContext context) throws ActionException {
         try {
-            service.deleteDimension(ServiceContextHelper.getServiceContext(),action.getDimensionUuid());
+            indicatorsServiceFacade.deleteDimension(ServiceContextHelper.getServiceContext(),action.getDimensionUuid());
             return new DeleteDimensionResult();
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

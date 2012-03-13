@@ -11,26 +11,26 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemResult;
 
 @Component
-public class GetIndicatorsSystemActionHandler extends AbstractActionHandler<GetIndicatorsSystemAction, GetIndicatorsSystemResult> {
+public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemAction, GetIndicatorsSystemResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
     
-    public GetIndicatorsSystemActionHandler() {
+    
+    public GetIndicatorsSystemByCodeActionHandler() {
         super(GetIndicatorsSystemAction.class);
     }
 
     @Override
     public GetIndicatorsSystemResult execute(GetIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
         try {
-            String code = action.getCode();
-            IndicatorsSystemDto indSys = service.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), code);
+            IndicatorsSystemDto indSys = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
             return new GetIndicatorsSystemResult(indSys);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

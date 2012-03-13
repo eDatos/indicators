@@ -10,8 +10,8 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 
@@ -19,8 +19,9 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
 
+    
     public GetIndicatorsSystemListActionHandler() {
         super(GetIndicatorsSystemListAction.class);
     }
@@ -28,7 +29,7 @@ public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<
     @Override
     public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
         try {
-            return new GetIndicatorsSystemListResult(service.findIndicatorsSystems(ServiceContextHelper.getServiceContext()));
+            return new GetIndicatorsSystemListResult(indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHelper.getServiceContext()));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
