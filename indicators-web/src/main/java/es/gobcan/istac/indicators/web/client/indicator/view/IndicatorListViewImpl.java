@@ -7,15 +7,8 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.TitleLabel;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -36,10 +29,10 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
@@ -54,23 +47,46 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	
 	private BaseCustomListGrid indicatorList;
 	
-	//New indicator
-	private CreateForm createPanel;
-	
-	//Delete
 	private DeleteConfirmationWindow deleteConfirmationWindow;
+	
+	private NewIndicatorWindow window;
+	
 	
 	@Inject
 	public IndicatorListViewImpl() {
 		super();
 	
-		//Toolstrip
+		// ToolStrip
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setWidth100();
 		
 		newIndicatorActor = new ToolStripButton(getConstants().indicNew(), RESOURCE.newListGrid().getURL());
+		newIndicatorActor.addClickHandler(new ClickHandler() {
+		    @Override
+		    public void onClick(ClickEvent event) {
+		        window = new NewIndicatorWindow(getConstants().indicCreateTitle());
+		        uiHandlers.retrieveSubjectsList();
+		        window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+		            @Override
+		            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+		                if (window.validateForm()) {
+		                    uiHandlers.createIndicator(window.getNewIndicatorDto());
+		                    window.destroy();
+		                }
+		            }
+		        });
+		    }
+		});
+
 		deleteIndicatorActor = new ToolStripButton(getConstants().indicDelete(), RESOURCE.deleteListGrid().getURL());
-		deleteIndicatorActor.hide();
+		deleteIndicatorActor.setVisibility(Visibility.HIDDEN);
+		deleteIndicatorActor.addClickHandler(new ClickHandler() {
+		    @Override
+		    public void onClick(ClickEvent event) {
+		        deleteConfirmationWindow.show();
+		    }
+		});
+		
 		toolStrip.addButton(newIndicatorActor);
 		toolStrip.addButton(deleteIndicatorActor);
 		
@@ -79,72 +95,48 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		indicatorList.setDataSource(indicatorDS);
 		indicatorList.setUseAllDataSourceFields(false);
 		indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+		indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {
+		    @Override
+		    public void onSelectionChanged(SelectionEvent event) {
+		        if (indicatorList.getSelectedRecords().length > 0) {
+		            deleteIndicatorActor.show();
+		        } else {
+		            deleteIndicatorActor.hide();
+		        }
+		    }
+		});
+		indicatorList.addRecordClickHandler(new RecordClickHandler() {
+		    @Override
+		    public void onRecordClick(RecordClickEvent event) {
+		        if (event.getFieldNum() != 0) { //Clicking checkBox will be ignored
+		            String code = event.getRecord().getAttribute(IndicatorDS.CODE);
+		            uiHandlers.goToIndicator(code);
+		        }
+		    }
+		});
 		
 		ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
 		fieldCode.setAlign(Alignment.LEFT);
 		ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
 		indicatorList.setFields(fieldCode, fieldName);
 		
-		createPanel = new CreateForm();
-		createPanel.hide();
-		
 		panel = new VLayout();
 		panel.addMember(toolStrip);
 		panel.addMember(indicatorList);
-		panel.addMember(createPanel);
 		
-		//Delete Confirmation Modal
+		// Delete confirmation window
 		deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
 		deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+		    @Override
+		    public void onClick(ClickEvent event) {
+		        uiHandlers.deleteIndicators(getUuidsFromSelected());
+		        deleteConfirmationWindow.hide();
+		    }
+		});
 		
-		bindEvents();
 	}
 	
-	private void bindEvents() {
-		newIndicatorActor.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				createPanel.init();
-				createPanel.show();
-			}
-		});
-		
-		indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChanged(SelectionEvent event) {
-				if (indicatorList.getSelectedRecords().length > 0) {
-					deleteIndicatorActor.show();
-				} else {
-					deleteIndicatorActor.hide();
-				}
-			}
-		});
-
-		indicatorList.addRecordClickHandler(new RecordClickHandler() {
-			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				if (event.getFieldNum() != 0) { //Clicking checkbox will be ignored
-				    String code = event.getRecord().getAttribute(IndicatorDS.CODE);
-					uiHandlers.goToIndicator(code);
-				}
-			}
-		});
-		
-		deleteIndicatorActor.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				deleteConfirmationWindow.show();
-			}
-		});
-		
-		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				uiHandlers.deleteIndicators(getUuidsFromSelected());
-				deleteConfirmationWindow.hide();
-			}
-		});
-	}
 	
 	@Override
 	public Widget asWidget() {
@@ -153,7 +145,6 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 	
 	@Override
 	public void setIndicatorList(List<IndicatorDto> indicators) {
-		createPanel.hide();
 		IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
 		int index = 0;
 		for (IndicatorDto ind : indicators) {
@@ -167,7 +158,6 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		this.uiHandlers = uiHandlers;
 	}
 	
-	/* Util */
 	public List<String> getUuidsFromSelected() {
 		List<String> codes = new ArrayList<String>();
 		for (ListGridRecord record : indicatorList.getSelectedRecords()) {
@@ -175,140 +165,12 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		}
 		return codes;
 	}
+
+    @Override
+    public void setSubjects(List<SubjectDto> subjectDtos) {
+        if (window != null) {
+            window.setSubjetcs(subjectDtos);
+        }
+    }
 	
-
-	private class CreateForm extends VLayout {
-		private GeneralPanel generalPanel;
-		
-		public CreateForm() {
-			
-			TitleLabel indicatorLabel = new TitleLabel();
-			indicatorLabel.setContents(getConstants().indicNewTitle());
-			
-			generalPanel = new GeneralPanel();
-			
-			this.addMember(indicatorLabel);
-			this.addMember(generalPanel);
-			init();
-		}
-		
-		public void init() {
-			generalPanel.setIndicator(new IndicatorDto());
-		}
-		
-		private class GeneralPanel extends VLayout {
-			
-		    /* Data */
-		    private IndicatorDto indicator;
-		    
-			private InternationalMainFormLayout mainFormLayout;
-			
-			/* Edit Form*/
-			private GroupDynamicForm identifiersEditionForm;
-			private GroupDynamicForm generalEditionForm;
-			
-			
-			public GeneralPanel() {
-				super();
-				mainFormLayout = new InternationalMainFormLayout();
-				mainFormLayout.setEditionMode();
-	
-				createForm();
-				
-				this.addMember(mainFormLayout);
-				bindEvents();
-			}
-			
-			private void bindEvents() {
-			    mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
-			        @Override
-		            public void onClick(ClickEvent event) {
-			        	boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
-		                generalEditionForm.setTranslationsShowed(translationsShowed);
-		                generalEditionForm.markForRedraw();
-		            }
-		        });
-		        
-		        mainFormLayout.getSave().addClickHandler(new ClickHandler() {
-		            @Override
-		            public void onClick(ClickEvent event) {
-		                saveIndicator();
-		            }
-		        });
-		        
-		        mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
-					
-					@Override
-					public void onClick(ClickEvent event) {
-						createPanel.hide();
-					}
-				});
-	
-			}
-
-			
-			private void createForm() {
-			    RequiredTextItem code = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
-				
-				// Identifiers Form
-				identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
-				identifiersEditionForm.setFields(code);
-				
-				
-				MultiLanguageTextItem internationalName = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
-				internationalName.setRequired(true);
-				// General Form
-				generalEditionForm = new GroupDynamicForm(getConstants().indicDetailDetails());
-				generalEditionForm.setFields(internationalName);
-						
-				// Status Form
-				GroupDynamicForm statusForm = new GroupDynamicForm(getConstants().indicDetailStatus());
-				//statusForm.setFields(staticFinalItemEdit, staticStartDateItemEdit, staticEndDateItemEdit);
-				
-				mainFormLayout.addEditionCanvas(identifiersEditionForm);
-				mainFormLayout.addEditionCanvas(generalEditionForm);
-				mainFormLayout.addEditionCanvas(statusForm);
-			}
-			
-			public void setIndicator(IndicatorDto indicator) {
-			    this.indicator = indicator;
-			    generalEditionForm.clearValues();
-			    identifiersEditionForm.clearValues();
-				mainFormLayout.setEditionMode();
-				
-				// Clear errors
-				/*identifiersEditionForm.clearErrors(true);
-				generalEditionForm.clearErrors(true);*/
-			}
-
-			
-		    private void saveIndicator() {
-		    	boolean validated = identifiersEditionForm.validate();
-		    	validated = generalEditionForm.validate(false) && validated;
-		        if (validated) {
-		        	indicator.setCode((String)identifiersEditionForm.getValue(IndicatorDS.CODE));
-		            indicator.setTitle((InternationalStringDto)generalEditionForm.getValue(IndicatorDS.TITLE));
-		            //TODO: Change this when new fields are added
-		            indicator.setSubjectCode("SUBJECT_CODE_CHANGE_ME");
-		            indicator.setSubjectTitle(createIntString("Subject titulo es"));
-		            QuantityDto quantity = new QuantityDto();
-		            quantity.setType(QuantityTypeEnum.QUANTITY);
-		            quantity.setUnitUuid("1");
-		            indicator.setQuantity(quantity);
-		            IndicatorListViewImpl.this.uiHandlers.createIndicator(indicator);
-		        }
-		    }
-		    
- 		    //TODO: remove, just mocking
-		    private InternationalStringDto createIntString(String textEs) {
-		        InternationalStringDto intStr = new InternationalStringDto();
-		        LocalisedStringDto localisedString = new LocalisedStringDto();
-		        localisedString.setLocale("es");
-		        localisedString.setLabel(textEs);
-		        intStr.addText(localisedString);
-
-		        return intStr;
-		    }
-		}
-	}
 }
