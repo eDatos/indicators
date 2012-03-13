@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -15,6 +16,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -33,6 +35,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     protected QuantityUnitRepository quantityUnitRepository;
 
     // Indicators
+    private static String            INDICATOR_1         = "Indicator-1";
     private static String            INDICATOR_3         = "Indicator-3";
     private static String            INDICATOR_3_VERSION = "11.033";
     private static String            INDICATOR_5         = "Indicator-5";
@@ -62,6 +65,55 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         String version = indicatorVersionCreated.getVersionNumber();
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContext(), uuid, version);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
+        assertTrue(indicatorVersionCreated.getIsLastVersion());
+    }
+
+    @Test
+    public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {
+
+        String uuid = INDICATOR_1;
+
+        // Retrieve before delete
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContext(), uuid, "1.000");
+            assertFalse(indicatorVersion1.getIsLastVersion());
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContext(), uuid, "2.000");
+            assertTrue(indicatorVersion2.getIsLastVersion());
+        }
+
+        // Delete indicator
+        indicatorService.deleteIndicator(getServiceContext(), uuid);
+
+        // Validation
+        // Retrieve after delete
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContext(), uuid, "1.000");
+            assertTrue(indicatorVersion1.getIsLastVersion());
+            assertNull(indicatorVersion1.getIndicator().getProductionVersion());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicator() throws Exception {
+
+        String uuid = INDICATOR_3;
+
+        // Retrieve before versioning
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
+            assertTrue(indicatorVersion1.getIsLastVersion());
+        }
+
+        // Versioning
+        IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+
+        // Retrieve after delete
+        {
+            IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
+            assertFalse(indicatorVersion1.getIsLastVersion());
+            IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContext(), uuid, newVersion.getVersionNumber());
+            assertTrue(indicatorVersion2.getIsLastVersion());
+        }
     }
 
     @Test

@@ -7,10 +7,14 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
 
 /**
  * Repository implementation for IndicatorVersion
@@ -36,14 +40,36 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IndicatorVersion> findIndicatorsVersions(IndicatorProcStatusEnum procStatus) {
+    public List<IndicatorVersion> findIndicatorsVersions(IndicatorsCriteria indicatorsCriteria) throws MetamacException {
 
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         Criteria criteria = session.createCriteria(IndicatorVersion.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (procStatus != null) {
-            criteria.add(Restrictions.eq("procStatus", procStatus));
+        if (indicatorsCriteria.getConjunctionRestriction() != null) {
+            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : indicatorsCriteria.getConjunctionRestriction().getRestrictions()) {
+                IndicatorCriteriaPropertyInternalEnum propertyName = IndicatorCriteriaPropertyInternalEnum.fromValue(propertyRestriction.getPropertyName());
+                switch (propertyName) {
+                    case CODE:
+                        criteria.createAlias("indicator", "ind");
+                        criteria.add(Restrictions.eq("ind.code", propertyRestriction.getStringValue()).ignoreCase());
+                        break;
+                    case PROC_STATUS:
+                        criteria.add(Restrictions.eq("procStatus", propertyRestriction.getEnumValue()));
+                        break;
+                    case IS_LAST_VERSION:
+                        criteria.add(Restrictions.eq("isLastVersion", propertyRestriction.getBooleanValue()));
+                        break;
+                    case VERSION_NUMBER:
+                        criteria.add(Restrictions.eq("versionNumber", propertyRestriction.getStringValue()));
+                        break;
+                    case SUBJECT_CODE:
+                        criteria.add(Restrictions.eq("subjectCode", propertyRestriction.getStringValue()));
+                        break;
+                    default:
+                        throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyName);
+                }
+            }
         }
         criteria.addOrder(Order.asc("id"));
 
@@ -59,7 +85,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         parameters.put("uuid", indicatorUuid);
 
         // Important! Queries must be executed separately because indicator can have different value of indicator in numerator, denominator..
-        
+
         // Numerator
         {
             List<IndicatorVersion> result = findByQuery("from IndicatorVersion iv where iv.quantity.numerator.uuid = :uuid", parameters, 1);

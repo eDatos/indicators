@@ -21,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -1776,7 +1780,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testFindIndicatorsSystems() throws Exception {
 
         // Retrieve last versions...
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), null);
         assertEquals(9, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1808,9 +1812,24 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+    public void testFindIndicatorsSystemsByUriGopestat() throws Exception {
+        
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.URI_GOPESTAT.name(), "http://indicators-sytems/1"));
+
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
+        assertEquals(1, indicatorsSystemsDto.size());
+
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals("2.000", indicatorsSystemsDto.get(0).getVersionNumber());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(0).getProcStatus());
+    }
+
+    @Test
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
         assertEquals(3, indicatorsSystemsDto.size());
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1821,6 +1840,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
+    }
+    
+    @Test
+    public void testFindIndicatorsSystemsPublishedByUriGopestat() throws Exception {
+        
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.URI_GOPESTAT.name(), "http://indicators-sytems/1"));
+
+        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), criteria);
+        assertEquals(1, indicatorsSystemsDto.size());
+
+        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
     }
 
     @Test

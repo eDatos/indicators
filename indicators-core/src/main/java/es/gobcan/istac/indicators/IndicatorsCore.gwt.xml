@@ -8,5 +8,6 @@
   <source path='core/enume/domain'/>
   <source path='core/util'/>
   <source path='core/constants'/>
+  <source path='core/criteria'/>
   
 </module>

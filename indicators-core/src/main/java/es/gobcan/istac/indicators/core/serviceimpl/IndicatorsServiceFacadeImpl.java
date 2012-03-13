@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
@@ -197,10 +198,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Find
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystems(ctx);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystems(ctx, criteria);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
@@ -212,10 +213,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, criteria);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
@@ -551,10 +552,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorDto> findIndicators(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorDto> findIndicators(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Find
-        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicators(ctx);
+        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicators(ctx, criteria);
 
         // Transform
         List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();
@@ -566,10 +567,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Retrieve published
-        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicatorsPublished(ctx);
+        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicatorsPublished(ctx, criteria);
 
         // Transform
         List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();

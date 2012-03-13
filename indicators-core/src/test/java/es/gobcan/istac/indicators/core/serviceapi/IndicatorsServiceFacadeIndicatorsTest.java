@@ -18,6 +18,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
@@ -32,6 +36,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
@@ -876,7 +881,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(indicatorDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateIndicatorErrorSubjectCodeNotExits() throws Exception {
 
@@ -900,7 +905,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(indicatorDto.getSubjectCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateIndicatorErrorSubjectTitleIncorrect() throws Exception {
 
@@ -924,7 +929,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCreateIndicatorErrorBaseTimeIncorrect() throws Exception {
 
@@ -2313,7 +2318,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testFindIndicators() throws Exception {
 
         // Retrieve last versions...
-        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext());
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext(), null);
         assertEquals(10, indicatorsDto.size());
 
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
@@ -2348,9 +2353,63 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testFindIndicatorsWithSubject() throws Exception {
+
+        // Retrieve last versions with subject 1
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3));
+
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
+        assertEquals(8, indicatorsDto.size());
+
+        assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+
+        assertEquals(INDICATOR_4, indicatorsDto.get(1).getUuid());
+        assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(1).getProcStatus());
+
+        assertEquals(INDICATOR_5, indicatorsDto.get(2).getUuid());
+        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+
+        assertEquals(INDICATOR_6, indicatorsDto.get(3).getUuid());
+        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(3).getProcStatus());
+
+        assertEquals(INDICATOR_7, indicatorsDto.get(4).getUuid());
+        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(4).getProcStatus());
+
+        assertEquals(INDICATOR_8, indicatorsDto.get(5).getUuid());
+        assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(5).getProcStatus());
+
+        assertEquals(INDICATOR_9, indicatorsDto.get(6).getUuid());
+        assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(6).getProcStatus());
+
+        assertEquals(INDICATOR_10, indicatorsDto.get(7).getUuid());
+        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(7).getProcStatus());
+    }
+
+    @Test
+    public void testFindIndicatorsErrorCriteriaIncorrectUsingPropertyInternal() throws Exception {
+
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
+        
+        try {
+            indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
+            fail("criteria incorrecto");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("CRITERIA", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testFindIndicatorsPublished() throws Exception {
 
-        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext());
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext(), null);
         assertEquals(3, indicatorsDto.size());
 
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
@@ -2361,6 +2420,24 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getProcStatus());
+    }
+
+    @Test
+    public void testFindIndicatorsPublishedWithSubject() throws Exception {
+
+        // Retrieve last versions with subject 1
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3));
+        
+        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext(), criteria);
+        assertEquals(2, indicatorsDto.size());
+
+        assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+
+        assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
     }
 
     @Test
@@ -3048,7 +3125,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

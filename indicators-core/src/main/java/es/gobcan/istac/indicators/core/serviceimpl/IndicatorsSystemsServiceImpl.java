@@ -11,6 +11,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -22,6 +25,8 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorsSystemCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -55,6 +60,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Save draft version
         indicatorsSystemVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
+        indicatorsSystemVersion.setIsLastVersion(Boolean.TRUE);
         indicatorsSystemVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
         indicatorsSystemVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
@@ -111,19 +117,26 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorsSystemByCode(code, null);
 
-        // Retrieve indicators system by code
-        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems.size() == 0) {
+        // Retrieve indicator by code, version requested or last version
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.CODE.name(), code));
+        if (versionNumber != null) {
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.VERSION_NUMBER.name(), versionNumber));
+        } else {
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
+        }
+
+        // Find
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
+        if (indicatorsSystemsVersion.size() == 0) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
-        } else if (indicatorsSystems.size() > 1) {
+        } else if (indicatorsSystemsVersion.size() > 1) {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
         }
 
-        // Retrieve version requested or last version
-        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), versionNumber);
-
-        return indicatorsSystemVersion;
+        // Return unique result
+        return indicatorsSystemsVersion.get(0);
     }
 
     @Override
@@ -132,25 +145,28 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorsSystemPublishedByCode(code, null);
 
-        // Retrieve indicators system by code
-        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems.size() == 0) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE, code);
-        } else if (indicatorsSystems.size() > 1) {
+        // Retrieve indicator by code, published
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.CODE.name(), code));
+        criteria.getConjunctionRestriction().getRestrictions()
+                .add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.PROC_STATUS.name(), IndicatorsSystemProcStatusEnum.PUBLISHED));
+
+        // Find
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
+        if (indicatorsSystemsVersion.size() > 1) {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicators system with code " + code);
+        } else if (indicatorsSystemsVersion.size() == 0) {
+            // Try retrieve any version with code, to throws specific exception
+            IndicatorsSystemVersion indicatorsSystemVersionLastVersion = retrieveIndicatorsSystemByCode(ctx, code, null);
+            if (indicatorsSystemVersionLastVersion != null) {
+                throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersionLastVersion.getIndicatorsSystem().getUuid(),
+                        new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
+            }
         }
 
-        // Retrieve only published
-        IndicatorsSystem indicatorsSystem = indicatorsSystems.get(0);
-        if (indicatorsSystem.getDiffusionVersion() == null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystem.getUuid(), new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
-        }
-        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), indicatorsSystem.getDiffusionVersion().getVersionNumber());
-        if (!IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemVersion.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystem.getUuid(), new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
-        }
-
-        return indicatorsSystemVersion;
+        // Return unique result
+        return indicatorsSystemsVersion.get(0);
     }
 
     @Override
@@ -200,50 +216,52 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
             indicatorsSystem.getVersions().remove(indicatorsSystemVersion);
             indicatorsSystem.setProductionVersion(null);
-
+            indicatorsSystem.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
+            
             // Update
             getIndicatorsSystemRepository().save(indicatorsSystem);
             getIndicatorsSystemVersionRepository().delete(indicatorsSystemVersion);
         }
     }
 
-    // TODO obtener directamente las últimas versiones con consulta? añadir columna lastVersion?
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystems(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorsSystemVersion> findIndicatorsSystems(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystems(null);
+        InvocationValidator.checkFindIndicatorsSystems(criteria, null);
+
+        // Retrieve last versions
+        if (criteria == null) {
+            criteria = new IndicatorsCriteria();
+        }
+        if (criteria.getConjunctionRestriction() == null) {
+            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        }
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
 
         // Find
-        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, null);
-
-        // Transform
-        List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
-        for (IndicatorsSystem indicatorsSystem : indicatorsSystems) {
-            // Last version
-            IndicatorsSystemVersionInformation lastVersion = indicatorsSystem.getProductionVersion() != null ? indicatorsSystem.getProductionVersion() : indicatorsSystem.getDiffusionVersion();
-            IndicatorsSystemVersion indicatorsSystemLastVersion = retrieveIndicatorsSystem(ctx, indicatorsSystem.getUuid(), lastVersion.getVersionNumber());
-            indicatorsSystemsVersions.add(indicatorsSystemLastVersion);
-        }
-
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
         return indicatorsSystemsVersions;
     }
 
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemsPublished(ServiceContext ctx) throws MetamacException {
+    public List<IndicatorsSystemVersion> findIndicatorsSystemsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystemsPublished(null);
+        InvocationValidator.checkFindIndicatorsSystemsPublished(criteria, null);
 
         // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(null, IndicatorsSystemProcStatusEnum.PUBLISHED);
-        
-        // Transform
-        List<IndicatorsSystemVersion> indicatorsSystemsVersions = new ArrayList<IndicatorsSystemVersion>();
-        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
-            indicatorsSystemsVersions.add(indicatorsSystemVersion);
+        if (criteria == null) {
+            criteria = new IndicatorsCriteria();
         }
+        if (criteria.getConjunctionRestriction() == null) {
+            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        }
+        criteria.getConjunctionRestriction().getRestrictions()
+                .add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.PROC_STATUS.name(), IndicatorsSystemProcStatusEnum.PUBLISHED));
 
+        // Find
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
         return indicatorsSystemsVersions;
     }
 
@@ -410,10 +428,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemNewVersion = DoCopyUtils.copy(indicatorsSystemVersionDiffusion);
         indicatorsSystemNewVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorsSystemVersionDiffusion.getVersionNumber(), versionType));
+        indicatorsSystemNewVersion.setIsLastVersion(Boolean.TRUE);
 
-        // Create
+        // Update diffusion version
+        indicatorsSystemVersionDiffusion.setIsLastVersion(Boolean.FALSE);
+        indicatorsSystemVersionDiffusion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersionDiffusion);
+
+        // Create draft version
         indicatorsSystemNewVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemNewVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemNewVersion);
+        
         // Update indicator with draft version
         indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemNewVersion.getId(), indicatorsSystemNewVersion.getVersionNumber()));
         indicatorsSystem.getVersions().add(indicatorsSystemNewVersion);
@@ -644,13 +668,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return geographicalGranularitys;
     }
 
-
     /**
-     * Checks not exists another indicators system with same code. Checks system retrieved not is actual system.
+     * Checks not exists another indicators system with same code. Checks indicators system retrieved not is actual indicators system
      */
     private void checkIndicatorsSystemCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
-        List<IndicatorsSystem> indicatorsSystems = findIndicatorsSystems(ctx, code);
-        if (indicatorsSystems != null && indicatorsSystems.size() != 0 && !indicatorsSystems.get(0).getUuid().equals(actualUuid)) {
+
+        // Criteria
+        IndicatorsCriteria criteria = new IndicatorsCriteria();
+        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.CODE.name(), code));
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to get only one result
+
+        // Find
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
+        if (indicatorsSystemsVersions != null && indicatorsSystemsVersions.size() != 0 && !indicatorsSystemsVersions.get(0).getIndicatorsSystem().getUuid().equals(actualUuid)) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, code);
         }
     }
@@ -660,13 +691,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      */
     private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
         if (uriGopestat != null) {
-            List<IndicatorsSystemVersion> indicatorsSystemVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemVersions(uriGopestat, null);
-            if (indicatorsSystemVersions != null && indicatorsSystemVersions.size() != 0) {
-                for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
-                    if (!indicatorsSystemVersion.getIndicatorsSystem().getUuid().equals(actualUuid)) {
-                        throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
-                    }
-                }
+            
+            // Criteria
+            IndicatorsCriteria criteria = new IndicatorsCriteria();
+            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.URI_GOPESTAT.name(), uriGopestat));
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to get only one result
+
+            // Find
+            List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
+            if (indicatorsSystemsVersions != null && indicatorsSystemsVersions.size() != 0 && !indicatorsSystemsVersions.get(0).getIndicatorsSystem().getUuid().equals(actualUuid)) {
+                throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
             }
         }
     }
@@ -1033,10 +1068,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND, uuid);
         }
         return indicatorsSystem;
-    }
-    
-    private List<IndicatorsSystem> findIndicatorsSystems(ServiceContext ctx, String code) throws MetamacException {
-        return getIndicatorsSystemRepository().findIndicatorsSystems(code);
     }
     
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {

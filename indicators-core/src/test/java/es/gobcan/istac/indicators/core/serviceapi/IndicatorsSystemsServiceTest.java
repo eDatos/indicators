@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -28,6 +30,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     protected IndicatorsSystemsService indicatorsSystemService;
 
     private static String              INDICATORS_SYSTEM_3         = "IndSys-3";
+    private static String              INDICATORS_SYSTEM_1         = "IndSys-1";
     private static String              INDICATORS_SYSTEM_3_VERSION = "11.033";
     private static String              INDICATORS_SYSTEM_5         = "IndSys-5";
 
@@ -47,6 +50,55 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         String version = indicatorsSystemVersionCreated.getVersionNumber();
         IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, version);
         assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
+        assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
+    }
+
+    @Test
+    public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_1;
+
+        // Retrieve before delete
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            assertFalse(indicatorsSystemVersion1.getIsLastVersion());
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "2.000");
+            assertTrue(indicatorsSystemVersion2.getIsLastVersion());
+        }
+
+        // Delete indicator
+        indicatorsSystemService.deleteIndicatorsSystem(getServiceContext(), uuid);
+
+        // Validation
+        // Retrieve after delete
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            assertTrue(indicatorsSystemVersion1.getIsLastVersion());
+            assertNull(indicatorsSystemVersion1.getIndicatorsSystem().getProductionVersion());
+        }
+    }
+
+    @Test
+    public void testVersioningIndicatorsSystem() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_3;
+
+        // Retrieve before versioning
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            assertTrue(indicatorsSystemVersion1.getIsLastVersion());
+        }
+
+        // Versioning
+        IndicatorsSystemVersion newVersion = indicatorsSystemService.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+
+        // Retrieve after delete
+        {
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            assertFalse(indicatorsSystemVersion1.getIsLastVersion());
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersion.getVersionNumber());
+            assertTrue(indicatorsSystemVersion2.getIsLastVersion());
+        }
     }
 
     @Test

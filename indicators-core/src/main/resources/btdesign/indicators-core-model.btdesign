@@ -31,8 +31,8 @@ Application Indicators {
 	    	List<@ElementLevel> retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion updateIndicatorsSystemVersion(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystems() throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemsPublished() throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystems(IndicatorsCriteria criteria) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
@@ -82,8 +82,8 @@ Application Indicators {
 	    	@IndicatorVersion retrieveIndicatorPublishedByCode(String code) throws MetamacException;
 	    	@IndicatorVersion updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicators() throws MetamacException;
-	    	List<@IndicatorVersion> findIndicatorsPublished() throws MetamacException;
+	    	List<@IndicatorVersion> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
+	    	List<@IndicatorVersion> findIndicatorsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorValidation(String uuid) throws MetamacException;
@@ -139,10 +139,10 @@ Application Indicators {
 	    	@IndicatorsSystemDto archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
-	    	"Finds indicators systems. Retrieves last versions"
-	    	List<@IndicatorsSystemDto> findIndicatorsSystems() throws MetamacException;
-	    	"Finds published indicators systems"
-	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished() throws MetamacException;
+	    	"Finds indicators systems by criteria. Retrieves last versions"
+	    	List<@IndicatorsSystemDto> findIndicatorsSystems(IndicatorsCriteria criteria) throws MetamacException;
+	    	"Finds published indicators systems by criteria"
+	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	
@@ -213,10 +213,10 @@ Application Indicators {
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
 	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
-	    	"Finds indicators. Retrieves last versions"
-	    	List<@IndicatorDto> findIndicators() throws MetamacException;
-	    	"Finds published indicators"
-	    	List<@IndicatorDto> findIndicatorsPublished() throws MetamacException;
+	    	"Finds indicators by criteria. Retrieves last versions"
+	    	List<@IndicatorDto> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
+	    	"Finds published indicators by criteria"
+	    	List<@IndicatorDto> findIndicatorsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
@@ -272,7 +272,6 @@ Application Indicators {
             	protected List<@IndicatorsSystem> findByQuery;
             	protected List<@IndicatorsSystem> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystem retrieveIndicatorsSystem(String uuid);
-            	List<@IndicatorsSystem> findIndicatorsSystems(String code);
 			}
 		} 
 		
@@ -294,6 +293,8 @@ Application Indicators {
        		- @InternationalString objetive cascade="all" nullable databaseColumn="OBJETIVE_FK";
        		"Description of statistic operation"
        		- @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
+       		"True if this version is the last"
+       		Boolean isLastVersion not nullable;
        		
 			"Date when the indicators system was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -326,7 +327,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery;
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemVersions(String uriGopestat, @IndicatorsSystemProcStatusEnum procStatus);
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemsVersions(IndicatorsCriteria criteria) throws MetamacException;
 			}
 		} 
 			    
@@ -448,7 +449,6 @@ Application Indicators {
             	protected List<@Indicator> findByQuery;
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
-            	List<@Indicator> findIndicators(String code);
             	List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid);
 			}
 		}
@@ -479,6 +479,8 @@ Application Indicators {
        		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
        		"Notes url"
        		String notesUrl nullable;
+       		"True if this version is the last"
+       		Boolean isLastVersion not nullable;
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -511,7 +513,7 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
-            	List<@IndicatorVersion> findIndicatorsVersions(@IndicatorProcStatusEnum procStatus);
+            	List<@IndicatorVersion> findIndicatorsVersions(IndicatorsCriteria criteria) throws MetamacException;
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
 			}
 		}     	

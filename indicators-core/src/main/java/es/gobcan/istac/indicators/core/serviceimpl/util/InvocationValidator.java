@@ -9,6 +9,10 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
+import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -182,26 +186,28 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsSystems(List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindIndicatorsSystems(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing to validate
+        // Checks properties names of criteria restrictions
+        if (criteria != null && criteria.getConjunctionRestriction() != null) {
+            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
+                try {
+                    IndicatorsSystemCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName()); 
+                } catch (IllegalArgumentException e) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
+                }
+            }
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsSystemsPublished(List<MetamacExceptionItem> exceptions) throws MetamacException {
-
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        // nothing to validate
-
-        ExceptionUtils.throwIfException(exceptions);
+    public static void checkFindIndicatorsSystemsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkFindIndicatorsSystems(criteria, exceptions);
     }
 
     public static void checkCreateDimension(String indicatorsSystemUuid, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -418,26 +424,28 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindIndicators(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing to validate
+        // Checks properties names of criteria restrictions
+        if (criteria != null && criteria.getConjunctionRestriction() != null) {
+            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
+                try {
+                    IndicatorCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName()); 
+                } catch (IllegalArgumentException e) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
+                }
+            }
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsPublished(List<MetamacExceptionItem> exceptions) throws MetamacException {
-
-        if (exceptions == null) {
-            exceptions = new ArrayList<MetamacExceptionItem>();
-        }
-
-        // nothing to validate
-
-        ExceptionUtils.throwIfException(exceptions);
+    public static void checkFindIndicatorsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkFindIndicators(criteria, exceptions);
     }
 
     public static void checkCreateDataSource(String indicatorUuid, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
