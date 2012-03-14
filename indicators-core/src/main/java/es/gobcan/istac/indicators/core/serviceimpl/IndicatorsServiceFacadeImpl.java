@@ -35,7 +35,6 @@ import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 
 /**
  * Implementation of IndicatorServiceFacade.
- * TODO criteria y paginación en operaciones de búsqueda: find*
  */
 @Service("indicatorsServiceFacade")
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
