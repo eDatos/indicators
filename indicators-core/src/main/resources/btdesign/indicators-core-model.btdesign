@@ -664,9 +664,9 @@ Application Indicators {
        		"Granularity"
 			- @GeographicalGranularity granularity cascade="none" not nullable databaseColumn="GRANULARITY_FK";
        		"Latitude"
-       		String latitude nullable;
+       		Double latitude nullable;
        		"Longitude"
-       		String longitude nullable;
+       		Double longitude nullable;
        		
        		Repository GeographicalValueRepository {
        			findAll;

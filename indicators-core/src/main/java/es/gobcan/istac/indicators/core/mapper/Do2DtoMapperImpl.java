@@ -195,24 +195,23 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-    
+
     @Override
     public SubjectDto subjectDoToDto(Subject source) {
 
         SubjectDto target = new SubjectDto();
         target.setCode(source.getId());
-        
+
         InternationalStringDto description = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel(source.getDescription());
         localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH); // description only in spanish
         description.addText(localisedStringDto);
         target.setDescription(description);
-        
+
         return target;
     }
 
-    // TODO Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
     public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source) {
 
@@ -221,10 +220,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGranularityUuid(source.getGranularity().getUuid());
-        // target.setLatitude(source.getLatitude());
-        // target.setLongitude(source.getLongitude());
-        target.setLatitude(Double.valueOf(source.getLatitude()));
-        target.setLongitude(Double.valueOf(source.getLongitude()));
+        target.setLatitude(source.getLatitude());
+        target.setLongitude(source.getLongitude());
 
         return target;
     }

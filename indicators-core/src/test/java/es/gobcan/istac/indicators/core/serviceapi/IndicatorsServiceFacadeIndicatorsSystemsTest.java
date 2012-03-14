@@ -3783,8 +3783,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(uuid, geographicalValueDto.getUuid());
         assertEquals("ES", geographicalValueDto.getCode());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularityUuid());
-        assertEquals(Double.valueOf(998612325.5656233), geographicalValueDto.getLatitude());
-        assertEquals(Double.valueOf(-15632112156.45456464565), geographicalValueDto.getLongitude());
+        assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
+        assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
+        assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
+        assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
     }
 
