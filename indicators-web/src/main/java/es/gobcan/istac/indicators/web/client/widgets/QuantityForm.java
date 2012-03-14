@@ -30,6 +30,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 
 
 public class QuantityForm extends BaseQuantityForm {
@@ -101,6 +102,7 @@ public class QuantityForm extends BaseQuantityForm {
         
         RequiredTextItem baseTime = new RequiredTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
+        baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
         
         final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setRequired(true);

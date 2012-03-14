@@ -77,6 +77,7 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorInstanceDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNode;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 
 public class SystemStructurePanel extends HLayout {
@@ -905,6 +906,7 @@ public class SystemStructurePanel extends HLayout {
             
             RequiredTextItem timeValue = new RequiredTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
             timeValue.setShowIfCondition(getTimeValueIfFunction());
+            timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
             
             // Geographical
             
