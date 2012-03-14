@@ -29,7 +29,7 @@ public class GetIndicatorListActionHandler extends AbstractActionHandler<GetIndi
     @Override
     public GetIndicatorListResult execute(GetIndicatorListAction action, ExecutionContext context) throws ActionException {
         try {
-            return new GetIndicatorListResult(indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext()));
+            return new GetIndicatorListResult(indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext(), null));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

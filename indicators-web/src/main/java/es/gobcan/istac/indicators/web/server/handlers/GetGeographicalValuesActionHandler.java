@@ -12,6 +12,10 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
@@ -33,7 +37,12 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
     @Override
     public GetGeographicalValuesResult execute(GetGeographicalValuesAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), action.getGeographicalGranularityUuid());
+            IndicatorsCriteria criteria = new IndicatorsCriteria();
+            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid()));
+            
+            List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), criteria);
+            
             return new GetGeographicalValuesResult(geographicalValuesDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
