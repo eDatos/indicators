@@ -48,6 +48,7 @@ public class CommonUtils {
     
     public static LinkedHashMap<String, String> getQuantityIndexBaseMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (QuantityIndexBaseTypeEnum type : QuantityIndexBaseTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityIndexBaseTypeEnum() + type.getName()));
         }
@@ -74,7 +75,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getGeographicalGranularituesValueMap(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
-            valueMap.put(geographicalGranularityDto.getUuid(), InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle()));
+            valueMap.put(geographicalGranularityDto.getUuid(), geographicalGranularityDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle()));
         }
         return valueMap;
     }
@@ -82,7 +83,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getGeographicalValuesValueMap(List<GeographicalValueDto> geographicalValueDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
-            valueMap.put(geographicalValueDto.getUuid(), InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
+            valueMap.put(geographicalValueDto.getUuid(), geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
         }
         return valueMap;
     }

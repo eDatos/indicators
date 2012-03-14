@@ -23,6 +23,8 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
@@ -320,8 +322,7 @@ public class IndicatorGeneralPanel extends VLayout {
 		identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 		
 	    // Content Classifiers
-        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
-        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT_TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getSubjectTitle()));
+        contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT, indicatorDto.getSubjectCode());
         
         // Content Descriptors
         contentDescriptorsEditionForm.setValue(IndicatorDS.CONCEPT_DESCRIPTION, RecordUtils.getInternationalStringRecord(indicatorDto.getConceptDescription()));
@@ -378,6 +379,8 @@ public class IndicatorGeneralPanel extends VLayout {
     
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
+        quantityForm.setUiHandlers(uiHandlers);
+        quantityEditionForm.setUiHandlers(uiHandlers);
     }
     
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -394,6 +397,19 @@ public class IndicatorGeneralPanel extends VLayout {
         this.subjectDtos = subjectDtos;
         LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
         ((SelectItem)contentClassifiersEditionForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
+    }
+    
+    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        quantityEditionForm.setGeographicalGranularities(geographicalGranularityDtos);
+    }
+    
+    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
+        quantityEditionForm.setGeographicalValues(geographicalValueDtos);
+    }
+    
+    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+        quantityForm.setGeographicalValue(geographicalValueDto);
+        quantityEditionForm.setGeographicalValue(geographicalValueDto);
     }
     
 }

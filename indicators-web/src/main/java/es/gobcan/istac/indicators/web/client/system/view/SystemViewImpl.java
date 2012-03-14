@@ -134,6 +134,11 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         structurePanel.setGeographicalValues(geographicalValueDtos);
     }
+
+    @Override
+    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+        structurePanel.setGeographicalValue(geographicalValueDto);
+    }
 	
 }
 

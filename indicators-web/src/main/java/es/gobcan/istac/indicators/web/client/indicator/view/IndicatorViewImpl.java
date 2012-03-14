@@ -14,6 +14,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
@@ -72,6 +74,21 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setSubjectsList(List<SubjectDto> subjectDtos) {
         generalPanel.setSubjectsList(subjectDtos);
+    }
+
+    @Override
+    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        generalPanel.setGeographicalGranularities(geographicalGranularityDtos);
+    }
+
+    @Override
+    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
+        generalPanel.setGeographicalValues(geographicalValueDtos);
+    }
+
+    @Override
+    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+        generalPanel.setGeographicalValue(geographicalValueDto);
     }
 
 }

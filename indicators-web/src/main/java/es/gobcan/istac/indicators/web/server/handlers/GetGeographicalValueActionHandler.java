@@ -10,36 +10,37 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
+
 
 @Component
-public class GetIndicatorActionHandler extends AbstractActionHandler<GetIndicatorAction, GetIndicatorResult> {
+public class GetGeographicalValueActionHandler extends AbstractActionHandler<GetGeographicalValueAction, GetGeographicalValueResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
+ 
     
-    
-    public GetIndicatorActionHandler() {
-        super(GetIndicatorAction.class);
+    public GetGeographicalValueActionHandler() {
+        super(GetGeographicalValueAction.class);
     }
 
     @Override
-    public GetIndicatorResult execute(GetIndicatorAction action, ExecutionContext context) throws ActionException {
+    public GetGeographicalValueResult execute(GetGeographicalValueAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHelper.getServiceContext(), action.getUuid(), null);
-            return new GetIndicatorResult(indicatorDto);
+            GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(ServiceContextHelper.getServiceContext(), action.getGeographicalValueUuid());
+            return new GetGeographicalValueResult(geographicalValueDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetIndicatorAction action, GetIndicatorResult result, ExecutionContext context) throws ActionException {
-
+    public void undo(GetGeographicalValueAction action, GetGeographicalValueResult result, ExecutionContext context) throws ActionException {
+        
     }
-
+    
 }

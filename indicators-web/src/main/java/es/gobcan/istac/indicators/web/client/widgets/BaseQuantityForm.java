@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -24,6 +25,8 @@ public class BaseQuantityForm extends GroupDynamicForm {
     
     protected List<IndicatorDto> indicatorDtos;
     protected List<QuantityUnitDto> quantityUnitDtos;
+    protected UiHandlers uiHandlers;
+    
     
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
@@ -35,6 +38,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
     
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         this.quantityUnitDtos = units;
+    }
+    
+    public void setUiHandlers(UiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
     }
     
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {

@@ -6,7 +6,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 
 
 public class UpdateGeographicalValuesEvent extends GwtEvent<UpdateGeographicalValuesEvent.UpdateGeographicalValuesHandler> {
@@ -23,7 +23,7 @@ public class UpdateGeographicalValuesEvent extends GwtEvent<UpdateGeographicalVa
     }
     
     // TODO HasEventBus should be used instead of HasHandlers ¿?
-    public static void fire(HasHandlers source, List<GeographicalGranularityDto> geoValues) {
+    public static void fire(HasHandlers source, List<GeographicalValueDto> geoValues) {
         if (TYPE != null) {
             source.fireEvent(new UpdateGeographicalValuesEvent(geoValues));
         }
@@ -34,13 +34,13 @@ public class UpdateGeographicalValuesEvent extends GwtEvent<UpdateGeographicalVa
         handler.onUpdateGeographicalValues(this);
     }
     
-    private final List<GeographicalGranularityDto> geoValues;
+    private final List<GeographicalValueDto> geoValues;
     
-    public UpdateGeographicalValuesEvent(List<GeographicalGranularityDto> geoValues) {
+    public UpdateGeographicalValuesEvent(List<GeographicalValueDto> geoValues) {
         this.geoValues = geoValues;
     }
     
-    public List<GeographicalGranularityDto> getGeographicalValues() {
+    public List<GeographicalValueDto> getGeographicalValues() {
         return geoValues;
     }
 

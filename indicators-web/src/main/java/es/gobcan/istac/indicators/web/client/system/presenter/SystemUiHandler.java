@@ -23,8 +23,9 @@ public interface SystemUiHandler extends UiHandlers {
 	void retrieveSystemStructure();
 	
 	void retrieveIndicators();
-	void retrieveIndicatorFromIndicatorInstance(String uuid);
+	void retrieveIndicator(String uuid);
 	
 	void retrieveGeographicalValues(String geographicalGranularityUuid);
+    void retrieveGeographicalValue(String geographicalValueUuid);
 	
 }

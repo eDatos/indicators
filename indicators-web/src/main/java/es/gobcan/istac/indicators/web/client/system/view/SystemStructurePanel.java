@@ -183,7 +183,6 @@ public class SystemStructurePanel extends HLayout {
 			dimensionPanel.hide();
 		}
 		selectedIndInstance = instance;
-		uiHandlers.retrieveIndicatorFromIndicatorInstance(instance.getIndicatorUuid());
 		indicatorInstPanel.setIndicatorInstance(instance);
 		indicatorInstPanel.show();
 	}
@@ -263,6 +262,10 @@ public class SystemStructurePanel extends HLayout {
 
 	public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
 	    indicatorInstPanel.setGeographicalValues(geographicalValueDtos);
+	}
+	
+	public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+	    indicatorInstPanel.setGeographicalValue(geographicalValueDto);
 	}
 	
 	private class TreePanel extends VLayout {
@@ -684,7 +687,6 @@ public class SystemStructurePanel extends HLayout {
         private boolean createMode;
         
         private List<GeographicalGranularityDto> geographicalGranularityDtos;
-        private List<GeographicalValueDto> geographicalValueDtos;
         
         
         public IndicatorInstancePanel() {
@@ -760,7 +762,7 @@ public class SystemStructurePanel extends HLayout {
         	indicatorInstanceDto.setTimeGranularity(editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(editionForm.getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
         	indicatorInstanceDto.setTimeValue(editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
         	indicatorInstanceDto.setGeographicalGranularityUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY) : null);
-        	indicatorInstanceDto.setGeographicalValueUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue(geographicalValueDtos) : null);
+        	indicatorInstanceDto.setGeographicalValueUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue() : null);
         	return indicatorInstanceDto;
         }
         
@@ -786,8 +788,18 @@ public class SystemStructurePanel extends HLayout {
         }
         
         public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-            this.geographicalValueDtos = geographicalValueDtos;
             ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+        }
+        
+        public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+            // View form
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) :  new String());
+            // Edition form
+            if (geographicalValueDto != null) {
+                ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
+                // Make sure value map is set properly
+                uiHandlers.retrieveGeographicalValues(geographicalValueDto.getGranularityUuid());
+            }
         }
         
         private void setIndicator(IndicatorDto indicator) {
@@ -796,7 +808,9 @@ public class SystemStructurePanel extends HLayout {
         
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
         	form.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        	form.setValue(IndicatorInstanceDS.IND_TITLE, "");
+        	
+        	form.setValue(IndicatorInstanceDS.IND_TITLE, new String()); // Indicator title set in setIndicator method 
+        	uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());
         	
         	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
         	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
@@ -806,7 +820,12 @@ public class SystemStructurePanel extends HLayout {
         	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
         	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE  + "-text", getGeoSelectionType(indInst));
         	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
-        	// TODO null pointer (geographical values list is still empty) form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getGeographicalValueTitle(indInst.getGeographicalValueUuid()));
+        	
+        	// Geographical value set in setGeographicalValue method
+        	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
+        	if (indInst.getGeographicalValueUuid() != null && !indInst.getGeographicalValueUuid().isEmpty()) {
+                uiHandlers.retrieveGeographicalValue(indInst.getGeographicalValueUuid());
+            }
         	
         	form.markForRedraw();
         }
@@ -821,7 +840,7 @@ public class SystemStructurePanel extends HLayout {
         
         	editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
         	editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, indInst.getGeographicalGranularityUuid());
-        	// TODO editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, indInst.getGeographicalValueUuid());
+        	((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValue(indInst.getGeographicalValueUuid());
         }
         
         private void createViewForm() {
@@ -901,13 +920,17 @@ public class SystemStructurePanel extends HLayout {
             RequiredSelectItem geographicalGranularity = new RequiredSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
             geographicalGranularity.setShowIfCondition(getGeoGranularityIfFunction());
             
-            GeographicalSelectItem geographicalValue = new GeographicalSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
+            final GeographicalSelectItem geographicalValue = new GeographicalSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
             geographicalValue.setRequired(true);
             geographicalValue.setShowIfCondition(getGeoValueIfFunction());
             geographicalValue.getGeoGranularity().addChangedHandler(new ChangedHandler() {
                 @Override
                 public void onChanged(ChangedEvent event) {
-                    if (event.getValue() != null) {
+                    // Clear geographical value
+                    geographicalValue.setGeoValuesValueMap(new LinkedHashMap<String, String>());
+                    geographicalValue.setGeoValue(new String());
+                    // Set values with selected granularity
+                    if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                         uiHandlers.retrieveGeographicalValues(event.getValue().toString());
                     }
                 }
@@ -998,17 +1021,6 @@ public class SystemStructurePanel extends HLayout {
         private String getGeographicalGranularityTitle(String uuid) {
             if (uuid != null && !uuid.isEmpty()) {
                 for (GeographicalGranularityDto dto : geographicalGranularityDtos) {
-                    if (uuid.equals(dto.getUuid())) {
-                        return InternationalStringUtils.getLocalisedString(dto.getTitle());
-                    }
-                }
-            }
-            return new String();
-        }
-        
-        private String getGeographicalValueTitle(String uuid) {
-            if (uuid != null && !uuid.isEmpty()) {
-                for (GeographicalValueDto dto : geographicalValueDtos) {
                     if (uuid.equals(dto.getUuid())) {
                         return InternationalStringUtils.getLocalisedString(dto.getTitle());
                     }

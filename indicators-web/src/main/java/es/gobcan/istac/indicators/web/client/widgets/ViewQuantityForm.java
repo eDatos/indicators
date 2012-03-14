@@ -8,9 +8,11 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 
@@ -88,7 +90,15 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getIndexBaseType(quantityDto));
             setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, quantityDto.getBaseLocationUuid());
+            
+            // Base location set in setGeographicalValue method
+            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, new String()); 
+            if (quantityDto.getBaseLocationUuid() != null && !quantityDto.getBaseLocationUuid().isEmpty()) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
+                }
+            }
+            
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getIndicatorText(quantityDto.getBaseQuantityIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
@@ -114,6 +124,10 @@ public class ViewQuantityForm extends BaseQuantityForm {
             }
         }
         return new String();
+    }
+    
+    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+        setValue(IndicatorDS.QUANTITY_BASE_LOCATION, geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) :  new String());
     }
     
 }

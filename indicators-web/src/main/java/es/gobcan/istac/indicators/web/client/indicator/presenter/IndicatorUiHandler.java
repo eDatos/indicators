@@ -8,6 +8,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 public interface IndicatorUiHandler extends UiHandlers {
 
     void saveIndicator(IndicatorDto indicator);
+    
     void retrieveSubjects();
+    void retrieveGeographicalValues(String geographicalGranularityUuid);
+    void retrieveGeographicalValue(String geographicalValueUuid);
     
 }

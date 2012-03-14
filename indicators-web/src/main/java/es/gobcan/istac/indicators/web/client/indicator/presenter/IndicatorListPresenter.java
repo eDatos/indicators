@@ -139,7 +139,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
         dispatcher.execute(new GetSubjectsListAction(), new AsyncCallback<GetSubjectsListResult>() {
             @Override
             public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingSubjects()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingSubjects()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(GetSubjectsListResult result) {

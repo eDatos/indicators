@@ -1,15 +1,12 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 
 public class GeographicalSelectItem extends CustomCanvasItem {
 
@@ -45,6 +42,10 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         geoValueItem.setValueMap(map);
     }
     
+    public void setGeoGranularity(String granularity) {
+        geoGranularitItem.setValue(granularity);
+    }
+    
     public void setGeoValue(String value) {
         geoValueItem.setValue(value);
     }
@@ -57,7 +58,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         return geoValueItem;
     }
     
-    public String getSelectedGeoValue(List<GeographicalValueDto> geographicalValueDtos) {
+    public String getSelectedGeoValue() {
         return geoValueItem.getValueAsString();
     }
     

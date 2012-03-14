@@ -4,6 +4,8 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
@@ -24,15 +26,23 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
+import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
@@ -42,8 +52,11 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
-public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler, UpdateQuantityUnitsHandler {
-	private DispatchAsync dispatcher;
+public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler, UpdateQuantityUnitsHandler, UpdateGeographicalGranularitiesHandler {
+	
+    private Logger logger = Logger.getLogger(IndicatorPresenter.class.getName());
+    
+    private DispatchAsync dispatcher;
 	private String indicatorCode;
 	
 	@ProxyCodeSplit
@@ -55,6 +68,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		void setQuantityUnits(List<QuantityUnitDto> units);
 		void setIndicatorList(List<IndicatorDto> indicators);
 		void setSubjectsList(List<SubjectDto> subjectDtos);
+		void setGeographicalGranularities(List<GeographicalGranularityDto> granularityDtos);
+		void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
+		void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 	}
 	
 	@Inject
@@ -130,11 +146,47 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         dispatcher.execute(new GetSubjectsListAction(), new AsyncCallback<GetSubjectsListResult>() {
             @Override
             public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingSubjects()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingSubjects()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(GetSubjectsListResult result) {
                 getView().setSubjectsList(result.getSubjectDtos());
+            }}
+        );
+    }
+    
+    @ProxyEvent
+    @Override
+    public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
+        getView().setGeographicalGranularities(event.getGeographicalGranularities());
+    }
+
+    @Override
+    public void retrieveGeographicalValues(final String geographicalGranularityUuid) {
+        dispatcher.execute(new GetGeographicalValuesAction(geographicalGranularityUuid), new AsyncCallback<GetGeographicalValuesResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error loading geographical values with geographical granularity UUID = " + geographicalGranularityUuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetGeographicalValuesResult result) {
+                getView().setGeographicalValues(result.getGeographicalValueDtos());
+            }}
+        );
+    }
+
+    @Override
+    public void retrieveGeographicalValue(final String geographicalValueUuid) {
+        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new AsyncCallback<GetGeographicalValueResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error loading geographical value with UUID = " + geographicalValueUuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetGeographicalValueResult result) {
+                getView().setGeographicalValue(result.getGeographicalValueDto());
             }}
         );
     }

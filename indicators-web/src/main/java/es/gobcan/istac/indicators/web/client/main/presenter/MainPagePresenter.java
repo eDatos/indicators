@@ -102,7 +102,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 	    dispatcher.execute(new GetQuantityUnitsListAction(), new AsyncCallback<GetQuantityUnitsListResult>() {
             @Override
             public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingQuantityUnits()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingQuantityUnits()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(GetQuantityUnitsListResult result) {
@@ -115,7 +115,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 	    dispatcher.execute(new GetGeographicalGranularitiesAction(), new AsyncCallback<GetGeographicalGranularitiesResult>() {
             @Override
             public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingGeographicalGranularities()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularities()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(GetGeographicalGranularitiesResult result) {

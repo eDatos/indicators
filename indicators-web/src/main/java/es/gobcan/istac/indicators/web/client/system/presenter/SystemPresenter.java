@@ -4,6 +4,8 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
@@ -50,6 +52,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
@@ -69,6 +73,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler, UpdateGeographicalGranularitiesHandler {
 	
+    private Logger logger = Logger.getLogger(SystemPresenter.class.getName());
+    
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> GENERAL_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot
@@ -93,6 +99,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		
 		void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos);
 		void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
+		void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 	}
 	
 	@ProxyCodeSplit
@@ -142,10 +149,11 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	@Override
-	public void retrieveIndSystem(String indSystemCode) {
+	public void retrieveIndSystem(final String indSystemCode) {
 		dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode), new AsyncCallback<GetIndicatorsSystemByCodeResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
+			    logger.log(Level.SEVERE, "Error loading indicator system with code = " + indSystemCode);
 				ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
 			}
 			@Override
@@ -164,6 +172,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 			dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new AsyncCallback<GetIndicatorsSystemStructureResult>() {
 				@Override
 				public void onFailure(Throwable caught) {
+				    logger.log(Level.SEVERE, "Error loading system structure of indicator system  with code = " + indSystem.getCode());
 					ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
 				}
 				@Override
@@ -179,7 +188,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	    dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicators()), MessageTypeEnum.ERROR);
 	        }
 	        @Override
 	        public void onSuccess(GetIndicatorListResult result) {
@@ -189,11 +198,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	}
 	
 	@Override
-	public void retrieveIndicatorFromIndicatorInstance(String uuid) {
+	public void retrieveIndicator(final String uuid) {
 	    dispatcher.execute(new GetIndicatorAction(uuid), new AsyncCallback<GetIndicatorResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
+	            logger.log(Level.SEVERE, "Error retrieving indicador with uuid = " + uuid);
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorFromInstance()), MessageTypeEnum.ERROR);
 	        }
 	        @Override
 	        public void onSuccess(GetIndicatorResult result) {
@@ -331,7 +341,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	    dispatcher.execute(new GetGeographicalValuesAction(geographicalGranularityUuid), new AsyncCallback<GetGeographicalValuesResult>() {
 	        @Override
 	        public void onFailure(Throwable caught) {
-	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingGeographicalValues()), MessageTypeEnum.ERROR);
+	            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
 	        }
 	        @Override
 	        public void onSuccess(GetGeographicalValuesResult result) {
@@ -344,6 +354,20 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
         getView().setGeographicalGranularities(event.getGeographicalGranularities());
+    }
+
+    @Override
+    public void retrieveGeographicalValue(String geographicalValueUuid) {
+        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new AsyncCallback<GetGeographicalValueResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetGeographicalValueResult result) {
+                getView().setGeographicalValue(result.getGeographicalValueDto());
+            }}
+        );
     }
    
 }
