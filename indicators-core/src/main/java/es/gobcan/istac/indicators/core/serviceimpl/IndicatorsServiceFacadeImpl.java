@@ -378,10 +378,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException {
+    public List<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Retrieve geographicalValues
-        List<GeographicalValue> geographicalValues = getIndicatorsSystemsService().findGeographicalValues(ctx, geographicalGranularityUuid);
+        List<GeographicalValue> geographicalValues = getIndicatorsSystemsService().findGeographicalValues(ctx, criteria);
 
         // Transform
         List<GeographicalValueDto> geographicalValuesDto = new ArrayList<GeographicalValueDto>();

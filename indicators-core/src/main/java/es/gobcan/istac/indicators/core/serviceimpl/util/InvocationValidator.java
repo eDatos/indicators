@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
@@ -41,8 +42,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions)
-            throws MetamacException {
+    public static void checkUpdateIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -96,7 +96,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveIndicatorsSystemStructure(String uuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -196,7 +196,7 @@ public class InvocationValidator {
         if (criteria != null && criteria.getConjunctionRestriction() != null) {
             for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
                 try {
-                    IndicatorsSystemCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName()); 
+                    IndicatorsSystemCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
                 } catch (IllegalArgumentException e) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
                 }
@@ -325,7 +325,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveIndicatorByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -434,7 +434,7 @@ public class InvocationValidator {
         if (criteria != null && criteria.getConjunctionRestriction() != null) {
             for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
                 try {
-                    IndicatorCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName()); 
+                    IndicatorCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
                 } catch (IllegalArgumentException e) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
                 }
@@ -498,8 +498,8 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        checkDataSource(dataSource, exceptions); 
-        ValidationUtils.checkMetadataRequired(dataSource.getId(), "DATA_SOURCE.UUID", exceptions);  // uuid never is null: it is initialized when create object
+        checkDataSource(dataSource, exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getId(), "DATA_SOURCE.UUID", exceptions); // uuid never is null: it is initialized when create object
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -516,7 +516,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -556,7 +556,7 @@ public class InvocationValidator {
         }
 
         checkIndicatorInstance(indicatorInstance, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions);   // uuid never is null: it is initialized when create object
+        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), "INDICATOR_INSTANCE.UUID", exceptions); // uuid never is null: it is initialized when create object
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -589,8 +589,8 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing 
-        
+        // nothing
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -610,8 +610,8 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing 
-        
+        // nothing
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -626,16 +626,25 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, String geographicalGranularityUuid) throws MetamacException {
+    public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, IndicatorsCriteria criteria) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing 
-        
+        // Checks properties names of criteria restrictions
+        if (criteria != null && criteria.getConjunctionRestriction() != null) {
+            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
+                try {
+                    GeographicalValueCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
+                } catch (IllegalArgumentException e) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
+                }
+            }
+        }
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalGranularity(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -652,8 +661,8 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // nothing 
-        
+        // nothing
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -711,12 +720,12 @@ public class InvocationValidator {
     }
 
     private static void checkQuantity(Quantity quantity, String parameterName, List<MetamacExceptionItem> exceptions) {
-        
+
         ValidationUtils.checkMetadataRequired(quantity, parameterName, exceptions);
         if (ValidationUtils.isEmpty(quantity)) {
             return;
         }
-        
+
         // checks required
         ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ".TYPE", exceptions);
         ValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ".UNIT_UUID", exceptions);
@@ -726,7 +735,8 @@ public class InvocationValidator {
         }
         if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
             if (ValidationUtils.isEmpty(quantity.getBaseValue()) && ValidationUtils.isEmpty(quantity.getBaseTime()) && ValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName + ".BASE_LOCATION_UUID"));
+                exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName
+                        + ".BASE_LOCATION_UUID"));
             }
             // must be filled only one of followings
             if (!ValidationUtils.isEmpty(quantity.getBaseValue())) {
@@ -737,14 +747,14 @@ public class InvocationValidator {
             }
             if (!ValidationUtils.isEmpty(quantity.getBaseTime())) {
                 if (!TimeVariableUtils.isTimeValue(quantity.getBaseTime())) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT,  parameterName + ".BASE_TIME"));
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_TIME"));
                 }
             }
         }
         if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataRequired(quantity.getBaseQuantity(), parameterName + ".BASE_QUANTITY_INDICATOR_UUID", exceptions);
         }
-        
+
         // Quantity: checks unexpected
         if (!IndicatorUtils.isMagnitudeOrExtension(quantity.getQuantityType())) {
             ValidationUtils.checkMetadataEmpty(quantity.getMinimum(), parameterName + ".MINIMUM", exceptions);
@@ -777,14 +787,14 @@ public class InvocationValidator {
         checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
         checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
     }
-    
+
     private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, List<MetamacExceptionItem> exceptions) {
-        
+
         ValidationUtils.checkMetadataRequired(rateDerivation, parameterName, exceptions);
         if (ValidationUtils.isEmpty(rateDerivation)) {
             return;
         }
-        
+
         // checks required
         ValidationUtils.checkMetadataRequired(rateDerivation.getMethodType(), parameterName + ".METHOD_TYPE", exceptions);
         ValidationUtils.checkMetadataRequired(rateDerivation.getMethod(), parameterName + ".METHOD", exceptions);
@@ -795,7 +805,7 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(rateDerivation.getQuantity())) {
             if (!ValidationUtils.isEmpty(rateDerivation.getQuantity().getQuantityType())) {
                 if (!QuantityTypeEnum.AMOUNT.equals(rateDerivation.getQuantity().getQuantityType()) && !QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
-                    exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));            
+                    exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));
                 }
             }
             checkQuantity(rateDerivation.getQuantity(), parameterName + ".QUANTITY", exceptions);

@@ -633,13 +633,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<GeographicalValue> findGeographicalValues(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException {
+    public List<GeographicalValue> findGeographicalValues(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindGeographicalValues(null, geographicalGranularityUuid);
+        InvocationValidator.checkFindGeographicalValues(null, criteria);
 
         // Find
-        List<GeographicalValue> geographicalValues = getGeographicalValueRepository().findGeographicalValues(geographicalGranularityUuid);
+        List<GeographicalValue> geographicalValues = getGeographicalValueRepository().findGeographicalValues(criteria);
         return geographicalValues;
     }
 

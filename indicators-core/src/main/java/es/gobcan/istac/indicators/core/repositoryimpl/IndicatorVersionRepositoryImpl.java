@@ -46,7 +46,7 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         Criteria criteria = session.createCriteria(IndicatorVersion.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        if (indicatorsCriteria.getConjunctionRestriction() != null) {
+        if (indicatorsCriteria != null && indicatorsCriteria.getConjunctionRestriction() != null) {
             for (IndicatorsCriteriaPropertyRestriction propertyRestriction : indicatorsCriteria.getConjunctionRestriction().getRestrictions()) {
                 IndicatorCriteriaPropertyInternalEnum propertyName = IndicatorCriteriaPropertyInternalEnum.fromValue(propertyRestriction.getPropertyName());
                 switch (propertyName) {

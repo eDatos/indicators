@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
@@ -3839,7 +3840,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         
         // By granularity
         {
-            List<GeographicalValueDto> geographicalValues = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), GEOGRAPHICAL_GRANULARITY_1);
+            IndicatorsCriteria criteria = new IndicatorsCriteria();
+            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1));
+
+            List<GeographicalValueDto> geographicalValues = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);
             assertEquals(2, geographicalValues.size());
     
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
