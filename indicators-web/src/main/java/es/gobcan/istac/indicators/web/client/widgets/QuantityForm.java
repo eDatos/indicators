@@ -25,6 +25,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
@@ -48,13 +49,13 @@ public class QuantityForm extends BaseQuantityForm {
                 QuantityForm.this.markForRedraw();
             }
         });
-        // TODO Required when indicator is not DRAFT
+        type.setValidators(getQuantityRequiredIfValidator());
         
         SelectItem unitUuid = new SelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
-        // TODO Required when indicator is not DRAFT
+        unitUuid.setValidators(getQuantityRequiredIfValidator());
         
         IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        // TODO Required when indicator is not DRAFT
+        unitMultiplier.setValidators(getQuantityRequiredIfValidator());
         
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
         
@@ -237,6 +238,15 @@ public class QuantityForm extends BaseQuantityForm {
                 ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(geographicalValueDto.getGranularityUuid());
             }
         }
+    }
+    
+    public RequiredIfValidator getQuantityRequiredIfValidator() {
+        return new RequiredIfValidator(new RequiredIfFunction() {
+            @Override
+            public boolean execute(FormItem formItem, Object value) {
+                return IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
+            }
+        });
     }
     
 }
