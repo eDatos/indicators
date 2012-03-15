@@ -680,6 +680,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             // Check other conditions
             checkConditionsToPublish(ctx, indicatorVersion, exceptions);
         }
+        
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     /**

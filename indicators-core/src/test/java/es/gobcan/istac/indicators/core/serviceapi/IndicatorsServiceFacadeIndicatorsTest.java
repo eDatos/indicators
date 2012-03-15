@@ -1537,15 +1537,19 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             indicatorsServiceFacade.sendIndicatorToProductionValidation(getServiceContext(), uuid);
             fail("Indicator quantity incomplete");
         } catch (MetamacException e) {
-            assertEquals(2, e.getExceptionItems().size());
+            assertEquals(3, e.getExceptionItems().size());
             
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.TYPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
             
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
+            assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(2).getMessageParameters()[0]);
         }
     }
 
