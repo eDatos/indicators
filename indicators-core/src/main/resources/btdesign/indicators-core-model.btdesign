@@ -105,6 +105,7 @@ Application Indicators {
 	    	// Subjects
 	    	@Subject retrieveSubject(String code) throws MetamacException;
 	    	List<@Subject> findSubjects() throws MetamacException;
+	    	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
     	}   	
 	    
 	    "Provides access to indicators, indicators systems..."
@@ -241,7 +242,8 @@ Application Indicators {
 	    	@SubjectDto retrieveSubject(String code) throws MetamacException;
 	    	"Find all subjects. Important! Do not invoke this operation from public web application"
 	    	List<@SubjectDto> findSubjects() throws MetamacException;
-	    	
+	    	"Find all subjects in published indicators"
+	    	List<@SubjectDto> findSubjectsInPublishedIndicators() throws MetamacException;
 	    }
 
 	    // ----------------------------------------------------------------
@@ -515,6 +517,8 @@ Application Indicators {
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
             	List<@IndicatorVersion> findIndicatorsVersions(IndicatorsCriteria criteria) throws MetamacException;
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
+            	"Find all distinct subjects in published indicators"
+            	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
 			}
 		}     	
 		
@@ -708,8 +712,8 @@ Application Indicators {
 			
 			"Id"
 			String id not nullable databaseColumn="ID_AREA_TEMATICA" length="15" key;
-       		"Description"
-       		String description not nullable databaseColumn="DESCRIPCION" length="200";
+       		"Title"
+       		String title not nullable databaseColumn="DESCRIPCION" length="200";
        		
        		Repository SubjectRepository {
             	protected List<@Subject> findByQuery;
@@ -1015,8 +1019,8 @@ Application Indicators {
     	DataTransferObject SubjectDto {
 	   		"Code"
 	   		String code;
-			"Description"
-			- @InternationalStringDto description;
+			"Title"
+			- @InternationalStringDto title;
     	}
 	}
 	

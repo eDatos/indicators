@@ -2196,6 +2196,11 @@
 		ID_AREA_TEMATICA="3"
 		DESCRIPCION="Área temática 3"
 	/>
+	
+	<TV_AREAS_TEMATICAS
+		ID_AREA_TEMATICA="4"
+		DESCRIPCION="Área temática 4"
+	/>
   		  		  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->

@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 public interface Do2DtoMapper {
     
@@ -54,4 +55,5 @@ public interface Do2DtoMapper {
 
     // Subject
     public SubjectDto subjectDoToDto(Subject source);
+    public SubjectDto subjectDoToDto(SubjectIndicatorResult source);
 }

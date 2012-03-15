@@ -214,9 +214,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setNotesUrl(source.getNotesUrl());
 
         if (source.getSubjectCode() != null) {
-            // Although subject is not saved as a relation to table view, it is necessary validate it exists and same description is provided
+            // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
             Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
-            if (source.getSubjectTitle() != null && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getDescription().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
+            if (source.getSubjectTitle() != null && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getTitle().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
                 throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR.SUBJECT_TITLE");
             }
             target.setSubjectCode(source.getSubjectCode());

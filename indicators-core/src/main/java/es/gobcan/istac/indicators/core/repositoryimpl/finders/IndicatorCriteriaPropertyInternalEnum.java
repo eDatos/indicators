@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.repositoryimpl.criteria;
+package es.gobcan.istac.indicators.core.repositoryimpl.finders;
 
 /**
  * This class can not be used out of service or repository. Do not use in web!

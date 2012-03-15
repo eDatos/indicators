@@ -14,7 +14,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorsSystemCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorsSystemCriteriaPropertyInternalEnum;
 
 /**
  * Repository implementation for IndicatorsSystemVersion

@@ -14,7 +14,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.GeographicalValueCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.GeographicalValueCriteriaPropertyInternalEnum;
 
 /**
  * Repository implementation for GeographicalValue

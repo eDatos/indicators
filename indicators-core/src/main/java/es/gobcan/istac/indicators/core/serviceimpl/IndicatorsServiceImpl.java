@@ -25,7 +25,8 @@ import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
@@ -556,6 +557,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Find
         List<Subject> subjects = getSubjectRepository().findSubjects();
+        return subjects;
+    }
+    
+    /**
+     * This operation retrieves subjects from indicators table
+     */
+    @Override
+    public List<SubjectIndicatorResult> findSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindSubjectsInPublishedIndicators(null);
+
+        // Find
+        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
         return subjects;
     }
 

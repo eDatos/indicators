@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 /**
  * Implementation of IndicatorServiceFacade.
@@ -685,6 +686,21 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Transform
         List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
         for (Subject subject : subjects) {
+            subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
+        }
+
+        return subjectsDto;
+    }
+    
+    @Override
+    public List<SubjectDto> findSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
+
+        // Retrieve subjects
+        List<SubjectIndicatorResult> subjects = getIndicatorsService().findSubjectsInPublishedIndicators(ctx);
+
+        // Transform
+        List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
+        for (SubjectIndicatorResult subject : subjects) {
             subjectsDto.add(do2DtoMapper.subjectDoToDto(subject));
         }
 

@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -202,12 +203,22 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         SubjectDto target = new SubjectDto();
         target.setCode(source.getId());
 
-        InternationalStringDto description = new InternationalStringDto();
+        InternationalStringDto title = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-        localisedStringDto.setLabel(source.getDescription());
-        localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH); // description only in spanish
-        description.addText(localisedStringDto);
-        target.setDescription(description);
+        localisedStringDto.setLabel(source.getTitle());
+        localisedStringDto.setLocale(IndicatorsConstants.LOCALE_SPANISH); // title only in spanish
+        title.addText(localisedStringDto);
+        target.setTitle(title);
+
+        return target;
+    }
+    
+    @Override
+    public SubjectDto subjectDoToDto(SubjectIndicatorResult source) {
+
+        SubjectDto target = new SubjectDto();
+        target.setCode(source.getId());
+        target.setTitle(internationalStringToDto(source.getTitle()));
 
         return target;
     }

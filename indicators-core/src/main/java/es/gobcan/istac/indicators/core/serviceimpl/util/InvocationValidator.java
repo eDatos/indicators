@@ -615,6 +615,16 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkFindSubjectsInPublishedIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // nothing
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
     public static void checkRetrieveGeographicalValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {

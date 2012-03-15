@@ -27,8 +27,8 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorsSystemCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorsSystemCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;

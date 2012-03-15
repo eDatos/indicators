@@ -36,7 +36,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.criteria.IndicatorCriteriaPropertyInternalEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
@@ -83,6 +83,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             SUBJECT_1                    = "1";
     private static String             SUBJECT_2                    = "2";
     private static String             SUBJECT_3                    = "3";
+    private static String             SUBJECT_4                    = "4";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -3118,7 +3119,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertNotNull(subjectDto);
         assertEquals(code, subjectDto.getCode());
-        IndicatorsAsserts.assertEqualsInternationalString(subjectDto.getDescription(), "es", "Área temática 1", null, null);
+        IndicatorsAsserts.assertEqualsInternationalString(subjectDto.getTitle(), "es", "Área temática 1", null, null);
     }
 
     @Test
@@ -3157,13 +3158,30 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testFindSubjects() throws Exception {
 
         List<SubjectDto> subjects = indicatorsServiceFacade.findSubjects(getServiceContext());
-        assertEquals(3, subjects.size());
+        assertEquals(4, subjects.size());
 
         assertEquals(SUBJECT_1, subjects.get(0).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
         assertEquals(SUBJECT_2, subjects.get(1).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(1).getTitle(), "es", "Área temática 2", null, null);
         assertEquals(SUBJECT_3, subjects.get(2).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(2).getTitle(), "es", "Área temática 3", null, null);
+        assertEquals(SUBJECT_4, subjects.get(3).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(3).getTitle(), "es", "Área temática 4", null, null);
     }
 
+    @Test
+    public void testFindSubjectsInPublishedIndicators() throws Exception {
+
+        List<SubjectDto> subjects = indicatorsServiceFacade.findSubjectsInPublishedIndicators(getServiceContext());
+        assertEquals(2, subjects.size());
+
+        assertEquals(SUBJECT_1, subjects.get(0).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
+        assertEquals(SUBJECT_3, subjects.get(1).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(1).getTitle(), "es", "Área temática 3", null, null);
+    }
+    
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
