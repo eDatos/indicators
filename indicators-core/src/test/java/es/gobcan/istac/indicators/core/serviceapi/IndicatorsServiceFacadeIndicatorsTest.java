@@ -599,6 +599,32 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testCreateIndicatorWithQuantityEmptyAttributes() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoRetrieved);
+        assertNull(indicatorDtoRetrieved.getQuantity().getUnitUuid());
+    }
+
+    @Test
     public void testCreateIndicatorParametersRequired() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
@@ -607,13 +633,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setSubjectCode(null);
         indicatorDto.setSubjectTitle(null);
         indicatorDto.setQuantity(new QuantityDto());
-        indicatorDto.getQuantity().setUnitMultiplier(null);
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
             fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(7, e.getExceptionItems().size());
+            assertEquals(4, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
@@ -630,55 +655,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
             assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(3).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.TYPE", e.getExceptionItems().get(4).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(5).getCode());
-            assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(5).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(6).getCode());
-            assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.UNIT_MULTIPLIER", e.getExceptionItems().get(6).getMessageParameters()[0]);
-
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorChangeRateErrorMetadataRequired() throws Exception {
-
-        IndicatorDto indicatorDto = new IndicatorDto();
-        indicatorDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(100));
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setQuantity(new QuantityDto());
-        indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
-
-        // Create
-        try {
-            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
-            fail("parameters required");
-        } catch (MetamacException e) {
-            assertEquals(2, e.getExceptionItems().size());
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -1537,6 +1513,38 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_MUST_HAVE_DATA_SOURCES.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testSendIndicatorToProductionValidationErrorQuantityIncomplete() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String productionVersion = "2.000";
+
+        IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
+        assertEquals(productionVersion, indicatorDtoV2.getProductionVersion());
+        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoV2.getProcStatus());
+
+        // Update to clear quantity required attributes
+        indicatorDtoV2.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        indicatorDtoV2.getQuantity().setUnitUuid(null);
+        indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDtoV2);
+        
+        // Sends to production validation
+        try {
+            indicatorsServiceFacade.sendIndicatorToProductionValidation(getServiceContext(), uuid);
+            fail("Indicator quantity incomplete");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+            
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.TYPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 

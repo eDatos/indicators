@@ -525,9 +525,9 @@ Application Indicators {
         	gap
 
 	    	"Type"
-			- @QuantityTypeEnum quantityType not nullable;
+			- @QuantityTypeEnum quantityType nullable;
 			"Multiplier of percentage"
-			Integer unitMultiplier not nullable;
+			Integer unitMultiplier nullable;
 			"Number of significant digits to use when displaying the values of a metric concept"
 			Integer significantDigits nullable;
 			"Number of decimal places to use for displaying the values of a metric concept"
@@ -540,7 +540,6 @@ Application Indicators {
 			Boolean isPercentage nullable;
 			"In percentages, descriptive text to display next to number that specifies what this is a percentage of"
 			- @InternationalString percentageOf cascade="all" nullable databaseColumn="PERCENTAGE_OF_FK";
-			
 			"Value base"
 			Integer baseValue nullable;
 			"Time value base"
@@ -548,7 +547,7 @@ Application Indicators {
 			
 			// Relations
 			"Unit"
-			- @QuantityUnit unit not nullable cascade="none" databaseColumn="UNIT_FK";
+			- @QuantityUnit unit nullable cascade="none" databaseColumn="UNIT_FK";
 			"Numerator of the fraction"
 			- @Indicator numerator nullable cascade="none" databaseColumn="NUMERATOR_FK";
 			"Denominator of the fraction"
@@ -556,7 +555,7 @@ Application Indicators {
 			"Base quantity"
 			- @Indicator baseQuantity nullable cascade="none" databaseColumn="BASE_QUANTITY_FK";
             "Geographical value base"
-			- @GeographicalValue baseLocation cascade="none" nullable databaseColumn="BASE_LOCATION_FK";
+			- @GeographicalValue baseLocation nullable cascade="none" databaseColumn="BASE_LOCATION_FK";
 	    }
 	    
 	    "Metric characteristics of a data source of indicator"

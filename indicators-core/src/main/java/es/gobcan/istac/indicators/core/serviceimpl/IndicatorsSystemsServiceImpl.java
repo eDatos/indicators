@@ -8,6 +8,8 @@ import java.util.Set;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -47,7 +49,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         IndicatorsSystem indicatorsSystem = indicatorsSystemVersion.getIndicatorsSystem();
-        
+
         // Validation of parameters
         InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystemVersion, null);
         checkIndicatorsSystemCodeUnique(ctx, indicatorsSystem.getCode(), null);
@@ -190,10 +192,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Check indicators system proc status
         checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-        
+
         // Update
         indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
-        
+
         return indicatorsSystemVersion;
     }
 
@@ -217,7 +219,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             indicatorsSystem.getVersions().remove(indicatorsSystemVersion);
             indicatorsSystem.setProductionVersion(null);
             indicatorsSystem.getVersions().get(0).setIsLastVersion(Boolean.TRUE); // another version is now last version
-            
+
             // Update
             getIndicatorsSystemRepository().save(indicatorsSystem);
             getIndicatorsSystemVersionRepository().delete(indicatorsSystemVersion);
@@ -273,21 +275,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Retrieve version in draft
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemProcStatusEnum.DRAFT.equals(indicatorsSystemInProduction.getProcStatus()) && !IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(indicatorsSystemInProduction.getProcStatus()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DRAFT,
-                    IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED});
-        }
 
         // Validate to send to production
-        checkIndicatorsSystemToSendToProductionValidation(ctx, indicatorsSystemInProduction);
+        checkIndicatorsSystemToSendToProductionValidation(ctx, uuid, indicatorsSystemInProduction);
 
         // Update proc status
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION);
         indicatorsSystemInProduction.setProductionValidationDate(new DateTime());
         indicatorsSystemInProduction.setProductionValidationUser(ctx.getUserId());
         indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
-        
+
         return indicatorsSystemInProduction;
     }
 
@@ -299,19 +296,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Retrieve version in production validation
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION});
-        }
 
         // Validate to send to diffusion
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, indicatorsSystemInProduction);
+        checkIndicatorsSystemToSendToDiffusionValidation(ctx, uuid, indicatorsSystemInProduction);
 
         // Update proc status
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION);
         indicatorsSystemInProduction.setDiffusionValidationDate(new DateTime());
         indicatorsSystemInProduction.setDiffusionValidationUser(ctx.getUserId());
         indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
-        
+
         return indicatorsSystemInProduction;
     }
 
@@ -321,17 +315,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
 
-        // Retrieve version in production (proc status can be production or diffusion validation)
+        // Retrieve version in production
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null
-                || (!IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus()) && !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION
-                        .equals(indicatorsSystemInProduction.getProcStatus()))) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION,
-                    IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
-        }
 
         // Validate to reject
-        checkIndicatorsSystemToReject(ctx, indicatorsSystemInProduction);
+        checkIndicatorsSystemToReject(ctx, uuid, indicatorsSystemInProduction);
 
         // Update proc status
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED);
@@ -340,7 +328,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setDiffusionValidationDate(null);
         indicatorsSystemInProduction.setDiffusionValidationUser(null);
         indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
-        
+
         return indicatorsSystemInProduction;
     }
 
@@ -352,15 +340,12 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Retrieve version in diffusion validation
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
-        if (indicatorsSystemInProduction == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemInProduction.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
-        }
 
         // Validate to publish
-        checkIndicatorsSystemToPublish(ctx, indicatorsSystemInProduction);
+        checkIndicatorsSystemToPublish(ctx, uuid, indicatorsSystemInProduction);
 
         // Update proc status
-        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PUBLISHED); 
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.PUBLISHED);
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
         indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
@@ -379,7 +364,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Update indicators system
         getIndicatorsSystemRepository().save(indicatorsSystem);
-        
+
         return indicatorsSystemInProduction;
     }
 
@@ -391,23 +376,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Retrieve version published
         IndicatorsSystemVersion indicatorsSystemInDiffusion = retrieveIndicatorsSystemProcStatusInDiffusion(ctx, uuid, false);
-        if (indicatorsSystemInDiffusion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemInDiffusion.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
-        }
 
         // Validate to archive
-        checkIndicatorsSystemToArchive(ctx, indicatorsSystemInDiffusion);
+        checkIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion);
 
         // Update proc status
         IndicatorsSystem indicatorsSystem = indicatorsSystemInDiffusion.getIndicatorsSystem();
         indicatorsSystem.setIsPublished(Boolean.FALSE);
         getIndicatorsSystemRepository().save(indicatorsSystem);
-        
+
         indicatorsSystemInDiffusion.setProcStatus(IndicatorsSystemProcStatusEnum.ARCHIVED);
         indicatorsSystemInDiffusion.setArchiveDate(new DateTime());
         indicatorsSystemInDiffusion.setArchiveUser(ctx.getUserId());
         indicatorsSystemInDiffusion = getIndicatorsSystemVersionRepository().save(indicatorsSystemInDiffusion);
-        
+
         return indicatorsSystemInDiffusion;
     }
 
@@ -437,7 +419,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Create draft version
         indicatorsSystemNewVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemNewVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemNewVersion);
-        
+
         // Update indicator with draft version
         indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(indicatorsSystemNewVersion.getId(), indicatorsSystemNewVersion.getVersionNumber()));
         indicatorsSystem.getVersions().add(indicatorsSystemNewVersion);
@@ -496,7 +478,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Update location
         ElementLevel elementLevel = retrieveDimension(ctx, uuid).getElementLevel();
         elementLevel = updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
-        
+
         return elementLevel.getDimension();
     }
 
@@ -581,7 +563,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Update location
         ElementLevel elementLevel = retrieveIndicatorInstance(ctx, uuid).getElementLevel();
         elementLevel = updateElementLevelLocation(ctx, elementLevel, parentTargetUuid, orderInLevel);
-        
+
         return elementLevel.getIndicatorInstance();
     }
 
@@ -616,7 +598,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return indicatorsInstances;
     }
-    
+
     // Latitud y longitud como doubles. Ver txt en el escritorio
     @Override
     public GeographicalValue retrieveGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
@@ -677,7 +659,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsCriteria criteria = new IndicatorsCriteria();
         criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
         criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.CODE.name(), code));
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to get only one result
+        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to
+                                                                                                                                                                                                  // get
+                                                                                                                                                                                                  // only
+                                                                                                                                                                                                  // one
+                                                                                                                                                                                                  // result
 
         // Find
         List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
@@ -691,12 +677,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      */
     private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
         if (uriGopestat != null) {
-            
+
             // Criteria
             IndicatorsCriteria criteria = new IndicatorsCriteria();
             criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
             criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.URI_GOPESTAT.name(), uriGopestat));
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to get only one result
+            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to
+                                                                                                                                                                                                      // get
+                                                                                                                                                                                                      // only
+                                                                                                                                                                                                      // one
+                                                                                                                                                                                                      // result
 
             // Find
             List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
@@ -715,7 +705,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 || IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus);
         if (!inProduction) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemProcStatusEnum[]{
-                    IndicatorsSystemProcStatusEnum.DRAFT, IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
+                    IndicatorsSystemProcStatusEnum.DRAFT, IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION,
+                    IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
         }
     }
 
@@ -751,64 +742,146 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     /**
      * Makes validations to sent to production validation
-     * 1) Must exists at least one indicator instance
+     * - Check actual processing status
+     * If processing status is correct:
+     * - Must exists at least one indicator instance
      */
-    private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    private void checkIndicatorsSystemToSendToProductionValidation(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        String uuid = indicatorsSystemVersion.getIndicatorsSystem().getUuid();
-        String versionNumber = indicatorsSystemVersion.getVersionNumber();
-        
-        // Check exists at least one indicator instance
-        if (!getIndicatorInstanceRepository().existAnyIndicatorInstance(uuid, versionNumber)) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid);
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorsSystemVersion == null
+                || (!IndicatorsSystemProcStatusEnum.DRAFT.equals(indicatorsSystemVersion.getProcStatus()) && !IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(indicatorsSystemVersion
+                        .getProcStatus()))) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DRAFT,
+                    IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED}));
+        } else {
+            // Check other conditions
+            checkConditionsToChangeIndicatorsSystemProcStatus(ctx, IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemVersion, exceptions);
         }
+
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     /**
      * Makes validations to sent to diffusion validation
-     * 1) Validations when send to production validation
+     * - Check actual processing status
+     * If processing status is correct:
+     * - Validations to send to production validation
      */
-    private void checkIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    private void checkIndicatorsSystemToSendToDiffusionValidation(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        checkIndicatorsSystemToSendToProductionValidation(ctx, indicatorsSystemVersion);
-    }
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-    /**
-     * Makes validations to publish
-     * 1) Validations when send to diffusion validation
-     * 2) All indicators have one version PUBLISHED
-     */
-    private void checkIndicatorsSystemToPublish(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-
-        // Validation 1
-        checkIndicatorsSystemToSendToDiffusionValidation(ctx, indicatorsSystemVersion);
-        
-        // Validation 2
-        List<String> indicatorsUuid = getIndicatorInstanceRepository().findIndicatorsLinkedWithIndicatorsSystemVersion(indicatorsSystemVersion.getId());
-        List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuid);
-        if (indicatorsNotPublishedUuid.size() != 0) {
-            String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsNotPublishedUuidArray);
+        // Check proc status
+        if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
+                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION}));
+        } else {
+            // Check other conditions
+            checkConditionsToChangeIndicatorsSystemProcStatus(ctx, IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemVersion, exceptions);
         }
-    }
 
-    /**
-     * Makes validations to archive
-     * 1) Validations when publish
-     */
-    private void checkIndicatorsSystemToArchive(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-
-        checkIndicatorsSystemToPublish(ctx, indicatorsSystemVersion);
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     /**
      * Makes validations to reject
+     * - Check actual processing status
+     * If processing status is correct:
+     * - No additional validations
      */
-    private void checkIndicatorsSystemToReject(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    private void checkIndicatorsSystemToReject(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
-        // Nothing
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorsSystemVersion == null
+                || (!IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus()) && !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION
+                        .equals(indicatorsSystemVersion.getProcStatus()))) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{
+                    IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
+        } else {
+            // Check other conditions
+            checkConditionsToChangeIndicatorsSystemProcStatus(ctx, IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemVersion, exceptions);
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    /**
+     * Makes validations to publish
+     * - Check actual processing status
+     * If processing status is correct:
+     * - Validations to send to diffusion validation
+     * - All indicators have one version PUBLISHED
+     */
+    private void checkIndicatorsSystemToPublish(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
+                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
+        } else {
+            // Check other conditions
+            checkConditionsToChangeIndicatorsSystemProcStatus(ctx, IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemVersion, exceptions);
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
     }
 
+    /**
+     * Makes validations to archive
+     * - Check actual processing status
+     * If processing status is correct: 
+     * - Validations when publish
+     */
+    private void checkIndicatorsSystemToArchive(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED}));
+        } else {
+            // Check other conditions
+            checkConditionsToChangeIndicatorsSystemProcStatus(ctx, IndicatorsSystemProcStatusEnum.ARCHIVED, indicatorsSystemVersion, exceptions);
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
+     * Checks conditions of indicators system to change status
+     */
+    private void checkConditionsToChangeIndicatorsSystemProcStatus(ServiceContext ctx, IndicatorsSystemProcStatusEnum targetState, IndicatorsSystemVersion indicatorsSystemVersion,
+            List<MetamacExceptionItem> exceptions) {
+
+
+        if (IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(targetState) || IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(targetState)
+                || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(targetState)) {
+            String uuid = indicatorsSystemVersion.getIndicatorsSystem().getUuid();
+            String versionNumber = indicatorsSystemVersion.getVersionNumber();
+            // Check exists at least one indicator instance
+            if (!getIndicatorInstanceRepository().existAnyIndicatorInstance(uuid, versionNumber)) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_INDICATOR_INSTANCE, uuid));
+            }
+        }
+
+        if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(targetState)) {
+            // All linked indicators have one version PUBLISHED
+            List<String> indicatorsUuid = getIndicatorInstanceRepository().findIndicatorsLinkedWithIndicatorsSystemVersion(indicatorsSystemVersion.getId());
+            List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuid);
+            if (indicatorsNotPublishedUuid.size() != 0) {
+                String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
+                        indicatorsNotPublishedUuidArray));
+            }
+        }
+    }
     /**
      * Create element level: dimension or indicator instance
      */
@@ -950,7 +1023,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             updateIndicatorsSystemElementsOrdersInLevelChangingOrder(ctx, elementsInLevel, elementLevel, orderInLevelBefore, elementLevel.getOrderInLevel());
             elementLevel = updateElementLevel(elementLevel);
         }
-        
+
         return elementLevel;
     }
 
@@ -1069,7 +1142,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return indicatorsSystem;
     }
-    
+
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
         return getElementLevelRepository().save(elementLevel);
     }
