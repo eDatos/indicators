@@ -2108,7 +2108,6 @@
 		ID="1"
  		UUID="1"
   		SYMBOL="km"
-  		VERSION="1"
   		TITLE_FK="33"
   		SYMBOL_POSITION="END"
 	/>
@@ -2116,7 +2115,6 @@
 		ID="2"
  		UUID="2"
   		SYMBOL="kg"
-  		VERSION="1"
   		TITLE_FK="34"
   		SYMBOL_POSITION="START"
 	/>
@@ -2132,7 +2130,6 @@
  		LONGITUDE="-15632112156.45456464565"
   		TITLE_FK="43"
   		GRANULARITY_FK="1"
-  		VERSION="1"
 	/>
 
 	<LIS_GEOGR_VALUES
@@ -2143,7 +2140,6 @@
  		LONGITUDE="51232.254112"
   		TITLE_FK="44"
   		GRANULARITY_FK="2"
-  		VERSION="1"
 	/>
 
 	<LIS_GEOGR_VALUES
@@ -2154,7 +2150,6 @@
  		LONGITUDE="-25632112156.45456464565"
   		TITLE_FK="[null]"
   		GRANULARITY_FK="1"
-  		VERSION="1"
 	/>
 
 	<LIS_GEOGR_VALUES
@@ -2165,7 +2160,6 @@
  		LONGITUDE="41232.254112"
   		TITLE_FK="[null]"
   		GRANULARITY_FK="2"
-  		VERSION="1"
 	/>
 	
 	<!-- ************************************************************************************ -->
@@ -2176,7 +2170,6 @@
  		UUID="1"
  		CODE="COUNTRIES"
   		TITLE_FK="45"
-  		VERSION="1"
 	/>
 
 	<LIS_GEOGR_GRANULARITIES
@@ -2184,7 +2177,6 @@
  		UUID="2"
  		CODE="MUNICIPALITIES"
   		TITLE_FK="46"
-  		VERSION="1"
 	/>  		  
 	
 	<!-- ************************************************************************************ -->

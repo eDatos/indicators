@@ -633,6 +633,7 @@ Application Indicators {
         	databaseTable = "LIS_QUANTITIES_UNITS"
         	hint="idSequence=QUANTITIES_UNITS"
 			!auditable
+			!optimisticLocking
 			
 			"Symbol of unit (example: km)"
 			String symbol nullable;
@@ -654,6 +655,7 @@ Application Indicators {
         	databaseTable = "LIS_GEOGR_VALUES"
         	hint="idSequence=GEOGR_VALUES"
 			!auditable
+			!optimisticLocking
 			gap
 			
 			"Code"
@@ -681,6 +683,7 @@ Application Indicators {
         	databaseTable = "LIS_GEOGR_GRANULARITIES"
         	hint="idSequence=GEOGR_GRANULARITIES"
 			!auditable
+			!optimisticLocking
 			gap
 			
 			"Code"
