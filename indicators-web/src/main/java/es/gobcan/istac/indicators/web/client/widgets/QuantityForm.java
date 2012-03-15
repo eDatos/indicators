@@ -9,7 +9,6 @@ import java.util.List;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -30,7 +29,6 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
-import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 
 
 public class QuantityForm extends BaseQuantityForm {
@@ -42,7 +40,7 @@ public class QuantityForm extends BaseQuantityForm {
     public QuantityForm(String groupTitle) {
         super(groupTitle);
         
-        RequiredSelectItem type = new RequiredSelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
+        SelectItem type = new SelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
         type.setValueMap(CommonUtils.getQuantityValueMap());
         type.addChangedHandler(new ChangedHandler() {
             @Override
@@ -50,12 +48,14 @@ public class QuantityForm extends BaseQuantityForm {
                 QuantityForm.this.markForRedraw();
             }
         });
+        // TODO Required when indicator is not DRAFT
         
-        RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        SelectItem unitUuid = new SelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        // TODO Required when indicator is not DRAFT
         
         IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        unitMultiplier.setRequired(true);
-
+        // TODO Required when indicator is not DRAFT
+        
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
         
         IntegerItem decPlaces = new IntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
@@ -102,7 +102,7 @@ public class QuantityForm extends BaseQuantityForm {
         
         RequiredTextItem baseTime = new RequiredTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
         baseTime.setShowIfCondition(getBaseTimeIfFunction());
-        baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
+//        baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
         
         final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setRequired(true);
@@ -168,7 +168,7 @@ public class QuantityForm extends BaseQuantityForm {
     }
 
     public QuantityDto getValue() {
-        quantityDto.setType(QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)));
+        quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
         quantityDto.setUnitUuid(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID));
         quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer)getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer)getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
@@ -203,7 +203,7 @@ public class QuantityForm extends BaseQuantityForm {
         for (QuantityUnitDto unit : units) {
             valueMap.put(unit.getUuid(), unit.getSymbol());
         }
-        ((RequiredSelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
     
     public void setIndicator(IndicatorDto indicatorDto) {

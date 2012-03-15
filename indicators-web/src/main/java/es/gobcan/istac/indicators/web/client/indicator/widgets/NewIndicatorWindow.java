@@ -21,7 +21,6 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
@@ -63,11 +62,7 @@ public class NewIndicatorWindow extends CustomWindow {
         indicatorDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(IndicatorDS.TITLE)));
         indicatorDto.setSubjectCode(form.getValueAsString(IndicatorDS.SUBJECT));
         indicatorDto.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, form.getValueAsString(IndicatorDS.SUBJECT)));
-        // TODO Do no set quantity (must be not required)
-        QuantityDto quantity = new QuantityDto();
-        quantity.setType(QuantityTypeEnum.QUANTITY);
-        quantity.setUnitUuid("1");
-        indicatorDto.setQuantity(quantity);
+        indicatorDto.setQuantity(new QuantityDto()); // Set always an empty Quantity (required by service)
         return indicatorDto;
     }
     

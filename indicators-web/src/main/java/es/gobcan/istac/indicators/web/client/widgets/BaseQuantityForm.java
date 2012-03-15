@@ -86,7 +86,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isMagnitudeOrExtension(type)) {
                         return true;
@@ -101,7 +101,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isMagnitudeOrExtension(type)) {
                         return true;
@@ -116,7 +116,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isFractionOrExtension(type)) {
                         return true;
@@ -131,7 +131,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isFractionOrExtension(type)) {
                         return true;
@@ -146,7 +146,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isRatioOrExtension(type)) {
                         return true;
@@ -161,7 +161,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isRatioOrExtension(type)) {
                         return true;
@@ -176,7 +176,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
                             return true;
@@ -191,7 +191,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
                         if (QuantityIndexBaseTypeEnum.BASE_VALUE.toString().equals(BaseQuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_INDEX_BASE_TYPE))) {
@@ -208,7 +208,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
                         if (QuantityIndexBaseTypeEnum.BASE_TIME.toString().equals(BaseQuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_INDEX_BASE_TYPE))) {
@@ -225,7 +225,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
                         if (QuantityIndexBaseTypeEnum.BASE_LOCATION.toString().equals(BaseQuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_INDEX_BASE_TYPE))) {
@@ -242,7 +242,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         return new FormItemIfFunction() {
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null) {
+                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isChangeRateOrExtension(type)) {
                         return true;
