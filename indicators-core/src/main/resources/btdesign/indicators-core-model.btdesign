@@ -237,9 +237,9 @@ Application Indicators {
 	    	List<@QuantityUnitDto> findQuantityUnits() throws MetamacException;
 	    	
 			// SUBJECTS
-			"Retrieves subject"
+			"Retrieves subject. Important! Do not invoke this operation from public web application"
 	    	@SubjectDto retrieveSubject(String code) throws MetamacException;
-	    	"Find all subjects"
+	    	"Find all subjects. Important! Do not invoke this operation from public web application"
 	    	List<@SubjectDto> findSubjects() throws MetamacException;
 	    	
 	    }
@@ -698,13 +698,13 @@ Application Indicators {
         
         "Table values for subjects. It is a table view of an already existing table"
 	    Entity Subject {
-        	databaseTable = "TV_CATALOGO_OPERACION_ESTADIST"
+        	databaseTable = "TV_AREAS_TEMATICAS"
 			!auditable
 			!optimisticLocking
 			hint="strategy=IDENTITY"
 			
 			"Id"
-			String id not nullable databaseColumn="ID_CATALOGO" length="15" key;
+			String id not nullable databaseColumn="ID_AREA_TEMATICA" length="15" key;
        		"Description"
        		String description not nullable databaseColumn="DESCRIPCION" length="200";
        		

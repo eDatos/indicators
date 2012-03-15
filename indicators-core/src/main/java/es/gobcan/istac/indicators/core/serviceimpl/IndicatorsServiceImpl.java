@@ -528,6 +528,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return quantityUnits;
     }
 
+    /**
+     * This operation retrieve subject from table view. Won't be accesible in public web application.
+     */
     @Override
     public Subject retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
 
@@ -542,6 +545,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return subject;
     }
 
+    /**
+     * This operation retrieves subjects from table view. Won't be accesible in public web application.
+     */
     @Override
     public List<Subject> findSubjects(ServiceContext ctx) throws MetamacException {
 

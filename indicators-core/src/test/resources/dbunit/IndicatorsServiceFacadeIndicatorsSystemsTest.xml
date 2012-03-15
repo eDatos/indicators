@@ -1513,18 +1513,18 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 SUBJECTS				                              -->
 	<!-- ************************************************************************************ -->
-	<TV_CATALOGO_OPERACION_ESTADIST
-		ID_CATALOGO="1"
+	<TV_AREAS_TEMATICAS
+		ID_AREA_TEMATICA="1"
 		DESCRIPCION="Área temática 1"
 	/>
 	
-	<TV_CATALOGO_OPERACION_ESTADIST
-		ID_CATALOGO="2"
+	<TV_AREAS_TEMATICAS
+		ID_AREA_TEMATICA="2"
 		DESCRIPCION="Área temática 2"
 	/>
 	
-	<TV_CATALOGO_OPERACION_ESTADIST
-		ID_CATALOGO="3"
+	<TV_AREAS_TEMATICAS
+		ID_AREA_TEMATICA="3"
 		DESCRIPCION="Área temática 3"
 	/>
 	
