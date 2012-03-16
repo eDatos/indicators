@@ -597,9 +597,11 @@ Application Indicators {
 			"Px"
 			String px not nullable;
 			"Time variable"
-			String timeVariable not nullable;
+			String timeVariable nullable;
+        	"Time value"
+        	String timeValue nullable;
 			"Geographical variable"
-			String geographicalVariable not nullable;
+			String geographicalVariable nullable;
 			"Other variables fixing one category"
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			
@@ -610,6 +612,8 @@ Application Indicators {
 			- @RateDerivation interperiodRate not nullable cascade="all" databaseColumn="INTERPERIOD_RATE_FK";
             "Annual rate"
 			- @RateDerivation annualRate not nullable cascade="all" databaseColumn="ANNUAL_RATE_FK";
+            "Geographical value"
+			- @GeographicalValue geographicalValue cascade="none" nullable databaseColumn="GEOGRAPHICAL_VALUE_FK";
             
 			"Provides access to Dimension"
             Repository DataSourceRepository {
@@ -859,8 +863,12 @@ Application Indicators {
 			String px;
 			"Time variable"
 			String timeVariable;
+			"Time value, if time variable is not provided"
+			String timeValue;
 			"Geographical variable"
 			String geographicalVariable;
+			"Geographical value, if geographical variable is not provided"
+			String geographicalValueUuid;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
 			"Interperiod rate"

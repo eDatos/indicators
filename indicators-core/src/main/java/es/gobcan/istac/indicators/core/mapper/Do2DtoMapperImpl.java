@@ -162,7 +162,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setQueryGpe(source.getQueryGpe());
         target.setPx(source.getPx());
         target.setTimeVariable(source.getTimeVariable());
+        target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
+        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));
         target.setAnnualRate(rateDerivationDoToDto(source.getAnnualRate()));

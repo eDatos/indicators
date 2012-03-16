@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
@@ -624,7 +623,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -699,19 +698,17 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         if (ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
-            // TODO ¿cómo poner si es requerido uno de ellos?
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TIME_GRANULARITY", "INDICATOR_INSTANCE.TIME_VALUE"));
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TIME_GRANULARITY", "INDICATOR_INSTANCE.TIME_VALUE"));
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TIME_VALUE"));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.TIME_VALUE"));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
-            if (!TimeVariableUtils.isTimeValue(indicatorInstance.getTimeValue())) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TIME_VALUE"));
-            }
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeValue()) && !TimeVariableUtils.isTimeValue(indicatorInstance.getTimeValue())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR_INSTANCE.TIME_VALUE"));
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getGeographicalValue())) {
-            exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHICAL_VALUE_UUID"));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, "INDICATOR_INSTANCE.GEOGRAPHICAL_VALUE_UUID"));
         }
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
@@ -726,9 +723,9 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), "INDICATOR.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), "INDICATOR.SUBJECT_CODE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE", exceptions);
-        
+
         // Quantity: do not validate required attributes of quantity, only when send to production validation
-        checkQuantity(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", false, exceptions);        
+        checkQuantity(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", false, exceptions);
     }
 
     public static void checkQuantity(Quantity quantity, String parameterName, boolean checksRequired, List<MetamacExceptionItem> exceptions) {
@@ -742,7 +739,7 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(quantity.getBaseTime()) && !TimeVariableUtils.isTimeValue(quantity.getBaseTime())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_TIME"));
         }
-        
+
         // checks required
         if (checksRequired) {
             ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ".TYPE", exceptions);
@@ -753,8 +750,8 @@ public class InvocationValidator {
             }
             if (IndicatorUtils.isIndexOrExtension(quantity.getQuantityType())) {
                 if (ValidationUtils.isEmpty(quantity.getBaseValue()) && ValidationUtils.isEmpty(quantity.getBaseTime()) && ValidationUtils.isEmpty(quantity.getBaseLocation())) {
-                    exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName
-                            + ".BASE_LOCATION_UUID"));
+                    exceptions
+                            .add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, parameterName + ".BASE_VALUE", parameterName + ".BASE_TIME", parameterName + ".BASE_LOCATION_UUID"));
                 }
             }
             if (IndicatorUtils.isChangeRateOrExtension(quantity.getQuantityType())) {
@@ -797,10 +794,27 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPx(), "DATA_SOURCE.PX", exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getTimeVariable(), "DATA_SOURCE.TIME_VARIABLE", exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getGeographicalVariable(), "DATA_SOURCE.GEOGRAPHICAL_VARIABLE", exceptions);
         checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
         checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
+        // Time
+        if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "DATA_SOURCE.TIME_VARIABLE", "DATA_SOURCE.TIME_VALUE"));
+        }
+        if (!ValidationUtils.isEmpty(dataSource.getTimeVariable())) {
+            ValidationUtils.checkMetadataEmpty(dataSource.getTimeValue(), "DATA_SOURCE.TIME_VALUE", exceptions);
+        }
+        if (!ValidationUtils.isEmpty(dataSource.getTimeValue()) && !TimeVariableUtils.isTimeValue(dataSource.getTimeValue())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DATA_SOURCE.TIME_VALUE"));
+        }
+        // Geographical
+        if (ValidationUtils.isEmpty(dataSource.getGeographicalVariable()) && ValidationUtils.isEmpty(dataSource.getGeographicalValue())) {
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "DATA_SOURCE.GEOGRAPHICAL_VARIABLE", "DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID"));
+        }
+        if (!ValidationUtils.isEmpty(dataSource.getGeographicalVariable())) {
+            ValidationUtils.checkMetadataEmpty(dataSource.getTimeValue(), "DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", exceptions);
+        }
     }
 
     private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, List<MetamacExceptionItem> exceptions) {
@@ -820,7 +834,7 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(rateDerivation.getQuantity())) {
             if (!ValidationUtils.isEmpty(rateDerivation.getQuantity().getQuantityType())) {
                 if (!QuantityTypeEnum.AMOUNT.equals(rateDerivation.getQuantity().getQuantityType()) && !QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
-                    exceptions.add(new MetamacExceptionItem(CommonServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));
                 }
             }
             checkQuantity(rateDerivation.getQuantity(), parameterName + ".QUANTITY", true, exceptions);

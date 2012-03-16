@@ -258,7 +258,13 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         // Metadata modifiable
         target.setTimeVariable(source.getTimeVariable());
+        target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
+        if (source.getGeographicalValueUuid() != null) {
+            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValueUuid()));
+        } else {
+            target.setGeographicalValue(null);
+        }
 
         // Related entities
         target.setInterperiodRate(rateDerivationDtoToDo(ctx, source.getInterperiodRate(), target.getInterperiodRate()));
