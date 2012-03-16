@@ -91,6 +91,12 @@ NOT NULL«ENDIF»,
 		«targetDef.proceed() -»
 	«ENDIF -»
 «ENDAROUND»
+«REM»Skip script database generation for hibernate_sequence«ENDREM»
+«AROUND templates::db::OracleDDL::dropSequence FOR Application»
+«ENDAROUND»
+«AROUND templates::db::OracleDDL::createSequence FOR Application»
+«ENDAROUND»
+
 
 «AROUND templates::domain::DomainObject::dataTransferObjectHook FOR DataTransferObject-»
     /**

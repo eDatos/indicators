@@ -1,5 +1,3 @@
-DROP sequence hibernate_sequence;
-
 CREATE sequence SEQ_INDIC_SYSTEMS_VERSIONS;
 CREATE sequence SEQ_INDICATORS_SYSTEMS;
 CREATE sequence SEQ_INDICATORS_INSTANCES;
