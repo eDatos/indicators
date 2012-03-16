@@ -2782,7 +2782,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
     
