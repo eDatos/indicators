@@ -244,7 +244,7 @@ public class QuantityForm extends BaseQuantityForm {
         return new RequiredIfValidator(new RequiredIfFunction() {
             @Override
             public boolean execute(FormItem formItem, Object value) {
-                return IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
+                return !IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
             }
         });
     }

@@ -13,4 +13,10 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveGeographicalValues(String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
     
+    void sendToProductionValidation(String uuid);
+    void sendToDiffusionValidation(String uuid);
+    void rejectValidation(String uuid);
+    void publish(String uuid);
+    void archive(String uuid);
+    
 }

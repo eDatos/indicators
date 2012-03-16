@@ -39,6 +39,8 @@ import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
@@ -49,6 +51,14 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
@@ -187,6 +197,86 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onSuccess(GetGeographicalValueResult result) {
                 getView().setGeographicalValue(result.getGeographicalValueDto());
+            }}
+        );
+    }
+
+    @Override
+    public void sendToProductionValidation(final String uuid) {
+        dispatcher.execute(new SendIndicatorToProductionValidationAction(uuid), new AsyncCallback<SendIndicatorToProductionValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error sending to production validation indicator with uuid  = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingIndicatorToProductionValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(SendIndicatorToProductionValidationResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
+            }}
+        );
+    }
+
+    @Override
+    public void sendToDiffusionValidation(final String uuid) {
+        dispatcher.execute(new SendIndicatorToDiffusionValidationAction(uuid), new AsyncCallback<SendIndicatorToDiffusionValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error sending to diffusion validation indicator with uuid  = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingIndicatorToDiffusionValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(SendIndicatorToDiffusionValidationResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
+            }}
+        );
+    }
+
+    @Override
+    public void rejectValidation(final String uuid) {
+        dispatcher.execute(new RejectIndicatorValidationAction(uuid), new AsyncCallback<RejectIndicatorValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(RejectIndicatorValidationResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
+            }}
+        );
+    }
+
+    @Override
+    public void publish(final String uuid) {
+        dispatcher.execute(new PublishIndicatorAction(uuid), new AsyncCallback<PublishIndicatorResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error publishing indicator with uuid  = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(PublishIndicatorResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorPublished()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
+            }}
+        );
+    }
+
+    @Override
+    public void archive(final String uuid) {
+        dispatcher.execute(new ArchiveIndicatorAction(uuid), new AsyncCallback<ArchiveIndicatorResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error arhiving indicator with uuid  = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorArchivingIndicator()), MessageTypeEnum.ERROR);  
+            }
+            @Override
+            public void onSuccess(ArchiveIndicatorResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorArchived()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
             }}
         );
     }

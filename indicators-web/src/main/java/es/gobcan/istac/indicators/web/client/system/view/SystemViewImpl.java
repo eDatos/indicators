@@ -113,6 +113,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 	public void setUiHandlers(SystemUiHandler uiHandlers) {
 		this.uiHandlers = uiHandlers;
 		this.structurePanel.setUiHandlers(uiHandlers);
+		this.generalPanel.setUiHandlers(uiHandlers);
 	}
 	
 	@Override
@@ -138,6 +139,11 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     @Override
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         structurePanel.setGeographicalValue(geographicalValueDto);
+    }
+
+    @Override
+    public void onIndicatorsSystemStatusChanged(IndicatorsSystemDto indicatorSystem) {
+        generalPanel.setIndicatorsSystem(indicatorSystem);
     }
 	
 }

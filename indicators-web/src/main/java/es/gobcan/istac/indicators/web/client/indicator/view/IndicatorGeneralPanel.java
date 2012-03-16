@@ -10,7 +10,6 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
@@ -31,6 +30,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
 
@@ -42,7 +42,7 @@ public class IndicatorGeneralPanel extends VLayout {
     /* UiHandlers */
     private IndicatorUiHandler uiHandlers;
     
-	private InternationalMainFormLayout mainFormLayout;
+	private IndicatorMainFormLayout mainFormLayout;
 	
 	/* View Form */
 	private GroupDynamicForm identifiersForm;
@@ -70,7 +70,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	public IndicatorGeneralPanel() {
 		super();
 		
-		mainFormLayout = new InternationalMainFormLayout();
+		mainFormLayout = new IndicatorMainFormLayout();
 
 		createViewForm();
 		createEditionForm();
@@ -119,6 +119,39 @@ public class IndicatorGeneralPanel extends VLayout {
                 saveIndicator();
             }
         });
+        
+        // Life Cycle
+        mainFormLayout.getProductionValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToProductionValidation(indicator.getUuid());
+            }
+        });
+        mainFormLayout.getDiffusionValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToDiffusionValidation(indicator.getUuid());
+            }
+        });
+        mainFormLayout.getRejectValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.rejectValidation(indicator.getUuid());
+            }
+        });
+        mainFormLayout.getPublish().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.publish(indicator.getUuid());
+            }
+       });
+        mainFormLayout.getArchive().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.archive(indicator.getUuid());
+            }
+        });
+        
 	}
 	
 	/**
@@ -260,6 +293,7 @@ public class IndicatorGeneralPanel extends VLayout {
 	public void setIndicator(IndicatorDto indicatorDto) {
 	    this.indicator = indicatorDto;
 	    
+	    mainFormLayout.updatePublishSection(indicatorDto.getProcStatus());
 		mainFormLayout.setViewMode();
 		
 		setIndicatorViewMode(indicatorDto);

@@ -5,7 +5,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -15,10 +14,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
+import es.gobcan.istac.indicators.web.client.widgets.SystemMainFormLayout;
 
 public class SystemGeneralPanel extends VLayout {
 
-	private InternationalViewMainFormLayout mainFormLayout;
+    private SystemUiHandler uiHandlers;
+    
+	private SystemMainFormLayout mainFormLayout;
 	
 	/* VIEW FORM */
 	private GroupDynamicForm identifiersForm;
@@ -27,10 +30,14 @@ public class SystemGeneralPanel extends VLayout {
 	private GroupDynamicForm contentForm;
 	private GroupDynamicForm publicationForm;
 	
+	private IndicatorsSystemDto indicatorsSystemDto;
+	
 
 	public SystemGeneralPanel() {
 		super();
-		mainFormLayout = new InternationalViewMainFormLayout();
+		mainFormLayout = new SystemMainFormLayout();
+		
+		// Show/Hide Translations
 		mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
 		    @Override
             public void onClick(ClickEvent event) {
@@ -38,6 +45,39 @@ public class SystemGeneralPanel extends VLayout {
                 identifiersForm.setTranslationsShowed(translationsShowed);
             }
         });
+		
+        // Life Cycle
+        mainFormLayout.getProductionValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToProductionValidation(indicatorsSystemDto.getUuid());
+            }
+        });
+        mainFormLayout.getDiffusionValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.sendToDiffusionValidation(indicatorsSystemDto.getUuid());
+            }
+        });
+        mainFormLayout.getRejectValidation().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.rejectValidation(indicatorsSystemDto.getUuid());
+            }
+        });
+        mainFormLayout.getPublish().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.publish(indicatorsSystemDto.getUuid());
+            }
+       });
+        mainFormLayout.getArchive().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.archive(indicatorsSystemDto.getUuid());
+            }
+        });
+		
 		createViewForm();
 		this.addMember(mainFormLayout);
 	}
@@ -51,14 +91,13 @@ public class SystemGeneralPanel extends VLayout {
 		
 		// Identifiers Form
 	    identifiersForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
-	    ViewTextItem uuidField = new ViewTextItem(IndicatorsSystemsDS.UUID, getConstants().systemDetailUuid());
         ViewTextItem versionField = new ViewTextItem(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
         ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE,getConstants().systemDetailIdentifier());
         ViewTextItem uri = new ViewTextItem(IndicatorsSystemsDS.URI, getConstants().systemDetailUri());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
-		identifiersForm.setFields(codeField, uuidField, versionField, uri, title, acronym, procStatus);
+		identifiersForm.setFields(codeField, versionField, uri, title, acronym, procStatus);
 
 		// Production Descriptors
 		productionForm = new GroupDynamicForm(getConstants().systemDetailProductionDescriptors());
@@ -96,8 +135,10 @@ public class SystemGeneralPanel extends VLayout {
 	}
 	
 	public void setIndicatorsSystem(IndicatorsSystemDto indicatorSystemDto) {
+	    this.indicatorsSystemDto = indicatorSystemDto;
+	    mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
+	    
 		// Identifiers
-	    identifiersForm.setValue(IndicatorsSystemsDS.UUID, indicatorSystemDto.getUuid());
 		identifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
 		identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
 		identifiersForm.setValue(IndicatorsSystemsDS.URI, indicatorSystemDto.getUriGopestat());
@@ -125,8 +166,12 @@ public class SystemGeneralPanel extends VLayout {
 		publicationForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
 		publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, indicatorSystemDto.getPublicationDate() != null ? indicatorSystemDto.getPublicationDate().toString() : "");
 		publicationForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
-		
+
 		mainFormLayout.setViewMode();
+	}
+
+	public void setUiHandlers(SystemUiHandler uiHandlers) {
+	    this.uiHandlers = uiHandlers;
 	}
 	
 }

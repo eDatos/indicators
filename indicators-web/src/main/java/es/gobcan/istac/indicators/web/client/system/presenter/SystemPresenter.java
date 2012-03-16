@@ -44,6 +44,8 @@ import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularit
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
@@ -66,6 +68,14 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationResult;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
@@ -93,6 +103,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 	    void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
 	    void setIndicators(List<IndicatorDto> indicators);
 		void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
+		void onIndicatorsSystemStatusChanged(IndicatorsSystemDto indicatorSystem);
 		void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure);
 		void onDimensionSaved(DimensionDto dimension);
 		void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
@@ -366,6 +377,86 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onSuccess(GetGeographicalValueResult result) {
                 getView().setGeographicalValue(result.getGeographicalValueDto());
+            }}
+        );
+    }
+
+    @Override
+    public void sendToProductionValidation(final String uuid) {
+        dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(uuid), new AsyncCallback<SendIndicatorsSystemToProductionValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error sendind to production validation indicators system with uuid = " + uuid);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToProductionValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(SendIndicatorsSystemToProductionValidationResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+            }}
+        );
+    }
+
+    @Override
+    public void sendToDiffusionValidation(final String uuid) {
+        dispatcher.execute(new SendIndicatorsSystemToDiffusionValidationAction(uuid), new AsyncCallback<SendIndicatorsSystemToDiffusionValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error sendind to diffusion validation indicators system with uuid = " + uuid);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToDiffusionValidation()), MessageTypeEnum.ERROR);                
+            }
+            @Override
+            public void onSuccess(SendIndicatorsSystemToDiffusionValidationResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+            }}
+        );
+    }
+
+    @Override
+    public void rejectValidation(final String uuid) {
+        dispatcher.execute(new RejectIndicatorsSystemValidationAction(uuid), new AsyncCallback<RejectIndicatorsSystemValidationResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + uuid);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(RejectIndicatorsSystemValidationResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+            }}
+        );
+    }
+
+    @Override
+    public void publish(final String uuid) {
+        dispatcher.execute(new PublishIndicatorsSystemAction(uuid), new AsyncCallback<PublishIndicatorsSystemResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + uuid);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingSystem()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(PublishIndicatorsSystemResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+            }}
+        );
+    }
+
+    @Override
+    public void archive(final String uuid) {
+        dispatcher.execute(new ArchiveIndicatorsSystemAction(uuid), new AsyncCallback<ArchiveIndicatorsSystemResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error archiving indicators system with uuid = " + uuid);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorArchivingSystem()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(ArchiveIndicatorsSystemResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemArchived()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
             }}
         );
     }
