@@ -6,10 +6,11 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class IndicatorRecord extends Record {
 	
-	public IndicatorRecord(String uuid, String code, String name) {
+	public IndicatorRecord(String uuid, String code, String name, String status) {
 		setUuid(uuid);
 		setName(name);
 		setCode(code);
+		setProcStatus(status);
 	}
 	
 	public void setUuid(String uuid) {
@@ -26,6 +27,10 @@ public class IndicatorRecord extends Record {
 
 	public String getUuid() {
 	    return getAttribute(IndicatorDS.UUID);
+	}
+	
+	public void setProcStatus(String value) {
+	    setAttribute(IndicatorDS.PROC_STATUS, value);
 	}
 	
 }

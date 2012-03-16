@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
-import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,7 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUi
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 
@@ -118,7 +118,8 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
 		fieldCode.setAlign(Alignment.LEFT);
 		ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
-		indicatorList.setFields(fieldCode, fieldName);
+		ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
+		indicatorList.setFields(fieldCode, fieldName, status);
 		
 		panel = new VLayout();
 		panel.addMember(toolStrip);
@@ -148,7 +149,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 		IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
 		int index = 0;
 		for (IndicatorDto ind : indicators) {
-			records[index++] = new IndicatorRecord(ind.getUuid(), ind.getCode(), getLocalisedString(ind.getTitle()));
+			records[index++] = RecordUtils.getIndicatorRecord(ind);
 		}
 		indicatorList.setData(records);
 	}

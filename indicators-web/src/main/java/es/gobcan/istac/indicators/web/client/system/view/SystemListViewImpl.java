@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
+import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
@@ -39,11 +39,12 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 		indSystemListGrid.setDataSource(datasource);
 		indSystemListGrid.setUseAllDataSourceFields(false);
 		
-		//List
-		ListGridField field1 = new ListGridField(IndicatorsSystemsDS.CODE,getConstants().systemListHeaderIdentifier());
-		field1.setAlign(Alignment.LEFT);
-		ListGridField field2 = new ListGridField(IndicatorsSystemsDS.TITLE,getConstants().systemListHeaderTitle());
-		indSystemListGrid.setFields(field1,field2);
+		// List
+		ListGridField code = new ListGridField(IndicatorsSystemsDS.CODE,getConstants().systemListHeaderIdentifier());
+		code.setAlign(Alignment.LEFT);
+		ListGridField title = new ListGridField(IndicatorsSystemsDS.TITLE,getConstants().systemListHeaderTitle());
+		ListGridField status = new ListGridField(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
+		indSystemListGrid.setFields(code, title, status);
 		
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[0];
 
@@ -70,7 +71,7 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 		IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
 		int index = 0;
 		for (IndicatorsSystemDto indSys : indicatorsSystemList) {
-			records[index++] = new IndicatorSystemRecord(indSys.getUuid(), indSys.getCode(), getLocalisedString(indSys.getTitle()));
+			records[index++] = RecordUtils.getIndicatorsSystemRecord(indSys);
 		}
 		indSystemListGrid.setData(records);
 	}
