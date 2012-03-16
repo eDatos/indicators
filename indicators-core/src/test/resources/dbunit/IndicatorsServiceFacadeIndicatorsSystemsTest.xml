@@ -1526,7 +1526,6 @@
 	<!-- ************************************************************************************ -->
 	<TBL_INTERNATIONAL_STRINGS
 		ID="1"
-		UUID="IS-1"
 		VERSION="1"
 	/>	
 	
@@ -1534,7 +1533,6 @@
 		ID="1"
 		LABEL="Título IndSys-1-v1"
 		LOCALE="es"
-		UUID="IS-1-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="1"
 	/>	
@@ -1542,14 +1540,12 @@
 		ID="2"
 		LABEL="Title IndSys-1-v1"
 		LOCALE="en"
-		UUID="IS-1-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="1"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="2"
-		UUID="IS-2"
 		VERSION="1"
 	/>
 	
@@ -1557,7 +1553,6 @@
 		ID="3"
 		LABEL="Acrónimo IndSys-1-v1"
 		LOCALE="es"
-		UUID="IS-2-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="2"
 	/>
@@ -1566,14 +1561,12 @@
 		ID="4"
 		LABEL="Acronym IndSys-1-v1"
 		LOCALE="en"
-		UUID="IS-2-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="2"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="3"
-		UUID="IS-3"
 		VERSION="1"
 	/>
 		
@@ -1581,7 +1574,6 @@
 		ID="5"
 		LABEL="Objetivo IndSys-1-v1"
 		LOCALE="es"
-		UUID="IS-3-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="3"
 	/>
@@ -1590,14 +1582,12 @@
 		ID="6"
 		LABEL="Objetive IndSys-1-v1"
 		LOCALE="en"
-		UUID="IS-3-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="3"
 	/>  
 		
 	<TBL_INTERNATIONAL_STRINGS
 		ID="4"
-		UUID="IS-4"
 		VERSION="1"
 	/>	
 	
@@ -1605,7 +1595,6 @@
 		ID="7"
 		LABEL="Descripción IndSys-1-v1"
 		LOCALE="es"
-		UUID="IS-4-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="4"
 	/>
@@ -1614,14 +1603,12 @@
 		ID="8"
 		LABEL="Description IndSys-1-v1"
 		LOCALE="en"
-		UUID="IS-4-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="4"
 	/> 
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="5"
-		UUID="IS-5"
 		VERSION="1"
 	/>
 	
@@ -1629,7 +1616,6 @@
 		ID="9"
 		LABEL="Título IndSys-1-v2"
 		LOCALE="es"
-		UUID="IS-5-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="5"
 	/>
@@ -1638,14 +1624,12 @@
 		ID="10"
 		LABEL="Title IndSys-1-v2"
 		LOCALE="en"
-		UUID="IS-5-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="5"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="6"
-		UUID="IS-6"
 		VERSION="1"
 	/>
 	
@@ -1653,7 +1637,6 @@
 		ID="11"
 		LABEL="Acrónimo IndSys-1-v2"
 		LOCALE="es"
-		UUID="IS-6-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="6"
 	/>
@@ -1662,14 +1645,12 @@
 		ID="12"
 		LABEL="Acronym IndSys-1-v2"
 		LOCALE="en"
-		UUID="IS-6-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="6"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="7"
-		UUID="IS-7"
 		VERSION="1"
 	/>
 	
@@ -1677,7 +1658,6 @@
 		ID="13"
 		LABEL="Objetivo IndSys-1-v2"
 		LOCALE="es"
-		UUID="IS-7-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="7"
 	/>
@@ -1686,14 +1666,12 @@
 		ID="14"
 		LABEL="Objetive IndSys-1-v2"
 		LOCALE="en"
-		UUID="IS-7-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="8"
-		UUID="IS-8"
 		VERSION="1"
 	/>
 	
@@ -1701,7 +1679,6 @@
 		ID="15"
 		LABEL="Descripción IndSys-1-v2"
 		LOCALE="es"
-		UUID="IS-8-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="8"
 	/>
@@ -1710,14 +1687,12 @@
 		ID="16"
 		LABEL="Description IndSys-1-v2"
 		LOCALE="en"
-		UUID="IS-8-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="8"
 	/>
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="9"
-		UUID="IS-9"
 		VERSION="1"
 	/>
 	
@@ -1725,7 +1700,6 @@
 		ID="17"
 		LABEL="Title IndSys-2-v1"
 		LOCALE="es"
-		UUID="IS-9-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="9"
 	/>
@@ -1734,14 +1708,12 @@
 		ID="18"
 		LABEL="Title IndSys-2-v1"
 		LOCALE="en"
-		UUID="IS-9-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="9"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="10"
-		UUID="IS-10"
 		VERSION="1"
 	/>
 	
@@ -1749,7 +1721,6 @@
 		ID="19"
 		LABEL="Título IndSys-3-v1"
 		LOCALE="es"
-		UUID="IS-10-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="10"
 	/>
@@ -1758,14 +1729,12 @@
 		ID="20"
 		LABEL="Title IndSys-3-v1"
 		LOCALE="en"
-		UUID="IS-10-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="10"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="11"
-		UUID="IS-11"
 		VERSION="1"
 	/>
 	
@@ -1773,7 +1742,6 @@
 		ID="21"
 		LABEL="Título IndSys-4-v1"
 		LOCALE="es"
-		UUID="IS-11-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="11"
 	/>
@@ -1782,14 +1750,12 @@
 		ID="22"
 		LABEL="Title IndSys-4-v1"
 		LOCALE="en"
-		UUID="IS-11-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="11"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="12"
-		UUID="IS-12"
 		VERSION="1"
 	/>
 	
@@ -1797,7 +1763,6 @@
 		ID="23"
 		LABEL="Título IndSys-5-v1"
 		LOCALE="es"
-		UUID="IS-12-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="12"
 	/>
@@ -1806,14 +1771,12 @@
 		ID="24"
 		LABEL="Title IndSys-5-v1"
 		LOCALE="en"
-		UUID="IS-12-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="12"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="13"
-		UUID="IS-13"
 		VERSION="1"
 	/>
 	
@@ -1821,7 +1784,6 @@
 		ID="23"
 		LABEL="Título IndSys-6-v1"
 		LOCALE="es"
-		UUID="IS-13-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="13"
 	/>
@@ -1830,14 +1792,12 @@
 		ID="24"
 		LABEL="Title IndSys-6-v1"
 		LOCALE="en"
-		UUID="IS-13-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="13"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="14"
-		UUID="IS-14"
 		VERSION="1"
 	/>
 	
@@ -1845,7 +1805,6 @@
 		ID="23"
 		LABEL="Título IndSys-6-v1"
 		LOCALE="es"
-		UUID="IS-14-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="14"
 	/>
@@ -1854,14 +1813,12 @@
 		ID="24"
 		LABEL="Title IndSys-6-v1"
 		LOCALE="en"
-		UUID="IS-14-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="14"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="15"
-		UUID="IS-15"
 		VERSION="1"
 	/>
 	
@@ -1869,7 +1826,6 @@
 		ID="25"
 		LABEL="Título IndSys-7-v1"
 		LOCALE="es"
-		UUID="IS-15-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="15"
 	/>
@@ -1878,14 +1834,12 @@
 		ID="26"
 		LABEL="Title IndSys-7-v1"
 		LOCALE="en"
-		UUID="IS-15-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="15"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="16"
-		UUID="IS-16"
 		VERSION="1"
 	/>
 	
@@ -1893,7 +1847,6 @@
 		ID="27"
 		LABEL="Título IndSys-7-v1"
 		LOCALE="es"
-		UUID="IS-16-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="16"
 	/>
@@ -1902,14 +1855,12 @@
 		ID="28"
 		LABEL="Title IndSys-7-v1"
 		LOCALE="en"
-		UUID="IS-16-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="16"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="17"
-		UUID="IS-17"
 		VERSION="1"
 	/>
 	
@@ -1917,7 +1868,6 @@
 		ID="29"
 		LABEL="Título IndSys-8-v1"
 		LOCALE="es"
-		UUID="IS-17-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="17"
 	/>
@@ -1926,14 +1876,12 @@
 		ID="30"
 		LABEL="Title IndSys-8-v1"
 		LOCALE="en"
-		UUID="IS-17-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="17"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="18"
-		UUID="IS-18"
 		VERSION="1"
 	/>
 	
@@ -1941,7 +1889,6 @@
 		ID="31"
 		LABEL="Título"
 		LOCALE="es"
-		UUID="IS-18-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="18"
 	/>
@@ -1950,14 +1897,12 @@
 		ID="32"
 		LABEL="Title"
 		LOCALE="en"
-		UUID="IS-18-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="18"
 	/>		
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="19"
-		UUID="IS-19"
 		VERSION="1"
 	/>
 	
@@ -1965,7 +1910,6 @@
 		ID="33"
 		LABEL="Título"
 		LOCALE="es"
-		UUID="IS-19-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="19"
 	/>
@@ -1974,14 +1918,12 @@
 		ID="34"
 		LABEL="Title"
 		LOCALE="en"
-		UUID="IS-19-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="19"
 	/>			
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="20"
-		UUID="IS-20"
 		VERSION="1"
 	/>
 	
@@ -1989,7 +1931,6 @@
 		ID="35"
 		LABEL="Título IndSys-1-v2-Dimension-1"
 		LOCALE="es"
-		UUID="IS-20-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="20"
 	/>
@@ -1998,14 +1939,12 @@
 		ID="36"
 		LABEL="Title IndSys-1-v2-Dimension-1"
 		LOCALE="en"
-		UUID="IS-20-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="20"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="21"
-		UUID="IS-21"
 		VERSION="1"
 	/>
 	
@@ -2013,7 +1952,6 @@
 		ID="37"
 		LABEL="Título IndSys-1-v2-Dimension-1A"
 		LOCALE="es"
-		UUID="IS-21-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="21"
 	/>
@@ -2022,14 +1960,12 @@
 		ID="38"
 		LABEL="Title IndSys-1-v2-Dimension-1A"
 		LOCALE="en"
-		UUID="IS-21-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="21"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="22"
-		UUID="IS-22"
 		VERSION="1"
 	/>
 	
@@ -2037,7 +1973,6 @@
 		ID="39"
 		LABEL="Título IndSys-1-v2-Dimension-1B"
 		LOCALE="es"
-		UUID="IS-22-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="22"
 	/>
@@ -2046,14 +1981,12 @@
 		ID="40"
 		LABEL="Title IndSys-1-v2-Dimension-1B"
 		LOCALE="en"
-		UUID="IS-22-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="22"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="23"
-		UUID="IS-23"
 		VERSION="1"
 	/>
 	
@@ -2061,7 +1994,6 @@
 		ID="41"
 		LABEL="Título IndSys-1-v2-Dimension-1BA"
 		LOCALE="es"
-		UUID="IS-23-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="23"
 	/>
@@ -2070,14 +2002,12 @@
 		ID="42"
 		LABEL="Title IndSys-1-v2-Dimension-1BA"
 		LOCALE="en"
-		UUID="IS-23-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="23"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="24"
-		UUID="IS-24"
 		VERSION="1"
 	/>
 	
@@ -2085,7 +2015,6 @@
 		ID="43"
 		LABEL="Título IndSys-1-v2-Dimension-2"
 		LOCALE="es"
-		UUID="IS-24-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="24"
 	/>
@@ -2094,14 +2023,12 @@
 		ID="44"
 		LABEL="Title IndSys-1-v2-Dimension-2"
 		LOCALE="en"
-		UUID="IS-24-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="24"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="25"
-		UUID="IS-25"
 		VERSION="1"
 	/>
 	
@@ -2109,7 +2036,6 @@
 		ID="45"
 		LABEL="Título IndSys-3-v1-Dimension-1"
 		LOCALE="es"
-		UUID="IS-25-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="25"
 	/>
@@ -2118,14 +2044,12 @@
 		ID="46"
 		LABEL="Title IndSys-3-v1-Dimension-1"
 		LOCALE="en"
-		UUID="IS-25-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="25"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="26"
-		UUID="IS-26"
 		VERSION="1"
 	/>
 	
@@ -2133,7 +2057,6 @@
 		ID="47"
 		LABEL="Título"
 		LOCALE="es"
-		UUID="IS-26-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="26"
 	/>
@@ -2142,14 +2065,12 @@
 		ID="28"
 		LABEL="Title"
 		LOCALE="en"
-		UUID="IS-26-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="26"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="27"
-		UUID="IS-27"
 		VERSION="1"
 	/>
 	
@@ -2157,7 +2078,6 @@
 		ID="48"
 		LABEL="Título IndSys-3-v1-Dimension-1A"
 		LOCALE="es"
-		UUID="IS-27-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="27"
 	/>
@@ -2166,14 +2086,12 @@
 		ID="49"
 		LABEL="Title IndSys-3-v1-Dimension-1A"
 		LOCALE="en"
-		UUID="IS-27-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="27"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="28"
-		UUID="IS-28"
 		VERSION="1"
 	/>
 	
@@ -2181,7 +2099,6 @@
 		ID="50"
 		LABEL="Título IndSys-1-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-28-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="28"
 	/>
@@ -2190,14 +2107,12 @@
 		ID="51"
 		LABEL="Title IndSys-1-v2-IInstance-1"
 		LOCALE="en"
-		UUID="IS-28-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="28"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="29"
-		UUID="IS-29"
 		VERSION="1"
 	/>
 	
@@ -2205,7 +2120,6 @@
 		ID="52"
 		LABEL="Título IndSys-3-v1-Dimension-1A"
 		LOCALE="es"
-		UUID="IS-29-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="29"
 	/>
@@ -2214,14 +2128,12 @@
 		ID="53"
 		LABEL="Title IndSys-3-v1-Dimension-1A"
 		LOCALE="en"
-		UUID="IS-29-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="29"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="30"
-		UUID="IS-30"
 		VERSION="1"
 	/>
 	
@@ -2229,7 +2141,6 @@
 		ID="54"
 		LABEL="Título IndSys-3-v1-IInstance-2"
 		LOCALE="es"
-		UUID="IS-30-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="30"
 	/>
@@ -2238,14 +2149,12 @@
 		ID="55"
 		LABEL="Title IndSys-3-v1-IInstance-2"
 		LOCALE="en"
-		UUID="IS-30-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="30"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="31"
-		UUID="IS-31"
 		VERSION="1"
 	/>
 	
@@ -2253,7 +2162,6 @@
 		ID="56"
 		LABEL="Título IndSys-3-v1-IInstance-1A"
 		LOCALE="es"
-		UUID="IS-31-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="31"
 	/>
@@ -2262,14 +2170,12 @@
 		ID="57"
 		LABEL="Title IndSys-3-v1-IInstance-1A"
 		LOCALE="en"
-		UUID="IS-31-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="31"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="32"
-		UUID="IS-32"
 		VERSION="1"
 	/>
 	
@@ -2277,7 +2183,6 @@
 		ID="58"
 		LABEL="Título IndSys-1-v2-IInstance-3"
 		LOCALE="es"
-		UUID="IS-32-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="32"
 	/>
@@ -2286,14 +2191,12 @@
 		ID="59"
 		LABEL="Title IndSys-1-v2-IInstance-3"
 		LOCALE="en"
-		UUID="IS-32-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="32"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="33"
-		UUID="IS-33"
 		VERSION="1"
 	/>
 	
@@ -2301,7 +2204,6 @@
 		ID="60"
 		LABEL="Título IndSys-9-v1-IInstance-1"
 		LOCALE="es"
-		UUID="IS-33-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="33"
 	/>
@@ -2310,14 +2212,12 @@
 		ID="61"
 		LABEL="Title IndSys-9-v1-IInstance-1"
 		LOCALE="en"
-		UUID="IS-33-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="33"
 	/>			
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="34"
-		UUID="IS-34"
 		VERSION="1"
 	/>
 	
@@ -2325,7 +2225,6 @@
 		ID="62"
 		LABEL="Título IndSys-5-v1-IInstance-1"
 		LOCALE="es"
-		UUID="IS-34-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="34"
 	/>
@@ -2334,14 +2233,12 @@
 		ID="63"
 		LABEL="Title IndSys-5-v1-IInstance-1"
 		LOCALE="en"
-		UUID="IS-34-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="34"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="35"
-		UUID="IS-35"
 		VERSION="1"
 	/>
 	
@@ -2349,7 +2246,6 @@
 		ID="64"
 		LABEL="Título IndSys-5-v1-IInstance-1"
 		LOCALE="es"
-		UUID="IS-35-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="35"
 	/>
@@ -2358,14 +2254,12 @@
 		ID="65"
 		LABEL="Title IndSys-5-v1-IInstance-1"
 		LOCALE="en"
-		UUID="IS-35-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="35"
 	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="36"
-		UUID="IS-36"
 		VERSION="1"
 	/>
 	
@@ -2373,7 +2267,6 @@
 		ID="66"
 		LABEL="Título IndSys-4-v1-IInstance-1"
 		LOCALE="es"
-		UUID="IS-36-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="36"
 	/>
@@ -2382,14 +2275,12 @@
 		ID="67"
 		LABEL="Title IndSys-4-v1-IInstance-1"
 		LOCALE="en"
-		UUID="IS-36-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="36"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="37"
-		UUID="IS-37"
 		VERSION="1"
 	/>
 	
@@ -2397,7 +2288,6 @@
 		ID="68"
 		LABEL="Título IndSys-6-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-37-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="37"
 	/>
@@ -2406,14 +2296,12 @@
 		ID="69"
 		LABEL="Title IndSys-6-v6-IInstance-1"
 		LOCALE="en"
-		UUID="IS-37-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="37"
 	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="38"
-		UUID="IS-38"
 		VERSION="1"
 	/>
 	
@@ -2421,7 +2309,6 @@
 		ID="70"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-38-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="38"
 	/>
@@ -2430,14 +2317,12 @@
 		ID="71"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
-		UUID="IS-38-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="38"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="39"
-		UUID="IS-39"
 		VERSION="1"
 	/>
 	
@@ -2445,7 +2330,6 @@
 		ID="72"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-39-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="39"
 	/>
@@ -2454,14 +2338,12 @@
 		ID="73"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
-		UUID="IS-39-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="39"
 	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="40"
-		UUID="IS-40"
 		VERSION="1"
 	/>
 	
@@ -2469,7 +2351,6 @@
 		ID="74"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-40-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="40"
 	/>
@@ -2478,14 +2359,12 @@
 		ID="75"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
-		UUID="IS-40-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="40"
 	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="41"
-		UUID="IS-41"
 		VERSION="1"
 	/>
 	
@@ -2493,7 +2372,6 @@
 		ID="76"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
-		UUID="IS-41-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="41"
 	/>
@@ -2502,14 +2380,12 @@
 		ID="77"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
-		UUID="IS-41-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="41"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="42"
-		UUID="IS-42"
 		VERSION="1"
 	/>
 	
@@ -2517,14 +2393,12 @@
 		ID="78"
 		LABEL="Área temática 1"
 		LOCALE="es"
-		UUID="IS-42-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="42"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="43"
-		UUID="IS-43"
 		VERSION="1"
 	/>
 	
@@ -2532,14 +2406,12 @@
 		ID="79"
 		LABEL="Área temática 2"
 		LOCALE="es"
-		UUID="IS-43-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="43"
 	/>
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="44"
-		UUID="IS-44"
 		VERSION="1"
 	/>
 	
@@ -2547,14 +2419,12 @@
 		ID="80"
 		LABEL="Área temática 1"
 		LOCALE="es"
-		UUID="IS-44-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="44"
 	/>
 
 	<TBL_INTERNATIONAL_STRINGS
 		ID="45"
-		UUID="IS-45"
 		VERSION="1"
 	/>
 	
@@ -2562,7 +2432,6 @@
 		ID="81"
 		LABEL="Países"
 		LOCALE="es"
-		UUID="IS-45-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="45"
 	/>
@@ -2571,14 +2440,12 @@
 		ID="82"
 		LABEL="Countries"
 		LOCALE="en"
-		UUID="IS-45-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="45"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="46"
-		UUID="IS-46"
 		VERSION="1"
 	/>
 	
@@ -2586,7 +2453,6 @@
 		ID="83"
 		LABEL="Municipios"
 		LOCALE="es"
-		UUID="IS-46-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="46"
 	/>
@@ -2595,14 +2461,12 @@
 		ID="84"
 		LABEL="Municipalities"
 		LOCALE="en"
-		UUID="IS-46-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="46"
 	/>	
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="47"
-		UUID="IS-47"
 		VERSION="1"
 	/>
 	
@@ -2610,7 +2474,6 @@
 		ID="85"
 		LABEL="España"
 		LOCALE="es"
-		UUID="IS-47-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="47"
 	/>
@@ -2619,14 +2482,12 @@
 		ID="86"
 		LABEL="Spain"
 		LOCALE="en"
-		UUID="IS-47-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="47"
 	/>		
 	
 	<TBL_INTERNATIONAL_STRINGS
 		ID="48"
-		UUID="IS-48"
 		VERSION="1"
 	/>
 	
@@ -2634,7 +2495,6 @@
 		ID="87"
 		LABEL="Londres"
 		LOCALE="es"
-		UUID="IS-48-LS-1"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="48"
 	/>
@@ -2643,7 +2503,6 @@
 		ID="88"
 		LABEL="London"
 		LOCALE="en"
-		UUID="IS-48-LS-2"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="48"
 	/>														

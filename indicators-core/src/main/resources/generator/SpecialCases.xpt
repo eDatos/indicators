@@ -81,16 +81,18 @@ NOT NULL«ENDIF»,
     	«targetDef.proceed() -»
     «ENDIF -»
 «ENDAROUND»
-«AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
-    «IF name != "Subject" -»
-    	«targetDef.proceed() -»
-    «ENDIF -»
-«ENDAROUND»
 «AROUND templates::db::OracleDDL::idPrimaryKey FOR DomainObject»
 	«IF name != "Subject" -»
 		«targetDef.proceed() -»
 	«ENDIF -»
 «ENDAROUND»
+«REM»Skip unique constraint in InternationalString and LocalisedString this will be for "id", and primary key restriction already exists for this attribute «ENDREM»
+«AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
+    «IF name != "Subject" && name != "InternationalString" && name != "LocalisedString" -»
+    	«targetDef.proceed() -»
+    «ENDIF -»
+«ENDAROUND»
+
 «REM»Skip script database generation for hibernate_sequence«ENDREM»
 «AROUND templates::db::OracleDDL::dropSequence FOR Application»
 «ENDAROUND»
