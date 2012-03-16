@@ -25,7 +25,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorsSystemCriteriaPropertyInternalEnum;
@@ -63,7 +63,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Save draft version
         indicatorsSystemVersion.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemVersion.setIsLastVersion(Boolean.TRUE);
-        indicatorsSystemVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersiontTypeEnum.MAJOR));
+        indicatorsSystemVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersionTypeEnum.MAJOR));
         indicatorsSystemVersion.setIndicatorsSystem(indicatorsSystem);
         indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
 
@@ -394,7 +394,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public IndicatorsSystemVersion versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersiontTypeEnum versionType) throws MetamacException {
+    public IndicatorsSystemVersion versioningIndicatorsSystem(ServiceContext ctx, String uuid, VersionTypeEnum versionType) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkVersioningIndicatorsSystem(uuid, versionType, null);

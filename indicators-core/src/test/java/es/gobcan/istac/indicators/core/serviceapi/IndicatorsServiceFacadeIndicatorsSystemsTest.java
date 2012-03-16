@@ -36,7 +36,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -1652,7 +1652,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1719,7 +1719,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(null, indicatorsSystemDto.getProductionVersion());
         assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getDiffusionVersion());
 
-        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+        IndicatorsSystemDto indicatorsSystemDtoVersioned = indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersionTypeEnum.MINOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorsSystemDtoVersioned.getVersionNumber());
@@ -1749,7 +1749,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
-            indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, VersiontTypeEnum.MINOR);
+            indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), NOT_EXISTS, VersionTypeEnum.MINOR);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1765,7 +1765,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATORS_SYSTEM_2;
 
         try {
-            indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+            indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContext(), uuid, VersionTypeEnum.MINOR);
             fail("Indicators system already exists in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

@@ -38,7 +38,7 @@ Application Indicators {
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
-	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
+	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(String indicatorsSystemUuid, @Dimension dimension) throws MetamacException;
@@ -89,7 +89,7 @@ Application Indicators {
 	    	@IndicatorVersion rejectIndicatorValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
-	    	@IndicatorVersion versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
+	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	
 	    	// Data sources
 	    	@DataSource createDataSource(String indicatorUuid, @DataSource dataSource) throws MetamacException;
@@ -139,7 +139,7 @@ Application Indicators {
 	    	"Archives indicators system"
 	    	@IndicatorsSystemDto archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
-	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
+	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems by criteria. Retrieves last versions"
 	    	List<@IndicatorsSystemDto> findIndicatorsSystems(IndicatorsCriteria criteria) throws MetamacException;
 	    	"Finds published indicators systems by criteria"
@@ -213,7 +213,7 @@ Application Indicators {
 	    	"Archives indicator"
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
-	    	@IndicatorDto versioningIndicator(String uuid, @VersiontTypeEnum versionType) throws MetamacException;
+	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators by criteria. Retrieves last versions"
 	    	List<@IndicatorDto> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
 	    	"Finds published indicators by criteria"
@@ -1059,7 +1059,7 @@ Application Indicators {
     		ARCHIVED
     	}	
     	"Type of version of the change"
-    	enum VersiontTypeEnum {
+    	enum VersionTypeEnum {
     		MAJOR,
     		MINOR
     	}

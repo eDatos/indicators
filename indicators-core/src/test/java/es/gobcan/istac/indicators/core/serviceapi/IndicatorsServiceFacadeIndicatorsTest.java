@@ -34,7 +34,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -2218,7 +2218,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(null, indicatorDto.getProductionVersion());
         assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
 
-        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
@@ -2269,7 +2269,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(null, indicatorDto.getProductionVersion());
         assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
 
-        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+        IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MINOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
@@ -2299,7 +2299,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testVersioningIndicatorErrorNotExists() throws Exception {
 
         try {
-            indicatorsServiceFacade.versioningIndicator(getServiceContext(), NOT_EXISTS, VersiontTypeEnum.MINOR);
+            indicatorsServiceFacade.versioningIndicator(getServiceContext(), NOT_EXISTS, VersionTypeEnum.MINOR);
             fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -2315,7 +2315,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = INDICATOR_2;
 
         try {
-            indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MINOR);
+            indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MINOR);
             fail("Indicator already exists in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

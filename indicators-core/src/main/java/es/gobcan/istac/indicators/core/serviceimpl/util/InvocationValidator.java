@@ -22,7 +22,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 
@@ -173,7 +173,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkVersioningIndicatorsSystem(String uuid, VersiontTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkVersioningIndicatorsSystem(String uuid, VersionTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -411,7 +411,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkVersioningIndicator(String uuid, VersiontTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkVersioningIndicator(String uuid, VersionTypeEnum versionType, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();

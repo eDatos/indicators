@@ -16,7 +16,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -105,7 +105,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         }
 
         // Versioning
-        IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+        IndicatorVersion newVersion = indicatorService.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
 
         // Retrieve after delete
         {

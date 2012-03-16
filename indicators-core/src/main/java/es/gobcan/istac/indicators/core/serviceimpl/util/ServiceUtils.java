@@ -6,7 +6,7 @@ import java.text.NumberFormat;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class ServiceUtils {
@@ -14,7 +14,7 @@ public class ServiceUtils {
     private static final NumberFormat formatterMajor = new DecimalFormat("0");
     private static final NumberFormat formatterMinor = new DecimalFormat("000");
 
-    public static String generateVersionNumber(String actualVersionNumber, VersiontTypeEnum versionType) throws MetamacException {
+    public static String generateVersionNumber(String actualVersionNumber, VersionTypeEnum versionType) throws MetamacException {
 
         if (actualVersionNumber == null) {
             return IndicatorsConstants.VERSION_NUMBER_INITIAL;
@@ -24,13 +24,13 @@ public class ServiceUtils {
         Integer versionNumberMajor = Integer.valueOf(versionNumberSplited[0]);
         Integer versionNumberMinor = Integer.valueOf(versionNumberSplited[1]);
 
-        if (VersiontTypeEnum.MAJOR.equals(versionType)) {
+        if (VersionTypeEnum.MAJOR.equals(versionType)) {
             versionNumberMajor++;
             versionNumberMinor = 0;
-        } else if (VersiontTypeEnum.MINOR.equals(versionType)) {
+        } else if (VersionTypeEnum.MINOR.equals(versionType)) {
             versionNumberMinor++;
         } else {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_UNEXPECTED, versionType, VersiontTypeEnum.class);
+            throw new MetamacException(ServiceExceptionType.PARAMETER_UNEXPECTED, versionType, VersionTypeEnum.class);
         }
         return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
     }

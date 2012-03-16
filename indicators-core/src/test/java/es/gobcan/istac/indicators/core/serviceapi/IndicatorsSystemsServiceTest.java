@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -90,7 +90,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         }
 
         // Versioning
-        IndicatorsSystemVersion newVersion = indicatorsSystemService.versioningIndicatorsSystem(getServiceContext(), uuid, VersiontTypeEnum.MAJOR);
+        IndicatorsSystemVersion newVersion = indicatorsSystemService.versioningIndicatorsSystem(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
 
         // Retrieve after delete
         {
