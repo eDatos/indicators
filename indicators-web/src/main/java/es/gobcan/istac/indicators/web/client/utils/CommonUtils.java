@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
@@ -105,6 +106,14 @@ public class CommonUtils {
             }
         }
         return null;
+    }
+    
+    public static LinkedHashMap<String, String> getVersionTypeValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
+        for (VersiontTypeEnum type : VersiontTypeEnum.values()) {
+            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().versionTypeEnum() + type.getName()));
+        }
+        return valueMap;
     }
     
 }
