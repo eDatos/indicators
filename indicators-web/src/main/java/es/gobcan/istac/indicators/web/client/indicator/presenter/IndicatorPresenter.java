@@ -31,7 +31,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
@@ -285,7 +285,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void versioningIndicator(String uuid, VersiontTypeEnum versionType) {
+    public void versioningIndicator(String uuid, VersionTypeEnum versionType) {
         dispatcher.execute(new VersioningIndicatorAction(uuid, versionType), new AsyncCallback<VersioningIndicatorResult>() {
             @Override
             public void onFailure(Throwable caught) {

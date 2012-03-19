@@ -5,7 +5,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 
 
 @GenDispatch(isSecure=false)
@@ -15,7 +15,7 @@ public class VersioningIndicator {
     String uuid;
     
     @In(2)
-    VersiontTypeEnum versiontType;
+    VersionTypeEnum versionType;
     
     @Out(1)
     IndicatorDto indicatorDto;

@@ -11,7 +11,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 
@@ -41,9 +41,9 @@ public class AskVersionWindow extends CustomWindow {
         show();
     }
     
-    public VersiontTypeEnum getSelectedVersion() {
+    public VersionTypeEnum getSelectedVersion() {
         String value = form.getValueAsString(FIELD_VERSION); 
-        return (value != null && !value.isEmpty()) ? VersiontTypeEnum.valueOf(value) : null;
+        return (value != null && !value.isEmpty()) ? VersionTypeEnum.valueOf(value) : null;
     }
     
     public boolean validateForm() {

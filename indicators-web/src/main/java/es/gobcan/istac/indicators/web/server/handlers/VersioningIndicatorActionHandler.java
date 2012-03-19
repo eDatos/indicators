@@ -30,7 +30,7 @@ public class VersioningIndicatorActionHandler extends AbstractActionHandler<Vers
     @Override
     public VersioningIndicatorResult execute(VersioningIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.versioningIndicator(ServiceContextHelper.getServiceContext(), action.getUuid(), action.getVersiontType());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.versioningIndicator(ServiceContextHelper.getServiceContext(), action.getUuid(), action.getVersionType());
             return new VersioningIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

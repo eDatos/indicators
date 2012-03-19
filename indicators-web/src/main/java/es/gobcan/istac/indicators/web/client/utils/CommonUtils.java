@@ -14,7 +14,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
-import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
@@ -92,7 +92,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (SubjectDto subjectDto : subjectDtos) {
-            valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getDescription()));
+            valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
         }
         return valueMap;
     }
@@ -101,7 +101,7 @@ public class CommonUtils {
         if (code != null) {
             for (SubjectDto subjectDto : subjectDtos) {
                 if (code.equals(subjectDto.getCode())) {
-                    return subjectDto.getDescription();
+                    return subjectDto.getTitle();
                 }
             }
         }
@@ -110,7 +110,7 @@ public class CommonUtils {
     
     public static LinkedHashMap<String, String> getVersionTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
-        for (VersiontTypeEnum type : VersiontTypeEnum.values()) {
+        for (VersionTypeEnum type : VersionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().versionTypeEnum() + type.getName()));
         }
         return valueMap;
