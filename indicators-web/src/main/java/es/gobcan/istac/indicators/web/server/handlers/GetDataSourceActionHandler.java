@@ -10,35 +10,36 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
+import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
+import es.gobcan.istac.indicators.web.shared.GetDataSourceResult;
+
 
 @Component
-public class DeleteIndicatorsActionHandler extends AbstractActionHandler<DeleteIndicatorsAction, DeleteIndicatorsResult> {
+public class GetDataSourceActionHandler extends AbstractActionHandler<GetDataSourceAction, GetDataSourceResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    public DeleteIndicatorsActionHandler() {
-        super(DeleteIndicatorsAction.class);
+    public GetDataSourceActionHandler() {
+        super(GetDataSourceAction.class);
     }
 
     @Override
-    public DeleteIndicatorsResult execute(DeleteIndicatorsAction action, ExecutionContext context) throws ActionException {
+    public GetDataSourceResult execute(GetDataSourceAction action, ExecutionContext context) throws ActionException {
         try {
-            for (String uuid : action.getUuids()) {
-                indicatorsServiceFacade.deleteIndicator(ServiceContextHelper.getServiceContext(),uuid);
-            }
-            return new DeleteIndicatorsResult();
+            DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(ServiceContextHelper.getServiceContext(), action.getUuid());
+            return new GetDataSourceResult(dataSourceDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(DeleteIndicatorsAction action, DeleteIndicatorsResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetDataSourceAction action, GetDataSourceResult result, ExecutionContext context) throws ActionException {
+        
     }
 
 }

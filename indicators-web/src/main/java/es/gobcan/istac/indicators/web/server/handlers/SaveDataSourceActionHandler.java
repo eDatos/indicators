@@ -10,35 +10,36 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
-import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
+import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
+import es.gobcan.istac.indicators.web.shared.SaveDataSourceResult;
+
 
 @Component
-public class DeleteIndicatorsActionHandler extends AbstractActionHandler<DeleteIndicatorsAction, DeleteIndicatorsResult> {
+public class SaveDataSourceActionHandler extends AbstractActionHandler<SaveDataSourceAction, SaveDataSourceResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-
-    public DeleteIndicatorsActionHandler() {
-        super(DeleteIndicatorsAction.class);
+    
+    public SaveDataSourceActionHandler() {
+        super(SaveDataSourceAction.class);
     }
 
     @Override
-    public DeleteIndicatorsResult execute(DeleteIndicatorsAction action, ExecutionContext context) throws ActionException {
+    public SaveDataSourceResult execute(SaveDataSourceAction action, ExecutionContext context) throws ActionException {
         try {
-            for (String uuid : action.getUuids()) {
-                indicatorsServiceFacade.deleteIndicator(ServiceContextHelper.getServiceContext(),uuid);
-            }
-            return new DeleteIndicatorsResult();
+            DataSourceDto dataSourceDto = indicatorsServiceFacade.createDataSource(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getDataSourceDtoToSave());
+            return new SaveDataSourceResult(dataSourceDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(DeleteIndicatorsAction action, DeleteIndicatorsResult result, ExecutionContext context) throws ActionException {
+    public void undo(SaveDataSourceAction action, SaveDataSourceResult result, ExecutionContext context) throws ActionException {
+        
     }
 
 }

@@ -9,9 +9,12 @@ import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorsSystemAct
 import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueActionHandler;
@@ -30,6 +33,7 @@ import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHand
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.SaveDataSourceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToDiffusionValidationActionHandler;
@@ -45,9 +49,12 @@ import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
+import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
@@ -66,6 +73,7 @@ import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
+import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
@@ -126,6 +134,12 @@ public class ServerModule extends HandlerModule {
 		bindHandler(PublishIndicatorAction.class, PublishIndicatorActionHandler.class);
 		bindHandler(RejectIndicatorValidationAction.class, RejectIndicatorValidationActionHandler.class);
 		bindHandler(VersioningIndicatorAction.class, VersioningIndicatorActionHandler.class);
+		
+		// Indicators DataSources
+		bindHandler(SaveDataSourceAction.class, SaveDataSourceActionHandler.class);
+		bindHandler(GetDataSourcesListAction.class, GetDataSourcesListActionHandler.class);
+		bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
+		bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
 		
 		bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
 		bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
