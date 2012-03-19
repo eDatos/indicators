@@ -38,6 +38,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
@@ -80,6 +81,8 @@ import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler, UpdateGeographicalGranularitiesHandler {
 	
@@ -111,6 +114,9 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 		void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos);
 		void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
 		void setGeographicalValue(GeographicalValueDto geographicalValueDto);
+		
+//		void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto);
+//		void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto);
 	}
 	
 	@ProxyCodeSplit
@@ -460,5 +466,20 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }}
         );
     }
-   
+
+    @Override
+    public void versioningIndicatorsSystem(String uuid, VersiontTypeEnum versionType) {
+        dispatcher.execute(new VersioningIndicatorsSystemAction(uuid, versionType), new AsyncCallback<VersioningIndicatorsSystemResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorVersioningIndicatorsSystem()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(VersioningIndicatorsSystemResult result) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
+                getView().setIndicatorsSystem(result.getIndicatorsSystemDto());
+            }}
+        );
+    }
+    
 }

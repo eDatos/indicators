@@ -17,22 +17,29 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private PublishToolStripButton rejectValidation;
     private PublishToolStripButton publish;
     private PublishToolStripButton archive;
+    private PublishToolStripButton versioning;
     
     private IndicatorProcStatusEnum status;
     
     
     public IndicatorMainFormLayout() {
+        
+        // Remove handler from edit button
+        editHandlerRegistration.removeHandler();
+        
         productionValidation = new PublishToolStripButton(getConstants().indicatorSendToProductionValidation(), IndicatorsResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new PublishToolStripButton(getConstants().indicatorSendToDiffusionValidation(), IndicatorsResources.RESOURCE.validateDifussion().getURL());
         publish = new PublishToolStripButton(getConstants().indicatorPublish(), IndicatorsResources.RESOURCE.publish().getURL());
         archive = new PublishToolStripButton(getConstants().indicatorArchive(), IndicatorsResources.RESOURCE.archive().getURL());
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
+        versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
         
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
         toolStrip.addButton(archive);
         toolStrip.addButton(rejectValidation);
+        toolStrip.addButton(versioning);
     }
     
     public void updatePublishSection(IndicatorProcStatusEnum status) {
@@ -57,8 +64,9 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
             publish.show();
         } else if (IndicatorProcStatusEnum.PUBLISHED.equals(status)) {
             archive.show();
+            versioning.show();
         } else if (IndicatorProcStatusEnum.ARCHIVED.equals(status)) {
-            // Do nothing
+            versioning.show();
         }
     }
     
@@ -94,12 +102,17 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         return archive;
     }
     
+    public HasClickHandlers getVersioning() {
+        return versioning;
+    }
+    
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
         publish.hide();
         archive.hide();
+        versioning.hide();
     }
 
 }

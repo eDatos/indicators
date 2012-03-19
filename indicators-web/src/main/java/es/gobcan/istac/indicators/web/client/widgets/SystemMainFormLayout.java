@@ -17,6 +17,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
     private PublishToolStripButton rejectValidation;
     private PublishToolStripButton publish;
     private PublishToolStripButton archive;
+    private PublishToolStripButton versioning;
     
     private IndicatorsSystemProcStatusEnum status;
     
@@ -27,12 +28,14 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         publish = new PublishToolStripButton(getConstants().indicatorPublish(), IndicatorsResources.RESOURCE.publish().getURL());
         archive = new PublishToolStripButton(getConstants().indicatorArchive(), IndicatorsResources.RESOURCE.archive().getURL());
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
+        versioning = new PublishToolStripButton(getConstants().systemVersioning(), IndicatorsResources.RESOURCE.version().getURL());
         
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
         toolStrip.addButton(archive);
         toolStrip.addButton(rejectValidation);
+        toolStrip.addButton(versioning);
     }
     
     public void updatePublishSection(IndicatorsSystemProcStatusEnum status) {
@@ -55,8 +58,9 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
             productionValidation.show();
         } else if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(status)) {
             archive.show();
+            versioning.show();
         } else if (IndicatorsSystemProcStatusEnum.ARCHIVED.equals(status)) {
-            // Do nothing
+            versioning.show();
         }
     }
     
@@ -86,12 +90,17 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         return archive;
     }
     
+    public HasClickHandlers getVersioning() {
+        return versioning;
+    }
+    
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
         publish.hide();
         archive.hide();
+        versioning.hide();
     }
 
 }

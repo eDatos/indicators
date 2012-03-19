@@ -13,6 +13,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.widgets.SystemMainFormLayout;
@@ -75,6 +76,21 @@ public class SystemGeneralPanel extends VLayout {
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.archive(indicatorsSystemDto.getUuid());
+            }
+        });
+        mainFormLayout.getVersioning().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (versionWindow.validateForm()) {
+                            uiHandlers.versioningIndicatorsSystem(indicatorsSystemDto.getUuid(), versionWindow.getSelectedVersion());
+                            versionWindow.destroy();
+                        }
+                    }
+                });
             }
         });
 		

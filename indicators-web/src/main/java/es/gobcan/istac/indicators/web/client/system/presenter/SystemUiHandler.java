@@ -6,6 +6,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 
 public interface SystemUiHandler extends UiHandlers {
 
@@ -33,5 +34,7 @@ public interface SystemUiHandler extends UiHandlers {
     void rejectValidation(String uuid);
     void publish(String uuid);
     void archive(String uuid);
+    
+    void versioningIndicatorsSystem(String uuid, VersiontTypeEnum versionType);
 	
 }

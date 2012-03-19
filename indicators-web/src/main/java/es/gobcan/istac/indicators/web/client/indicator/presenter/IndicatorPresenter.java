@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.VersiontTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
@@ -61,6 +62,8 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidation
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy> implements IndicatorUiHandler, UpdateQuantityUnitsHandler, UpdateGeographicalGranularitiesHandler {
 	
@@ -276,6 +279,21 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onSuccess(ArchiveIndicatorResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorArchived()), MessageTypeEnum.SUCCESS);
+                getView().setIndicator(result.getIndicatorDto());
+            }}
+        );
+    }
+
+    @Override
+    public void versioningIndicator(String uuid, VersiontTypeEnum versionType) {
+        dispatcher.execute(new VersioningIndicatorAction(uuid, versionType), new AsyncCallback<VersioningIndicatorResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorVersioningIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(VersioningIndicatorResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorVersioned()), MessageTypeEnum.SUCCESS);
                 getView().setIndicator(result.getIndicatorDto());
             }}
         );

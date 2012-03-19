@@ -3,12 +3,14 @@ package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -27,7 +29,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
@@ -104,11 +108,34 @@ public class IndicatorGeneralPanel extends VLayout {
 	        }
         });
         
-	    // Edit
+        // Edit: Add a custom handler to check indicator status before start editing
 	    mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.retrieveSubjects();
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(indicator.getProcStatus()) || IndicatorProcStatusEnum.ARCHIVED.equals(indicator.getProcStatus())) {
+                    // Create a new version of the indicator
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
+                    window.show();
+//                    window.getYesButton().addClickHandler(new ClickHandler() {
+//                        @Override
+//                        public void onClick(ClickEvent event) {
+//                            window.destroy();
+//                            final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+//                            versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//                                @Override
+//                                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//                                    if (versionWindow.validateForm()) {
+//                                        uiHandlers.versioningIndicator(indicator.getUuid(), versionWindow.getSelectedVersion());
+//                                        versionWindow.destroy();
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    });
+                } else {
+                    // Default behavior
+                    setEditionMode();
+                }
             }
         });
 	    
@@ -151,9 +178,24 @@ public class IndicatorGeneralPanel extends VLayout {
                 uiHandlers.archive(indicator.getUuid());
             }
         });
-        
+        mainFormLayout.getVersioning().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (versionWindow.validateForm()) {
+                            uiHandlers.versioningIndicator(indicator.getUuid(), versionWindow.getSelectedVersion());
+                            versionWindow.destroy();
+                        }
+                    }
+                });
+            }
+        });
+
 	}
-	
+
 	/**
 	 * Creates and returns the view layout
 	 * 
@@ -444,6 +486,11 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         quantityForm.setGeographicalValue(geographicalValueDto);
         quantityEditionForm.setGeographicalValue(geographicalValueDto);
+    }
+    
+    private void setEditionMode() {
+        uiHandlers.retrieveSubjects();
+        mainFormLayout.setEditionMode();
     }
     
 }

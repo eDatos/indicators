@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.Collections;
@@ -15,6 +16,7 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -69,6 +71,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
@@ -143,7 +146,9 @@ public class SystemStructurePanel extends HLayout {
 	
 
 	public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
+	    this.system = indSys;
 		treePanelEdit.setIndicatorsSystem(indSys);
+		hidePanels();
 	}
 	
 	public void setIndicators(List<IndicatorDto> indicators) {
@@ -244,12 +249,12 @@ public class SystemStructurePanel extends HLayout {
 	}
 	
 	private void hidePanels() {
-        if (dimensionPanel.isVisible()) {
+//        if (dimensionPanel.isVisible()) {
             dimensionPanel.hide();
-        }
-        if (indicatorInstPanel.isVisible()) {
+//        }
+//        if (indicatorInstPanel.isVisible()) {
             indicatorInstPanel.hide();
-        }
+//        }
     }
 	
 	public void setUiHandlers(SystemUiHandler uiHandlers) {
@@ -267,6 +272,14 @@ public class SystemStructurePanel extends HLayout {
 	public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
 	    indicatorInstPanel.setGeographicalValue(geographicalValueDto);
 	}
+	
+//	public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
+//	    indicatorInstPanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
+//	}
+	
+//	public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
+//	    dimensionPanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
+//	}
 	
 	private class TreePanel extends VLayout {
 		protected final Long FALSE_ROOT_NODE_ID = 0L;
@@ -509,12 +522,19 @@ public class SystemStructurePanel extends HLayout {
             item3.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(MenuItemClickEvent event) {
-                    if (selNode == falseRoot)
-                        SystemStructurePanel.this.selectDimForCreate = null;
-                    else {
-                        SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                        // If system is PUBLISH or ARCHIVED, dimension cannot be created
+                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                        window.show();
+                    } else {
+                        // Create a new dimension
+                        if (selNode == falseRoot)
+                            SystemStructurePanel.this.selectDimForCreate = null;
+                        else {
+                            SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
+                        }
+                        SystemStructurePanel.this.showDimCreatePanel();
                     }
-                    SystemStructurePanel.this.showDimCreatePanel();
                 }
             });
             MenuItem item4 = new MenuItem(getConstants().systemStrucNewIndInstance());
@@ -522,12 +542,19 @@ public class SystemStructurePanel extends HLayout {
 				
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-                    if (selNode == falseRoot)
-                        SystemStructurePanel.this.selectDimForCreate = null;
-                    else {
-                        SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
-                    }
-                    SystemStructurePanel.this.showIndicInstanceCreatePanel();
+				    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                        // If system is PUBLISH or ARCHIVED, dimension cannot be created
+                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                        window.show();
+				    } else {
+				        // Create a new indicator instance
+				        if (selNode == falseRoot)
+				            SystemStructurePanel.this.selectDimForCreate = null;
+				        else {
+				            SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
+				        }
+				        SystemStructurePanel.this.showIndicInstanceCreatePanel();
+				    }
 				}
 			});
             
@@ -536,9 +563,15 @@ public class SystemStructurePanel extends HLayout {
                 item1.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						DimensionDto dim = selNode.getSource().getDimension();
-						selectedDimension = dim;
-						dimensionDeleteConfirm.show();
+					    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+	                        // If system is PUBLISH or ARCHIVED, cannot be deleted
+	                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+	                        window.show();
+	                    } else {
+    					    DimensionDto dim = selNode.getSource().getDimension();
+    						selectedDimension = dim;
+    						dimensionDeleteConfirm.show();
+	                    }
 					}
 				});
                 menu.addItem(item1);
@@ -556,9 +589,15 @@ public class SystemStructurePanel extends HLayout {
             item1.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(MenuItemClickEvent event) {
-					IndicatorInstanceDto instance = selNode.getSource().getIndicatorInstance();
-					selectedIndInstance = instance;
-					indInstanceDeleteConfirm.show();
+				    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                        // If system is PUBLISH or ARCHIVED, cannot be deleted
+                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                        window.show();
+                    } else {
+    					IndicatorInstanceDto instance = selNode.getSource().getIndicatorInstance();
+    					selectedIndInstance = instance;
+    					indInstanceDeleteConfirm.show();
+                    }
 				}
 			});
             menu.addItem(item1);
@@ -594,8 +633,43 @@ public class SystemStructurePanel extends HLayout {
 			mainFormLayout.setViewMode();
 			setDimension(dimensionDto);
 		}
+        
+//        public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
+//            selectDimension(dimensionDto, true);
+//        }
 
 		private void bindEvents() {
+            // Remove handler from edit button
+            mainFormLayout.getEditHandlerRegistration().removeHandler();
+            mainFormLayout.getEditToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
+                        // Create a new version of the indicator
+                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                        window.show();
+//                        window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+//                            @Override
+//                            public void onClick(ClickEvent event) {
+//                                window.destroy();
+//                                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+//                                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//                                    @Override
+//                                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//                                        if (versionWindow.validateForm()) {
+//                                            uiHandlers.versioningIndicatorsSystemByDimension(system.getUuid(), versionWindow.getSelectedVersion());
+//                                            versionWindow.destroy();
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        });
+                    } else {
+                        setEditionMode();
+                    }
+                }
+            });
+		    
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -708,7 +782,41 @@ public class SystemStructurePanel extends HLayout {
 			setIndicatorInstance(indicatorInstance);
 		}
         
+//        public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
+//            selectIndicatorInstance(indicatorInstanceDto, true);
+//        }
+        
         private void bindEvents() {
+            // Remove handler from edit button
+            mainFormLayout.getEditHandlerRegistration().removeHandler();
+            mainFormLayout.getEditToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
+                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                        window.show();
+//                        window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+//                            @Override
+//                            public void onClick(ClickEvent event) {
+//                                window.destroy();
+//                                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+//                                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//                                    @Override
+//                                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//                                        if (versionWindow.validateForm()) {
+//                                            uiHandlers.versioningIndicatorsSystemByInstance(system.getUuid(), versionWindow.getSelectedVersion());
+//                                            versionWindow.destroy();
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        });
+                    } else {
+                        setEditionMode();
+                    }
+                }
+            });
+            
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
