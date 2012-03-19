@@ -107,7 +107,16 @@ Application Indicators {
 	    	List<@Subject> findSubjects() throws MetamacException;
 	    	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
     	}   	
-	    
+
+	    "Provides access to indicators, indicators systems..."
+    	Service IndicatorsWebserviceFacade {
+    		webservice
+			> @IndicatorsSystemsService
+    		> @IndicatorsService
+	    	
+	    	List<String> findIndicatorsSystems(String tipo) throws MetamacException;
+		}
+			    
 	    "Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
