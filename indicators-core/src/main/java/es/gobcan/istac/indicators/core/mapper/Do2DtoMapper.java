@@ -2,7 +2,10 @@ package es.gobcan.istac.indicators.core.mapper;
 
 import java.util.List;
 
+import es.gobcan.istac.indicators.core.domain.Data;
+import es.gobcan.istac.indicators.core.domain.DataBasic;
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -12,7 +15,10 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -56,4 +62,13 @@ public interface Do2DtoMapper {
     // Subject
     public SubjectDto subjectDoToDto(Subject source);
     public SubjectDto subjectDoToDto(SubjectIndicatorResult source);
+    
+    // DataBasic
+    public DataBasicDto dataBasicDoToDto(DataBasic source);
+    
+    // DataStructure
+    public DataStructureDto dataStructureDoToDto(DataStructure source);
+    
+    //Data 
+    public DataDto dataDoToDto(Data source);
 }

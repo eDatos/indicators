@@ -107,8 +107,20 @@ Application Indicators {
 	    	List<@Subject> findSubjects() throws MetamacException;
 	    	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
     	}   	
-
-	    "Provides access to indicators, indicators systems..."
+    	
+    	"Provides access to indicators data"
+    	Service IndicatorsDataService {
+    		> @DataGpeRepository
+    		
+			"Find all Data containing basic info only"
+	    	List<@DataBasic> findDataDefinitions() throws MetamacException;
+	    	"Retrieve the Data's structure info"
+	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieve Data content"
+	    	Data retrieveData(String uuid) throws MetamacException;
+    	}
+    	
+    	"Provides access to indicators, indicators systems..."
     	Service IndicatorsWebserviceFacade {
     		webservice
 			> @IndicatorsSystemsService
@@ -117,7 +129,7 @@ Application Indicators {
 	    	List<String> findIndicatorsSystems(String tipo) throws MetamacException;
 		}
 			    
-	    "Provides access to indicators, indicators systems..."
+    	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
     		> @IndicatorsService
@@ -255,6 +267,18 @@ Application Indicators {
 	    	List<@SubjectDto> findSubjectsInPublishedIndicators() throws MetamacException;
 	    }
 
+	    "Provides access to indicators data"
+    	Service IndicatorsDataServiceFacade {
+			> @IndicatorsDataService
+	    	
+	    	"Find all Data containing basic info only"
+	    	List<@DataBasicDto> findDataDefinitions() throws MetamacException;
+	    	"Retrieve the Data's structure info"
+	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
+	    	"Retrieve Data content"
+	    	@DataDto retrieveData(String uuid) throws MetamacException;
+		}
+		
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
 		// ----------------------------------------------------------------        	
@@ -735,6 +759,53 @@ Application Indicators {
             	List<@Subject> findSubjects;
 			}
         }
+        
+        "Table view for Data basic information"
+	    Entity DataBasic {
+        	databaseTable = "TV_CONSULTA"
+			!auditable
+			!optimisticLocking
+			hint="strategy=IDENTITY"
+			
+			"Id"
+			Long id not nullable databaseColumn="ID_CONSULTA" key;
+			"uuid"
+			String uuid nullable databaseColumn="UUID_CONSULTA" length="255";
+			"Nombre de la consulta"
+			String title nullable databaseColumn="NOMBRE_CONSULTA" length="255";
+			"Query's type"
+			String type nullable databaseColumn="TIPO_CONSULTA" length="255";
+			"Query's parameters serialization"
+			Clob query nullable databaseColumn="CONSULTA";
+			"Px's Identifier"
+			String uriPx not nullable databaseColumn="URI_PX" length="255";
+			"Px's version when the query was created"
+			String versionPx nullable databaseColumn="VERSION_PX" length="255";
+			"Operation's identifier, should match with px's operation"
+			String idOperacion not nullable databaseColumn="ID_OPERACION" length="7";
+			"Creator"
+			String creator not nullable databaseColumn="USUARIO_CREACION" length="255";
+			"Creation date"
+			Date creationDate databaseColumn="FECHA_CREACION";
+			"Last user who modified"
+			String modifier nullable databaseColumn="USUARIO_MODIFICACION" length="255";
+			"Modification date"
+			Date  updateDate nullable databaseColumn="FECHA_MODIFICACION";
+			"Data modification date"
+			Date dataUpdateDate nullable databaseColumn="FECHA_MODIFICACION_DATOS";
+			"Flag indicating whether the query is autoincremental or not, containing 'on' for yes"
+			private String autoincrement nullable databaseColumn="AUTOINCREMENTO";
+			"Start date for available period"
+			private Date availableStartDate nullable databaseColumn="FECHA_DISPONIBLE_INICIO";
+			"End date for available period"
+			private Date availableEndDate nullable databaseColumn="FECHA_DISPONIBLE_FIN";
+			"Metadata which contains a # separated list enumerating all publications where the query is being referenced"
+			private Clob isPartOf nullable databaseColumn="IS_PART_OF";
+			
+       		Repository DataGpeRepository {
+            	List<@DataBasic> findCurrentDataDefinitions;
+			}
+        }
 	}
 	
 	// ----------------------------------------------------------------
@@ -1038,6 +1109,26 @@ Application Indicators {
 	   		String code;
 			"Title"
 			- @InternationalStringDto title;
+    	}
+    	
+    	"Dto for data basic definition"
+    	DataTransferObject DataBasicDto {
+	   		"Uuid"
+	   		String uuid;
+	   		"title"
+	   		String title;
+    	}
+    	
+    	"Dto for data structure"
+    	DataTransferObject DataStructureDto {
+	   		"Uuid"
+	   		String uuid;
+    	}
+    	
+    	"Dto for data"
+    	DataTransferObject DataDto {
+	   		"Uuid"
+	   		String uuid;
     	}
 	}
 	

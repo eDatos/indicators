@@ -14,8 +14,11 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.Data;
+import es.gobcan.istac.indicators.core.domain.DataBasic;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
+import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -27,8 +30,11 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -247,6 +253,26 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
 
+        return target;
+    }
+    
+    @Override
+    public DataBasicDto dataBasicDoToDto(DataBasic source) {
+        DataBasicDto target = new DataBasicDto();
+        target.setUuid(source.getUuid());
+        target.setTitle(source.getTitle());
+        return target;
+    }
+    
+    @Override
+    public DataStructureDto dataStructureDoToDto(DataStructure source) {
+        DataStructureDto target = new DataStructureDto();
+        return target;
+    }
+    
+    @Override
+    public DataDto dataDoToDto(Data source) {
+        DataDto target = new DataDto();
         return target;
     }
 

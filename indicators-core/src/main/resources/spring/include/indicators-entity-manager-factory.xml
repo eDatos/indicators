@@ -11,7 +11,7 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="jpaProperties">
 			<props>
-				<!-- These properties override persistence-test.xml -->
+				<!-- These properties override persistence.xml -->
 				<prop key="hibernate.hbm2ddl.auto">validate</prop>
 			</props>
 		</property>

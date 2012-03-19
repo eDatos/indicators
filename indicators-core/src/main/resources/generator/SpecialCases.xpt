@@ -72,23 +72,23 @@ NOT NULL«ENDIF»,
 
 «REM»Skip script database generation for table views«ENDREM»
 «AROUND templates::db::OracleDDL::createTable FOR DomainObject»
-    «IF name != "Subject" -»
+    «IF name != "Subject" && name != "IndicatorData" -»
     	«targetDef.proceed() -»
     «ENDIF -»
 «ENDAROUND»
 «AROUND templates::db::OracleDDL::dropTable FOR DomainObject»
-    «IF name != "Subject" -»
+    «IF name != "Subject" && name != "IndicatorData" -»
     	«targetDef.proceed() -»
     «ENDIF -»
 «ENDAROUND»
 «AROUND templates::db::OracleDDL::idPrimaryKey FOR DomainObject»
-	«IF name != "Subject" -»
+	«IF name != "Subject" && name != "IndicatorData" -»
 		«targetDef.proceed() -»
 	«ENDIF -»
 «ENDAROUND»
 «REM»Skip unique constraint in InternationalString and LocalisedString this will be for "id", and primary key restriction already exists for this attribute «ENDREM»
 «AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
-    «IF name != "Subject" && name != "InternationalString" && name != "LocalisedString" -»
+    «IF name != "Subject" && name != "IndicatorData" && name != "InternationalString" && name != "LocalisedString" -»
     	«targetDef.proceed() -»
     «ENDIF -»
 «ENDAROUND»
@@ -101,23 +101,5 @@ NOT NULL«ENDIF»,
 
 
 «AROUND templates::domain::DomainObject::dataTransferObjectHook FOR DataTransferObject-»
-    /**
-     * ToString
-     */
-    @Override
-    public String toString() {
-        try {
-			org.apache.commons.lang.builder.ReflectionToStringBuilder builder = new org.apache.commons.lang.builder.ReflectionToStringBuilder(this, toStringStyle());	        
-            builder.setAppendStatics(false);
-            builder.setAppendTransients(true);
-            return builder.toString();
-        } catch (RuntimeException e) {
-            // toString is only used for debug purpose and eventual exceptions should not be "ignored"
-            return "RuntimeException in " + getClass().getName() + ".toString():" + e.getMessage();
-        }
-    }	
-    
-	protected org.apache.commons.lang.builder.ToStringStyle toStringStyle() {
-		return org.apache.commons.lang.builder.ToStringStyle.MULTI_LINE_STYLE;
-	}
+
 «ENDAROUND»

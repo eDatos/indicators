@@ -674,6 +674,18 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkFindDataDefinitions() {
+        //NOTHING
+    }
+    
+    public static void checkRetrieveDataStructure(String uuid) {
+        //NOTHING
+    }
+    
+    public static void checkFindData(String uuid) {
+        //NOTHING
+    }
 
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);

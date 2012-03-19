@@ -19,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.Data;
+import es.gobcan.istac.indicators.core.domain.DataBasic;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
+import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.Indicator;
@@ -31,8 +34,11 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
@@ -274,6 +280,24 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.getOtherVariables().clear();
         target.getOtherVariables().addAll(variables);
 
+        return target;
+    }
+    
+    @Override
+    public DataBasic dataBasicDtoToDo(ServiceContext ctx, DataBasicDto source) {
+        DataBasic target = new DataBasic();
+        return target;
+    }
+    
+    @Override
+    public DataStructure dataStructureDtoToDo(ServiceContext ctx, DataStructureDto source) {
+        DataStructure target = new DataStructure();
+        return target;
+    }
+    
+    @Override
+    public Data dataDtoToDo(ServiceContext ctx, DataDto source) {
+        Data target = new Data();
         return target;
     }
 

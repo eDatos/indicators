@@ -38,6 +38,12 @@
 		<commons-pool.version>1.5.6</commons-pool.version>
 		<commons-configuration.version>1.7</commons-configuration.version>
 		<commons-io.version>1.4</commons-io.version>
+		
+		<!-- Jersey, rest client -->
+		<jersey-client.version>1.12</jersey-client.version>
+		
+		<!-- Jackson -->
+		<jackson.version>1.9.4</jackson.version>
 
 		<!-- LOGGING -->
 		<slf4j.version>1.6.1</slf4j.version>
@@ -189,7 +195,23 @@
 				<artifactId>ehcache-core</artifactId>
 				<version>${ehcache.version}</version>
 			</dependency>
-
+			<!-- Jersey, rest client -->
+			<dependency>
+	    		<groupId>com.sun.jersey</groupId>
+	    		<artifactId>jersey-client</artifactId>
+	    		<version>${jersey-client.version}</version>
+			</dependency>
+			<!-- Jackson, json support -->
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+	        <dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
