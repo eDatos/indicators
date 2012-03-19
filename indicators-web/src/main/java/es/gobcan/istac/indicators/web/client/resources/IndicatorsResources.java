@@ -26,4 +26,7 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
 	@Source("images/archive.png")
 	ImageResource archive();
 	
+	@Source("images/version.png")
+	ImageResource version();
+	
 }
