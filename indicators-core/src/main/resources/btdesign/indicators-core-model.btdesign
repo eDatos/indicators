@@ -781,21 +781,21 @@ Application Indicators {
 			"Creator"
 			String creator not nullable databaseColumn="USUARIO_CREACION" length="255";
 			"Creation date"
-			Date creationDate databaseColumn="FECHA_CREACION";
+			DateTimestamp creationDate databaseColumn="FECHA_CREACION";
 			"Last user who modified"
 			String modifier nullable databaseColumn="USUARIO_MODIFICACION" length="255";
 			"Modification date"
-			Date  updateDate nullable databaseColumn="FECHA_MODIFICACION";
+			DateTimestamp  updateDate nullable databaseColumn="FECHA_MODIFICACION";
 			"Data modification date"
-			Date dataUpdateDate nullable databaseColumn="FECHA_MODIFICACION_DATOS";
+			DateTimestamp dataUpdateDate nullable databaseColumn="FECHA_MODIFICACION_DATOS";
 			"Flag indicating whether the query is autoincremental or not, containing 'on' for yes"
-			private String autoincrement nullable databaseColumn="AUTOINCREMENTO";
+			String autoincrement nullable databaseColumn="AUTOINCREMENTO";
 			"Start date for available period"
-			private Date availableStartDate nullable databaseColumn="FECHA_DISPONIBLE_INICIO";
+			DateTimestamp availableStartDate nullable databaseColumn="FECHA_DISPONIBLE_INICIO";
 			"End date for available period"
-			private Date availableEndDate nullable databaseColumn="FECHA_DISPONIBLE_FIN";
+			DateTimestamp availableEndDate nullable databaseColumn="FECHA_DISPONIBLE_FIN";
 			"Metadata which contains a # separated list enumerating all publications where the query is being referenced"
-			private Clob isPartOf nullable databaseColumn="IS_PART_OF";
+			Clob isPartOf nullable databaseColumn="IS_PART_OF";
 			
        		Repository DataGpeRepository {
             	List<@DataBasic> findCurrentDataDefinitions;
