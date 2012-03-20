@@ -47,4 +47,25 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         
         return finalResult;
     }
+    
+    public DataBasic findCurrentDataDefinition(String uuid) {
+        LocalDate now = LocalDate.fromCalendarFields(Calendar.getInstance());
+        // Criteria
+        org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
+        
+        Criteria criteria = session.createCriteria(DataBasic.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.lt("availableStartDate", now));
+        criteria.add(Restrictions.isNull("availableEndDate"));
+        criteria.add(Restrictions.eq("uuid",uuid));
+        
+        criteria.addOrder(Order.asc("availableStartDate"));
+        // first result is the current available query
+        List<DataBasic> result = criteria.list();
+        if (result != null && result.size() > 0) {
+            return result.get(0);
+        } else {
+            return null;
+        }
+    }
 }

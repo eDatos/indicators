@@ -2,7 +2,7 @@
 
 <dataset>
      
-  <!-- Unavailable -->
+  <!-- Currently available -->
   <TV_CONSULTA
   	ID_CONSULTA="1"
   	UUID_CONSULTA="2d4887dc-52f0-4c17-abbb-ef1fdc62e868"
@@ -17,7 +17,7 @@
   	NOMBRE_CONSULTA="CONSULTA 1"  	
   />
   
-  <!-- Currently available -->
+  <!-- Unavailable -->
   <TV_CONSULTA
   	ID_CONSULTA="2"
   	UUID_CONSULTA="2d4887dc-52f0-4c17-abbb-ef1fdc62e868"
@@ -61,7 +61,36 @@
   	FECHA_DISPONIBLE_FIN="[NULL]"
   	NOMBRE_CONSULTA="CONSULTA 1"  	
   />
-    
+  
+  <!-- archived -->
+  <TV_CONSULTA
+  	ID_CONSULTA="5"
+  	UUID_CONSULTA="1-1-1-1-1"
+  	URI_PX="DUMMY"
+  	ID_OPERACION="DUMMY"
+  	USUARIO_CREACION="DUMMY"
+  	CONSULTA="DUMMY"
+  	FECHA_CREACION="2012-03-13 14:53:13"
+  	FECHA_MODIFICACION_DATOS="2012-03-14 14:59:52"
+  	FECHA_DISPONIBLE_INICIO="2012-03-13 14:57:04"
+  	FECHA_DISPONIBLE_FIN="2012-03-16 14:57:04"
+  	NOMBRE_CONSULTA="CONSULTA 5"  	
+  />
+  
+  <!-- future, current unavailable -->
+  <TV_CONSULTA
+  	ID_CONSULTA="6"
+  	UUID_CONSULTA="2-2-2-2-2"
+  	URI_PX="DUMMY"
+  	ID_OPERACION="DUMMY"
+  	USUARIO_CREACION="DUMMY"
+  	CONSULTA="DUMMY"
+  	FECHA_CREACION="2012-03-13 14:53:13"
+  	FECHA_MODIFICACION_DATOS="2012-03-14 14:59:52"
+  	FECHA_DISPONIBLE_INICIO="2030-03-13 14:57:04"
+  	FECHA_DISPONIBLE_FIN="[NULL]"
+  	NOMBRE_CONSULTA="CONSULTA 6"  	
+  />
        
 </dataset>
 

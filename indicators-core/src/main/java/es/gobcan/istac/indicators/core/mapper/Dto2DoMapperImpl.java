@@ -284,18 +284,6 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
     
     @Override
-    public DataBasic dataBasicDtoToDo(ServiceContext ctx, DataBasicDto source) {
-        DataBasic target = new DataBasic();
-        return target;
-    }
-    
-    @Override
-    public DataStructure dataStructureDtoToDo(ServiceContext ctx, DataStructureDto source) {
-        DataStructure target = new DataStructure();
-        return target;
-    }
-    
-    @Override
     public Data dataDtoToDo(ServiceContext ctx, DataDto source) {
         Data target = new Data();
         return target;

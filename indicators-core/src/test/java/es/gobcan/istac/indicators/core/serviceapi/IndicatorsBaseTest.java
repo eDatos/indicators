@@ -70,4 +70,12 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         Connection connection = getConnection().getConnection();
         connection.prepareStatement("UPDATE TBL_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
     }
+    
+    public static <T> List<T> getList(T... values) {
+        List<T> result = new ArrayList<T>();
+        for (T value: values) {
+            result.add(value);
+        }
+        return result;
+    }
 }

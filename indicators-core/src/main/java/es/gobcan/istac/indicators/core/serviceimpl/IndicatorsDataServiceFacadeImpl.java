@@ -38,6 +38,19 @@ public class IndicatorsDataServiceFacadeImpl extends IndicatorsDataServiceFacade
         }
         return dtos;
     }
+    
+    @Override
+    public DataBasicDto findDataDefinition(ServiceContext ctx,String uuid) throws MetamacException {
+        // Service call
+        DataBasic dataDef = getIndicatorsDataService().findDataDefinition(ctx,uuid);
+        
+        //Transform
+        DataBasicDto dto = null;
+        if (dataDef != null) {
+            dto = do2DtoMapper.dataBasicDoToDto(dataDef);
+        }
+        return dto;
+    }
 
     @Override
     public DataStructureDto retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {

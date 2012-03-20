@@ -679,6 +679,10 @@ public class InvocationValidator {
         //NOTHING
     }
     
+    public static void checkFindDataDefinition(String uuid) {
+        //NOTHING
+    }
+    
     public static void checkRetrieveDataStructure(String uuid) {
         //NOTHING
     }

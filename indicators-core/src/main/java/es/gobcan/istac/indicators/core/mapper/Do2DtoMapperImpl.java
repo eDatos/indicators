@@ -260,7 +260,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public DataBasicDto dataBasicDoToDto(DataBasic source) {
         DataBasicDto target = new DataBasicDto();
         target.setUuid(source.getUuid());
-        target.setTitle(source.getTitle());
+        target.setName(source.getName());
+        target.setPxUri(source.getPxUri());
         return target;
     }
     
@@ -269,13 +270,13 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         DataStructureDto target = new DataStructureDto();
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
-        target.setUriPx(source.getUriPx());
-        if (source.getCategoryCodes() != null) {
-            target.setVariables(new ArrayList<String>(source.getCategoryCodes().keySet()));
-            target.setValueCodes(source.getCategoryCodes());
+        target.setPxUri(source.getPxUri());
+        if (source.getValueCodes() != null) {
+            target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
+            target.setValueCodes(source.getValueCodes());
         }
-        if (source.getCategoryLabels() != null) {
-            target.setValueLabels(source.getCategoryLabels());
+        if (source.getValueLabels() != null) {
+            target.setValueLabels(source.getValueLabels());
         }
         if (source.getTemporals() != null && source.getTemporals().size() > 0) {
             target.setTemporalVariable(source.getTemporals().get(0));

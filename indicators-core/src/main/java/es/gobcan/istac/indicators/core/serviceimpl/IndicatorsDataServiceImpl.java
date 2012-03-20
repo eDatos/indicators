@@ -41,6 +41,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<DataBasic> dataDefinitions = getDataGpeRepository().findCurrentDataDefinitions();
         return dataDefinitions;
     }
+    
+    @Override
+    public DataBasic findDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkFindDataDefinition(uuid);
+        
+        // Find db
+        DataBasic dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
+        return dataDefinition;
+    }
 
     @Override
     public DataStructure retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {

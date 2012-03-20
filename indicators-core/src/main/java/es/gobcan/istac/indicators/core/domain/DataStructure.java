@@ -15,11 +15,11 @@ public class DataStructure {
 
     private String                    uuid;
     
-    @JsonProperty("table")
+    @JsonProperty
     private String                    title;
     
-    @JsonProperty
-    private String                    uriPx;
+    @JsonProperty("uriPx")
+    private String                    pxUri;
 
     @JsonProperty
     private List<String>              stub;
@@ -27,8 +27,8 @@ public class DataStructure {
     @JsonProperty
     private List<String>              heading;
 
-    private Map<String, List<String>> categoryLabels;
-    private Map<String, List<String>> categoryCodes;
+    private Map<String, List<String>> valueLabels;
+    private Map<String, List<String>> valueCodes;
 
     @JsonProperty
     private List<String>              temporals;
@@ -49,22 +49,22 @@ public class DataStructure {
             String var = (String) mapa.get("variable");
             List<String> labels = (List<String>) mapa.get("labels");
             List<String> codes = (List<String>) mapa.get("codes");
-            addCategoryLabels(var, labels);
-            addCategoryCodes(var, codes);
+            addValueLabels(var, labels);
+            addValueCodes(var, codes);
         }
     }
 
-    private void addCategoryLabels(String var, List<String> labels) {
-        if (categoryLabels == null) {
-            categoryLabels = new HashMap<String, List<String>>();
+    private void addValueLabels(String var, List<String> labels) {
+        if (valueLabels == null) {
+            valueLabels = new HashMap<String, List<String>>();
         }
-        categoryLabels.put(var, labels);
+        valueLabels.put(var, labels);
     }
-    private void addCategoryCodes(String var, List<String> labels) {
-        if (categoryCodes == null) {
-            categoryCodes = new HashMap<String, List<String>>();
+    private void addValueCodes(String var, List<String> labels) {
+        if (valueCodes == null) {
+            valueCodes = new HashMap<String, List<String>>();
         }
-        categoryCodes.put(var, labels);
+        valueCodes.put(var, labels);
     }
     
     
@@ -84,14 +84,14 @@ public class DataStructure {
         this.title = title;
     }
 
-    public String getUriPx() {
-        return uriPx;
+    public String getPxUri() {
+        return pxUri;
     }
-
-    public void setUriPx(String uriPx) {
-        this.uriPx = uriPx;
+    
+    public void setPxUri(String pxUri) {
+        this.pxUri = pxUri;
     }
-
+    
     public List<String> getStub() {
         return stub;
     }
@@ -108,20 +108,20 @@ public class DataStructure {
         this.heading = heading;
     }
 
-    public Map<String, List<String>> getCategoryLabels() {
-        return categoryLabels;
+    public Map<String, List<String>> getValueLabels() {
+        return valueLabels;
     }
 
-    public void setCategoryLabels(Map<String, List<String>> categoryLabels) {
-        this.categoryLabels = categoryLabels;
+    public void setValueLabels(Map<String, List<String>> valueLabels) {
+        this.valueLabels = valueLabels;
     }
 
-    public Map<String, List<String>> getCategoryCodes() {
-        return categoryCodes;
+    public Map<String, List<String>> getValueCodes() {
+        return valueCodes;
     }
 
-    public void setCategoryCodes(Map<String, List<String>> categoryCodes) {
-        this.categoryCodes = categoryCodes;
+    public void setValueCodes(Map<String, List<String>> valueCodes) {
+        this.valueCodes = valueCodes;
     }
 
     public List<String> getTemporals() {

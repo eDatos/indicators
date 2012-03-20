@@ -37,12 +37,6 @@ public interface Dto2DoMapper {
     // Data sources
     public DataSource dataSourceDtoToDo(ServiceContext ctx, DataSourceDto source) throws MetamacException;
     
-    // DataBasic
-    public DataBasic dataBasicDtoToDo(ServiceContext ctx, DataBasicDto source);
-    
-    // DataStructure
-    public DataStructure dataStructureDtoToDo(ServiceContext ctx, DataStructureDto source);
-    
     //Data 
     public Data dataDtoToDo(ServiceContext ctx, DataDto source);
 }

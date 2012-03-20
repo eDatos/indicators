@@ -12,7 +12,8 @@ ALTER TABLE TV_AREAS_TEMATICAS ADD CONSTRAINT PK_TV_AREAS_TEMATICAS
   PRIMARY KEY (ID_AREA_TEMATICA)
 ;
 
--- Consultas del gpe
+-- Consultas del gpe, OJO!!!! se puede simular de dos formas 
+-- 1) simulando una tabla:
 CREATE TABLE TV_CONSULTA (
   ID_CONSULTA NUMBER(19) NOT NULL,
   UUID_CONSULTA VARCHAR2(255),
@@ -36,3 +37,20 @@ CREATE TABLE TV_CONSULTA (
 ALTER TABLE TV_CONSULTA ADD CONSTRAINT PK_TV_CONSULTA
   PRIMARY KEY (ID_CONSULTA)
 ;
+
+-- 2) O con una vista a otro esquema, pero necesita permisos para ver la tabla
+grant select on USUARIO_PROPIETARIO.tb_consulta to USUARIO_ACTUAL with grant option
+
+CREATE OR REPLACE FORCE VIEW tv_consulta (id_consulta,
+autoincremento, consulta, fecha_creacion, fecha_disponible_fin,
+fecha_disponible_inicio, fecha_modificacion, fecha_modificacion_datos,
+id_operacion, uri_px, is_part_of, nombre_consulta, tipo_consulta,
+usuario_creacion, usuario_modificacion, uuid_consulta, version_px)
+AS
+SELECT id_consulta, autoincremento, consulta, fecha_creacion,
+fecha_disponible_fin, fecha_disponible_inicio, fecha_modificacion, fecha_modificacion_datos,
+id_operacion, uri_px, is_part_of, nombre_consulta, tipo_consulta,
+usuario_creacion, usuario_modificacion, uuid_consulta, version_px
+FROM USUARIO.tB_consulta
+ORDER BY id_consulta;
+

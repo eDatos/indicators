@@ -114,6 +114,8 @@ Application Indicators {
     		
 			"Find all Data containing basic info only"
 	    	List<@DataBasic> findDataDefinitions() throws MetamacException;
+			"Find Data containing basic info only"
+	    	@DataBasic findDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieve Data content"
@@ -264,6 +266,8 @@ Application Indicators {
 	    	
 	    	"Find all Data containing basic info only"
 	    	List<@DataBasicDto> findDataDefinitions() throws MetamacException;
+	    	"Find all Data basic info only"
+	    	@DataBasicDto findDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieve Data content"
@@ -763,13 +767,13 @@ Application Indicators {
 			"uuid"
 			String uuid nullable databaseColumn="UUID_CONSULTA" length="255";
 			"Nombre de la consulta"
-			String title nullable databaseColumn="NOMBRE_CONSULTA" length="255";
+			String name nullable databaseColumn="NOMBRE_CONSULTA" length="255";
 			"Query's type"
 			String type nullable databaseColumn="TIPO_CONSULTA" length="255";
 			"Query's parameters serialization"
 			Clob query nullable databaseColumn="CONSULTA";
 			"Px's Identifier"
-			String uriPx not nullable databaseColumn="URI_PX" length="255";
+			String pxUri not nullable databaseColumn="URI_PX" length="255";
 			"Px's version when the query was created"
 			String versionPx nullable databaseColumn="VERSION_PX" length="255";
 			"Operation's identifier, should match with px's operation"
@@ -795,6 +799,7 @@ Application Indicators {
 			
        		Repository DataGpeRepository {
             	List<@DataBasic> findCurrentDataDefinitions;
+            	@DataBasic findCurrentDataDefinition(String uuid);
 			}
         }
 	}
@@ -1106,8 +1111,10 @@ Application Indicators {
     	DataTransferObject DataBasicDto {
 	   		"Uuid"
 	   		String uuid;
-	   		"title"
-	   		String title;
+	   		"name"
+	   		String name;
+	   		"pxUri"
+	   		String pxUri;
     	}
     	
     	"Dto for data structure"
@@ -1117,7 +1124,7 @@ Application Indicators {
     		"Title"
     		String title;
     		"Uri px associated"
-    		String uriPx;
+    		String pxUri;
     		"Variables"
     		List<String> variables;
     		"Temporal variable"
