@@ -73,6 +73,12 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     }
     
     @Test
+    public void testFindDataDefinitionNotFound() throws Exception {
+        DataBasicDto dto = indicatorsDataServiceFacade.findDataDefinition(getServiceContext(),"NOT_EXIST");
+        assertNull(dto);
+    }
+    
+    @Test
     @Override
     public void testRetrieveDataStructure() throws Exception {
         DataStructureDto dto = indicatorsDataServiceFacade.retrieveDataStructure(getServiceContext(), dataStructure1.getUuid());
