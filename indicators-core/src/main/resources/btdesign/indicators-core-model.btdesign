@@ -1112,8 +1112,22 @@ Application Indicators {
     	
     	"Dto for data structure"
     	DataTransferObject DataStructureDto {
-	   		"Uuid"
-	   		String uuid;
+    		"Uuid"
+    		String uuid;
+    		"Title"
+    		String title;
+    		"Uri px associated"
+    		String uriPx;
+    		"Variables"
+    		List<String> variables;
+    		"Temporal variable"
+    		String temporalVariable; 
+    		"Spatial variable"
+    		String spatialVariable;
+    		"Labels for every value in every variable"
+    		MapList valueLabels;
+    		"Codes for every value in every variable"
+    		MapList valueCodes;
     	}
     	
     	"Dto for data"

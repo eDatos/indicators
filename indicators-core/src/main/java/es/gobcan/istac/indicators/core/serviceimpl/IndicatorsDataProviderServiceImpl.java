@@ -3,12 +3,10 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;
@@ -17,16 +15,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import es.gobcan.istac.indicators.core.domain.Data;
-import es.gobcan.istac.indicators.core.domain.DataStructure;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 
 @Service("indicatorsDataProviderService")
 public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProviderService {
 
     //TODO: Configuration parameter
-    private static final String URL_JAXI = "http://localhost:9080/jaxi-web/tabla.do";
+    private static final String URL_JAXI = "http://192.168.1.44:9080/jaxi-web/tabla.do";
 
     public IndicatorsDataProviderServiceImpl() {
     }

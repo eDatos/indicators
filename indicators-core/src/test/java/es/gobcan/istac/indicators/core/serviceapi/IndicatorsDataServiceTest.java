@@ -1,10 +1,11 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,7 +38,7 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     private IndicatorsDataProviderService indicatorsDataProviderService;
 
     @Before
-    public void initMock() throws Exception {
+    public void initMock() throws MetamacException {
         doReturn(JSON_CONSULTA1).when(indicatorsDataProviderService).retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.same(UUID_CONSULTA1));
     }
     

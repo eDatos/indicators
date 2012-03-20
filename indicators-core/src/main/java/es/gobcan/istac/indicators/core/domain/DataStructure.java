@@ -13,9 +13,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataStructure {
 
+    private String                    uuid;
+    
     @JsonProperty("table")
     private String                    title;
-
+    
     @JsonProperty
     private String                    uriPx;
 
@@ -63,6 +65,15 @@ public class DataStructure {
             categoryCodes = new HashMap<String, List<String>>();
         }
         categoryCodes.put(var, labels);
+    }
+    
+    
+    public String getUuid() {
+        return uuid;
+    }
+    
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getTitle() {

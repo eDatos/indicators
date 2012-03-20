@@ -267,6 +267,22 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     @Override
     public DataStructureDto dataStructureDoToDto(DataStructure source) {
         DataStructureDto target = new DataStructureDto();
+        target.setUuid(source.getUuid());
+        target.setTitle(source.getTitle());
+        target.setUriPx(source.getUriPx());
+        if (source.getCategoryCodes() != null) {
+            target.setVariables(new ArrayList<String>(source.getCategoryCodes().keySet()));
+            target.setValueCodes(source.getCategoryCodes());
+        }
+        if (source.getCategoryLabels() != null) {
+            target.setValueLabels(source.getCategoryLabels());
+        }
+        if (source.getTemporals() != null && source.getTemporals().size() > 0) {
+            target.setTemporalVariable(source.getTemporals().get(0));
+        }
+        if (source.getSpatials() != null && source.getSpatials().size() > 0) {
+            target.setSpatialVariable(source.getSpatials().get(0));
+        }
         return target;
     }
     
