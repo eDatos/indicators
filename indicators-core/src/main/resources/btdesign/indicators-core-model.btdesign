@@ -119,15 +119,6 @@ Application Indicators {
 	    	"Retrieve Data content"
 	    	Data retrieveData(String uuid) throws MetamacException;
     	}
-    	
-    	"Provides access to indicators, indicators systems..."
-    	Service IndicatorsWebserviceFacade {
-    		webservice
-			> @IndicatorsSystemsService
-    		> @IndicatorsService
-	    	
-	    	List<String> findIndicatorsSystems(String tipo) throws MetamacException;
-		}
 			    
     	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
