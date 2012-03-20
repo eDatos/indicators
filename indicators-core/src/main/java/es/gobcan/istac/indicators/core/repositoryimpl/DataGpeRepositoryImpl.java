@@ -2,12 +2,12 @@ package es.gobcan.istac.indicators.core.repositoryimpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.DataBasic;
@@ -22,7 +22,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
 
     public List<DataBasic> findCurrentDataDefinitions() {
         List<DataBasic> finalResult = new ArrayList<DataBasic>();
-        LocalDate now = LocalDate.fromCalendarFields(Calendar.getInstance());
+        Date now = Calendar.getInstance().getTime();
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         
@@ -49,7 +49,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     }
     
     public DataBasic findCurrentDataDefinition(String uuid) {
-        LocalDate now = LocalDate.fromCalendarFields(Calendar.getInstance());
+        Date now = Calendar.getInstance().getTime();
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         
