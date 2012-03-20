@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -251,6 +252,28 @@ public class BaseQuantityForm extends GroupDynamicForm {
                 return false;
             }
         };
+    }
+    
+    protected String getQuantityUnitSymbol(String unitUuid) {
+        if (unitUuid != null) {
+            for (QuantityUnitDto unit : quantityUnitDtos) {
+                if (unitUuid.equals(unit.getUuid())) {
+                    return unit.getSymbol();
+                }
+            }
+        }
+        return new String();
+    }
+    
+    protected String getIndicatorText(String indicatorUuid) {
+        if (indicatorUuid != null) {
+            for (IndicatorDto ind : indicatorDtos) {
+                if (indicatorUuid.equals(ind.getUuid())) {
+                    return ind.getCode() + " - " + InternationalStringUtils.getLocalisedString(ind.getTitle());
+                }
+            }
+        }
+        return new String();
     }
     
 }

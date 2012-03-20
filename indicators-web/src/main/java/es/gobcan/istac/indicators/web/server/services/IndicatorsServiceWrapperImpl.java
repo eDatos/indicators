@@ -35,7 +35,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     @Override
     public DimensionDto createDimension(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, DimensionDto dimensionDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
-            log.info("Operando sobre sistema sin persistir, se procede a persistir sistema: "+indicatorsSystemDto.getCode());
+            log.info("Working in a system not persisted. Indicator with code " + indicatorsSystemDto.getCode() + " is going to be persisted");
             indicatorsSystemDto = indicatorsService.createIndicatorsSystem(ctx, indicatorsSystemDto);
         }
         return indicatorsService.createDimension(ctx,indicatorsSystemDto.getUuid(), dimensionDto);

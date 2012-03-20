@@ -8,11 +8,14 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
@@ -112,6 +115,32 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
         for (VersionTypeEnum type : VersionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().versionTypeEnum() + type.getName()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getDataBasicValueMap(List<DataBasicDto> dataBasicDtos) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
+        for (DataBasicDto dataBasic : dataBasicDtos) {
+            valueMap.put(dataBasic.getUuid(), dataBasic.getName());
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getRateDerivationMethodTypeValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
+        for (RateDerivationMethodTypeEnum type : RateDerivationMethodTypeEnum.values()) {
+            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + type.getName()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getRateDerivationRoundingValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
+        for (RateDerivationRoundingEnum type : RateDerivationRoundingEnum.values()) {
+            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().rateDerivationRoundingEnum() + type.getName()));
         }
         return valueMap;
     }

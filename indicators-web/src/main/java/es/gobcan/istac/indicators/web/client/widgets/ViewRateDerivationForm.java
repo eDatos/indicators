@@ -10,14 +10,22 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
-import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
+import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 
-public class ViewQuantityForm extends BaseQuantityForm {
+public class ViewRateDerivationForm extends BaseRateDerivationForm {
     
-    public ViewQuantityForm(String groupTitle) {
-        super(groupTitle);
+    public ViewRateDerivationForm(String groupTitle, DataSourceQuantityType dataSourceQuantityType) {
+        super(groupTitle, dataSourceQuantityType);
+        
+        ViewTextItem method = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
+        
+        ViewTextItem methodType = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
+        
+        ViewTextItem rounding = new ViewTextItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         
         // Its important to set the value of the QuantityType (no translated name!) in a hidden field. It is required by the validators (see BaseQuantityForm).
         ViewTextItem type = new ViewTextItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
@@ -67,11 +75,19 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
         
-        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
+        
+        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
     }
     
-    public void setValue(QuantityDto quantityDto) {
+    public void setValue(RateDerivationDto rateDerivationDto) {
         clearValues();
+        
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, rateDerivationDto.getMethodType() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + rateDerivationDto.getMethodType().getName()) : new String());
+        setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationRoundingEnum() + rateDerivationDto.getRounding().getName()) : new String());
+        
+        QuantityDto quantityDto = rateDerivationDto.getQuantity();
+        
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : "");
             setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityDto.getType() != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityDto.getType().toString()) : "");
@@ -92,9 +108,10 @@ public class ViewQuantityForm extends BaseQuantityForm {
             // Base location set in setGeographicalValue method
             setValue(IndicatorDS.QUANTITY_BASE_LOCATION, new String()); 
             if (quantityDto.getBaseLocationUuid() != null && !quantityDto.getBaseLocationUuid().isEmpty()) {
-                if (uiHandlers instanceof IndicatorUiHandler) {
-                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
-                }
+                // TODO
+//                if (uiHandlers instanceof IndicatorUiHandler) {
+//                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
+//                }
             }
             
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getIndicatorText(quantityDto.getBaseQuantityIndicatorUuid()));
@@ -105,5 +122,5 @@ public class ViewQuantityForm extends BaseQuantityForm {
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         setValue(IndicatorDS.QUANTITY_BASE_LOCATION, geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) :  new String());
     }
-    
+
 }

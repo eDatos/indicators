@@ -15,9 +15,13 @@
 }
 
 
-.sectionTitle {
+.sectionTitle, .sectionTitleLeftMargin {
 	font-size: 20px;
 	color: #008BD0; /* Blue */
+}
+
+.sectionTitleLeftMargin {
+    padding-left: 10px;
 }
 
 .subsectionTitle {

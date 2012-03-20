@@ -14,6 +14,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
@@ -25,28 +26,43 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
+import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
+import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 
-public class QuantityForm extends BaseQuantityForm {
+public class RateDerivationForm extends BaseRateDerivationForm {
     
-    private QuantityDto quantityDto;
+    private RateDerivationDto rateDerivationDto;
     private IndicatorDto indicatorDto;
     
     
-    public QuantityForm(String groupTitle) {
-        super(groupTitle);
+    public RateDerivationForm(String groupTitle, final DataSourceQuantityType dataSourceQuantityType) {
+        super(groupTitle, dataSourceQuantityType);
         
+        TextItem method = new TextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
+        
+        SelectItem methodType = new SelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
+        methodType.setValueMap(CommonUtils.getRateDerivationMethodTypeValueMap());
+        
+        SelectItem rounding = new SelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
+        rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
+        
+        // QUANTITY
+
         SelectItem type = new SelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
         type.setValueMap(CommonUtils.getQuantityValueMap());
         type.addChangedHandler(new ChangedHandler() {
             @Override
             public void onChanged(ChangedEvent event) {
-                QuantityForm.this.markForRedraw();
+                RateDerivationForm.this.markForRedraw();
             }
         });
         type.setValidators(getQuantityRequiredIfValidator());
@@ -63,7 +79,7 @@ public class QuantityForm extends BaseQuantityForm {
         decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
             @Override
             public boolean execute(FormItem formItem, Object value) {
-                return QuantityTypeEnum.FRACTION.toString().equals(QuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+                return QuantityTypeEnum.FRACTION.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE));
             }
         }));
         
@@ -93,7 +109,7 @@ public class QuantityForm extends BaseQuantityForm {
         indexBaseType.addChangedHandler(new ChangedHandler() {
             @Override
             public void onChanged(ChangedEvent event) {
-                QuantityForm.this.markForRedraw();
+                RateDerivationForm.this.markForRedraw();
             }
         });
         
@@ -117,7 +133,11 @@ public class QuantityForm extends BaseQuantityForm {
                 // Set values with selected granularity
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                     if (uiHandlers instanceof IndicatorUiHandler) {
-                        ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(event.getValue().toString());
+                        if (DataSourceQuantityType.INTERPERIOD_RATE.equals(dataSourceQuantityType)) {
+                            ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSInterperiodRate(event.getValue().toString());
+                        } else if (DataSourceQuantityType.ANNUAL_RATE.equals(dataSourceQuantityType)) {
+                            ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSAnnualRate(event.getValue().toString());
+                        }
                     }
                 }
             }
@@ -127,13 +147,22 @@ public class QuantityForm extends BaseQuantityForm {
         baseQuantityIndUuid.setRequired(true);
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
         baseQuantityIndUuid.setValidators(getIndicatorSelectedValidator());
+
         
-        setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(method, methodType, rounding, type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
     }
     
-    public void setValue(QuantityDto quantityDto) {
-        this.quantityDto = quantityDto;
+    public void setValue(RateDerivationDto rateDerivationDto) {
+        this.rateDerivationDto = rateDerivationDto;
+        
         clearValues();
+        
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, rateDerivationDto.getMethodType() != null ? rateDerivationDto.getMethodType().toString() : new String());
+        setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : new String());
+        
+        QuantityDto quantityDto = rateDerivationDto.getQuantity();
+        
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : null);
             setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
@@ -166,9 +195,19 @@ public class QuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
+        
     }
-
-    public QuantityDto getValue() {
+    
+    public RateDerivationDto getValue() {
+        rateDerivationDto.setMethod(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD));
+        rateDerivationDto.setMethodType(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE).isEmpty() ? RateDerivationMethodTypeEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE)) : null);
+        rateDerivationDto.setRounding(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING).isEmpty() ? RateDerivationRoundingEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING)) : null);
+        
+        QuantityDto quantityDto = rateDerivationDto.getQuantity();
+        if (quantityDto == null) {
+            quantityDto = new QuantityDto();
+        }
+        
         quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
         quantityDto.setUnitUuid(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID));
         quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer)getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
@@ -185,30 +224,23 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
         quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue() : null);
         quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID) : null);
-        return quantityDto;
+
+        rateDerivationDto.setQuantity(quantityDto);
+        
+        return rateDerivationDto;
     }
-    
-    @Override
-    public void setIndicators(List<IndicatorDto> indicators) {
-        super.setIndicators(indicators);
-        LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
-        ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
-    }
-    
-    @Override
-    public void setQuantityUnits(List<QuantityUnitDto> units) {
-        super.setQuantityUnits(units);
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (QuantityUnitDto unit : units) {
-            valueMap.put(unit.getUuid(), unit.getSymbol());
-        }
-        ((SelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
-    }
-    
+
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
+    }
+    
+    private RequiredIfValidator getQuantityRequiredIfValidator() {
+        return new RequiredIfValidator(new RequiredIfFunction() {
+            @Override
+            public boolean execute(FormItem formItem, Object value) {
+                return !IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
+            }
+        });
     }
     
     private CustomValidator getIndicatorSelectedValidator() {
@@ -235,18 +267,32 @@ public class QuantityForm extends BaseQuantityForm {
             ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
             // Make sure value map is set properly
             if (uiHandlers instanceof IndicatorUiHandler) {
-                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(geographicalValueDto.getGranularityUuid());
+                if (DataSourceQuantityType.INTERPERIOD_RATE.equals(dataSourceQuantityType)) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSInterperiodRate(geographicalValueDto.getGranularityUuid());
+                } else if (DataSourceQuantityType.ANNUAL_RATE.equals(dataSourceQuantityType)) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSAnnualRate(geographicalValueDto.getGranularityUuid());
+                }
             }
         }
     }
     
-    public RequiredIfValidator getQuantityRequiredIfValidator() {
-        return new RequiredIfValidator(new RequiredIfFunction() {
-            @Override
-            public boolean execute(FormItem formItem, Object value) {
-                return !IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
-            }
-        });
+    @Override
+    public void setQuantityUnits(List<QuantityUnitDto> units) {
+        super.setQuantityUnits(units);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (QuantityUnitDto unit : units) {
+            valueMap.put(unit.getUuid(), unit.getSymbol());
+        }
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
+    }
+    
+    @Override
+    public void setIndicators(List<IndicatorDto> indicators) {
+        super.setIndicators(indicators);
+        LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
+//        ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
+//        ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
+//        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
     }
     
 }

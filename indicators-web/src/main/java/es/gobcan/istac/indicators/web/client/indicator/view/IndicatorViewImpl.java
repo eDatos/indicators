@@ -14,6 +14,9 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
@@ -27,18 +30,26 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 	private TitleLabel indicatorLabel;
 	private TabSet tabset;
 	private IndicatorGeneralPanel generalPanel;
+	private DataSourcesPanel dataSourcesPanel;
+	
 	
 	@Inject
-	public IndicatorViewImpl(IndicatorGeneralPanel genPanel) {
+	public IndicatorViewImpl(IndicatorGeneralPanel genPanel, DataSourcesPanel dataSourcesPanel) {
 		this.generalPanel = genPanel;
+		this.dataSourcesPanel = dataSourcesPanel;
 		
 		indicatorLabel = new TitleLabel();
+		indicatorLabel.setStyleName("sectionTitleLeftMargin");
 		
 		Tab generalTab = new Tab(getConstants().indicDetailGeneral());
 		generalTab.setPane(generalPanel);
 		
+		Tab dataSourcesTab = new Tab(getConstants().indicDetailDataSources());
+		dataSourcesTab.setPane(dataSourcesPanel);
+		
 		tabset = new TabSet();
 		tabset.addTab(generalTab);
+		tabset.addTab(dataSourcesTab);
 		
 		panel = new VLayout();
 		panel.addMember(indicatorLabel);
@@ -53,22 +64,26 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 	@Override
 	public void setUiHandlers(IndicatorPresenter uiHandlers) {
 	    generalPanel.setUiHandlers(uiHandlers);
+	    dataSourcesPanel.setUiHandlers(uiHandlers);
 	}
 
 	@Override
 	public void setIndicator(IndicatorDto indicator) {
 		indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
 		generalPanel.setIndicator(indicator);
+		dataSourcesPanel.setIndicator(indicator);
 	}
 
     @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         generalPanel.setQuantityUnits(units);
+        dataSourcesPanel.setQuantityUnits(units);
     }
 
     @Override
     public void setIndicatorList(List<IndicatorDto> indicators) {
         generalPanel.setIndicatorList(indicators);
+        dataSourcesPanel.setIndicatorList(indicators);
     }
 
     @Override
@@ -79,6 +94,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         generalPanel.setGeographicalGranularities(geographicalGranularityDtos);
+        dataSourcesPanel.setGeographicalGranularities(geographicalGranularityDtos);
     }
 
     @Override
@@ -89,6 +105,61 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         generalPanel.setGeographicalValue(geographicalValueDto);
+    }
+
+    @Override
+    public void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos) {
+        dataSourcesPanel.setDataSources(dataSourceDtos);
+    }
+
+    @Override
+    public void setDataDefinitions(List<DataBasicDto> dataBasicDtos) {
+        dataSourcesPanel.setDataDefinitions(dataBasicDtos);
+    }
+
+    @Override
+    public void setDataStructure(DataStructureDto dataStructureDto) {
+       dataSourcesPanel.setDataStructure(dataStructureDto);
+    }
+
+    @Override
+    public void setDataDefinition(DataBasicDto dataBasicDto) {
+        dataSourcesPanel.setDataDefinition(dataBasicDto);
+    }
+
+    @Override
+    public void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos) {
+        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
+    }
+
+    @Override
+    public void setGeographicalValueDS(GeographicalValueDto geographicalValueDto) {
+        dataSourcesPanel.setGeographicalValue(geographicalValueDto);
+    }
+
+    @Override
+    public void onDataSourceSaved(DataSourceDto dataSourceDto) {
+        dataSourcesPanel.onDataSourceSaved(dataSourceDto);
+    }
+
+    @Override
+    public void setGeographicalValuesDSInterperiodRate(List<GeographicalValueDto> geographicalValueDtos) {
+        dataSourcesPanel.setGeographicalValuesDSInterperiodRate(geographicalValueDtos);
+    }
+
+    @Override
+    public void setGeographicalValuesDSAnnualRate(List<GeographicalValueDto> geographicalValueDtos) {
+        dataSourcesPanel.setGeographicalValuesDSAnnualRate(geographicalValueDtos);
+    }
+
+    @Override
+    public void setGeographicalValueDSInterperiodRate(GeographicalValueDto geographicalValueDto) {
+        dataSourcesPanel.setGeographicalValueDSInterperiodRate(geographicalValueDto);
+    }
+
+    @Override
+    public void setGeographicalValueDSAnnualRate(GeographicalValueDto geographicalValueDto) {
+        dataSourcesPanel.setGeographicalValueDSAnnualRate(geographicalValueDto);
     }
 
 }

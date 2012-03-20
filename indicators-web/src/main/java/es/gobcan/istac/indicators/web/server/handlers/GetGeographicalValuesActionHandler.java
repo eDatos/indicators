@@ -37,9 +37,12 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
     @Override
     public GetGeographicalValuesResult execute(GetGeographicalValuesAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsCriteria criteria = new IndicatorsCriteria();
-            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid()));
+            IndicatorsCriteria criteria = null;
+            if (action.getGeographicalGranularityUuid() != null) {
+                criteria = new IndicatorsCriteria();
+                criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
+                criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid())); 
+            }
             
             List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), criteria);
             
