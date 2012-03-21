@@ -42,11 +42,18 @@ public class CommonUtils {
         return valueMap;
     }
         
-    public static LinkedHashMap<String, String> getQuantityValueMap() {
+    public static LinkedHashMap<String, String> getQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityTypeEnum type : QuantityTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + type.getName()));
         }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getDataSourceQuantityTypeValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(QuantityTypeEnum.AMOUNT.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + QuantityTypeEnum.AMOUNT.getName()));
+        valueMap.put(QuantityTypeEnum.CHANGE_RATE.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + QuantityTypeEnum.CHANGE_RATE.getName()));        
         return valueMap;
     }
     
