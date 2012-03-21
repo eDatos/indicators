@@ -217,13 +217,13 @@ public class DataSourcesPanel extends VLayout {
     
     private void setDataSource(DataSourceDto dataSourceDto) {
         this.dataSourceDto = dataSourceDto;
-        setDataSourceViewMode(dataSourceDto);
-        setDataSourceEditionMode(dataSourceDto);
-        
-        // Load data structure
+        // Clear and load data structure
+        dataStructureDto = null;
         if (dataSourceDto.getQueryGpe() != null && !dataSourceDto.getQueryGpe().isEmpty()) {
             uiHandlers.retrieveDataStructure(dataSourceDto.getQueryGpe());
         }
+        setDataSourceViewMode(dataSourceDto);
+        setDataSourceEditionMode(dataSourceDto);
     }
     
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
@@ -398,16 +398,22 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setQueryGpe(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
         dataSourceDto.setPx(dataStructureDto.getPxUri());
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
-        dataSourceDto.setTimeValue(generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE));
+        dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
-        dataSourceDto.setGeographicalValueUuid(CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE)));
+        dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ?  CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE)) : null);
         dataSourceDto.setInterperiodRate(interperiodRateEditionForm.getValue());
         dataSourceDto.setAnnualRate(annualRateEditionForm.getValue());
         return dataSourceDto;
     }
     
     public void onDataSourceSaved(DataSourceDto dataSourceDto) {
+        this.dataSourceDto = dataSourceDto;
         selectDataSource(dataSourceDto);
+
+        dataSourcesListGrid.removeSelectedData();
+        DataSourceRecord record = RecordUtils.getDataSourceRecord(dataSourceDto);
+        dataSourcesListGrid.addData(record);
+        dataSourcesListGrid.selectRecord(record);
     }
     
     public void setQuantityUnits(List<QuantityUnitDto> units) {

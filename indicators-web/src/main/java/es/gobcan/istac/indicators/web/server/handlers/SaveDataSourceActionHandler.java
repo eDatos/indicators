@@ -30,7 +30,12 @@ public class SaveDataSourceActionHandler extends AbstractActionHandler<SaveDataS
     @Override
     public SaveDataSourceResult execute(SaveDataSourceAction action, ExecutionContext context) throws ActionException {
         try {
-            DataSourceDto dataSourceDto = indicatorsServiceFacade.createDataSource(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getDataSourceDtoToSave());
+            DataSourceDto dataSourceDto = null;
+            if (action.getDataSourceDtoToSave().getUuid() == null) {
+                dataSourceDto = indicatorsServiceFacade.createDataSource(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getDataSourceDtoToSave());
+            } else {
+                dataSourceDto = indicatorsServiceFacade.updateDataSource(ServiceContextHelper.getServiceContext(), action.getDataSourceDtoToSave());
+            }
             return new SaveDataSourceResult(dataSourceDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
