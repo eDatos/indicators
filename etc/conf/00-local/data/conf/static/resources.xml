@@ -2,5 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
   <comment>Configurations</comment>
-  <entry key="indicators.resources.jaxi.url">http://localhost:9080/jaxi-web</entry>
+  <entry key="indicators.resources.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
 </properties>
