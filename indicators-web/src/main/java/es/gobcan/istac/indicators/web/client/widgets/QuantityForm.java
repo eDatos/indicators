@@ -60,12 +60,6 @@ public class QuantityForm extends BaseQuantityForm {
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
         
         IntegerItem decPlaces = new IntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
-        decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
-            @Override
-            public boolean execute(FormItem formItem, Object value) {
-                return QuantityTypeEnum.FRACTION.toString().equals(QuantityForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-            }
-        }));
         
         IntegerItem min = new IntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
