@@ -9,6 +9,7 @@ import java.util.List;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -27,7 +28,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
@@ -51,27 +51,38 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         
         SelectItem methodType = new SelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
         methodType.setValueMap(CommonUtils.getRateDerivationMethodTypeValueMap());
+        methodType.addChangedHandler(new ChangedHandler() {
+            @Override
+            public void onChanged(ChangedEvent event) {
+                RateDerivationForm.this.markForRedraw();
+            }
+        });
         
         SelectItem rounding = new SelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
+        rounding.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
+            @Override
+            public boolean execute(FormItem formItem, Object value) {
+                // Required when method type is CALCULATED
+                return RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
+            }
+        }));
         
         // QUANTITY
 
-        SelectItem type = new SelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
-        type.setValueMap(CommonUtils.getQuantityValueMap());
+        RequiredSelectItem type = new RequiredSelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
+        type.setValueMap(CommonUtils.getDataSourceQuantityTypeValueMap());
         type.addChangedHandler(new ChangedHandler() {
             @Override
             public void onChanged(ChangedEvent event) {
                 RateDerivationForm.this.markForRedraw();
             }
         });
-        type.setValidators(getQuantityRequiredIfValidator());
         
-        SelectItem unitUuid = new SelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
-        unitUuid.setValidators(getQuantityRequiredIfValidator());
+        RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
         
         IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        unitMultiplier.setValidators(getQuantityRequiredIfValidator());
+        unitMultiplier.setRequired(true);
         
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
         
@@ -79,7 +90,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
             @Override
             public boolean execute(FormItem formItem, Object value) {
-                return QuantityTypeEnum.FRACTION.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+                // Required when quantity type is CHANGE_RATE and method type is CALCULATED
+                return QuantityTypeEnum.CHANGE_RATE.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE)) &&
+                    RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
             }
         }));
         
@@ -234,15 +247,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         this.indicatorDto = indicatorDto;
     }
     
-    private RequiredIfValidator getQuantityRequiredIfValidator() {
-        return new RequiredIfValidator(new RequiredIfFunction() {
-            @Override
-            public boolean execute(FormItem formItem, Object value) {
-                return !IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
-            }
-        });
-    }
-    
     private CustomValidator getIndicatorSelectedValidator() {
         CustomValidator validator = new CustomValidator() {
             @Override
@@ -290,9 +294,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     public void setIndicators(List<IndicatorDto> indicators) {
         super.setIndicators(indicators);
         LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
-//        ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
-//        ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-//        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
+        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
     }
     
 }
