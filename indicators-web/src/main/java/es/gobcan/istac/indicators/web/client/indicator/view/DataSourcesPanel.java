@@ -5,6 +5,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -201,8 +202,12 @@ public class DataSourcesPanel extends VLayout {
     }
     
     private void selectDataSource(DataSourceDto dataSourceDto) {
+        if (dataSourceDto.getUuid() != null) {
+            mainFormLayout.setViewMode();
+        } else {
+            mainFormLayout.setEditionMode();
+        }
         mainFormLayout.show();
-        mainFormLayout.setViewMode();
         setDataSource(dataSourceDto);
     }
     
@@ -223,7 +228,9 @@ public class DataSourcesPanel extends VLayout {
     
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
         generalForm.setValue(DataSourceDS.QUERY, ""); // Set in method setDataDefinition
-        uiHandlers.retrieveDataDefinition(dataSourceDto.getQueryGpe());
+        if (!StringUtils.isBlank(dataSourceDto.getQueryGpe())) {
+            uiHandlers.retrieveDataDefinition(dataSourceDto.getQueryGpe());
+        }
         
         generalForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         generalForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
