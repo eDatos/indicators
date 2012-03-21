@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.domain.Data;
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
@@ -33,22 +33,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<DataBasic> findDataDefinitions(ServiceContext ctx) throws MetamacException {
+    public List<DataDefinition> findDataDefinitions(ServiceContext ctx) throws MetamacException {
         // Validation
         InvocationValidator.checkFindDataDefinitions();
         
         // Find db
-        List<DataBasic> dataDefinitions = getDataGpeRepository().findCurrentDataDefinitions();
+        List<DataDefinition> dataDefinitions = getDataGpeRepository().findCurrentDataDefinitions();
         return dataDefinitions;
     }
     
     @Override
-    public DataBasic findDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
+    public DataDefinition retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
         InvocationValidator.checkFindDataDefinition(uuid);
         
         // Find db
-        DataBasic dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
+        DataDefinition dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
         return dataDefinition;
     }
 

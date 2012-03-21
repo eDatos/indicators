@@ -10,7 +10,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.serviceapi.MetamacCoreCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

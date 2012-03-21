@@ -3,7 +3,7 @@ package es.gobcan.istac.indicators.core.mapper;
 import java.util.List;
 
 import es.gobcan.istac.indicators.core.domain.Data;
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.Dimension;
@@ -15,7 +15,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
@@ -63,8 +63,8 @@ public interface Do2DtoMapper {
     public SubjectDto subjectDoToDto(Subject source);
     public SubjectDto subjectDoToDto(SubjectIndicatorResult source);
     
-    // DataBasic
-    public DataBasicDto dataBasicDoToDto(DataBasic source);
+    // DataDefinition
+    public DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
     
     // DataStructure
     public DataStructureDto dataStructureDoToDto(DataStructure source);

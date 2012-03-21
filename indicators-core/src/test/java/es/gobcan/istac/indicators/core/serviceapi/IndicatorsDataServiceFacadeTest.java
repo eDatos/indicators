@@ -4,7 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 
 /**
@@ -41,7 +42,7 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     private IndicatorsDataService indicatorsDataService;
     
     /* Objects */
-    private static DataBasic dataBasic1;
+    private static DataDefinition dataDefinition1;
     private static DataStructure dataStructure1;
     
     static {
@@ -51,30 +52,30 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     @Before
     public void setUpMocks() throws MetamacException {
         //init mocks
-        doReturn(Arrays.asList(new DataBasic[] {dataBasic1})).when(indicatorsDataService).findDataDefinitions(any(ServiceContext.class));
-        doReturn(dataBasic1).when(indicatorsDataService).findDataDefinition(any(ServiceContext.class),eq(dataBasic1.getUuid()));
+        doReturn(Arrays.asList(new DataDefinition[] {dataDefinition1})).when(indicatorsDataService).findDataDefinitions(any(ServiceContext.class));
+        doReturn(dataDefinition1).when(indicatorsDataService).retrieveDataDefinition(any(ServiceContext.class),eq(dataDefinition1.getUuid()));
         doReturn(dataStructure1).when(indicatorsDataService).retrieveDataStructure(any(ServiceContext.class),eq(dataStructure1.getUuid()));
     }
     
     @Test
     @Override
     public void testFindDataDefinitions() throws Exception {
-        List<DataBasicDto> dtos = indicatorsDataServiceFacade.findDataDefinitions(getServiceContext());
+        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.findDataDefinitions(getServiceContext());
         assertNotNull(dtos);
-        compareDoDto(dataBasic1, dtos.get(0));
+        compareDoDto(dataDefinition1, dtos.get(0));
     }
     
     @Test
     @Override
-    public void testFindDataDefinition() throws Exception {
-        DataBasicDto dto = indicatorsDataServiceFacade.findDataDefinition(getServiceContext(),dataBasic1.getUuid());
+    public void testRetrieveDataDefinition() throws Exception {
+        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContext(),dataDefinition1.getUuid());
         assertNotNull(dto);
-        compareDoDto(dataBasic1, dto);
+        compareDoDto(dataDefinition1, dto);
     }
     
     @Test
     public void testFindDataDefinitionNotFound() throws Exception {
-        DataBasicDto dto = indicatorsDataServiceFacade.findDataDefinition(getServiceContext(),"NOT_EXIST");
+        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContext(),"NOT_EXIST");
         assertNull(dto);
     }
     
@@ -97,7 +98,7 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
         return "dbunit/EmptyDatabase.xml";
     }
     
-    private void compareDoDto(DataBasic dbo, DataBasicDto dto) {
+    private void compareDoDto(DataDefinition dbo, DataDefinitionDto dto) {
         assertEquals(dbo.getUuid(),dto.getUuid());
         assertEquals(dbo.getName(),dto.getName());
         assertEquals(dbo.getPxUri(),dto.getPxUri());
@@ -125,9 +126,9 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     }
     
     private static void initializeObjects() {
-        dataBasic1 = new DataBasic();
-        dataBasic1.getUuid(); //generate uuid
-        dataBasic1.setName("My Data");
+        dataDefinition1 = new DataDefinition();
+        dataDefinition1.getUuid(); //generate uuid
+        dataDefinition1.setName("My Data");
         
         dataStructure1 = new DataStructure();
         dataStructure1.setUuid("1-1-1-1");

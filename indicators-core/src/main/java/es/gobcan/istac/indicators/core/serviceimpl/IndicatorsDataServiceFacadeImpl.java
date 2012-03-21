@@ -8,9 +8,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -27,27 +27,27 @@ public class IndicatorsDataServiceFacadeImpl extends IndicatorsDataServiceFacade
     }
 
     @Override
-    public List<DataBasicDto> findDataDefinitions(ServiceContext ctx) throws MetamacException {
+    public List<DataDefinitionDto> findDataDefinitions(ServiceContext ctx) throws MetamacException {
         // Service call
-        List<DataBasic> dataDefs = getIndicatorsDataService().findDataDefinitions(ctx);
+        List<DataDefinition> dataDefs = getIndicatorsDataService().findDataDefinitions(ctx);
         
         //Transform
-        List<DataBasicDto> dtos = new ArrayList<DataBasicDto>();
-        for (DataBasic basic : dataDefs) {
-            dtos.add(do2DtoMapper.dataBasicDoToDto(basic));
+        List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();
+        for (DataDefinition basic : dataDefs) {
+            dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
         }
         return dtos;
     }
     
     @Override
-    public DataBasicDto findDataDefinition(ServiceContext ctx,String uuid) throws MetamacException {
+    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx,String uuid) throws MetamacException {
         // Service call
-        DataBasic dataDef = getIndicatorsDataService().findDataDefinition(ctx,uuid);
+        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx,uuid);
         
         //Transform
-        DataBasicDto dto = null;
+        DataDefinitionDto dto = null;
         if (dataDef != null) {
-            dto = do2DtoMapper.dataBasicDoToDto(dataDef);
+            dto = do2DtoMapper.dataDefinitionDoToDto(dataDef);
         }
         return dto;
     }

@@ -15,13 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 /**
  * Spring based transactional test with DbUnit support.
@@ -52,33 +51,33 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     @Test
     @Override
     public void testFindDataDefinitions() throws Exception {
-        List<DataBasic> dataDefs = indicatorsDataService.findDataDefinitions(getServiceContext());
+        List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitions(getServiceContext());
         assertEquals(1, dataDefs.size());
         assertTrue(1 == dataDefs.get(0).getId());
     }
     
     @Test
     @Override
-    public void testFindDataDefinition() throws Exception {
-        DataBasic dataDef = indicatorsDataService.findDataDefinition(getServiceContext(),UUID_CONSULTA1);
+    public void testRetrieveDataDefinition() throws Exception {
+        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(),UUID_CONSULTA1);
         assertTrue(1 == dataDef.getId());
     }
     
     @Test
-    public void testFindDataDefinitionNotExist() throws Exception {
-        DataBasic dataDef = indicatorsDataService.findDataDefinition(getServiceContext(),"NOT_EXIST");
+    public void testRetrieveDataDefinitionNotExist() throws Exception {
+        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(),"NOT_EXIST");
         assertNull(dataDef);
     }
     
     @Test
-    public void testFindDataDefinitionArchived() throws Exception {
-        DataBasic dataDef = indicatorsDataService.findDataDefinition(getServiceContext(),UUID_CONSULTA2);
+    public void testRetrieveDataDefinitionArchived() throws Exception {
+        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(),UUID_CONSULTA2);
         assertNull(dataDef);
     }
     
     @Test
-    public void testFindDataDefinitionPublishedUnavailable() throws Exception {
-        DataBasic dataDef = indicatorsDataService.findDataDefinition(getServiceContext(),UUID_CONSULTA3);
+    public void testRetrieveDataDefinitionPublishedUnavailable() throws Exception {
+        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(),UUID_CONSULTA3);
         assertNull(dataDef);
     }
 

@@ -113,9 +113,9 @@ Application Indicators {
     		> @DataGpeRepository
     		
 			"Find all Data containing basic info only"
-	    	List<@DataBasic> findDataDefinitions() throws MetamacException;
+	    	List<@DataDefinition> findDataDefinitions() throws MetamacException;
 			"Find Data containing basic info only"
-	    	@DataBasic findDataDefinition(String uuid) throws MetamacException;
+	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieve Data content"
@@ -265,9 +265,9 @@ Application Indicators {
 			> @IndicatorsDataService
 	    	
 	    	"Find all Data containing basic info only"
-	    	List<@DataBasicDto> findDataDefinitions() throws MetamacException;
+	    	List<@DataDefinitionDto> findDataDefinitions() throws MetamacException;
 	    	"Find all Data basic info only"
-	    	@DataBasicDto findDataDefinition(String uuid) throws MetamacException;
+	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Retrieve Data content"
@@ -756,7 +756,7 @@ Application Indicators {
         }
         
         "Table view for Data basic information"
-	    Entity DataBasic {
+	    Entity DataDefinition {
         	databaseTable = "TV_CONSULTA"
 			!auditable
 			!optimisticLocking
@@ -798,8 +798,8 @@ Application Indicators {
 			Clob isPartOf nullable databaseColumn="IS_PART_OF";
 			
        		Repository DataGpeRepository {
-            	List<@DataBasic> findCurrentDataDefinitions;
-            	@DataBasic findCurrentDataDefinition(String uuid);
+            	List<@DataDefinition> findCurrentDataDefinitions;
+            	@DataDefinition findCurrentDataDefinition(String uuid);
 			}
         }
 	}
@@ -1108,7 +1108,7 @@ Application Indicators {
     	}
     	
     	"Dto for data basic definition"
-    	DataTransferObject DataBasicDto {
+    	DataTransferObject DataDefinitionDto {
 	   		"Uuid"
 	   		String uuid;
 	   		"name"

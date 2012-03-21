@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
-import es.gobcan.istac.indicators.core.domain.DataBasic;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -30,7 +30,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
@@ -257,8 +257,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     }
     
     @Override
-    public DataBasicDto dataBasicDoToDto(DataBasic source) {
-        DataBasicDto target = new DataBasicDto();
+    public DataDefinitionDto dataDefinitionDoToDto(DataDefinition source) {
+        DataDefinitionDto target = new DataDefinitionDto();
         target.setUuid(source.getUuid());
         target.setName(source.getName());
         target.setPxUri(source.getPxUri());
