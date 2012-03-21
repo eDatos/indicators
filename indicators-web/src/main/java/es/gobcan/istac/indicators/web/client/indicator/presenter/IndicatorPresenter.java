@@ -45,6 +45,8 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsResult;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
@@ -88,7 +90,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     public interface IndicatorProxy extends Proxy<IndicatorPresenter>, Place {}
 	
 	public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
-		void setIndicator(IndicatorDto indicator);
+		// Indicator
+	    
+	    void setIndicator(IndicatorDto indicator);
 		void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos);
 		
 		void setIndicatorList(List<IndicatorDto> indicators);
@@ -99,7 +103,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
 		void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 		
-		// Data sources
+		// Data source
 		
 		void setDataDefinitions(List<DataBasicDto> dataBasicDtos);
 		void setDataDefinition(DataBasicDto dataBasicDto);
@@ -108,12 +112,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
 		void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
 		
-	    void setGeographicalValuesDSInterperiodRate(List<GeographicalValueDto> geographicalValueDtos);
-	    void setGeographicalValuesDSAnnualRate(List<GeographicalValueDto> geographicalValueDtos);
-	    
-	    void setGeographicalValueDSInterperiodRate(GeographicalValueDto geographicalValueDto);
-        void setGeographicalValueDSAnnualRate(GeographicalValueDto geographicalValueDto);
-	        
 		void onDataSourceSaved(DataSourceDto dataSourceDto);
 	}
 	
@@ -377,9 +375,18 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveDataDefinition(String uuid) {
-        // TODO Auto-generated method stub
-        
+    public void retrieveDataDefinition(final String uuid) {
+        dispatcher.execute(new GetDataDefinitionAction(uuid), new AsyncCallback<GetDataDefinitionResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error retrieving data definition with uuid = " + uuid);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataDefinition()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(GetDataDefinitionResult result) {
+                getView().setDataDefinition(result.getDataBasicDto());
+            }}
+        );
     }
 
     @Override
@@ -423,66 +430,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onSuccess(SaveDataSourceResult result) {
                 getView().onDataSourceSaved(result.getDataSourceDto());
-            }}
-        );
-    }
-
-    @Override
-    public void retrieveGeographicalValuesDSInterperiodRate(final String uuid) {
-        dispatcher.execute(new GetGeographicalValuesAction(uuid), new AsyncCallback<GetGeographicalValuesResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical values with geographical granularity UUID = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValuesDSInterperiodRate(result.getGeographicalValueDtos());
-            }}
-        );        
-    }
-
-    @Override
-    public void retrieveGeographicalValuesDSAnnualRate(final String uuid) {
-        dispatcher.execute(new GetGeographicalValuesAction(uuid), new AsyncCallback<GetGeographicalValuesResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical values with geographical granularity UUID = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValuesDSAnnualRate(result.getGeographicalValueDtos());
-            }}
-        );
-    }
-
-    @Override
-    public void retrieveGeographicalValueDSInterperiodRate(final String uuid) {
-        dispatcher.execute(new GetGeographicalValueAction(uuid), new AsyncCallback<GetGeographicalValueResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical value with UUID = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValueDSInterperiodRate(result.getGeographicalValueDto());
-            }}
-        );
-    }
-
-    @Override
-    public void retrieveGeographicalValueDSAnnualRate(final String uuid) {
-        dispatcher.execute(new GetGeographicalValueAction(uuid), new AsyncCallback<GetGeographicalValueResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical value with UUID = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValueResult result) {
-                getView().setGeographicalValueDSAnnualRate(result.getGeographicalValueDto());
             }}
         );
     }

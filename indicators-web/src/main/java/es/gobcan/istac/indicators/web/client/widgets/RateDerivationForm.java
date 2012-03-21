@@ -11,19 +11,17 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxIt
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
@@ -32,7 +30,6 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
-import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -47,9 +44,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     public RateDerivationForm(String groupTitle, final DataSourceQuantityType dataSourceQuantityType) {
         super(groupTitle, dataSourceQuantityType);
         
-        TextItem method = new TextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
+        RequiredTextItem method = new RequiredTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
         
-        SelectItem methodType = new SelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
+        RequiredSelectItem methodType = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
         methodType.setValueMap(CommonUtils.getRateDerivationMethodTypeValueMap());
         methodType.addChangedHandler(new ChangedHandler() {
             @Override
@@ -75,6 +72,12 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         type.addChangedHandler(new ChangedHandler() {
             @Override
             public void onChanged(ChangedEvent event) {
+                if (event.getValue() != null && QuantityTypeEnum.CHANGE_RATE.toString().equals(event.getValue().toString())) {
+                    // If selected type if CHANGE_RATE, set current indicator as base quantity indicator
+                    setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, indicatorDto.getUuid());
+                } else {
+                    setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, new String());
+                }
                 RateDerivationForm.this.markForRedraw();
             }
         });
@@ -116,53 +119,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         MultiLanguageTextItem percentageOf = new MultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
         
-        SelectItem indexBaseType = new SelectItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
-        indexBaseType.setValueMap(getQuantityIndexBaseTypeValueMap());
-        indexBaseType.setShowIfCondition(getIndexBaseTypeIfFunction());
-        indexBaseType.addChangedHandler(new ChangedHandler() {
-            @Override
-            public void onChanged(ChangedEvent event) {
-                RateDerivationForm.this.markForRedraw();
-            }
-        });
+        ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
+        baseQuantityIndUuid.setVisible(false);
         
-        IntegerItem baseValue = new IntegerItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
-        baseValue.setRequired(true);
-        baseValue.setShowIfCondition(getBaseValueIfFunction());
-        
-        RequiredTextItem baseTime = new RequiredTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
-        baseTime.setShowIfCondition(getBaseTimeIfFunction());
-// TODO       baseTime.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
-        
-        final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
-        baseLocation.setRequired(true);
-        baseLocation.setShowIfCondition(getBaseLocationIfFunction());
-        baseLocation.getGeoGranularity().addChangedHandler(new ChangedHandler() {
-            @Override
-            public void onChanged(ChangedEvent event) {
-                // Clear geographical value
-                baseLocation.setGeoValuesValueMap(new LinkedHashMap<String, String>());
-                baseLocation.setGeoValue(new String());
-                // Set values with selected granularity
-                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    if (uiHandlers instanceof IndicatorUiHandler) {
-                        if (DataSourceQuantityType.INTERPERIOD_RATE.equals(dataSourceQuantityType)) {
-                            ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSInterperiodRate(event.getValue().toString());
-                        } else if (DataSourceQuantityType.ANNUAL_RATE.equals(dataSourceQuantityType)) {
-                            ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSAnnualRate(event.getValue().toString());
-                        }
-                    }
-                }
-            }
-        });
-        
-        SelectItem baseQuantityIndUuid = new SelectItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
-        baseQuantityIndUuid.setRequired(true);
-        baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
-        baseQuantityIndUuid.setValidators(getIndicatorSelectedValidator());
-
-        
-        setFields(method, methodType, rounding, type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(method, methodType, rounding, type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, baseQuantityIndUuid);
     }
     
     public void setValue(RateDerivationDto rateDerivationDto) {
@@ -195,15 +155,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, quantityDto.getDenominatorIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, quantityDto.getNumeratorIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
-            setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null  ? getIndexBaseTypeEnum(quantityDto).toString() : "");
-            if (quantityDto.getBaseValue() != null) {
-                setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue());
-            }
-            setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
-
-            // Base location granularity set in setGeographicalGranularity method
-            ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(new String());
-            ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValue(quantityDto.getBaseLocationUuid());
             
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
@@ -222,21 +173,18 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         }
         
         quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum.valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
-        quantityDto.setUnitUuid(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID));
+        quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
         quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer)getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer)getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
         quantityDto.setDecimalPlaces(getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) != null ? (Integer)getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) : null);
         // Only set value if item is visible (these item are quantity type dependent) 
         quantityDto.setMinimum(getItem(IndicatorDS.QUANTITY_MINIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MINIMUM) != null ? (Integer)getValue(IndicatorDS.QUANTITY_MINIMUM) : null) : null);
         quantityDto.setMaximum(getItem(IndicatorDS.QUANTITY_MAXIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MAXIMUM) != null ? (Integer)getValue(IndicatorDS.QUANTITY_MAXIMUM) : null) : null);
-        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID) : null);
-        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID) : null);
+        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)) : null);
+        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)) : null);
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean.valueOf((Boolean)getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)): false) : null);
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem)getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
-        quantityDto.setBaseValue(getItem(IndicatorDS.QUANTITY_BASE_VALUE).isVisible() ? (getValue(IndicatorDS.QUANTITY_BASE_VALUE) != null ? (Integer)getValue(IndicatorDS.QUANTITY_BASE_VALUE) : null) : null);
-        quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
-        quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).getSelectedGeoValue() : null);
-        quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID) : null);
+        quantityDto.setBaseQuantityIndicatorUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)));
 
         rateDerivationDto.setQuantity(quantityDto);
         
@@ -258,27 +206,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         return validator;
     }
     
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> granularityDtos) {
-        ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularitiesValueMap(CommonUtils.getGeographicalGranularituesValueMap(granularityDtos));
-    }
-    
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
-    }
-    
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        if (geographicalValueDto != null) {
-            ((GeographicalSelectItem)getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
-            // Make sure value map is set properly
-            if (uiHandlers instanceof IndicatorUiHandler) {
-                if (DataSourceQuantityType.INTERPERIOD_RATE.equals(dataSourceQuantityType)) {
-                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSInterperiodRate(geographicalValueDto.getGranularityUuid());
-                } else if (DataSourceQuantityType.ANNUAL_RATE.equals(dataSourceQuantityType)) {
-                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValuesDSAnnualRate(geographicalValueDto.getGranularityUuid());
-                }
-            }
-        }
-    }
     
     @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -296,7 +223,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
         ((SelectItem)getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
         ((SelectItem)getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem)getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
     }
     
 }

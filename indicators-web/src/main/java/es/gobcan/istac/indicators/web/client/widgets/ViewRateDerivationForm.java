@@ -4,11 +4,9 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
@@ -58,25 +56,7 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem percentageOf = new ViewTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
         
-        ViewTextItem indexBaseType = new ViewTextItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
-        indexBaseType.setVisible(false);
-        ViewTextItem indexBaseTypeText = new ViewTextItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getConstants().indicQuantityIndexMetadata());
-        indexBaseTypeText.setShowIfCondition(getIndexBaseTypeIfFunction());
-        
-        ViewTextItem baseValue = new ViewTextItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
-        baseValue.setShowIfCondition(getBaseValueIfFunction());
-        
-        ViewTextItem baseTime = new ViewTextItem(IndicatorDS.QUANTITY_BASE_TIME, getConstants().indicQuantityBaseTime());
-        baseTime.setShowIfCondition(getBaseTimeIfFunction());
-        
-        ViewTextItem baseLocation = new ViewTextItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
-        baseLocation.setShowIfCondition(getBaseLocationIfFunction());
-        
-        ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
-        baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
-        
-        
-        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue, baseTime, baseLocation, baseQuantityIndUuid);
+        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf);
     }
     
     public void setValue(RateDerivationDto rateDerivationDto) {
@@ -100,27 +80,8 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
             setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getDenominatorIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getNumeratorIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no()) : "");
-            setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null  ? getIndexBaseTypeEnum(quantityDto).toString() : "");
-            setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getIndexBaseType(quantityDto));
-            setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");
-            setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
-            
-            // Base location set in setGeographicalValue method
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, new String()); 
-            if (quantityDto.getBaseLocationUuid() != null && !quantityDto.getBaseLocationUuid().isEmpty()) {
-                // TODO
-//                if (uiHandlers instanceof IndicatorUiHandler) {
-//                    ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
-//                }
-            }
-            
-            setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getIndicatorText(quantityDto.getBaseQuantityIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
-    }
-    
-    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-        setValue(IndicatorDS.QUANTITY_BASE_LOCATION, geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) :  new String());
     }
 
 }

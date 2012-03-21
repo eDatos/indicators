@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
@@ -150,6 +151,16 @@ public class CommonUtils {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().rateDerivationRoundingEnum() + type.getName()));
         }
         return valueMap;
+    }
+    
+    /**
+     * Returns null if UUID parameter is blank
+     * 
+     * @param uuid
+     * @return
+     */
+    public static String getUuidString(String uuid) {
+        return StringUtils.isBlank(uuid) ? null : uuid;
     }
     
 }

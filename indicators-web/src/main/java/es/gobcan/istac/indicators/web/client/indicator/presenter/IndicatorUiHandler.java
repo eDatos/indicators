@@ -31,12 +31,6 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveGeographicalValuesDS();
     void retrieveGeographicalValueDS(String uuid);
     
-    void retrieveGeographicalValuesDSInterperiodRate(String uuid);
-    void retrieveGeographicalValuesDSAnnualRate(String uuid);
-    
-    void retrieveGeographicalValueDSInterperiodRate(String uuid);
-    void retrieveGeographicalValueDSAnnualRate(String uuid);
-    
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     
 }

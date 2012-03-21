@@ -10,18 +10,19 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
-import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -69,7 +70,6 @@ public class DataSourcesPanel extends VLayout {
     private RateDerivationForm annualRateEditionForm;
     
     private DataSourceDto dataSourceDto;
-    private DataBasicDto dataBasicDto;
     private DataStructureDto dataStructureDto;
     
     
@@ -128,15 +128,6 @@ public class DataSourcesPanel extends VLayout {
                 }
             }
         });
-        dataSourcesListGrid.addRecordClickHandler(new RecordClickHandler() {
-            @Override
-            public void onRecordClick(RecordClickEvent event) {
-                if (event.getFieldNum() != 0) { // CheckBox is not clicked
-                    dataSourcesListGrid.deselectAllRecords();
-                    dataSourcesListGrid.selectRecord(event.getRecord());
-                }
-            }
-        });
         
         // MainFormLayout
         
@@ -146,7 +137,7 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (generalForm.validate(false)) {
+                if (generalEditionForm.validate(false) && interperiodRateEditionForm.validate(false) && annualRateEditionForm.validate(false)) {
                     uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                 }
             }
@@ -232,12 +223,14 @@ public class DataSourcesPanel extends VLayout {
     
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
         generalForm.setValue(DataSourceDS.QUERY, ""); // Set in method setDataDefinition
+        uiHandlers.retrieveDataDefinition(dataSourceDto.getQueryGpe());
+        
         generalForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         generalForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         generalForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
         generalForm.setValue(DataSourceDS.GEO_VALUE, ""); // Set in method setGeographicalValue
         if (dataSourceDto.getGeographicalValueUuid() != null && !dataSourceDto.getGeographicalValueUuid().isEmpty()) {
-            uiHandlers.retrieveGeographicalValue(dataSourceDto.getGeographicalValueUuid());
+            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
         }
         
         interperiodRateForm.setValue(dataSourceDto.getInterperiodRate());
@@ -259,12 +252,42 @@ public class DataSourcesPanel extends VLayout {
     
     private void createViewForm() {
         generalForm = new GroupDynamicForm(getConstants().datasourceGeneral());
+        
         ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
+        
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
+        timeVariable.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !value.toString().isEmpty();
+            }
+        });
+        
         ViewTextItem timeValue = new ViewTextItem(DataSourceDS.TIME_VALUE, getConstants().dataSourceTimeValue());
+        timeValue.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !form.getItem(DataSourceDS.TIME_VARIABLE).isVisible();
+            }
+        });
+        
         ViewTextItem geographicalVariable = new ViewTextItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
+        geographicalVariable.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !value.toString().isEmpty();
+            }
+        });
+        
         ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
-        generalForm.setFields(query, timeVariable, timeVariable, timeValue, geographicalVariable, geographicalValue);
+        geographicalValue.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !form.getItem(DataSourceDS.GEO_VARIABLE).isVisible();
+            }
+        });
+        
+        generalForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue);
         
         interperiodRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodRate(), DataSourceQuantityType.INTERPERIOD_RATE);
         
@@ -277,6 +300,7 @@ public class DataSourcesPanel extends VLayout {
     
     private void createEditionForm() {
         generalEditionForm = new GroupDynamicForm(getConstants().datasourceGeneral());
+        
         RequiredSelectItem query = new RequiredSelectItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
         query.addChangedHandler(new ChangedHandler() {
             @Override
@@ -284,14 +308,46 @@ public class DataSourcesPanel extends VLayout {
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                     uiHandlers.retrieveDataStructure(event.getValue().toString());
                 } else {
-                    // TODO Clear all values related?
+                    // Clear temporal variable
+                    generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, new String());
+                    // Clear spatial variable
+                    generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, new String());
                 }
             }
         });
+        
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
-        TextItem timeValue = new TextItem(DataSourceDS.TIME_VALUE, getConstants().dataSourceTimeValue());
+        timeVariable.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !value.toString().isEmpty();
+            }
+        });
+        
+        RequiredTextItem timeValue = new RequiredTextItem(DataSourceDS.TIME_VALUE, getConstants().dataSourceTimeValue());
+        timeValue.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !form.getItem(DataSourceDS.TIME_VARIABLE).isVisible();
+            }
+        });
+        
         ViewTextItem geographicalVariable = new ViewTextItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
-        SelectItem geographicalValue = new SelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        geographicalVariable.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !value.toString().isEmpty();
+            }
+        });
+        
+        RequiredSelectItem geographicalValue = new RequiredSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        geographicalValue.setShowIfCondition(new FormItemIfFunction() {
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !form.getItem(DataSourceDS.GEO_VARIABLE).isVisible();
+            }
+        });
+        
         generalEditionForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue);
         
         interperiodRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodRate(), DataSourceQuantityType.INTERPERIOD_RATE);
@@ -308,12 +364,19 @@ public class DataSourcesPanel extends VLayout {
     }
     
     public void setDataDefinition(DataBasicDto dataBasicDto) {
-        this.dataBasicDto = dataBasicDto;
         generalForm.setValue(DataSourceDS.QUERY, dataBasicDto.getName());
     }
     
     public void setDataStructure(DataStructureDto dataStructureDto) {
         this.dataStructureDto = dataStructureDto;
+        
+        // Temporal variable
+        generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, dataStructureDto.getTemporalVariable());
+        
+        // Spatial variable
+        generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataStructureDto.getSpatialVariable());
+        
+        generalEditionForm.markForRedraw();
     }
     
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
@@ -325,32 +388,19 @@ public class DataSourcesPanel extends VLayout {
     }
     
     public DataSourceDto getDataSourceDto() {
+        dataSourceDto.setQueryGpe(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
         dataSourceDto.setPx(dataStructureDto.getPxUri());
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setTimeValue(generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE));
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
-        dataSourceDto.setGeographicalValueUuid(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE));
+        dataSourceDto.setGeographicalValueUuid(CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE)));
+        dataSourceDto.setInterperiodRate(interperiodRateEditionForm.getValue());
+        dataSourceDto.setAnnualRate(annualRateEditionForm.getValue());
         return dataSourceDto;
     }
     
     public void onDataSourceSaved(DataSourceDto dataSourceDto) {
         selectDataSource(dataSourceDto);
-    }
-    
-    public void setGeographicalValuesDSInterperiodRate(List<GeographicalValueDto> geographicalValueDtos) {
-        interperiodRateEditionForm.setGeographicalValues(geographicalValueDtos);
-    }
-
-    public void setGeographicalValuesDSAnnualRate(List<GeographicalValueDto> geographicalValueDtos) {
-        annualRateEditionForm.setGeographicalValues(geographicalValueDtos);
-    }
-    
-    public void setGeographicalValueDSInterperiodRate(GeographicalValueDto geographicalValueDto) {
-        interperiodRateEditionForm.setGeographicalValue(geographicalValueDto);
-    }
-
-    public void setGeographicalValueDSAnnualRate(GeographicalValueDto geographicalValueDto) {
-        annualRateEditionForm.setGeographicalValue(geographicalValueDto);
     }
     
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -368,8 +418,7 @@ public class DataSourcesPanel extends VLayout {
     }
     
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        interperiodRateEditionForm.setGeographicalGranularities(geographicalGranularityDtos);
-        annualRateEditionForm.setGeographicalGranularities(geographicalGranularityDtos);
+        // TODO
     }
     
 }

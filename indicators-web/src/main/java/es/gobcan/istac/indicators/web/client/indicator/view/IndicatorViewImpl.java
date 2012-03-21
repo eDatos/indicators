@@ -142,24 +142,4 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
         dataSourcesPanel.onDataSourceSaved(dataSourceDto);
     }
 
-    @Override
-    public void setGeographicalValuesDSInterperiodRate(List<GeographicalValueDto> geographicalValueDtos) {
-        dataSourcesPanel.setGeographicalValuesDSInterperiodRate(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValuesDSAnnualRate(List<GeographicalValueDto> geographicalValueDtos) {
-        dataSourcesPanel.setGeographicalValuesDSAnnualRate(geographicalValueDtos);
-    }
-
-    @Override
-    public void setGeographicalValueDSInterperiodRate(GeographicalValueDto geographicalValueDto) {
-        dataSourcesPanel.setGeographicalValueDSInterperiodRate(geographicalValueDto);
-    }
-
-    @Override
-    public void setGeographicalValueDSAnnualRate(GeographicalValueDto geographicalValueDto) {
-        dataSourcesPanel.setGeographicalValueDSAnnualRate(geographicalValueDto);
-    }
-
 }
