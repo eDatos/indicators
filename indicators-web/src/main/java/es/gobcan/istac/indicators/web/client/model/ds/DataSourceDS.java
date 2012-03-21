@@ -18,6 +18,11 @@ public class DataSourceDS extends DataSource {
     public static String RATE_DERIVATION_METHOD = "rate-method";
     public static String RATE_DERIVATION_METHOD_TYPE = "rate-method-type";
     public static String RATE_DERIVATION_ROUNDING = "rate-rounding";
+    public static String OTHER_VARIABLES = "ds-other-var";
+    
+    public static String VARIABLE_NAME = "var-name";
+    public static String VARIABLE_CATEGORY = "var-cat";
+    public static String VARIABLE_DTO = "var-dto";
     
     public static String DTO = "ds-dto";
     

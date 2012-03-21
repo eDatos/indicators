@@ -163,4 +163,12 @@ public class CommonUtils {
         return StringUtils.isBlank(uuid) ? null : uuid;
     }
     
+    public static LinkedHashMap<String, String> getVariableCategoriesValueMap(List<String> codes, List<String> labels) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (int i = 0; i < codes.size(); i++) {
+            valueMap.put(codes.get(i), codes.get(i) + " - " + labels.get(i));
+        }
+        return valueMap;
+    }
+    
 }

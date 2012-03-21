@@ -4,6 +4,9 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -46,11 +49,14 @@ import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.VariableListItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 
 
 public class DataSourcesPanel extends VLayout {
 
+    private Logger logger = Logger.getLogger(DataSourcesPanel.class.getName());
+    
     private IndicatorDto indicatorDto;
     private IndicatorUiHandler uiHandlers;
     
@@ -252,6 +258,8 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
         generalEditionForm.setValue(DataSourceDS.GEO_VALUE, dataSourceDto.getGeographicalValueUuid());
         
+        ((VariableListItem)generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
+        
         interperiodRateEditionForm.setValue(dataSourceDto.getInterperiodRate());
         
         annualRateEditionForm.setValue(dataSourceDto.getAnnualRate());
@@ -355,7 +363,9 @@ public class DataSourcesPanel extends VLayout {
             }
         });
         
-        generalEditionForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue);
+        VariableListItem variables = new VariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
+        
+        generalEditionForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
         
         interperiodRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodRate(), DataSourceQuantityType.INTERPERIOD_RATE);
         
@@ -382,6 +392,18 @@ public class DataSourcesPanel extends VLayout {
         
         // Spatial variable
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataStructureDto.getSpatialVariable());
+        
+        // Variables and categories
+        List<String> variables = dataStructureDto.getVariables();
+        Map<String, List<String>> categoryCodes = dataStructureDto.getValueCodes();
+        Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
+        for (String var : variables) {
+            if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
+                ((VariableListItem)generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).addVariableAndCategories(var, categoryCodes.get(var), categoryLabels.get(var));
+            } else {
+                logger.log(Level.SEVERE, "Something wrong with variables and its category labels and codes");
+            }
+        }
         
         generalEditionForm.markForRedraw();
     }
