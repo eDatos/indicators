@@ -7,21 +7,8 @@
   <override>
 	<system />
 	
-	<!-- STATIC configurations ************************************************ -->
-	<!-- 	Examples: -->
-		<!-- 	<properties fileName="${url.url}/conf/static/name1.xml" config-name="name1" /> -->
-		<!-- 	<properties fileName="${url.url}/conf/static/name2.xml" config-optional="false" /> -->
-		<!-- 	<properties fileName="${url.url}/conf/static/name3.properties" config-name="name3" /> -->
-		<!-- 	<properties fileName="${url.url}/conf/static/name4.properties" config-name="name4"  /> -->
-
+	<!-- STATIC configurations -->
   	<properties fileName="${environment.indicators.data}/conf/static/resources.xml" config-optional="false" />
 
-	<!-- Dynamic configurations *********************************************** -->
-	<!-- 	Examples: -->	
-		<!--    <properties fileName="${url.url.url}/conf/dynamic/xform.xml" config-optional="false" >-->
-		<!--        <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy" refreshDelay="10000"/>        -->
-		<!--    </properties>-->
-  	
   </override>
-  
 </configuration>
