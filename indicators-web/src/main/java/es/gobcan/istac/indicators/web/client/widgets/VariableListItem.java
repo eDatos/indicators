@@ -59,6 +59,7 @@ public class VariableListItem extends CustomCanvasItem {
         categoryField.setCanEdit(true);
         categoryField.setEditorType(new SelectItem());
         
+        // Dynamic valueMap. Its values depends on the record.
         EditorValueMapFunction editorValueMapFunction = new EditorValueMapFunction() {
             @SuppressWarnings("rawtypes")
             @Override
@@ -69,6 +70,7 @@ public class VariableListItem extends CustomCanvasItem {
                         return variableValueMaps.get(variableName);
                     }
                 }
+                // This should not happen
                 LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
                 return valueMap;
             }
@@ -100,7 +102,7 @@ public class VariableListItem extends CustomCanvasItem {
     
     @Override
     public Boolean validate() {
-        // TODO How can i validate this?
+        // Not required (at least for now)
         return true;
     }
     
@@ -113,14 +115,19 @@ public class VariableListItem extends CustomCanvasItem {
     
     public void setValue(List<DataSourceVariableDto> dataSourceVariableDtos) {
         this.dataSourceVariableDtos = dataSourceVariableDtos;
-//        for (DataSourceVariableDto dataSourceVariableDto : dataSourceVariableDtos) {
-//            DataSourceVariableRecord record = RecordUtils.getDataSourceVariableRecord(dataSourceVariableDto);
-//            variableList.addData(record);
-//        }
+        // Value map must be already set
+        // In this method we should set the value selected of this valueMap
+        // TODO How can i do this?
+        
+//       ¿? for (DataSourceVariableDto dataSourceVariableDto : dataSourceVariableDtos) {
+//       ¿?    DataSourceVariableRecord record = RecordUtils.getDataSourceVariableRecord(dataSourceVariableDto);
+//       ¿?    variableList.addData(record);
+//       ¿? }
     }
     
     public List<DataSourceVariableDto> getValue() {
-        return null;
+        // TODO 
+        return dataSourceVariableDtos;
     }
     
 }

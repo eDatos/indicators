@@ -247,6 +247,9 @@ public class DataSourcesPanel extends VLayout {
             uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
         }
         
+        // TODO Set other variables 
+        // ((ViewVariableListItem)generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue();
+        
         interperiodRateForm.setValue(dataSourceDto.getInterperiodRate());
         
         annualRateForm.setValue(dataSourceDto.getAnnualRate());
@@ -428,6 +431,10 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ?  CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE)) : null);
         dataSourceDto.setInterperiodRate(interperiodRateEditionForm.getValue());
         dataSourceDto.setAnnualRate(annualRateEditionForm.getValue());
+        
+        dataSourceDto.getOtherVariables().clear();
+        dataSourceDto.getOtherVariables().addAll(((VariableListItem)generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());
+        
         return dataSourceDto;
     }
     
