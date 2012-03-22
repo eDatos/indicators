@@ -10,7 +10,7 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
@@ -30,8 +30,8 @@ public class GetDataDefinitionActionHandler extends AbstractActionHandler<GetDat
     @Override
     public GetDataDefinitionResult execute(GetDataDefinitionAction action, ExecutionContext context) throws ActionException {
         try {
-            DataBasicDto dataBasicDto = indicatorsDataServiceFacade.findDataDefinition(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new GetDataDefinitionResult(dataBasicDto);
+            DataDefinitionDto dataDefinitionDto = indicatorsDataServiceFacade.retrieveDataDefinition(ServiceContextHelper.getServiceContext(), action.getUuid());
+            return new GetDataDefinitionResult(dataDefinitionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

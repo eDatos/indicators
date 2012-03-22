@@ -26,7 +26,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -105,8 +105,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 		
 		// Data source
 		
-		void setDataDefinitions(List<DataBasicDto> dataBasicDtos);
-		void setDataDefinition(DataBasicDto dataBasicDto);
+		void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
+		void setDataDefinition(DataDefinitionDto dataDefinitionDto);
 		void setDataStructure(DataStructureDto dataStructureDto);
 		
 		void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
@@ -353,7 +353,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onSuccess(GetDataDefinitionsResult result) {
-                getView().setDataDefinitions(result.getDataBasicDtos());
+                getView().setDataDefinitions(result.getDataDefinitionDtos());
             }}
         );
     }
@@ -384,7 +384,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onSuccess(GetDataDefinitionResult result) {
-                getView().setDataDefinition(result.getDataBasicDto());
+                getView().setDataDefinition(result.getDataDefinitionDto());
             }}
         );
     }

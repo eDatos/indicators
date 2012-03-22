@@ -33,7 +33,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -382,12 +382,12 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.addEditionCanvas(annualRateEditionForm);
     }
     
-    public void setDataDefinitions(List<DataBasicDto> dataBasicDtos) {
-        ((SelectItem)generalEditionForm.getItem(DataSourceDS.QUERY)).setValueMap(CommonUtils.getDataBasicValueMap(dataBasicDtos));
+    public void setDataDefinitions(List<DataDefinitionDto> dataDefinitionsDtos) {
+        ((SelectItem)generalEditionForm.getItem(DataSourceDS.QUERY)).setValueMap(CommonUtils.getDataBasicValueMap(dataDefinitionsDtos));
     }
     
-    public void setDataDefinition(DataBasicDto dataBasicDto) {
-        generalForm.setValue(DataSourceDS.QUERY, dataBasicDto.getName());
+    public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
+        generalForm.setValue(DataSourceDS.QUERY, dataDefinitionDto.getName());
     }
     
     public void setDataStructure(DataStructureDto dataStructureDto) {

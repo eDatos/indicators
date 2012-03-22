@@ -9,7 +9,7 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
@@ -127,9 +127,9 @@ public class CommonUtils {
         return valueMap;
     }
     
-    public static LinkedHashMap<String, String> getDataBasicValueMap(List<DataBasicDto> dataBasicDtos) {
+    public static LinkedHashMap<String, String> getDataBasicValueMap(List<DataDefinitionDto> dataDefinitionDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
-        for (DataBasicDto dataBasic : dataBasicDtos) {
+        for (DataDefinitionDto dataBasic : dataDefinitionDtos) {
             valueMap.put(dataBasic.getUuid(), dataBasic.getName());
         }
         return valueMap;

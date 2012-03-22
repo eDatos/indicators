@@ -14,7 +14,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataBasicDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -113,8 +113,8 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setDataDefinitions(List<DataBasicDto> dataBasicDtos) {
-        dataSourcesPanel.setDataDefinitions(dataBasicDtos);
+    public void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos) {
+        dataSourcesPanel.setDataDefinitions(dataDefinitionDtos);
     }
 
     @Override
@@ -123,8 +123,8 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setDataDefinition(DataBasicDto dataBasicDto) {
-        dataSourcesPanel.setDataDefinition(dataBasicDto);
+    public void setDataDefinition(DataDefinitionDto datDefinitionDto) {
+        dataSourcesPanel.setDataDefinition(datDefinitionDto);
     }
 
     @Override
