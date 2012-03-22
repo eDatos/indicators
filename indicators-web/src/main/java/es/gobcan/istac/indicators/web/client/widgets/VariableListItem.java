@@ -6,12 +6,10 @@ import java.util.Map;
 
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
-import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.grid.EditorValueMapFunction;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -43,8 +41,8 @@ public class VariableListItem extends CustomCanvasItem {
         variableList.setShowHeader(false);
         variableList.setLeaveScrollbarGap(false);
         variableList.setAlternateRecordStyles(false);
-        variableList.setWidth(400);
-        variableList.setHeight(200);
+        variableList.setWidth(300);
+        variableList.setHeight(150);
         variableList.setAlwaysShowEditors(true);
         variableList.addRecordClickHandler(new RecordClickHandler() {
             @Override

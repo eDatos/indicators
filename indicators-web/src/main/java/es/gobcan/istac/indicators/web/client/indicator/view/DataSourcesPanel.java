@@ -51,6 +51,7 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.VariableListItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.ViewVariableListItem;
 
 
 public class DataSourcesPanel extends VLayout {
@@ -302,7 +303,9 @@ public class DataSourcesPanel extends VLayout {
             }
         });
         
-        generalForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue);
+        ViewVariableListItem variables = new ViewVariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
+        
+        generalForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
         
         interperiodRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodRate(), DataSourceQuantityType.INTERPERIOD_RATE);
         
