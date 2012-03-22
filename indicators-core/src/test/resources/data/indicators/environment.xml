@@ -2,5 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
   <comment>Metamac environment definition</comment>
-  <entry key="environment.indicators.data">C:/data/istac/indicators</entry>
+  <entry key="environment.indicators.data">./data</entry>
 </properties>

@@ -22,7 +22,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 @Service("indicatorsDataProviderService")
 public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProviderService {
 
-    private final String JAXI_URL = "indicators.resources.jaxi.url";
+    private final String JAXI_URL = "indicators.jaxi.url";
 
     @Autowired
     private ConfigurationService configurationService;
