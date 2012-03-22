@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!-- NOTE: System properties must be configured in: SetupApplicationListener -->
-<!-- <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="commons-configuration.xsd"> -->
+<!-- <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="commons-configuration.xsd">  -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-	<override>
-		<system />
+  <override>
+    <system />
+    
+    <!-- STATIC configurations -->
+    <properties fileName="${environment.indicators.data}/conf/static/resources.xml" config-optional="false" />
 
-		<!-- STATIC configurations -->
-		<properties fileName="${environment.indicators.data}/conf/static/indicators-web.xml" config-optional="false" />
-	</override>
+  </override>
 </configuration>
