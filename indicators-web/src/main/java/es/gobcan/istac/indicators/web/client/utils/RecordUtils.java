@@ -32,8 +32,8 @@ public class RecordUtils {
     
     public static DataSourceRecord getDataSourceRecord(DataSourceDto dataSourceDto) {
         DataSourceRecord record = new DataSourceRecord(dataSourceDto.getUuid(), 
-                dataSourceDto.getQueryGpe(), 
-                dataSourceDto.getPx(),
+                dataSourceDto.getDataGpeUuid(), 
+                dataSourceDto.getPxUri(),
                 dataSourceDto);
         return record;
     }

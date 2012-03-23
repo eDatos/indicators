@@ -226,8 +226,8 @@ public class DataSourcesPanel extends VLayout {
         this.dataSourceDto = dataSourceDto;
         // Clear and load data structure
         dataStructureDto = null;
-        if (dataSourceDto.getQueryGpe() != null && !dataSourceDto.getQueryGpe().isEmpty()) {
-            uiHandlers.retrieveDataStructure(dataSourceDto.getQueryGpe());
+        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
+            uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
         }
         setDataSourceViewMode(dataSourceDto);
         setDataSourceEditionMode(dataSourceDto);
@@ -235,8 +235,8 @@ public class DataSourcesPanel extends VLayout {
     
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
         generalForm.setValue(DataSourceDS.QUERY, ""); // Set in method setDataDefinition
-        if (!StringUtils.isBlank(dataSourceDto.getQueryGpe())) {
-            uiHandlers.retrieveDataDefinition(dataSourceDto.getQueryGpe());
+        if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid())) {
+            uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
         }
         
         generalForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
@@ -256,7 +256,7 @@ public class DataSourcesPanel extends VLayout {
     }
     
     private void setDataSourceEditionMode(DataSourceDto dataSourceDto) {
-        generalEditionForm.setValue(DataSourceDS.QUERY, dataSourceDto.getQueryGpe());
+        generalEditionForm.setValue(DataSourceDS.QUERY, dataSourceDto.getDataGpeUuid());
         generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
@@ -423,8 +423,8 @@ public class DataSourcesPanel extends VLayout {
     }
     
     public DataSourceDto getDataSourceDto() {
-        dataSourceDto.setQueryGpe(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
-        dataSourceDto.setPx(dataStructureDto.getPxUri());
+        dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
+        dataSourceDto.setPxUri(dataStructureDto.getPxUri());
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
