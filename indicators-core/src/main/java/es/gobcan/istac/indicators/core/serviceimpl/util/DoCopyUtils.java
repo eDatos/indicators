@@ -161,8 +161,8 @@ public class DoCopyUtils {
      */
     private static DataSource copy(DataSource source) {
         DataSource target = new DataSource();
-        target.setQueryGpe(source.getQueryGpe());
-        target.setPx(source.getPx());
+        target.setDataGpeUuid(source.getDataGpeUuid());
+        target.setPxUri(source.getPxUri());
         target.setTimeVariable(source.getTimeVariable());
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));

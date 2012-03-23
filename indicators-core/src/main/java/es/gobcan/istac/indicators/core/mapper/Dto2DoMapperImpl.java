@@ -246,15 +246,15 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target = new DataSource();
 
             // Metadata unmodifiable
-            target.setQueryGpe(source.getQueryGpe());
-            target.setPx(source.getPx());
+            target.setDataGpeUuid(source.getDataGpeUuid());
+            target.setPxUri(source.getPxUri());
         } else {
             target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-            ValidationUtils.checkMetadataUnmodifiable(target.getQueryGpe(), source.getQueryGpe(), "DATA_SOURCE.QUERY_GPE", exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(target.getPx(), source.getPx(), "DATA_SOURCE.PX", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataGpeUuid(), source.getDataGpeUuid(), "DATA_SOURCE.DATA_GPE_UUID", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getPxUri(), source.getPxUri(), "DATA_SOURCE.PX_URI", exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 

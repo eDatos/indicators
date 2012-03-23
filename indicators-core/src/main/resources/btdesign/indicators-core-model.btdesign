@@ -621,9 +621,9 @@ Application Indicators {
         	hint="idSequence=DATA_SOURCES"
         	
 			"Query in GPE"
-			String queryGpe not nullable;
+			String dataGpeUuid not nullable;
 			"Px"
-			String px not nullable;
+			String pxUri not nullable;
 			"Time variable"
 			String timeVariable nullable;
         	"Time value"
@@ -934,9 +934,9 @@ Application Indicators {
 			"Unique uuid"
 			String uuid;
 			"Query in GPE"
-			String queryGpe;
+			String dataGpeUuid;
 			"Px"
-			String px;
+			String pxUri;
 			"Time variable"
 			String timeVariable;
 			"Time value, if time variable is not provided"

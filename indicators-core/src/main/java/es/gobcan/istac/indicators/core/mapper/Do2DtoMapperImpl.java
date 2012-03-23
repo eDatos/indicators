@@ -165,8 +165,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     public DataSourceDto dataSourceDoToDto(DataSource source) {
         DataSourceDto target = new DataSourceDto();
         target.setUuid(source.getUuid());
-        target.setQueryGpe(source.getQueryGpe());
-        target.setPx(source.getPx());
+        target.setDataGpeUuid(source.getDataGpeUuid());
+        target.setPxUri(source.getPxUri());
         target.setTimeVariable(source.getTimeVariable());
         target.setTimeValue(source.getTimeValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
