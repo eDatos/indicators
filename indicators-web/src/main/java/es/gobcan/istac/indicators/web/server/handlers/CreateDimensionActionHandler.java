@@ -1,6 +1,11 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacExceptionFault;
+import org.siemac.metamac.gopestat.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +17,11 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
+import es.gobcan.istac.indicators.web.server.utils.WSExceptionUtils;
+import es.gobcan.istac.indicators.web.server.ws.WebservicesLocator;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 
@@ -21,7 +29,11 @@ import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDimensionAction, CreateDimensionResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
+    @Autowired
+    private WebservicesLocator webservicesLocator;
+    
     
     public CreateDimensionActionHandler() {
         super(CreateDimensionAction.class);
@@ -29,10 +41,31 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
 
     @Override
     public CreateDimensionResult execute(CreateDimensionAction action, ExecutionContext context) throws ActionException {
+        IndicatorsSystemDto indicatorsSystemDto = null;
+        // Check if operation (indicators system) exists in the DB
         try {
-            IndicatorsSystemDto system = action.getIndicatorsSystem();
-            DimensionDto createdDim = service.createDimension(ServiceContextHelper.getServiceContext(),system, action.getDimension());
-            return new CreateDimensionResult(createdDim);
+            // If exists, create dimension
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getIndicatorsSystem().getCode(), null);
+        } catch (MetamacException e) {
+            // If does not exist, create a new indicators system and set operation values
+            try {
+                // Retrieve operation from WS
+                OperationBase operationBase = webservicesLocator.getGopestatInternalInterface().retrieveOperation(action.getIndicatorsSystem().getCode());
+                // Set values to indicators system
+                indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
+                // Create indicators system
+                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDto);
+            } catch (MetamacExceptionFault e1) {
+                List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e1.getFaultInfo().getExceptionItems());
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
+            } catch (MetamacException e2) {
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e2.getExceptionItems()));
+            }
+        }
+        // Create Dimension
+        try {
+            DimensionDto dimensionDto = indicatorsServiceFacade.createDimension(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid(), action.getDimension());
+            return new CreateDimensionResult(dimensionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

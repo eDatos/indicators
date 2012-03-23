@@ -29,7 +29,7 @@ public interface SystemUiHandler extends UiHandlers {
 	void retrieveGeographicalValues(String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
     
-    void sendToProductionValidation(String uuid);
+    void sendToProductionValidation(IndicatorsSystemDto indicatorsSystemDto);
     void sendToDiffusionValidation(String uuid);
     void rejectValidation(String uuid);
     void publish(String uuid);

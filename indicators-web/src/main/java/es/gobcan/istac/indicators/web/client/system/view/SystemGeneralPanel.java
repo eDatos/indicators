@@ -51,7 +51,7 @@ public class SystemGeneralPanel extends VLayout {
         mainFormLayout.getProductionValidation().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToProductionValidation(indicatorsSystemDto.getUuid());
+                uiHandlers.sendToProductionValidation(indicatorsSystemDto);
             }
         });
         mainFormLayout.getDiffusionValidation().addClickHandler(new ClickHandler() {

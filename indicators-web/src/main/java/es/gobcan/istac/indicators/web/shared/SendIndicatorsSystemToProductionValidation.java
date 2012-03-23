@@ -10,7 +10,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 public class SendIndicatorsSystemToProductionValidation {
 
     @In(1)
-    String uuid;
+    IndicatorsSystemDto systemToSend;
     
     @Out(1)
     IndicatorsSystemDto indicatorsSystemDto;

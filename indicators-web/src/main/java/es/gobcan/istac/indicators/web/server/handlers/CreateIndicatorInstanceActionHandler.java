@@ -1,6 +1,11 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacExceptionFault;
+import org.siemac.metamac.gopestat.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +17,11 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
+import es.gobcan.istac.indicators.web.server.utils.WSExceptionUtils;
+import es.gobcan.istac.indicators.web.server.ws.WebservicesLocator;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 
@@ -21,7 +29,11 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+    
+    @Autowired
+    private WebservicesLocator webservicesLocator;
+    
     
     public CreateIndicatorInstanceActionHandler() {
         super(CreateIndicatorInstanceAction.class);
@@ -29,10 +41,31 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
 
     @Override
     public CreateIndicatorInstanceResult execute(CreateIndicatorInstanceAction action, ExecutionContext context) throws ActionException {
+        IndicatorsSystemDto indicatorsSystemDto = null;
+        // Check if operation (indicators system) exists in the DB
         try {
-            IndicatorsSystemDto system = action.getIndicatorsSystem();
-            IndicatorInstanceDto createdInstance = service.createIndicatorInstance(ServiceContextHelper.getServiceContext(), system, action.getIndicatorInstance());
-            return new CreateIndicatorInstanceResult(createdInstance);
+            // If exists, create instance
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getIndicatorsSystem().getCode(), null);
+        } catch (MetamacException e) {
+            // If does not exist, create a new indicators system and set operation values
+            try {
+                // Retrieve operation from WS
+                OperationBase operationBase = webservicesLocator.getGopestatInternalInterface().retrieveOperation(action.getIndicatorsSystem().getCode());
+                // Set values to indicators system
+                indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
+                // Create indicators system
+                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDto);
+            } catch (MetamacExceptionFault e1) {
+                List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e1.getFaultInfo().getExceptionItems());
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
+            } catch (MetamacException e2) {
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e2.getExceptionItems()));
+            }
+        }
+        // Create instance
+        try {
+            IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.createIndicatorInstance(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid(), action.getIndicatorInstance());
+            return new CreateIndicatorInstanceResult(indicatorInstanceDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

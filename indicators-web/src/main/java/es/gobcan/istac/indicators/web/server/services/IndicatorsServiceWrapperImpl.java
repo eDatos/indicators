@@ -21,7 +21,8 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
     
     @Autowired
     private IndicatorsServiceFacade indicatorsService;
-    
+
+    @Deprecated
     @Override
     public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructureByCode(ServiceContext ctx, String code) throws MetamacException {
         IndicatorsSystemDto system = indicatorsService.retrieveIndicatorsSystemByCode(ctx,code,null);
@@ -32,6 +33,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return structure;
     }
 
+    @Deprecated
     @Override
     public DimensionDto createDimension(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, DimensionDto dimensionDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {
@@ -41,6 +43,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
         return indicatorsService.createDimension(ctx,indicatorsSystemDto.getUuid(), dimensionDto);
     }
 
+    @Deprecated
     @Override
     public IndicatorInstanceDto createIndicatorInstance(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto, IndicatorInstanceDto indicatorInstanceDto) throws MetamacException {
         if (StringUtils.isEmpty(indicatorsSystemDto.getUuid())) {

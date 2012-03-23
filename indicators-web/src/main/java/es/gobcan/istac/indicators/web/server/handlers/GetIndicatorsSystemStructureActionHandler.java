@@ -1,8 +1,6 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +8,10 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.server.services.IndicatorsServiceWrapper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 
@@ -20,7 +19,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHandler<GetIndicatorsSystemStructureAction, GetIndicatorsSystemStructureResult> {
 
     @Autowired
-    private IndicatorsServiceWrapper service;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
     
     
     public GetIndicatorsSystemStructureActionHandler() {
@@ -29,13 +28,15 @@ public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHan
 
     @Override
     public GetIndicatorsSystemStructureResult execute(GetIndicatorsSystemStructureAction action, ExecutionContext context) throws ActionException {
-       
+        // Check if operation (indicators system) exists in the DB
         try {
-            IndicatorsSystemStructureDto structure = null;
-            structure = service.retrieveIndicatorsSystemStructureByCode(ServiceContextHelper.getServiceContext(), action.getCode());
+            // If exists, retrieve indicators system structure
+            IndicatorsSystemDto system = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
+            IndicatorsSystemStructureDto structure = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(ServiceContextHelper.getServiceContext(), system.getUuid(), null);
             return new GetIndicatorsSystemStructureResult(structure);
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            // If does not exist, return an empty structure
+            return new GetIndicatorsSystemStructureResult(new IndicatorsSystemStructureDto());
         }
     }
 

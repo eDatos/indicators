@@ -29,12 +29,26 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
 
     @Override
     public SendIndicatorsSystemToProductionValidationResult execute(SendIndicatorsSystemToProductionValidationAction action, ExecutionContext context) throws ActionException {
+        IndicatorsSystemDto indicatorsSystemDto = null;
+        // If system does not exist, create and send to production validation
         try {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new SendIndicatorsSystemToProductionValidationResult(indicatorsSystemDto);
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getSystemToSend().getCode(), null);
+        } catch (MetamacException e) {
+            try {
+                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), action.getSystemToSend());
+                indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid());
+                return new SendIndicatorsSystemToProductionValidationResult(indicatorsSystemDto);
+            } catch (MetamacException e1) {
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            }
+        }
+        // If exists, send to production validation
+        try {
+            indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid());
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
+        return new SendIndicatorsSystemToProductionValidationResult(indicatorsSystemDto);
     }
 
     @Override

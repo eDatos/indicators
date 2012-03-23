@@ -385,11 +385,11 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void sendToProductionValidation(final String uuid) {
-        dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(uuid), new AsyncCallback<SendIndicatorsSystemToProductionValidationResult>() {
+    public void sendToProductionValidation(final IndicatorsSystemDto indicatorsSystemDto) {
+        dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(indicatorsSystemDto), new AsyncCallback<SendIndicatorsSystemToProductionValidationResult>() {
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sendind to production validation indicators system with uuid = " + uuid);
+                logger.log(Level.SEVERE, "Error sendind to production validation indicators system with uuid = " + indicatorsSystemDto.getUuid());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToProductionValidation()), MessageTypeEnum.ERROR);
             }
             @Override
