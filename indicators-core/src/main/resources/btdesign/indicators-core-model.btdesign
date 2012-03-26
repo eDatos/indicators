@@ -487,6 +487,7 @@ Application Indicators {
 		Entity IndicatorVersion {
 			databaseTable="TBL_INDICATORS_VERSIONS"
 			hint="idSequence=INDICATORS_VERSIONS"
+			gap
 			
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus not nullable;
@@ -511,6 +512,10 @@ Application Indicators {
        		String notesUrl nullable;
        		"True if this version is the last"
        		Boolean isLastVersion not nullable;
+       		"Identifier in repository of observations"
+       		String dataRepositoryId nullable;       		
+       		"Table name in repository of observations"
+       		String dataRepositoryTableName nullable;       		
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -890,7 +895,12 @@ Application Indicators {
        		"Number of version in production"
        		String productionVersion;
        		"Number of version in diffusion"   		
-			String diffusionVersion;			
+			String diffusionVersion;		
+			
+       		"Identifier in repository of observations"
+       		String dataRepositoryId;       		
+       		"Table name in repository of observations"
+       		String dataRepositoryTableName; 				
 			
 			"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;

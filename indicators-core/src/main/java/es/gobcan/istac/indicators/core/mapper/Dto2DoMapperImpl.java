@@ -203,6 +203,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), "INDICATOR.CODE", exceptions);
+            // These attributes are modified by service, not by user
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryId(), source.getDataRepositoryId(), "INDICATOR.DATA_REPOSITORY_ID", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), "INDICATOR.DATA_REPOSITORY_TABLE_NAME", exceptions);
+            
             ExceptionUtils.throwIfException(exceptions);
         }
 

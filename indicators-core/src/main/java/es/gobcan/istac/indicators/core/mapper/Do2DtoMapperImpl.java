@@ -144,6 +144,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
 
+        target.setDataRepositoryId(source.getDataRepositoryId());
+        target.setDataRepositoryTableName(source.getDataRepositoryTableName());
+        
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());
         target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));

@@ -108,6 +108,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getNotes(), "es", "Nota Indicator-1-v1", "en", "Note Indicator-1-v1");
         assertEquals("http://indicators/1", indicatorDto.getNotesUrl());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getConceptDescription(), "es", "Concepto 1", "en", "Concept 1");
+        assertEquals("data:repository:11", indicatorDto.getDataRepositoryId());
+        assertEquals("TABLE_NAME_11", indicatorDto.getDataRepositoryTableName());
 
         assertNotNull(indicatorDto.getQuantity());
         assertEquals(QuantityTypeEnum.CHANGE_RATE, indicatorDto.getQuantity().getType());
@@ -1351,6 +1353,33 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
     }
 
+    @Test
+    public void testUpdateIndicatorsErrorDataRepositoryNonModifiable() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
+        indicatorDto.setDataRepositoryId("newDataRepositoryId");
+        indicatorDto.setDataRepositoryTableName("newTable");
+
+        // Update
+        try {
+            indicatorsServiceFacade.updateIndicator(getServiceContext(), indicatorDto);
+            fail("attributes are unmodifiable");
+        } catch (MetamacException e) {
+            assertEquals(2, e.getExceptionItems().size());
+            
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.DATA_REPOSITORY_ID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals("INDICATOR.DATA_REPOSITORY_TABLE_NAME", e.getExceptionItems().get(1).getMessageParameters()[0]);
+        }
+    }
+    
     @Test
     public void testUpdateIndicatorsErrorOwnIndicatorLinked() throws Exception {
 

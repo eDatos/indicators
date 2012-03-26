@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -665,7 +666,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     /**
      * Makes validations to publish
-     * Checks actual processing status and if it is correct checks same conditions to send to production validation and additional conditions to publish
+     * Checks actual processing status.
+     * If state is correct checks same conditions to send to production validation and additional conditions to publish
      */
     private void checkIndicatorToPublish(ServiceContext ctx, String uuid, IndicatorVersion indicatorVersion) throws MetamacException {
 
@@ -739,12 +741,17 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     
     /**
      * - Validations when send to diffusion validation
+     * - Checks dataset repository is completed
      * - Checks linked indicators are published
      */
     private void checkConditionsToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
 
         checkConditionsToSendToProductionValidation(indicatorVersion, exceptions);
 
+        // Check information of data in repository
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryId(), "INDICATOR.DATA_REPOSITORY_ID", exceptions);
+        ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryTableName(), "INDICATOR.DATA_REPOSITORY_TABLE_NAME", exceptions);
+        
         // Check linked indicators
         checkQuantityIndicatorsPublished(ctx, indicatorVersion, exceptions);
     }
