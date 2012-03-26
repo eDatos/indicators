@@ -46,7 +46,7 @@ public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<
         try {
             List<IndicatorsSystemDto> indicatorsSystemDtos = new ArrayList<IndicatorsSystemDto>();
             OperationCriteria criteria = new OperationCriteria();
-            criteria.setIsIndicatorsSystem(Boolean.valueOf(true));
+            criteria.setIsIndicatorsSystem(Boolean.TRUE);
             OperationBaseList operationBaseList = webservicesLocator.getGopestatInternalInterface().findOperations(criteria);
             if (operationBaseList.getOperation() != null) {
                 for (OperationBase operationBase : operationBaseList.getOperation()) {
