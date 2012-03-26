@@ -1,13 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacExceptionFault;
 import org.siemac.metamac.gopestat.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +13,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
-import es.gobcan.istac.indicators.web.server.utils.WSExceptionUtils;
-import es.gobcan.istac.indicators.web.server.ws.WebservicesLocator;
+import es.gobcan.istac.indicators.web.server.ws.GopestatInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 
@@ -31,7 +24,7 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
     private IndicatorsServiceFacade indicatorsServiceFacade;
     
     @Autowired
-    private WebservicesLocator webservicesLocator;
+    private GopestatInternalWebServiceFacade gopestatInternalWebServiceFacade;
     
     
     public GetIndicatorsSystemByCodeActionHandler() {
@@ -49,15 +42,9 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
         } catch (MetamacException e) {
             // If does not exist, create a new indicators system and set operation values
             // Retrieve operation from WS
-            OperationBase operationBase;
-            try {
-                operationBase = webservicesLocator.getGopestatInternalInterface().retrieveOperation(action.getCode());
-                IndicatorsSystemDto indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
-                return new GetIndicatorsSystemByCodeResult(indicatorsSystemDto);
-            } catch (MetamacExceptionFault e1) {
-                List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e1.getFaultInfo().getExceptionItems());
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
-            }
+            OperationBase operationBase = gopestatInternalWebServiceFacade.retrieveOperation(action.getCode());
+            IndicatorsSystemDto indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
+            return new GetIndicatorsSystemByCodeResult(indicatorsSystemDto);
         }
     }
 
