@@ -91,7 +91,1100 @@
   	FECHA_DISPONIBLE_FIN="[NULL]"
   	NOMBRE_CONSULTA="CONSULTA 6"  	
   />
-       
+  
+  
+  
+  	<TBL_INTERNATIONAL_STRINGS
+  		ID="1"
+  		VERSION="1"
+  	/>
+  
+	<TBL_LOCALISED_STRINGS 
+		ID="1"
+		LABEL="kilometers" 
+		LOCALE="en"
+		INTERNATIONAL_STRING_FK="1"
+		VERSION="1"
+	/>
+	
+  	<TBL_INTERNATIONAL_STRINGS
+  		ID="2"
+  		VERSION="1"
+  	/>
+  
+	<TBL_LOCALISED_STRINGS 
+		ID="2"
+		LABEL="subtitle" 
+		LOCALE="en"
+		INTERNATIONAL_STRING_FK="2"
+		VERSION="1"
+	/>
+	
+  	<TBL_INTERNATIONAL_STRINGS
+  		ID="3"
+  		VERSION="1"
+  	/>
+  
+	<TBL_LOCALISED_STRINGS 
+		ID="3"
+		LABEL="title" 
+		LOCALE="en"
+		INTERNATIONAL_STRING_FK="3"
+		VERSION="1"
+	/>
+	
+	<LIS_QUANTITIES_UNITS 
+		ID="1" 
+		UUID="1"
+		VERSION="1" 
+		SYMBOL="km"
+		SYMBOL_POSITION="END" 
+		TITLE_FK="1"
+	/>
+  
+  	<TBL_INTERNATIONAL_STRINGS
+  		ID="4"
+  		VERSION="1"
+  	/>
+  
+	<TBL_LOCALISED_STRINGS 
+		ID="4"
+		LABEL="Countries" 
+		LOCALE="en"
+		INTERNATIONAL_STRING_FK="4"
+		VERSION="1"
+	/>
+	
+	<LIS_GEOGR_GRANULARITIES 
+		ID="1"
+		CODE="COUNTRIES"
+		UUID="1"
+		TITLE_FK="4"
+		VERSION="1"
+	/>
+	
+  	<TBL_INTERNATIONAL_STRINGS
+  		ID="5"
+  		VERSION="1"
+  	/>
+  
+	<TBL_LOCALISED_STRINGS 
+		ID="5"
+		LABEL="Spain" 
+		LOCALE="en"
+		INTERNATIONAL_STRING_FK="5"
+		VERSION="1"
+	/>
+  
+  
+  	<!-- GEOGRAPHIC VALUES -->
+  	<LIS_GEOGR_VALUES 
+  		ID="1" 
+  		CODE="ES" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="1"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="1"
+  		VERSION="1"
+  	/>
+  
+  <!-- **************************************************************************************	-->
+	<!--    INDICATOR 1											                      			-->
+	<!--		- Version 1: draft															-->
+	<!-- *************************************************************************************	-->
+	<TBL_INDICATORS
+		ID="1"
+		UUID="Indicator-1"
+		CODE="CODE-1"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TBL_INDICATORS_VERSIONS
+				ID="11"
+				UUID="Indicator-1-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/1"
+	  			INDICATOR_FK="1"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/1"
+				SUBJECT_CODE="1"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="111"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TBL_QUANTITIES
+				  	ID="111"
+  					UUID="Quantity-111"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+  					DECIMAL_PLACES="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TBL_DATA_SOURCES
+					ID="111"
+					UUID="Indicator-1-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-1-v1-DataSource-1-GPE"
+					PX_URI="Indicator-1-v1-DataSource-1-PX"
+					TIME_VARIABLE="Periodos"
+					TIME_VALUE="[null]"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+					INDICATOR_VERSION_FK="11"
+					INTERPERIOD_RATE_FK="1111"
+					ANNUAL_RATE_FK="1112"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_RATES_DERIVATIONS
+						ID="1111"
+						UUID="RateDerivation-1111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="11111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="11111"
+		  					UUID="Quantity-11111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+				
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="1111"
+						UUID="Indicator-1-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="1112"
+						UUID="Indicator-1-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza Jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+
+					<TBL_RATES_DERIVATIONS
+						ID="1111"
+						UUID="RateDerivation-1111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="11111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="11111"
+		  					UUID="Quantity-11111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+					<TBL_RATES_DERIVATIONS
+						ID="1112"
+						UUID="RateDerivation-1112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="11121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="11121"
+		  					UUID="Quantity-11121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+	<!-- INDICATOR 2 -->	
+	<TBL_INDICATORS
+		ID="2"
+		UUID="Indicator-2"
+		CODE="CODE-2"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TBL_INDICATORS_VERSIONS
+				ID="21"
+				UUID="Indicator-2-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/2"
+	  			INDICATOR_FK="2"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/2"
+				SUBJECT_CODE="2"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="211"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TBL_QUANTITIES
+				  	ID="211"
+  					UUID="Quantity-211"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TBL_DATA_SOURCES
+					ID="211"
+					UUID="Indicator-2-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-2-v1-DataSource-1-GPE"
+					PX_URI="Indicator-2-v1-DataSource-1-PX"
+					TIME_VARIABLE="[null]"
+					TIME_VALUE="2010"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+					INDICATOR_VERSION_FK="21"
+					INTERPERIOD_RATE_FK="2111"
+					ANNUAL_RATE_FK="2112"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_RATES_DERIVATIONS
+						ID="2111"
+						UUID="RateDerivation-2111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="21111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="21111"
+		  					UUID="Quantity-21111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+				
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="2111"
+						UUID="Indicator-2-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="211"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="2112"
+						UUID="Indicator-2-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza Jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="211"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="2113"
+						UUID="Indicator-2-v1-DataSource-1-Var-3"
+						VARIABLE="Periodos"
+						CATEGORY="2010M12"
+						DATA_SOURCE_FK="211"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+
+					<TBL_RATES_DERIVATIONS
+						ID="2111"
+						UUID="RateDerivation-2111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="21111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="21111"
+		  					UUID="Quantity-21111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+					<TBL_RATES_DERIVATIONS
+						ID="2112"
+						UUID="RateDerivation-2112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="21121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="21121"
+		  					UUID="Quantity-21121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+	<!-- INDICATOR 3 -->	
+	
+	<TBL_INDICATORS
+		ID="3"
+		UUID="Indicator-3"
+		CODE="CODE-3"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TBL_INDICATORS_VERSIONS
+				ID="31"
+				UUID="Indicator-3-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/3"
+	  			INDICATOR_FK="3"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/3"
+				SUBJECT_CODE="3"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="311"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TBL_QUANTITIES
+				  	ID="311"
+  					UUID="Quantity-311"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+
+				<TBL_DATA_SOURCES
+					ID="311"
+					UUID="Indicator-3-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-3-v1-DataSource-1-GPE"
+					PX_URI="Indicator-3-v1-DataSource-1-PX"
+					TIME_VARIABLE="Periodos"
+					TIME_VALUE="[null]"
+					
+					GEOGRAPHICAL_VALUE_FK="1"
+					GEOGRAPHICAL_VARIABLE="[null]"
+					INDICATOR_VERSION_FK="31"
+					INTERPERIOD_RATE_FK="3111"
+					ANNUAL_RATE_FK="3112"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_RATES_DERIVATIONS
+						ID="3111"
+						UUID="RateDerivation-3111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="21111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="31111"
+		  					UUID="Quantity-31111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+				
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="3111"
+						UUID="Indicator-3-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="311"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="3112"
+						UUID="Indicator-3-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza Jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="311"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="3113"
+						UUID="Indicator-3-v1-DataSource-1-Var-3"
+						VARIABLE="Provincias por CC.AA."
+						CATEGORY="ES24"
+						DATA_SOURCE_FK="311"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+
+
+					<TBL_RATES_DERIVATIONS
+						ID="3111"
+						UUID="RateDerivation-3111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="31111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="31111"
+		  					UUID="Quantity-31111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+					<TBL_RATES_DERIVATIONS
+						ID="3112"
+						UUID="RateDerivation-3112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="21121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="31121"
+		  					UUID="Quantity-31121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+	<!-- INDICATOR 4 -->	
+	<TBL_INDICATORS
+		ID="4"
+		UUID="Indicator-4"
+		CODE="CODE-4"
+		PRODUCTION_ID="1"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TBL_INDICATORS_VERSIONS
+				ID="41"
+				UUID="Indicator-4-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/4"
+	  			INDICATOR_FK="4"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/4"
+				SUBJECT_CODE="4"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="411"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TBL_QUANTITIES
+				  	ID="411"
+  					UUID="Quantity-411"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TBL_DATA_SOURCES
+					ID="411"
+					UUID="Indicator-4-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-4-v1-DataSource-1-GPE"
+					PX_URI="Indicator-4-v1-DataSource-1-PX"
+					TIME_VARIABLE="[null]"
+					TIME_VALUE="2010"
+					GEOGRAPHICAL_VALUE_FK="1"
+					GEOGRAPHICAL_VARIABLE="[null]"
+					INDICATOR_VERSION_FK="41"
+					INTERPERIOD_RATE_FK="4111"
+					ANNUAL_RATE_FK="4112"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+				
+					<TBL_RATES_DERIVATIONS
+						ID="4111"
+						UUID="RateDerivation-4111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="41111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="41111"
+		  					UUID="Quantity-41111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+				
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="4111"
+						UUID="Indicator-4-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="4112"
+						UUID="Indicator-4-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza Jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="4113"
+						UUID="Indicator-4-v1-DataSource-1-Var-3"
+						VARIABLE="Periodos"
+						CATEGORY="2010M12"
+						DATA_SOURCE_FK="411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					<TBL_DATA_SOURCES_VARIABLES
+						ID="4114"
+						UUID="Indicator-4-v1-DataSource-1-Var-4"
+						VARIABLE="Provincias por CC.AA."
+						CATEGORY="ES61"
+						DATA_SOURCE_FK="411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+
+					<TBL_RATES_DERIVATIONS
+						ID="4111"
+						UUID="RateDerivation-4111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="41111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="41111"
+		  					UUID="Quantity-41111"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+		
+					<TBL_RATES_DERIVATIONS
+						ID="4112"
+						UUID="RateDerivation-4112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="TheMethod"
+						ROUNDING="DOWN"
+						QUANTITY_FK="41121"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="41121"
+		  					UUID="Quantity-41121"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="10"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+				
 </dataset>
 
     

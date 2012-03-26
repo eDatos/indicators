@@ -62,8 +62,7 @@ public class IndicatorsDataServiceFacadeImpl extends IndicatorsDataServiceFacade
     }
 
     @Override
-    public DataDto retrieveData(ServiceContext ctx, String uuid) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid, String version) throws MetamacException {
+        getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid, version);
     }
 }

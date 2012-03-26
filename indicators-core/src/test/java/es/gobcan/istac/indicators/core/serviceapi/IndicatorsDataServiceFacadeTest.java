@@ -89,9 +89,9 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
 
     @Test
     @Override
-    public void testRetrieveData() throws Exception {
-        fail("not implemented");
-    }
+    public void testPopulateIndicatorData() throws Exception {
+        // TODO Auto-generated method stub
+    }    
     
     @Override
     protected String getDataSetFile() {
@@ -116,13 +116,14 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
             assertNull(dto.getSpatialVariable());
         } else {
             assertEquals(dbo.getSpatials().get(0),dto.getSpatialVariable());
-            
         }
         if (dbo.getTemporals() == null || dbo.getTemporals().size() == 0) {
             assertNull(dto.getTemporalVariable());
         } else {
             assertEquals(dbo.getTemporals().get(0),dto.getTemporalVariable());
         }
+        assertEquals(dbo.getContVariable(),dto.getContVariable());
+        
     }
     
     private static void initializeObjects() {

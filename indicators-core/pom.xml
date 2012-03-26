@@ -200,8 +200,14 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.9.0</version>
 		</dependency>
+
+		<!-- Dataset repository -->
+		<dependency>
+			<groupId>com.arte.statistic</groupId>
+			<artifactId>statistic-dataset-repository</artifactId>
+			<classifier>client-oracle</classifier>
+    	</dependency>
 
 		<!-- METAMAC -->
 		<dependency>
@@ -305,15 +311,15 @@
 						<checkFileset>
 							<directory>${basedir}</directory>
 							<includes>
-								<include>src/main/resources/*.btdesign</include>
+								<include>src/main/resources/indicators-core-model.btdesign</include>
 							</includes>
 						</checkFileset>
 					</checkFilesets>
-					<!-- ignored. model is specified in Workflow.mwe2 -->
-					<!-- <properties> -->
-					<!-- <modelFile>src/main/resources/indicators-core-model.btdesign</modelFile> -->
-					<!-- <appProject>${project.artifactId}</appProject> -->
-					<!-- </properties> -->
+<!-- 					ignored. model is specified in Workflow.mwe2 -->
+					<properties>
+					<modelFile>src/main/resources/indicators-core-model.btdesign</modelFile>
+					<appProject>${project.artifactId}</appProject>
+					</properties>
 					<jvmSettings>
 						<copySysProperties>true</copySysProperties>
 						<jvmArgs>

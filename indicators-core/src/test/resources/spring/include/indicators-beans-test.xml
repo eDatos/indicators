@@ -12,4 +12,5 @@
 			<ref bean="configurationService" />
 		</property>
 	</bean>
+
 </beans>

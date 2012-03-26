@@ -110,6 +110,8 @@ Application Indicators {
     	
     	"Provides access to indicators data"
     	Service IndicatorsDataService {
+    		> @IndicatorsDataProviderService
+    		> @IndicatorsServiceFacade
     		> @DataGpeRepository
     		
 			"Find all Data containing basic info only"
@@ -118,8 +120,16 @@ Application Indicators {
 	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Retrieve Data content"
-	    	Data retrieveData(String uuid) throws MetamacException;
+	    	"Populate a given indicator data"
+	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+    	}
+    	
+    	"Provides access to indicators data from Jaxi"
+    	Service IndicatorsDataProviderService {
+    		"Retrieve the Data's structure info"
+		    String retrieveDataStructureJson(String uuid) throws MetamacException;
+	     	"Retrieve Data content"
+    		String retrieveDataJson(String uuid) throws MetamacException;
     	}
 			    
     	"Provides access to indicators, indicators systems..."
@@ -270,8 +280,8 @@ Application Indicators {
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieve the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Retrieve Data content"
-	    	@DataDto retrieveData(String uuid) throws MetamacException;
+	    	"Populate a given indicator data"
+	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 		}
 		
 	    // ----------------------------------------------------------------
@@ -1141,6 +1151,8 @@ Application Indicators {
     		String temporalVariable; 
     		"Spatial variable"
     		String spatialVariable;
+    		"Contvariable"
+    		String contVariable;
     		"Labels for every value in every variable"
     		MapList valueLabels;
     		"Codes for every value in every variable"
@@ -1225,5 +1237,14 @@ Application Indicators {
     		WEEKLY,
     		DAILY
     	}		
+    	
+    	"Types of Measure Dimensions"
+    	enum MeasureDimensionTypeEnum {
+    		ABSOLUTE,
+    		PERCENT_ANNUAL_RATE,
+    		PERCENT_PERIOD_RATE,
+    		POINT_ANNUAL_RATE,
+    		POINT_PERIOD_RATE
+    	}
 	}
 }

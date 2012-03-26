@@ -69,6 +69,9 @@
 		<dbunit.version>2.4.8</dbunit.version>
 		<mockito.version>1.8.1</mockito.version>
 
+		<!-- STATISTIC DATASET REPOSITORY -->
+		<statistic-dataset-repository-version>1.0.0-SNAPSHOT</statistic-dataset-repository-version>
+		
 		<!-- METAMAC -->
 		<metamac-core-common.version>1.0-SNAPSHOT</metamac-core-common.version>
 		<metamac-common-test.version>1.0-SNAPSHOT</metamac-common-test.version>
@@ -365,6 +368,14 @@
 				<artifactId>icu4j</artifactId>
 				<version>${icu4j.version}</version>
 			</dependency>
+
+			<!-- Dataset repository -->
+			<dependency>
+				<groupId>com.arte.statistic</groupId>
+				<artifactId>statistic-dataset-repository</artifactId>
+				<classifier>client-oracle</classifier>
+				<version>${statistic-dataset-repository-version}</version>
+    		</dependency>
 
 			<!-- METAMAC -->
 			<dependency>

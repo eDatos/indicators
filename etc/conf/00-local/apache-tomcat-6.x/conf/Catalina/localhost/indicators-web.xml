@@ -12,5 +12,16 @@
         password="indicators" 
         driverClassName="oracle.jdbc.driver.OracleDriver"
         url="jdbc:oracle:thin:@localhost:1521:xe" />
-
+        
+	<Resource name="jdbc/StatisticDatasetDS" auth="Container" scope="Shareable"
+              type="javax.sql.DataSource"             
+              maxActive="100" maxIdle="30" maxWait="10000"
+              username="indicators"
+              password="indicators"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/indicators_dataset_repository"
+              removeAbandoned="true"
+              removeAbandonedTimeout="60"
+              logAbandoned="false"
+              validationQuery="Select 1"  />
 </Context>

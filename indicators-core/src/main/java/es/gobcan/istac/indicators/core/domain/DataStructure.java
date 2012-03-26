@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,34 +14,37 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataStructure {
 
-    private String                    uuid;
-    
+    private String uuid;
+
     @JsonProperty
-    private String                    title;
-    
+    private String title;
+
     @JsonProperty("uriPx")
-    private String                    pxUri;
+    private String pxUri;
 
     @JsonProperty
-    private List<String>              stub;
+    private List<String> stub;
 
     @JsonProperty
-    private List<String>              heading;
+    private List<String> heading;
 
     private Map<String, List<String>> valueLabels;
     private Map<String, List<String>> valueCodes;
 
     @JsonProperty
-    private List<String>              temporals;
+    private List<String> temporals;
 
     @JsonProperty
-    private List<String>              spatials;
+    private List<String> spatials;
 
     @JsonProperty
-    private List<String>              notes;
+    private String contVariable;
 
     @JsonProperty
-    private String                    source;
+    private List<String> notes;
+
+    @JsonProperty
+    private String source;
 
     @JsonProperty("categories")
     public void setCategories(List<Object> categories) {
@@ -54,24 +58,10 @@ public class DataStructure {
         }
     }
 
-    private void addValueLabels(String var, List<String> labels) {
-        if (valueLabels == null) {
-            valueLabels = new HashMap<String, List<String>>();
-        }
-        valueLabels.put(var, labels);
-    }
-    private void addValueCodes(String var, List<String> labels) {
-        if (valueCodes == null) {
-            valueCodes = new HashMap<String, List<String>>();
-        }
-        valueCodes.put(var, labels);
-    }
-    
-    
     public String getUuid() {
         return uuid;
     }
-    
+
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
@@ -87,11 +77,11 @@ public class DataStructure {
     public String getPxUri() {
         return pxUri;
     }
-    
+
     public void setPxUri(String pxUri) {
         this.pxUri = pxUri;
     }
-    
+
     public List<String> getStub() {
         return stub;
     }
@@ -106,6 +96,10 @@ public class DataStructure {
 
     public void setHeading(List<String> heading) {
         this.heading = heading;
+    }
+
+    public List<String> getVariables() {
+        return new ArrayList<String>(valueCodes.keySet());
     }
 
     public Map<String, List<String>> getValueLabels() {
@@ -140,6 +134,14 @@ public class DataStructure {
         this.spatials = spatials;
     }
 
+    public String getContVariable() {
+        return contVariable;
+    }
+
+    public void setContVariable(String contVariable) {
+        this.contVariable = contVariable;
+    }
+
     public List<String> getNotes() {
         return notes;
     }
@@ -154,6 +156,20 @@ public class DataStructure {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    private void addValueLabels(String var, List<String> labels) {
+        if (valueLabels == null) {
+            valueLabels = new HashMap<String, List<String>>();
+        }
+        valueLabels.put(var, labels);
+    }
+
+    private void addValueCodes(String var, List<String> labels) {
+        if (valueCodes == null) {
+            valueCodes = new HashMap<String, List<String>>();
+        }
+        valueCodes.put(var, labels);
     }
 
 }

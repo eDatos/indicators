@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -286,6 +287,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         if (source.getSpatials() != null && source.getSpatials().size() > 0) {
             target.setSpatialVariable(source.getSpatials().get(0));
+        }
+        if (!StringUtils.isEmpty(source.getContVariable())) {
+            target.setContVariable(source.getContVariable());
         }
         return target;
     }

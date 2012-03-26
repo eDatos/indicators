@@ -13,7 +13,10 @@
         <value>classpath:/spring-test.properties</value> 
       </list> 
     </property> 
-  </bean>  
+  </bean>
+  <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>  
+  <!-- Overriding some beans from statistic dataset repository -->
+  <import resource="classpath:/spring/include/indicators-beans-statistic-dataset-repository.xml"/>  
   <import resource="classpath:/spring/include/indicators-entity-manager-factory-test.xml"/>  
   <import resource="classpath:/spring/include/indicators-pub-sub.xml"/>  
   <import resource="classpath:/spring/include/indicators-interceptor.xml"/>  

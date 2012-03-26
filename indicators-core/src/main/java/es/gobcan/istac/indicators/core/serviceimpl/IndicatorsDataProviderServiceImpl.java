@@ -32,7 +32,6 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
 
     @Override
     public String retrieveDataStructureJson(ServiceContext ctx, String uuid) throws MetamacException {
-        // retrieve from jaxi
         Map<String, String> params = new HashMap<String, String>();
         params.put("uuidConsulta", uuid);
         params.put("type", "structure");
@@ -42,7 +41,6 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
     
     @Override
     public String retrieveDataJson(ServiceContext ctx, String uuid) throws MetamacException {
-        // retrieve from jaxi
         Map<String, String> params = new HashMap<String, String>();
         params.put("uuidConsulta", uuid);
         params.put("type", "data");
@@ -50,6 +48,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         return json;
     }
    
+    // retrieve from jaxi
     private String requestForJson(String url, String param) {
         Client client = new Client();
         client.setFollowRedirects(true);
