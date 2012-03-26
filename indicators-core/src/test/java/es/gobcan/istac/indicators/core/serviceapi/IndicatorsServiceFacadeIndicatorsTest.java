@@ -908,6 +908,37 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testCreateIndicatorErrorCodeIncorrect() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("A*b-?");
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+
+        // Create
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+            fail("code incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Test
     public void testCreateIndicatorErrorBaseTimeIncorrect() throws Exception {
