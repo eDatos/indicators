@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
@@ -40,6 +41,7 @@ public class NewIndicatorWindow extends CustomWindow {
         setWidth(330);
         
         RequiredTextItem codeItem = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+        codeItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         RequiredTextItem titleItem = new RequiredTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         RequiredSelectItem subjectItem = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
         ButtonItem saveItem = new ButtonItem(FIELD_SAVE, MetamacWebCommon.getConstants().actionSave());
