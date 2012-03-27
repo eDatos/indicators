@@ -80,13 +80,6 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ExceptionUtils.throwIfException(exceptions);
         }
 
-        // Attributes modifiables
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATORS_SYSTEM.TITLE"));
-        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATORS_SYSTEM.ACRONYM"));
-        target.setDescription(internationalStringToDo(ctx, source.getDescription(), target.getDescription(), "INDICATORS_SYSTEM.DESCRIPTION"));
-        target.setObjetive(internationalStringToDo(ctx, source.getObjetive(), target.getObjetive(), "INDICATORS_SYSTEM.OBJETIVE"));
-        target.setUriGopestat(source.getUriGopestat());
-
         return target;
     }
 

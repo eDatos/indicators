@@ -25,11 +25,6 @@ public class DoCopyUtils {
      */
     public static IndicatorsSystemVersion copy(IndicatorsSystemVersion source) {
         IndicatorsSystemVersion target = new IndicatorsSystemVersion();
-        target.setUriGopestat(source.getUriGopestat());
-        target.setTitle(copy(source.getTitle()));
-        target.setAcronym(copy(source.getAcronym()));
-        target.setObjetive(copy(source.getObjetive()));
-        target.setDescription(copy(source.getDescription()));
         copyElementsLevels(source, target);
 
         return target;

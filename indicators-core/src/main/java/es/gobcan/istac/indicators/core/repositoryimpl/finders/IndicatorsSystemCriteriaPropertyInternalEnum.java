@@ -6,7 +6,6 @@ package es.gobcan.istac.indicators.core.repositoryimpl.finders;
 public enum IndicatorsSystemCriteriaPropertyInternalEnum {
     
     CODE,
-    URI_GOPESTAT,
     PROC_STATUS,
     IS_LAST_VERSION,
     VERSION_NUMBER;

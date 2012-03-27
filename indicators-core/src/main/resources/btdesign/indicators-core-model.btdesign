@@ -323,16 +323,6 @@ Application Indicators {
 			"Processing status"
 			- @IndicatorsSystemProcStatusEnum procStatus not nullable;
 			String versionNumber not nullable length="10";
-       		"Uri of statistic operation in Gopestat"
-       		String uriGopestat nullable;
-       		"Title of statistic operation"
-       		- @InternationalString title cascade="all" databaseColumn="TITLE_FK";
-       		"Acronym of statistic operation"
-       		- @InternationalString acronym cascade="all" nullable databaseColumn="ACRONYM_FK";
-       		"Objetive of statistic operation"
-       		- @InternationalString objetive cascade="all" nullable databaseColumn="OBJETIVE_FK";
-       		"Description of statistic operation"
-       		- @InternationalString description cascade="all" nullable databaseColumn="DESCRIPTION_FK";
        		"True if this version is the last"
        		Boolean isLastVersion not nullable;
        		
@@ -840,16 +830,6 @@ Application Indicators {
 			- @IndicatorsSystemProcStatusEnum procStatus;
 			"Semantic identifier of statistic operation"
        		String code;
-       		"Uri of statistic operation in Gopestat"
-       		String uriGopestat;
-       		"Title of statistic operation"
-       		- @InternationalStringDto title;
-       		"Acronym of statistic operation"
-       		- @InternationalStringDto acronym;
-       		"Description of statistic operation"
-       		- @InternationalStringDto description;
-       		"Objetive of statistic operation"
-       		- @InternationalStringDto objetive;			
        		"Number of version in production"
        		String productionVersion;
        		"Number of version in diffusion"   		

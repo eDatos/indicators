@@ -394,6 +394,7 @@
 								<delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
 								<delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
 								<delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
+								<delete file="${basedir}/src/test/resources/spring-test.properties" />
 							</target>
 						</configuration>
 

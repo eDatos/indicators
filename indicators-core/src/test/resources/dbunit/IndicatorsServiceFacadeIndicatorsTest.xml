@@ -2095,13 +2095,8 @@
 				ID="11"
 				UUID="IndSys-1-v1"
 				VERSION_NUMBER="1.000"
-				TITLE_FK="1"
-				ACRONYM_FK="[null]"
-	  			OBJETIVE_FK="[null]"
-	  			DESCRIPTION_FK="[null]"
 	  			INDICATORS_SYSTEM_FK="1"
 	  			PROC_STATUS="DRAFT"
-				URI_GOPESTAT="http://indicators-sytems/1"
 				IS_LAST_VERSION="1"
 				
 				PRODUCTION_VALIDATION_DATE="[null]"

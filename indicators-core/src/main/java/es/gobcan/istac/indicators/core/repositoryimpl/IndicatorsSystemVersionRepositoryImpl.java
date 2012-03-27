@@ -64,9 +64,6 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
                     case VERSION_NUMBER:
                         criteria.add(Restrictions.eq("versionNumber", propertyRestriction.getStringValue()));
                         break;
-                    case URI_GOPESTAT:
-                        criteria.add(Restrictions.eq("uriGopestat", propertyRestriction.getStringValue()));
-                        break;
                     default:
                         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyName);
                 }

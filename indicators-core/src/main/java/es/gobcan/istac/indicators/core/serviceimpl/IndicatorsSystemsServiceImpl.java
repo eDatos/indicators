@@ -42,9 +42,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public IndicatorsSystemsServiceImpl() {
     }
 
-    /**
-     * TODO qué datos se almacenarán? Los sistemas de indicadores se obtienen desde Gopestat, y aquí se almacenan como "referencias" a ellas
-     */
     @Override
     public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
@@ -53,7 +50,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkCreateIndicatorsSystem(indicatorsSystemVersion, null);
         checkIndicatorsSystemCodeUnique(ctx, indicatorsSystem.getCode(), null);
-        checkIndicatorsSystemUriGopestatUnique(ctx, indicatorsSystemVersion.getUriGopestat(), null);
 
         // Save indicator
         indicatorsSystem.setDiffusionVersion(null);
@@ -680,30 +676,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
         if (indicatorsSystemsVersions != null && indicatorsSystemsVersions.size() != 0 && !indicatorsSystemsVersions.get(0).getIndicatorsSystem().getUuid().equals(actualUuid)) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, code);
-        }
-    }
-
-    /**
-     * Checks not exists another indicators system with same uri in Gopestat. Checks system retrieved not is actual system.
-     */
-    private void checkIndicatorsSystemUriGopestatUnique(ServiceContext ctx, String uriGopestat, String actualUuid) throws MetamacException {
-        if (uriGopestat != null) {
-
-            // Criteria
-            IndicatorsCriteria criteria = new IndicatorsCriteria();
-            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.URI_GOPESTAT.name(), uriGopestat));
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE)); // to
-                                                                                                                                                                                                      // get
-                                                                                                                                                                                                      // only
-                                                                                                                                                                                                      // one
-                                                                                                                                                                                                      // result
-
-            // Find
-            List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
-            if (indicatorsSystemsVersions != null && indicatorsSystemsVersions.size() != 0 && !indicatorsSystemsVersions.get(0).getIndicatorsSystem().getUuid().equals(actualUuid)) {
-                throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED, uriGopestat);
-            }
         }
     }
 

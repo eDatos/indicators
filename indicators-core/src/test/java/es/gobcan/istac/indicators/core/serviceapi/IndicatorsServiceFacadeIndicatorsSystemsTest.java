@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +24,6 @@ import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropert
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
@@ -112,12 +110,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("1.000", indicatorsSystemDto.getDiffusionVersion());
         assertEquals("2.000", indicatorsSystemDto.getProductionVersion());
         assertEquals("CODE-1", indicatorsSystemDto.getCode());
-        assertEquals("http://indicators-sytems/1", indicatorsSystemDto.getUriGopestat());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getTitle(), "es", "Título IndSys-1-v1", "en", "Title IndSys-1-v1");
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getAcronym(), "es", "Acrónimo IndSys-1-v1", "en", "Acronym IndSys-1-v1");
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getDescription(), "es", "Descripción IndSys-1-v1", "en", "Description IndSys-1-v1");
-        IndicatorsAsserts.assertEqualsInternationalString(indicatorsSystemDto.getObjetive(), "es", "Objetivo IndSys-1-v1", "en", "Objetive IndSys-1-v1");
         IndicatorsAsserts.assertEqualsDate("2011-01-01 01:02:04", indicatorsSystemDto.getCreatedDate());
         IndicatorsAsserts.assertEqualsDate("2011-01-02 02:02:04", indicatorsSystemDto.getProductionValidationDate());
         IndicatorsAsserts.assertEqualsDate("2011-01-03 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
@@ -442,11 +435,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUriGopestat(IndicatorsMocks.mockString(100));
-        indicatorsSystemDto.setObjetive(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setDescription(IndicatorsMocks.mockInternationalString());
 
         // Create
         IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -484,32 +472,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(null);
-        indicatorsSystemDto.setTitle(null);
-
-        try {
-            indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("parameters required");
-        } catch (MetamacException e) {
-            assertEquals(2, e.getExceptionItems().size());
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.TITLE", e.getExceptionItems().get(1).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testCreateIndicatorsSystemParametersInternationalStringMalformed() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.getAcronym().addText(new LocalisedStringDto());
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -519,7 +481,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.ACRONYM", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -528,7 +490,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -542,30 +503,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testCreateIndicatorsSystemUriDuplicated() throws Exception {
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUriGopestat("http://indicators-sytems/1");
-
-        try {
-            indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-            fail("uri gopestat duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemDto.getUriGopestat(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
     public void testCreateIndicatorsSystemCodeDuplicatedInsensitive() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode("CoDe-1");
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         try {
             indicatorsServiceFacade.createIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -726,10 +667,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
 
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorsSystemDto.setUriGopestat("newUri");
-
         // Update
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
@@ -749,8 +686,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
 
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-
         // Update
         indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
@@ -768,8 +703,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, indicatorsSystemDto.getProcStatus());
-
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
 
         // Update
         indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
@@ -789,31 +722,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
 
-        indicatorsSystemDto.setTitle(IndicatorsMocks.mockInternationalString());
-
         // Update
         indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
 
         // Validation
         IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDtoUpdated.getProcStatus());
-        IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
-    }
-
-    @Test
-    public void testUpdateIndicatorsSystemReusingLocalisedStrings() throws Exception {
-
-        String uuid = INDICATORS_SYSTEM_1;
-        String versionNumber = "2.000";
-
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
-        indicatorsSystemDto.getTitle().getTexts().iterator().next().setLabel("NewLabel");
-
-        // Update
-        indicatorsServiceFacade.updateIndicatorsSystem(getServiceContext(), indicatorsSystemDto);
-
-        // Validation
-        IndicatorsSystemDto indicatorsSystemDtoUpdated = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
         IndicatorsAsserts.assertEqualsIndicatorsSystem(indicatorsSystemDto, indicatorsSystemDtoUpdated);
     }
 
@@ -1814,21 +1728,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindIndicatorsSystemsByUriGopestat() throws Exception {
-        
-        IndicatorsCriteria criteria = new IndicatorsCriteria();
-        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.URI_GOPESTAT.name(), "http://indicators-sytems/1"));
-
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
-        assertEquals(1, indicatorsSystemsDto.size());
-
-        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
-        assertEquals("2.000", indicatorsSystemsDto.get(0).getVersionNumber());
-        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(0).getProcStatus());
-    }
-
-    @Test
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
@@ -1842,21 +1741,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
-    }
-    
-    @Test
-    public void testFindIndicatorsSystemsPublishedByUriGopestat() throws Exception {
-        
-        IndicatorsCriteria criteria = new IndicatorsCriteria();
-        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.URI_GOPESTAT.name(), "http://indicators-sytems/1"));
-
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), criteria);
-        assertEquals(1, indicatorsSystemsDto.size());
-
-        assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
-        assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
-        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
     }
     
     @Test

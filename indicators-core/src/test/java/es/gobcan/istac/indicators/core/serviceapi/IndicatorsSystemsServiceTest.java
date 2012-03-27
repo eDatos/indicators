@@ -40,7 +40,6 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         IndicatorsSystemVersion indicatorsSystemVersion = new IndicatorsSystemVersion();
         indicatorsSystemVersion.setIndicatorsSystem(new IndicatorsSystem());
         indicatorsSystemVersion.getIndicatorsSystem().setCode(IndicatorsMocks.mockString(10));
-        indicatorsSystemVersion.setTitle(new InternationalString());
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContext(), indicatorsSystemVersion);

@@ -24,11 +24,6 @@ public class IndicatorsAsserts {
     
     public static void assertEqualsIndicatorsSystem(IndicatorsSystemDto expected, IndicatorsSystemDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
-        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
-        assertEquals(expected.getUriGopestat(), actual.getUriGopestat());
-        assertEqualsInternationalString(expected.getObjetive(), actual.getObjetive());
-        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 
     public static void assertEqualsDimension(DimensionDto expected, DimensionDto actual) {

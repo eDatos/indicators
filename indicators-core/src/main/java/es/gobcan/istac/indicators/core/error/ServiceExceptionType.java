@@ -9,7 +9,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_VERSION_NOT_FOUND                     = create("exception.indicators.indicators_system.vesion_not_found");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE                   = create("exception.indicators.indicators_system.not_found_code");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED         = create("exception.indicators.indicators_system.already_exists.code_duplicated");
-    public static final CommonServiceExceptionType INDICATORS_SYSTEM_ALREADY_EXIST_URI_GOPESTAT_DUPLICATED = create("exception.indicators.indicators_system.already_exists.uri_gopestat_duplicated");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_IN_PRODUCTION_NOT_FOUND               = create("exception.indicators.indicators_system.production_not_found");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_IN_DIFFUSION_NOT_FOUND                = create("exception.indicators.indicators_system.diffusion_not_found");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_WRONG_PROC_STATUS                     = create("exception.indicators.indicators_system.wrong_proc_status");
