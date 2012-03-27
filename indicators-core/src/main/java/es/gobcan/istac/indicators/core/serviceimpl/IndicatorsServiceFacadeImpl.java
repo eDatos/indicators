@@ -228,6 +228,21 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public List<IndicatorsSystemDto> findIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+
+        // Retrieve
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemPublishedForIndicator(ctx, indicatorUuid);
+
+        // Transform
+        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
+        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
+            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
+        }
+
+        return indicatorsSystemsDto;
+    }
+
+    @Override
     public DimensionDto createDimension(ServiceContext ctx, String indicatorsSystemUuid, DimensionDto dimensionDto) throws MetamacException {
 
         // Transform
@@ -288,7 +303,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public DimensionDto updateDimensionLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        
+
         // Update
         Dimension dimension = getIndicatorsSystemsService().updateDimensionLocation(ctx, uuid, parentTargetUuid, orderInLevel);
 
@@ -358,9 +373,9 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorInstanceDto updateIndicatorInstanceLocation(ServiceContext ctx, String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException {
-        
+
         IndicatorInstance indicatorInstance = getIndicatorsSystemsService().updateIndicatorInstanceLocation(ctx, uuid, parentTargetUuid, orderInLevel);
-        
+
         // Transform to Dto
         IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
         return indicatorInstanceDto;
@@ -391,7 +406,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return geographicalValuesDto;
     }
-    
+
     @Override
     public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -417,7 +432,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return geographicalGranularitysDto;
     }
-
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
 
@@ -502,7 +516,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorDto sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().sendIndicatorToDiffusionValidation(ctx, uuid);
 
         // Transform to Dto
@@ -512,7 +526,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorDto rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorValidation(ctx, uuid);
 
         // Transform to Dto
@@ -522,7 +536,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorDto publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().publishIndicator(ctx, uuid);
 
         // Transform to Dto
@@ -532,7 +546,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorDto archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().archiveIndicator(ctx, uuid);
 
         // Transform to Dto
@@ -665,7 +679,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return quantityUnitsDto;
     }
-    
+
     @Override
     public SubjectDto retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
 
@@ -691,7 +705,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return subjectsDto;
     }
-    
+
     @Override
     public List<SubjectDto> findSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
 

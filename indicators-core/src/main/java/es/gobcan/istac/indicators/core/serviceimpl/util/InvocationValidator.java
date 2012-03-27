@@ -209,6 +209,16 @@ public class InvocationValidator {
     public static void checkFindIndicatorsSystemsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkFindIndicatorsSystems(criteria, exceptions);
     }
+    
+    public static void checkFindIndicatorsSystemPublishedForIndicator(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkCreateDimension(String indicatorsSystemUuid, Dimension dimension, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {

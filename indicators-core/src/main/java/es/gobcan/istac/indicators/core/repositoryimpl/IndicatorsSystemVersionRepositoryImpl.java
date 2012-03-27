@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorsSystemCriteriaPropertyInternalEnum;
 
@@ -73,6 +74,28 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
         }
         criteria.addOrder(Order.asc("id"));
 
+        // Find
+        List<IndicatorsSystemVersion> result = criteria.list();
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
+
+        // Criteria
+        org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
+        Criteria criteria = session.createCriteria(IndicatorsSystemVersion.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.eq("procStatus", IndicatorsSystemProcStatusEnum.PUBLISHED));
+
+        criteria.createAlias("childrenAllLevels", "children");
+        criteria.createAlias("children.indicatorInstance", "indicatorInstance");
+        criteria.createAlias("indicatorInstance.indicator", "indicator");
+        criteria.add(Restrictions.like("indicator.uuid", indicatorUuid));
+
+        criteria.addOrder(Order.asc("id"));
+        
         // Find
         List<IndicatorsSystemVersion> result = criteria.list();
         return result;

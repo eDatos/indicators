@@ -266,6 +266,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemsVersions(criteria);
         return indicatorsSystemsVersions;
     }
+    
+    @Override
+    public List<IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystemPublishedForIndicator(indicatorUuid, null);
+
+        // Find
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemPublishedForIndicator(indicatorUuid);
+        return indicatorsSystemsVersions;
+    }
 
     @Override
     public IndicatorsSystemVersion sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {

@@ -39,6 +39,7 @@ Application Indicators {
 	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(String indicatorsSystemUuid, @Dimension dimension) throws MetamacException;
@@ -170,6 +171,8 @@ Application Indicators {
 	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
+	    	"Find all indicators system published where indicator is"
+	    	List<@IndicatorsSystemDto> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"
@@ -368,6 +371,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
             	List<@IndicatorsSystemVersion> findIndicatorsSystemsVersions(IndicatorsCriteria criteria) throws MetamacException;
+            	List<@IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 			}
 		} 
 			    

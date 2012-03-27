@@ -845,6 +845,68 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
+					<TBL_ELEMENTS_LEVELS
+						ID="611"
+						UUID="uuid-ignored-611"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="1"
+						
+						IND_SYSTEM_VERSION_ALL_FK="61"
+						IND_SYSTEM_VERSION_FIRST_FK="61"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="611"
+						VERSION="1"
+					/>			
+					<TBL_INDICATORS_INSTANCES
+						ID="611"
+						UUID="IndSys-6-v1-IInstance-1"
+						TIME_GRANULARITY="YEARLY"
+						TIME_VALUE="[null]"
+						GEOGRAPHICAL_GRANULARITY_FK="1"
+						GEOGRAPHICAL_VALUE_FK="[null]"
+						TITLE_FK="49"
+						INDICATOR_FK="3"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-05-05 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-06-06 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TBL_ELEMENTS_LEVELS
+						ID="612"
+						UUID="uuid-ignored-612"
+						PARENT_FK="[null]"
+						ORDER_IN_LEVEL="2"
+						
+						IND_SYSTEM_VERSION_ALL_FK="61"
+						IND_SYSTEM_VERSION_FIRST_FK="61"
+						DIMENSION_FK="[null]"
+						INDICATOR_INSTANCE_FK="612"
+						VERSION="1"
+					/>			
+					<TBL_INDICATORS_INSTANCES
+						ID="612"
+						UUID="IndSys-6-v1-IInstance-2"
+						TIME_GRANULARITY="YEARLY"
+						TIME_VALUE="[null]"
+						GEOGRAPHICAL_GRANULARITY_FK="1"
+						GEOGRAPHICAL_VALUE_FK="[null]"
+						TITLE_FK="50"
+						INDICATOR_FK="1"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-05-05 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-06-06 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+			
 			<TBL_INDIC_SYSTEMS_VERSIONS
 				ID="62"
 				UUID="IndSys-6-v2"
@@ -2511,6 +2573,32 @@
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="48"
-	/>														
+	/>		
+		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="49"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="89"
+		LABEL="Londres"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="49"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="50"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="90"
+		LABEL="Londres"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="50"
+	/>								
 					
 </dataset>

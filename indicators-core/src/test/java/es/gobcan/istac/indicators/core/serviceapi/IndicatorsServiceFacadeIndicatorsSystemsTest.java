@@ -95,6 +95,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             GEOGRAPHICAL_GRANULARITY_2                    = "2";
 
     // Indicators
+    private static String             INDICATOR_1                                 = "Indicator-1";
     private static String             INDICATOR_2                                 = "Indicator-2";
     private static String             INDICATOR_3                                 = "Indicator-3";
 
@@ -1856,6 +1857,42 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
+    }
+    
+    @Test
+    public void testFindIndicatorsSystemsPublishedWithIndicator() throws Exception {
+
+        {
+            // Indicator 1
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_1);
+            assertEquals(3, indicatorsSystemsDto.size());
+    
+            assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
+            assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
+            
+            assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
+            assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemsDto.get(1).getVersionNumber());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(1).getProcStatus());
+
+            assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
+            assertEquals("1.000", indicatorsSystemsDto.get(2).getVersionNumber());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
+        }
+        {
+            // Indicator 2
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_2);
+            assertEquals(0, indicatorsSystemsDto.size());
+        }
+        {
+            // Indicator 3
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_3);
+            assertEquals(1, indicatorsSystemsDto.size());
+            
+            assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(0).getUuid());
+            assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
+        }
     }
 
     @Test
