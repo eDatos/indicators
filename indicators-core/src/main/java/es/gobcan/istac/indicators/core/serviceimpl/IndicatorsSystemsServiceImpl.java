@@ -181,21 +181,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public IndicatorsSystemVersion updateIndicatorsSystemVersion(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-
-        // Validation
-        InvocationValidator.checkUpdateIndicatorsSystem(indicatorsSystemVersion, null);
-
-        // Check indicators system proc status
-        checkIndicatorsSystemVersionInProduction(indicatorsSystemVersion);
-
-        // Update
-        indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
-
-        return indicatorsSystemVersion;
-    }
-
-    @Override
     public void deleteIndicatorsSystem(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -916,7 +901,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
             // Update indicators system adding element to all children
             indicatorsSystemVersion.addChildrenAllLevel(elementLevel);
-            updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+            indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
         }
         return elementLevel;
     }
@@ -970,7 +955,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             List<ElementLevel> elementsInLevel = null;
             if (parentTarget == null) {
                 indicatorsSystemVersion.addChildrenFirstLevel(elementLevel);
-                updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
+                indicatorsSystemVersion = getIndicatorsSystemVersionRepository().save(indicatorsSystemVersion);
                 elementsInLevel = indicatorsSystemVersion.getChildrenFirstLevel();
             } else {
                 parentTarget.addChildren(elementLevel);

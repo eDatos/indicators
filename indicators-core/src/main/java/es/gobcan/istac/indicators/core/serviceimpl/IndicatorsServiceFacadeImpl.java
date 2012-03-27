@@ -127,19 +127,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         getIndicatorsSystemsService().deleteIndicatorsSystem(ctx, uuid);
     }
 
-    public IndicatorsSystemDto updateIndicatorsSystem(ServiceContext ctx, IndicatorsSystemDto indicatorsSystemDto) throws MetamacException {
-
-        // Transform
-        IndicatorsSystemVersion indicatorsSystemVersion = dto2DoMapper.indicatorsSystemDtoToDo(ctx, indicatorsSystemDto);
-
-        // Update
-        indicatorsSystemVersion = getIndicatorsSystemsService().updateIndicatorsSystemVersion(ctx, indicatorsSystemVersion);
-
-        // Transform to Dto
-        indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
-        return indicatorsSystemDto;
-    }
-
     @Override
     public IndicatorsSystemDto sendIndicatorsSystemToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 

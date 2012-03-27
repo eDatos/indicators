@@ -66,19 +66,13 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         // If exists, retrieves existing entity. Otherwise, creates new entity
         IndicatorsSystemVersion target = null;
-        if (source.getUuid() == null) {
-            target = new IndicatorsSystemVersion();
-            target.setIndicatorsSystem(new IndicatorsSystem());
-            // non modifiable after creation
-            target.getIndicatorsSystem().setCode(source.getCode());
-        } else {
-            target = indicatorsSystemsService.retrieveIndicatorsSystem(ctx, source.getUuid(), source.getVersionNumber());
-
-            // Metadata unmodifiable
-            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-            ValidationUtils.checkMetadataUnmodifiable(target.getIndicatorsSystem().getCode(), source.getCode(), "INDICATORS_SYSTEM.CODE", exceptions);
-            ExceptionUtils.throwIfException(exceptions);
+        if (source.getUuid() != null) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Indicators system can be updated");
         }
+        
+        target = new IndicatorsSystemVersion();
+        target.setIndicatorsSystem(new IndicatorsSystem());
+        target.getIndicatorsSystem().setCode(source.getCode());        // non modifiable after creation
 
         return target;
     }
