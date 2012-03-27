@@ -2524,6 +2524,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("px Indicator-1-v2-DataSource-1", dataSourceDto.getPxUri());
         assertEquals("time v Indicator-1-v2-DataSource-1", dataSourceDto.getTimeVariable());
         assertEquals("geographical v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicalVariable());
+        assertEquals("absolute-method-1-v2-1", dataSourceDto.getAbsoluteMethod());
 
         assertEquals(RateDerivationMethodTypeEnum.CALCULATE, dataSourceDto.getInterperiodRate().getMethodType());
         assertEquals("MethodOfInterperiod", dataSourceDto.getInterperiodRate().getMethod());
@@ -2598,6 +2599,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
+        dataSourceDto.setAbsoluteMethod("absoluteMethod1");
         dataSourceDto.setInterperiodRate(new RateDerivationDto());
         dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getInterperiodRate().setMethod("Method1");

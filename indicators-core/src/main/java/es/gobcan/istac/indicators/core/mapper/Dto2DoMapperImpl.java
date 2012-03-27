@@ -271,7 +271,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target.setGeographicalValue(null);
         }
-
+        target.setAbsoluteMethod(source.getAbsoluteMethod());
+        
         // Related entities
         target.setInterperiodRate(rateDerivationDtoToDo(ctx, source.getInterperiodRate(), target.getInterperiodRate()));
         target.setAnnualRate(rateDerivationDtoToDo(ctx, source.getAnnualRate(), target.getAnnualRate()));

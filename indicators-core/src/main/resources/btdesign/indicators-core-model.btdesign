@@ -651,6 +651,8 @@ Application Indicators {
 			String geographicalVariable nullable;
 			"Other variables fixing one category"
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
+			"Absolute method"
+			String absoluteMethod nullable;
 			
 			// Relations
             "Indicator version"
@@ -971,6 +973,8 @@ Application Indicators {
 			String geographicalValueUuid;
 			"Other variables fixing one category"
 			- List<@DataSourceVariableDto> otherVariables;
+			"Absolute method. Must be OBS_VALUE or a variable value"
+			String absoluteMethod;
 			"Interperiod rate"
 			- @RateDerivationDto interperiodRate;
 			"Annual rate"

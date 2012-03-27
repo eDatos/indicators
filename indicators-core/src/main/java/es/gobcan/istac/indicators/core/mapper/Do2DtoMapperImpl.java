@@ -176,6 +176,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
+        target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setInterperiodRate(rateDerivationDoToDto(source.getInterperiodRate()));
         target.setAnnualRate(rateDerivationDoToDto(source.getAnnualRate()));
 

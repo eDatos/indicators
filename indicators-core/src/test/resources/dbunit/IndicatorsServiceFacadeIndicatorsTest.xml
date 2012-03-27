@@ -107,6 +107,7 @@
 						GEOGRAPHICAL_VALUE_FK="[null]"
 						GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v1-DataSource-1"
 						INDICATOR_VERSION_FK="11"
+						ABSOLUTE_METHOD="absolute-method-1"
 						INTERPERIOD_RATE_FK="1111"
   						ANNUAL_RATE_FK="1112"
   
@@ -258,6 +259,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-1"
 					INDICATOR_VERSION_FK="12"
+					ABSOLUTE_METHOD="absolute-method-1-v2-1"
 					INTERPERIOD_RATE_FK="1211"
 					ANNUAL_RATE_FK="1212"
 					
@@ -454,6 +456,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-2"
 					INDICATOR_VERSION_FK="12"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="1221"
 					ANNUAL_RATE_FK="1222"
 					
@@ -709,6 +712,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-3-v1-DataSource-1"
 					INDICATOR_VERSION_FK="31"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="3111"
 					ANNUAL_RATE_FK="3112"
 					
@@ -899,6 +903,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-4-v1-DataSource-1"
 					INDICATOR_VERSION_FK="41"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="4111"
   					ANNUAL_RATE_FK="4112"
 					
@@ -1074,6 +1079,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-1"
 					INDICATOR_VERSION_FK="51"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="5111"
 					ANNUAL_RATE_FK="5112"
 				
@@ -1167,6 +1173,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-2"
 					INDICATOR_VERSION_FK="51"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="5121"
 					ANNUAL_RATE_FK="5122"
 				
@@ -1402,6 +1409,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-6-v2-DataSource-1"
 					INDICATOR_VERSION_FK="62"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="6211"
   					ANNUAL_RATE_FK="6212"
 					
@@ -1637,6 +1645,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-7-v2-DataSource-1"
 					INDICATOR_VERSION_FK="72"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="7211"
   					ANNUAL_RATE_FK="7212"
 					
@@ -1893,6 +1902,7 @@
 					GEOGRAPHICAL_VALUE_FK="[null]"
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-9-v1-DataSource-1"
 					INDICATOR_VERSION_FK="91"
+					ABSOLUTE_METHOD="[null]"
 					INTERPERIOD_RATE_FK="9111"
   					ANNUAL_RATE_FK="9112"
 					

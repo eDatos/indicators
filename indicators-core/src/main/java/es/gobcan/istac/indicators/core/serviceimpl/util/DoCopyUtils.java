@@ -163,11 +163,15 @@ public class DoCopyUtils {
         DataSource target = new DataSource();
         target.setDataGpeUuid(source.getDataGpeUuid());
         target.setPxUri(source.getPxUri());
+        target.setTimeValue(source.getTimeValue());
         target.setTimeVariable(source.getTimeVariable());
+        target.setGeographicalValue(source.getGeographicalValue());
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
+        target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setInterperiodRate(copyRateDerivation(source.getInterperiodRate()));
         target.setAnnualRate(copyRateDerivation(source.getAnnualRate()));
+        // TODO resto de rates
         return target;
     }
 
