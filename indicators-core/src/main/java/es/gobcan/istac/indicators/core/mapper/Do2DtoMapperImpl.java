@@ -276,6 +276,10 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setTitle(source.getTitle());
         target.setPxUri(source.getPxUri());
+        target.setSurveyCode(source.getSurveyCode());
+        target.setSurveyTitle(source.getSurveyTitle());
+        target.setPublishers(source.getPublishers());
+        
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
             target.setValueCodes(source.getValueCodes());

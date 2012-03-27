@@ -51,8 +51,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Subjects
     public static final CommonServiceExceptionType SUBJECT_NOT_FOUND                                       = create("exception.indicators.subject.not_found");
-    
-    //Data
+
+    // Data
+    public static final CommonServiceExceptionType DATA_DEFINITION_RETRIEVE_ERROR                          = create("exception.indicators.data.definition.error");
     public static final CommonServiceExceptionType DATA_STRUCTURE_RETRIEVE_ERROR                           = create("exception.indicators.data.structure.error");
     public static final CommonServiceExceptionType DATA_RETRIEVE_ERROR                                     = create("exception.indicators.data.error");
 }

@@ -1,7 +1,10 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -59,6 +62,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         
         // Find db
         DataDefinition dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
+        if (dataDefinition == null) {
+            throw new MetamacException(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR,uuid);
+        }
         return dataDefinition;
     }
 
@@ -92,7 +98,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             //TODO: CHANGE LANGUAGES
             List<String> languages = new ArrayList<String>();
             languages.add("es");
-            languages.add("en");
             datasetRepoDto.setLanguages(languages);
             
             datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
@@ -120,13 +125,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 if (geoValues.size() > 0 && timeValues.size() > 0) {
                     for (String geoVal : geoValues) {
                         for (String timeVal : timeValues) {
-                            List<String> codes = new ArrayList<String>();
-                            codes.add(geoVal);
-                            codes.add(timeVal);
+                            Map<String,String> varCodes = new HashMap<String,String>();
+                            varCodes.put(dataSource.getGeographicalVariable(), geoVal);
+                            varCodes.put(dataSource.getTimeVariable(),timeVal);
                             for (DataSourceVariableDto var : dataSource.getOtherVariables()) {
-                                codes.add(var.getCategory());
+                                varCodes.put(var.getVariable(),var.getCategory());
                             }
-                            DataContent dataContent = data.getDataContent(codes);  
+                            DataContent dataContent = data.getDataContent(varCodes);
                             ObservationExtendedDto observation = new ObservationExtendedDto();
                             observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION,geoVal));
                             observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION,timeVal));
@@ -137,12 +142,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 } else if (geoValues.size() > 0) {
                     for (String geoVal : geoValues) {
-                        List<String> codes = new ArrayList<String>();
-                        codes.add(geoVal);
+                        Map<String,String> varCodes = new HashMap<String,String>();
+                        varCodes.put(dataSource.getGeographicalVariable(), geoVal);
                         for (DataSourceVariableDto var : dataSource.getOtherVariables()) {
-                            codes.add(var.getCategory());
+                            varCodes.put(var.getVariable(),var.getCategory());
                         }
-                        DataContent dataContent = data.getDataContent(codes);  
+                        DataContent dataContent = data.getDataContent(varCodes);  
                         ObservationExtendedDto observation = new ObservationExtendedDto();
                         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION,geoVal));
                         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION,dataSource.getTimeValue()));
@@ -152,12 +157,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 } else if (timeValues.size() > 0) {
                     for (String timeVal : timeValues) {
-                        List<String> codes = new ArrayList<String>();
-                        codes.add(timeVal);
+                        Map<String,String> varCodes = new HashMap<String,String>();
+                        varCodes.put(dataSource.getTimeVariable(),timeVal);
                         for (DataSourceVariableDto var : dataSource.getOtherVariables()) {
-                            codes.add(var.getCategory());
+                            varCodes.put(var.getVariable(),var.getCategory());
                         }
-                        DataContent dataContent = data.getDataContent(codes);  
+                        DataContent dataContent = data.getDataContent(varCodes);  
                         ObservationExtendedDto observation = new ObservationExtendedDto();
                         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION,timeVal));
                         GeographicalValueDto geoValDto = getIndicatorsServiceFacade().retrieveGeographicalValue(ctx, dataSource.getGeographicalValueUuid());
@@ -168,11 +173,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
                 else if (geoValues.size() == 0 && timeValues.size() == 0) {
-                    List<String> codes = new ArrayList<String>();
+                    Map<String,String> varCodes = new HashMap<String,String>();
                     for (DataSourceVariableDto var : dataSource.getOtherVariables()) {
-                        codes.add(var.getCategory());
+                        varCodes.put(var.getVariable(),var.getCategory());
                     }
-                    DataContent dataContent = data.getDataContent(codes);  
+                    DataContent dataContent = data.getDataContent(varCodes);  
                     ObservationExtendedDto observation = new ObservationExtendedDto();
                     observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION,dataSource.getTimeValue()));
                     GeographicalValueDto geoValDto = getIndicatorsServiceFacade().retrieveGeographicalValue(ctx, dataSource.getGeographicalValueUuid());
@@ -187,74 +192,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         } catch (Exception e) {
             throw new MetamacException();
         }
-        
-        /*
-         *  // Create dataset
-        DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
-        datasetRepositoryDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
-        datasetRepositoryDto.getDimensions().add("Countries");
-        datasetRepositoryDto.getDimensions().add("Ages");
-        datasetRepositoryDto.setMaxAttributesObservation(10);
-        List<String> languages = new ArrayList<String>();
-        languages.add("es");
-        languages.add("en");
-        languages.add("it");
-        languages.add("fr");
-        datasetRepositoryDto.setLanguages(languages);
-
-        datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
-
-        // Insert observations
-        List<String> codesCountries = new ArrayList<String>();
-        codesCountries.add("Spain");
-        codesCountries.add("England");
-        codesCountries.add("France");
-        codesCountries.add("Italy");
-        List<String> codesAges = new ArrayList<String>();
-        codesAges.add("10");
-        codesAges.add("20");
-        codesAges.add("30");
-
-        List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
-        int i = 0;
-        for (String codeCountry : codesCountries) {
-            for (String codeAge : codesAges) {
-                ObservationExtendedDto observationExtendedDto = new ObservationExtendedDto();
-                observationExtendedDto.setPrimaryMeasure(String.valueOf(i++));
-                observationExtendedDto.addCodesDimension(new CodeDimensionDto("Countries", codeCountry));
-                observationExtendedDto.addCodesDimension(new CodeDimensionDto("Ages", codeAge));
-                observations.add(observationExtendedDto);
-            }
-        }
-        
-        // Some attributes
-        {
-            // Observation Spain#10
-            ObservationExtendedDto observationExtendedDto = observations.get(0);
-            assertEquals("Spain#10", observationExtendedDto.getUniqueKey());
-            AttributeBasicDto attributeBasicDto = new AttributeBasicDto();
-            attributeBasicDto.setAttributeId("NOTEX");
-            attributeBasicDto.setValue(getInternationalStringDto("NOTEX Spain#10", true));
-            observationExtendedDto.addAttribute(attributeBasicDto);
-        }
-        {
-            // Observation England#20
-            ObservationExtendedDto observationExtendedDto = observations.get(4);
-            assertEquals("England#20", observationExtendedDto.getUniqueKey());
-            AttributeBasicDto attributeBasicDto = new AttributeBasicDto();
-            attributeBasicDto.setAttributeId("NOTEX");
-            attributeBasicDto.setValue(getInternationalStringDto("NOTEX England#20", true));
-            observationExtendedDto.addAttribute(attributeBasicDto);
-            AttributeBasicDto attributeBasicDto2 = new AttributeBasicDto();
-            attributeBasicDto2.setAttributeId("NOTE");
-            attributeBasicDto2.setValue(getInternationalStringDto("NOTE England#20", true));
-            observationExtendedDto.addAttribute(attributeBasicDto2);
-        }
-
-        // Insert observations
-        datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepositoryDto.getDatasetId(), observations);
-        
-         */
     }
     
     /*

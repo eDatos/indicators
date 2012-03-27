@@ -1,9 +1,13 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.siemac.metamac.common.test.MetamacBaseTests;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
@@ -72,10 +76,22 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
     
     public static <T> List<T> getList(T... values) {
-        List<T> result = new ArrayList<T>();
-        for (T value: values) {
-            result.add(value);
+        return Arrays.asList(values);
+    }
+    
+    public static String readFile(String filename) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(IndicatorsBaseTest.class.getClassLoader().getResourceAsStream(filename)));
+            StringBuffer strbuf = new StringBuffer();
+            String line = reader.readLine();
+            while (line != null) {
+                strbuf.append(line);
+                line = reader.readLine();
+            }
+            return strbuf.toString();
+        } catch (Exception e) {
+            Assert.fail("Error Reading file "+filename);
+            return null;
         }
-        return result;
     }
 }

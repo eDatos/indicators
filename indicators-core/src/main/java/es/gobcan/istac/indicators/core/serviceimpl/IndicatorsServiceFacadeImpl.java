@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
+import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -19,7 +21,9 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
@@ -719,5 +723,45 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
 
         return subjectsDto;
+    }
+    
+    @Override
+    public List<DataDefinitionDto> findDataDefinitions(ServiceContext ctx) throws MetamacException {
+        // Service call
+        List<DataDefinition> dataDefs = getIndicatorsDataService().findDataDefinitions(ctx);
+        
+        //Transform
+        List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();
+        for (DataDefinition basic : dataDefs) {
+            dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
+        }
+        return dtos;
+    }
+    
+    @Override
+    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx,String uuid) throws MetamacException {
+        // Service call
+        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx,uuid);
+        
+        //Transform
+        DataDefinitionDto dto = null;
+        if (dataDef != null) {
+            dto = do2DtoMapper.dataDefinitionDoToDto(dataDef);
+        }
+        return dto;
+    }
+
+    @Override
+    public DataStructureDto retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
+        //Service call
+        DataStructure dataStruc = getIndicatorsDataService().retrieveDataStructure(ctx, uuid);
+        
+        //Transform
+        return do2DtoMapper.dataStructureDoToDto(dataStruc);
+    }
+
+    @Override
+    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid, String version) throws MetamacException {
+        getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid, version);
     }
 }

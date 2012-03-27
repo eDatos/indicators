@@ -11,6 +11,6 @@ public class IndicatorsServiceFacadeTest {
     @Test
     @Ignore
     public void noTest() {
-        // Test are in IndicatorsServiceFacadeIndicatorsSystemsTest and IndicatorsServiceFacadeIndicatorsTest
+        // Test are in IndicatorsServiceFacadeIndicatorsSystemsTest, IndicatorsServiceFacadeIndicatorsTest and IndicatorsDataServiceFacadeTest
     }
 }

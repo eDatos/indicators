@@ -342,7 +342,7 @@
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="1112"
 						UUID="Indicator-1-v1-DataSource-1-Var-2"
-						VARIABLE="Naturaleza Jurídica"
+						VARIABLE="Naturaleza jurídica"
 						CATEGORY="T"
 						DATA_SOURCE_FK="111"
 						
@@ -574,7 +574,7 @@
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="2112"
 						UUID="Indicator-2-v1-DataSource-1-Var-2"
-						VARIABLE="Naturaleza Jurídica"
+						VARIABLE="Naturaleza jurídica"
 						CATEGORY="T"
 						DATA_SOURCE_FK="211"
 						
@@ -823,7 +823,7 @@
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="3112"
 						UUID="Indicator-3-v1-DataSource-1-Var-2"
-						VARIABLE="Naturaleza Jurídica"
+						VARIABLE="Naturaleza jurídica"
 						CATEGORY="T"
 						DATA_SOURCE_FK="311"
 						
@@ -1071,7 +1071,7 @@
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="4112"
 						UUID="Indicator-4-v1-DataSource-1-Var-2"
-						VARIABLE="Naturaleza Jurídica"
+						VARIABLE="Naturaleza jurídica"
 						CATEGORY="T"
 						DATA_SOURCE_FK="411"
 						

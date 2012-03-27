@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -35,8 +36,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         Map<String, String> params = new HashMap<String, String>();
         params.put("uuidConsulta", uuid);
         params.put("type", "structure");
-        String json = requestForJson(getJaxiUrl()+"/tabla.do", uuid);
-        return json;
+        return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
     }
     
     @Override
@@ -44,8 +44,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         Map<String, String> params = new HashMap<String, String>();
         params.put("uuidConsulta", uuid);
         params.put("type", "data");
-        String json = requestForJson(getJaxiUrl()+"/tabla.do", uuid);
-        return json;
+        return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
     }
    
     // retrieve from jaxi

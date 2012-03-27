@@ -45,6 +45,15 @@ public class DataStructure {
 
     @JsonProperty
     private String source;
+    
+    @JsonProperty
+    private String surveyCode;
+    
+    @JsonProperty
+    private String surveyTitle;
+    
+    @JsonProperty
+    private List<String> publishers;
 
     @JsonProperty("categories")
     public void setCategories(List<Object> categories) {
@@ -156,6 +165,33 @@ public class DataStructure {
 
     public void setSource(String source) {
         this.source = source;
+    }
+    
+    public String getSurveyCode() {
+        return surveyCode;
+    }
+
+    public void setSurveyCode(String surveyCode) {
+        this.surveyCode = surveyCode;
+    }
+
+    
+    public String getSurveyTitle() {
+        return surveyTitle;
+    }
+
+    
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
+    }
+
+    
+    public List<String> getPublishers() {
+        return publishers;
+    }
+    
+    public void setPublishers(List<String> publishers) {
+        this.publishers = publishers;
     }
 
     private void addValueLabels(String var, List<String> labels) {

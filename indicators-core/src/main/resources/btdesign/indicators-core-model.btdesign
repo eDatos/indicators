@@ -137,6 +137,7 @@ Application Indicators {
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
     		> @IndicatorsService
+    		> @IndicatorsDataService
 	    	
 	    	// INDICATORS SYSTEMS
 	    	"Creates an indicators system"
@@ -271,12 +272,8 @@ Application Indicators {
 	    	List<@SubjectDto> findSubjects() throws MetamacException;
 	    	"Find all subjects in published indicators"
 	    	List<@SubjectDto> findSubjectsInPublishedIndicators() throws MetamacException;
-	    }
-
-	    "Provides access to indicators data"
-    	Service IndicatorsDataServiceFacade {
-			> @IndicatorsDataService
 	    	
+	    	// DATA
 	    	"Find all Data containing basic info only"
 	    	List<@DataDefinitionDto> findDataDefinitions() throws MetamacException;
 	    	"Find all Data basic info only"
@@ -285,8 +282,8 @@ Application Indicators {
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populate a given indicator data"
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-		}
-		
+	    }
+
 	    // ----------------------------------------------------------------
 		// 							ENTITIES
 		// ----------------------------------------------------------------        	
@@ -1153,6 +1150,12 @@ Application Indicators {
     		String title;
     		"Uri px associated"
     		String pxUri;
+    		"Survey code"
+    		String surveyCode;
+    		"Survey Title"
+    		String surveyTitle;
+    		"Publishers"
+    		List<String> publishers;
     		"Variables"
     		List<String> variables;
     		"Temporal variable"

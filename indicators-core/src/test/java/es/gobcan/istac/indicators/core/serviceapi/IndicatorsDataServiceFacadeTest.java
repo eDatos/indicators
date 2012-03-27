@@ -3,10 +3,9 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +26,6 @@ import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
-
 /**
  * Spring based transactional test with DbUnit support.
  */
@@ -36,7 +34,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
 public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implements IndicatorsDataServiceFacadeTestBase {
 
     @Autowired
-    protected IndicatorsDataServiceFacade indicatorsDataServiceFacade;
+    protected IndicatorsServiceFacade indicatorsDataServiceFacade;
     
     @Autowired
     private IndicatorsDataService indicatorsDataService;
@@ -52,9 +50,9 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     @Before
     public void setUpMocks() throws MetamacException {
         //init mocks
-        doReturn(Arrays.asList(new DataDefinition[] {dataDefinition1})).when(indicatorsDataService).findDataDefinitions(any(ServiceContext.class));
-        doReturn(dataDefinition1).when(indicatorsDataService).retrieveDataDefinition(any(ServiceContext.class),eq(dataDefinition1.getUuid()));
-        doReturn(dataStructure1).when(indicatorsDataService).retrieveDataStructure(any(ServiceContext.class),eq(dataStructure1.getUuid()));
+        when(indicatorsDataService.findDataDefinitions(any(ServiceContext.class))).thenReturn(Arrays.asList(new DataDefinition[] {dataDefinition1}));
+        when(indicatorsDataService.retrieveDataDefinition(any(ServiceContext.class),eq(dataDefinition1.getUuid()))).thenReturn(dataDefinition1);
+        when(indicatorsDataService.retrieveDataStructure(any(ServiceContext.class),eq(dataStructure1.getUuid()))).thenReturn(dataStructure1);
     }
     
     @Test
@@ -108,6 +106,10 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
         assertEquals(dbo.getUuid(),dto.getUuid());
         assertEquals(dbo.getTitle(),dto.getTitle());
         assertEquals(dbo.getPxUri(),dto.getPxUri());
+        assertEquals(dbo.getSurveyCode(),dto.getSurveyCode());
+        assertEquals(dbo.getSurveyTitle(),dto.getSurveyTitle());
+        assertEquals(dbo.getPublishers(),dto.getPublishers());
+        
         assertEquals(dbo.getValueCodes(),dto.getValueCodes());
         assertEquals(dbo.getValueLabels(),dto.getValueLabels());
         List<String> variables = new ArrayList<String>(dbo.getValueCodes().keySet());
@@ -149,6 +151,10 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
         dataStructure1.setStub(getList("var3"));
         dataStructure1.setTemporals(getList("var1"));
         dataStructure1.setSpatials(getList("var2"));
+        dataStructure1.setSurveyCode("SCODE");
+        dataStructure1.setSurveyTitle("Survey title");
+        dataStructure1.setPublishers(getList("pub1","pub2"));
+        
     }
     
 }
