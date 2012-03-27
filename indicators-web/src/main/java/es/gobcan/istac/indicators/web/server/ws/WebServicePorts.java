@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.server.ws;
 
 import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacGopestatInternalInterfaceV10;
 
-public class WSPorts {
+public class WebServicePorts {
 
     private MetamacGopestatInternalInterfaceV10 gopestatInternalInterface;
     

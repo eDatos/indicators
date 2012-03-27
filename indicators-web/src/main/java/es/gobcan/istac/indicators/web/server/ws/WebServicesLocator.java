@@ -23,10 +23,10 @@ public class WebServicesLocator {
     private MetamacGopestatInternalV10 metamacGopestatInternal                     = null;
     private String                     metamacGopestatInternalEndpoint             = null;
 
-    private ThreadLocal<WSPorts>       ports                                       = new ThreadLocal<WSPorts>() {
+    private ThreadLocal<WebServicePorts>       ports                                       = new ThreadLocal<WebServicePorts>() {
        @Override
-       protected WSPorts initialValue() {
-           return new WSPorts();
+       protected WebServicePorts initialValue() {
+           return new WebServicePorts();
        }
     };
 
@@ -37,7 +37,7 @@ public class WebServicesLocator {
     }
 
     public MetamacGopestatInternalInterfaceV10 getGopestatInternalInterface() {
-        WSPorts wsPorts = ports.get();
+        WebServicePorts wsPorts = ports.get();
         if (wsPorts.getGopestatInternalInterface() == null) {
             synchronized (this) {
                 if (wsPorts.getGopestatInternalInterface() == null) {
