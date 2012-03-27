@@ -13,7 +13,6 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHan
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
@@ -57,7 +56,6 @@ import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
-import es.gobcan.istac.indicators.web.shared.GetDataAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
@@ -156,7 +154,6 @@ public class ServerModule extends HandlerModule {
 		bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
 		
 		// Data Sources
-		bindHandler(GetDataAction.class, GetDataActionHandler.class);
 		bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
 		bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
 		bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
