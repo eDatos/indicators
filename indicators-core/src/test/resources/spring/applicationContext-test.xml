@@ -7,10 +7,12 @@
   <context:component-scan base-package="es.gobcan.istac.indicators, org.siemac.metamac.core.common"> 
     <context:exclude-filter type="regex" expression=".*web.*"/> 
   </context:component-scan>  
-  <bean id="springPropertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+  <bean id="springPropertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="ignoreResourceNotFound" value="true" /> 
     <property name="locations"> 
       <list> 
-        <value>classpath:/spring-test.properties</value> 
+        <value>classpath:/spring-test-default.properties</value>
+        <value>classpath:/spring-test-local.properties</value> 
       </list> 
     </property> 
   </bean>
