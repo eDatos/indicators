@@ -847,10 +847,10 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), "DATA_SOURCE.DATA_GPE_UUID", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPxUri(), "DATA_SOURCE.PX_URI", exceptions);
-        checkRateDerivation(dataSource.getAnnualPuntualRate(), "DATA_SOURCE.ANNUAL_PUNTUAL_RATE", exceptions);
-        checkRateDerivation(dataSource.getAnnualPercentageRate(), "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE", exceptions);
-        checkRateDerivation(dataSource.getInterperiodPuntualRate(), "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE", exceptions);
-        checkRateDerivation(dataSource.getInterperiodPercentageRate(), "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE", exceptions);
+        checkRateDerivation(dataSource.getAnnualPuntualRate(), "DATA_SOURCE.ANNUAL_PUNTUAL_RATE", Boolean.FALSE, exceptions);
+        checkRateDerivation(dataSource.getAnnualPercentageRate(), "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
+        checkRateDerivation(dataSource.getInterperiodPuntualRate(), "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE", Boolean.FALSE, exceptions);
+        checkRateDerivation(dataSource.getInterperiodPercentageRate(), "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
         // Time
         if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
             // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
@@ -872,7 +872,7 @@ public class InvocationValidator {
         }
     }
 
-    private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, List<MetamacExceptionItem> exceptions) {
+    private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, Boolean isPercentage, List<MetamacExceptionItem> exceptions) {
 
         if (ValidationUtils.isEmpty(rateDerivation)) {
             // it is optional
@@ -888,7 +888,11 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity(), parameterName + ".QUANTITY", exceptions);
         if (!ValidationUtils.isEmpty(rateDerivation.getQuantity())) {
             if (!ValidationUtils.isEmpty(rateDerivation.getQuantity().getQuantityType())) {
-                if (!QuantityTypeEnum.AMOUNT.equals(rateDerivation.getQuantity().getQuantityType()) && !QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
+                if (isPercentage && QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
+                    // ok
+                } else if (!isPercentage && QuantityTypeEnum.AMOUNT.equals(rateDerivation.getQuantity().getQuantityType())) {
+                    // ok
+                } else {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".QUANTITY.TYPE"));
                 }
             }
