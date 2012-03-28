@@ -1,6 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
@@ -76,15 +76,23 @@ public class IndicatorsAsserts {
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
             assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());
         }
-        assertEqualsRateDerivation(expected.getInterperiodRate(), actual.getInterperiodRate());
-        assertEqualsRateDerivation(expected.getAnnualRate(), actual.getAnnualRate());
+        assertEqualsRateDerivation(expected.getAnnualPuntualRate(), actual.getAnnualPuntualRate());
+        assertEqualsRateDerivation(expected.getAnnualPercentageRate(), actual.getAnnualPercentageRate());
+        assertEqualsRateDerivation(expected.getInterperiodPuntualRate(), actual.getInterperiodPuntualRate());
+        assertEqualsRateDerivation(expected.getInterperiodPercentageRate(), actual.getInterperiodPercentageRate());
     }
     
     private static void assertEqualsRateDerivation(RateDerivationDto expected, RateDerivationDto actual) {
-        assertEquals(expected.getMethodType(), actual.getMethodType());
-        assertEquals(expected.getMethod(), actual.getMethod());
-        assertEquals(expected.getRounding(), actual.getRounding());
-        assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
+        if (expected == null && actual == null) {
+            return;
+        } else if (expected != null && actual != null) {
+            assertEquals(expected.getMethodType(), actual.getMethodType());
+            assertEquals(expected.getMethod(), actual.getMethod());
+            assertEquals(expected.getRounding(), actual.getRounding());
+            assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
+        } else {
+            fail("Rates are different");
+        }
     }
 
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {

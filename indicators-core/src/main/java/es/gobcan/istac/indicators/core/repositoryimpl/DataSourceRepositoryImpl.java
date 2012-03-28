@@ -37,13 +37,33 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
         List<String> indicatorsUuidLinked = new ArrayList<String>();
 
         // Important! Queries must be executed separated (Following is executed incorrectly: 1) Join of annualRate and interperiodRate. 2) quantity with null values in numerator, denominator...)
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id"));
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id"));
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.annualRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id"));
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.numerator.uuid from DataSource d where d.indicatorVersion.id = :id"));
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.denominator.uuid from DataSource d where d.indicatorVersion.id = :id"));
-        indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, "select d.interperiodRate.quantity.baseQuantity.uuid from DataSource d where d.indicatorVersion.id = :id"));
+        List<String> queriesSql = buildQueriesToFindIndicatorsLinkedWithIndicatorVersion();
+        for (String querySql : queriesSql) {
+            indicatorsUuidLinked.addAll(findIndicatorsLinkedCommon(indicatorVersionId, querySql));
+        }
         return indicatorsUuidLinked;
+    }
+    
+    private List<String> buildQueriesToFindIndicatorsLinkedWithIndicatorVersion() {
+        String[] rateAttributes = new String[] {"annualPuntualRate", "annualPercentageRate", "interperiodPuntualRate", "interperiodPercentageRate"};
+        String[] quantityIndicatorsAttributes = new String[] {"numerator", "denominator", "baseQuantity"};
+        List<String> queriesSql = new ArrayList<String>();
+        for (int i = 0; i < rateAttributes.length; i++) {
+            String rateAttribute = rateAttributes[i];
+            for (int j = 0; j < quantityIndicatorsAttributes.length; j++) {
+                String quantityIndicatorsAttribute = quantityIndicatorsAttributes[j];
+                
+                StringBuffer querySql = new StringBuffer();
+                querySql.append("select d.");
+                querySql.append(rateAttribute);
+                querySql.append(".quantity.");
+                querySql.append(quantityIndicatorsAttribute);
+                querySql.append(".uuid from DataSource d where d.indicatorVersion.id = :id");
+                
+                queriesSql.add(querySql.toString());
+            }
+        }        
+        return queriesSql;
     }
 
     @SuppressWarnings("unchecked")

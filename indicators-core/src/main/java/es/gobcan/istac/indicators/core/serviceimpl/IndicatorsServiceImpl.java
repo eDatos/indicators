@@ -184,7 +184,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate indicators system proc status and linked indicators
         checkIndicatorVersionInProduction(indicatorVersion);
-        checkIndicatorsLinked(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, "INDICATOR.QUANTITY");
+        checkIndicatorsLinkedInQuantity(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, "INDICATOR.QUANTITY");
 
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
@@ -438,8 +438,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate indicators system proc status and linked indicators
         IndicatorVersion indicatorVersion = retrieveIndicatorProcStatusInProduction(ctx, indicatorUuid, true);
-        checkIndicatorsLinked(dataSource.getAnnualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_RATE.QUANTITY");
-        checkIndicatorsLinked(dataSource.getInterperiodRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_RATE.QUANTITY");
+        checkIndicatorsLinkedInDatasource(dataSource, indicatorVersion);
 
         // Create dataSource
         dataSource.setIndicatorVersion(indicatorVersion);
@@ -474,8 +473,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check indicator proc status and linked indicators
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
-        checkIndicatorsLinked(dataSource.getAnnualRate().getQuantity(), dataSource.getIndicatorVersion().getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_RATE.QUANTITY");
-        checkIndicatorsLinked(dataSource.getInterperiodRate().getQuantity(), dataSource.getIndicatorVersion().getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_RATE.QUANTITY");
+        checkIndicatorsLinkedInDatasource(dataSource, dataSource.getIndicatorVersion());
 
         // Update
         return getDataSourceRepository().save(dataSource);
@@ -811,11 +809,26 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
     }
 
+    private void checkIndicatorsLinkedInDatasource(DataSource dataSource, IndicatorVersion indicatorVersion) throws MetamacException {
+        if (dataSource.getAnnualPuntualRate() != null) {
+            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY");
+        }
+        if (dataSource.getInterperiodPuntualRate() != null) {
+            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY");
+        }
+        if (dataSource.getAnnualPercentageRate() != null) {
+            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY");
+        }
+        if (dataSource.getInterperiodPercentageRate() != null) {
+            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE.QUANTITY");
+        }
+    }
+
     /**
      * Numerator and denominator never must be own indicator.
      * Base quantity never must be own indicator, except when it is a quantity of a datasource and it is change rate. In this case it always must be own indicator
      */
-    private void checkIndicatorsLinked(Quantity quantity, String indicatorUuid, Boolean isDataSource, String parameterName) throws MetamacException {
+    private void checkIndicatorsLinkedInQuantity(Quantity quantity, String indicatorUuid, Boolean isDataSource, String parameterName) throws MetamacException {
         if (quantity.getNumerator() != null && quantity.getNumerator().getUuid().equals(indicatorUuid)) {
             throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".NUMERATOR_INDICATOR_UUID");
         }

@@ -108,8 +108,10 @@
 						GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v1-DataSource-1"
 						INDICATOR_VERSION_FK="11"
 						ABSOLUTE_METHOD="absolute-method-1"
-						INTERPERIOD_RATE_FK="1111"
-  						ANNUAL_RATE_FK="1112"
+						INTERPERIOD_PUNTUAL_RATE_FK="1111"
+						INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  						ANNUAL_PUNTUAL_RATE_FK="1112"
+  						ANNUAL_PERCENTAGE_RATE_FK="[null]"
   
 						VERSION="1"
 						CREATED_BY="user1"
@@ -260,8 +262,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-1"
 					INDICATOR_VERSION_FK="12"
 					ABSOLUTE_METHOD="absolute-method-1-v2-1"
-					INTERPERIOD_RATE_FK="1211"
-					ANNUAL_RATE_FK="1212"
+					INTERPERIOD_PUNTUAL_RATE_FK="1211"
+					ANNUAL_PUNTUAL_RATE_FK="1212"
+					INTERPERIOD_PERCENTAGE_RATE_FK="1213"
+					ANNUAL_PERCENTAGE_RATE_FK="1214"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -311,7 +315,7 @@
 						ID="1212"
 						UUID="RateDerivation-1212"
 						METHOD_TYPE="LOAD"
-						METHOD="MethodOfAnnual"
+						METHOD="MethodOfAnnual1212"
 						ROUNDING="DOWN"
 						QUANTITY_FK="12121"
 						
@@ -327,11 +331,56 @@
 						<TBL_QUANTITIES
 						  	ID="12121"
 		  					UUID="Quantity-12121"
-							QUANTITY_TYPE="AMOUNT"
-		  					UNIT_MULTIPLIER="10"
-		  					SIGNIFICANT_DIGITS="2"
-		  					DECIMAL_PLACES="3"
+							QUANTITY_TYPE="CHANGE_RATE"
+		  					UNIT_MULTIPLIER="13"
+		  					SIGNIFICANT_DIGITS="3"
+		  					DECIMAL_PLACES="4"
 							UNIT_FK="2"
+		  					MINIMUM="111"
+		  					MAXIMUM="222"
+		  					IS_PERCENTAGE="1"
+							PERCENTAGE_OF_FK="49"
+		  					BASE_VALUE="5"
+		  					BASE_TIME="2010"
+		  					BASE_LOCATION_FK="1"
+		  					BASE_QUANTITY_FK="3"
+							NUMERATOR_FK="3"
+							DENOMINATOR_FK="6"
+							
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TBL_RATES_DERIVATIONS
+						ID="1213"
+						UUID="RateDerivation-1213"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod123"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="12131"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="12131"
+		  					UUID="Quantity-12131"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="53"
+		  					SIGNIFICANT_DIGITS="5"
+		  					DECIMAL_PLACES="4"
+							UNIT_FK="1"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -341,7 +390,41 @@
 							LAST_UPDATED="2011-01-22 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
 						/>
-				
+					
+					<TBL_RATES_DERIVATIONS
+						ID="1214"
+						UUID="RateDerivation-1214"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfInterperiod1214"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="12141"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="12141"
+		  					UUID="Quantity-12141"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="63"
+		  					SIGNIFICANT_DIGITS="3"
+		  					DECIMAL_PLACES="4"
+							UNIT_FK="2"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>	
 				
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="1211"
@@ -457,8 +540,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-1-v2-DataSource-2"
 					INDICATOR_VERSION_FK="12"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="1221"
-					ANNUAL_RATE_FK="1222"
+					INTERPERIOD_PUNTUAL_RATE_FK="1221"
+					ANNUAL_PUNTUAL_RATE_FK="1222"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -713,8 +798,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-3-v1-DataSource-1"
 					INDICATOR_VERSION_FK="31"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="3111"
-					ANNUAL_RATE_FK="3112"
+					INTERPERIOD_PUNTUAL_RATE_FK="3111"
+					ANNUAL_PUNTUAL_RATE_FK="3112"
+					ANNUAL_PERCENTAGE_RATE_FK="3113"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -729,7 +816,7 @@
 						ID="3111"
 						UUID="RateDerivation-3111"
 						METHOD_TYPE="CALCULATE"
-						METHOD="MethodOfInterperiod"
+						METHOD="MethodOfInterperiodPuntual"
 						ROUNDING="DOWN"
 						QUANTITY_FK="31111"
 						
@@ -745,11 +832,21 @@
 						<TBL_QUANTITIES
 						  	ID="31111"
 		  					UUID="Quantity-31111"
-							QUANTITY_TYPE="AMOUNT"
+							QUANTITY_TYPE="CHANGE_RATE"
 		  					UNIT_MULTIPLIER="10"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
-							UNIT_FK="2"
+		  					MINIMUM="100"
+		  					MAXIMUM="200"
+		  					IS_PERCENTAGE="1"
+							PERCENTAGE_OF_FK="48"
+		  					BASE_VALUE="5"
+		  					BASE_TIME="2010"
+		  					BASE_LOCATION_FK="1"
+		  					BASE_QUANTITY_FK="3"
+							UNIT_FK="1"
+							NUMERATOR_FK="3"
+							DENOMINATOR_FK="6"
 		
 							VERSION="1"
 							CREATED_BY="user1"
@@ -759,12 +856,12 @@
 							LAST_UPDATED="2011-01-22 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
 						/>
-		
+						
 					<TBL_RATES_DERIVATIONS
 						ID="3112"
 						UUID="RateDerivation-3112"
 						METHOD_TYPE="CALCULATE"
-						METHOD="MethodOfAnnual"
+						METHOD="MethodOfAnnualPuntual"
 						ROUNDING="DOWN"
 						QUANTITY_FK="31121"
 						
@@ -781,7 +878,7 @@
 						  	ID="31121"
 		  					UUID="Quantity-31121"
 							QUANTITY_TYPE="AMOUNT"
-		  					UNIT_MULTIPLIER="10"
+		  					UNIT_MULTIPLIER="50"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
 							UNIT_FK="1"
@@ -794,6 +891,42 @@
 							LAST_UPDATED="2011-01-22 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
 						/>
+						
+					<TBL_RATES_DERIVATIONS
+						ID="3113"
+						UUID="RateDerivation-3113"
+						METHOD_TYPE="CALCULATE"
+						METHOD="MethodOfAnnualPercentage"
+						ROUNDING="UPWARD"
+						QUANTITY_FK="31131"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TBL_QUANTITIES
+						  	ID="31131"
+		  					UUID="Quantity-31131"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="20"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+								
 				
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="3111"
@@ -904,8 +1037,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-4-v1-DataSource-1"
 					INDICATOR_VERSION_FK="41"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="4111"
-  					ANNUAL_RATE_FK="4112"
+					INTERPERIOD_PUNTUAL_RATE_FK="4111"
+  					ANNUAL_PUNTUAL_RATE_FK="4112"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1080,8 +1215,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-1"
 					INDICATOR_VERSION_FK="51"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="5111"
-					ANNUAL_RATE_FK="5112"
+					INTERPERIOD_PUNTUAL_RATE_FK="5111"
+					ANNUAL_PUNTUAL_RATE_FK="5112"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 				
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1174,8 +1311,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-5-v1-DataSource-2"
 					INDICATOR_VERSION_FK="51"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="5121"
-					ANNUAL_RATE_FK="5122"
+					INTERPERIOD_PUNTUAL_RATE_FK="5121"
+					ANNUAL_PUNTUAL_RATE_FK="5122"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 				
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1410,8 +1549,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-6-v2-DataSource-1"
 					INDICATOR_VERSION_FK="62"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="6211"
-  					ANNUAL_RATE_FK="6212"
+					INTERPERIOD_PUNTUAL_RATE_FK="6211"
+  					ANNUAL_PUNTUAL_RATE_FK="6212"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1646,8 +1787,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-7-v2-DataSource-1"
 					INDICATOR_VERSION_FK="72"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="7211"
-  					ANNUAL_RATE_FK="7212"
+					INTERPERIOD_PUNTUAL_RATE_FK="7211"
+  					ANNUAL_PUNTUAL_RATE_FK="7212"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1903,8 +2046,10 @@
 					GEOGRAPHICAL_VARIABLE="geographical v Indicator-9-v1-DataSource-1"
 					INDICATOR_VERSION_FK="91"
 					ABSOLUTE_METHOD="[null]"
-					INTERPERIOD_RATE_FK="9111"
-  					ANNUAL_RATE_FK="9112"
+					INTERPERIOD_PUNTUAL_RATE_FK="9111"
+  					ANNUAL_PUNTUAL_RATE_FK="9112"
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+  					ANNUAL_PERCENTAGE_RATE_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -3128,6 +3273,32 @@
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="47"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="48"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="78"
+		LABEL="Porcentaje xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="48"
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="49"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="79"
+		LABEL="Porcentaje xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="49"
 	/>							
 							
 

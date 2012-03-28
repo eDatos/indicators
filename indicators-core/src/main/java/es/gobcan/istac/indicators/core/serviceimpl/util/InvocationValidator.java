@@ -847,8 +847,10 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), "DATA_SOURCE.DATA_GPE_UUID", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPxUri(), "DATA_SOURCE.PX_URI", exceptions);
-        checkRateDerivation(dataSource.getInterperiodRate(), "DATA_SOURCE.INTERPERIOD_RATE", exceptions);
-        checkRateDerivation(dataSource.getAnnualRate(), "DATA_SOURCE.ANNUAL_RATE", exceptions);
+        checkRateDerivation(dataSource.getAnnualPuntualRate(), "DATA_SOURCE.ANNUAL_PUNTUAL_RATE", exceptions);
+        checkRateDerivation(dataSource.getAnnualPercentageRate(), "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE", exceptions);
+        checkRateDerivation(dataSource.getInterperiodPuntualRate(), "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE", exceptions);
+        checkRateDerivation(dataSource.getInterperiodPercentageRate(), "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE", exceptions);
         // Time
         if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
             // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
@@ -872,8 +874,8 @@ public class InvocationValidator {
 
     private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, List<MetamacExceptionItem> exceptions) {
 
-        ValidationUtils.checkMetadataRequired(rateDerivation, parameterName, exceptions);
         if (ValidationUtils.isEmpty(rateDerivation)) {
+            // it is optional
             return;
         }
 
@@ -891,6 +893,7 @@ public class InvocationValidator {
                 }
             }
             checkQuantity(rateDerivation.getQuantity(), parameterName + ".QUANTITY", true, exceptions);
+            // TODO obligatoriedad baseQuantity
             if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType()) && QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
                 ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getDecimalPlaces(), parameterName + ".QUANTITY.DECIMAL_PLACES", exceptions);
                 ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getBaseQuantity(), parameterName + ".QUANTITY.BASE_QUANTITY", exceptions);

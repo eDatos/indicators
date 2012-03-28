@@ -608,6 +608,11 @@ Application Indicators {
 			// Relations
 			"Quantity"
 			- @Quantity quantity not nullable cascade="all" databaseColumn="QUANTITY_FK";
+			
+			"Provides access to RateDerivation"
+            Repository RateDerivationRepository {
+            	delete;
+            }
 	    }
 	    
         BasicType IndicatorVersionInformation {
@@ -641,10 +646,14 @@ Application Indicators {
 			// Relations
             "Indicator version"
 			- @IndicatorVersion indicatorVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATOR_VERSION_FK" <-> dataSources;
-            "Interperiod rate"
-			- @RateDerivation interperiodRate not nullable cascade="all" databaseColumn="INTERPERIOD_RATE_FK";
-            "Annual rate"
-			- @RateDerivation annualRate not nullable cascade="all" databaseColumn="ANNUAL_RATE_FK";
+            "Annual puntual rate"
+			- @RateDerivation annualPuntualRate nullable cascade="all" databaseColumn="ANNUAL_PUNTUAL_RATE_FK";
+            "Annual percentage rate"
+			- @RateDerivation annualPercentageRate nullable cascade="all" databaseColumn="ANNUAL_PERCENTAGE_RATE_FK";
+            "Interperiod puntual rate"
+			- @RateDerivation interperiodPuntualRate nullable cascade="all" databaseColumn="INTERPERIOD_PUNTUAL_RATE_FK";
+            "Interperiod percentage rate"
+			- @RateDerivation interperiodPercentageRate nullable cascade="all" databaseColumn="INTERPERIOD_PERCENTAGE_RATE_FK";
             "Geographical value"
 			- @GeographicalValue geographicalValue cascade="none" nullable databaseColumn="GEOGRAPHICAL_VALUE_FK";
             
@@ -949,10 +958,14 @@ Application Indicators {
 			- List<@DataSourceVariableDto> otherVariables;
 			"Absolute method. Must be OBS_VALUE or a variable value"
 			String absoluteMethod;
-			"Interperiod rate"
-			- @RateDerivationDto interperiodRate;
-			"Annual rate"
-			- @RateDerivationDto annualRate; 
+			"Annual puntual rate"
+			- @RateDerivationDto annualPuntualRate; 
+			"Annual percentage rate"
+			- @RateDerivationDto annualPercentageRate; 
+			"Interperiod puntual rate"
+			- @RateDerivationDto interperiodPuntualRate;
+			"Interperiod percentage rate"
+			- @RateDerivationDto interperiodPercentageRate;
 	    }
 	    
 	    "Dto for variables and categories"

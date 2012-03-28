@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.domain.RateDerivationRepository;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
@@ -49,17 +50,20 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 public class Dto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
-    private InternationalStringRepository internationalStringRepository;
-
-    @Autowired
     private IndicatorsSystemsService      indicatorsSystemsService;
 
     @Autowired
     private IndicatorsService             indicatorsService;
+    
+    @Autowired
+    private InternationalStringRepository internationalStringRepository;
+
+    @Autowired
+    private RateDerivationRepository      rateDerivationRepository;
 
     @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
-
+        
         if (source == null) {
             return null;
         }
@@ -261,8 +265,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         
         // Related entities
-        target.setInterperiodRate(rateDerivationDtoToDo(ctx, source.getInterperiodRate(), target.getInterperiodRate()));
-        target.setAnnualRate(rateDerivationDtoToDo(ctx, source.getAnnualRate(), target.getAnnualRate()));
+        target.setAnnualPuntualRate(rateDerivationDtoToDo(ctx, source.getAnnualPuntualRate(), target.getAnnualPuntualRate()));
+        target.setAnnualPercentageRate(rateDerivationDtoToDo(ctx, source.getAnnualPercentageRate(), target.getAnnualPercentageRate()));
+        target.setInterperiodPuntualRate(rateDerivationDtoToDo(ctx, source.getInterperiodPuntualRate(), target.getInterperiodPuntualRate()));
+        target.setInterperiodPercentageRate(rateDerivationDtoToDo(ctx, source.getInterperiodPercentageRate(), target.getInterperiodPercentageRate()));
 
         List<DataSourceVariable> variables = dataSourceVariableDtoToDo(ctx, source.getOtherVariables(), target.getOtherVariables());
         target.getOtherVariables().clear();
@@ -280,6 +286,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     private RateDerivation rateDerivationDtoToDo(ServiceContext ctx, RateDerivationDto source, RateDerivation target) throws MetamacException {
 
         if (source == null) {
+            if (target != null) {
+                // delete previous entity
+                rateDerivationRepository.delete(target);
+            }
             return null;
         }
         if (target == null) {

@@ -389,7 +389,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testCreateIndicatorQuantity() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
-        indicatorDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorDto.setCode("code" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -2086,30 +2086,72 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = INDICATOR_5;
         String uuidPublished1 = INDICATOR_1;
         String uuidNotPublished2 = INDICATOR_2;
+        String uuidPublished3 = INDICATOR_3;
         String uuidNotPublished4 = INDICATOR_4;
         String uuidNotPublished7 = INDICATOR_7;
+        String uuidNotPublished8 = INDICATOR_8;
+        String uuidNotPublished9 = INDICATOR_9;
 
         // Change datasource to fraction with numerator in draft
         List<DataSourceDto> datasources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
         {
             DataSourceDto dataSourceDto = datasources.get(0);
-            dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-            dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished2);
-            dataSourceDto.getAnnualRate().getQuantity().setDenominatorIndicatorUuid(uuidNotPublished7);
-            dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-            dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
-            dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-            dataSourceDto.getInterperiodRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished4);
-            dataSourceDto.getInterperiodRate().getQuantity().setIsPercentage(Boolean.TRUE);
-            dataSourceDto.getInterperiodRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator not published
+            dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished2);
+            dataSourceDto.getAnnualPuntualRate().getQuantity().setDenominatorIndicatorUuid(uuidNotPublished7);
+            dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator not published
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished9);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator not published
+            dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
+            dataSourceDto.getInterperiodPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+            dataSourceDto.getInterperiodPercentageRate().setMethod("aa");
+            dataSourceDto.getInterperiodPercentageRate().setRounding(RateDerivationRoundingEnum.DOWN);
+            dataSourceDto.getInterperiodPercentageRate().setQuantity(new QuantityDto());
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished4);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
             indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
         }
         {
             DataSourceDto dataSourceDto = datasources.get(1);
-            dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-            dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(uuidPublished1);
-            dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-            dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator published
+            dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+            dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+            dataSourceDto.getAnnualPercentageRate().setMethod("aa");
+            dataSourceDto.getAnnualPercentageRate().setRounding(RateDerivationRoundingEnum.DOWN);
+            dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setNumeratorIndicatorUuid(uuidPublished1);
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator not published
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setNumeratorIndicatorUuid(uuidNotPublished8);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getInterperiodPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);
+            // Indicator published         
+            dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
+            dataSourceDto.getInterperiodPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+            dataSourceDto.getInterperiodPercentageRate().setMethod("aa");
+            dataSourceDto.getInterperiodPercentageRate().setRounding(RateDerivationRoundingEnum.DOWN);
+            dataSourceDto.getInterperiodPercentageRate().setQuantity(new QuantityDto());
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setNumeratorIndicatorUuid(uuidPublished3);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
+            dataSourceDto.getInterperiodPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(uuid);            
             indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
         }
 
@@ -2122,10 +2164,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(3, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
+            assertEquals(5, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
             assertEquals(uuidNotPublished2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
             assertEquals(uuidNotPublished4, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
             assertEquals(uuidNotPublished7, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(uuidNotPublished8, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(uuidNotPublished9, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -2306,10 +2350,49 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, dataSources.get(0).getOtherVariables().size());
             assertEquals("variable Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getVariable());
             assertEquals("category Indicator-3-v1-DataSource-1-Var-1", dataSources.get(0).getOtherVariables().get(0).getCategory());
-            assertEquals("MethodOfAnnual", dataSources.get(0).getAnnualRate().getMethod());
-            assertEquals(QUANTITY_UNIT_1, dataSources.get(0).getAnnualRate().getQuantity().getUnitUuid());
-            assertEquals("MethodOfInterperiod", dataSources.get(0).getInterperiodRate().getMethod());
-            assertEquals(QUANTITY_UNIT_2, dataSources.get(0).getInterperiodRate().getQuantity().getUnitUuid());
+            
+            {
+                RateDerivationDto rateDerivationDto = dataSources.get(0).getInterperiodPuntualRate();
+                assertEquals("MethodOfInterperiodPuntual", rateDerivationDto.getMethod());
+                assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+                assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
+                assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
+                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+                assertEquals(Integer.valueOf(10), rateDerivationDto.getQuantity().getUnitMultiplier());
+                assertEquals(Integer.valueOf(2), rateDerivationDto.getQuantity().getSignificantDigits());
+                assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getDecimalPlaces());
+                assertEquals(Integer.valueOf(100), rateDerivationDto.getQuantity().getMinimum());
+                assertEquals(Integer.valueOf(200), rateDerivationDto.getQuantity().getMaximum());
+                assertEquals(Boolean.TRUE, rateDerivationDto.getQuantity().getIsPercentage());
+                IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getPercentageOf(), "es", "Porcentaje xx", null, null);
+                assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getBaseValue());
+                assertEquals("2010", rateDerivationDto.getQuantity().getBaseTime());
+                assertEquals(GEOGRAPHICAL_VALUE_1, rateDerivationDto.getQuantity().getBaseLocationUuid());
+                assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
+                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+                assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
+                assertEquals(INDICATOR_6, rateDerivationDto.getQuantity().getDenominatorIndicatorUuid());
+            }
+            {
+                RateDerivationDto rateDerivationDto = dataSources.get(0).getAnnualPuntualRate();                
+                assertEquals("MethodOfAnnualPuntual", rateDerivationDto.getMethod());
+                assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+                assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
+                assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
+                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+                assertEquals(Integer.valueOf(50), rateDerivationDto.getQuantity().getUnitMultiplier());
+            }
+            {
+                RateDerivationDto rateDerivationDto = dataSources.get(0).getAnnualPercentageRate();
+                assertEquals("MethodOfAnnualPercentage", rateDerivationDto.getMethod());
+                assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+                assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
+                assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
+                assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+                assertEquals(Integer.valueOf(20), rateDerivationDto.getQuantity().getUnitMultiplier());
+            }
+            
+            assertNull(dataSources.get(0).getInterperiodPercentageRate());
 
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoDiffusion.getProcStatus());
             assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
@@ -2526,17 +2609,60 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("geographical v Indicator-1-v2-DataSource-1", dataSourceDto.getGeographicalVariable());
         assertEquals("absolute-method-1-v2-1", dataSourceDto.getAbsoluteMethod());
 
-        assertEquals(RateDerivationMethodTypeEnum.CALCULATE, dataSourceDto.getInterperiodRate().getMethodType());
-        assertEquals("MethodOfInterperiod", dataSourceDto.getInterperiodRate().getMethod());
-        assertEquals(RateDerivationRoundingEnum.UPWARD, dataSourceDto.getInterperiodRate().getRounding());
-        assertEquals(QuantityTypeEnum.AMOUNT, dataSourceDto.getInterperiodRate().getQuantity().getType());
-        assertEquals(QUANTITY_UNIT_1, dataSourceDto.getInterperiodRate().getQuantity().getUnitUuid());
-
-        assertEquals(RateDerivationMethodTypeEnum.LOAD, dataSourceDto.getAnnualRate().getMethodType());
-        assertEquals("MethodOfAnnual", dataSourceDto.getAnnualRate().getMethod());
-        assertEquals(RateDerivationRoundingEnum.DOWN, dataSourceDto.getAnnualRate().getRounding());
-        assertEquals(QuantityTypeEnum.AMOUNT, dataSourceDto.getAnnualRate().getQuantity().getType());
-        assertEquals(QUANTITY_UNIT_2, dataSourceDto.getAnnualRate().getQuantity().getUnitUuid());
+        {   
+            RateDerivationDto rateDerivationDto = dataSourceDto.getInterperiodPuntualRate();
+            assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+            assertEquals("MethodOfInterperiod", rateDerivationDto.getMethod());
+            assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
+            assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
+            assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+            assertEquals(Integer.valueOf(10), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(2), rateDerivationDto.getQuantity().getSignificantDigits());
+            assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getDecimalPlaces());
+        }
+        {   
+            RateDerivationDto rateDerivationDto = dataSourceDto.getInterperiodPercentageRate();
+            assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+            assertEquals("MethodOfInterperiod123", rateDerivationDto.getMethod());
+            assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
+            assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
+            assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
+            assertEquals(Integer.valueOf(53), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getSignificantDigits());
+            assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
+        }
+        {   
+            RateDerivationDto rateDerivationDto = dataSourceDto.getAnnualPuntualRate();
+            assertEquals("MethodOfAnnual1212", rateDerivationDto.getMethod());
+            assertEquals(RateDerivationMethodTypeEnum.LOAD, rateDerivationDto.getMethodType());
+            assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
+            assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
+            assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnitUuid());
+            assertEquals(Integer.valueOf(13), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
+            assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
+            assertEquals(Integer.valueOf(111), rateDerivationDto.getQuantity().getMinimum());
+            assertEquals(Integer.valueOf(222), rateDerivationDto.getQuantity().getMaximum());
+            assertEquals(Boolean.TRUE, rateDerivationDto.getQuantity().getIsPercentage());
+            IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getPercentageOf(), "es", "Porcentaje xx", null, null);
+            assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getBaseValue());
+            assertEquals("2010", rateDerivationDto.getQuantity().getBaseTime());
+            assertEquals(GEOGRAPHICAL_VALUE_1, rateDerivationDto.getQuantity().getBaseLocationUuid());
+            assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getBaseQuantityIndicatorUuid());
+            assertEquals(INDICATOR_3, rateDerivationDto.getQuantity().getNumeratorIndicatorUuid());
+            assertEquals(INDICATOR_6, rateDerivationDto.getQuantity().getDenominatorIndicatorUuid());
+        }
+        {   
+            RateDerivationDto rateDerivationDto = dataSourceDto.getAnnualPercentageRate();
+            assertEquals(RateDerivationMethodTypeEnum.CALCULATE, rateDerivationDto.getMethodType());
+            assertEquals("MethodOfInterperiod1214", rateDerivationDto.getMethod());
+            assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
+            assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
+            assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnitUuid());
+            assertEquals(Integer.valueOf(63), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
+            assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
+        }
 
         assertEquals(2, dataSourceDto.getOtherVariables().size());
         assertEquals("variable Indicator-1-v2-DataSource-1-Variable-1", dataSourceDto.getOtherVariables().get(0).getVariable());
@@ -2600,24 +2726,45 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
         dataSourceDto.setAbsoluteMethod("absoluteMethod1");
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
+        
+        dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodPuntualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getInterperiodPuntualRate().setMethod("Method1");
+        dataSourceDto.getInterperiodPuntualRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
+
+        dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodPercentageRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getInterperiodPercentageRate().setMethod("Method3");
+        dataSourceDto.getInterperiodPercentageRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodPercentageRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setIsPercentage(Boolean.FALSE);
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
+
+        dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualPuntualRate().setMethod("Method2");
+        dataSourceDto.getAnnualPuntualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
+        
+        dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualPercentageRate().setMethod("Method3");
+        dataSourceDto.getAnnualPercentageRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
 
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
@@ -2636,7 +2783,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
     
     @Test
-    public void testCreateDataSourceWithoutVariables() throws Exception {
+    public void testCreateDataSourceWithValuesInsteadOfVariables() throws Exception {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
@@ -2652,24 +2799,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
@@ -2686,10 +2815,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setDataGpeUuid(null);
         dataSourceDto.setPxUri("px1");
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
+        dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
+        dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), INDICATOR_1, dataSourceDto);
@@ -2703,31 +2832,31 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_RATE.METHOD_TYPE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.METHOD", e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_RATE.METHOD", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.ROUNDING", e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_RATE.QUANTITY", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.TYPE", e.getExceptionItems().get(3).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(4).getCode());
             assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.METHOD", e.getExceptionItems().get(4).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.UNIT_UUID", e.getExceptionItems().get(4).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(5).getCode());
             assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.ROUNDING", e.getExceptionItems().get(5).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.METHOD_TYPE", e.getExceptionItems().get(5).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(6).getCode());
             assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.TYPE", e.getExceptionItems().get(6).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.METHOD", e.getExceptionItems().get(6).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(7).getCode());
             assertEquals(1, e.getExceptionItems().get(7).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.UNIT_UUID", e.getExceptionItems().get(7).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY", e.getExceptionItems().get(7).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(2, e.getExceptionItems().get(8).getMessageParameters().length);
@@ -2758,24 +2887,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
         String uuidIndicator = INDICATOR_1;
         try {
@@ -2789,7 +2900,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
     
     @Test
-    public void testCreateDataSourceErrorMetamacUnexpected() throws Exception {
+    public void testCreateDataSourceErrorMetadataUnexpected() throws Exception {
 
         // Create dataSource
         DataSourceDto dataSourceDto = new DataSourceDto();
@@ -2809,24 +2920,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
         String uuidIndicator = INDICATOR_1;
         try {
@@ -2847,80 +2940,44 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testCreateDataSourceErrorIndicatorNotExists() throws Exception {
 
-        String indicatorsSystemUuid = NOT_EXISTS;
+        String indicatorUuid = NOT_EXISTS;
 
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
         try {
-            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorsSystemUuid, dataSourceDto);
+            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
             fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(indicatorUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
     @Test
     public void testCreateDataSourceErrorIndicatorHasNotVersionInProduction() throws Exception {
 
-        String indicatorsSystemUuid = INDICATOR_3;
+        String indicatorUuid = INDICATOR_3;
 
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setDataGpeUuid("queryGpe1");
         dataSourceDto.setPxUri("px1");
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
 
         try {
-            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorsSystemUuid, dataSourceDto);
+            indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
             fail("Indicator not in production");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATOR_IN_PRODUCTION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorsSystemUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(indicatorUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2944,24 +3001,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualPuntualRate().setMethod("Method2");
+        dataSourceDto.getAnnualPuntualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuidLinked);
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
@@ -2970,7 +3019,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2993,24 +3042,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
+        dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualPuntualRate().setMethod("Method2");
+        dataSourceDto.getAnnualPuntualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
@@ -3019,7 +3060,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_RATE.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals("DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3043,24 +3084,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-        dataSourceDto.setInterperiodRate(new RateDerivationDto());
-        dataSourceDto.getInterperiodRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
-        dataSourceDto.getInterperiodRate().setMethod("Method1");
-        dataSourceDto.getInterperiodRate().setRounding(RateDerivationRoundingEnum.DOWN);
-        dataSourceDto.getInterperiodRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
-        dataSourceDto.getInterperiodRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        dataSourceDto.getInterperiodRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
-        dataSourceDto.setAnnualRate(new RateDerivationDto());
-        dataSourceDto.getAnnualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
-        dataSourceDto.getAnnualRate().setMethod("Method2");
-        dataSourceDto.getAnnualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
-        dataSourceDto.getAnnualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualRate().getQuantity().setType(QuantityTypeEnum.INDEX);
-        dataSourceDto.getAnnualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
-        dataSourceDto.getAnnualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
-        dataSourceDto.getAnnualRate().getQuantity().setIsPercentage(Boolean.TRUE);
-        dataSourceDto.getAnnualRate().getQuantity().setBaseLocationUuid(NOT_EXISTS);
+        dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
+        dataSourceDto.getAnnualPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
+        dataSourceDto.getAnnualPuntualRate().setMethod("Method2");
+        dataSourceDto.getAnnualPuntualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
+        dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.INDEX);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseLocationUuid(NOT_EXISTS);
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
@@ -3069,7 +3102,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(dataSourceDto.getAnnualRate().getQuantity().getBaseLocationUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(dataSourceDto.getAnnualPuntualRate().getQuantity().getBaseLocationUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
 
     }
@@ -3180,6 +3213,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto3.setVariable("variable3new");
         dataSourceVariableDto3.setCategory("category3new");
         dataSourceDto.addOtherVariable(dataSourceVariableDto3);
+        dataSourceDto.setAnnualPuntualRate(null);
+        dataSourceDto.getAnnualPercentageRate().setMethod("newMethod");
 
         // Update
         DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);

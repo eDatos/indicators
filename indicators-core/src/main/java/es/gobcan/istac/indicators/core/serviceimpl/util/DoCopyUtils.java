@@ -164,9 +164,10 @@ public class DoCopyUtils {
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
-        target.setInterperiodRate(copyRateDerivation(source.getInterperiodRate()));
-        target.setAnnualRate(copyRateDerivation(source.getAnnualRate()));
-        // TODO resto de rates
+        target.setAnnualPuntualRate(copyRateDerivation(source.getAnnualPuntualRate()));
+        target.setAnnualPercentageRate(copyRateDerivation(source.getAnnualPercentageRate()));
+        target.setInterperiodPuntualRate(copyRateDerivation(source.getInterperiodPuntualRate()));
+        target.setInterperiodPercentageRate(copyRateDerivation(source.getInterperiodPercentageRate()));
         return target;
     }
 
@@ -174,6 +175,9 @@ public class DoCopyUtils {
      * Copy a rate derivation
      */
     private static RateDerivation copyRateDerivation(RateDerivation source) {
+        if (source == null) {
+            return null;
+        }
         RateDerivation target = new RateDerivation();
         target.setMethodType(source.getMethodType());
         target.setMethod(source.getMethod());
