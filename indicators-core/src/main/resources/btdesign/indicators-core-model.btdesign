@@ -38,7 +38,7 @@ Application Indicators {
 	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+	    	List<@IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	
 	    	// Dimensions
 	    	@Dimension createDimension(String indicatorsSystemUuid, @Dimension dimension) throws MetamacException;
@@ -46,7 +46,7 @@ Application Indicators {
 	    	@Dimension updateDimensionLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
 	    	deleteDimension(String uuid) throws MetamacException;
-	    	List<@Dimension> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@Dimension> retrieveDimensionsByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// Indicators instances
 	    	@IndicatorInstance createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstance indicatorInstance) throws MetamacException;
@@ -54,7 +54,7 @@ Application Indicators {
 	    	@IndicatorInstance updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
-	    	List<@IndicatorInstance> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// Geographical values
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
@@ -62,7 +62,7 @@ Application Indicators {
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
-	    	List<@GeographicalGranularity> findGeographicalGranularities() throws MetamacException;
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularities() throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -96,16 +96,16 @@ Application Indicators {
 	    	@DataSource updateDataSource(@DataSource dataSource) throws MetamacException;
 	    	@DataSource retrieveDataSource(String uuid) throws MetamacException;
 	    	deleteDataSource(String uuid) throws MetamacException;
-	    	List<@DataSource> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<@DataSource> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
 	    	// Quantity units
 	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
-	    	List<@QuantityUnit> findQuantityUnits() throws MetamacException;
+	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
 	    	
 	    	// Subjects
 	    	@Subject retrieveSubject(String code) throws MetamacException;
-	    	List<@Subject> findSubjects() throws MetamacException;
-	    	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
+	    	List<@Subject> retrieveSubjects() throws MetamacException;
+	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
     	}   	
     	
     	"Provides access to indicators data"
@@ -114,21 +114,21 @@ Application Indicators {
     		> @IndicatorsServiceFacade
     		> @DataGpeRepository
     		
-			"Find all Data containing basic info only"
-	    	List<@DataDefinition> findDataDefinitions() throws MetamacException;
-			"Find Data containing basic info only"
+			"Retrieves all Data containing basic info only"
+	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
+			"Retrieves Data containing basic info only"
 	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
-	    	"Retrieve the Data's structure info"
+	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Populate a given indicator data"
+	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
     	Service IndicatorsDataProviderService {
-    		"Retrieve the Data's structure info"
+    		"Retrieves the Data's structure info"
 		    String retrieveDataStructureJson(String uuid) throws MetamacException;
-	     	"Retrieve Data content"
+	     	"Retrieves Data content"
     		String retrieveDataJson(String uuid) throws MetamacException;
     	}
 			    
@@ -169,8 +169,8 @@ Application Indicators {
 	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
-	    	"Find all indicators system published where indicator is"
-	    	List<@IndicatorsSystemDto> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+	    	"Retrieves all indicators system published where indicator is"
+	    	List<@IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"
@@ -184,7 +184,7 @@ Application Indicators {
 	    	"Deletes dimension"
 	    	deleteDimension(String uuid) throws MetamacException;
 	    	"Retrieves all dimensions of a indicators system regardless of the level"
-	    	List<@DimensionDto> findDimensions(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@DimensionDto> retrieveDimensionsByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	
 	    	// INDICATORS INSTANCES	    	
 	    	"Creates a indicator instance"
@@ -198,7 +198,7 @@ Application Indicators {
 	    	"Deletes indicator instance"
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	"Retrieves all indicators instances of a indicators system regardless of the level"
-	    	List<@IndicatorInstanceDto> findIndicatorsInstances(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	List<@IndicatorInstanceDto> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 
 	    	// GEOGRAPHICAL VALUES
 	    	"Retrieves geographical value"
@@ -210,7 +210,7 @@ Application Indicators {
 	    	"Retrieves geographical granularity"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	"Retrieves all geographical granularities"
-	    	List<@GeographicalGranularityDto> findGeographicalGranularities() throws MetamacException;
+	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -253,31 +253,31 @@ Application Indicators {
 	    	@DataSourceDto retrieveDataSource(String uuid) throws MetamacException;
 	    	"Deletes data source"
 	    	deleteDataSource(String uuid) throws MetamacException;
-	    	"Find data sources"
-	    	List<@DataSourceDto> findDataSources(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrieves all data sources of indicator"
+	    	List<@DataSourceDto> retrieveDataSourcesByIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	
 	    	// QUANTITY UNITS
 	    	"Retrieves quantity unit"
 	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
-	    	"Find all quantity units"
-	    	List<@QuantityUnitDto> findQuantityUnits() throws MetamacException;
+	    	"Retrieve all quantity units"
+	    	List<@QuantityUnitDto> retrieveQuantityUnits() throws MetamacException;
 	    	
 			// SUBJECTS
 			"Retrieves subject. Important! Do not invoke this operation from public web application"
 	    	@SubjectDto retrieveSubject(String code) throws MetamacException;
-	    	"Find all subjects. Important! Do not invoke this operation from public web application"
-	    	List<@SubjectDto> findSubjects() throws MetamacException;
-	    	"Find all subjects in published indicators"
-	    	List<@SubjectDto> findSubjectsInPublishedIndicators() throws MetamacException;
+	    	"Retrieves all subjects. Important! Do not invoke this operation from public web application"
+	    	List<@SubjectDto> retrieveSubjects() throws MetamacException;
+	    	"Retrieves all subjects in published indicators"
+	    	List<@SubjectDto> retrieveSubjectsInPublishedIndicators() throws MetamacException;
 	    	
 	    	// DATA
-	    	"Find all Data containing basic info only"
-	    	List<@DataDefinitionDto> findDataDefinitions() throws MetamacException;
-	    	"Find all Data basic info only"
+	    	"Retrieves all Data containing basic info only"
+	    	List<@DataDefinitionDto> retrieveDataDefinitions() throws MetamacException;
+	    	"Retrieves all Data basic info only"
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
-	    	"Retrieve the Data's structure info"
+	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
-	    	"Populate a given indicator data"
+	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    }
 
@@ -355,7 +355,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
             	List<@IndicatorsSystemVersion> findIndicatorsSystemsVersions(IndicatorsCriteria criteria) throws MetamacException;
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+            	List<@IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 			}
 		} 
 			    

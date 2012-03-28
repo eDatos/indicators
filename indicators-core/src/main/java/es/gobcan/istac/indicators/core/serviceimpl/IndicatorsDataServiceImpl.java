@@ -46,9 +46,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     @Override
-    public List<DataDefinition> findDataDefinitions(ServiceContext ctx) throws MetamacException {
+    public List<DataDefinition> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
         // Validation
-        InvocationValidator.checkFindDataDefinitions(null);
+        InvocationValidator.checkRetrieveDataDefinitions(null);
         
         // Find db
         List<DataDefinition> dataDefinitions = getDataGpeRepository().findCurrentDataDefinitions();
@@ -58,7 +58,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Override
     public DataDefinition retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation
-        InvocationValidator.checkFindDataDefinition(uuid,null);
+        InvocationValidator.checkRetrieveDataDefinition(uuid,null);
         
         // Find db
         DataDefinition dataDefinition = getDataGpeRepository().findCurrentDataDefinition(uuid);
@@ -88,7 +88,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkPopulateIndicatorData(indicatorUuid, indicatorVersionNumber, null);
         
         try {
-            List<DataSourceDto> dataSources = getIndicatorsServiceFacade().findDataSources(ctx, indicatorUuid, indicatorVersionNumber);
+            List<DataSourceDto> dataSources = getIndicatorsServiceFacade().retrieveDataSourcesByIndicator(ctx, indicatorUuid, indicatorVersionNumber);
             DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto(); 
             datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
             datasetRepoDto.setMaxAttributesObservation(1); //TODO: change when observation-level attributes are defined

@@ -995,7 +995,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = INDICATOR_1;
         String uuidDataSource1 = DATA_SOURCE_1_INDICATOR_1_V2;
         String uuidDataSource2 = DATA_SOURCE_2_INDICATOR_1_V2;
-        List<DataSourceDto> datasources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "2.000");
+        List<DataSourceDto> datasources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuid, "2.000");
         assertEquals(2, datasources.size());
         assertEquals(uuidDataSource1, datasources.get(0).getUuid());
         assertEquals(uuidDataSource2, datasources.get(1).getUuid());
@@ -1562,7 +1562,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
 
             // Check zero data sources
-            List<DataSourceDto> dataSources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
+            List<DataSourceDto> dataSources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(0, dataSources.size());
         }
 
@@ -2091,7 +2091,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuidNotPublished7 = INDICATOR_7;
 
         // Change datasource to fraction with numerator in draft
-        List<DataSourceDto> datasources = indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
+        List<DataSourceDto> datasources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuid, "1.000");
         {
             DataSourceDto dataSourceDto = datasources.get(0);
             // Indicator not published
@@ -2334,7 +2334,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
             assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
             // Data sources
-            List<DataSourceDto> dataSources = indicatorsServiceFacade.findDataSources(getServiceContext(), indicatorDtoProduction.getUuid(), indicatorDtoProduction.getProductionVersion());
+            List<DataSourceDto> dataSources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), indicatorDtoProduction.getUuid(), indicatorDtoProduction.getProductionVersion());
             assertEquals(1, dataSources.size());
             assertEquals("query-gpe Indicator-3-v1-DataSource-1", dataSources.get(0).getDataGpeUuid());
             assertEquals("px Indicator-3-v1-DataSource-1", dataSources.get(0).getPxUri());
@@ -2793,7 +2793,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoRetrieved);
 
         // Retrieves all data sources
-        List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
+        List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuidIndicator, "2.000");
         assertEquals(3, dataSourcesDto.size());
         assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
         assertEquals(DATA_SOURCE_2_INDICATOR_1_V2, dataSourcesDto.get(1).getUuid());
@@ -3306,20 +3306,20 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindDataSources() throws Exception {
+    public void testretrieveDataSourcesByIndicator() throws Exception {
 
         String uuidIndicator = INDICATOR_1;
 
         // Version 1.000
         {
-            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "1.000");
+            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuidIndicator, "1.000");
             assertEquals(1, dataSourcesDto.size());
             assertEquals(DATA_SOURCE_1_INDICATOR_1_V1, dataSourcesDto.get(0).getUuid());
         }
 
         // Version 2.000
         {
-            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.findDataSources(getServiceContext(), uuidIndicator, "2.000");
+            List<DataSourceDto> dataSourcesDto = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuidIndicator, "2.000");
             assertEquals(2, dataSourcesDto.size());
 
             assertEquals(DATA_SOURCE_1_INDICATOR_1_V2, dataSourcesDto.get(0).getUuid());
@@ -3328,13 +3328,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindDataSourcesErrorNotExists() throws Exception {
+    public void testRetrieveDataSourcesErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
 
         // Validation
         try {
-            indicatorsServiceFacade.findDataSources(getServiceContext(), uuid, "1.000");
+            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), uuid, "1.000");
             fail("Indicator not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -3493,9 +3493,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindQuantityUnits() throws Exception {
+    public void testRetrieveQuantityUnits() throws Exception {
 
-        List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.findQuantityUnits(getServiceContext());
+        List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.retrieveQuantityUnits(getServiceContext());
         assertEquals(2, quantityUnits.size());
 
         assertEquals(QUANTITY_UNIT_1, quantityUnits.get(0).getUuid());
@@ -3551,9 +3551,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindSubjects() throws Exception {
+    public void testRetrieveSubjects() throws Exception {
 
-        List<SubjectDto> subjects = indicatorsServiceFacade.findSubjects(getServiceContext());
+        List<SubjectDto> subjects = indicatorsServiceFacade.retrieveSubjects(getServiceContext());
         assertEquals(4, subjects.size());
 
         assertEquals(SUBJECT_1, subjects.get(0).getCode());
@@ -3567,9 +3567,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testFindSubjectsInPublishedIndicators() throws Exception {
+    public void testRetrieveSubjectsInPublishedIndicators() throws Exception {
 
-        List<SubjectDto> subjects = indicatorsServiceFacade.findSubjectsInPublishedIndicators(getServiceContext());
+        List<SubjectDto> subjects = indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContext());
         assertEquals(2, subjects.size());
 
         assertEquals(SUBJECT_1, subjects.get(0).getCode());

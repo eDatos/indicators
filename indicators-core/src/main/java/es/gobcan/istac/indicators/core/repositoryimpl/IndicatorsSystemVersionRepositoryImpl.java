@@ -78,7 +78,7 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
+    public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
 
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();

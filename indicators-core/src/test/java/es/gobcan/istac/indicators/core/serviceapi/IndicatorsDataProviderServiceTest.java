@@ -1,11 +1,8 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
-import static org.junit.Assert.fail;
-
 import org.junit.Ignore;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

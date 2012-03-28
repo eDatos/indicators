@@ -73,8 +73,8 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     
     @Test
     @Override
-    public void testFindDataDefinitions() throws Exception {
-        List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitions(getServiceContext());
+    public void testRetrieveDataDefinitions() throws Exception {
+        List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContext());
         assertEquals(1, dataDefs.size());
         assertTrue(1 == dataDefs.get(0).getId());
     }
@@ -82,7 +82,7 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     @Test
     public void testRetrieveDataDefinitionUuidNull() throws Exception {
         try {
-            DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(),null);
+            indicatorsDataService.retrieveDataDefinition(getServiceContext(),null);
             fail("parameter required");
         } catch(MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -182,7 +182,7 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     @Test
     public void testRetrieveDataStructureUuidNull() throws Exception {
         try {
-            DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContext(), null);
+            indicatorsDataService.retrieveDataStructure(getServiceContext(), null);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

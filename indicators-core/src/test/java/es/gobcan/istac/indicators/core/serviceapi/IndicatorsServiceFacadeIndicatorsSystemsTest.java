@@ -1586,11 +1586,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
     
     @Test
-    public void testFindIndicatorsSystemsPublishedWithIndicator() throws Exception {
+    public void testRetrieveIndicatorsSystemsPublishedWithIndicator() throws Exception {
 
         {
             // Indicator 1
-            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_1);
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_1);
             assertEquals(3, indicatorsSystemsDto.size());
     
             assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1607,12 +1607,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
         {
             // Indicator 2
-            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_2);
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_2);
             assertEquals(0, indicatorsSystemsDto.size());
         }
         {
             // Indicator 3
-            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_3);
+            List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_3);
             assertEquals(1, indicatorsSystemsDto.size());
             
             assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(0).getUuid());
@@ -2080,20 +2080,20 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindDimensions() throws Exception {
+    public void testretrieveDimensionsByIndicatorsSystem() throws Exception {
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
         // Version 1.000
         {
-            List<DimensionDto> dimensionsDto = indicatorsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "1.000");
+            List<DimensionDto> dimensionsDto = indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContext(), uuidIndicatorsSystem, "1.000");
             assertEquals(1, dimensionsDto.size());
             assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V1, dimensionsDto.get(0).getUuid());
         }
 
         // Version 2.000
         {
-            List<DimensionDto> dimensionsDto = indicatorsServiceFacade.findDimensions(getServiceContext(), uuidIndicatorsSystem, "2.000");
+            List<DimensionDto> dimensionsDto = indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContext(), uuidIndicatorsSystem, "2.000");
             assertEquals(5, dimensionsDto.size());
 
             assertEquals(DIMENSION_1A_INDICATORS_SYSTEM_1_V2, dimensionsDto.get(0).getUuid());
@@ -2105,13 +2105,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindDimensionsErrorNotExists() throws Exception {
+    public void testretrieveDimensionsByIndicatorsSystemErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
 
         // Validation
         try {
-            indicatorsServiceFacade.findDimensions(getServiceContext(), uuid, "1.000");
+            indicatorsServiceFacade.retrieveDimensionsByIndicatorsSystem(getServiceContext(), uuid, "1.000");
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -3033,20 +3033,20 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindIndicatorsInstances() throws Exception {
+    public void testRetrieveIndicatorsInstances() throws Exception {
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
         // Version 1.000
         {
-            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "1.000");
+            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContext(), uuidIndicatorsSystem, "1.000");
             assertEquals(1, indicatorsInstancesDto.size());
             assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1, indicatorsInstancesDto.get(0).getUuid());
         }
 
         // Version 2.000
         {
-            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsServiceFacade.findIndicatorsInstances(getServiceContext(), uuidIndicatorsSystem, "2.000");
+            List<IndicatorInstanceDto> indicatorsInstancesDto = indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContext(), uuidIndicatorsSystem, "2.000");
             assertEquals(3, indicatorsInstancesDto.size());
 
             assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorsInstancesDto.get(0).getUuid());
@@ -3056,13 +3056,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindIndicatorsInstancesErrorNotExists() throws Exception {
+    public void testRetrieveIndicatorsInstancesErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
 
         // Validation
         try {
-            indicatorsServiceFacade.findIndicatorsInstances(getServiceContext(), uuid, "1.000");
+            indicatorsServiceFacade.retrieveIndicatorsInstancesByIndicatorsSystem(getServiceContext(), uuid, "1.000");
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -3664,9 +3664,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testFindGeographicalGranularities() throws Exception {
+    public void testRetrieveGeographicalGranularities() throws Exception {
 
-        List<GeographicalGranularityDto> geographicalGranularities = indicatorsServiceFacade.findGeographicalGranularities(getServiceContext());
+        List<GeographicalGranularityDto> geographicalGranularities = indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContext());
         assertEquals(2, geographicalGranularities.size());
 
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalGranularities.get(0).getUuid());

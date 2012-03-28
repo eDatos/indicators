@@ -219,10 +219,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorsSystemDto> findIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Retrieve
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemPublishedForIndicator(ctx, indicatorUuid);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublishedForIndicator(ctx, indicatorUuid);
 
         // Transform
         List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
@@ -264,10 +264,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<DimensionDto> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
+    public List<DimensionDto> retrieveDimensionsByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
         // Retrieve dimensions
-        List<Dimension> dimensions = getIndicatorsSystemsService().findDimensions(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        List<Dimension> dimensions = getIndicatorsSystemsService().retrieveDimensionsByIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
 
         // Transform
         List<DimensionDto> dimensionsDto = new ArrayList<DimensionDto>();
@@ -334,10 +334,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorInstanceDto> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
+    public List<IndicatorInstanceDto> retrieveIndicatorsInstancesByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersion) throws MetamacException {
 
         // Retrieve indicators instances
-        List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().findIndicatorsInstances(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
+        List<IndicatorInstance> indicatorsInstances = getIndicatorsSystemsService().retrieveIndicatorsInstancesByIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersion);
 
         // Transform
         List<IndicatorInstanceDto> indicatorsInstancesDto = new ArrayList<IndicatorInstanceDto>();
@@ -410,10 +410,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalGranularityDto> findGeographicalGranularities(ServiceContext ctx) throws MetamacException {
+    public List<GeographicalGranularityDto> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
 
         // Retrieve geographicalGranularitys
-        List<GeographicalGranularity> geographicalGranularitys = getIndicatorsSystemsService().findGeographicalGranularities(ctx);
+        List<GeographicalGranularity> geographicalGranularitys = getIndicatorsSystemsService().retrieveGeographicalGranularities(ctx);
 
         // Transform
         List<GeographicalGranularityDto> geographicalGranularitysDto = new ArrayList<GeographicalGranularityDto>();
@@ -617,10 +617,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<DataSourceDto> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
+    public List<DataSourceDto> retrieveDataSourcesByIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
 
         // Retrieve dataSources
-        List<DataSource> dataSources = getIndicatorsService().findDataSources(ctx, indicatorUuid, indicatorVersion);
+        List<DataSource> dataSources = getIndicatorsService().retrieveDataSourcesByIndicator(ctx, indicatorUuid, indicatorVersion);
 
         // Transform
         List<DataSourceDto> dataSourcesDto = new ArrayList<DataSourceDto>();
@@ -657,10 +657,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<QuantityUnitDto> findQuantityUnits(ServiceContext ctx) throws MetamacException {
+    public List<QuantityUnitDto> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
 
         // Retrieve quantityUnits
-        List<QuantityUnit> quantityUnits = getIndicatorsService().findQuantityUnits(ctx);
+        List<QuantityUnit> quantityUnits = getIndicatorsService().retrieveQuantityUnits(ctx);
 
         // Transform
         List<QuantityUnitDto> quantityUnitsDto = new ArrayList<QuantityUnitDto>();
@@ -683,10 +683,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<SubjectDto> findSubjects(ServiceContext ctx) throws MetamacException {
+    public List<SubjectDto> retrieveSubjects(ServiceContext ctx) throws MetamacException {
 
         // Retrieve subjects
-        List<Subject> subjects = getIndicatorsService().findSubjects(ctx);
+        List<Subject> subjects = getIndicatorsService().retrieveSubjects(ctx);
 
         // Transform
         List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
@@ -698,10 +698,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<SubjectDto> findSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
+    public List<SubjectDto> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
 
         // Retrieve subjects
-        List<SubjectIndicatorResult> subjects = getIndicatorsService().findSubjectsInPublishedIndicators(ctx);
+        List<SubjectIndicatorResult> subjects = getIndicatorsService().retrieveSubjectsInPublishedIndicators(ctx);
 
         // Transform
         List<SubjectDto> subjectsDto = new ArrayList<SubjectDto>();
@@ -713,9 +713,9 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
     
     @Override
-    public List<DataDefinitionDto> findDataDefinitions(ServiceContext ctx) throws MetamacException {
+    public List<DataDefinitionDto> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
         // Service call
-        List<DataDefinition> dataDefs = getIndicatorsDataService().findDataDefinitions(ctx);
+        List<DataDefinition> dataDefs = getIndicatorsDataService().retrieveDataDefinitions(ctx);
         
         //Transform
         List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();

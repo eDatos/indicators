@@ -493,10 +493,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public List<DataSource> findDataSources(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<DataSource> retrieveDataSourcesByIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindDataSources(indicatorUuid, indicatorVersionNumber, null);
+        InvocationValidator.checkRetrieveDataSourcesByIndicator(indicatorUuid, indicatorVersionNumber, null);
 
         // Retrieve dataSources and transform
         IndicatorVersion indicatorVersion = retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
@@ -518,10 +518,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public List<QuantityUnit> findQuantityUnits(ServiceContext ctx) throws MetamacException {
+    public List<QuantityUnit> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindQuantityUnits(null);
+        InvocationValidator.checkRetrieveQuantityUnits(null);
 
         // Find
         List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
@@ -549,10 +549,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * This operation retrieves subjects from table view. Won't be accesible in public web application.
      */
     @Override
-    public List<Subject> findSubjects(ServiceContext ctx) throws MetamacException {
+    public List<Subject> retrieveSubjects(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindSubjects(null);
+        InvocationValidator.checkRetrieveSubjects(null);
 
         // Find
         List<Subject> subjects = getSubjectRepository().findSubjects();
@@ -563,10 +563,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * This operation retrieves subjects from indicators table
      */
     @Override
-    public List<SubjectIndicatorResult> findSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
+    public List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindSubjectsInPublishedIndicators(null);
+        InvocationValidator.checkRetrieveSubjectsInPublishedIndicators(null);
 
         // Find
         List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();

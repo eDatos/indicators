@@ -31,7 +31,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-facade-mockito.xml","classpath:spring/applicationContext-test.xml"})
-public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implements IndicatorsDataServiceFacadeTestBase {
+public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsDataServiceFacade;
@@ -50,21 +50,19 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     @Before
     public void setUpMocks() throws MetamacException {
         //init mocks
-        when(indicatorsDataService.findDataDefinitions(any(ServiceContext.class))).thenReturn(Arrays.asList(new DataDefinition[] {dataDefinition1}));
+        when(indicatorsDataService.retrieveDataDefinitions(any(ServiceContext.class))).thenReturn(Arrays.asList(new DataDefinition[] {dataDefinition1}));
         when(indicatorsDataService.retrieveDataDefinition(any(ServiceContext.class),eq(dataDefinition1.getUuid()))).thenReturn(dataDefinition1);
         when(indicatorsDataService.retrieveDataStructure(any(ServiceContext.class),eq(dataStructure1.getUuid()))).thenReturn(dataStructure1);
     }
     
     @Test
-    @Override
-    public void testFindDataDefinitions() throws Exception {
-        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.findDataDefinitions(getServiceContext());
+    public void testRetrieveDataDefinitions() throws Exception {
+        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.retrieveDataDefinitions(getServiceContext());
         assertNotNull(dtos);
         compareDoDto(dataDefinition1, dtos.get(0));
     }
     
     @Test
-    @Override
     public void testRetrieveDataDefinition() throws Exception {
         DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContext(),dataDefinition1.getUuid());
         assertNotNull(dto);
@@ -78,7 +76,6 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     }
     
     @Test
-    @Override
     public void testRetrieveDataStructure() throws Exception {
         DataStructureDto dto = indicatorsDataServiceFacade.retrieveDataStructure(getServiceContext(), dataStructure1.getUuid());
         assertNotNull(dto);
@@ -86,7 +83,6 @@ public class IndicatorsDataServiceFacadeTest extends IndicatorsBaseTest implemen
     }
 
     @Test
-    @Override
     public void testPopulateIndicatorData() throws Exception {
         // TODO Auto-generated method stub
     }    

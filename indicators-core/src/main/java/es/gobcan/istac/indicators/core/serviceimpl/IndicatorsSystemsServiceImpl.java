@@ -249,13 +249,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
     
     @Override
-    public List<IndicatorsSystemVersion> findIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystemPublishedForIndicator(indicatorUuid, null);
+        InvocationValidator.checkRetrieveIndicatorsSystemPublishedForIndicator(indicatorUuid, null);
 
         // Find
-        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().findIndicatorsSystemPublishedForIndicator(indicatorUuid);
+        List<IndicatorsSystemVersion> indicatorsSystemsVersions = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemPublishedForIndicator(indicatorUuid);
         return indicatorsSystemsVersions;
     }
 
@@ -488,10 +488,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<Dimension> findDimensions(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+    public List<Dimension> retrieveDimensionsByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindDimensions(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
+        InvocationValidator.checkRetrieveDimensionsByIndicatorsSystem(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
 
         // Retrieve dimensions
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
@@ -574,10 +574,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<IndicatorInstance> findIndicatorsInstances(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
+    public List<IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicatorsInstances(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
+        InvocationValidator.checkRetrieveIndicatorsInstancesByIndicatorsSystem(indicatorsSystemUuid, indicatorsSystemVersionNumber, null);
 
         // Retrieve
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystem(ctx, indicatorsSystemUuid, indicatorsSystemVersionNumber);
@@ -632,10 +632,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public List<GeographicalGranularity> findGeographicalGranularities(ServiceContext ctx) throws MetamacException {
+    public List<GeographicalGranularity> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindGeographicalGranularities(null);
+        InvocationValidator.checkRetrieveGeographicalGranularities(null);
 
         // Find
         List<GeographicalGranularity> geographicalGranularitys = getGeographicalGranularityRepository().findAll();
