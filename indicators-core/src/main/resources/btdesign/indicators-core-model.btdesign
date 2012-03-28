@@ -642,7 +642,17 @@ Application Indicators {
 			- Bag<@DataSourceVariable> otherVariables cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" databaseColumn="DATA_SOURCE_FK";
 			"Absolute method"
 			String absoluteMethod nullable;
-			
+			"Source survey code"
+			String sourceSurveyCode not nullable;
+			"Source survey title"
+			- @InternationalString sourceSurveyTitle cascade="all" not nullable databaseColumn="SOURCE_SURVEY_TITLE_FK";
+			"Source survey acronym"
+			- @InternationalString sourceSurveyAcronym cascade="all" nullable databaseColumn="SOURCE_SURVEY_ACRONYM_FK";
+			"Source survey url"
+			String sourceSurveyUrl nullable;
+			"Publishers (with ## as separtor)"
+			String publishers not nullable;
+						
 			// Relations
             "Indicator version"
 			- @IndicatorVersion indicatorVersion cascade="none" fetch="lazy" nullable databaseColumn="INDICATOR_VERSION_FK" <-> dataSources;
@@ -966,6 +976,16 @@ Application Indicators {
 			- @RateDerivationDto interperiodPuntualRate;
 			"Interperiod percentage rate"
 			- @RateDerivationDto interperiodPercentageRate;
+			"Source survey code"
+			String sourceSurveyCode;
+			"Source survey title"
+			- @InternationalStringDto sourceSurveyTitle;
+			"Source survey acronym"
+			- @InternationalStringDto sourceSurveyAcronym;
+			"Source survey url"
+			String sourceSurveyUrl;
+			"Publishers"
+			List<String> publishers;			
 	    }
 	    
 	    "Dto for variables and categories"

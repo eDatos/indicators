@@ -847,10 +847,16 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), "DATA_SOURCE.DATA_GPE_UUID", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPxUri(), "DATA_SOURCE.PX_URI", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), "DATA_SOURCE.SOURCE_SURVEY_CODE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyTitle(), "DATA_SOURCE.SOURCE_SURVEY_TITLE", exceptions);
+        ValidationUtils.checkMetadataRequired(dataSource.getPublishers(), "DATA_SOURCE.PUBLISHERS", exceptions);
+        
+        // Rates
         checkRateDerivation(dataSource.getAnnualPuntualRate(), "DATA_SOURCE.ANNUAL_PUNTUAL_RATE", Boolean.FALSE, exceptions);
         checkRateDerivation(dataSource.getAnnualPercentageRate(), "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
         checkRateDerivation(dataSource.getInterperiodPuntualRate(), "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE", Boolean.FALSE, exceptions);
         checkRateDerivation(dataSource.getInterperiodPercentageRate(), "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
+        
         // Time
         if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
             // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
@@ -862,6 +868,7 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(dataSource.getTimeValue()) && !TimeVariableUtils.isTimeValue(dataSource.getTimeValue())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DATA_SOURCE.TIME_VALUE"));
         }
+        
         // Geographical
         if (ValidationUtils.isEmpty(dataSource.getGeographicalVariable()) && ValidationUtils.isEmpty(dataSource.getGeographicalValue())) {
             // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 

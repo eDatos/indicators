@@ -48,6 +48,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -172,6 +173,12 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
         target.getOtherVariables().addAll(dataSourceVariableDoToDto(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
+        target.setSourceSurveyCode(source.getSourceSurveyCode());
+        target.setSourceSurveyTitle(internationalStringToDto(source.getSourceSurveyTitle()));
+        target.setSourceSurveyAcronym(internationalStringToDto(source.getSourceSurveyAcronym()));
+        target.setSourceSurveyUrl(source.getSourceSurveyUrl());
+        target.setPublishers(ServiceUtils.doString2DtoList(source.getPublishers()));
+
         target.setAnnualPuntualRate(rateDerivationDoToDto(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDoToDto(source.getAnnualPercentageRate()));
         target.setInterperiodPuntualRate(rateDerivationDoToDto(source.getInterperiodPuntualRate()));

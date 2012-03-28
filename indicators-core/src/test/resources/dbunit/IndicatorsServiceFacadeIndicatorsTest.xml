@@ -112,6 +112,11 @@
 						INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   						ANNUAL_PUNTUAL_RATE_FK="1112"
   						ANNUAL_PERCENTAGE_RATE_FK="[null]"
+    					SOURCE_SURVEY_CODE="code-Indicator-1-v1-DataSource-1"
+  						SOURCE_SURVEY_URL="http Indicator-1-v1-DataSource-1"
+  						PUBLISHERS="ISTAC##INE"
+  						SOURCE_SURVEY_TITLE_FK="50"
+  						SOURCE_SURVEY_ACRONYM_FK="51"
   
 						VERSION="1"
 						CREATED_BY="user1"
@@ -263,9 +268,14 @@
 					INDICATOR_VERSION_FK="12"
 					ABSOLUTE_METHOD="absolute-method-1-v2-1"
 					INTERPERIOD_PUNTUAL_RATE_FK="1211"
-					ANNUAL_PUNTUAL_RATE_FK="1212"
-					INTERPERIOD_PERCENTAGE_RATE_FK="1213"
+					INTERPERIOD_PERCENTAGE_RATE_FK="1212"
+					ANNUAL_PUNTUAL_RATE_FK="1213"
 					ANNUAL_PERCENTAGE_RATE_FK="1214"
+   					SOURCE_SURVEY_CODE="code-Indicator-1-v2-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-1-v2-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="52"
+ 					SOURCE_SURVEY_ACRONYM_FK="61"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -315,7 +325,7 @@
 						ID="1212"
 						UUID="RateDerivation-1212"
 						METHOD_TYPE="LOAD"
-						METHOD="MethodOfAnnual1212"
+						METHOD="MethodOfInterperiod1212"
 						ROUNDING="DOWN"
 						QUANTITY_FK="12121"
 						
@@ -340,10 +350,10 @@
 		  					MAXIMUM="222"
 		  					IS_PERCENTAGE="1"
 							PERCENTAGE_OF_FK="49"
-		  					BASE_VALUE="5"
-		  					BASE_TIME="2010"
-		  					BASE_LOCATION_FK="1"
-		  					BASE_QUANTITY_FK="3"
+		  					BASE_VALUE="[null]"
+		  					BASE_TIME="[null]"
+		  					BASE_LOCATION_FK="[null]"
+		  					BASE_QUANTITY_FK="1"
 							NUMERATOR_FK="3"
 							DENOMINATOR_FK="6"
 							
@@ -407,16 +417,26 @@
 						LAST_UPDATED="2011-03-3 01:02:04"
 						LAST_UPDATED_TZ="Europe/London"
 					/>
-					
+						
 						<TBL_QUANTITIES
 						  	ID="12141"
 		  					UUID="Quantity-12141"
-							QUANTITY_TYPE="AMOUNT"
+							QUANTITY_TYPE="CHANGE_RATE"
 		  					UNIT_MULTIPLIER="63"
 		  					SIGNIFICANT_DIGITS="3"
 		  					DECIMAL_PLACES="4"
 							UNIT_FK="2"
-		
+		  					MINIMUM="333"
+		  					MAXIMUM="444"
+		  					IS_PERCENTAGE="1"
+							PERCENTAGE_OF_FK="[null]"
+		  					BASE_VALUE="[null]"
+		  					BASE_TIME="[null]"
+		  					BASE_LOCATION_FK="[null]"
+		  					BASE_QUANTITY_FK="1"
+							NUMERATOR_FK="3"
+							DENOMINATOR_FK="6"
+							
 							VERSION="1"
 							CREATED_BY="user1"
 							CREATED_DATE="2011-01-01 01:02:04"
@@ -424,7 +444,7 @@
 							LAST_UPDATED_BY="user2"
 							LAST_UPDATED="2011-01-22 01:02:04"
 							LAST_UPDATED_TZ="Europe/London"
-						/>	
+						/>
 				
 					<TBL_DATA_SOURCES_VARIABLES
 						ID="1211"
@@ -544,7 +564,12 @@
 					ANNUAL_PUNTUAL_RATE_FK="1222"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
-					
+					SOURCE_SURVEY_CODE="code-Indicator-1-v2-DataSource-2"
+ 					SOURCE_SURVEY_URL="http Indicator-1-v2-DataSource-2"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="53"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+ 					
 					VERSION="1"
 					CREATED_BY="user1"
 					CREATED_DATE="2011-03-03 01:02:04"
@@ -802,6 +827,11 @@
 					ANNUAL_PUNTUAL_RATE_FK="3112"
 					ANNUAL_PERCENTAGE_RATE_FK="3113"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-3-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-3-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="54"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1041,6 +1071,11 @@
   					ANNUAL_PUNTUAL_RATE_FK="4112"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-4-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-4-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="55"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1219,6 +1254,11 @@
 					ANNUAL_PUNTUAL_RATE_FK="5112"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-5-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-5-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="56"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
 				
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1315,7 +1355,12 @@
 					ANNUAL_PUNTUAL_RATE_FK="5122"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
-				
+					SOURCE_SURVEY_CODE="code-Indicator-5-v1-DataSource-2"
+ 					SOURCE_SURVEY_URL="http Indicator-5-v1-DataSource-2"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="57"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+ 					
 					VERSION="1"
 					CREATED_BY="user1"
 					CREATED_DATE="2011-03-03 01:02:04"
@@ -1553,6 +1598,11 @@
   					ANNUAL_PUNTUAL_RATE_FK="6212"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+  					SOURCE_SURVEY_CODE="code-Indicator-6-v2-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-6-v2-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="58"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -1791,7 +1841,12 @@
   					ANNUAL_PUNTUAL_RATE_FK="7212"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
-					
+					SOURCE_SURVEY_CODE="code-Indicator-7-v2-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-7-v2-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="59"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+ 					
 					VERSION="1"
 					CREATED_BY="user1"
 					CREATED_DATE="2011-03-03 01:02:04"
@@ -2050,6 +2105,11 @@
   					ANNUAL_PUNTUAL_RATE_FK="9112"
 					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
   					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code-Indicator-9-v1-DataSource-1"
+ 					SOURCE_SURVEY_URL="http Indicator-9-v1-DataSource-1"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="60"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
 					
 					VERSION="1"
 					CREATED_BY="user1"
@@ -3299,7 +3359,161 @@
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="49"
-	/>							
-							
-
+	/>		
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="50"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="80"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="50"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="51"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="81"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="51"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="52"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="82"
+		LABEL="source survey title Indicator-1-v2-DataSource-1"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="52"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="53"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="83"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="53"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="54"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="84"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="54"
+	/>	
+		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="55"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="85"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="55"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="56"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="86"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="56"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="57"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="87"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="57"
+	/>	
+		
+	<TBL_INTERNATIONAL_STRINGS
+		ID="58"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="88"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="58"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="59"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="89"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="59"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="60"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="90"
+		LABEL="Título xx"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="60"
+	/>	
+	
+	<TBL_INTERNATIONAL_STRINGS
+		ID="61"
+		VERSION="1"
+	/>
+	
+	<TBL_LOCALISED_STRINGS
+		ID="91"
+		LABEL="source survey acronym Indicator-1-v2-DataSource-1"
+		LOCALE="es"
+		VERSION="1"
+		INTERNATIONAL_STRING_FK="61"
+	/>		
 </dataset>

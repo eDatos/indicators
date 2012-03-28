@@ -45,7 +45,7 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
     }
     
     private List<String> buildQueriesToFindIndicatorsLinkedWithIndicatorVersion() {
-        String[] rateAttributes = new String[] {"annualPuntualRate", "annualPercentageRate", "interperiodPuntualRate", "interperiodPercentageRate"};
+        String[] rateAttributes = new String[] {"annualPercentageRate", "interperiodPercentageRate"}; // Note: *puntualRate has not attributes with indicators
         String[] quantityIndicatorsAttributes = new String[] {"numerator", "denominator", "baseQuantity"};
         List<String> queriesSql = new ArrayList<String>();
         for (int i = 0; i < rateAttributes.length; i++) {

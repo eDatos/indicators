@@ -2,7 +2,10 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -13,6 +16,7 @@ public class ServiceUtils {
 
     private static final NumberFormat formatterMajor = new DecimalFormat("0");
     private static final NumberFormat formatterMinor = new DecimalFormat("000");
+    private static final String SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
 
     public static String generateVersionNumber(String actualVersionNumber, VersionTypeEnum versionType) throws MetamacException {
 
@@ -33,5 +37,19 @@ public class ServiceUtils {
             throw new MetamacException(ServiceExceptionType.PARAMETER_UNEXPECTED, versionType, VersionTypeEnum.class);
         }
         return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
+    }
+    
+    public static String dtoList2DtoString(List<String> source) {
+        if (source == null || source.size() == 0) {
+            return null;
+        }
+        return StringUtils.join(source, SEPARATOR_LIST_DTO_TO_STRING_DO);
+        
+    }
+    public static List<String> doString2DtoList(String source) {
+        if (org.siemac.metamac.core.common.util.shared.StringUtils.isBlank(source)) {
+            return null;
+        }
+        return Arrays.asList(org.apache.commons.lang.StringUtils.split(source, SEPARATOR_LIST_DTO_TO_STRING_DO));
     }
 }

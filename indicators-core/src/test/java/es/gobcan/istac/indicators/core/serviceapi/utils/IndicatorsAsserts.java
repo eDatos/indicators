@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Asserts to tests
@@ -72,7 +73,6 @@ public class IndicatorsAsserts {
         assertEquals(expected.getGeographicalVariable(), actual.getGeographicalVariable());
         assertEquals(expected.getGeographicalValueUuid(), actual.getGeographicalValueUuid());
         assertEquals(expected.getOtherVariables().size(), actual.getOtherVariables().size());
-        
         for (DataSourceVariableDto expectedDataSourceVariable : expected.getOtherVariables()) {
             assertEquals(expectedDataSourceVariable.getCategory(), actual.getOtherVariable(expectedDataSourceVariable.getVariable()).getCategory());
         }
@@ -80,6 +80,12 @@ public class IndicatorsAsserts {
         assertEqualsRateDerivation(expected.getAnnualPercentageRate(), actual.getAnnualPercentageRate());
         assertEqualsRateDerivation(expected.getInterperiodPuntualRate(), actual.getInterperiodPuntualRate());
         assertEqualsRateDerivation(expected.getInterperiodPercentageRate(), actual.getInterperiodPercentageRate());
+        assertEquals(expected.getSourceSurveyCode(), actual.getSourceSurveyCode());
+        assertEqualsInternationalString(expected.getSourceSurveyTitle(), actual.getSourceSurveyTitle());
+        assertEqualsInternationalString(expected.getSourceSurveyAcronym(), actual.getSourceSurveyAcronym());
+        assertEquals(expected.getSourceSurveyUrl(), actual.getSourceSurveyUrl());
+        assertEquals(expected.getPublishers().size(), actual.getPublishers().size());
+        assertEquals(ServiceUtils.dtoList2DtoString(expected.getPublishers()), ServiceUtils.dtoList2DtoString(actual.getPublishers()));
     }
     
     private static void assertEqualsRateDerivation(RateDerivationDto expected, RateDerivationDto actual) {

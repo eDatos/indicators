@@ -164,6 +164,11 @@ public class DoCopyUtils {
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
+        target.setSourceSurveyCode(source.getSourceSurveyCode());
+        target.setSourceSurveyTitle(copy(source.getSourceSurveyTitle()));
+        target.setSourceSurveyAcronym(copy(source.getSourceSurveyAcronym()));
+        target.setSourceSurveyUrl(source.getSourceSurveyUrl());
+        target.setPublishers(source.getPublishers());
         target.setAnnualPuntualRate(copyRateDerivation(source.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(copyRateDerivation(source.getAnnualPercentageRate()));
         target.setInterperiodPuntualRate(copyRateDerivation(source.getInterperiodPuntualRate()));
