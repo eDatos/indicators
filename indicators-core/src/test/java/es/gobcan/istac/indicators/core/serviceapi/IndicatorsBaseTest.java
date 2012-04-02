@@ -27,22 +27,22 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     @Override
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
-        tables.add("TBL_LOCALISED_STRINGS");
-        tables.add("TBL_ELEMENTS_LEVELS");
-        tables.add("TBL_INDICATORS_INSTANCES");
-        tables.add("TBL_DIMENSIONS");
-        tables.add("TBL_INDIC_SYSTEMS_VERSIONS");
-        tables.add("TBL_INDICATORS_SYSTEMS");
-        tables.add("TBL_DATA_SOURCES_VARIABLES");
-        tables.add("TBL_DATA_SOURCES");
-        tables.add("TBL_INDICATORS_VERSIONS");
-        tables.add("TBL_INDICATORS");
-        tables.add("TBL_RATES_DERIVATIONS");
-        tables.add("TBL_QUANTITIES");
-        tables.add("LIS_QUANTITIES_UNITS");
-        tables.add("LIS_GEOGR_VALUES");
-        tables.add("LIS_GEOGR_GRANULARITIES");
-        tables.add("TBL_INTERNATIONAL_STRINGS");
+        tables.add("TB_LOCALISED_STRINGS");
+        tables.add("TB_ELEMENTS_LEVELS");
+        tables.add("TB_INDICATORS_INSTANCES");
+        tables.add("TB_DIMENSIONS");
+        tables.add("TB_INDIC_SYSTEMS_VERSIONS");
+        tables.add("TB_INDICATORS_SYSTEMS");
+        tables.add("TB_DATA_SOURCES_VARIABLES");
+        tables.add("TB_DATA_SOURCES");
+        tables.add("TB_INDICATORS_VERSIONS");
+        tables.add("TB_INDICATORS");
+        tables.add("TB_RATES_DERIVATIONS");
+        tables.add("TB_QUANTITIES");
+        tables.add("TB_LIS_QUANTITIES_UNITS");
+        tables.add("TB_LIS_GEOGR_VALUES");
+        tables.add("TB_LIS_GEOGR_GRANULARITIES");
+        tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TV_AREAS_TEMATICAS");
         return tables;
     }
@@ -72,7 +72,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     
     private void removeCyclicDependences() throws Exception {
         Connection connection = getConnection().getConnection();
-        connection.prepareStatement("UPDATE TBL_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
+        connection.prepareStatement("UPDATE TB_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
     }
     
     public static <T> List<T> getList(T... values) {

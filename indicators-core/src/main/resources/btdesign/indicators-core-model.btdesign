@@ -286,7 +286,7 @@ Application Indicators {
 		// ----------------------------------------------------------------        	
 		"Indicators system entity"
 		Entity IndicatorsSystem {
-			databaseTable="TBL_INDICATORS_SYSTEMS"
+			databaseTable="TB_INDICATORS_SYSTEMS"
 			hint="idSequence=INDICATORS_SYSTEMS"
 			gap
 			
@@ -314,7 +314,7 @@ Application Indicators {
 		
 		"Version of indicators system entity"
 		Entity IndicatorsSystemVersion {
-			databaseTable="TBL_INDIC_SYSTEMS_VERSIONS"
+			databaseTable="TB_INDIC_SYSTEMS_VERSIONS"
 			hint="idSequence=INDIC_SYSTEMS_VERSIONS"
 			
 			"Processing status"
@@ -361,7 +361,7 @@ Application Indicators {
 			    
 		"Level at indicators system"
         Entity ElementLevel {
-        	databaseTable = "TBL_ELEMENTS_LEVELS"
+        	databaseTable = "TB_ELEMENTS_LEVELS"
         	hint="idSequence=ELEMENTS_LEVELS"
         	gap
         	!auditable
@@ -392,7 +392,7 @@ Application Indicators {
 		
         "Dimension of indicators system"
         Entity Dimension {
-        	databaseTable = "TBL_DIMENSIONS"
+        	databaseTable = "TB_DIMENSIONS"
         	hint="idSequence=DIMENSIONS"
         	
             "Title"
@@ -412,7 +412,7 @@ Application Indicators {
         
 		"Instance of indicator"
         Entity IndicatorInstance {
-        	databaseTable = "TBL_INDICATORS_INSTANCES"
+        	databaseTable = "TB_INDICATORS_INSTANCES"
         	hint="idSequence=INDICATORS_INSTANCES"
         	       		
 			"Title"
@@ -452,7 +452,7 @@ Application Indicators {
     	
 		"Indicator entity"
 		Entity Indicator {
-			databaseTable="TBL_INDICATORS"
+			databaseTable="TB_INDICATORS"
 			hint="idSequence=INDICATORS"
 			gap
 
@@ -483,7 +483,7 @@ Application Indicators {
 	    
 		"Version of indicator entity"
 		Entity IndicatorVersion {
-			databaseTable="TBL_INDICATORS_VERSIONS"
+			databaseTable="TB_INDICATORS_VERSIONS"
 			hint="idSequence=INDICATORS_VERSIONS"
 			gap
 			
@@ -555,7 +555,7 @@ Application Indicators {
 		
 	    "Metric characteristics of the indicator"
 	    Entity Quantity {
-        	databaseTable = "TBL_QUANTITIES"
+        	databaseTable = "TB_QUANTITIES"
         	hint="idSequence=QUANTITIES"
         	gap
 
@@ -595,7 +595,7 @@ Application Indicators {
 	    
 	    "Metric characteristics of a data source of indicator"
 	    Entity RateDerivation {
-        	databaseTable = "TBL_RATES_DERIVATIONS"
+        	databaseTable = "TB_RATES_DERIVATIONS"
         	hint="idSequence=RATES_DERIVATIONS"
 
 	    	"Method type"
@@ -625,7 +625,7 @@ Application Indicators {
     	
 		"Data source of indicator"
         Entity DataSource {
-        	databaseTable = "TBL_DATA_SOURCES"
+        	databaseTable = "TB_DATA_SOURCES"
         	hint="idSequence=DATA_SOURCES"
         	
 			"Query in GPE"
@@ -679,7 +679,7 @@ Application Indicators {
 
 		"Variable of data source"
         Entity DataSourceVariable {
-        	databaseTable = "TBL_DATA_SOURCES_VARIABLES"
+        	databaseTable = "TB_DATA_SOURCES_VARIABLES"
         	hint="idSequence=DATA_SOURCES_VARIABLES"
         	
 			"Variable"
@@ -690,7 +690,7 @@ Application Indicators {
         
         "Table values for quantity units"
 	    Entity QuantityUnit {
-        	databaseTable = "LIS_QUANTITIES_UNITS"
+        	databaseTable = "TB_LIS_QUANTITIES_UNITS"
         	hint="idSequence=QUANTITIES_UNITS"
 			!auditable
 			!optimisticLocking
@@ -712,7 +712,7 @@ Application Indicators {
         
         "Table values for geographical values"
 	    Entity GeographicalValue {
-        	databaseTable = "LIS_GEOGR_VALUES"
+        	databaseTable = "TB_LIS_GEOGR_VALUES"
         	hint="idSequence=GEOGR_VALUES"
 			!auditable
 			!optimisticLocking
@@ -740,7 +740,7 @@ Application Indicators {
         
         "Table values for geographical granularities"
 	    Entity GeographicalGranularity {
-        	databaseTable = "LIS_GEOGR_GRANULARITIES"
+        	databaseTable = "TB_LIS_GEOGR_GRANULARITIES"
         	hint="idSequence=GEOGR_GRANULARITIES"
 			!auditable
 			!optimisticLocking

@@ -8,7 +8,7 @@ import javax.persistence.UniqueConstraint;
  * Indicators system entity
  */
 @Entity
-@Table(name = "TBL_INDICATORS_SYSTEMS", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
+@Table(name = "TB_INDICATORS_SYSTEMS", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
 public class IndicatorsSystem extends IndicatorsSystemBase {
     private static final long serialVersionUID = 1L;
 

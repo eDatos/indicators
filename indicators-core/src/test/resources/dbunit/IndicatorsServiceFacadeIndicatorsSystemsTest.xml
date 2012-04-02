@@ -7,7 +7,7 @@
 	<!--		- Version 1: published															-->
 	<!--		- Version 2: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="1"
 		UUID="IndSys-1"
 		CODE="CODE-1"
@@ -26,7 +26,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="11"
 				UUID="IndSys-1-v1"
 				VERSION_NUMBER="1.000"
@@ -56,7 +56,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="111"
 						UUID="uuid-ignored-10"
 						PARENT_FK="[null]"
@@ -68,7 +68,7 @@
 						INDICATOR_INSTANCE_FK="[null]"
 						VERSION="1"
 					/>
-					<TBL_DIMENSIONS
+					<TB_DIMENSIONS
 						ID="111"
 						UUID="IndSys-1-v1-Dimension-1"
 						TITLE_FK="26"
@@ -82,7 +82,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="112"
 						UUID="uuid-ignored-112"
 						PARENT_FK="[null]"
@@ -94,7 +94,7 @@
 						INDICATOR_INSTANCE_FK="112"
 						VERSION="1"
 					/>			
-					<TBL_INDICATORS_INSTANCES
+					<TB_INDICATORS_INSTANCES
 						ID="112"
 						UUID="IndSys-1-v1-IInstance-1"
 						TIME_GRANULARITY="YEARLY"
@@ -113,7 +113,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 			
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="12"
 				UUID="IndSys-1-v2"
 				VERSION_NUMBER="2.000"
@@ -143,7 +143,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="121"
 					UUID="uuid-ignored-15"
 					PARENT_FK="[null]"
@@ -155,7 +155,7 @@
 					INDICATOR_INSTANCE_FK="121"
 					VERSION="1"
 				/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="121"
 					UUID="IndSys-1-v2-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -174,7 +174,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>		
 				
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="122"
 					UUID="uuid-ignored-122"
 					PARENT_FK="[null]"
@@ -186,7 +186,7 @@
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
-				<TBL_DIMENSIONS
+				<TB_DIMENSIONS
 					ID="122"
 					TITLE_FK="20"
 					UUID="IndSys-1-v2-Dimension-1"
@@ -200,7 +200,7 @@
 					LAST_UPDATED_TZ="Europe/London"				
 				/>
 				
-						<TBL_ELEMENTS_LEVELS
+						<TB_ELEMENTS_LEVELS
 							ID="1221"
 							UUID="uuid-ignored-30"
 							PARENT_FK="122"
@@ -212,7 +212,7 @@
 							INDICATOR_INSTANCE_FK="[null]"
 							VERSION="1"
 						/>				
-						<TBL_DIMENSIONS
+						<TB_DIMENSIONS
 							ID="1221"
 							UUID="IndSys-1-v2-Dimension-1A"
 							TITLE_FK="21"
@@ -226,7 +226,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>		
 
-						<TBL_ELEMENTS_LEVELS
+						<TB_ELEMENTS_LEVELS
 							ID="1222"
 							UUID="uuid-ignored-40"
 							PARENT_FK="122"
@@ -238,7 +238,7 @@
 							INDICATOR_INSTANCE_FK="[null]"
 							VERSION="1"
 						/>
-						<TBL_DIMENSIONS
+						<TB_DIMENSIONS
 							ID="1222"
 							TITLE_FK="22"
 							UUID="IndSys-1-v2-Dimension-1B"
@@ -252,7 +252,7 @@
 							LAST_UPDATED_TZ="Europe/London"							
 						/>			
 						
-								<TBL_ELEMENTS_LEVELS
+								<TB_ELEMENTS_LEVELS
 									ID="12221"
 									UUID="uuid-ignored-50"
 									PARENT_FK="1222"
@@ -264,7 +264,7 @@
 									INDICATOR_INSTANCE_FK="[null]"
 									VERSION="1"
 								/>
-								<TBL_DIMENSIONS
+								<TB_DIMENSIONS
 									ID="12221"
 									UUID="IndSys-1-v2-Dimension-1BA"
 									TITLE_FK="23"
@@ -278,7 +278,7 @@
 									LAST_UPDATED_TZ="Europe/London"								
 								/>	
 								
-								<TBL_ELEMENTS_LEVELS
+								<TB_ELEMENTS_LEVELS
 									ID="12222"
 									UUID="uuid-ignored-51"
 									PARENT_FK="1222"
@@ -290,7 +290,7 @@
 									INDICATOR_INSTANCE_FK="12222"
 									VERSION="1"
 								/>
-								<TBL_INDICATORS_INSTANCES
+								<TB_INDICATORS_INSTANCES
 									ID="12222"
 									UUID="IndSys-1-v2-IInstance-3"
 									TIME_GRANULARITY="YEARLY"
@@ -310,7 +310,7 @@
 								/>	
 								
 				
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="123"
 					UUID="uuid-ignored-20"
 					PARENT_FK="[null]"
@@ -322,7 +322,7 @@
 					INDICATOR_INSTANCE_FK="123"
 					VERSION="1"
 				/>
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="123"
 					UUID="IndSys-1-v2-IInstance-2"
 					TIME_GRANULARITY="YEARLY"
@@ -341,7 +341,7 @@
 					LAST_UPDATED_TZ="Europe/London"				
 				/>									
 								
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="124"
 					UUID="uuid-ignored-60"
 					PARENT_FK="[null]"
@@ -353,7 +353,7 @@
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
-				<TBL_DIMENSIONS
+				<TB_DIMENSIONS
 					ID="124"
 					UUID="IndSys-1-v2-Dimension-2"
 					TITLE_FK="24"
@@ -372,7 +372,7 @@
 	<!--    INDICATORS SYSTEM 2											                      	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="2"
 		UUID="IndSys-2"
 		CODE="CODE-2"
@@ -391,7 +391,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="21"
 				UUID="IndSys-2-v1"
 				VERSION_NUMBER="1.000"
@@ -425,7 +425,7 @@
 	<!--    INDICATORS SYSTEM 3											                      	-->
 	<!--		- Version 1: published															-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="3"
 		UUID="IndSys-3"
 		CODE="CODE-3"
@@ -444,7 +444,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="31"
 				UUID="IndSys-3-v1"
 				VERSION_NUMBER="11.033"
@@ -474,7 +474,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="311"
 					UUID="uuid-ignored-70"
 					PARENT_FK="[null]"
@@ -486,7 +486,7 @@
 					INDICATOR_INSTANCE_FK="[null]"
 					VERSION="1"
 				/>
-				<TBL_DIMENSIONS
+				<TB_DIMENSIONS
 					ID="311"
 					UUID="IndSys-3-v1-Dimension-1"
 					TITLE_FK="25"
@@ -500,7 +500,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>					
 				
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="3111"
 						UUID="uuid-ignored-78"
 						PARENT_FK="311"
@@ -512,7 +512,7 @@
 						INDICATOR_INSTANCE_FK="3111"
 						VERSION="1"
 					/>
-					<TBL_INDICATORS_INSTANCES
+					<TB_INDICATORS_INSTANCES
 						ID="3111"
 						UUID="IndSys-3-v1-IInstance-1A"
 						TIME_GRANULARITY="YEARLY"
@@ -531,7 +531,7 @@
 						LAST_UPDATED_TZ="Europe/London"				
 					/>		
 					
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="3112"
 						UUID="uuid-ignored-80"
 						PARENT_FK="311"
@@ -543,7 +543,7 @@
 						INDICATOR_INSTANCE_FK="[null]"
 						VERSION="1"
 					/>
-					<TBL_DIMENSIONS
+					<TB_DIMENSIONS
 						ID="3112"
 						UUID="IndSys-3-v1-Dimension-1A"						
 						TITLE_FK="27"
@@ -557,7 +557,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 				
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="312"
 					UUID="uuid-ignored-75"
 					PARENT_FK="[null]"
@@ -569,7 +569,7 @@
 					INDICATOR_INSTANCE_FK="312"
 					VERSION="1"
 				/>
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="312"
 					UUID="IndSys-3-v1-IInstance-2"
 					TIME_GRANULARITY="YEARLY"
@@ -592,7 +592,7 @@
 	<!--    INDICATORS SYSTEM 4											                      	-->
 	<!--		- Version 1: production validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="4"
 		UUID="IndSys-4"
 		CODE="CODE-4"
@@ -611,7 +611,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="41"
 				UUID="IndSys-4-v1"
 				VERSION_NUMBER="1.000"
@@ -641,7 +641,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="411"
 					UUID="uuid-ignored-411"
 					PARENT_FK="[null]"
@@ -653,7 +653,7 @@
 					INDICATOR_INSTANCE_FK="411"
 					VERSION="1"
 				/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="411"
 					UUID="IndSys-4-v1-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -676,7 +676,7 @@
 	<!--    INDICATORS SYSTEM 5											                      	-->
 	<!--		- Version 1: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="5"
 		UUID="IndSys-5"
 		CODE="CODE-5"
@@ -695,7 +695,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="51"
 				UUID="IndSys-5-v1"
 				VERSION_NUMBER="1.000"
@@ -725,7 +725,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 						ID="511"
 						UUID="uuid-ignored-511"
 						PARENT_FK="[null]"
@@ -737,7 +737,7 @@
 						INDICATOR_INSTANCE_FK="511"
 						VERSION="1"
 					/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="511"
 					UUID="IndSys-5-v1-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -761,7 +761,7 @@
 	<!--		- Version 1: published															-->
 	<!--		- Version 2: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="6"
 		UUID="IndSys-6"
 		CODE="CODE-6"
@@ -780,7 +780,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="61"
 				UUID="IndSys-6-v1"
 				VERSION_NUMBER="1.000"
@@ -810,7 +810,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="611"
 						UUID="uuid-ignored-611"
 						PARENT_FK="[null]"
@@ -822,7 +822,7 @@
 						INDICATOR_INSTANCE_FK="611"
 						VERSION="1"
 					/>			
-					<TBL_INDICATORS_INSTANCES
+					<TB_INDICATORS_INSTANCES
 						ID="611"
 						UUID="IndSys-6-v1-IInstance-1"
 						TIME_GRANULARITY="YEARLY"
@@ -841,7 +841,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="612"
 						UUID="uuid-ignored-612"
 						PARENT_FK="[null]"
@@ -853,7 +853,7 @@
 						INDICATOR_INSTANCE_FK="612"
 						VERSION="1"
 					/>			
-					<TBL_INDICATORS_INSTANCES
+					<TB_INDICATORS_INSTANCES
 						ID="612"
 						UUID="IndSys-6-v1-IInstance-2"
 						TIME_GRANULARITY="YEARLY"
@@ -872,7 +872,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 			
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="62"
 				UUID="IndSys-6-v2"
 				VERSION_NUMBER="2.000"
@@ -902,7 +902,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="621"
 					UUID="uuid-ignored-621"
 					PARENT_FK="[null]"
@@ -914,7 +914,7 @@
 					INDICATOR_INSTANCE_FK="621"
 					VERSION="1"
 				/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="621"
 					UUID="IndSys-6-v2-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -938,7 +938,7 @@
 	<!--		- Version 1: archived															-->
 	<!--		- Version 2: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="7"
 		UUID="IndSys-7"
 		CODE="CODE-7"
@@ -957,7 +957,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="71"
 				UUID="IndSys-7-v1"
 				VERSION_NUMBER="1.000"
@@ -987,7 +987,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="72"
 				UUID="IndSys-7-v2"
 				VERSION_NUMBER="2.000"
@@ -1017,7 +1017,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>		
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 					ID="721"
 					UUID="uuid-ignored-721"
 					PARENT_FK="[null]"
@@ -1029,7 +1029,7 @@
 					INDICATOR_INSTANCE_FK="721"
 					VERSION="1"
 				/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="721"
 					UUID="IndSys-7-v2-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -1052,7 +1052,7 @@
 	<!--    INDICATORS SYSTEM 8											                      	-->
 	<!--		- Version 1: archived															-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="8"
 		UUID="IndSys-8"
 		CODE="CODE-8"
@@ -1071,7 +1071,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="81"
 				UUID="IndSys-8-v1"
 				VERSION_NUMBER="1.000"
@@ -1105,7 +1105,7 @@
 	<!--    INDICATORS SYSTEM 9											                      	-->
 	<!--		- Version 1: validation rejected												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="9"
 		UUID="IndSys-9"
 		CODE="CODE-9"
@@ -1124,7 +1124,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="91"
 				UUID="IndSys-9-v1"
 				VERSION_NUMBER="1.000"
@@ -1154,7 +1154,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>								
 			
-				<TBL_ELEMENTS_LEVELS
+				<TB_ELEMENTS_LEVELS
 						ID="911"
 						UUID="uuid-ignored-120"
 						PARENT_FK="[null]"
@@ -1166,7 +1166,7 @@
 						INDICATOR_INSTANCE_FK="911"
 						VERSION="1"
 					/>			
-				<TBL_INDICATORS_INSTANCES
+				<TB_INDICATORS_INSTANCES
 					ID="911"
 					UUID="IndSys-9-v1-IInstance-1"
 					TIME_GRANULARITY="YEARLY"
@@ -1190,7 +1190,7 @@
 	<!--    INDICATOR 1											                      			-->
 	<!--		- Version 1: published															-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="1"
 		UUID="Indicator-1"
 		CODE="CODE-1"
@@ -1209,7 +1209,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="11"
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
@@ -1251,7 +1251,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>				
 
-  				<TBL_QUANTITIES
+  				<TB_QUANTITIES
 				  	ID="111"
   					UUID="Quantity-111"
 					QUANTITY_TYPE="QUANTITY"
@@ -1272,7 +1272,7 @@
 	<!--    INDICATOR 2											                     		 	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="2"
 		UUID="Indicator-2"
 		CODE="CODE-2"
@@ -1291,7 +1291,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="21"
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
@@ -1332,7 +1332,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="211"
   					UUID="Quantity-211"
 					QUANTITY_TYPE="QUANTITY"
@@ -1354,7 +1354,7 @@
 	<!--    INDICATOR 3											                     		 	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="3"
 		UUID="Indicator-3"
 		CODE="CODE-3"
@@ -1373,7 +1373,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="31"
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="1.000"
@@ -1414,7 +1414,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>					  		
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="311"
   					UUID="Quantity-311"
 					QUANTITY_TYPE="QUANTITY"
@@ -1435,14 +1435,14 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 QUANTITIES UNITS		                              -->
 	<!-- ************************************************************************************ -->
-	<LIS_QUANTITIES_UNITS
+	<TB_LIS_QUANTITIES_UNITS
 		ID="1"
  		UUID="1"
   		SYMBOL="km"
   		TITLE_FK="33"
   		SYMBOL_POSITION="END"
 	/>
-	<LIS_QUANTITIES_UNITS
+	<TB_LIS_QUANTITIES_UNITS
 		ID="2"
  		UUID="2"
   		SYMBOL="[null]"
@@ -1453,7 +1453,7 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL VALUES	                              -->
 	<!-- ************************************************************************************ -->
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="1"
  		UUID="1"
  		CODE="ES"
@@ -1463,7 +1463,7 @@
   		GRANULARITY_FK="1"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="2"
  		UUID="2"
  		CODE="EN-LN"
@@ -1473,7 +1473,7 @@
   		GRANULARITY_FK="2"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="3"
  		UUID="3"
  		CODE="FR"
@@ -1483,7 +1483,7 @@
   		GRANULARITY_FK="1"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="4"
  		UUID="4"
  		CODE="ES-MD"
@@ -1496,14 +1496,14 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->
 	<!-- ************************************************************************************ -->
-	<LIS_GEOGR_GRANULARITIES
+	<TB_LIS_GEOGR_GRANULARITIES
 		ID="1"
  		UUID="1"
  		CODE="COUNTRIES"
   		TITLE_FK="45"
 	/>
 
-	<LIS_GEOGR_GRANULARITIES
+	<TB_LIS_GEOGR_GRANULARITIES
 		ID="2"
  		UUID="2"
  		CODE="MUNICIPALITIES"
@@ -1532,19 +1532,19 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
 	<!-- ************************************************************************************ -->
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="1"
 		VERSION="1"
 	/>	
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="1"
 		LABEL="Título IndSys-1-v1"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="1"
 	/>	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="2"
 		LABEL="Title IndSys-1-v1"
 		LOCALE="en"
@@ -1552,12 +1552,12 @@
 		INTERNATIONAL_STRING_FK="1"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="2"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="3"
 		LABEL="Acrónimo IndSys-1-v1"
 		LOCALE="es"
@@ -1565,7 +1565,7 @@
 		INTERNATIONAL_STRING_FK="2"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="4"
 		LABEL="Acronym IndSys-1-v1"
 		LOCALE="en"
@@ -1573,12 +1573,12 @@
 		INTERNATIONAL_STRING_FK="2"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="3"
 		VERSION="1"
 	/>
 		
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="5"
 		LABEL="Objetivo IndSys-1-v1"
 		LOCALE="es"
@@ -1586,7 +1586,7 @@
 		INTERNATIONAL_STRING_FK="3"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="6"
 		LABEL="Objetive IndSys-1-v1"
 		LOCALE="en"
@@ -1594,12 +1594,12 @@
 		INTERNATIONAL_STRING_FK="3"
 	/>  
 		
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="4"
 		VERSION="1"
 	/>	
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="7"
 		LABEL="Descripción IndSys-1-v1"
 		LOCALE="es"
@@ -1607,7 +1607,7 @@
 		INTERNATIONAL_STRING_FK="4"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="8"
 		LABEL="Description IndSys-1-v1"
 		LOCALE="en"
@@ -1615,12 +1615,12 @@
 		INTERNATIONAL_STRING_FK="4"
 	/> 
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="5"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="9"
 		LABEL="Título IndSys-1-v2"
 		LOCALE="es"
@@ -1628,7 +1628,7 @@
 		INTERNATIONAL_STRING_FK="5"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="10"
 		LABEL="Title IndSys-1-v2"
 		LOCALE="en"
@@ -1636,12 +1636,12 @@
 		INTERNATIONAL_STRING_FK="5"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="6"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="11"
 		LABEL="Acrónimo IndSys-1-v2"
 		LOCALE="es"
@@ -1649,7 +1649,7 @@
 		INTERNATIONAL_STRING_FK="6"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="12"
 		LABEL="Acronym IndSys-1-v2"
 		LOCALE="en"
@@ -1657,12 +1657,12 @@
 		INTERNATIONAL_STRING_FK="6"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="7"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="13"
 		LABEL="Objetivo IndSys-1-v2"
 		LOCALE="es"
@@ -1670,7 +1670,7 @@
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="14"
 		LABEL="Objetive IndSys-1-v2"
 		LOCALE="en"
@@ -1678,12 +1678,12 @@
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="8"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="15"
 		LABEL="Descripción IndSys-1-v2"
 		LOCALE="es"
@@ -1691,7 +1691,7 @@
 		INTERNATIONAL_STRING_FK="8"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="16"
 		LABEL="Description IndSys-1-v2"
 		LOCALE="en"
@@ -1699,12 +1699,12 @@
 		INTERNATIONAL_STRING_FK="8"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="9"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="17"
 		LABEL="Title IndSys-2-v1"
 		LOCALE="es"
@@ -1712,7 +1712,7 @@
 		INTERNATIONAL_STRING_FK="9"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="18"
 		LABEL="Title IndSys-2-v1"
 		LOCALE="en"
@@ -1720,12 +1720,12 @@
 		INTERNATIONAL_STRING_FK="9"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="10"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="19"
 		LABEL="Título IndSys-3-v1"
 		LOCALE="es"
@@ -1733,7 +1733,7 @@
 		INTERNATIONAL_STRING_FK="10"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="20"
 		LABEL="Title IndSys-3-v1"
 		LOCALE="en"
@@ -1741,12 +1741,12 @@
 		INTERNATIONAL_STRING_FK="10"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="11"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="21"
 		LABEL="Título IndSys-4-v1"
 		LOCALE="es"
@@ -1754,7 +1754,7 @@
 		INTERNATIONAL_STRING_FK="11"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="22"
 		LABEL="Title IndSys-4-v1"
 		LOCALE="en"
@@ -1762,12 +1762,12 @@
 		INTERNATIONAL_STRING_FK="11"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="12"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título IndSys-5-v1"
 		LOCALE="es"
@@ -1775,7 +1775,7 @@
 		INTERNATIONAL_STRING_FK="12"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title IndSys-5-v1"
 		LOCALE="en"
@@ -1783,12 +1783,12 @@
 		INTERNATIONAL_STRING_FK="12"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="13"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título IndSys-6-v1"
 		LOCALE="es"
@@ -1796,7 +1796,7 @@
 		INTERNATIONAL_STRING_FK="13"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title IndSys-6-v1"
 		LOCALE="en"
@@ -1804,12 +1804,12 @@
 		INTERNATIONAL_STRING_FK="13"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="14"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título IndSys-6-v1"
 		LOCALE="es"
@@ -1817,7 +1817,7 @@
 		INTERNATIONAL_STRING_FK="14"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title IndSys-6-v1"
 		LOCALE="en"
@@ -1825,12 +1825,12 @@
 		INTERNATIONAL_STRING_FK="14"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="15"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="25"
 		LABEL="Título IndSys-7-v1"
 		LOCALE="es"
@@ -1838,7 +1838,7 @@
 		INTERNATIONAL_STRING_FK="15"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="26"
 		LABEL="Title IndSys-7-v1"
 		LOCALE="en"
@@ -1846,12 +1846,12 @@
 		INTERNATIONAL_STRING_FK="15"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="16"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="27"
 		LABEL="Título IndSys-7-v1"
 		LOCALE="es"
@@ -1859,7 +1859,7 @@
 		INTERNATIONAL_STRING_FK="16"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="28"
 		LABEL="Title IndSys-7-v1"
 		LOCALE="en"
@@ -1867,12 +1867,12 @@
 		INTERNATIONAL_STRING_FK="16"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="17"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="29"
 		LABEL="Título IndSys-8-v1"
 		LOCALE="es"
@@ -1880,7 +1880,7 @@
 		INTERNATIONAL_STRING_FK="17"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="30"
 		LABEL="Title IndSys-8-v1"
 		LOCALE="en"
@@ -1888,12 +1888,12 @@
 		INTERNATIONAL_STRING_FK="17"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="18"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="31"
 		LABEL="Título"
 		LOCALE="es"
@@ -1901,7 +1901,7 @@
 		INTERNATIONAL_STRING_FK="18"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="32"
 		LABEL="Title"
 		LOCALE="en"
@@ -1909,12 +1909,12 @@
 		INTERNATIONAL_STRING_FK="18"
 	/>		
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="19"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="33"
 		LABEL="Título"
 		LOCALE="es"
@@ -1922,7 +1922,7 @@
 		INTERNATIONAL_STRING_FK="19"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="34"
 		LABEL="Title"
 		LOCALE="en"
@@ -1930,12 +1930,12 @@
 		INTERNATIONAL_STRING_FK="19"
 	/>			
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="20"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="35"
 		LABEL="Título IndSys-1-v2-Dimension-1"
 		LOCALE="es"
@@ -1943,7 +1943,7 @@
 		INTERNATIONAL_STRING_FK="20"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="36"
 		LABEL="Title IndSys-1-v2-Dimension-1"
 		LOCALE="en"
@@ -1951,12 +1951,12 @@
 		INTERNATIONAL_STRING_FK="20"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="21"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="37"
 		LABEL="Título IndSys-1-v2-Dimension-1A"
 		LOCALE="es"
@@ -1964,7 +1964,7 @@
 		INTERNATIONAL_STRING_FK="21"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="38"
 		LABEL="Title IndSys-1-v2-Dimension-1A"
 		LOCALE="en"
@@ -1972,12 +1972,12 @@
 		INTERNATIONAL_STRING_FK="21"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="22"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="39"
 		LABEL="Título IndSys-1-v2-Dimension-1B"
 		LOCALE="es"
@@ -1985,7 +1985,7 @@
 		INTERNATIONAL_STRING_FK="22"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="40"
 		LABEL="Title IndSys-1-v2-Dimension-1B"
 		LOCALE="en"
@@ -1993,12 +1993,12 @@
 		INTERNATIONAL_STRING_FK="22"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="23"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="41"
 		LABEL="Título IndSys-1-v2-Dimension-1BA"
 		LOCALE="es"
@@ -2006,7 +2006,7 @@
 		INTERNATIONAL_STRING_FK="23"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="42"
 		LABEL="Title IndSys-1-v2-Dimension-1BA"
 		LOCALE="en"
@@ -2014,12 +2014,12 @@
 		INTERNATIONAL_STRING_FK="23"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="24"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="43"
 		LABEL="Título IndSys-1-v2-Dimension-2"
 		LOCALE="es"
@@ -2027,7 +2027,7 @@
 		INTERNATIONAL_STRING_FK="24"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="44"
 		LABEL="Title IndSys-1-v2-Dimension-2"
 		LOCALE="en"
@@ -2035,12 +2035,12 @@
 		INTERNATIONAL_STRING_FK="24"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="25"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="45"
 		LABEL="Título IndSys-3-v1-Dimension-1"
 		LOCALE="es"
@@ -2048,7 +2048,7 @@
 		INTERNATIONAL_STRING_FK="25"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="46"
 		LABEL="Title IndSys-3-v1-Dimension-1"
 		LOCALE="en"
@@ -2056,12 +2056,12 @@
 		INTERNATIONAL_STRING_FK="25"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="26"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="47"
 		LABEL="Título"
 		LOCALE="es"
@@ -2069,7 +2069,7 @@
 		INTERNATIONAL_STRING_FK="26"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="28"
 		LABEL="Title"
 		LOCALE="en"
@@ -2077,12 +2077,12 @@
 		INTERNATIONAL_STRING_FK="26"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="27"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="48"
 		LABEL="Título IndSys-3-v1-Dimension-1A"
 		LOCALE="es"
@@ -2090,7 +2090,7 @@
 		INTERNATIONAL_STRING_FK="27"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="49"
 		LABEL="Title IndSys-3-v1-Dimension-1A"
 		LOCALE="en"
@@ -2098,12 +2098,12 @@
 		INTERNATIONAL_STRING_FK="27"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="28"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="50"
 		LABEL="Título IndSys-1-v2-IInstance-1"
 		LOCALE="es"
@@ -2111,7 +2111,7 @@
 		INTERNATIONAL_STRING_FK="28"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="51"
 		LABEL="Title IndSys-1-v2-IInstance-1"
 		LOCALE="en"
@@ -2119,12 +2119,12 @@
 		INTERNATIONAL_STRING_FK="28"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="29"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="52"
 		LABEL="Título IndSys-3-v1-Dimension-1A"
 		LOCALE="es"
@@ -2132,7 +2132,7 @@
 		INTERNATIONAL_STRING_FK="29"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="53"
 		LABEL="Title IndSys-3-v1-Dimension-1A"
 		LOCALE="en"
@@ -2140,12 +2140,12 @@
 		INTERNATIONAL_STRING_FK="29"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="30"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="54"
 		LABEL="Título IndSys-3-v1-IInstance-2"
 		LOCALE="es"
@@ -2153,7 +2153,7 @@
 		INTERNATIONAL_STRING_FK="30"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="55"
 		LABEL="Title IndSys-3-v1-IInstance-2"
 		LOCALE="en"
@@ -2161,12 +2161,12 @@
 		INTERNATIONAL_STRING_FK="30"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="31"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="56"
 		LABEL="Título IndSys-3-v1-IInstance-1A"
 		LOCALE="es"
@@ -2174,7 +2174,7 @@
 		INTERNATIONAL_STRING_FK="31"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="57"
 		LABEL="Title IndSys-3-v1-IInstance-1A"
 		LOCALE="en"
@@ -2182,12 +2182,12 @@
 		INTERNATIONAL_STRING_FK="31"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="32"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="58"
 		LABEL="Título IndSys-1-v2-IInstance-3"
 		LOCALE="es"
@@ -2195,7 +2195,7 @@
 		INTERNATIONAL_STRING_FK="32"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="59"
 		LABEL="Title IndSys-1-v2-IInstance-3"
 		LOCALE="en"
@@ -2203,12 +2203,12 @@
 		INTERNATIONAL_STRING_FK="32"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="33"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="60"
 		LABEL="Título IndSys-9-v1-IInstance-1"
 		LOCALE="es"
@@ -2216,7 +2216,7 @@
 		INTERNATIONAL_STRING_FK="33"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="61"
 		LABEL="Title IndSys-9-v1-IInstance-1"
 		LOCALE="en"
@@ -2224,12 +2224,12 @@
 		INTERNATIONAL_STRING_FK="33"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="34"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="62"
 		LABEL="Título IndSys-5-v1-IInstance-1"
 		LOCALE="es"
@@ -2237,7 +2237,7 @@
 		INTERNATIONAL_STRING_FK="34"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="63"
 		LABEL="Title IndSys-5-v1-IInstance-1"
 		LOCALE="en"
@@ -2245,12 +2245,12 @@
 		INTERNATIONAL_STRING_FK="34"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="35"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="64"
 		LABEL="Título IndSys-5-v1-IInstance-1"
 		LOCALE="es"
@@ -2258,7 +2258,7 @@
 		INTERNATIONAL_STRING_FK="35"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="65"
 		LABEL="Title IndSys-5-v1-IInstance-1"
 		LOCALE="en"
@@ -2266,12 +2266,12 @@
 		INTERNATIONAL_STRING_FK="35"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="36"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="66"
 		LABEL="Título IndSys-4-v1-IInstance-1"
 		LOCALE="es"
@@ -2279,7 +2279,7 @@
 		INTERNATIONAL_STRING_FK="36"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="67"
 		LABEL="Title IndSys-4-v1-IInstance-1"
 		LOCALE="en"
@@ -2287,12 +2287,12 @@
 		INTERNATIONAL_STRING_FK="36"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="37"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="68"
 		LABEL="Título IndSys-6-v2-IInstance-1"
 		LOCALE="es"
@@ -2300,7 +2300,7 @@
 		INTERNATIONAL_STRING_FK="37"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="69"
 		LABEL="Title IndSys-6-v6-IInstance-1"
 		LOCALE="en"
@@ -2308,12 +2308,12 @@
 		INTERNATIONAL_STRING_FK="37"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="38"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="70"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
@@ -2321,7 +2321,7 @@
 		INTERNATIONAL_STRING_FK="38"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="71"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
@@ -2329,12 +2329,12 @@
 		INTERNATIONAL_STRING_FK="38"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="39"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="72"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
@@ -2342,7 +2342,7 @@
 		INTERNATIONAL_STRING_FK="39"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="73"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
@@ -2350,12 +2350,12 @@
 		INTERNATIONAL_STRING_FK="39"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="40"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="74"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
@@ -2363,7 +2363,7 @@
 		INTERNATIONAL_STRING_FK="40"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="75"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
@@ -2371,12 +2371,12 @@
 		INTERNATIONAL_STRING_FK="40"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="41"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="76"
 		LABEL="Título IndSys-7-v2-IInstance-1"
 		LOCALE="es"
@@ -2384,7 +2384,7 @@
 		INTERNATIONAL_STRING_FK="41"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="77"
 		LABEL="Title IndSys-7-v6-IInstance-1"
 		LOCALE="en"
@@ -2392,12 +2392,12 @@
 		INTERNATIONAL_STRING_FK="41"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="42"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="78"
 		LABEL="Área temática 1"
 		LOCALE="es"
@@ -2405,12 +2405,12 @@
 		INTERNATIONAL_STRING_FK="42"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="43"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="79"
 		LABEL="Área temática 2"
 		LOCALE="es"
@@ -2418,12 +2418,12 @@
 		INTERNATIONAL_STRING_FK="43"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="44"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="80"
 		LABEL="Área temática 1"
 		LOCALE="es"
@@ -2431,12 +2431,12 @@
 		INTERNATIONAL_STRING_FK="44"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="45"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="81"
 		LABEL="Países"
 		LOCALE="es"
@@ -2444,7 +2444,7 @@
 		INTERNATIONAL_STRING_FK="45"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="82"
 		LABEL="Countries"
 		LOCALE="en"
@@ -2452,12 +2452,12 @@
 		INTERNATIONAL_STRING_FK="45"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="46"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="83"
 		LABEL="Municipios"
 		LOCALE="es"
@@ -2465,7 +2465,7 @@
 		INTERNATIONAL_STRING_FK="46"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="84"
 		LABEL="Municipalities"
 		LOCALE="en"
@@ -2473,12 +2473,12 @@
 		INTERNATIONAL_STRING_FK="46"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="47"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="85"
 		LABEL="España"
 		LOCALE="es"
@@ -2486,7 +2486,7 @@
 		INTERNATIONAL_STRING_FK="47"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="86"
 		LABEL="Spain"
 		LOCALE="en"
@@ -2494,12 +2494,12 @@
 		INTERNATIONAL_STRING_FK="47"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="48"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="87"
 		LABEL="Londres"
 		LOCALE="es"
@@ -2507,7 +2507,7 @@
 		INTERNATIONAL_STRING_FK="48"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="88"
 		LABEL="London"
 		LOCALE="en"
@@ -2515,12 +2515,12 @@
 		INTERNATIONAL_STRING_FK="48"
 	/>		
 		
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="49"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="89"
 		LABEL="Londres"
 		LOCALE="es"
@@ -2528,12 +2528,12 @@
 		INTERNATIONAL_STRING_FK="49"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="50"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="90"
 		LABEL="Londres"
 		LOCALE="es"

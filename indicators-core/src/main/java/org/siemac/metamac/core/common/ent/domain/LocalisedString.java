@@ -9,7 +9,7 @@ import javax.persistence.UniqueConstraint;
  * variations such as Canadian French, US English etc.).
  */
 @Entity
-@Table(name = "TBL_LOCALISED_STRINGS", uniqueConstraints = {@UniqueConstraint(columnNames = {"LOCALE", "INTERNATIONAL_STRING_FK"})})
+@Table(name = "TB_LOCALISED_STRINGS", uniqueConstraints = {@UniqueConstraint(columnNames = {"LOCALE", "INTERNATIONAL_STRING_FK"})})
 public class LocalisedString extends LocalisedStringBase {
     private static final long serialVersionUID = 1L;
 

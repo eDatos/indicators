@@ -8,7 +8,7 @@ import javax.persistence.UniqueConstraint;
  * Table values for geographical values
  */
 @Entity
-@Table(name = "LIS_GEOGR_VALUES", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
+@Table(name = "TB_LIS_GEOGR_VALUES", uniqueConstraints = {@UniqueConstraint(columnNames = {"CODE"})})
 public class GeographicalValue extends GeographicalValueBase {
     private static final long serialVersionUID = 1L;
 

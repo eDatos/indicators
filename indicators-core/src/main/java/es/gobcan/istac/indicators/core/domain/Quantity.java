@@ -7,7 +7,7 @@ import javax.persistence.Table;
  * Metric characteristics of the indicator
  */
 @Entity
-@Table(name = "TBL_QUANTITIES")
+@Table(name = "TB_QUANTITIES")
 public class Quantity extends QuantityBase {
     private static final long serialVersionUID = 1L;
 

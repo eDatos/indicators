@@ -8,7 +8,7 @@ import javax.persistence.UniqueConstraint;
  * Level at indicators system
  */
 @Entity
-@Table(name = "TBL_ELEMENTS_LEVELS", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORDER_IN_LEVEL", "IND_SYSTEM_VERSION_FIRST_FK", "PARENT_FK"})})
+@Table(name = "TB_ELEMENTS_LEVELS", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORDER_IN_LEVEL", "IND_SYSTEM_VERSION_FIRST_FK", "PARENT_FK"})})
 public class ElementLevel extends ElementLevelBase {
 
     private static final long serialVersionUID = 1L;

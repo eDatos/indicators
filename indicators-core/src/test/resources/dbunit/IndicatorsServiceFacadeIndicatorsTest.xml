@@ -7,7 +7,7 @@
 	<!--		- Version 1: published															-->
 	<!--		- Version 2: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="1"
 		UUID="Indicator-1"
 		CODE="CODE-1"
@@ -26,7 +26,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="11"
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
@@ -69,7 +69,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="111"
   					UUID="Quantity-111"
 					QUANTITY_TYPE="CHANGE_RATE"
@@ -97,7 +97,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 						ID="111"
 						UUID="Indicator-1-v1-DataSource-1"
 						DATA_GPE_UUID="query-gpe Indicator-1-v1-DataSource-1"
@@ -127,7 +127,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1111"
 						UUID="RateDerivation-1111"
 						METHOD_TYPE="CALCULATE"
@@ -144,7 +144,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="11111"
 		  					UUID="Quantity-11111"
 							QUANTITY_TYPE="AMOUNT"
@@ -162,7 +162,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1112"
 						UUID="RateDerivation-1112"
 						METHOD_TYPE="CALCULATE"
@@ -179,7 +179,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="11121"
 		  					UUID="Quantity-11121"
 							QUANTITY_TYPE="AMOUNT"
@@ -197,7 +197,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 				
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="12"
 				UUID="Indicator-1-v2"
 				VERSION_NUMBER="2.000"
@@ -238,7 +238,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="121"
   					UUID="Quantity-121"
 					QUANTITY_TYPE="QUANTITY"
@@ -256,7 +256,7 @@
 				/>
 			
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="121"
 					UUID="Indicator-1-v2-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-1-v2-DataSource-1"
@@ -286,7 +286,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1211"
 						UUID="RateDerivation-1211"
 						METHOD_TYPE="CALCULATE"
@@ -303,7 +303,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12111"
 		  					UUID="Quantity-12111"
 							QUANTITY_TYPE="AMOUNT"
@@ -321,7 +321,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1212"
 						UUID="RateDerivation-1212"
 						METHOD_TYPE="LOAD"
@@ -338,7 +338,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12121"
 		  					UUID="Quantity-12121"
 							QUANTITY_TYPE="CHANGE_RATE"
@@ -366,7 +366,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 						
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1213"
 						UUID="RateDerivation-1213"
 						METHOD_TYPE="CALCULATE"
@@ -383,7 +383,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12131"
 		  					UUID="Quantity-12131"
 							QUANTITY_TYPE="AMOUNT"
@@ -401,7 +401,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 					
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1214"
 						UUID="RateDerivation-1214"
 						METHOD_TYPE="CALCULATE"
@@ -418,7 +418,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 						
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12141"
 		  					UUID="Quantity-12141"
 							QUANTITY_TYPE="CHANGE_RATE"
@@ -446,7 +446,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 				
-					<TBL_DATA_SOURCES_VARIABLES
+					<TB_DATA_SOURCES_VARIABLES
 						ID="1211"
 						UUID="Indicator-1-v2-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-1"
@@ -462,7 +462,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1111"
 						UUID="RateDerivation-1111"
 						METHOD_TYPE="CALCULATE"
@@ -479,7 +479,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="11111"
 		  					UUID="Quantity-11111"
 							QUANTITY_TYPE="AMOUNT"
@@ -497,7 +497,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1112"
 						UUID="RateDerivation-1112"
 						METHOD_TYPE="CALCULATE"
@@ -514,7 +514,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="11121"
 		  					UUID="Quantity-11121"
 							QUANTITY_TYPE="AMOUNT"
@@ -532,7 +532,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 					
-					<TBL_DATA_SOURCES_VARIABLES
+					<TB_DATA_SOURCES_VARIABLES
 						ID="1212"
 						UUID="Indicator-1-v2-DataSource-1-Var-2"
 						VARIABLE="variable Indicator-1-v2-DataSource-1-Variable-2"
@@ -549,7 +549,7 @@
 					/>
 					
 					
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="122"
 					UUID="Indicator-1-v2-DataSource-2"
 					DATA_GPE_UUID="query-gpe Indicator-1-v2-DataSource-2"
@@ -579,7 +579,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>					
 
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1221"
 						UUID="RateDerivation-1221"
 						METHOD_TYPE="CALCULATE"
@@ -596,7 +596,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12211"
 		  					UUID="Quantity-12211"
 							QUANTITY_TYPE="AMOUNT"
@@ -614,7 +614,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="1222"
 						UUID="RateDerivation-1222"
 						METHOD_TYPE="CALCULATE"
@@ -631,7 +631,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="12221"
 		  					UUID="Quantity-12221"
 							QUANTITY_TYPE="AMOUNT"
@@ -653,7 +653,7 @@
 	<!--    INDICATOR 2											                     		 	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="2"
 		UUID="Indicator-2"
 		CODE="CODE-2"
@@ -672,7 +672,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="21"
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
@@ -713,7 +713,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="211"
   					UUID="Quantity-211"
 					QUANTITY_TYPE="QUANTITY"
@@ -734,7 +734,7 @@
 	<!--    INDICATOR 3											                     		 	-->
 	<!--		- Version 1: published															-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="3"
 		UUID="Indicator-3"
 		CODE="CODE-3"
@@ -753,7 +753,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="31"
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="11.033"
@@ -794,7 +794,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="311"
   					UUID="Quantity-311"
 					QUANTITY_TYPE="QUANTITY"
@@ -812,7 +812,7 @@
 				/>
 			
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="311"
 					UUID="Indicator-3-v1-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-3-v1-DataSource-1"
@@ -842,7 +842,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="3111"
 						UUID="RateDerivation-3111"
 						METHOD_TYPE="CALCULATE"
@@ -859,7 +859,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="31111"
 		  					UUID="Quantity-31111"
 							QUANTITY_TYPE="CHANGE_RATE"
@@ -887,7 +887,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 						
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="3112"
 						UUID="RateDerivation-3112"
 						METHOD_TYPE="CALCULATE"
@@ -904,7 +904,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="31121"
 		  					UUID="Quantity-31121"
 							QUANTITY_TYPE="AMOUNT"
@@ -922,7 +922,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 						
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="3113"
 						UUID="RateDerivation-3113"
 						METHOD_TYPE="CALCULATE"
@@ -939,7 +939,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="31131"
 		  					UUID="Quantity-31131"
 							QUANTITY_TYPE="AMOUNT"
@@ -958,7 +958,7 @@
 						/>
 								
 				
-					<TBL_DATA_SOURCES_VARIABLES
+					<TB_DATA_SOURCES_VARIABLES
 						ID="3111"
 						UUID="Indicator-3-v1-DataSource-1-Var-1"
 						VARIABLE="variable Indicator-3-v1-DataSource-1-Var-1"
@@ -978,7 +978,7 @@
 	<!--    INDICATOR 4											                      			-->
 	<!--		- Version 1: production validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="4"
 		UUID="Indicator-4"
 		CODE="CODE-4"
@@ -997,7 +997,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="41"
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
@@ -1038,7 +1038,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="411"
   					UUID="Quantity-411"
 					QUANTITY_TYPE="FRACTION"
@@ -1056,7 +1056,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="411"
 					UUID="Indicator-4-v1-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-4-v1-DataSource-1"
@@ -1086,7 +1086,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="4111"
 						UUID="RateDerivation-4111"
 						METHOD_TYPE="CALCULATE"
@@ -1103,7 +1103,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="41111"
 		  					UUID="Quantity-41111"
 							QUANTITY_TYPE="AMOUNT"
@@ -1121,7 +1121,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="4112"
 						UUID="RateDerivation-4112"
 						METHOD_TYPE="CALCULATE"
@@ -1138,7 +1138,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="41121"
 		  					UUID="Quantity-41121"
 							QUANTITY_TYPE="AMOUNT"
@@ -1161,7 +1161,7 @@
 	<!--    INDICATOR 5													                      	-->
 	<!--		- Version 1: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="5"
 		UUID="Indicator-5"
 		CODE="CODE-5"
@@ -1180,7 +1180,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="51"
 				UUID="Indicator-5-v1"
 				VERSION_NUMBER="1.000"
@@ -1221,7 +1221,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="511"
   					UUID="Quantity-511"
 					QUANTITY_TYPE="FRACTION"
@@ -1239,7 +1239,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="511"
 					UUID="Indicator-5-v1-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-5-v1-DataSource-1"
@@ -1269,7 +1269,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="5111"
 						UUID="RateDerivation-5111"
 						METHOD_TYPE="CALCULATE"
@@ -1286,7 +1286,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="51111"
 		  					UUID="Quantity-51111"
 							QUANTITY_TYPE="AMOUNT"
@@ -1304,7 +1304,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="5112"
 						UUID="RateDerivation-5112"
 						METHOD_TYPE="CALCULATE"
@@ -1321,7 +1321,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="51121"
 		  					UUID="Quantity-51121"
 							QUANTITY_TYPE="AMOUNT"
@@ -1340,7 +1340,7 @@
 						/>
 						
 						
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="512"
 					UUID="Indicator-5-v1-DataSource-2"
 					DATA_GPE_UUID="query-gpe Indicator-5-v1-DataSource-2"
@@ -1370,7 +1370,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="5121"
 						UUID="RateDerivation-5121"
 						METHOD_TYPE="CALCULATE"
@@ -1387,7 +1387,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="51211"
 		  					UUID="Quantity-51211"
 							QUANTITY_TYPE="AMOUNT"
@@ -1405,7 +1405,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="5122"
 						UUID="RateDerivation-5122"
 						METHOD_TYPE="CALCULATE"
@@ -1422,7 +1422,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="51221"
 		  					UUID="Quantity-51221"
 							QUANTITY_TYPE="AMOUNT"
@@ -1446,7 +1446,7 @@
 	<!--		- Version 1: published															-->
 	<!--		- Version 2: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="6"
 		UUID="Indicator-6"
 		CODE="CODE-6"
@@ -1465,7 +1465,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="61"
 				UUID="Indicator-6-v1"
 				VERSION_NUMBER="1.000"
@@ -1506,7 +1506,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="611"
   					UUID="Quantity-611"
 					QUANTITY_TYPE="QUANTITY"
@@ -1524,7 +1524,7 @@
 				/>
 			
 			
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="62"
 				UUID="Indicator-6-v2"
 				VERSION_NUMBER="2.000"
@@ -1565,7 +1565,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="621"
   					UUID="Quantity-621"
 					QUANTITY_TYPE="QUANTITY"
@@ -1583,7 +1583,7 @@
 				/>
 			
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="621"
 					UUID="Indicator-6-v2-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-6-v2-DataSource-1"
@@ -1613,7 +1613,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="6211"
 						UUID="RateDerivation-6211"
 						METHOD_TYPE="CALCULATE"
@@ -1630,7 +1630,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="62111"
 		  					UUID="Quantity-62111"
 							QUANTITY_TYPE="AMOUNT"
@@ -1648,7 +1648,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="6212"
 						UUID="RateDerivation-6212"
 						METHOD_TYPE="CALCULATE"
@@ -1665,7 +1665,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="62121"
 		  					UUID="Quantity-62121"
 							QUANTITY_TYPE="AMOUNT"
@@ -1689,7 +1689,7 @@
 	<!--		- Version 1: archived															-->
 	<!--		- Version 2: diffusion validation												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="7"
 		UUID="Indicator-7"
 		CODE="CODE-7"
@@ -1708,7 +1708,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="71"
 				UUID="Indicator-7-v1"
 				VERSION_NUMBER="1.000"
@@ -1749,7 +1749,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="711"
   					UUID="Quantity-711"
 					QUANTITY_TYPE="QUANTITY"
@@ -1767,7 +1767,7 @@
 				/>
 			
 			
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="72"
 				UUID="Indicator-7-v2"
 				VERSION_NUMBER="2.000"
@@ -1808,7 +1808,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="721"
   					UUID="Quantity-721"
 					QUANTITY_TYPE="QUANTITY"
@@ -1826,7 +1826,7 @@
 				/>
 			
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="721"
 					UUID="Indicator-7-v2-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-7-v2-DataSource-1"
@@ -1856,7 +1856,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="7211"
 						UUID="RateDerivation-7211"
 						METHOD_TYPE="CALCULATE"
@@ -1873,7 +1873,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="72111"
 		  					UUID="Quantity-72111"
 							QUANTITY_TYPE="AMOUNT"
@@ -1891,7 +1891,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="7212"
 						UUID="RateDerivation-7212"
 						METHOD_TYPE="CALCULATE"
@@ -1908,7 +1908,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="72121"
 		  					UUID="Quantity-72121"
 							QUANTITY_TYPE="AMOUNT"
@@ -1931,7 +1931,7 @@
 	<!--    INDICATOR 8											                      			-->
 	<!--		- Version 1: archived															-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="8"
 		UUID="Indicator-8"
 		CODE="CODE-8"
@@ -1950,7 +1950,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="81"
 				UUID="Indicator-8-v1"
 				VERSION_NUMBER="1.000"
@@ -1991,7 +1991,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>	
 			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="811"
   					UUID="Quantity-811"
 					QUANTITY_TYPE="QUANTITY"
@@ -2013,7 +2013,7 @@
 	<!--    INDICATOR 9											                     		 	-->
 	<!--		- Version 1: validation rejected												-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="9"
 		UUID="Indicator-9"
 		CODE="CODE-9"
@@ -2032,7 +2032,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="91"
 				UUID="Indicator-9-v1"
 				VERSION_NUMBER="1.000"
@@ -2072,7 +2072,7 @@
 				LAST_UPDATED="2011-01-22 01:02:04"
 				LAST_UPDATED_TZ="Europe/London"
 			/>			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="911"
   					UUID="Quantity-911"
 					QUANTITY_TYPE="QUANTITY"
@@ -2090,7 +2090,7 @@
 				/>
 			
 			
-				<TBL_DATA_SOURCES
+				<TB_DATA_SOURCES
 					ID="911"
 					UUID="Indicator-9-v1-DataSource-1"
 					DATA_GPE_UUID="query-gpe Indicator-9-v1-DataSource-1"
@@ -2120,7 +2120,7 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>			
 				
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="9111"
 						UUID="RateDerivation-9111"
 						METHOD_TYPE="CALCULATE"
@@ -2137,7 +2137,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="91111"
 		  					UUID="Quantity-91111"
 							QUANTITY_TYPE="AMOUNT"
@@ -2155,7 +2155,7 @@
 							LAST_UPDATED_TZ="Europe/London"
 						/>
 		
-					<TBL_RATES_DERIVATIONS
+					<TB_RATES_DERIVATIONS
 						ID="9112"
 						UUID="RateDerivation-9112"
 						METHOD_TYPE="CALCULATE"
@@ -2172,7 +2172,7 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
 					
-						<TBL_QUANTITIES
+						<TB_QUANTITIES
 						  	ID="91121"
 		  					UUID="Quantity-91121"
 							QUANTITY_TYPE="AMOUNT"
@@ -2195,7 +2195,7 @@
 	<!--    INDICATOR 10											                     		 	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS
+	<TB_INDICATORS
 		ID="10"
 		UUID="Indicator-10"
 		CODE="CODE-10"
@@ -2214,7 +2214,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDICATORS_VERSIONS
+			<TB_INDICATORS_VERSIONS
 				ID="101"
 				UUID="Indicator-10-v1"
 				VERSION_NUMBER="1.000"
@@ -2255,7 +2255,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>										
 			  			
-				<TBL_QUANTITIES
+				<TB_QUANTITIES
 				  	ID="1011"
   					UUID="Quantity-1011"
 					QUANTITY_TYPE="QUANTITY"
@@ -2277,7 +2277,7 @@
 	<!--    INDICATORS SYSTEM 1											                      	-->
 	<!--		- Version 1: draft																-->
 	<!-- *************************************************************************************	-->
-	<TBL_INDICATORS_SYSTEMS
+	<TB_INDICATORS_SYSTEMS
 		ID="1"
 		UUID="IndSys-1"
 		CODE="CODE-1"
@@ -2296,7 +2296,7 @@
 		LAST_UPDATED_TZ="Europe/London"
 	 />
   
-			<TBL_INDIC_SYSTEMS_VERSIONS
+			<TB_INDIC_SYSTEMS_VERSIONS
 				ID="11"
 				UUID="IndSys-1-v1"
 				VERSION_NUMBER="1.000"
@@ -2326,7 +2326,7 @@
 				LAST_UPDATED_TZ="Europe/London"
 			/>
 					
-					<TBL_ELEMENTS_LEVELS
+					<TB_ELEMENTS_LEVELS
 						ID="111"
 						UUID="uuid-ignored-112"
 						PARENT_FK="[null]"
@@ -2338,7 +2338,7 @@
 						INDICATOR_INSTANCE_FK="111"
 						VERSION="1"
 					/>			
-					<TBL_INDICATORS_INSTANCES
+					<TB_INDICATORS_INSTANCES
 						ID="111"
 						UUID="IndSys-1-v1-IInstance-1"
 						TIME_GRANULARITY="YEARLY"
@@ -2360,14 +2360,14 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 QUANTITIES UNITS		                              -->
 	<!-- ************************************************************************************ -->
-	<LIS_QUANTITIES_UNITS
+	<TB_LIS_QUANTITIES_UNITS
 		ID="1"
  		UUID="1"
   		SYMBOL="km"
   		TITLE_FK="33"
   		SYMBOL_POSITION="END"
 	/>
-	<LIS_QUANTITIES_UNITS
+	<TB_LIS_QUANTITIES_UNITS
 		ID="2"
  		UUID="2"
   		SYMBOL="kg"
@@ -2378,7 +2378,7 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL VALUES	                              -->
 	<!-- ************************************************************************************ -->
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="1"
  		UUID="1"
  		CODE="ES"
@@ -2388,7 +2388,7 @@
   		GRANULARITY_FK="1"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="2"
  		UUID="2"
  		CODE="EN-LN"
@@ -2398,7 +2398,7 @@
   		GRANULARITY_FK="2"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="3"
  		UUID="3"
  		CODE="FR"
@@ -2408,7 +2408,7 @@
   		GRANULARITY_FK="1"
 	/>
 
-	<LIS_GEOGR_VALUES
+	<TB_LIS_GEOGR_VALUES
 		ID="4"
  		UUID="4"
  		CODE="ES-MD"
@@ -2421,14 +2421,14 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->
 	<!-- ************************************************************************************ -->
-	<LIS_GEOGR_GRANULARITIES
+	<TB_LIS_GEOGR_GRANULARITIES
 		ID="1"
  		UUID="1"
  		CODE="COUNTRIES"
   		TITLE_FK="45"
 	/>
 
-	<LIS_GEOGR_GRANULARITIES
+	<TB_LIS_GEOGR_GRANULARITIES
 		ID="2"
  		UUID="2"
  		CODE="MUNICIPALITIES"
@@ -2461,19 +2461,19 @@
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
 	<!-- ************************************************************************************ -->
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="1"
 		VERSION="1"
 	/>	
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="1"
 		LABEL="Título Indicator-1-v1"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="1"
 	/>	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="2"
 		LABEL="Title Indicator-1-v1"
 		LOCALE="en"
@@ -2481,12 +2481,12 @@
 		INTERNATIONAL_STRING_FK="1"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="2"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="3"
 		LABEL="Acrónimo Indicator-1-v1"
 		LOCALE="es"
@@ -2494,7 +2494,7 @@
 		INTERNATIONAL_STRING_FK="2"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="4"
 		LABEL="Acronym Indicator-1-v1"
 		LOCALE="en"
@@ -2502,12 +2502,12 @@
 		INTERNATIONAL_STRING_FK="2"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="3"
 		VERSION="1"
 	/>
 		
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="5"
 		LABEL="Nota Indicator-1-v1"
 		LOCALE="es"
@@ -2515,7 +2515,7 @@
 		INTERNATIONAL_STRING_FK="3"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="6"
 		LABEL="Note Indicator-1-v1"
 		LOCALE="en"
@@ -2523,12 +2523,12 @@
 		INTERNATIONAL_STRING_FK="3"
 	/>  
 		
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="4"
 		VERSION="1"
 	/>	
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="7"
 		LABEL="Comentario Indicator-1-v1"
 		LOCALE="es"
@@ -2536,7 +2536,7 @@
 		INTERNATIONAL_STRING_FK="4"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="8"
 		LABEL="Comments Indicator-1-v1"
 		LOCALE="en"
@@ -2544,12 +2544,12 @@
 		INTERNATIONAL_STRING_FK="4"
 	/> 
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="5"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="9"
 		LABEL="Título Indicator-1-v2"
 		LOCALE="es"
@@ -2557,7 +2557,7 @@
 		INTERNATIONAL_STRING_FK="5"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="10"
 		LABEL="Title Indicator-1-v2"
 		LOCALE="en"
@@ -2565,12 +2565,12 @@
 		INTERNATIONAL_STRING_FK="5"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="6"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="11"
 		LABEL="Acrónimo Indicator-1-v2"
 		LOCALE="es"
@@ -2578,7 +2578,7 @@
 		INTERNATIONAL_STRING_FK="6"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="12"
 		LABEL="Acronym Indicator-1-v2"
 		LOCALE="en"
@@ -2586,12 +2586,12 @@
 		INTERNATIONAL_STRING_FK="6"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="7"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="13"
 		LABEL="Nota Indicator-1-v2"
 		LOCALE="es"
@@ -2599,7 +2599,7 @@
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="14"
 		LABEL="Note Indicator-1-v2"
 		LOCALE="en"
@@ -2607,12 +2607,12 @@
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="8"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="15"
 		LABEL="Comentario Indicator-1-v2"
 		LOCALE="es"
@@ -2620,7 +2620,7 @@
 		INTERNATIONAL_STRING_FK="8"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="16"
 		LABEL="Comments Indicator-1-v2"
 		LOCALE="en"
@@ -2628,12 +2628,12 @@
 		INTERNATIONAL_STRING_FK="8"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="9"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="17"
 		LABEL="Title Indicator-2-v1"
 		LOCALE="es"
@@ -2641,7 +2641,7 @@
 		INTERNATIONAL_STRING_FK="9"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="18"
 		LABEL="Title Indicator-2-v1"
 		LOCALE="en"
@@ -2649,12 +2649,12 @@
 		INTERNATIONAL_STRING_FK="9"
 	/>
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="10"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="19"
 		LABEL="Título Indicator-3-v1"
 		LOCALE="es"
@@ -2662,7 +2662,7 @@
 		INTERNATIONAL_STRING_FK="10"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="20"
 		LABEL="Title Indicator-3-v1"
 		LOCALE="en"
@@ -2670,12 +2670,12 @@
 		INTERNATIONAL_STRING_FK="10"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="11"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="21"
 		LABEL="Título Indicator-4-v1"
 		LOCALE="es"
@@ -2683,7 +2683,7 @@
 		INTERNATIONAL_STRING_FK="11"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="22"
 		LABEL="Title Indicator-4-v1"
 		LOCALE="en"
@@ -2691,12 +2691,12 @@
 		INTERNATIONAL_STRING_FK="11"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="12"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título Indicator-5-v1"
 		LOCALE="es"
@@ -2704,7 +2704,7 @@
 		INTERNATIONAL_STRING_FK="12"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title Indicator-5-v1"
 		LOCALE="en"
@@ -2712,12 +2712,12 @@
 		INTERNATIONAL_STRING_FK="12"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="13"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título Indicator-6-v1"
 		LOCALE="es"
@@ -2725,7 +2725,7 @@
 		INTERNATIONAL_STRING_FK="13"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title Indicator-6-v1"
 		LOCALE="en"
@@ -2733,12 +2733,12 @@
 		INTERNATIONAL_STRING_FK="13"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="14"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="23"
 		LABEL="Título Indicator-6-v1"
 		LOCALE="es"
@@ -2746,7 +2746,7 @@
 		INTERNATIONAL_STRING_FK="14"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="24"
 		LABEL="Title Indicator-6-v1"
 		LOCALE="en"
@@ -2754,12 +2754,12 @@
 		INTERNATIONAL_STRING_FK="14"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="15"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="25"
 		LABEL="Título Indicator-7-v1"
 		LOCALE="es"
@@ -2767,7 +2767,7 @@
 		INTERNATIONAL_STRING_FK="15"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="26"
 		LABEL="Title Indicator-7-v1"
 		LOCALE="en"
@@ -2775,12 +2775,12 @@
 		INTERNATIONAL_STRING_FK="15"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="16"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="27"
 		LABEL="Título Indicator-7-v1"
 		LOCALE="es"
@@ -2788,7 +2788,7 @@
 		INTERNATIONAL_STRING_FK="16"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="28"
 		LABEL="Title Indicator-7-v1"
 		LOCALE="en"
@@ -2796,12 +2796,12 @@
 		INTERNATIONAL_STRING_FK="16"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="17"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="29"
 		LABEL="Título Indicator-8-v1"
 		LOCALE="es"
@@ -2809,7 +2809,7 @@
 		INTERNATIONAL_STRING_FK="17"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="30"
 		LABEL="Title Indicator-8-v1"
 		LOCALE="en"
@@ -2817,12 +2817,12 @@
 		INTERNATIONAL_STRING_FK="17"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="18"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="31"
 		LABEL="Título"
 		LOCALE="es"
@@ -2830,7 +2830,7 @@
 		INTERNATIONAL_STRING_FK="18"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="32"
 		LABEL="Title"
 		LOCALE="en"
@@ -2838,12 +2838,12 @@
 		INTERNATIONAL_STRING_FK="18"
 	/>		
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="19"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="33"
 		LABEL="Título"
 		LOCALE="es"
@@ -2851,7 +2851,7 @@
 		INTERNATIONAL_STRING_FK="19"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="34"
 		LABEL="Title"
 		LOCALE="en"
@@ -2859,12 +2859,12 @@
 		INTERNATIONAL_STRING_FK="19"
 	/>			
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="20"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="35"
 		LABEL="Título Indicator-1-v2-DataSource-1"
 		LOCALE="es"
@@ -2872,7 +2872,7 @@
 		INTERNATIONAL_STRING_FK="20"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="36"
 		LABEL="Title Indicator-1-v2-DataSource-1"
 		LOCALE="en"
@@ -2880,12 +2880,12 @@
 		INTERNATIONAL_STRING_FK="20"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="21"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="37"
 		LABEL="Título Indicator-1-v2-DataSource-1A"
 		LOCALE="es"
@@ -2893,7 +2893,7 @@
 		INTERNATIONAL_STRING_FK="21"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="38"
 		LABEL="Title Indicator-1-v2-DataSource-1A"
 		LOCALE="en"
@@ -2901,12 +2901,12 @@
 		INTERNATIONAL_STRING_FK="21"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="22"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="39"
 		LABEL="Título Indicator-1-v2-DataSource-1B"
 		LOCALE="es"
@@ -2914,7 +2914,7 @@
 		INTERNATIONAL_STRING_FK="22"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="40"
 		LABEL="Title Indicator-1-v2-DataSource-1B"
 		LOCALE="en"
@@ -2922,12 +2922,12 @@
 		INTERNATIONAL_STRING_FK="22"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="23"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="41"
 		LABEL="Título Indicator-1-v2-DataSource-1BA"
 		LOCALE="es"
@@ -2935,7 +2935,7 @@
 		INTERNATIONAL_STRING_FK="23"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="42"
 		LABEL="Title Indicator-1-v2-DataSource-1BA"
 		LOCALE="en"
@@ -2943,12 +2943,12 @@
 		INTERNATIONAL_STRING_FK="23"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="24"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="43"
 		LABEL="Título Indicator-1-v2-DataSource-2"
 		LOCALE="es"
@@ -2956,7 +2956,7 @@
 		INTERNATIONAL_STRING_FK="24"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="44"
 		LABEL="Title Indicator-1-v2-DataSource-2"
 		LOCALE="en"
@@ -2964,12 +2964,12 @@
 		INTERNATIONAL_STRING_FK="24"
 	/>			
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="25"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="45"
 		LABEL="Título Indicator-3-v1-DataSource-1"
 		LOCALE="es"
@@ -2977,7 +2977,7 @@
 		INTERNATIONAL_STRING_FK="25"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="46"
 		LABEL="Title Indicator-3-v1-DataSource-1"
 		LOCALE="en"
@@ -2985,12 +2985,12 @@
 		INTERNATIONAL_STRING_FK="25"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="26"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="47"
 		LABEL="Título"
 		LOCALE="es"
@@ -2998,7 +2998,7 @@
 		INTERNATIONAL_STRING_FK="26"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="28"
 		LABEL="Title"
 		LOCALE="en"
@@ -3006,12 +3006,12 @@
 		INTERNATIONAL_STRING_FK="26"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="27"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="48"
 		LABEL="Título Indicator-3-v1-DataSource-1A"
 		LOCALE="es"
@@ -3019,7 +3019,7 @@
 		INTERNATIONAL_STRING_FK="27"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="49"
 		LABEL="Title Indicator-3-v1-DataSource-1A"
 		LOCALE="en"
@@ -3027,12 +3027,12 @@
 		INTERNATIONAL_STRING_FK="27"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="28"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="50"
 		LABEL="Título"
 		LOCALE="es"
@@ -3040,7 +3040,7 @@
 		INTERNATIONAL_STRING_FK="28"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="51"
 		LABEL="Title"
 		LOCALE="en"
@@ -3048,12 +3048,12 @@
 		INTERNATIONAL_STRING_FK="28"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="29"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="52"
 		LABEL="Título"
 		LOCALE="es"
@@ -3061,7 +3061,7 @@
 		INTERNATIONAL_STRING_FK="29"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="53"
 		LABEL="Title"
 		LOCALE="en"
@@ -3069,12 +3069,12 @@
 		INTERNATIONAL_STRING_FK="29"
 	/>								
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="30"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="54"
 		LABEL="Área temática 1"
 		LOCALE="es"
@@ -3082,12 +3082,12 @@
 		INTERNATIONAL_STRING_FK="30"
 	/>							
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="31"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="56"
 		LABEL="Área temática 1"
 		LOCALE="es"
@@ -3095,12 +3095,12 @@
 		INTERNATIONAL_STRING_FK="31"
 	/>							
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="32"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="58"
 		LABEL="Porcentaje de 1"
 		LOCALE="es"
@@ -3108,7 +3108,7 @@
 		INTERNATIONAL_STRING_FK="32"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="59"
 		LABEL="Percentage of 1"
 		LOCALE="en"
@@ -3116,12 +3116,12 @@
 		INTERNATIONAL_STRING_FK="32"
 	/>								
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="33"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="60"
 		LABEL="Kilómetros"
 		LOCALE="es"
@@ -3129,7 +3129,7 @@
 		INTERNATIONAL_STRING_FK="33"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="61"
 		LABEL="Kilometers"
 		LOCALE="en"
@@ -3137,12 +3137,12 @@
 		INTERNATIONAL_STRING_FK="33"
 	/>								
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="34"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="62"
 		LABEL="Porcentaje de 1"
 		LOCALE="es"
@@ -3150,7 +3150,7 @@
 		INTERNATIONAL_STRING_FK="34"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="63"
 		LABEL="Percentage of 1"
 		LOCALE="en"
@@ -3158,12 +3158,12 @@
 		INTERNATIONAL_STRING_FK="34"
 	/>								
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="35"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="64"
 		LABEL="Área temática 2"
 		LOCALE="es"
@@ -3171,12 +3171,12 @@
 		INTERNATIONAL_STRING_FK="35"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="36"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="65"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3184,12 +3184,12 @@
 		INTERNATIONAL_STRING_FK="36"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="37"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="66"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3197,12 +3197,12 @@
 		INTERNATIONAL_STRING_FK="37"
 	/>
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="38"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="67"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3210,12 +3210,12 @@
 		INTERNATIONAL_STRING_FK="38"
 	/>	
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="39"
 		VERSION="1"
 	/>
 
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="68"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3223,12 +3223,12 @@
 		INTERNATIONAL_STRING_FK="39"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="40"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="69"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3236,12 +3236,12 @@
 		INTERNATIONAL_STRING_FK="40"
 	/>	
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="41"
 		VERSION="1"
 	/>		
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="70"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3249,12 +3249,12 @@
 		INTERNATIONAL_STRING_FK="41"
 	/>				
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="42"
 		VERSION="1"
 	/>		
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="71"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3262,12 +3262,12 @@
 		INTERNATIONAL_STRING_FK="42"
 	/>	
 				
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="43"
 		VERSION="1"
 	/>			
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="72"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3275,12 +3275,12 @@
 		INTERNATIONAL_STRING_FK="43"
 	/>	
 			
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="44"
 		VERSION="1"
 	/>		
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="73"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3288,12 +3288,12 @@
 		INTERNATIONAL_STRING_FK="44"
 	/>	
 				
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="45"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="74"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3301,12 +3301,12 @@
 		INTERNATIONAL_STRING_FK="45"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="46"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="75"
 		LABEL="Concepto 1"
 		LOCALE="es"
@@ -3314,7 +3314,7 @@
 		INTERNATIONAL_STRING_FK="46"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="76"
 		LABEL="Concept 1"
 		LOCALE="en"
@@ -3322,12 +3322,12 @@
 		INTERNATIONAL_STRING_FK="46"
 	/>								
 
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="47"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="77"
 		LABEL="Área temática 3"
 		LOCALE="es"
@@ -3335,12 +3335,12 @@
 		INTERNATIONAL_STRING_FK="47"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="48"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="78"
 		LABEL="Porcentaje xx"
 		LOCALE="es"
@@ -3348,12 +3348,12 @@
 		INTERNATIONAL_STRING_FK="48"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="49"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="79"
 		LABEL="Porcentaje xx"
 		LOCALE="es"
@@ -3361,12 +3361,12 @@
 		INTERNATIONAL_STRING_FK="49"
 	/>		
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="50"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="80"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3374,12 +3374,12 @@
 		INTERNATIONAL_STRING_FK="50"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="51"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="81"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3387,12 +3387,12 @@
 		INTERNATIONAL_STRING_FK="51"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="52"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="82"
 		LABEL="source survey title Indicator-1-v2-DataSource-1"
 		LOCALE="es"
@@ -3400,12 +3400,12 @@
 		INTERNATIONAL_STRING_FK="52"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="53"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="83"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3413,12 +3413,12 @@
 		INTERNATIONAL_STRING_FK="53"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="54"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="84"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3426,12 +3426,12 @@
 		INTERNATIONAL_STRING_FK="54"
 	/>	
 		
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="55"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="85"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3439,12 +3439,12 @@
 		INTERNATIONAL_STRING_FK="55"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="56"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="86"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3452,12 +3452,12 @@
 		INTERNATIONAL_STRING_FK="56"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="57"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="87"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3465,12 +3465,12 @@
 		INTERNATIONAL_STRING_FK="57"
 	/>	
 		
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="58"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="88"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3478,12 +3478,12 @@
 		INTERNATIONAL_STRING_FK="58"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="59"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="89"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3491,12 +3491,12 @@
 		INTERNATIONAL_STRING_FK="59"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="60"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="90"
 		LABEL="Título xx"
 		LOCALE="es"
@@ -3504,12 +3504,12 @@
 		INTERNATIONAL_STRING_FK="60"
 	/>	
 	
-	<TBL_INTERNATIONAL_STRINGS
+	<TB_INTERNATIONAL_STRINGS
 		ID="61"
 		VERSION="1"
 	/>
 	
-	<TBL_LOCALISED_STRINGS
+	<TB_LOCALISED_STRINGS
 		ID="91"
 		LABEL="source survey acronym Indicator-1-v2-DataSource-1"
 		LOCALE="es"
