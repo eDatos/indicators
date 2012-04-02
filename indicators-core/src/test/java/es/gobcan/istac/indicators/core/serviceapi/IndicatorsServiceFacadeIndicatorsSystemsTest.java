@@ -3535,6 +3535,48 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("2012W51xx", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testCalculatePreviousTimeValue() throws Exception {
+
+        // Yearly
+        assertEquals("2010", TimeVariableUtils.calculatePreviousTimeValue("2011"));
+        assertEquals("1999", TimeVariableUtils.calculatePreviousTimeValue("2000"));
+        // Biyearly
+        assertEquals("2012H1", TimeVariableUtils.calculatePreviousTimeValue("2012H2"));
+        assertEquals("2011H2", TimeVariableUtils.calculatePreviousTimeValue("2012H1"));
+        // Quaterly
+        assertEquals("2012Q3", TimeVariableUtils.calculatePreviousTimeValue("2012Q4"));
+        assertEquals("2012Q2", TimeVariableUtils.calculatePreviousTimeValue("2012Q3"));
+        assertEquals("2012Q1", TimeVariableUtils.calculatePreviousTimeValue("2012Q2"));
+        assertEquals("2011Q4", TimeVariableUtils.calculatePreviousTimeValue("2012Q1"));
+        // Monthly
+        assertEquals("2012M11", TimeVariableUtils.calculatePreviousTimeValue("2012M12"));
+        assertEquals("2012M10", TimeVariableUtils.calculatePreviousTimeValue("2012M11"));
+        assertEquals("2012M09", TimeVariableUtils.calculatePreviousTimeValue("2012M10"));
+        assertEquals("2012M08", TimeVariableUtils.calculatePreviousTimeValue("2012M09"));
+        assertEquals("2012M07", TimeVariableUtils.calculatePreviousTimeValue("2012M08"));
+        assertEquals("2012M06", TimeVariableUtils.calculatePreviousTimeValue("2012M07"));
+        assertEquals("2012M05", TimeVariableUtils.calculatePreviousTimeValue("2012M06"));
+        assertEquals("2012M04", TimeVariableUtils.calculatePreviousTimeValue("2012M05"));
+        assertEquals("2012M03", TimeVariableUtils.calculatePreviousTimeValue("2012M04"));
+        assertEquals("2012M02", TimeVariableUtils.calculatePreviousTimeValue("2012M03"));
+        assertEquals("2012M01", TimeVariableUtils.calculatePreviousTimeValue("2012M02"));
+        assertEquals("2011M12", TimeVariableUtils.calculatePreviousTimeValue("2012M01"));
+        // Weekly
+        assertEquals("2012W51", TimeVariableUtils.calculatePreviousTimeValue("2012W52"));
+        assertEquals("2012W50", TimeVariableUtils.calculatePreviousTimeValue("2012W51"));
+        assertEquals("2012W01", TimeVariableUtils.calculatePreviousTimeValue("2012W02"));
+        assertEquals("2011W52", TimeVariableUtils.calculatePreviousTimeValue("2012W01"));
+        // Daily
+        assertEquals("20121230", TimeVariableUtils.calculatePreviousTimeValue("20121231"));
+        assertEquals("20121229", TimeVariableUtils.calculatePreviousTimeValue("20121230"));
+        assertEquals("20121207", TimeVariableUtils.calculatePreviousTimeValue("20121208"));
+        assertEquals("20121130", TimeVariableUtils.calculatePreviousTimeValue("20121201"));
+        assertEquals("20120930", TimeVariableUtils.calculatePreviousTimeValue("20121001"));
+        assertEquals("20120505", TimeVariableUtils.calculatePreviousTimeValue("20120506"));
+        assertEquals("20111231", TimeVariableUtils.calculatePreviousTimeValue("20120101"));
+    }
 
     @Test
     public void testRetrieveGeographicalValue() throws Exception {
