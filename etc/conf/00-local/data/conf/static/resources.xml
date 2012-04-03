@@ -3,5 +3,5 @@
 <properties>
 	<comment>Configurations</comment>
 	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
-	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/statistical/operations/internal/v1.0/statisticalOperationsInternalInterface</entry>
+	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/metamac/statistical/operations/internal/v1.0/metamacStatisticalOperationsInternalInterface</entry>
 </properties>
