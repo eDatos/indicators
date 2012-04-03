@@ -1,13 +1,14 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +78,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
             return jsonToDataStructure(json);
         } catch (Exception e) {
-            //TODO: We must keep the stacktrace somehow, logging exception or adding cause to metamacexception
-            throw new MetamacException(ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR);
         }
     }
 
@@ -190,7 +190,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             
         } catch (Exception e) {
-            throw new MetamacException();
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
         }
     }
     
