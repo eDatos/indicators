@@ -1,16 +1,16 @@
 package es.gobcan.istac.indicators.web.server.ws;
 
-import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacGopestatInternalInterfaceV10;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10;
 
 public class WebServicePorts {
 
-    private MetamacGopestatInternalInterfaceV10 gopestatInternalInterface;
+    private MetamacStatisticalOperationsInternalInterfaceV10 metamacStatisticalOperationsInternalInterface;
     
-    public MetamacGopestatInternalInterfaceV10 getGopestatInternalInterface() {
-        return gopestatInternalInterface;
+    public MetamacStatisticalOperationsInternalInterfaceV10 getMetamacStatisticalOperationsInternalInterface() {
+        return metamacStatisticalOperationsInternalInterface;
     }
     
-    public void setGopestatInternalInterface(MetamacGopestatInternalInterfaceV10 gopestatInternalInterface) {
-        this.gopestatInternalInterface = gopestatInternalInterface;
+    public void setMetamacStatisticalOperationsInternalInterface(MetamacStatisticalOperationsInternalInterfaceV10 metamacStatisticalOperationsInternalInterface) {
+        this.metamacStatisticalOperationsInternalInterface = metamacStatisticalOperationsInternalInterface;
     }
 }

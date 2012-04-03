@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-  <comment>Configurations</comment>
-  <entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
-  <entry key="indicators.ws.metamac.gopestat.internal.endpoint">http://localhost:8080/gopestat-web/ws/gopestat/internal/v1.0/gopestatInternalInterface</entry>
+	<comment>Configurations</comment>
+	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
+	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/statistical/operations/internal/v1.0/statisticalOperationsInternalInterface</entry>
 </properties>

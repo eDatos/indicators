@@ -6,8 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.ws.BindingProvider;
 
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacGopestatInternalInterfaceV10;
-import org.siemac.metamac.gopestat.internal.ws.v1_0.MetamacGopestatInternalV10;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -18,36 +18,37 @@ import es.gobcan.istac.indicators.web.server.ServerConstants;
 public class WebServicesLocator {
 
     @Autowired
-    private ConfigurationService       configurationService;
+    private ConfigurationService                    configurationService;
 
-    private MetamacGopestatInternalV10 metamacGopestatInternal                     = null;
-    private String                     metamacGopestatInternalEndpoint             = null;
+    private MetamacStatisticalOperationsInternalV10 metamacStatisticalOperationsInternal        = null;
+    private String                                  metamacStatisticalOperationInternalEndpoint = null;
 
-    private ThreadLocal<WebServicePorts>       ports                                       = new ThreadLocal<WebServicePorts>() {
-       @Override
-       protected WebServicePorts initialValue() {
-           return new WebServicePorts();
-       }
-    };
+    private ThreadLocal<WebServicePorts>            ports                                       = new ThreadLocal<WebServicePorts>() {
+            @Override
+            protected WebServicePorts initialValue() {
+                return new WebServicePorts();
+            }
+         };
 
     @PostConstruct
     public void initService() throws Exception {
-        metamacGopestatInternalEndpoint = configurationService.getProperties().getProperty(ServerConstants.GOPESTAT_INTERNAL_ENDPOINT_ADDRESS_PROPERTY);
-        metamacGopestatInternal = new MetamacGopestatInternalV10(ResourceUtils.getURL("classpath:META-INF/wsdl/metamac-gopestat-internal-v1.0.wsdl"));
+        metamacStatisticalOperationInternalEndpoint = configurationService.getProperties().getProperty(ServerConstants.METAMAC_STATISTICAL_OPERATIONS_INTERNAL_ENDPOINT_ADDRESS_PROPERTY);
+        metamacStatisticalOperationsInternal = new MetamacStatisticalOperationsInternalV10(ResourceUtils.getURL("classpath:META-INF/wsdl/metamac-statistical-operations-internal-v1.0.wsdl"));
     }
 
-    public MetamacGopestatInternalInterfaceV10 getGopestatInternalInterface() {
+    public MetamacStatisticalOperationsInternalInterfaceV10 getMetamacStatisticalOperationsInternalInterface() {
         WebServicePorts wsPorts = ports.get();
-        if (wsPorts.getGopestatInternalInterface() == null) {
+        if (wsPorts.getMetamacStatisticalOperationsInternalInterface() == null) {
             synchronized (this) {
-                if (wsPorts.getGopestatInternalInterface() == null) {
-                    MetamacGopestatInternalInterfaceV10 gopestatInternalInterface = metamacGopestatInternal.getMetamacGopestatInternalSOAPV10();
-                    updateWSPort(gopestatInternalInterface, metamacGopestatInternalEndpoint);
-                    wsPorts.setGopestatInternalInterface(gopestatInternalInterface);
+                if (wsPorts.getMetamacStatisticalOperationsInternalInterface() == null) {
+                    MetamacStatisticalOperationsInternalInterfaceV10 metamacStatisticalOperationsInternalInterface = metamacStatisticalOperationsInternal
+                            .getMetamacStatisticalOperationsInternalSOAPV10();
+                    updateWSPort(metamacStatisticalOperationsInternalInterface, metamacStatisticalOperationInternalEndpoint);
+                    wsPorts.setMetamacStatisticalOperationsInternalInterface(metamacStatisticalOperationsInternalInterface);
                 }
             }
         }
-        return wsPorts.getGopestatInternalInterface();
+        return wsPorts.getMetamacStatisticalOperationsInternalInterface();
     }
 
     private void updateWSPort(Object port, String url/* , String userName, String password */) {

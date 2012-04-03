@@ -76,7 +76,7 @@
 		<metamac-core-common.version>1.0-SNAPSHOT</metamac-core-common.version>
 		<metamac-common-test.version>1.0-SNAPSHOT</metamac-common-test.version>
 		<metamac-web-common.version>1.0-SNAPSHOT</metamac-web-common.version>
-		<metamac-gopestat-ws-api.version>1.0-SNAPSHOT</metamac-gopestat-ws-api.version>
+		<metamac-statistical-operations-ws-api.version>1.0-SNAPSHOT</metamac-statistical-operations-ws-api.version>
 		
 		<!-- INDICATORS -->
 		<indicators.version>0.0.1-SNAPSHOT</indicators.version>
@@ -493,9 +493,9 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.siemac.metamac.gopestat</groupId>
-				<artifactId>gopestat-ws-api</artifactId>
-				<version>${metamac-gopestat-ws-api.version}</version>
+				<groupId>org.siemac.metamac.statistical.operations</groupId>
+				<artifactId>metamac-statistical-operations-ws-api</artifactId>
+				<version>${metamac-statistical-operations-ws-api.version}</version>
 			</dependency>
 			
 			<!-- WEB -->
