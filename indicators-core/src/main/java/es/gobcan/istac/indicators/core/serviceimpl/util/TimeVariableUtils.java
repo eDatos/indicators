@@ -130,4 +130,24 @@ public class TimeVariableUtils {
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
     }
+    /**
+     * Retrieves previous time value in yearly granularity
+     */
+    public static String calculatePreviousYearTimeValue(String value) throws MetamacException {
+        if (value == null || !isTimeValue(value)) {
+            return null;
+        }
+        
+        //Year is in first 4 letters
+        String yearStr = value.substring(0, 4);
+        Integer year = Integer.parseInt(yearStr); 
+        
+        String feb29 = "0229";
+        if (feb29.equals(value.substring(4))) {
+            //TODO: Wait for Alberto Answer to decide what to do
+            return null;
+        }
+        year = year-1;
+        return value.replaceFirst(yearStr, year.toString());
+    }
 }

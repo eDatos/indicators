@@ -3577,6 +3577,49 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("20120505", TimeVariableUtils.calculatePreviousTimeValue("20120506"));
         assertEquals("20111231", TimeVariableUtils.calculatePreviousTimeValue("20120101"));
     }
+    
+    @Test
+    public void testCalculatePreviousYearTimeValue() throws Exception {
+        
+        // Yearly
+        assertEquals("2010", TimeVariableUtils.calculatePreviousYearTimeValue("2011"));
+        assertEquals("1999", TimeVariableUtils.calculatePreviousYearTimeValue("2000"));
+        // Biyearly
+        assertEquals("2011H2", TimeVariableUtils.calculatePreviousYearTimeValue("2012H2"));
+        assertEquals("2011H1", TimeVariableUtils.calculatePreviousYearTimeValue("2012H1"));
+        // Quaterly
+        assertEquals("2011Q4", TimeVariableUtils.calculatePreviousYearTimeValue("2012Q4"));
+        assertEquals("2011Q3", TimeVariableUtils.calculatePreviousYearTimeValue("2012Q3"));
+        assertEquals("2011Q2", TimeVariableUtils.calculatePreviousYearTimeValue("2012Q2"));
+        assertEquals("2011Q1", TimeVariableUtils.calculatePreviousYearTimeValue("2012Q1"));
+        // Monthly
+        assertEquals("2011M12", TimeVariableUtils.calculatePreviousYearTimeValue("2012M12"));
+        assertEquals("2011M11", TimeVariableUtils.calculatePreviousYearTimeValue("2012M11"));
+        assertEquals("2011M10", TimeVariableUtils.calculatePreviousYearTimeValue("2012M10"));
+        assertEquals("2011M09", TimeVariableUtils.calculatePreviousYearTimeValue("2012M09"));
+        assertEquals("2011M08", TimeVariableUtils.calculatePreviousYearTimeValue("2012M08"));
+        assertEquals("2011M07", TimeVariableUtils.calculatePreviousYearTimeValue("2012M07"));
+        assertEquals("2011M06", TimeVariableUtils.calculatePreviousYearTimeValue("2012M06"));
+        assertEquals("2011M05", TimeVariableUtils.calculatePreviousYearTimeValue("2012M05"));
+        assertEquals("2011M04", TimeVariableUtils.calculatePreviousYearTimeValue("2012M04"));
+        assertEquals("2011M03", TimeVariableUtils.calculatePreviousYearTimeValue("2012M03"));
+        assertEquals("2011M02", TimeVariableUtils.calculatePreviousYearTimeValue("2012M02"));
+        assertEquals("2011M01", TimeVariableUtils.calculatePreviousYearTimeValue("2012M01"));
+        // Weekly
+        assertEquals("2011W52", TimeVariableUtils.calculatePreviousYearTimeValue("2012W52"));
+        assertEquals("2011W51", TimeVariableUtils.calculatePreviousYearTimeValue("2012W51"));
+        assertEquals("2011W02", TimeVariableUtils.calculatePreviousYearTimeValue("2012W02"));
+        assertEquals("2011W01", TimeVariableUtils.calculatePreviousYearTimeValue("2012W01"));
+        // Daily
+        assertEquals("20111231", TimeVariableUtils.calculatePreviousYearTimeValue("20121231"));
+        assertEquals("20111230", TimeVariableUtils.calculatePreviousYearTimeValue("20121230"));
+        assertEquals("20111208", TimeVariableUtils.calculatePreviousYearTimeValue("20121208"));
+        assertEquals("20111201", TimeVariableUtils.calculatePreviousYearTimeValue("20121201"));
+        assertEquals("20111001", TimeVariableUtils.calculatePreviousYearTimeValue("20121001"));
+        assertEquals("20110506", TimeVariableUtils.calculatePreviousYearTimeValue("20120506"));
+        assertEquals("20110101", TimeVariableUtils.calculatePreviousYearTimeValue("20120101"));
+        assertEquals(null, TimeVariableUtils.calculatePreviousYearTimeValue("20120229"));
+    }
 
     @Test
     public void testRetrieveGeographicalValue() throws Exception {
