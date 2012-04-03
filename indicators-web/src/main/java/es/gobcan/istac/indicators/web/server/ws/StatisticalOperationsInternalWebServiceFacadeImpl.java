@@ -36,6 +36,7 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
         }
     }
 
+    // TODO pendiente de paginación METAMAC-434
     @Override
     public OperationBaseList findOperationsIndicatorsSystem() throws MetamacWebException {
         try {
