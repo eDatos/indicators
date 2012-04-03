@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
@@ -14,14 +15,14 @@ import org.siemac.metamac.core.common.exception.MetamacException;
  */
 public class Data extends DataStructure {
     
-    private Map<List<String>,DataContent> data;
+    private Map<String,DataContent> data;
     
     @JsonProperty("data")
     public void processData(List<DataContent> dataList) {
-        data = new HashMap<List<String>, DataContent>();
+        data = new HashMap<String, DataContent>();
         for (DataContent content : dataList) {
-            List<String> dims = new ArrayList<String>(content.getDimCodes());
-            data.put(dims, content);
+            String key = StringUtils.join(content.getDimCodes(), "#");
+            data.put(key, content);
         }
     }
     
@@ -45,6 +46,11 @@ public class Data extends DataStructure {
                 return null;
             }
         }
-        return data.get(dimCodes);
+        String key = StringUtils.join(dimCodes,"#");
+        return data.get(key);
+    }
+    
+    public boolean hasContVariable() {
+        return !StringUtils.isBlank(getContVariable());
     }
 }

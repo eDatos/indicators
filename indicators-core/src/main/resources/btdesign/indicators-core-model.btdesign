@@ -111,7 +111,7 @@ Application Indicators {
     	"Provides access to indicators data"
     	Service IndicatorsDataService {
     		> @IndicatorsDataProviderService
-    		> @IndicatorsServiceFacade
+    		> @IndicatorsService
     		> @DataGpeRepository
     		
 			"Retrieves all Data containing basic info only"
@@ -1262,10 +1262,10 @@ Application Indicators {
     	"Types of Measure Dimensions"
     	enum MeasureDimensionTypeEnum {
     		ABSOLUTE,
-    		PERCENT_ANNUAL_RATE,
-    		PERCENT_PERIOD_RATE,
-    		POINT_ANNUAL_RATE,
-    		POINT_PERIOD_RATE
+    		ANNUAL_PERCENTAGE_RATE,
+    		INTERPERIOD_PERCENTAGE_RATE,
+    		ANNUAL_PUNTUAL_RATE,
+    		INTERPERIOD_PUNTUAL_RATE
     	}
 	}
 }

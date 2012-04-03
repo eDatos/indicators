@@ -1,12 +1,15 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
@@ -121,4 +124,19 @@ public class IndicatorsAsserts {
         assertEquals(expected.getTimeGranularity(), actual.getTimeGranularity());
         assertEquals(expected.getTimeValue(), actual.getTimeValue());
     }
+    
+    public static void assertEqualsAttributeBasic(AttributeBasicDto expected, AttributeBasicDto actual) {
+        if (expected == actual) {
+            return;
+        }
+        if (expected == null) {
+            fail("Expected is null, actual isn't");
+        } else if (actual == null) {
+            fail("Expected is not null, actual is");
+        }
+        assertEquals(expected.getAttributeId(),actual.getAttributeId());
+        DatasetRepositoryAsserts.assertEqualsInternationalString(expected.getValue(), actual.getValue());
+    }
+    
+
 }
