@@ -232,6 +232,35 @@
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.4.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/generated</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                                <include>**/*.xml</include>
+                                <include>**/*.properties</include>
+                                <include>**/*.dot</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/.svn/*</exclude>
+                            </excludes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>src/test/generated</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                                <include>**/*.xml</include>
+                                <include>**/*.properties</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/.svn/*</exclude>
+                            </excludes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
