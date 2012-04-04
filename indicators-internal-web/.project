@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>indicators-web</name>
-	<comment>indicators-web project</comment>
+	<name>indicators-internal-web</name>
+	<comment>indicators-internal-web project</comment>
 	<projects>
 	</projects>
 	<buildSpec>

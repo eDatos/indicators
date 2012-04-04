@@ -9,8 +9,8 @@
 		<relativePath>../indicators-parent/pom.xml</relativePath>
 	</parent>
 	<groupId>es.gobcan.istac.indicators</groupId>
-	<artifactId>indicators-web</artifactId>
-	<name>INDICATORS :: WEB</name>
+	<artifactId>indicators-internal-web</artifactId>
+	<name>INDICATORS :: WEB :: INTERNAL</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
