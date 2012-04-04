@@ -469,11 +469,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (obs1.getPrimaryMeasure() == null && obs2.getPrimaryMeasure() == null) {
             String desc1 = getAttribute(OBS_CONF_ATTR, obs1).getValue().getLocalisedLabel(OBS_CONF_LOC);
             String desc2 = getAttribute(OBS_CONF_ATTR, obs2).getValue().getLocalisedLabel(OBS_CONF_LOC);
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc1 + "," + desc2);
+            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc1 + ", " + desc2);
         } else if (obs1.getPrimaryMeasure() == null) {
             String desc1 = getAttribute(OBS_CONF_ATTR, obs1).getValue().getLocalisedLabel(OBS_CONF_LOC);
             return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc1);
-        } else if (obs2.getPrimaryMeasure() != null) {
+        } else if (obs2.getPrimaryMeasure() == null) {
             String desc2 = getAttribute(OBS_CONF_ATTR, obs2).getValue().getLocalisedLabel(OBS_CONF_LOC);
             return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc2);
         }

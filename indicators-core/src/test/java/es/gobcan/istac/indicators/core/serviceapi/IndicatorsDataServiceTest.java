@@ -68,49 +68,49 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     private static final String              CONSULTA1_UUID           = "2d4887dc-52f0-4c17-abbb-ef1fdc62e868";
     private static final String              CONSULTA2_UUID           = "1-1-1-1-1";
     private static final String              CONSULTA3_UUID           = "2-2-2-2-2";
-    private static final String              CONSULTA1_JSON_STRUC     = readFile("json/query_structure_1.json");
+    private static final String              CONSULTA1_JSON_STRUC     = readFile("json/structure_1.json");
 
     /* Has geographic and time variables */
     private static final String              INDICATOR1_UUID          = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID   = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_GPE_JSON_DATA = readFile("json/query_data_temporal_spatials.json");
+    private static final String              INDICATOR1_GPE_JSON_DATA = readFile("json/data_temporal_spatials.json");
     private static final String              INDICATOR1_VERSION       = "1.000";
 
     /* Has geographic variable */
     private static final String              INDICATOR2_UUID          = "Indicator-2";
     private static final String              INDICATOR2_DS_GPE_UUID   = "Indicator-2-v1-DataSource-1-GPE-GEO";
-    private static final String              INDICATOR2_GPE_JSON_DATA = readFile("json/query_data_spatials.json");
+    private static final String              INDICATOR2_GPE_JSON_DATA = readFile("json/data_spatials.json");
     private static final String              INDICATOR2_VERSION       = "1.000";
 
     /* Has time variable */
     private static final String              INDICATOR3_UUID          = "Indicator-3";
     private static final String              INDICATOR3_DS_UUID       = "Indicator-3-v1-DataSource-1";
     private static final String              INDICATOR3_DS_GPE_UUID   = "Indicator-3-v1-DataSource-1-GPE-TIME";
-    private static final String              INDICATOR3_GPE_JSON_DATA = readFile("json/query_data_temporals.json");
+    private static final String              INDICATOR3_GPE_JSON_DATA = readFile("json/data_temporals.json");
     private static final String              INDICATOR3_VERSION       = "1.000";
 
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR4_UUID          = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID   = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
-    private static final String              INDICATOR4_GPE_JSON_DATA = readFile("json/query_data_fixed.json");
+    private static final String              INDICATOR4_GPE_JSON_DATA = readFile("json/data_fixed.json");
     private static final String              INDICATOR4_VERSION       = "1.000";
 
     /* uses contvariable for absolute method*/
     private static final String              INDICATOR5_UUID          = "Indicator-5";
     private static final String              INDICATOR5_DS_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
-    private static final String              INDICATOR5_GPE_JSON_DATA = readFile("json/query_data_fixed_contvariable.json");
+    private static final String              INDICATOR5_GPE_JSON_DATA = readFile("json/data_fixed_contvariable.json");
     private static final String              INDICATOR5_VERSION       = "1.000";
 
     /* Has "." in data*/
     private static final String              INDICATOR6_UUID          = "Indicator-6";
     private static final String              INDICATOR6_DS_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-DOTS";
-    private static final String              INDICATOR6_GPE_JSON_DATA = readFile("json/query_data_dots.json");
+    private static final String              INDICATOR6_GPE_JSON_DATA = readFile("json/data_dots.json");
     private static final String              INDICATOR6_VERSION       = "1.000";
 
     /* Calculates all rates */
     private static final String              INDICATOR7_UUID          = "Indicator-7";
     private static final String              INDICATOR7_DS_GPE_UUID   = "Indicator-7-v1-DataSource-1-GPE-TIME";
-    private static final String              INDICATOR7_GPE_JSON_DATA = readFile("json/query_data_temporals_calculate.json");
+    private static final String              INDICATOR7_GPE_JSON_DATA = readFile("json/data_temporals_calculate.json");
     private static final String              INDICATOR7_VERSION       = "1.000";
     
     
@@ -118,28 +118,47 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     private static final String              INDICATOR8_UUID          = "Indicator-8";
     private static final String              INDICATOR8_DS1_GPE_UUID   = "Indicator-8-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR8_DS2_GPE_UUID   = "Indicator-8-v1-DataSource-2-GPE-TIME";
-    private static final String              INDICATOR8_GPE_JSON_DATA1 = readFile("json/query_data_increase_temporal_part1.json");
-    private static final String              INDICATOR8_GPE_JSON_DATA2 = readFile("json/query_data_increase_temporal_part2.json");
+    private static final String              INDICATOR8_GPE_JSON_DATA1 = readFile("json/data_increase_temporal_part1.json");
+    private static final String              INDICATOR8_GPE_JSON_DATA2 = readFile("json/data_increase_temporal_part2.json");
     private static final String              INDICATOR8_VERSION       = "1.000";
     
     /* Loads all rates from one data source using contvariable*/
     private static final String              INDICATOR9_UUID          = "Indicator-9";
     private static final String              INDICATOR9_DS_GPE_UUID   = "Indicator-9-v1-DataSource-1-GPE-TIME";
-    private static final String              INDICATOR9_GPE_JSON_DATA = readFile("json/query_data_allrates_contvariable.json");
+    private static final String              INDICATOR9_GPE_JSON_DATA = readFile("json/data_allrates_contvariable.json");
     private static final String              INDICATOR9_VERSION       = "1.000";
     
+    /* Loads all rates, all from different data sources, using OBS_VALUE*/
     private static final String              INDICATOR10_UUID          = "Indicator-9";
     private static final String              INDICATOR10_DS1_GPE_UUID   = "Indicator-9-v1-DataSource-1-GPE-ABSOLUTE";
     private static final String              INDICATOR10_DS2_GPE_UUID   = "Indicator-9-v1-DataSource-2-GPE-ANNUAL-PERC";
     private static final String              INDICATOR10_DS3_GPE_UUID   = "Indicator-9-v1-DataSource-3-GPE-ANNUAL-PUNT";
     private static final String              INDICATOR10_DS4_GPE_UUID   = "Indicator-9-v1-DataSource-4-GPE-INTER-PERC";
     private static final String              INDICATOR10_DS5_GPE_UUID   = "Indicator-9-v1-DataSource-5-GPE-INTER-PUNT";
-    private static final String              INDICATOR10_GPE_JSON_DATA1 = readFile("json/query_data_rates_obsvalue_split1_absolute.json");
-    private static final String              INDICATOR10_GPE_JSON_DATA2 = readFile("json/query_data_rates_obsvalue_split2_annual_percentage.json");
-    private static final String              INDICATOR10_GPE_JSON_DATA3 = readFile("json/query_data_rates_obsvalue_split3_annual_puntual.json");
-    private static final String              INDICATOR10_GPE_JSON_DATA4 = readFile("json/query_data_rates_obsvalue_split4_inter_percentage.json");
-    private static final String              INDICATOR10_GPE_JSON_DATA5 = readFile("json/query_data_rates_obsvalue_split5_inter_puntual.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA1 = readFile("json/data_rates_obsvalue_split1_absolute.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA2 = readFile("json/data_rates_obsvalue_split2_annual_percentage.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA3 = readFile("json/data_rates_obsvalue_split3_annual_puntual.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA4 = readFile("json/data_rates_obsvalue_split4_inter_percentage.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA5 = readFile("json/data_rates_obsvalue_split5_inter_puntual.json");
     private static final String              INDICATOR10_VERSION       = "1.000";
+    
+    /* Error wrong absoluteMethod without contvariable */
+    private static final String              INDICATOR11_UUID          = "Indicator-11";
+    private static final String              INDICATOR11_DS_GPE_UUID   = "Indicator-11-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR11_GPE_JSON_DATA = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR11_VERSION       = "1.000";
+    
+    /* Error wrong absoluteMethod with contvariable */
+    private static final String              INDICATOR12_UUID          = "Indicator-12";
+    private static final String              INDICATOR12_DS_GPE_UUID   = "Indicator-12-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
+    private static final String              INDICATOR12_GPE_JSON_DATA = readFile("json/data_fixed_contvariable.json");
+    private static final String              INDICATOR12_VERSION       = "1.000";
+    
+    /* Calculates all rates, with some dots values */
+    private static final String              INDICATOR13_UUID          = "Indicator-13";
+    private static final String              INDICATOR13_DS_GPE_UUID   = "Indicator-13-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR13_GPE_JSON_DATA = readFile("json/data_temporals_calculate_dots.json");
+    private static final String              INDICATOR13_VERSION       = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -174,6 +193,10 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS3_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA3);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS4_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA4);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS5_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA5);
+        
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR11_DS_GPE_UUID))).thenReturn(INDICATOR11_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR12_DS_GPE_UUID))).thenReturn(INDICATOR12_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR13_DS_GPE_UUID))).thenReturn(INDICATOR13_GPE_JSON_DATA);
     }
 
     @Test
@@ -228,6 +251,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         }
     }
 
+    /*
+     * Some query exist but the date shows is no longer available
+     */
     @Test
     public void testRetrieveDataDefinitionPublishedUnavailable() throws Exception {
         try {
@@ -239,6 +265,10 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         }
     }
 
+    /*
+     * Checking conversion from json to Data object 
+     * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testRetrieveDataStructure()
+     */
     @Test
     @Override
     public void testRetrieveDataStructure() throws Exception {
@@ -303,6 +333,10 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         }
     }
 
+    /*
+     * Populate data using geographical and time variables provided by Jaxi
+     * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testPopulateIndicatorData()
+     */
     @Test
     @Override
     public void testPopulateIndicatorData() throws Exception {
@@ -317,7 +351,56 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
                 "20", "46", "26", "2.156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
     }
+    
+    @Test
+    public void testPopulateIndicatorDataUuuidNull() throws Exception {
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContext(), null, "version");
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals("INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
 
+    }
+
+    /*
+     * Populate data error: absolute method can only be OBS_VALUE or a CONT_VARIABLE category
+     * In this case there is no contvariable, so only valid option is OBS_VALUE
+     */
+    @Test
+    public void testPopulateIndicatorDataWrongAbsoluteMethod() throws Exception {
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR11_UUID, INDICATOR11_VERSION);
+            fail("Should NOT accept other absoluteMethd than OBS_VALUE");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1,e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_INVALID_NOCONTVARIABLE_LOAD_METHOD.getCode(),e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
+    /*
+     * Populate data error: absolute method can only be OBS_VALUE or a CONT_VARIABLE category
+     * In this case there is contvariable, so only valid option is a CONT_VARIABLE category
+     */
+    @Test
+    public void testPopulateIndicatorDataWrongAbsoluteMethodContVariable() throws Exception {
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR12_UUID, INDICATOR12_VERSION);
+            fail("Should NOT accept other absoluteMethd than a CONT_VARIABLE category");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1,e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_INVALID_CONTVARIABLE_LOAD_METHOD.getCode(),e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
+    /*
+     * Populate data with geographical variable provided by Jaxi, and fixed time value
+     */
     @Test
     public void testPopulateIndicatorDataSpatialVariableTemporalValue() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR2_UUID, INDICATOR2_VERSION);
@@ -331,6 +414,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR2_UUID, INDICATOR2_VERSION, data);
     }
 
+    /*
+     * Populate data with time variable provided by Jaxi, and fixed geographical value
+     */
     @Test
     public void testPopulateIndicatorDataSpatialValueTemporalVariable() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR3_UUID, INDICATOR3_VERSION);
@@ -344,6 +430,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, data);
     }
 
+    /*
+     * Populate data with both, time and geographical, variables fixed 
+     */
     @Test
     public void testPopulateIndicatorDataSpatialValueTemporalValue() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
@@ -357,6 +446,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR4_UUID, INDICATOR4_VERSION, data);
     }
 
+    /*
+     * Populate Data with fixed variables, loading absolute values from cont variable
+     */
     @Test
     public void testPopulateIndicatorDataContVariable() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR5_UUID, INDICATOR5_VERSION);
@@ -370,6 +462,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR5_UUID, INDICATOR5_VERSION, data);
     }
 
+    /*
+     * Populate Data with all different kind of dots "."
+     */
     @Test
     public void testPopulateIndicatorDataDots() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR6_UUID, INDICATOR6_VERSION);
@@ -412,6 +507,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorsDataServiceImpl.OBS_CONF_ATTR, mapAttributes);
     }
 
+    /*
+     * Populate Data checking that CODE attribute is specified for all values
+     */
     @Test
     public void testPopulateIndicatorDataCodeAttribute() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR3_UUID, INDICATOR3_VERSION);
@@ -438,6 +536,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataAttributes(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, IndicatorsDataServiceImpl.CODE_ATTR, mapAttributes);
     }
 
+    /*
+     * Populate Data with All rates calculated using only one data source with absolute values
+     */
     @Test
     public void testPopulateIndicatorDataCalculate() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR7_UUID, INDICATOR7_VERSION);
@@ -469,6 +570,67 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION, data);
     }
     
+    /*
+     * Populate Data with All rates calculated using only one data source with absolute values
+     * some values are dots
+     */
+    @Test
+    public void testPopulateIndicatorDataCalculateDots() throws Exception {
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR13_UUID, INDICATOR13_VERSION);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+
+        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION,
+                Arrays.asList("2010", "2010M12", "2010M11", "2010M10","2009", "2009M12", "2009M11"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                                                                                      MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name()));
+        /* ABSOLUTE */
+        List<String> absolute = Arrays.asList("34.413", null/*...*/, null/*.*/, "2.036", "30.413", "1.952", "1.925");
+        List<String> interperiodPercentageRate = Arrays.asList("13,15", null, null, null, null, "1,40", null);
+        
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(interperiodPercentageRate);
+        
+        checkDataDimensions(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION);
+        checkDataObservations(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, data);
+        
+        Map<String, AttributeBasicDto> mapAttributes = new HashMap<String, AttributeBasicDto>();
+        {
+            String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.ABSOLUTE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad, No procede"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2010M10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+        }
+        {
+            String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+        }
+        checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorsDataServiceImpl.OBS_CONF_ATTR, mapAttributes);
+    }
+    
+    /*
+     * Populate Data with All rates calculated using two data sources with absolute values, checking that 
+     * calculated values are correct and were calculated using both data sources
+     */
     @Test
     public void testPopulateIndicatorDataMultiDataSource() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR8_UUID, INDICATOR8_VERSION);
@@ -505,6 +667,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION, data);
     }
     
+    /*
+     * Populate Data with All rates obtained from contvariable
+     */
     @Test
     public void testPopulateIndicatorDataAllRatesContVariable() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR9_UUID, INDICATOR9_VERSION);
@@ -541,6 +706,9 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR9_UUID, INDICATOR9_VERSION, data);
     }
     
+    /*
+     * Populate Data with All rates obtained from different data sources as OBS_VALUE 
+     */
     @Test
     public void testPopulateIndicatorDataAllRatesObsValue() throws Exception {
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR10_UUID, INDICATOR10_VERSION);
@@ -577,19 +745,7 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         checkDataObservations(dimensionCodes, INDICATOR10_UUID, INDICATOR10_VERSION, data);
     }
 
-    @Test
-    public void testPopulateIndicatorDataUuuidNull() throws Exception {
-        try {
-            indicatorsDataService.populateIndicatorData(getServiceContext(), null, "version");
-            fail("parameter required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
 
-    }
 
     @Override
     protected String getDataSetFile() {
