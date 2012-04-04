@@ -9,7 +9,13 @@
 	</ul>	
 	
 	<div class="clearfix" ></div>
-	<div class="sep-2">&nbsp;</div>
+	<div class="sep-20">&nbsp;</div>
+	
+	<div>
+	-- BÚSQUEDA DE SISTEMAS DE INDICADORES
+	</div>
+	<div class="clearfix" ></div>
+	<div class="sep-20">&nbsp;</div>
 	
 	<div class="data-table">
 		<div class="data-table-body">
@@ -17,11 +23,13 @@
 				<colgroup>
 					<col class="col-20" />
 				</colgroup>
+				[#-- 
 				<thead>
 					<tr>
 						<th class="data-table-col-15">[@spring.message 'entity.indicators-system.code' /]</th>
 					</tr>
 				</thead>
+				--]
 				<tbody>
 					[#list indicatorsSystems as indicatorsSystem]
 						<tr>
