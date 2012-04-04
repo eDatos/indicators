@@ -2,9 +2,14 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
-    <!-- APP -->
+    <!-- General -->
     <entry key="app.title">Indicators</entry>
     <entry key="app.copyrigth"><![CDATA[Copyright &copy; 2012. All Rights reserved.]]></entry>
+
+    <!-- Footer -->
+    <entry key="app.footer.gobcan"><![CDATA[&copy; Gobierno de Canarias]]></entry>
+    <entry key="app.footer.legal-advice">Aviso Legal</entry>
+    <entry key="app.footer.suggests">Sugerencias y Reclamaciones</entry>
     
     <!-- Dates -->
     <entry key="date.short">dd/MM/yyyy</entry>
@@ -21,5 +26,6 @@
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
     <entry key="entity.indicators-system.identifier">Código</entry>
     <entry key="entity.indindicators-system.uri">Uri</entry>
+    
   
 </properties>

@@ -64,7 +64,13 @@
 			</div>
 	
 		  	<div id="footer" class="span-24">
-		  		<p>[@apph.messageEscape 'app.copyrigth' /]</p>
+		  		<p class="left">[@apph.messageEscape 'app.footer.gobcan' /]</p>
+		  		<div class="right">
+		  			<ul>
+		  				<li>[@apph.messageEscape 'app.footer.legal-advice' /]</li>
+		  				<li>[@apph.messageEscape 'app.footer.suggests' /]</li>
+		  			</ul>
+		  		</div>
 			</div>
 		</div>
 	</body>

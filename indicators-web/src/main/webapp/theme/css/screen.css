@@ -74,16 +74,41 @@ h1 {
    	FOOTER
 	################################## */
 #footer {
-	background-color: #003366;
-	text-align: center;
-	color: #FFFFFF;
-	height: 30px;
-	padding-top: 5px;
-	
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+    background-color: #FFDF61;
+    float: left;
+    height: 23px;
+    margin: 10px 0 0;
+    width: 100%;
+    font-size: 0.8em;
+}
+#footer .left {
+    color: #000000;
+    float: left;
+    margin: 0;
+    padding: 6px 0 0 16px;
+    width: 40%;
+}
+#footer .right {
+    float: right;
+    text-align: right;
+    width: 50%;
+}
+#footer .right ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 6px 0 0;
+}
+#footer .right ul li {
+    display: inline;
+    padding: 0 5px 0 0;
+}
+#footer .right ul li a {
+    color: #000000;
+    margin-right: 7px;
+    text-decoration: none;
+}
+#footer .right ul li a:hover {
+    text-decoration: underline;
 }
 
 /*	##################################
@@ -103,7 +128,7 @@ h1 {
 }
 
 #menu li {
-	 display: inline;
+	display: inline;
 }
 
 #menu li a {
@@ -114,8 +139,7 @@ h1 {
 	text-decoration: none;
 }
 
-#menu li.selected a, 
-#menu li a:hover {
+#menu li.selected a,#menu li a:hover {
 	text-transform: uppercase;
 	font-weight: bold;
 }
@@ -133,7 +157,7 @@ ul.menu-left {
 	margin-bottom: 1px;
 }
 
-.menu-left li.selected, .menu-left li:hover {
+.menu-left li.selected,.menu-left li:hover {
 	cursor: pointer;
 	color: #2b5d86;
 	background-color: #F2F2F2;
@@ -150,7 +174,6 @@ ul.menu-left {
 .box h3 {
 	font-size: 1em;
 	margin: 0px;
-	
 	background-color: #0F5B95;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
@@ -164,9 +187,7 @@ ul.menu-left {
 	border-left: 1px solid #D5DFE7;
 	border-right: 1px solid #D5DFE7;
 	border-bottom: 1px solid #D5DFE7;
-
 	padding: 5px;
-	
 	-moz-border-radius-bottomleft: 5px;
 	-moz-border-radius-bottomright: 5px;
 	border-bottom-left-radius: 5px;
@@ -174,10 +195,9 @@ ul.menu-left {
 }
 
 /*	#################################################### */
-/*   	TOOLBAR                                          */	
+/*   	TOOLBAR                                          */
 /*   	http://experiments.brandoncash.net/sexytoolbars/ */
 /*	#################################################### */
-
 ul.toolbar {
 	color: #FFFFFF;
 	font-size: 12px;
@@ -188,12 +208,9 @@ ul.toolbar li {
 	display: inline-block;
 	margin: 0px;
 	padding: 2px 3px;
-	
 	cursor: default;
-	
 	border: 1px solid grey;
 	border-width: 1px 0px 1px 1px;
-
 	background-color: #8AA2B5;
 }
 
@@ -209,11 +226,10 @@ ul.toolbar li.last {
 	-moz-border-radius-bottomright: 3px;
 	border-top-right-radius: 3px;
 	border-bottom-right-radius: 3px;
-	
 	border-width: 1px;
 }
 
-ul.toolbar li.selected, ul.toolbar li:hover {
+ul.toolbar li.selected,ul.toolbar li:hover {
 	cursor: pointer;
 }
 
@@ -225,8 +241,7 @@ ul.toolbar li img {
 	margin-right: 2px;
 }
 
-ul.toolbar a:active,
-ul.toolbar a:visited {
+ul.toolbar a:active,ul.toolbar a:visited {
 	color: #FFFFFF;
 }
 
@@ -279,18 +294,23 @@ tbody tr:hover td {
 .col-20 {
 	width: 20%;
 }
+
 .col-25 {
 	width: 25%;
 }
+
 .col-30 {
 	width: 30%;
 }
+
 .col-40 {
 	width: 40%;
 }
+
 .col-50 {
 	width: 50%;
 }
+
 .col-75 {
 	width: 75%;
 }
@@ -331,14 +351,14 @@ div.container-center {
 }
 
 div #change-visual-element {
-    margin-left: 1%;
-    border-top: 1px dashed #ccc;
-    margin-top: 10px;
-    padding-top: 10px;
-    float: left;
-    position: relative;
+	margin-left: 1%;
+	border-top: 1px dashed #ccc;
+	margin-top: 10px;
+	padding-top: 10px;
+	float: left;
+	position: relative;
 }
-	
+
 /*	##################################
    	FORMS	
 	################################## */
@@ -383,11 +403,10 @@ div #change-visual-element {
 	width: 100%;
 	border: 0px;
 	padding: 0px;
-	
 	background: #FFFFFF;
 }
 
-.field div.label {	
+.field div.label {
 	cursor: pointer;
 	float: left;
 	width: 60%;
@@ -415,8 +434,8 @@ div #change-visual-element {
 	padding-right: 5px;
 }
 
-.field div.label, .field div.input, .field div.output {
-	margin-top: 3px; 
+.field div.label,.field div.input,.field div.output {
+	margin-top: 3px;
 }
 
 .field div.input span.hint {
@@ -442,7 +461,6 @@ div #change-visual-element {
 	background: no-repeat url("../../img-2/msg/exclamation-red.png");
 }
 
-
 /*	##################################
    	IMAGES	
 	################################## */
@@ -457,19 +475,19 @@ div #change-visual-element {
 }
 
 .search-result-list {
-	margin-top:10px;
+	margin-top: 10px;
 	width: 69%;
-	float:left;
+	float: left;
 }
 
 .facet-container {
-	margin-top:10px;
+	margin-top: 10px;
 	width: 29%;
 	float: right;
 }
 
 .facet-constraints li {
-	margin-top:5px;
+	margin-top: 5px;
 }
 
 .facet-constraints a {
@@ -478,24 +496,24 @@ div #change-visual-element {
 
 .search-facet {
 	border: 1px solid #003366;
-    margin-bottom: 10px;
-    padding: 5px;
+	margin-bottom: 10px;
+	padding: 5px;
 }
 
 .search-result {
 	border: 1px solid #0F5B95;
-    margin-bottom: 10px;
-    padding: 5px;
+	margin-bottom: 10px;
+	padding: 5px;
 }
 
 .search-result li {
 	margin-left: 15px;
-	margin-top:5px;
+	margin-top: 5px;
 }
 
 .search-title {
 	font-weight: bold;
-	text-decoration:underline;
+	text-decoration: underline;
 }
 
 #search-box {
@@ -510,7 +528,7 @@ div #change-visual-element {
 	Dataset
    ######################## */
 #dataset-content-left {
-	width: 30%;	
+	width: 30%;
 }
 
 #dataset-content-left ul {
@@ -518,7 +536,7 @@ div #change-visual-element {
 	margin-left: 20px;
 	line-height: 21px;
 }
-	
+
 #dataset-content-right {
 	width: 69%;
 	margin-left: 1%;
@@ -526,18 +544,18 @@ div #change-visual-element {
 }
 
 #dataset-categories {
-	margin: 10px 0px 10px 0px;	
+	margin: 10px 0px 10px 0px;
 }
 
 #dataset-description {
-	margin: 10px 15px 30px 15px;	
+	margin: 10px 15px 30px 15px;
 }
 
 /* ########################
 	Provider
    ######################## */
 #provider-content-left {
-	width: 50%;	
+	width: 50%;
 }
 
 #provider-content-left ul {
@@ -545,7 +563,7 @@ div #change-visual-element {
 	margin-left: 20px;
 	line-height: 21px;
 }
-	
+
 #provider-content-right {
 	width: 49%;
 	margin-left: 1%;
@@ -554,9 +572,8 @@ div #change-visual-element {
 /*
  PROVIDERS
 */
-
 #providers {
-		
+	
 }
 
 .providers-item {
@@ -566,20 +583,20 @@ div #change-visual-element {
 	border-radius: 5px;
 }
 
-.providers-item p{
-	margin: 5px;	
+.providers-item p {
+	margin: 5px;
 }
 
-.providers-item a{
-	padding: 0;	
+.providers-item a {
+	padding: 0;
 }
 
 strong {
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 #providers-search {
-	text-align: right;	
+	text-align: right;
 }
 
 .search {
@@ -596,11 +613,11 @@ strong {
 	border-radius: 14px;
 }
 
-input:focus, textarea:focus {
-  box-shadow: 0 0 8px rgba(203,115,14, 0.6);
-  outline: 0;
-  outline: thin dotted \9;
-  /* IE6-9 */
+input:focus,textarea:focus {
+	box-shadow: 0 0 8px rgba(203, 115, 14, 0.6);
+	outline: 0;
+	outline: thin dotted \9;
+	/* IE6-9 */
 }
 
 .alert-block {
@@ -636,10 +653,10 @@ input:focus, textarea:focus {
 	height: 100% !important;
 }
 
-.full-screen > .fs {
-	display : none;	
+.full-screen>.fs {
+	display: none;
 }
 
-.full-screen > .chart-container {
-	height: 95%;	
+.full-screen>.chart-container {
+	height: 95%;
 }
