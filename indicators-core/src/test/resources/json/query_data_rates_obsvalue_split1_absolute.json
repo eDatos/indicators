@@ -1,0 +1,201 @@
+{
+   "title":"Sociedades mercantiles que amplían capital Gran PX.",
+   "uriPx":"urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e",
+   "stub":[
+      "Periodos",
+      "Provincias por CC.AA."
+   ],
+   "heading":[
+      "Naturaleza jurídica"
+   ],
+   "categories":[
+      {
+         "variable":"Periodos",
+         "labels":[
+            "2010 TOTAL",
+            "2010 Diciembre (p)",
+            "2010 Noviembre (p)",
+            "2010 Octubre (p)",
+			"2009 TOTAL",
+            "2009 Diciembre (p)",
+            "2009 Noviembre (p)",
+            "2009 Octubre (p)"
+         ],
+         "codes":[
+            "2010",
+            "2010M12",
+            "2010M11",
+            "2010M10",
+            "2009",
+            "2009M12",
+            "2009M11",
+            "2009M10"
+         ]
+      },
+      {
+         "variable":"Provincias por CC.AA.",
+         "labels":[
+            "ESPAÑA",
+            " ANDALUCÍA"
+         ],
+         "codes":[
+            "ES",
+            "ES61"
+         ]
+      },
+      {
+         "variable":"Naturaleza jurídica",
+         "labels":[
+            "TOTAL DE SOCIEDADES"
+         ],
+         "codes":[
+            "T"
+         ]
+      }
+   ],
+   "temporals":[
+      "Periodos"
+   ],
+   "spatials":[
+   	  "Provincias por CC.AA."
+   ],
+   "notes":[
+      "(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."
+   ],
+   "source":"Instituto Canario de Estadística (ISTAC) a partir de datos del Instituto Nacional de Estadística (INE).",
+   "surveyCode":"C00040A",
+   "surveyTitle":"Estadística de Sociedades Mercantiles",
+   "publishers":[
+      "Instituto Canario de Estadística (ISTAC)"
+   ],
+   "data":[
+      {
+         "Valor":"34.413",
+         "dimCodes":[
+            "2010",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"4.546",
+         "dimCodes":[
+            "2010",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"2.471",
+         "dimCodes":[
+            "2010M12",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"329",
+         "dimCodes":[
+            "2010M12",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"2.507",
+         "dimCodes":[
+            "2010M11",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"347",
+         "dimCodes":[
+            "2010M11",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"2.036",
+         "dimCodes":[
+            "2010M10",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"297",
+         "dimCodes":[
+            "2010M10",
+            "ES61",
+            "T"
+         ]
+      },
+            {
+         "Valor":"33.413",
+         "dimCodes":[
+            "2009",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"3.546",
+         "dimCodes":[
+            "2009",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"1.471",
+         "dimCodes":[
+            "2009M12",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"229",
+         "dimCodes":[
+            "2009M12",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"1.507",
+         "dimCodes":[
+            "2009M11",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"247",
+         "dimCodes":[
+            "2009M11",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"1.036",
+         "dimCodes":[
+            "2009M10",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"197",
+         "dimCodes":[
+            "2009M10",
+            "ES61",
+            "T"
+         ]
+      }
+   ]
+}

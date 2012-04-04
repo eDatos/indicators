@@ -70,48 +70,76 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     private static final String              CONSULTA3_UUID           = "2-2-2-2-2";
     private static final String              CONSULTA1_JSON_STRUC     = readFile("json/query_structure_1.json");
 
+    /* Has geographic and time variables */
     private static final String              INDICATOR1_UUID          = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID   = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR1_GPE_JSON_DATA = readFile("json/query_data_temporal_spatials.json");
     private static final String              INDICATOR1_VERSION       = "1.000";
 
+    /* Has geographic variable */
     private static final String              INDICATOR2_UUID          = "Indicator-2";
     private static final String              INDICATOR2_DS_GPE_UUID   = "Indicator-2-v1-DataSource-1-GPE-GEO";
     private static final String              INDICATOR2_GPE_JSON_DATA = readFile("json/query_data_spatials.json");
     private static final String              INDICATOR2_VERSION       = "1.000";
 
+    /* Has time variable */
     private static final String              INDICATOR3_UUID          = "Indicator-3";
     private static final String              INDICATOR3_DS_UUID       = "Indicator-3-v1-DataSource-1";
     private static final String              INDICATOR3_DS_GPE_UUID   = "Indicator-3-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR3_GPE_JSON_DATA = readFile("json/query_data_temporals.json");
     private static final String              INDICATOR3_VERSION       = "1.000";
 
+    /* Has no geographic and temporal variables */
     private static final String              INDICATOR4_UUID          = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID   = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR4_GPE_JSON_DATA = readFile("json/query_data_fixed.json");
     private static final String              INDICATOR4_VERSION       = "1.000";
 
+    /* uses contvariable for absolute method*/
     private static final String              INDICATOR5_UUID          = "Indicator-5";
     private static final String              INDICATOR5_DS_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
     private static final String              INDICATOR5_GPE_JSON_DATA = readFile("json/query_data_fixed_contvariable.json");
     private static final String              INDICATOR5_VERSION       = "1.000";
 
+    /* Has "." in data*/
     private static final String              INDICATOR6_UUID          = "Indicator-6";
     private static final String              INDICATOR6_DS_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-DOTS";
     private static final String              INDICATOR6_GPE_JSON_DATA = readFile("json/query_data_dots.json");
     private static final String              INDICATOR6_VERSION       = "1.000";
 
+    /* Calculates all rates */
     private static final String              INDICATOR7_UUID          = "Indicator-7";
     private static final String              INDICATOR7_DS_GPE_UUID   = "Indicator-7-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR7_GPE_JSON_DATA = readFile("json/query_data_temporals_calculate.json");
     private static final String              INDICATOR7_VERSION       = "1.000";
     
+    
+    /* Calculates all rates from two different data sources*/
     private static final String              INDICATOR8_UUID          = "Indicator-8";
     private static final String              INDICATOR8_DS1_GPE_UUID   = "Indicator-8-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR8_DS2_GPE_UUID   = "Indicator-8-v1-DataSource-2-GPE-TIME";
     private static final String              INDICATOR8_GPE_JSON_DATA1 = readFile("json/query_data_increase_temporal_part1.json");
     private static final String              INDICATOR8_GPE_JSON_DATA2 = readFile("json/query_data_increase_temporal_part2.json");
     private static final String              INDICATOR8_VERSION       = "1.000";
+    
+    /* Loads all rates from one data source using contvariable*/
+    private static final String              INDICATOR9_UUID          = "Indicator-9";
+    private static final String              INDICATOR9_DS_GPE_UUID   = "Indicator-9-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR9_GPE_JSON_DATA = readFile("json/query_data_allrates_contvariable.json");
+    private static final String              INDICATOR9_VERSION       = "1.000";
+    
+    private static final String              INDICATOR10_UUID          = "Indicator-9";
+    private static final String              INDICATOR10_DS1_GPE_UUID   = "Indicator-9-v1-DataSource-1-GPE-ABSOLUTE";
+    private static final String              INDICATOR10_DS2_GPE_UUID   = "Indicator-9-v1-DataSource-2-GPE-ANNUAL-PERC";
+    private static final String              INDICATOR10_DS3_GPE_UUID   = "Indicator-9-v1-DataSource-3-GPE-ANNUAL-PUNT";
+    private static final String              INDICATOR10_DS4_GPE_UUID   = "Indicator-9-v1-DataSource-4-GPE-INTER-PERC";
+    private static final String              INDICATOR10_DS5_GPE_UUID   = "Indicator-9-v1-DataSource-5-GPE-INTER-PUNT";
+    private static final String              INDICATOR10_GPE_JSON_DATA1 = readFile("json/query_data_rates_obsvalue_split1_absolute.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA2 = readFile("json/query_data_rates_obsvalue_split2_annual_percentage.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA3 = readFile("json/query_data_rates_obsvalue_split3_annual_puntual.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA4 = readFile("json/query_data_rates_obsvalue_split4_inter_percentage.json");
+    private static final String              INDICATOR10_GPE_JSON_DATA5 = readFile("json/query_data_rates_obsvalue_split5_inter_puntual.json");
+    private static final String              INDICATOR10_VERSION       = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -135,8 +163,17 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA);
+        
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS1_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA1);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS2_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA2);
+        
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR9_DS_GPE_UUID))).thenReturn(INDICATOR9_GPE_JSON_DATA);
+        
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS1_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA1);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS2_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA2);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS3_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA3);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS4_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA4);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS5_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA5);
     }
 
     @Test
@@ -466,6 +503,78 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         
         checkDataDimensions(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION, data);
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataAllRatesContVariable() throws Exception {
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR9_UUID, INDICATOR9_VERSION);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        
+        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION,
+                Arrays.asList("2010", "2010M12", "2010M11", "2010M10","2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES","ES61"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
+        //DATA
+        List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347","2.036", "297",
+                "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
+        List<String> annualPercentageRate = Arrays.asList("2,993", "28,201", "67,981", "43,668", "66,357", "40,486", "96,525", "50,761", 
+                null, null, null, null,null, null, null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("2,99", "28,20", "-1,44", "-5,19", "23,13", "16,84", null, null,
+                null, null, "-2,39", "-7,29", "45,46", "25,38", null,null);
+        List<String> annualPuntualRate = Arrays.asList("1.000", "1.000", "1.000", "100", "1.000", "100", "1.000", "100",
+                null, null, null, null, null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("1.000", "1.000", "-36", "-18", "471", "50", null, null,
+                null, null, "-36", "-18", "471", "50", null, null);
+        
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(annualPercentageRate);
+        data.addAll(interperiodPercentageRate);
+        data.addAll(annualPuntualRate);
+        data.addAll(interperiodPuntualRate);
+        
+        checkDataDimensions(dimensionCodes, INDICATOR9_UUID, INDICATOR9_VERSION);
+        checkDataObservations(dimensionCodes, INDICATOR9_UUID, INDICATOR9_VERSION, data);
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataAllRatesObsValue() throws Exception {
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR10_UUID, INDICATOR10_VERSION);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        
+        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION,
+                Arrays.asList("2010", "2010M12", "2010M11", "2010M10","2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES","ES61"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
+        //DATA
+        List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347","2.036", "297",
+                "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
+        List<String> annualPercentageRate = Arrays.asList("2,993", "28,201", "67,981", "43,668", "66,357", "40,486", "96,525", "50,761", 
+                null, null, null, null,null, null, null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("2,99", "28,20", "-1,44", "-5,19", "23,13", "16,84", null, null,
+                null, null, "-2,39", "-7,29", "45,46", "25,38", null,null);
+        List<String> annualPuntualRate = Arrays.asList("1.000", "1.000", "1.000", "100", "1.000", "100", "1.000", "100",
+                null, null, null, null, null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("1.000", "1.000", "-36", "-18", "471", "50", null, null,
+                null, null, "-36", "-18", "471", "50", null, null);
+        
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(annualPercentageRate);
+        data.addAll(interperiodPercentageRate);
+        data.addAll(annualPuntualRate);
+        data.addAll(interperiodPuntualRate);
+        
+        checkDataDimensions(dimensionCodes, INDICATOR10_UUID, INDICATOR10_VERSION);
+        checkDataObservations(dimensionCodes, INDICATOR10_UUID, INDICATOR10_VERSION, data);
     }
 
     @Test

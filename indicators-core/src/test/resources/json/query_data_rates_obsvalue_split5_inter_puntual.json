@@ -1,0 +1,202 @@
+{
+   "title":"Sociedades mercantiles que amplían capital Gran PX.",
+   "uriPx":"urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e",
+   "stub":[
+      "Periodos",
+      "Provincias por CC.AA."
+   ],
+   "heading":[
+      "Naturaleza jurídica"
+   ],
+   "categories":[
+      {
+         "variable":"Periodos",
+         "labels":[
+            "2010 TOTAL",
+            "2010 Diciembre (p)",
+            "2010 Noviembre (p)",
+            "2010 Octubre (p)",
+			"2009 TOTAL",
+            "2009 Diciembre (p)",
+            "2009 Noviembre (p)",
+            "2009 Octubre (p)"
+         ],
+         "codes":[
+            "2010",
+            "2010M12",
+            "2010M11",
+            "2010M10",
+            "2009",
+            "2009M12",
+            "2009M11",
+            "2009M10"
+         ]
+      },
+      {
+         "variable":"Provincias por CC.AA.",
+         "labels":[
+            "ESPAÑA",
+            " ANDALUCÍA"
+         ],
+         "codes":[
+            "ES",
+            "ES61"
+         ]
+      },
+      {
+         "variable":"Naturaleza jurídica",
+         "labels":[
+            "TOTAL DE SOCIEDADES"
+         ],
+         "codes":[
+            "T"
+         ]
+      }
+   ],
+   "temporals":[
+      "Periodos"
+   ],
+   "spatials":[
+   	  "Provincias por CC.AA."
+   ],
+   "notes":[
+      "(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."
+   ],
+   "source":"Instituto Canario de Estadística (ISTAC) a partir de datos del Instituto Nacional de Estadística (INE).",
+   "surveyCode":"C00040A",
+   "surveyTitle":"Estadística de Sociedades Mercantiles",
+   "publishers":[
+      "Instituto Canario de Estadística (ISTAC)"
+   ],
+   "data":[
+     {
+         "Valor":"1.000",
+         "dimCodes":[
+            "2010",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"1.000",
+         "dimCodes":[
+            "2010",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"-36",
+         "dimCodes":[
+            "2010M12",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"-18",
+         "dimCodes":[
+            "2010M12",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"471",
+         "dimCodes":[
+            "2010M11",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"50",
+         "dimCodes":[
+            "2010M11",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"..",
+         "dimCodes":[
+            "2010M10",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"..",
+         "dimCodes":[
+            "2010M10",
+            "ES61",
+            "T"
+         ]
+      },
+            {
+         "Valor":"..",
+         "dimCodes":[
+            "2009",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"..",
+         "dimCodes":[
+            "2009",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"-36",
+         "dimCodes":[
+            "2009M12",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"-18",
+         "dimCodes":[
+            "2009M12",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"471",
+         "dimCodes":[
+            "2009M11",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"50",
+         "dimCodes":[
+            "2009M11",
+            "ES61",
+            "T"
+         ]
+      },
+      {
+         "Valor":"..",
+         "dimCodes":[
+            "2009M10",
+            "ES",
+            "T"
+         ]
+      },
+      {
+         "Valor":"..",
+         "dimCodes":[
+            "2009M10",
+            "ES61",
+            "T"
+         ]
+      }
+      
+   ]
+}

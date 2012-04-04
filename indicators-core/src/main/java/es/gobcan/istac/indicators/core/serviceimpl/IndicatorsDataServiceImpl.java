@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.dto.serviceapi.DataDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -253,7 +254,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         ObservationExtendedDto observation = new ObservationExtendedDto();
         observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
         observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
-        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
         observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
 
         // Check for dotted notation
