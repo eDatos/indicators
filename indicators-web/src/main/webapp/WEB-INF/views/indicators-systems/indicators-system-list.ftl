@@ -25,7 +25,7 @@
 				<tbody>
 					[#list indicatorsSystems as indicatorsSystem]
 						<tr>
-							<td><a href="[@spring.url "/indicators-ssytems/${indicatorsSystem.code}.html" /]">${indicatorsSystem.code}</a></td>
+							<td><a href="[@spring.url "/indicators-sytems/${indicatorsSystem.code}.html" /]">${indicatorsSystem.code}</a></td>
 						</tr>
 					[/#list]
 				</tbody>
