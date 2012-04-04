@@ -46,18 +46,15 @@
 	<body>
 		<div class="container">
 			<div id="header" class="span-24">
-				<div id="logo"><a href="[@spring.url "/index" /]">Indicators</a></div>
-			</div>
-
-			<div id="menu-top" class="span-24">
+				<div id="top"></div> 
+				<h1><a href="[@spring.url "/index.html" /]">Indicators</a></h1>
 				<div id="menu">
-					<div class="left">
-						<ul>
-							<li><a href="[@spring.url "/indicators-systems" /]">[@spring.message 'menu.left.indicators-systems' /]</a></li>
-						</ul>
-					</div>
-					<div class="clearfix">&nbsp:</div>
-				</div>
+					<ul class="menu">
+						<li>
+							<a href="[@spring.url "/indicators-systems" /]">[@spring.message 'menu.indicators-systems' /]</a>
+						</li>
+					</ul>
+				</div>		
 			</div>
 			<div id="column-body" class="span-24">
 				[#nested]
