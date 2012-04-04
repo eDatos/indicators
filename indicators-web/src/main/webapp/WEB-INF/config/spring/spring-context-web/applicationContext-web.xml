@@ -41,7 +41,7 @@
           <property name="prefix" value="" />
           <property name="suffix" value=".ftl" />
           <property name="contentType" value="text/html; charset=UTF-8" />
-          <property name="viewClass" value="com.stat4you.web.view.FreeMarkerHelperView" />
+          <property name="viewClass" value="es.gobcan.istac.indicators.view.FreeMarkerHelperView" />
           <property name="exposeSpringMacroHelpers" value="true" />
           <property name="exposeRequestAttributes" value="true" />
           <property name="exposeSessionAttributes" value="true" />
@@ -51,10 +51,10 @@
     </bean>
 
 	<!-- Configure the multipart resolver -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!--     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
         <!-- one of the properties available; the maximum file size in bytes -->
-        <property name="maxUploadSize" value="100000"/>
-    </bean>
+<!--         <property name="maxUploadSize" value="100000"/> -->
+<!--     </bean> -->
     
     
     <!-- Imports user-defined @Controller beans that process client requests -->

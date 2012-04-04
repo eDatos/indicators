@@ -11,6 +11,6 @@
 
 <!--     <context:component-scan base-package="es.gobcan.istac.indicators.rest" /> -->
     
-<!--     <bean class="com.stat4you.rest.spring.JacksonFix" /> -->
+<!--     <bean class="es.gobcan.istac.indicators.web.rest.spring.JacksonFix" /> -->
 
 </beans>

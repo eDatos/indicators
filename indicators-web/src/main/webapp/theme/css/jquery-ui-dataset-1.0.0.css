@@ -1,0 +1,141 @@
+/*
+IMPORTANT:
+In order to preserve the uniform grid appearance, all cell styles need to have paddingg, margin and border sizes.
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+classes should alter those!
+*/
+
+.dataset {
+    position: relative;
+}
+
+/* SEPARATOR */
+.dataset-separator {
+    float: left;
+}
+
+.dataset-separator-container {
+    
+}
+
+/* COLUMNS */
+.dataset-columns-container {
+    overflow: hidden;
+    border: 1px solid #B3B3B3;
+}
+
+.dataset-columns-cells {
+    height: 999999px;
+    position: relative;
+    white-space: nowrap;
+    cursor: default;
+    overflow: hidden;
+}
+
+.dataset-columns-top {
+    overflow: hidden;
+    float: left;
+}
+
+.dataset-columns-left {
+    overflow: hidden;
+    float: left;
+}
+
+.dataset-columns-left .dataset-columns-container {
+    border-right: 0px;
+}
+
+.dataset-columns-top .dataset-columns-container {
+    border-bottom: 0px;
+}
+
+/* DATA */
+.dataset-data {
+    overflow: hidden;
+    float: left;
+}
+
+.dataset-data-container {
+    overflow: hidden;
+    border: 1px solid silver;
+}
+
+.dataset-data-cells {
+    width: 999999px;
+    height: 999999px;
+    position: relative;
+    white-space: nowrap;
+    cursor: default;
+    overflow: hidden;
+}
+
+.dataset-data-cell {
+    float: left;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dataset-data-cell-container {
+    height: 16px;
+    line-height: 16px;
+    margin: 0;
+    padding: 4px;
+    
+    border-right: 1px solid silver;
+    border-left: 0px;
+    border-top: 0px;
+    border-bottom: 1px solid silver;
+}
+
+.dataset-data-cell-first {
+    clear: left;
+}
+
+.dataset-data-cell-last {
+    
+}
+
+/* CELL */
+.dataset-cell {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis-word;
+    
+    float: left;
+    
+    background-color: #E6E6E6;
+}
+
+.dataset-cell-container {
+    height: 16px;
+    line-height: 16px;
+    margin: 0;
+    padding: 4px;
+    
+    border-right: 1px solid blue;
+    border-left: 0px;
+    border-top: 0px;
+    border-bottom: 1px solid blue; 
+}
+
+.dataset-cell-name {
+}
+
+/* SCROLL */
+.dataset-scroll-right {
+    float: left;
+    background: blue;
+    width: 10px;
+    position: relative;
+}
+
+.dataset-scroll-drag {
+    background: red;
+    border-radius: 4px;
+    width: 10px;
+    top: 0;
+    position: absolute;
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <!-- APP -->
+    <entry key="app.title">Indicators</entry>
+    <entry key="app.copyrigth"><![CDATA[Copyright &copy; 2012. All Rights reserved.]]></entry>
+    
+    <!-- Dates -->
+    <entry key="date.short">dd/MM/yyyy</entry>
+    <entry key="date.long">dd/MM/yyyy HH:mm:ss</entry>
+    
+    <!-- MENU -->
+    <entry key="menu.left.title">Menú</entry>
+    <entry key="menu.left.indicators-systems">Indicators systems</entry>
+    
+    <!-- Indicators systems List -->
+    <entry key="page.indicators-system-list.title">Indicators systems</entry>
+    
+    <!-- Indicators systems -->    
+    <entry key="entity.indicators-system">Sistema de indicadores</entry>
+    <entry key="entity.indicators-system.identifier">Código</entry>
+    <entry key="entity.indindicators-system.uri">Uri</entry>
+  
+</properties>
