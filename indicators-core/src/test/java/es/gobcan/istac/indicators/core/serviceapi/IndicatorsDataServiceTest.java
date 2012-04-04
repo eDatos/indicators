@@ -105,6 +105,13 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
     private static final String              INDICATOR7_DS_GPE_UUID   = "Indicator-7-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR7_GPE_JSON_DATA = readFile("json/query_data_temporals_calculate.json");
     private static final String              INDICATOR7_VERSION       = "1.000";
+    
+    private static final String              INDICATOR8_UUID          = "Indicator-8";
+    private static final String              INDICATOR8_DS1_GPE_UUID   = "Indicator-8-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR8_DS2_GPE_UUID   = "Indicator-8-v1-DataSource-2-GPE-TIME";
+    private static final String              INDICATOR8_GPE_JSON_DATA1 = readFile("json/query_data_increase_temporal_part1.json");
+    private static final String              INDICATOR8_GPE_JSON_DATA2 = readFile("json/query_data_increase_temporal_part2.json");
+    private static final String              INDICATOR8_VERSION       = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -128,6 +135,8 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS1_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA1);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS2_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA2);
     }
 
     @Test
@@ -405,19 +414,58 @@ public class IndicatorsDataServiceTest extends IndicatorsBaseTest implements Ind
                                                                                       MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
                                                                                       MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
                                                                                       MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
-        List<String> data = Arrays.asList(
         /* ABSOLUTE */
-        "34.413", "2.471", "2.507", "2.036", "30.413", "1.952", "1.925",
-        /* ANNUAL PERCENTAGE RATE */
-        "13,152", "26,588", "30,234", null, null, null, null,
-        /* INTERPERIOD PERCENTAGE RATE*/
-        "13,15", "-1,44", "23,13", null, null,"1,40",null,
-        /* ANNUAL PUNTUAL RATE */
-        "4.000", "519", "582", null, null, null, null,
-        /* INTERPERIOD PUNTUAL RATE*/
-        "4.000", "-36", "471", null, null, "27",null);
+        List<String> absolute = Arrays.asList("34.413", "2.471", "2.507", "2.036", "30.413", "1.952", "1.925");
+        List<String> annualPercentageRate = Arrays.asList("13,152", "26,588", "30,234", null, null, null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("13,15", "-1,44", "23,13", null, null,"1,40",null);
+        List<String> annualPuntualRate = Arrays.asList("4.000", "519", "582", null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("4.000", "-36", "471", null, null, "27",null);
+        
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(annualPercentageRate);
+        data.addAll(interperiodPercentageRate);
+        data.addAll(annualPuntualRate);
+        data.addAll(interperiodPuntualRate);
+        
         checkDataDimensions(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION, data);
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataMultiDataSource() throws Exception {
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR8_UUID, INDICATOR8_VERSION);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+
+        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION,
+                Arrays.asList("2010", "2010M12", "2010M11", "2010M10","2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES","ES61"));
+        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                                                                                      MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                                                                                      MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                                                                                      MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                                                                                      MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
+        //DATA
+        List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347","2.036", "297",
+                                              "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
+        List<String> annualPercentageRate = Arrays.asList("2,993", "28,201", "67,981", "43,668", "66,357", "40,486", "96,525", "50,761", 
+                                                         null, null, null, null,null, null, null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("2,99", "28,20", "-1,44", "-5,19", "23,13", "16,84", null, null,
+                                                                null, null, "-2,39", "-7,29", "45,46", "25,38", null,null);
+        List<String> annualPuntualRate = Arrays.asList("1.000", "1.000", "1.000", "100", "1.000", "100", "1.000", "100",
+                                                        null, null, null, null, null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("1.000", "1.000", "-36", "-18", "471", "50", null, null,
+                                                            null, null, "-36", "-18", "471", "50", null, null);
+        
+        List<String> data = new ArrayList<String>();
+        data.addAll(absolute);
+        data.addAll(annualPercentageRate);
+        data.addAll(interperiodPercentageRate);
+        data.addAll(annualPuntualRate);
+        data.addAll(interperiodPuntualRate);
+        
+        checkDataDimensions(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION);
+        checkDataObservations(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION, data);
     }
 
     @Test
