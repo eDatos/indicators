@@ -10,10 +10,8 @@
 		
 		<link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"                   /]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/clearfix.css"                /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/grid.css"                    /]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/screen.css"                  /]" type="text/css" media="screen, projection" />		
 		<link rel="stylesheet" href="[@spring.url "/theme/css/jquery-ui-dataset-1.0.0.css" /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/charts.css"                  /]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/jquery.jscrollpane.css"      /]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/tables.css"                  /]" type="text/css" media="screen, projection" />
 		
@@ -45,7 +43,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<div id="header" class="span-24">
+			<div id="header">
 				<div id="top"></div> 
 				<h1><a href="[@spring.url "/index.html" /]">Indicators</a></h1>
 				<div id="menu">
@@ -56,11 +54,11 @@
 					</ul>
 				</div>		
 			</div>
-			<div id="column-body" class="span-24">
+			<div id="column-body">
 				[#nested]
 			</div>
 	
-		  	<div id="footer" class="span-24">
+		  	<div id="footer">
 		  		<p class="left">[@apph.messageEscape 'app.footer.gobcan' /]</p>
 		  		<div class="right">
 		  			<ul>

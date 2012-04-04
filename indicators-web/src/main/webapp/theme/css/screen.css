@@ -61,25 +61,31 @@ h1 {
 	float: left;
 }
 
-
 /*	##################################
    	BODY
 	################################## */
 .container {
+	width: 762px;
 	background-color: #FFFFFF;
+	border-style: none;
+	height: auto;
+	margin: 0 auto;
+	padding: 0;
+	text-align: left;
+	width: 762px;
 }
 
 /*	##################################
    	HEADER
 	################################## */
 #header {
-    border-bottom: 1px solid #D7DDDB;
-    border-left: 1px solid #D7DDDB;
-    border-right: 1px solid #D7DDDB;
-    float: left;
-    margin: 0;
-    padding-bottom: 5px;
-    width: 100%;
+	border-bottom: 1px solid #D7DDDB;
+	border-left: 1px solid #D7DDDB;
+	border-right: 1px solid #D7DDDB;
+	float: left;
+	margin: 0;
+	padding-bottom: 5px;
+	width: 100%;
 }
 
 #header #top {
@@ -87,65 +93,73 @@ h1 {
 }
 
 #header #menu {
-    background-color: #003366;
-    clear: both;
-    float: left;
-    height: 22px;
-    width: 100%;
+	background-color: #003366;
+	clear: both;
+	float: left;
+	height: 22px;
+	width: 100%;
 }
 
 #header h1 {
-    margin: 0;
-    padding: 0;
-    text-indent: -5000px;
+	margin: 0;
+	padding: 0;
+	text-indent: -5000px;
 }
+
 #header h1 a {
-	background: url("../images/logo_istac.jpg") no-repeat scroll 5px 5px transparent;
-    float: left;
-    height: 74px;
-    text-decoration: none;
-    width: 315px;
+	background: url("../images/logo_istac.jpg") no-repeat scroll 5px 5px
+		transparent;
+	float: left;
+	height: 74px;
+	text-decoration: none;
+	width: 315px;
 }
 
 /*	##################################
    	FOOTER
 	################################## */
 #footer {
-    background-color: #FFDF61;
-    float: left;
-    height: 23px;
-    margin: 10px 0 0;
-    width: 100%;
-    font-size: 0.8em;
+	background-color: #FFDF61;
+	float: left;
+	height: 23px;
+	margin: 10px 0 0;
+	width: 100%;
+	font-size: 0.8em;
 }
+
 #footer .left {
-    color: #000000;
-    float: left;
-    margin: 0;
-    padding: 6px 0 0 16px;
-    width: 40%;
+	color: #000000;
+	float: left;
+	margin: 0;
+	padding: 6px 0 0 16px;
+	width: 40%;
 }
+
 #footer .right {
-    float: right;
-    text-align: right;
-    width: 50%;
+	float: right;
+	text-align: right;
+	width: 50%;
 }
+
 #footer .right ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 6px 0 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 6px 0 0;
 }
+
 #footer .right ul li {
-    display: inline;
-    padding: 0 5px 0 0;
+	display: inline;
+	padding: 0 5px 0 0;
 }
+
 #footer .right ul li a {
-    color: #000000;
-    margin-right: 7px;
-    text-decoration: none;
+	color: #000000;
+	margin-right: 7px;
+	text-decoration: none;
 }
+
 #footer .right ul li a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 /*	##################################
@@ -198,88 +212,6 @@ ul.menu-left {
 	cursor: pointer;
 	color: #2b5d86;
 	background-color: #F2F2F2;
-}
-
-/*	##################################
-   	BOX	
-	################################## */
-.box {
-	background: none repeat scroll 0 0 #FFFFFF;
-	padding: 0px;
-}
-
-.box h3 {
-	font-size: 1em;
-	margin: 0px;
-	background-color: #0F5B95;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	color: #FFFFFF;
-	padding: 5px 10px;
-}
-
-.box-container {
-	border-left: 1px solid #D5DFE7;
-	border-right: 1px solid #D5DFE7;
-	border-bottom: 1px solid #D5DFE7;
-	padding: 5px;
-	-moz-border-radius-bottomleft: 5px;
-	-moz-border-radius-bottomright: 5px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-}
-
-/*	#################################################### */
-/*   	TOOLBAR                                          */
-/*   	http://experiments.brandoncash.net/sexytoolbars/ */
-/*	#################################################### */
-ul.toolbar {
-	color: #FFFFFF;
-	font-size: 12px;
-	font-weight: normal;
-}
-
-ul.toolbar li {
-	display: inline-block;
-	margin: 0px;
-	padding: 2px 3px;
-	cursor: default;
-	border: 1px solid grey;
-	border-width: 1px 0px 1px 1px;
-	background-color: #8AA2B5;
-}
-
-ul.toolbar li.first {
-	-moz-border-radius-topleft: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	border-top-left-radius: 3px;
-	border-bottom-left-radius: 3px;
-}
-
-ul.toolbar li.last {
-	-moz-border-radius-topright: 3px;
-	-moz-border-radius-bottomright: 3px;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
-	border-width: 1px;
-}
-
-ul.toolbar li.selected,ul.toolbar li:hover {
-	cursor: pointer;
-}
-
-ul.toolbar li:active {
-	background-color: #A3A3A3;
-}
-
-ul.toolbar li img {
-	margin-right: 2px;
-}
-
-ul.toolbar a:active,ul.toolbar a:visited {
-	color: #FFFFFF;
 }
 
 /*	##################################
@@ -588,54 +520,6 @@ div #change-visual-element {
 	margin: 10px 15px 30px 15px;
 }
 
-/* ########################
-	Provider
-   ######################## */
-#provider-content-left {
-	width: 50%;
-}
-
-#provider-content-left ul {
-	list-style: disc;
-	margin-left: 20px;
-	line-height: 21px;
-}
-
-#provider-content-right {
-	width: 49%;
-	margin-left: 1%;
-}
-
-/*
- PROVIDERS
-*/
-#providers {
-	
-}
-
-.providers-item {
-	margin-bottom: 10px;
-	background-color: #F5F5F5;
-	padding: 10px;
-	border-radius: 5px;
-}
-
-.providers-item p {
-	margin: 5px;
-}
-
-.providers-item a {
-	padding: 0;
-}
-
-strong {
-	font-weight: bold;
-}
-
-#providers-search {
-	text-align: right;
-}
-
 .search {
 	display: inline-block;
 	width: 210px;
@@ -672,28 +556,4 @@ input:focus,textarea:focus {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	color: #C09853;
-}
-
-.full-screen-no-support {
-	position: fixed !important;
-	top: 0 !important;
-	right: 0 !important;
-	bottom: 0 !important;
-	left: 0 !important;
-	z-index: 1 !important;
-}
-
-.full-screen {
-	background-color: #fff !important;
-	margin: 0 !important;
-	width: 100% !important;
-	height: 100% !important;
-}
-
-.full-screen>.fs {
-	display: none;
-}
-
-.full-screen>.chart-container {
-	height: 95%;
 }

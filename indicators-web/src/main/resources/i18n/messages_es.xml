@@ -24,7 +24,7 @@
     
     <!-- Indicators systems -->    
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
-    <entry key="entity.indicators-system.identifier">Código</entry>
+    <entry key="entity.indicators-system.code">Código</entry>
     <entry key="entity.indindicators-system.uri">Uri</entry>
     
   
