@@ -25,8 +25,6 @@
         
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-disable-text-selection-1.0.0.js"  /]" ></script>
         
-        <script type="text/javascript" src="[@spring.url "/theme/js/libs/highcharts-2.2.0.js"                     /]" ></script>
-		
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/css_browser_selector.js"                 /]" ></script>
 		
 		<script type="text/javascript">

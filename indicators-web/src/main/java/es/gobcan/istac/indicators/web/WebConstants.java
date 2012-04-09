@@ -5,7 +5,7 @@ public interface WebConstants {
     public String VIEW_NAME_INDEX        = "/index";
 
     // Indicators
-    public String VIEW_NAME_INDICATOR_LIST = "indicators-systems/indicators-system-list";
+    public String VIEW_NAME_INDICATOR_LIST = "indicators-systems/indicators-systems";
     public String VIEW_NAME_INDICATOR_VIEW = "indicators-systems/indicators-system";
 
     // Other
