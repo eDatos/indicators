@@ -17,16 +17,15 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 
 @Component
-public class CreateIndicatorActionHandler extends AbstractActionHandler<CreateIndicatorAction, CreateIndicatorResult>{
-    
+public class CreateIndicatorActionHandler extends AbstractActionHandler<CreateIndicatorAction, CreateIndicatorResult> {
+
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public CreateIndicatorActionHandler() {
         super(CreateIndicatorAction.class);
     }
-    
+
     @Override
     public CreateIndicatorResult execute(CreateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
@@ -39,7 +38,7 @@ public class CreateIndicatorActionHandler extends AbstractActionHandler<CreateIn
 
     @Override
     public void undo(CreateIndicatorAction action, CreateIndicatorResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

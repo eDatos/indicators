@@ -23,7 +23,6 @@ import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 
-
 public class CommonUtils {
 
     public static LinkedHashMap<String, String> getIndicatorsValueMap(List<IndicatorDto> indicatorDtos) {
@@ -34,15 +33,15 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getTimeGranularityValueMap() {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (TimeGranularityEnum type : TimeGranularityEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
         }
         return valueMap;
     }
-        
+
     public static LinkedHashMap<String, String> getQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityTypeEnum type : QuantityTypeEnum.values()) {
@@ -50,14 +49,14 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getDataSourceQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(QuantityTypeEnum.AMOUNT.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + QuantityTypeEnum.AMOUNT.getName()));
-        valueMap.put(QuantityTypeEnum.CHANGE_RATE.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + QuantityTypeEnum.CHANGE_RATE.getName()));        
+        valueMap.put(QuantityTypeEnum.CHANGE_RATE.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + QuantityTypeEnum.CHANGE_RATE.getName()));
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getQuantityIndexBaseMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -66,7 +65,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getTimeSelectionTypeMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (TimeSelectionTypeEnum type : TimeSelectionTypeEnum.values()) {
@@ -74,7 +73,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getGeographicalSelectionTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -83,7 +82,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getGeographicalGranularituesValueMap(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
@@ -91,7 +90,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getGeographicalValuesValueMap(List<GeographicalValueDto> geographicalValueDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
@@ -99,7 +98,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (SubjectDto subjectDto : subjectDtos) {
@@ -107,7 +106,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static InternationalStringDto getSubjectTitleFromCode(List<SubjectDto> subjectDtos, String code) {
         if (code != null) {
             for (SubjectDto subjectDto : subjectDtos) {
@@ -118,23 +117,23 @@ public class CommonUtils {
         }
         return null;
     }
-    
+
     public static LinkedHashMap<String, String> getVersionTypeValueMap() {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (VersionTypeEnum type : VersionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().versionTypeEnum() + type.getName()));
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getDataBasicValueMap(List<DataDefinitionDto> dataDefinitionDtos) {
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>(); 
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (DataDefinitionDto dataBasic : dataDefinitionDtos) {
             valueMap.put(dataBasic.getUuid(), dataBasic.getName());
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getRateDerivationMethodTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -143,7 +142,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getRateDerivationRoundingValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -152,7 +151,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     /**
      * Returns null if UUID parameter is blank
      * 
@@ -162,7 +161,7 @@ public class CommonUtils {
     public static String getUuidString(String uuid) {
         return StringUtils.isBlank(uuid) ? null : uuid;
     }
-    
+
     public static LinkedHashMap<String, String> getVariableCategoriesValueMap(List<String> codes, List<String> labels) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (int i = 0; i < codes.size(); i++) {
@@ -170,5 +169,5 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
 }

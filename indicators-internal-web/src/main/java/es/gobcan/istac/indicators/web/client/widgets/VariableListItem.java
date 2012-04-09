@@ -20,23 +20,21 @@ import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
-
 public class VariableListItem extends CustomCanvasItem {
 
-    protected ListGrid variableList;
-    
-    protected boolean required;
-    
-    private List<DataSourceVariableDto> dataSourceVariableDtos;
-    
+    protected ListGrid                                 variableList;
+
+    protected boolean                                  required;
+
+    private List<DataSourceVariableDto>                dataSourceVariableDtos;
+
     private Map<String, LinkedHashMap<String, String>> variableValueMaps = new java.util.HashMap<String, LinkedHashMap<String, String>>();
-    
-    
+
     public VariableListItem(String name, String title) {
         super(name, title);
 
         setCellStyle("dragAndDropCellStyle");
-        
+
         variableList = new ListGrid();
         variableList.setShowHeader(false);
         variableList.setLeaveScrollbarGap(false);
@@ -45,22 +43,24 @@ public class VariableListItem extends CustomCanvasItem {
         variableList.setHeight(150);
         variableList.setAlwaysShowEditors(true);
         variableList.addRecordClickHandler(new RecordClickHandler() {
+
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 variableList.deselectAllRecords();
                 variableList.selectRecord(event.getRecord());
             }
         });
-        
+
         ListGridField variableField = new ListGridField(DataSourceDS.VARIABLE_NAME, "variable");
         variableField.setCanEdit(false);
-        
+
         ListGridField categoryField = new ListGridField(DataSourceDS.VARIABLE_CATEGORY, "category");
         categoryField.setCanEdit(true);
         categoryField.setEditorType(new SelectItem());
-        
+
         // Dynamic valueMap. Its values depends on the record.
         EditorValueMapFunction editorValueMapFunction = new EditorValueMapFunction() {
+
             @SuppressWarnings("rawtypes")
             @Override
             public Map getEditorValueMap(Map values, ListGridField field, ListGrid grid) {
@@ -75,17 +75,17 @@ public class VariableListItem extends CustomCanvasItem {
                 return valueMap;
             }
         };
-        
+
         categoryField.setEditorValueMapFunction(editorValueMapFunction);
-        
+
         variableList.setFields(variableField, categoryField);
-        
+
         HLayout hLayout = new HLayout(1);
         hLayout.addMember(variableList);
-        
+
         VLayout vLayout = new VLayout();
         vLayout.addMember(hLayout);
-        
+
         setCanvas(vLayout);
     }
 
@@ -94,40 +94,40 @@ public class VariableListItem extends CustomCanvasItem {
         super.setRequired(required);
         setTitleStyle("requiredFormLabel");
     }
-    
+
     public void clearValue() {
         variableList.selectAllRecords();
         variableList.removeSelectedData();
     }
-    
+
     @Override
     public Boolean validate() {
         // Not required (at least for now)
         return true;
     }
-    
+
     public void addVariableAndCategories(String variable, List<String> categoryCodes, List<String> categoryLabels) {
         variableValueMaps.put(variable, CommonUtils.getVariableCategoriesValueMap(categoryCodes, categoryLabels));
-        
+
         DataSourceVariableRecord record = new DataSourceVariableRecord(variable, new String(), null);
         variableList.addData(record);
     }
-    
+
     public void setValue(List<DataSourceVariableDto> dataSourceVariableDtos) {
         this.dataSourceVariableDtos = dataSourceVariableDtos;
         // Value map must be already set
         // In this method we should set the value selected of this valueMap
         // TODO How can i do this?
-        
-//       ¿? for (DataSourceVariableDto dataSourceVariableDto : dataSourceVariableDtos) {
-//       ¿?    DataSourceVariableRecord record = RecordUtils.getDataSourceVariableRecord(dataSourceVariableDto);
-//       ¿?    variableList.addData(record);
-//       ¿? }
+
+        // ¿? for (DataSourceVariableDto dataSourceVariableDto : dataSourceVariableDtos) {
+        // ¿? DataSourceVariableRecord record = RecordUtils.getDataSourceVariableRecord(dataSourceVariableDto);
+        // ¿? variableList.addData(record);
+        // ¿? }
     }
-    
+
     public List<DataSourceVariableDto> getValue() {
-        // TODO 
+        // TODO
         return dataSourceVariableDtos;
     }
-    
+
 }

@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceResult;
 
-
 @Component
 public class SaveDataSourceActionHandler extends AbstractActionHandler<SaveDataSourceAction, SaveDataSourceResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public SaveDataSourceActionHandler() {
         super(SaveDataSourceAction.class);
     }
@@ -44,7 +43,7 @@ public class SaveDataSourceActionHandler extends AbstractActionHandler<SaveDataS
 
     @Override
     public void undo(SaveDataSourceAction action, SaveDataSourceResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

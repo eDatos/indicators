@@ -26,53 +26,52 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresen
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
 
-	private VLayout panel;
-	private TitleLabel indicatorLabel;
-	private TabSet tabset;
-	private IndicatorGeneralPanel generalPanel;
-	private DataSourcesPanel dataSourcesPanel;
-	
-	
-	@Inject
-	public IndicatorViewImpl(IndicatorGeneralPanel genPanel, DataSourcesPanel dataSourcesPanel) {
-		this.generalPanel = genPanel;
-		this.dataSourcesPanel = dataSourcesPanel;
-		
-		indicatorLabel = new TitleLabel();
-		indicatorLabel.setStyleName("sectionTitleLeftMargin");
-		
-		Tab generalTab = new Tab(getConstants().indicDetailGeneral());
-		generalTab.setPane(generalPanel);
-		
-		Tab dataSourcesTab = new Tab(getConstants().indicDetailDataSources());
-		dataSourcesTab.setPane(dataSourcesPanel);
-		
-		tabset = new TabSet();
-		tabset.addTab(generalTab);
-		tabset.addTab(dataSourcesTab);
-		
-		panel = new VLayout();
-		panel.addMember(indicatorLabel);
-		panel.addMember(tabset);
-	}
-	
-	@Override
-	public Widget asWidget() {
-		return panel;
-	}
-	
-	@Override
-	public void setUiHandlers(IndicatorPresenter uiHandlers) {
-	    generalPanel.setUiHandlers(uiHandlers);
-	    dataSourcesPanel.setUiHandlers(uiHandlers);
-	}
+    private VLayout               panel;
+    private TitleLabel            indicatorLabel;
+    private TabSet                tabset;
+    private IndicatorGeneralPanel generalPanel;
+    private DataSourcesPanel      dataSourcesPanel;
 
-	@Override
-	public void setIndicator(IndicatorDto indicator) {
-		indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
-		generalPanel.setIndicator(indicator);
-		dataSourcesPanel.setIndicator(indicator);
-	}
+    @Inject
+    public IndicatorViewImpl(IndicatorGeneralPanel genPanel, DataSourcesPanel dataSourcesPanel) {
+        this.generalPanel = genPanel;
+        this.dataSourcesPanel = dataSourcesPanel;
+
+        indicatorLabel = new TitleLabel();
+        indicatorLabel.setStyleName("sectionTitleLeftMargin");
+
+        Tab generalTab = new Tab(getConstants().indicDetailGeneral());
+        generalTab.setPane(generalPanel);
+
+        Tab dataSourcesTab = new Tab(getConstants().indicDetailDataSources());
+        dataSourcesTab.setPane(dataSourcesPanel);
+
+        tabset = new TabSet();
+        tabset.addTab(generalTab);
+        tabset.addTab(dataSourcesTab);
+
+        panel = new VLayout();
+        panel.addMember(indicatorLabel);
+        panel.addMember(tabset);
+    }
+
+    @Override
+    public Widget asWidget() {
+        return panel;
+    }
+
+    @Override
+    public void setUiHandlers(IndicatorPresenter uiHandlers) {
+        generalPanel.setUiHandlers(uiHandlers);
+        dataSourcesPanel.setUiHandlers(uiHandlers);
+    }
+
+    @Override
+    public void setIndicator(IndicatorDto indicator) {
+        indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
+        generalPanel.setIndicator(indicator);
+        dataSourcesPanel.setIndicator(indicator);
+    }
 
     @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -119,7 +118,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     @Override
     public void setDataStructure(DataStructureDto dataStructureDto) {
-       dataSourcesPanel.setDataStructure(dataStructureDto);
+        dataSourcesPanel.setDataStructure(dataStructureDto);
     }
 
     @Override

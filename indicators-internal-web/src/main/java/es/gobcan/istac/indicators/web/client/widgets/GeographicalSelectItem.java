@@ -10,10 +10,10 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 
 public class GeographicalSelectItem extends CustomCanvasItem {
 
-    private SelectItem geoGranularitItem;
-    private SelectItem geoValueItem;
+    private SelectItem        geoGranularitItem;
+    private SelectItem        geoValueItem;
     private CustomDynamicForm form;
-    
+
     public GeographicalSelectItem(String name, String title) {
         super(name, title);
         setTitleVAlign(VerticalAlignment.TOP);
@@ -27,55 +27,55 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         form.setStyleName("canvasCellStyle");
         setCanvas(form);
     }
-    
+
     public void setRequired(boolean required) {
         setTitleStyle("requiredFormLabel");
         geoGranularitItem.setRequired(true);
         geoValueItem.setRequired(true);
     }
-    
+
     public void setGeoGranularitiesValueMap(LinkedHashMap<String, String> map) {
         geoGranularitItem.setValueMap(map);
     }
-    
+
     public void setGeoValuesValueMap(LinkedHashMap<String, String> map) {
         geoValueItem.setValueMap(map);
     }
-    
+
     public void setGeoGranularity(String granularity) {
         geoGranularitItem.setValue(granularity);
     }
-    
+
     public void setGeoValue(String value) {
         geoValueItem.setValue(value);
     }
-    
+
     public SelectItem getGeoGranularity() {
         return geoGranularitItem;
     }
-    
+
     public SelectItem getItem() {
         return geoValueItem;
     }
-    
+
     public String getSelectedGeoValue() {
         return geoValueItem.getValueAsString();
     }
-    
+
     public void clearValue() {
         form.clearErrors(true);
         geoGranularitItem.clearValue();
         geoValueItem.clearValue();
         geoValueItem.setValueMap(new String());
     }
-    
+
     public boolean validateItem() {
         return super.validate() && form.validate();
     }
-    
+
     @Override
     public Boolean validate() {
         return super.validate();
     }
-	
+
 }

@@ -10,9 +10,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 public class RejectIndicatorsSystemValidation {
 
     @In(1)
-    String uuid;
-    
+    String              uuid;
+
     @Out(1)
     IndicatorsSystemDto indicatorsSystemDto;
-    
+
 }

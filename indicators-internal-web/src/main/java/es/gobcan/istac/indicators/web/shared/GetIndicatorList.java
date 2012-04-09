@@ -7,9 +7,9 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetIndicatorList {
 
-	@Out(1)
-	List<IndicatorDto> indicatorList;
+    @Out(1)
+    List<IndicatorDto> indicatorList;
 }

@@ -6,12 +6,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class UpdateDimension {
 
-	@In(1)
-	DimensionDto dimensionToUpdate;
-	
-	@Out(1)
-	DimensionDto dimension;
+    @In(1)
+    DimensionDto dimensionToUpdate;
+
+    @Out(1)
+    DimensionDto dimension;
 }

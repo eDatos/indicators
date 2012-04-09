@@ -10,41 +10,42 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 
 public class UpdateQuantityUnitsEvent extends GwtEvent<UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler> {
 
-	public interface UpdateQuantityUnitsHandler extends EventHandler {
-		void onUpdateQuantityUnits(UpdateQuantityUnitsEvent event);
-	}
+    public interface UpdateQuantityUnitsHandler extends EventHandler {
 
-	private static Type<UpdateQuantityUnitsHandler> TYPE = new Type<UpdateQuantityUnitsHandler>();
+        void onUpdateQuantityUnits(UpdateQuantityUnitsEvent event);
+    }
 
-	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<UpdateQuantityUnitsHandler> getAssociatedType() {
-		return TYPE;
-	}
-	
-	// TODO HasEventBus should be used instead of HasHandlers ¿?
-	public static void fire(HasHandlers source, List<QuantityUnitDto> quantityUnits) {
-		if (TYPE != null) {
-			source.fireEvent(new UpdateQuantityUnitsEvent(quantityUnits));
-		}
-	}
+    private static Type<UpdateQuantityUnitsHandler> TYPE = new Type<UpdateQuantityUnitsHandler>();
 
-	@Override
-	protected void dispatch(UpdateQuantityUnitsHandler handler) {
-		handler.onUpdateQuantityUnits(this);
-	}
-	
-	private final List<QuantityUnitDto> quantityUnits;
-	
-	public UpdateQuantityUnitsEvent(List<QuantityUnitDto> quantityUnits) {
-		this.quantityUnits = quantityUnits;
-	}
-	
-	public List<QuantityUnitDto> getQuantityUnits() {
-		return quantityUnits;
-	}
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateQuantityUnitsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-	public static Type<UpdateQuantityUnitsHandler> getType() {
-		return TYPE;
-	}
+    // TODO HasEventBus should be used instead of HasHandlers ¿?
+    public static void fire(HasHandlers source, List<QuantityUnitDto> quantityUnits) {
+        if (TYPE != null) {
+            source.fireEvent(new UpdateQuantityUnitsEvent(quantityUnits));
+        }
+    }
+
+    @Override
+    protected void dispatch(UpdateQuantityUnitsHandler handler) {
+        handler.onUpdateQuantityUnits(this);
+    }
+
+    private final List<QuantityUnitDto> quantityUnits;
+
+    public UpdateQuantityUnitsEvent(List<QuantityUnitDto> quantityUnits) {
+        this.quantityUnits = quantityUnits;
+    }
+
+    public List<QuantityUnitDto> getQuantityUnits() {
+        return quantityUnits;
+    }
+
+    public static Type<UpdateQuantityUnitsHandler> getType() {
+        return TYPE;
+    }
 
 }

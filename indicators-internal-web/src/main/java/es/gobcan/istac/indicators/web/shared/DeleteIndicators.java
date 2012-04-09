@@ -5,9 +5,9 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class DeleteIndicators {
 
-	@In(1)
-	List<String> uuids;
+    @In(1)
+    List<String> uuids;
 }

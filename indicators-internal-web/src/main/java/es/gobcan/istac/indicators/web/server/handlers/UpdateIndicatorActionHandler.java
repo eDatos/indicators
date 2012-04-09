@@ -21,8 +21,7 @@ public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIn
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public UpdateIndicatorActionHandler() {
         super(UpdateIndicatorAction.class);
     }
@@ -30,7 +29,7 @@ public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIn
     @Override
     public UpdateIndicatorResult execute(UpdateIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.updateIndicator(ServiceContextHelper.getServiceContext(),action.getIndicatorToUpdate());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.updateIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorToUpdate());
             return new UpdateIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

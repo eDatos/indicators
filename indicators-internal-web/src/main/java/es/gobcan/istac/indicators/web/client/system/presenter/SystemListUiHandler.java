@@ -4,6 +4,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface SystemListUiHandler extends UiHandlers {
 
-	void reloadIndicatorsSystemList();
-	void goToIndicatorsSystem(String indSystem);
+    void reloadIndicatorsSystemList();
+    void goToIndicatorsSystem(String indSystem);
 }

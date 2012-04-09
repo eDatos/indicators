@@ -96,68 +96,68 @@ public class ServerModule extends HandlerModule {
 
     public ServerModule() {
     }
-    
-	@Override
-	protected void configureHandlers() {
-	    
-		// Indicators System
-		bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
-		bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
-		bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
-		bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
-		
-		// Indicators System Structure
-		bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
-		bindHandler(CreateDimensionAction.class, CreateDimensionActionHandler.class);
-		bindHandler(UpdateDimensionAction.class, UpdateDimensionActionHandler.class);
-		bindHandler(DeleteDimensionAction.class, DeleteDimensionActionHandler.class);
-		bindHandler(GetIndicatorInstanceAction.class, GetIndicatorInstanceActionHandler.class);
-		bindHandler(CreateIndicatorInstanceAction.class, CreateIndicatorInstanceActionHandler.class);
-		bindHandler(UpdateIndicatorInstanceAction.class, UpdateIndicatorInstanceActionHandler.class);
-		bindHandler(DeleteIndicatorInstanceAction.class, DeleteIndicatorInstanceActionHandler.class);
-		bindHandler(MoveSystemStructureContentAction.class, MoveSystemStructureContentActionHandler.class);
-		
-	    // Indicators System life cycle
+
+    @Override
+    protected void configureHandlers() {
+
+        // Indicators System
+        bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
+        bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
+        bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
+        bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
+
+        // Indicators System Structure
+        bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
+        bindHandler(CreateDimensionAction.class, CreateDimensionActionHandler.class);
+        bindHandler(UpdateDimensionAction.class, UpdateDimensionActionHandler.class);
+        bindHandler(DeleteDimensionAction.class, DeleteDimensionActionHandler.class);
+        bindHandler(GetIndicatorInstanceAction.class, GetIndicatorInstanceActionHandler.class);
+        bindHandler(CreateIndicatorInstanceAction.class, CreateIndicatorInstanceActionHandler.class);
+        bindHandler(UpdateIndicatorInstanceAction.class, UpdateIndicatorInstanceActionHandler.class);
+        bindHandler(DeleteIndicatorInstanceAction.class, DeleteIndicatorInstanceActionHandler.class);
+        bindHandler(MoveSystemStructureContentAction.class, MoveSystemStructureContentActionHandler.class);
+
+        // Indicators System life cycle
         bindHandler(ArchiveIndicatorsSystemAction.class, ArchiveIndicatorsSystemActionHandler.class);
         bindHandler(SendIndicatorsSystemToProductionValidationAction.class, SendIndicatorsSystemToProductionValidationActionHandler.class);
         bindHandler(SendIndicatorsSystemToDiffusionValidationAction.class, SendIndicatorsSystemToDiffusionValidationActionHandler.class);
         bindHandler(PublishIndicatorsSystemAction.class, PublishIndicatorsSystemActionHandler.class);
         bindHandler(RejectIndicatorsSystemValidationAction.class, RejectIndicatorsSystemValidationActionHandler.class);
         bindHandler(VersioningIndicatorsSystemAction.class, VersioningIndicatorsSystemActionHandler.class);
-        
-		// Indicators
-		bindHandler(CreateIndicatorAction.class, CreateIndicatorActionHandler.class);
-		bindHandler(UpdateIndicatorAction.class, UpdateIndicatorActionHandler.class);
-		bindHandler(GetIndicatorListAction.class, GetIndicatorListActionHandler.class);
-		bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
-		bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
-		bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
-		
-		// Indicators life cycle
-		bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);
-		bindHandler(SendIndicatorToProductionValidationAction.class, SendIndicatorToProductionValidationActionHandler.class);
-		bindHandler(SendIndicatorToDiffusionValidationAction.class, SendIndicatorToDiffusionValidationActionHandler.class);
-		bindHandler(PublishIndicatorAction.class, PublishIndicatorActionHandler.class);
-		bindHandler(RejectIndicatorValidationAction.class, RejectIndicatorValidationActionHandler.class);
-		bindHandler(VersioningIndicatorAction.class, VersioningIndicatorActionHandler.class);
-		
-		// Indicators DataSources
-		bindHandler(SaveDataSourceAction.class, SaveDataSourceActionHandler.class);
-		bindHandler(GetDataSourcesListAction.class, GetDataSourcesListActionHandler.class);
-		bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
-		bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
-		
-		bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
-		bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
-		bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
-		bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
-		bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
-		
-		// Data Sources
-		bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
-		bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
-		bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
-		
-	}
-	
+
+        // Indicators
+        bindHandler(CreateIndicatorAction.class, CreateIndicatorActionHandler.class);
+        bindHandler(UpdateIndicatorAction.class, UpdateIndicatorActionHandler.class);
+        bindHandler(GetIndicatorListAction.class, GetIndicatorListActionHandler.class);
+        bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
+        bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
+        bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
+
+        // Indicators life cycle
+        bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);
+        bindHandler(SendIndicatorToProductionValidationAction.class, SendIndicatorToProductionValidationActionHandler.class);
+        bindHandler(SendIndicatorToDiffusionValidationAction.class, SendIndicatorToDiffusionValidationActionHandler.class);
+        bindHandler(PublishIndicatorAction.class, PublishIndicatorActionHandler.class);
+        bindHandler(RejectIndicatorValidationAction.class, RejectIndicatorValidationActionHandler.class);
+        bindHandler(VersioningIndicatorAction.class, VersioningIndicatorActionHandler.class);
+
+        // Indicators DataSources
+        bindHandler(SaveDataSourceAction.class, SaveDataSourceActionHandler.class);
+        bindHandler(GetDataSourcesListAction.class, GetDataSourcesListActionHandler.class);
+        bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
+        bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
+
+        bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
+        bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
+        bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
+        bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
+        bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
+
+        // Data Sources
+        bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
+        bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
+        bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
+
+    }
+
 }

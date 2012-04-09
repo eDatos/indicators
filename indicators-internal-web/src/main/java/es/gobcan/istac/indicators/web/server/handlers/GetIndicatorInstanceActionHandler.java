@@ -16,18 +16,15 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceResult;
 
-
 @Component
 public class GetIndicatorInstanceActionHandler extends AbstractActionHandler<GetIndicatorInstanceAction, GetIndicatorInstanceResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    
     public GetIndicatorInstanceActionHandler() {
         super(GetIndicatorInstanceAction.class);
     }
-
 
     @Override
     public GetIndicatorInstanceResult execute(GetIndicatorInstanceAction action, ExecutionContext context) throws ActionException {
@@ -41,7 +38,7 @@ public class GetIndicatorInstanceActionHandler extends AbstractActionHandler<Get
 
     @Override
     public void undo(GetIndicatorInstanceAction action, GetIndicatorInstanceResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

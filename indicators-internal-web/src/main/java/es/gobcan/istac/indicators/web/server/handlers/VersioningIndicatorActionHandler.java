@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 
-
 @Component
 public class VersioningIndicatorActionHandler extends AbstractActionHandler<VersioningIndicatorAction, VersioningIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public VersioningIndicatorActionHandler() {
         super(VersioningIndicatorAction.class);
     }
@@ -39,7 +38,7 @@ public class VersioningIndicatorActionHandler extends AbstractActionHandler<Vers
 
     @Override
     public void undo(VersioningIndicatorAction action, VersioningIndicatorResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

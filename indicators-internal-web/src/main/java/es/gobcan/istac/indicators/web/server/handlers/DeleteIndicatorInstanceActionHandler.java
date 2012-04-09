@@ -20,8 +20,7 @@ public class DeleteIndicatorInstanceActionHandler extends AbstractActionHandler<
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public DeleteIndicatorInstanceActionHandler() {
         super(DeleteIndicatorInstanceAction.class);
     }

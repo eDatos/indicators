@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client;
 
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.PlaceManagerImpl;
@@ -11,15 +10,15 @@ import es.gobcan.istac.indicators.web.client.gin.DefaultPlace;
 
 public class IndicatorsPlaceManager extends PlaceManagerImpl {
 
-	private final PlaceRequest defaultPlaceRequest;
-	
-	@Inject
-	public IndicatorsPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultNameToken) {
-		super(eventBus,tokenFormatter);
-		this.defaultPlaceRequest = new PlaceRequest(defaultNameToken);
-	}
+    private final PlaceRequest defaultPlaceRequest;
 
-	public void revealDefaultPlace() {
-		revealPlace(defaultPlaceRequest);
-	}
+    @Inject
+    public IndicatorsPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultNameToken) {
+        super(eventBus, tokenFormatter);
+        this.defaultPlaceRequest = new PlaceRequest(defaultNameToken);
+    }
+
+    public void revealDefaultPlace() {
+        revealPlace(defaultPlaceRequest);
+    }
 }

@@ -6,14 +6,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 
-
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetDimension {
 
     @In(1)
-    String uuid;
-    
+    String       uuid;
+
     @Out(1)
     DimensionDto dimensionDto;
-    
+
 }

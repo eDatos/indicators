@@ -7,15 +7,15 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class CreateDimension {
-	
-	@In(1)
-	IndicatorsSystemDto indicatorsSystem;
-	
-	@In(2)
-	DimensionDto dimension;
-	
-	@Out(1)
-	DimensionDto createdDimension;
+
+    @In(1)
+    IndicatorsSystemDto indicatorsSystem;
+
+    @In(2)
+    DimensionDto        dimension;
+
+    @Out(1)
+    DimensionDto        createdDimension;
 }

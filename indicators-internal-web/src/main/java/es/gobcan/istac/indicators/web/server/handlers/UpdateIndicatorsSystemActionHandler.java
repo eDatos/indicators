@@ -21,8 +21,7 @@ public class UpdateIndicatorsSystemActionHandler extends AbstractActionHandler<U
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public UpdateIndicatorsSystemActionHandler() {
         super(UpdateIndicatorsSystemAction.class);
     }

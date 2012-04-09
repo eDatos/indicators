@@ -40,66 +40,69 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers, SetTitleHandler {
-	
-    private final DispatchAsync dispatcher;
-    
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> CONTENT_SLOT = new Type<RevealContentHandler<?>>();
-	
-	public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
-		void showMessage(List<String> messages, MessageTypeEnum type);
-		void hideMessages();
-		void setTitle(String title);
-	}
-	
-	@ProxyStandard
-	@NameToken(NameTokens.mainPage)
-	public interface MainProxy extends Proxy<MainPagePresenter>, Place {}
-	
-	@Inject
-	public MainPagePresenter(EventBus eventBus, MainView view, MainProxy proxy, DispatchAsync dispatcher) {
-		super(eventBus, view, proxy);
-		getView().setUiHandlers(this);
-		this.dispatcher = dispatcher;
-	}
 
-	@Override
-	protected void revealInParent() {
-		RevealRootContentEvent.fire(this,this);
-	}
-	
-	@Override
-	protected void onBind() {
-		super.onBind();
-		addRegisteredHandler(ShowMessageEvent.getType(), this);
-		// TODO Is this the proper place to load value lists?
-		loadQuantityUnits();
-		loadGeographicalGranularities();
-	}
-	
-	@Override
-	protected void onReset() {
-	    super.onReset();
-	    hideMessages();
-	}
-	
-	@Override
-	public void onShowMessage(ShowMessageEvent event) {
-		getView().showMessage(event.getMessages(), event.getMessageType());
-	}
-	
+    private final DispatchAsync                       dispatcher;
+
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> CONTENT_SLOT = new Type<RevealContentHandler<?>>();
+
+    public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
+
+        void showMessage(List<String> messages, MessageTypeEnum type);
+        void hideMessages();
+        void setTitle(String title);
+    }
+
+    @ProxyStandard
+    @NameToken(NameTokens.mainPage)
+    public interface MainProxy extends Proxy<MainPagePresenter>, Place {
+    }
+
+    @Inject
+    public MainPagePresenter(EventBus eventBus, MainView view, MainProxy proxy, DispatchAsync dispatcher) {
+        super(eventBus, view, proxy);
+        getView().setUiHandlers(this);
+        this.dispatcher = dispatcher;
+    }
+
+    @Override
+    protected void revealInParent() {
+        RevealRootContentEvent.fire(this, this);
+    }
+
+    @Override
+    protected void onBind() {
+        super.onBind();
+        addRegisteredHandler(ShowMessageEvent.getType(), this);
+        // TODO Is this the proper place to load value lists?
+        loadQuantityUnits();
+        loadGeographicalGranularities();
+    }
+
+    @Override
+    protected void onReset() {
+        super.onReset();
+        hideMessages();
+    }
+
+    @Override
+    public void onShowMessage(ShowMessageEvent event) {
+        getView().showMessage(event.getMessages(), event.getMessageType());
+    }
+
     @ProxyEvent
     @Override
     public void onHideMessage(HideMessageEvent event) {
         hideMessages();
     }
-    
+
     private void hideMessages() {
         getView().hideMessages();
     }
-	
-	private void loadQuantityUnits() {
-	    dispatcher.execute(new GetQuantityUnitsListAction(), new AsyncCallback<GetQuantityUnitsListResult>() {
+
+    private void loadQuantityUnits() {
+        dispatcher.execute(new GetQuantityUnitsListAction(), new AsyncCallback<GetQuantityUnitsListResult>() {
+
             @Override
             public void onFailure(Throwable caught) {
                 ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingQuantityUnits()), MessageTypeEnum.ERROR);
@@ -107,12 +110,13 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             @Override
             public void onSuccess(GetQuantityUnitsListResult result) {
                 UpdateQuantityUnitsEvent.fire(MainPagePresenter.this, result.getQuantityUnits());
-            }}
-	    );
-	}
-	
-	private void loadGeographicalGranularities() {
-	    dispatcher.execute(new GetGeographicalGranularitiesAction(), new AsyncCallback<GetGeographicalGranularitiesResult>() {
+            }
+        });
+    }
+
+    private void loadGeographicalGranularities() {
+        dispatcher.execute(new GetGeographicalGranularitiesAction(), new AsyncCallback<GetGeographicalGranularitiesResult>() {
+
             @Override
             public void onFailure(Throwable caught) {
                 ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularities()), MessageTypeEnum.ERROR);
@@ -120,14 +124,14 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             @Override
             public void onSuccess(GetGeographicalGranularitiesResult result) {
                 UpdateGeographicalGranularitiesEvent.fire(MainPagePresenter.this, result.getGeographicalGranularityDtos());
-            }}
-	    );
-	}
-	
-	@ProxyEvent
+            }
+        });
+    }
+
+    @ProxyEvent
     @Override
     public void onSetTitle(SetTitleEvent event) {
-        getView().setTitle(event.getTitle());        
+        getView().setTitle(event.getTitle());
     }
 
 }

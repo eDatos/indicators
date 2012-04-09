@@ -9,19 +9,17 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 
-
 public class SystemMainFormLayout extends InternationalViewMainFormLayout {
 
-    private PublishToolStripButton productionValidation;
-    private PublishToolStripButton diffusionValidation;
-    private PublishToolStripButton rejectValidation;
-    private PublishToolStripButton publish;
-    private PublishToolStripButton archive;
-    private PublishToolStripButton versioning;
-    
+    private PublishToolStripButton         productionValidation;
+    private PublishToolStripButton         diffusionValidation;
+    private PublishToolStripButton         rejectValidation;
+    private PublishToolStripButton         publish;
+    private PublishToolStripButton         archive;
+    private PublishToolStripButton         versioning;
+
     private IndicatorsSystemProcStatusEnum status;
-    
-    
+
     public SystemMainFormLayout() {
         productionValidation = new PublishToolStripButton(getConstants().indicatorSendToProductionValidation(), IndicatorsResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new PublishToolStripButton(getConstants().indicatorSendToDiffusionValidation(), IndicatorsResources.RESOURCE.validateDifussion().getURL());
@@ -29,7 +27,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         archive = new PublishToolStripButton(getConstants().indicatorArchive(), IndicatorsResources.RESOURCE.archive().getURL());
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
         versioning = new PublishToolStripButton(getConstants().systemVersioning(), IndicatorsResources.RESOURCE.version().getURL());
-        
+
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
@@ -37,11 +35,11 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(versioning);
     }
-    
+
     public void updatePublishSection(IndicatorsSystemProcStatusEnum status) {
         this.status = status;
     }
-    
+
     private void updateVisibility() {
         // Hide all buttons
         hideAllPublishButtons();
@@ -63,37 +61,37 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
             versioning.show();
         }
     }
-    
+
     @Override
     public void setViewMode() {
         super.setViewMode();
         updateVisibility();
     }
-    
+
     public HasClickHandlers getProductionValidation() {
         return productionValidation;
     }
-    
+
     public HasClickHandlers getDiffusionValidation() {
         return diffusionValidation;
     }
-    
+
     public HasClickHandlers getRejectValidation() {
         return rejectValidation;
     }
-    
+
     public HasClickHandlers getPublish() {
         return publish;
     }
-    
+
     public HasClickHandlers getArchive() {
         return archive;
     }
-    
+
     public HasClickHandlers getVersioning() {
         return versioning;
     }
-    
+
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();

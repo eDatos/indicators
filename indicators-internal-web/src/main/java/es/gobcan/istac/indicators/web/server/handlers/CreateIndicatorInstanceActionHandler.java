@@ -24,12 +24,11 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
 
     @Autowired
-    private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
-    
-    
+
     public CreateIndicatorInstanceActionHandler() {
         super(CreateIndicatorInstanceAction.class);
     }
@@ -56,7 +55,8 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
         }
         // Create instance
         try {
-            IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.createIndicatorInstance(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid(), action.getIndicatorInstance());
+            IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.createIndicatorInstance(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid(),
+                    action.getIndicatorInstance());
             return new CreateIndicatorInstanceResult(indicatorInstanceDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
@@ -65,7 +65,7 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
 
     @Override
     public void undo(CreateIndicatorInstanceAction action, CreateIndicatorInstanceResult result, ExecutionContext context) throws ActionException {
-    
+
     }
 
 }

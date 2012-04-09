@@ -10,41 +10,42 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto
 
 public class UpdateGeographicalGranularitiesEvent extends GwtEvent<UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler> {
 
-	public interface UpdateGeographicalGranularitiesHandler extends EventHandler {
-		void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event);
-	}
+    public interface UpdateGeographicalGranularitiesHandler extends EventHandler {
 
-	private static Type<UpdateGeographicalGranularitiesHandler> TYPE = new Type<UpdateGeographicalGranularitiesHandler>();
+        void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event);
+    }
 
-	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<UpdateGeographicalGranularitiesHandler> getAssociatedType() {
-		return TYPE;
-	}
-	
-	// TODO HasEventBus should be used instead of HasHandlers ¿?
-	public static void fire(HasHandlers source, List<GeographicalGranularityDto> geoGranularities) {
-		if (TYPE != null) {
-			source.fireEvent(new UpdateGeographicalGranularitiesEvent(geoGranularities));
-		}
-	}
+    private static Type<UpdateGeographicalGranularitiesHandler> TYPE = new Type<UpdateGeographicalGranularitiesHandler>();
 
-	@Override
-	protected void dispatch(UpdateGeographicalGranularitiesHandler handler) {
-		handler.onUpdateGeographicalGranularities(this);
-	}
-	
-	private final List<GeographicalGranularityDto> geoGranularities;
-	
-	public UpdateGeographicalGranularitiesEvent(List<GeographicalGranularityDto> geoGranularities) {
-		this.geoGranularities = geoGranularities;
-	}
-	
-	public List<GeographicalGranularityDto> getGeographicalGranularities() {
-		return geoGranularities;
-	}
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateGeographicalGranularitiesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-	public static Type<UpdateGeographicalGranularitiesHandler> getType() {
-		return TYPE;
-	}
+    // TODO HasEventBus should be used instead of HasHandlers ¿?
+    public static void fire(HasHandlers source, List<GeographicalGranularityDto> geoGranularities) {
+        if (TYPE != null) {
+            source.fireEvent(new UpdateGeographicalGranularitiesEvent(geoGranularities));
+        }
+    }
+
+    @Override
+    protected void dispatch(UpdateGeographicalGranularitiesHandler handler) {
+        handler.onUpdateGeographicalGranularities(this);
+    }
+
+    private final List<GeographicalGranularityDto> geoGranularities;
+
+    public UpdateGeographicalGranularitiesEvent(List<GeographicalGranularityDto> geoGranularities) {
+        this.geoGranularities = geoGranularities;
+    }
+
+    public List<GeographicalGranularityDto> getGeographicalGranularities() {
+        return geoGranularities;
+    }
+
+    public static Type<UpdateGeographicalGranularitiesHandler> getType() {
+        return TYPE;
+    }
 
 }

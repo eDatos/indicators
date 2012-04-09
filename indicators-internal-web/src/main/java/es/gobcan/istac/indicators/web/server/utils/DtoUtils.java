@@ -10,7 +10,6 @@ import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 
-
 public class DtoUtils {
 
     /**

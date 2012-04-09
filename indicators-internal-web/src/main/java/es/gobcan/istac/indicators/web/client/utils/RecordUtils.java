@@ -11,36 +11,28 @@ import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 
-
 public class RecordUtils {
 
     public static IndicatorRecord getIndicatorRecord(IndicatorDto indicatorDto) {
-        IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), 
-                indicatorDto.getCode(), 
-                getLocalisedString(indicatorDto.getTitle()), 
-                getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName()));
+        IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), indicatorDto.getCode(), getLocalisedString(indicatorDto.getTitle()), getCoreMessages().getString(
+                getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName()));
         return record;
     }
-    
+
     public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDto indicatorsSystemDto) {
-        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDto.getUuid(), 
-                indicatorsSystemDto.getCode(), 
-                getLocalisedString(indicatorsSystemDto.getTitle()),
-                getCoreMessages().getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorsSystemDto.getProcStatus().getName()));
+        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getCode(), getLocalisedString(indicatorsSystemDto.getTitle()), getCoreMessages()
+                .getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorsSystemDto.getProcStatus().getName()));
         return record;
     }
-    
+
     public static DataSourceRecord getDataSourceRecord(DataSourceDto dataSourceDto) {
-        DataSourceRecord record = new DataSourceRecord(dataSourceDto.getUuid(), 
-                dataSourceDto.getDataGpeUuid(), 
-                dataSourceDto.getPxUri(),
-                dataSourceDto);
+        DataSourceRecord record = new DataSourceRecord(dataSourceDto.getUuid(), dataSourceDto.getDataGpeUuid(), dataSourceDto.getPxUri(), dataSourceDto);
         return record;
     }
-    
+
     public static DataSourceVariableRecord getDataSourceVariableRecord(DataSourceVariableDto dataSourceVariableDto) {
         DataSourceVariableRecord record = new DataSourceVariableRecord(dataSourceVariableDto.getVariable(), dataSourceVariableDto.getCategory(), dataSourceVariableDto);
         return record;
     }
-    
+
 }

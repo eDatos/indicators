@@ -16,14 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionResult;
 
-
 @Component
 public class GetDimensionActionHandler extends AbstractActionHandler<GetDimensionAction, GetDimensionResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    
     public GetDimensionActionHandler() {
         super(GetDimensionAction.class);
     }
@@ -40,7 +38,7 @@ public class GetDimensionActionHandler extends AbstractActionHandler<GetDimensio
 
     @Override
     public void undo(GetDimensionAction action, GetDimensionResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

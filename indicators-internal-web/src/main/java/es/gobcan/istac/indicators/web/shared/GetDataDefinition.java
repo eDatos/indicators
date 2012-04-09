@@ -6,13 +6,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetDataDefinition {
 
     @In(1)
-    String uuid;
-    
+    String            uuid;
+
     @Out(1)
     DataDefinitionDto dataDefinitionDto;
-    
+
 }

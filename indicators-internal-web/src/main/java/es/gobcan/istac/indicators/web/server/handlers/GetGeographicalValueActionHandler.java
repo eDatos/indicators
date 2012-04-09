@@ -16,14 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 
-
 @Component
 public class GetGeographicalValueActionHandler extends AbstractActionHandler<GetGeographicalValueAction, GetGeographicalValueResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
- 
-    
+
     public GetGeographicalValueActionHandler() {
         super(GetGeographicalValueAction.class);
     }
@@ -40,7 +38,7 @@ public class GetGeographicalValueActionHandler extends AbstractActionHandler<Get
 
     @Override
     public void undo(GetGeographicalValueAction action, GetGeographicalValueResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

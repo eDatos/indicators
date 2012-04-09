@@ -12,5 +12,5 @@ public class GetQuantityUnitsList {
 
     @Out(1)
     List<QuantityUnitDto> quantityUnits;
-    
+
 }

@@ -11,8 +11,8 @@ public class SendIndicatorsSystemToProductionValidation {
 
     @In(1)
     IndicatorsSystemDto systemToSend;
-    
+
     @Out(1)
     IndicatorsSystemDto indicatorsSystemDto;
-    
+
 }

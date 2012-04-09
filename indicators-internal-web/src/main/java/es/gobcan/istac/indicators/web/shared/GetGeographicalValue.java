@@ -6,13 +6,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetGeographicalValue {
 
     @In(1)
-    String geographicalValueUuid;
-    
+    String               geographicalValueUuid;
+
     @Out(1)
     GeographicalValueDto geographicalValueDto;
-    
+
 }

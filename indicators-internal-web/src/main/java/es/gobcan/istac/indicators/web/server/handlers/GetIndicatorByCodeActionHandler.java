@@ -17,11 +17,11 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 
 @Component
-public class GetIndicatorByCodeActionHandler extends AbstractActionHandler<GetIndicatorByCodeAction, GetIndicatorByCodeResult>{
-    
+public class GetIndicatorByCodeActionHandler extends AbstractActionHandler<GetIndicatorByCodeAction, GetIndicatorByCodeResult> {
+
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public GetIndicatorByCodeActionHandler() {
         super(GetIndicatorByCodeAction.class);
     }

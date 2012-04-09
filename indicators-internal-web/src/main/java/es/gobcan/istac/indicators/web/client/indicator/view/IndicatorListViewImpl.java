@@ -38,134 +38,138 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 
-	private IndicatorListUiHandler uiHandlers;
-	
-	private VLayout panel;
-	
-	private ToolStripButton newIndicatorActor;
-	private ToolStripButton deleteIndicatorActor;
-	
-	private BaseCustomListGrid indicatorList;
-	
-	private DeleteConfirmationWindow deleteConfirmationWindow;
-	
-	private NewIndicatorWindow window;
-	
-	
-	@Inject
-	public IndicatorListViewImpl() {
-		super();
-	
-		// ToolStrip
-		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setWidth100();
-		
-		newIndicatorActor = new ToolStripButton(getConstants().indicNew(), RESOURCE.newListGrid().getURL());
-		newIndicatorActor.addClickHandler(new ClickHandler() {
-		    @Override
-		    public void onClick(ClickEvent event) {
-		        window = new NewIndicatorWindow(getConstants().indicCreateTitle());
-		        uiHandlers.retrieveSubjectsList();
-		        window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-		            @Override
-		            public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-		                if (window.validateForm()) {
-		                    uiHandlers.createIndicator(window.getNewIndicatorDto());
-		                    window.destroy();
-		                }
-		            }
-		        });
-		    }
-		});
+    private IndicatorListUiHandler   uiHandlers;
 
-		deleteIndicatorActor = new ToolStripButton(getConstants().indicDelete(), RESOURCE.deleteListGrid().getURL());
-		deleteIndicatorActor.setVisibility(Visibility.HIDDEN);
-		deleteIndicatorActor.addClickHandler(new ClickHandler() {
-		    @Override
-		    public void onClick(ClickEvent event) {
-		        deleteConfirmationWindow.show();
-		    }
-		});
-		
-		toolStrip.addButton(newIndicatorActor);
-		toolStrip.addButton(deleteIndicatorActor);
-		
-		indicatorList = new BaseCustomListGrid();
-		IndicatorDS indicatorDS = new IndicatorDS();
-		indicatorList.setDataSource(indicatorDS);
-		indicatorList.setUseAllDataSourceFields(false);
-		indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
-		indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {
-		    @Override
-		    public void onSelectionChanged(SelectionEvent event) {
-		        if (indicatorList.getSelectedRecords().length > 0) {
-		            deleteIndicatorActor.show();
-		        } else {
-		            deleteIndicatorActor.hide();
-		        }
-		    }
-		});
-		indicatorList.addRecordClickHandler(new RecordClickHandler() {
-		    @Override
-		    public void onRecordClick(RecordClickEvent event) {
-		        if (event.getFieldNum() != 0) { //Clicking checkBox will be ignored
-		            String code = event.getRecord().getAttribute(IndicatorDS.CODE);
-		            uiHandlers.goToIndicator(code);
-		        }
-		    }
-		});
-		
-		ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
-		fieldCode.setAlign(Alignment.LEFT);
-		ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
-		ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-		indicatorList.setFields(fieldCode, fieldName, status);
-		
-		panel = new VLayout();
-		panel.addMember(toolStrip);
-		panel.addMember(indicatorList);
-		
-		// Delete confirmation window
-		deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
-		deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
-		deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
-		    @Override
-		    public void onClick(ClickEvent event) {
-		        uiHandlers.deleteIndicators(getUuidsFromSelected());
-		        deleteConfirmationWindow.hide();
-		    }
-		});
-		
-	}
-	
-	
-	@Override
-	public Widget asWidget() {
-		return panel;
-	}
-	
-	@Override
-	public void setIndicatorList(List<IndicatorDto> indicators) {
-		IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
-		int index = 0;
-		for (IndicatorDto ind : indicators) {
-			records[index++] = RecordUtils.getIndicatorRecord(ind);
-		}
-		indicatorList.setData(records);
-	}
-	
-	@Override
-	public void setUiHandlers(IndicatorListPresenter uiHandlers) {
-		this.uiHandlers = uiHandlers;
-	}
-	
-	public List<String> getUuidsFromSelected() {
-		List<String> codes = new ArrayList<String>();
-		for (ListGridRecord record : indicatorList.getSelectedRecords()) {
-			codes.add(record.getAttribute(IndicatorDS.UUID));
-		}
-		return codes;
-	}
+    private VLayout                  panel;
+
+    private ToolStripButton          newIndicatorActor;
+    private ToolStripButton          deleteIndicatorActor;
+
+    private BaseCustomListGrid       indicatorList;
+
+    private DeleteConfirmationWindow deleteConfirmationWindow;
+
+    private NewIndicatorWindow       window;
+
+    @Inject
+    public IndicatorListViewImpl() {
+        super();
+
+        // ToolStrip
+        ToolStrip toolStrip = new ToolStrip();
+        toolStrip.setWidth100();
+
+        newIndicatorActor = new ToolStripButton(getConstants().indicNew(), RESOURCE.newListGrid().getURL());
+        newIndicatorActor.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                window = new NewIndicatorWindow(getConstants().indicCreateTitle());
+                uiHandlers.retrieveSubjectsList();
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (window.validateForm()) {
+                            uiHandlers.createIndicator(window.getNewIndicatorDto());
+                            window.destroy();
+                        }
+                    }
+                });
+            }
+        });
+
+        deleteIndicatorActor = new ToolStripButton(getConstants().indicDelete(), RESOURCE.deleteListGrid().getURL());
+        deleteIndicatorActor.setVisibility(Visibility.HIDDEN);
+        deleteIndicatorActor.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteConfirmationWindow.show();
+            }
+        });
+
+        toolStrip.addButton(newIndicatorActor);
+        toolStrip.addButton(deleteIndicatorActor);
+
+        indicatorList = new BaseCustomListGrid();
+        IndicatorDS indicatorDS = new IndicatorDS();
+        indicatorList.setDataSource(indicatorDS);
+        indicatorList.setUseAllDataSourceFields(false);
+        indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+        indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {
+
+            @Override
+            public void onSelectionChanged(SelectionEvent event) {
+                if (indicatorList.getSelectedRecords().length > 0) {
+                    deleteIndicatorActor.show();
+                } else {
+                    deleteIndicatorActor.hide();
+                }
+            }
+        });
+        indicatorList.addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
+                    String code = event.getRecord().getAttribute(IndicatorDS.CODE);
+                    uiHandlers.goToIndicator(code);
+                }
+            }
+        });
+
+        ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
+        fieldCode.setAlign(Alignment.LEFT);
+        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
+        ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
+        indicatorList.setFields(fieldCode, fieldName, status);
+
+        panel = new VLayout();
+        panel.addMember(toolStrip);
+        panel.addMember(indicatorList);
+
+        // Delete confirmation window
+        deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
+        deleteConfirmationWindow.setVisibility(Visibility.HIDDEN);
+        deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.deleteIndicators(getUuidsFromSelected());
+                deleteConfirmationWindow.hide();
+            }
+        });
+
+    }
+
+    @Override
+    public Widget asWidget() {
+        return panel;
+    }
+
+    @Override
+    public void setIndicatorList(List<IndicatorDto> indicators) {
+        IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
+        int index = 0;
+        for (IndicatorDto ind : indicators) {
+            records[index++] = RecordUtils.getIndicatorRecord(ind);
+        }
+        indicatorList.setData(records);
+    }
+
+    @Override
+    public void setUiHandlers(IndicatorListPresenter uiHandlers) {
+        this.uiHandlers = uiHandlers;
+    }
+
+    public List<String> getUuidsFromSelected() {
+        List<String> codes = new ArrayList<String>();
+        for (ListGridRecord record : indicatorList.getSelectedRecords()) {
+            codes.add(record.getAttribute(IndicatorDS.UUID));
+        }
+        return codes;
+    }
 
     @Override
     public void setSubjects(List<SubjectDto> subjectDtos) {
@@ -173,5 +177,5 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
             window.setSubjetcs(subjectDtos);
         }
     }
-	
+
 }

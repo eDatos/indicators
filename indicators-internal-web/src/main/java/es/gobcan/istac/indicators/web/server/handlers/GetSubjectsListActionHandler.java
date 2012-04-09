@@ -18,14 +18,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
-
 @Component
 public class GetSubjectsListActionHandler extends AbstractActionHandler<GetSubjectsListAction, GetSubjectsListResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public GetSubjectsListActionHandler() {
         super(GetSubjectsListAction.class);
     }
@@ -42,7 +40,7 @@ public class GetSubjectsListActionHandler extends AbstractActionHandler<GetSubje
 
     @Override
     public void undo(GetSubjectsListAction action, GetSubjectsListResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

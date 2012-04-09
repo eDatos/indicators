@@ -18,14 +18,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
-
 @Component
 public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<GetQuantityUnitsListAction, GetQuantityUnitsListResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public GetQuantityUnitsListActionHandler() {
         super(GetQuantityUnitsListAction.class);
     }
@@ -42,7 +40,7 @@ public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<Get
 
     @Override
     public void undo(GetQuantityUnitsListAction action, GetQuantityUnitsListResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

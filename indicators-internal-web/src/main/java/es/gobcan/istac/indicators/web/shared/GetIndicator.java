@@ -6,12 +6,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetIndicator {
 
-	@In(1)
-	String uuid;
-	
-	@Out(1)
-	IndicatorDto indicator;
+    @In(1)
+    String       uuid;
+
+    @Out(1)
+    IndicatorDto indicator;
 }

@@ -10,9 +10,9 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 public class SendIndicatorToDiffusionValidation {
 
     @In(1)
-    String uuid;
-    
+    String       uuid;
+
     @Out(1)
     IndicatorDto indicatorDto;
-    
+
 }

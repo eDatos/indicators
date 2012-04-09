@@ -7,7 +7,6 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacExceptionItemList;
 
-
 public class WSExceptionUtils {
 
     /**
@@ -31,5 +30,5 @@ public class WSExceptionUtils {
         }
         return metamacExceptionItems;
     }
-    
+
 }

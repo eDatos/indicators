@@ -8,13 +8,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetGeographicalValues {
 
     @In(1)
-    String geographicalGranularityUuid;
-    
+    String                     geographicalGranularityUuid;
+
     @Out(1)
     List<GeographicalValueDto> geographicalValueDtos;
-    
+
 }

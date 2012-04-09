@@ -22,14 +22,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 
-
 @Component
 public class GetGeographicalValuesActionHandler extends AbstractActionHandler<GetGeographicalValuesAction, GetGeographicalValuesResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
- 
-    
+
     public GetGeographicalValuesActionHandler() {
         super(GetGeographicalValuesAction.class);
     }
@@ -41,11 +39,12 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
             if (action.getGeographicalGranularityUuid() != null) {
                 criteria = new IndicatorsCriteria();
                 criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-                criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid())); 
+                criteria.getConjunctionRestriction().getRestrictions()
+                        .add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid()));
             }
-            
+
             List<GeographicalValueDto> geographicalValuesDtos = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), criteria);
-            
+
             return new GetGeographicalValuesResult(geographicalValuesDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
@@ -54,7 +53,7 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
 
     @Override
     public void undo(GetGeographicalValuesAction action, GetGeographicalValuesResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

@@ -23,7 +23,7 @@ public class GetDataDefinitionsActionHandler extends AbstractActionHandler<GetDa
 
     @Autowired
     private IndicatorsDataServiceFacade indicatorsDataServiceFacade;
-    
+
     public GetDataDefinitionsActionHandler() {
         super(GetDataDefinitionsAction.class);
     }
@@ -40,7 +40,7 @@ public class GetDataDefinitionsActionHandler extends AbstractActionHandler<GetDa
 
     @Override
     public void undo(GetDataDefinitionsAction action, GetDataDefinitionsResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

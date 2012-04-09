@@ -4,7 +4,6 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 
-
 public class LoadingWindow extends Window {
 
     public LoadingWindow() {

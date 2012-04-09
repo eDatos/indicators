@@ -6,13 +6,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetDataSource {
 
     @In(1)
-    String uuid;
-    
+    String        uuid;
+
     @Out(1)
     DataSourceDto dataSourceDto;
-    
+
 }

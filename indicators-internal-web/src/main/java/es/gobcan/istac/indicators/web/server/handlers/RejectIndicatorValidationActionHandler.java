@@ -21,7 +21,7 @@ public class RejectIndicatorValidationActionHandler extends AbstractActionHandle
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public RejectIndicatorValidationActionHandler() {
         super(RejectIndicatorValidationAction.class);
     }
@@ -38,7 +38,7 @@ public class RejectIndicatorValidationActionHandler extends AbstractActionHandle
 
     @Override
     public void undo(RejectIndicatorValidationAction action, RejectIndicatorValidationResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

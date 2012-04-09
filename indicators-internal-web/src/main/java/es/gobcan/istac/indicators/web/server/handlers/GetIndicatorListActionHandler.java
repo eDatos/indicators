@@ -20,8 +20,7 @@ public class GetIndicatorListActionHandler extends AbstractActionHandler<GetIndi
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public GetIndicatorListActionHandler() {
         super(GetIndicatorListAction.class);
     }

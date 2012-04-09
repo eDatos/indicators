@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationResult;
 
-
 @Component
 public class SendIndicatorsSystemToProductionValidationActionHandler extends AbstractActionHandler<SendIndicatorsSystemToProductionValidationAction, SendIndicatorsSystemToProductionValidationResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public SendIndicatorsSystemToProductionValidationActionHandler() {
         super(SendIndicatorsSystemToProductionValidationAction.class);
     }
@@ -53,7 +52,7 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
 
     @Override
     public void undo(SendIndicatorsSystemToProductionValidationAction action, SendIndicatorsSystemToProductionValidationResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

@@ -21,30 +21,28 @@ import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
-
 public class BaseQuantityForm extends GroupDynamicForm {
-    
-    protected List<IndicatorDto> indicatorDtos;
+
+    protected List<IndicatorDto>    indicatorDtos;
     protected List<QuantityUnitDto> quantityUnitDtos;
-    protected UiHandlers uiHandlers;
-    
-    
+    protected UiHandlers            uiHandlers;
+
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
     }
-    
+
     public void setIndicators(List<IndicatorDto> indicatorDtos) {
         this.indicatorDtos = indicatorDtos;
     }
-    
+
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         this.quantityUnitDtos = units;
     }
-    
+
     public void setUiHandlers(UiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-    
+
     protected QuantityIndexBaseTypeEnum getIndexBaseTypeEnum(QuantityDto quantityDto) {
         Integer baseValue = quantityDto.getBaseValue();
         String baseTime = quantityDto.getBaseTime();
@@ -58,7 +56,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return null;
     }
-    
+
     protected String getIndexBaseType(QuantityDto quantityDto) {
         QuantityIndexBaseTypeEnum basetype = getIndexBaseTypeEnum(quantityDto);
         if (basetype != null) {
@@ -66,7 +64,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return "";
     }
-    
+
     protected LinkedHashMap<String, String> getQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityTypeEnum type : QuantityTypeEnum.values()) {
@@ -74,7 +72,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return valueMap;
     }
-    
+
     protected LinkedHashMap<String, String> getQuantityIndexBaseTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityIndexBaseTypeEnum type : QuantityIndexBaseTypeEnum.values()) {
@@ -82,9 +80,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return valueMap;
     }
-    
+
     protected FormItemIfFunction getMinIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -97,9 +96,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getMaxIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -112,9 +112,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getDenominatorIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -127,9 +128,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getNumeratorIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -142,9 +144,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getIsPercentageIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -157,9 +160,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getPercentageOfIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -172,24 +176,26 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getIndexBaseTypeIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
                     QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
                     if (IndicatorUtils.isIndexOrExtension(type)) {
-                            return true;
+                        return true;
                     }
                 }
                 return false;
             }
         };
     }
-    
+
     protected FormItemIfFunction getBaseValueIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -204,9 +210,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getBaseTimeIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -221,9 +228,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getBaseLocationIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -238,9 +246,10 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected FormItemIfFunction getBaseQuantityIfFunction() {
         return new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
@@ -253,7 +262,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         };
     }
-    
+
     protected String getQuantityUnitSymbol(String unitUuid) {
         if (unitUuid != null) {
             for (QuantityUnitDto unit : quantityUnitDtos) {
@@ -264,7 +273,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return new String();
     }
-    
+
     protected String getIndicatorText(String indicatorUuid) {
         if (indicatorUuid != null) {
             for (IndicatorDto ind : indicatorDtos) {
@@ -275,5 +284,5 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return new String();
     }
-    
+
 }

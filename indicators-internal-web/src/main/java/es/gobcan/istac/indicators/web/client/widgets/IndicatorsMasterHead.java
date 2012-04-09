@@ -6,8 +6,8 @@ import org.siemac.metamac.web.common.client.widgets.MasterHead;
 
 public class IndicatorsMasterHead extends MasterHead {
 
-	public IndicatorsMasterHead() {
-	    super();
-	    setTitleLabel(getConstants().appTitle());
-	}
+    public IndicatorsMasterHead() {
+        super();
+        setTitleLabel(getConstants().appTitle());
+    }
 }

@@ -6,7 +6,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class UpdateIndicatorInstance {
 
     @In(1)

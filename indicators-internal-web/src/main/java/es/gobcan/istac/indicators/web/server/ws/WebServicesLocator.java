@@ -24,11 +24,12 @@ public class WebServicesLocator {
     private String                                  metamacStatisticalOperationInternalEndpoint = null;
 
     private ThreadLocal<WebServicePorts>            ports                                       = new ThreadLocal<WebServicePorts>() {
-            @Override
-            protected WebServicePorts initialValue() {
-                return new WebServicePorts();
-            }
-         };
+
+                                                                                                    @Override
+                                                                                                    protected WebServicePorts initialValue() {
+                                                                                                        return new WebServicePorts();
+                                                                                                    }
+                                                                                                };
 
     @PostConstruct
     public void initService() throws Exception {

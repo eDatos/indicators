@@ -24,12 +24,11 @@ import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDimensionAction, CreateDimensionResult> {
 
     @Autowired
-    private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
-    
-    
+
     public CreateDimensionActionHandler() {
         super(CreateDimensionAction.class);
     }

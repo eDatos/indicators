@@ -4,10 +4,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
-
 public abstract class WaitingAsyncCallback<T> implements AsyncCallback<T> {
-    
-    
+
     public WaitingAsyncCallback() {
         showWaitCursor();
     }
@@ -23,14 +21,14 @@ public abstract class WaitingAsyncCallback<T> implements AsyncCallback<T> {
         onWaitSuccess(result);
         showDefaultCursor();
     }
-    
+
     public abstract void onWaitFailure(Throwable caught);
     public abstract void onWaitSuccess(T result);
-        
+
     private void showWaitCursor() {
         DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "progress");
     }
-    
+
     private void showDefaultCursor() {
         DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
     }

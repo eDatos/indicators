@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationResult;
 
-
 @Component
 public class RejectIndicatorsSystemValidationActionHandler extends AbstractActionHandler<RejectIndicatorsSystemValidationAction, RejectIndicatorsSystemValidationResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public RejectIndicatorsSystemValidationActionHandler() {
         super(RejectIndicatorsSystemValidationAction.class);
     }
@@ -39,7 +38,7 @@ public class RejectIndicatorsSystemValidationActionHandler extends AbstractActio
 
     @Override
     public void undo(RejectIndicatorsSystemValidationAction action, RejectIndicatorsSystemValidationResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

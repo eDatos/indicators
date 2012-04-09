@@ -6,13 +6,13 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class UpdateIndicatorsSystem {
 
-	@In(1)
-	IndicatorsSystemDto indicatorsSystemToUpdate;
+    @In(1)
+    IndicatorsSystemDto indicatorsSystemToUpdate;
 
-	@Out(1)
-	IndicatorsSystemDto indicatorsSystem;
+    @Out(1)
+    IndicatorsSystemDto indicatorsSystem;
 
 }

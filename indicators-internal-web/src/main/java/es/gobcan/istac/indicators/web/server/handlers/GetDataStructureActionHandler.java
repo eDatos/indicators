@@ -21,7 +21,7 @@ public class GetDataStructureActionHandler extends AbstractActionHandler<GetData
 
     @Autowired
     private IndicatorsDataServiceFacade indicatorsDataServiceFacade;
-    
+
     public GetDataStructureActionHandler() {
         super(GetDataStructureAction.class);
     }
@@ -38,7 +38,7 @@ public class GetDataStructureActionHandler extends AbstractActionHandler<GetData
 
     @Override
     public void undo(GetDataStructureAction action, GetDataStructureResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

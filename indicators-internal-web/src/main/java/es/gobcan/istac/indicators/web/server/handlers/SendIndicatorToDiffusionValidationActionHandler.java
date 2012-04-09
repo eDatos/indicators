@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationResult;
 
-
 @Component
 public class SendIndicatorToDiffusionValidationActionHandler extends AbstractActionHandler<SendIndicatorToDiffusionValidationAction, SendIndicatorToDiffusionValidationResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public SendIndicatorToDiffusionValidationActionHandler() {
         super(SendIndicatorToDiffusionValidationAction.class);
     }
@@ -39,7 +38,7 @@ public class SendIndicatorToDiffusionValidationActionHandler extends AbstractAct
 
     @Override
     public void undo(SendIndicatorToDiffusionValidationAction action, SendIndicatorToDiffusionValidationResult result, ExecutionContext context) throws ActionException {
-        
+
     }
- 
+
 }

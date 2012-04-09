@@ -25,11 +25,10 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
 public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
 
     @Autowired
-    private IndicatorsServiceFacade indicatorsServiceFacade;
+    private IndicatorsServiceFacade                       indicatorsServiceFacade;
 
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
-
 
     public GetIndicatorsSystemListActionHandler() {
         super(GetIndicatorsSystemListAction.class);

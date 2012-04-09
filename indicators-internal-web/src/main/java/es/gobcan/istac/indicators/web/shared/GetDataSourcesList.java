@@ -8,16 +8,16 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetDataSourcesList {
 
     @In(1)
-    String indicatorUuid;
-    
+    String              indicatorUuid;
+
     @In(2)
-    String indicatorVersion;
-    
+    String              indicatorVersion;
+
     @Out(1)
     List<DataSourceDto> dataSourceDtos;
-    
+
 }

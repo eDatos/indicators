@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
 
-
 @Component
 public class GetDataDefinitionActionHandler extends AbstractActionHandler<GetDataDefinitionAction, GetDataDefinitionResult> {
 
     @Autowired
     private IndicatorsDataServiceFacade indicatorsDataServiceFacade;
-    
+
     public GetDataDefinitionActionHandler() {
         super(GetDataDefinitionAction.class);
     }
@@ -39,7 +38,7 @@ public class GetDataDefinitionActionHandler extends AbstractActionHandler<GetDat
 
     @Override
     public void undo(GetDataDefinitionAction action, GetDataDefinitionResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

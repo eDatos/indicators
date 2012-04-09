@@ -84,443 +84,454 @@ import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 
 public class SystemStructurePanel extends HLayout {
-	
-	private SystemUiHandler uiHandlers;
-	private IndicatorsSystemDto system;
-	
-	private EditableTreePanel treePanelEdit;
-	
-	private DimensionPanel dimensionPanel;
-	private IndicatorInstancePanel indicatorInstPanel;
-	
-	private DeleteConfirmationWindow dimensionDeleteConfirm;
-	private DeleteConfirmationWindow indInstanceDeleteConfirm;
-	
-	private DimensionDto selectDimForCreate;
-	private DimensionDto selectedDimension;
-	
-	private IndicatorInstanceDto selectedIndInstance;
-	
-	
-	public SystemStructurePanel() {
-		super();
-		
-		treePanelEdit = new EditableTreePanel();
-		treePanelEdit.setMargin(15);
-		
-		dimensionPanel = new DimensionPanel();
-		dimensionPanel.setVisibility(Visibility.HIDDEN);
-		
-		indicatorInstPanel = new IndicatorInstancePanel(); 
-		indicatorInstPanel.setVisibility(Visibility.HIDDEN);
-		
-		dimensionDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucDimDeleteConfirm());
-		indInstanceDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucIndInstanceDeleteConfirm());
-		
-		VLayout formLayout = new VLayout();
-		formLayout.setMargin(15);
-		formLayout.addMember(dimensionPanel);
-		formLayout.addMember(indicatorInstPanel);
-		
-		this.addMember(treePanelEdit);
-		this.addMember(formLayout);
-		
-		bindEvents();
-	}
-	
-	private void bindEvents() {
-		dimensionDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				hidePanels();
-				uiHandlers.deleteDimension(selectedDimension);
-			}
-		});
-		indInstanceDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				hidePanels();
-				uiHandlers.deleteIndicatorInstance(selectedIndInstance);
-			}
-		});
-	}
-	
 
-	public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
-	    this.system = indSys;
-		treePanelEdit.setIndicatorsSystem(indSys);
-		hidePanels();
-	}
-	
-	public void setIndicators(List<IndicatorDto> indicators) {
-	    indicatorInstPanel.setIndicators(indicators);
-	}
-	
-	public void setIndicatorFromIndicatorInstance(IndicatorDto indicator) {
-	    indicatorInstPanel.setIndicator(indicator);
-	}
-	
-	public void setIndicatorSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure) {
-	    if (this.system != null && indicatorsSystem != null) {
-	        if (this.system.getCode().equals(indicatorsSystem.getCode())) { //reloading same structure
-	            //check if we have just persisted the system, in that case reload
-	            if (this.system.getUuid() == null && structure.getUuid() != null) {
-	                uiHandlers.retrieveIndSystem(this.system.getCode());
-	            }
-	        } else { //loading new structure, we must hide panels with old information
-	            hidePanels();
-	        }
-	    }
-		this.system = indicatorsSystem;
-		treePanelEdit.setIndicatorSystemStructure(structure);
-	}
-	
-	public void selectDimension(DimensionDto dim) {
-	    if (indicatorInstPanel.isVisible()) {
-	        indicatorInstPanel.hide();
-	    }
-	    selectedDimension = dim;
-	    dimensionPanel.setDimension(dim);
-	    dimensionPanel.show();
-	}
-	
-	public void selectIndicatorInstance(IndicatorInstanceDto instance) {
-		if (dimensionPanel.isVisible()) {
-			dimensionPanel.hide();
-		}
-		selectedIndInstance = instance;
-		indicatorInstPanel.setIndicatorInstance(instance);
-		indicatorInstPanel.show();
-	}
-	
-	private void showDimCreatePanel() {
-	    hidePanels();
-	    selectedDimension = null;
-	    selectedIndInstance = null;
-	    dimensionPanel.clearForms();
-	    dimensionPanel.setEditionMode();
-	    dimensionPanel.resetTitle();
-	    dimensionPanel.show();
-	}
-	
-	private void showIndicInstanceCreatePanel() {
-		hidePanels();
-		//reload indicators
-		uiHandlers.retrieveIndicators();
-		selectedDimension = null;
-		selectedIndInstance = null;
-		indicatorInstPanel.clearForms();
-		indicatorInstPanel.setEditionMode();
-		indicatorInstPanel.resetTitle();
-		indicatorInstPanel.show();
-	}
-	
-	private void saveDimension(DimensionDto dim) {
-		boolean creating = (selectedDimension == null);
-		selectedDimension = dim;
-		if (creating) {
-			dim.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
-			dim.setOrderInLevel(1L); // First child in parent
-			uiHandlers.createDimension(system, dim);
-		} else {
-			uiHandlers.updateDimension(dim);
-		}
-	}
-	
-	private void saveIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
-		boolean creating = (selectedIndInstance == null || selectedIndInstance.getUuid() == null);
-		selectedIndInstance = indicatorInstanceDto;
-		if (creating) {
-			indicatorInstanceDto.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
-			indicatorInstanceDto.setOrderInLevel(1L); // First child in parent
-			uiHandlers.createIndicatorInstance(system, indicatorInstanceDto);
-		} else {
-			uiHandlers.updateIndicatorInstance(indicatorInstanceDto);
-		}
-	}
-	
-	public void onDimensionSaved(DimensionDto dimension) {
-		selectDimension(dimension);
-		dimensionPanel.onDimensionSaved(dimension);
-	}
-	
-	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
-		selectIndicatorInstance(instance);
-		indicatorInstPanel.onIndicatorInstanceSaved(instance);
-	}
-	
-	private void hidePanels() {
-//        if (dimensionPanel.isVisible()) {
-            dimensionPanel.hide();
-//        }
-//        if (indicatorInstPanel.isVisible()) {
-            indicatorInstPanel.hide();
-//        }
+    private SystemUiHandler          uiHandlers;
+    private IndicatorsSystemDto      system;
+
+    private EditableTreePanel        treePanelEdit;
+
+    private DimensionPanel           dimensionPanel;
+    private IndicatorInstancePanel   indicatorInstPanel;
+
+    private DeleteConfirmationWindow dimensionDeleteConfirm;
+    private DeleteConfirmationWindow indInstanceDeleteConfirm;
+
+    private DimensionDto             selectDimForCreate;
+    private DimensionDto             selectedDimension;
+
+    private IndicatorInstanceDto     selectedIndInstance;
+
+    public SystemStructurePanel() {
+        super();
+
+        treePanelEdit = new EditableTreePanel();
+        treePanelEdit.setMargin(15);
+
+        dimensionPanel = new DimensionPanel();
+        dimensionPanel.setVisibility(Visibility.HIDDEN);
+
+        indicatorInstPanel = new IndicatorInstancePanel();
+        indicatorInstPanel.setVisibility(Visibility.HIDDEN);
+
+        dimensionDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucDimDeleteConfirm());
+        indInstanceDeleteConfirm = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().systemStrucIndInstanceDeleteConfirm());
+
+        VLayout formLayout = new VLayout();
+        formLayout.setMargin(15);
+        formLayout.addMember(dimensionPanel);
+        formLayout.addMember(indicatorInstPanel);
+
+        this.addMember(treePanelEdit);
+        this.addMember(formLayout);
+
+        bindEvents();
     }
-	
-	public void setUiHandlers(SystemUiHandler uiHandlers) {
-		this.uiHandlers = uiHandlers;
-	}
-	
-	public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-	    indicatorInstPanel.setGeographicalGranularities(geographicalGranularityDtos);
-	}
 
-	public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-	    indicatorInstPanel.setGeographicalValues(geographicalValueDtos);
-	}
-	
-	public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
-	    indicatorInstPanel.setGeographicalValue(geographicalValueDto);
-	}
-	
-//	public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-//	    indicatorInstPanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
-//	}
-	
-//	public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-//	    dimensionPanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
-//	}
-	
-	private class TreePanel extends VLayout {
-		protected final Long FALSE_ROOT_NODE_ID = 0L;
-		protected final Long ROOT_NODE_ID = 1L;
-		
-		/* TREE MANAGEMENT */
-		protected IndSystemContentNode falseRoot;
-		protected Tree tree;
-		protected final TreeGrid treeGrid;
-		protected Map<ElementLevelDto,IndSystemContentNode> sourceMapping;
-		protected String treeOpenState;					//Internal representation that helps us to recover opened nodes after reloading tree
-		
-		public TreePanel() {
-			super();
-			this.setHeight(600);
-			falseRoot = new IndSystemContentNode(FALSE_ROOT_NODE_ID.toString(), "", ROOT_NODE_ID.toString(), null);
-			
-			tree = new Tree();
-			tree.setModelType(TreeModelType.PARENT);
-			tree.setNameProperty(IndSystemContentNode.ATTR_NAME);
-			tree.setIdField(IndSystemContentNode.ATTR_ID);
-			tree.setParentIdField(IndSystemContentNode.ATTR_PARENT);
-		    tree.setRootValue(ROOT_NODE_ID.toString());  
+    private void bindEvents() {
+        dimensionDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
-			treeGrid = new TreeGrid();  
-			treeGrid.setShowHeader(false);
-	        treeGrid.setFields(new TreeGridField("Name"));
-	        treeGrid.setData(tree);
-	        treeGrid.setShowCellContextMenus(true);
-	        treeGrid.setSelectionAppearance(SelectionAppearance.ROW_STYLE);
-	        sourceMapping = new HashMap<ElementLevelDto, IndSystemContentNode>();
-			this.addMember(treeGrid);
-		}
-		
-		/**
-		 * Builds TreeNodes based on 
-		 * @param parentNode
-		 * @param dimensions
-		 * @param totalInstances
-		 */
-		private void buildNodes(TreeNode parentNode, List<ElementLevelDto> elementsLevel) {
-			String parentId = parentNode.getAttribute("ID");
-			for (ElementLevelDto elemLevel : elementsLevel) {
-			    if (elemLevel.isDimension()) {
-			        DimensionDto dim = elemLevel.getDimension();
-			        IndSystemContentNode node = new IndSystemContentNode(dim.getUuid(), InternationalStringUtils.getLocalisedString(dim.getTitle()), parentId, elemLevel);
-			        tree.add(node, parentNode);
-			        sourceMapping.put(elemLevel, node);
-			        List<ElementLevelDto> children = buildChildrenList(elemLevel.getSubelements());
-			        buildNodes(node, children);
-			    } else if (elemLevel.isIndicatorInstance()) {
-			        IndicatorInstanceDto indInst = elemLevel.getIndicatorInstance();
-			        IndSystemContentNode node = new IndSystemContentNode(indInst.getUuid(), InternationalStringUtils.getLocalisedString(indInst.getTitle()), parentId, elemLevel);
-			        tree.add(node, parentNode);
-			        sourceMapping.put(elemLevel, node);
-			    }
-			}
-		}
-		
-		public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
-			falseRoot.setAttribute("Name", getLocalisedString(indSys.getTitle()));
-			falseRoot.setAttribute("Source", indSys);
-			treeGrid.redraw();
-		}
-		
-		public void setIndicatorSystemStructure(IndicatorsSystemStructureDto structure) {
-			// Clear the tree
-			tree.removeList(tree.getAllNodes());
-			sourceMapping.clear();
+            @Override
+            public void onClick(ClickEvent event) {
+                hidePanels();
+                uiHandlers.deleteDimension(selectedDimension);
+            }
+        });
+        indInstanceDeleteConfirm.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
-			// Build nodes recursively
-			tree.add(falseRoot,"/");
-			if (structure != null) {
-			    List<ElementLevelDto> children = buildChildrenList(structure.getElements());
-			    buildNodes(falseRoot, children);
-			    recoverOpenState();
-			}
-			treeGrid.markForRedraw();
-		}
-		
-		private void recoverOpenState() {
-			//recover opened nodes
-			if (treeOpenState != null){
-				treeGrid.setOpenState(treeOpenState);
-			}
-			TreeNode node = null;
-			if (selectedDimension != null) {
-				node = sourceMapping.get(selectedDimension);
-			}
-			if (selectedIndInstance != null) {
-				node = sourceMapping.get(selectedIndInstance);
-			}
-			if (node != null) {
-				TreeNode[] ascendantNodes = treeGrid.getData().getParents(node);
-				treeGrid.getData().openFolders(ascendantNodes);
-			}
-			
-		}
-		
-		/*
-		 * Given subdimensions and ALL indicatorInstances, the method must create a new List containing all parentUuid direct children
-		 * and it must be sorted by orderInLevel field.
-		 */
-		private List<ElementLevelDto> buildChildrenList(List<ElementLevelDto> elementsLevel) {
-			Collections.sort(elementsLevel, new Comparator<ElementLevelDto>() {
-				@Override
-				public int compare(ElementLevelDto o1, ElementLevelDto o2) {
-					return o1.getOrderInLevel().compareTo(o2.getOrderInLevel());
-				}
-			});
-			return elementsLevel;
-		}
-	}
+            @Override
+            public void onClick(ClickEvent event) {
+                hidePanels();
+                uiHandlers.deleteIndicatorInstance(selectedIndInstance);
+            }
+        });
+    }
 
-	private class EditableTreePanel extends TreePanel {
-	    
+    public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
+        this.system = indSys;
+        treePanelEdit.setIndicatorsSystem(indSys);
+        hidePanels();
+    }
+
+    public void setIndicators(List<IndicatorDto> indicators) {
+        indicatorInstPanel.setIndicators(indicators);
+    }
+
+    public void setIndicatorFromIndicatorInstance(IndicatorDto indicator) {
+        indicatorInstPanel.setIndicator(indicator);
+    }
+
+    public void setIndicatorSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure) {
+        if (this.system != null && indicatorsSystem != null) {
+            if (this.system.getCode().equals(indicatorsSystem.getCode())) { // reloading same structure
+                // check if we have just persisted the system, in that case reload
+                if (this.system.getUuid() == null && structure.getUuid() != null) {
+                    uiHandlers.retrieveIndSystem(this.system.getCode());
+                }
+            } else { // loading new structure, we must hide panels with old information
+                hidePanels();
+            }
+        }
+        this.system = indicatorsSystem;
+        treePanelEdit.setIndicatorSystemStructure(structure);
+    }
+
+    public void selectDimension(DimensionDto dim) {
+        if (indicatorInstPanel.isVisible()) {
+            indicatorInstPanel.hide();
+        }
+        selectedDimension = dim;
+        dimensionPanel.setDimension(dim);
+        dimensionPanel.show();
+    }
+
+    public void selectIndicatorInstance(IndicatorInstanceDto instance) {
+        if (dimensionPanel.isVisible()) {
+            dimensionPanel.hide();
+        }
+        selectedIndInstance = instance;
+        indicatorInstPanel.setIndicatorInstance(instance);
+        indicatorInstPanel.show();
+    }
+
+    private void showDimCreatePanel() {
+        hidePanels();
+        selectedDimension = null;
+        selectedIndInstance = null;
+        dimensionPanel.clearForms();
+        dimensionPanel.setEditionMode();
+        dimensionPanel.resetTitle();
+        dimensionPanel.show();
+    }
+
+    private void showIndicInstanceCreatePanel() {
+        hidePanels();
+        // reload indicators
+        uiHandlers.retrieveIndicators();
+        selectedDimension = null;
+        selectedIndInstance = null;
+        indicatorInstPanel.clearForms();
+        indicatorInstPanel.setEditionMode();
+        indicatorInstPanel.resetTitle();
+        indicatorInstPanel.show();
+    }
+
+    private void saveDimension(DimensionDto dim) {
+        boolean creating = (selectedDimension == null);
+        selectedDimension = dim;
+        if (creating) {
+            dim.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
+            dim.setOrderInLevel(1L); // First child in parent
+            uiHandlers.createDimension(system, dim);
+        } else {
+            uiHandlers.updateDimension(dim);
+        }
+    }
+
+    private void saveIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
+        boolean creating = (selectedIndInstance == null || selectedIndInstance.getUuid() == null);
+        selectedIndInstance = indicatorInstanceDto;
+        if (creating) {
+            indicatorInstanceDto.setParentUuid(selectDimForCreate == null ? null : selectDimForCreate.getUuid()); // Whether is root's child or dimension's
+            indicatorInstanceDto.setOrderInLevel(1L); // First child in parent
+            uiHandlers.createIndicatorInstance(system, indicatorInstanceDto);
+        } else {
+            uiHandlers.updateIndicatorInstance(indicatorInstanceDto);
+        }
+    }
+
+    public void onDimensionSaved(DimensionDto dimension) {
+        selectDimension(dimension);
+        dimensionPanel.onDimensionSaved(dimension);
+    }
+
+    public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
+        selectIndicatorInstance(instance);
+        indicatorInstPanel.onIndicatorInstanceSaved(instance);
+    }
+
+    private void hidePanels() {
+        // if (dimensionPanel.isVisible()) {
+        dimensionPanel.hide();
+        // }
+        // if (indicatorInstPanel.isVisible()) {
+        indicatorInstPanel.hide();
+        // }
+    }
+
+    public void setUiHandlers(SystemUiHandler uiHandlers) {
+        this.uiHandlers = uiHandlers;
+    }
+
+    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        indicatorInstPanel.setGeographicalGranularities(geographicalGranularityDtos);
+    }
+
+    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
+        indicatorInstPanel.setGeographicalValues(geographicalValueDtos);
+    }
+
+    public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
+        indicatorInstPanel.setGeographicalValue(geographicalValueDto);
+    }
+
+    // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
+    // indicatorInstPanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
+    // }
+
+    // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
+    // dimensionPanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
+    // }
+
+    private class TreePanel extends VLayout {
+
+        protected final Long                                 FALSE_ROOT_NODE_ID = 0L;
+        protected final Long                                 ROOT_NODE_ID       = 1L;
+
+        /* TREE MANAGEMENT */
+        protected IndSystemContentNode                       falseRoot;
+        protected Tree                                       tree;
+        protected final TreeGrid                             treeGrid;
+        protected Map<ElementLevelDto, IndSystemContentNode> sourceMapping;
+        protected String                                     treeOpenState;          // Internal representation that helps us to recover opened nodes after reloading tree
+
+        public TreePanel() {
+            super();
+            this.setHeight(600);
+            falseRoot = new IndSystemContentNode(FALSE_ROOT_NODE_ID.toString(), "", ROOT_NODE_ID.toString(), null);
+
+            tree = new Tree();
+            tree.setModelType(TreeModelType.PARENT);
+            tree.setNameProperty(IndSystemContentNode.ATTR_NAME);
+            tree.setIdField(IndSystemContentNode.ATTR_ID);
+            tree.setParentIdField(IndSystemContentNode.ATTR_PARENT);
+            tree.setRootValue(ROOT_NODE_ID.toString());
+
+            treeGrid = new TreeGrid();
+            treeGrid.setShowHeader(false);
+            treeGrid.setFields(new TreeGridField("Name"));
+            treeGrid.setData(tree);
+            treeGrid.setShowCellContextMenus(true);
+            treeGrid.setSelectionAppearance(SelectionAppearance.ROW_STYLE);
+            sourceMapping = new HashMap<ElementLevelDto, IndSystemContentNode>();
+            this.addMember(treeGrid);
+        }
+
+        /**
+         * Builds TreeNodes based on
+         * 
+         * @param parentNode
+         * @param dimensions
+         * @param totalInstances
+         */
+        private void buildNodes(TreeNode parentNode, List<ElementLevelDto> elementsLevel) {
+            String parentId = parentNode.getAttribute("ID");
+            for (ElementLevelDto elemLevel : elementsLevel) {
+                if (elemLevel.isDimension()) {
+                    DimensionDto dim = elemLevel.getDimension();
+                    IndSystemContentNode node = new IndSystemContentNode(dim.getUuid(), InternationalStringUtils.getLocalisedString(dim.getTitle()), parentId, elemLevel);
+                    tree.add(node, parentNode);
+                    sourceMapping.put(elemLevel, node);
+                    List<ElementLevelDto> children = buildChildrenList(elemLevel.getSubelements());
+                    buildNodes(node, children);
+                } else if (elemLevel.isIndicatorInstance()) {
+                    IndicatorInstanceDto indInst = elemLevel.getIndicatorInstance();
+                    IndSystemContentNode node = new IndSystemContentNode(indInst.getUuid(), InternationalStringUtils.getLocalisedString(indInst.getTitle()), parentId, elemLevel);
+                    tree.add(node, parentNode);
+                    sourceMapping.put(elemLevel, node);
+                }
+            }
+        }
+
+        public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
+            falseRoot.setAttribute("Name", getLocalisedString(indSys.getTitle()));
+            falseRoot.setAttribute("Source", indSys);
+            treeGrid.redraw();
+        }
+
+        public void setIndicatorSystemStructure(IndicatorsSystemStructureDto structure) {
+            // Clear the tree
+            tree.removeList(tree.getAllNodes());
+            sourceMapping.clear();
+
+            // Build nodes recursively
+            tree.add(falseRoot, "/");
+            if (structure != null) {
+                List<ElementLevelDto> children = buildChildrenList(structure.getElements());
+                buildNodes(falseRoot, children);
+                recoverOpenState();
+            }
+            treeGrid.markForRedraw();
+        }
+
+        private void recoverOpenState() {
+            // recover opened nodes
+            if (treeOpenState != null) {
+                treeGrid.setOpenState(treeOpenState);
+            }
+            TreeNode node = null;
+            if (selectedDimension != null) {
+                node = sourceMapping.get(selectedDimension);
+            }
+            if (selectedIndInstance != null) {
+                node = sourceMapping.get(selectedIndInstance);
+            }
+            if (node != null) {
+                TreeNode[] ascendantNodes = treeGrid.getData().getParents(node);
+                treeGrid.getData().openFolders(ascendantNodes);
+            }
+
+        }
+
+        /*
+         * Given subdimensions and ALL indicatorInstances, the method must create a new List containing all parentUuid direct children
+         * and it must be sorted by orderInLevel field.
+         */
+        private List<ElementLevelDto> buildChildrenList(List<ElementLevelDto> elementsLevel) {
+            Collections.sort(elementsLevel, new Comparator<ElementLevelDto>() {
+
+                @Override
+                public int compare(ElementLevelDto o1, ElementLevelDto o2) {
+                    return o1.getOrderInLevel().compareTo(o2.getOrderInLevel());
+                }
+            });
+            return elementsLevel;
+        }
+    }
+
+    private class EditableTreePanel extends TreePanel {
+
         public EditableTreePanel() {
             super();
             treeGrid.setLeaveScrollbarGap(false);
-            treeGrid.setCanReorderRecords(true);  
-            treeGrid.setCanAcceptDroppedRecords(true);  
-            treeGrid.setCanDragRecordsOut(false);  
+            treeGrid.setCanReorderRecords(true);
+            treeGrid.setCanAcceptDroppedRecords(true);
+            treeGrid.setCanDragRecordsOut(false);
             treeGrid.setDragDataAction(DragDataAction.MOVE);
             bindEvents();
         }
-        
+
         private void bindEvents() {
             treeGrid.addFolderContextClickHandler(new FolderContextClickHandler() {
+
                 @Override
                 public void onFolderContextClick(FolderContextClickEvent event) {
-                    IndSystemContentNode node =(IndSystemContentNode)event.getFolder();
+                    IndSystemContentNode node = (IndSystemContentNode) event.getFolder();
                     Menu menu = buildContextMenuNode(node);
                     menu.setAutoDraw(true);
                     menu.showContextMenu();
                     menu.setShowCellContextMenus(true);
                 }
             });
-            
+
             treeGrid.addLeafContextClickHandler(new LeafContextClickHandler() {
+
                 @Override
                 public void onLeafContextClick(LeafContextClickEvent event) {
-                    IndSystemContentNode node =(IndSystemContentNode)event.getLeaf();
+                    IndSystemContentNode node = (IndSystemContentNode) event.getLeaf();
                     Menu menu = buildContextMenuLeaf(node);
                     menu.showContextMenu();
                 }
             });
-            
-            
+
             treeGrid.addFolderClickHandler(new FolderClickHandler() {
+
                 @Override
                 public void onFolderClick(FolderClickEvent event) {
-                    IndSystemContentNode node = (IndSystemContentNode)event.getFolder();
+                    IndSystemContentNode node = (IndSystemContentNode) event.getFolder();
                     if (node.isDimension()) {
                         SystemStructurePanel.this.selectDimension(node.getSource().getDimension());
                     }
                 }
             });
             treeGrid.addLeafClickHandler(new LeafClickHandler() {
+
                 @Override
                 public void onLeafClick(LeafClickEvent event) {
-                    IndSystemContentNode node = (IndSystemContentNode)event.getLeaf();
+                    IndSystemContentNode node = (IndSystemContentNode) event.getLeaf();
                     if (node.isIndicator()) {
                         SystemStructurePanel.this.selectIndicatorInstance(node.getSource().getIndicatorInstance());
                     }
                 }
             });
-            
-            treeGrid.addFolderDropHandler(new FolderDropHandler() {
-				@Override
-				public void onFolderDrop(FolderDropEvent event) {
-					TreeNode dropFolder = event.getFolder();
-					TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
-					int position = event.getIndex(); // Absolute position
-					if (isDroppable(dropFolder)) {
-	                    TreeNode[] siblings = treeGrid.getData().getChildren(dropFolder);
-					    
-					    // We find out position of node under dropFolder
-					    int relPosition = position;        // Use to update position
-					    int pos = -1;
-				        for (int i = 0; i < siblings.length; i++) {
-				            if (siblings[i] == droppedNode) {
-				                pos = i;
-				            }
-				        }
-				        if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
-				            relPosition--;
-				        }
-					    
-						ElementLevelDto level = ((IndSystemContentNode)droppedNode).getSource();
-						// Get drop folder, finding out target dimension/root 
-						IndSystemContentNode nodeParent = (IndSystemContentNode)(dropFolder);
-						String targetUuid = nodeParent.isRoot() ? null : nodeParent.getId();
-						
-						Long order = relPosition + 1L; // Relative position starts at 0, order at 1
 
-						uiHandlers.moveSystemStructureNodes(system.getUuid(), targetUuid, level, order);
-					}
-					event.cancel();
-				}
-			});
-            
+            treeGrid.addFolderDropHandler(new FolderDropHandler() {
+
+                @Override
+                public void onFolderDrop(FolderDropEvent event) {
+                    TreeNode dropFolder = event.getFolder();
+                    TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
+                    int position = event.getIndex(); // Absolute position
+                    if (isDroppable(dropFolder)) {
+                        TreeNode[] siblings = treeGrid.getData().getChildren(dropFolder);
+
+                        // We find out position of node under dropFolder
+                        int relPosition = position; // Use to update position
+                        int pos = -1;
+                        for (int i = 0; i < siblings.length; i++) {
+                            if (siblings[i] == droppedNode) {
+                                pos = i;
+                            }
+                        }
+                        if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
+                            relPosition--;
+                        }
+
+                        ElementLevelDto level = ((IndSystemContentNode) droppedNode).getSource();
+                        // Get drop folder, finding out target dimension/root
+                        IndSystemContentNode nodeParent = (IndSystemContentNode) (dropFolder);
+                        String targetUuid = nodeParent.isRoot() ? null : nodeParent.getId();
+
+                        Long order = relPosition + 1L; // Relative position starts at 0, order at 1
+
+                        uiHandlers.moveSystemStructureNodes(system.getUuid(), targetUuid, level, order);
+                    }
+                    event.cancel();
+                }
+            });
+
             treeGrid.addFolderOpenedHandler(new FolderOpenedHandler() {
+
                 // This method is used to save the open state
-				@Override
-				public void onFolderOpened(FolderOpenedEvent event) {
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-						@Override
-						public void execute() {
-							treeOpenState = treeGrid.getOpenState();
-						}
-					});
-				}
-			});
-            
+                @Override
+                public void onFolderOpened(FolderOpenedEvent event) {
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                        @Override
+                        public void execute() {
+                            treeOpenState = treeGrid.getOpenState();
+                        }
+                    });
+                }
+            });
+
             treeGrid.addFolderClosedHandler(new FolderClosedHandler() {
-				@Override
-				public void onFolderClosed(FolderClosedEvent event) {
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-						
-						@Override
-						public void execute() {
-							treeOpenState = treeGrid.getOpenState();
-						}
-					});
-				}
-			});
+
+                @Override
+                public void onFolderClosed(FolderClosedEvent event) {
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                        @Override
+                        public void execute() {
+                            treeOpenState = treeGrid.getOpenState();
+                        }
+                    });
+                }
+            });
         }
-       
+
         private boolean isDroppable(TreeNode dropFolder) {
-        	if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) { // Replacing false root is not allowed
-				return false;
-			}
-        	return true;
+            if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) { // Replacing false root is not allowed
+                return false;
+            }
+            return true;
         }
-        
+
         private Menu buildContextMenuNode(IndSystemContentNode node) {
             final IndSystemContentNode selNode = node;
             Menu menu = new Menu();
             MenuItem item3 = new MenuItem(getConstants().systemStrucNewDim());
             item3.addClickHandler(new ClickHandler() {
+
                 @Override
                 public void onClick(MenuItemClickEvent event) {
                     if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
@@ -540,138 +551,142 @@ public class SystemStructurePanel extends HLayout {
             });
             MenuItem item4 = new MenuItem(getConstants().systemStrucNewIndInstance());
             item4.addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(MenuItemClickEvent event) {
-				    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+
+                @Override
+                public void onClick(MenuItemClickEvent event) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
                         // If system is PUBLISH or ARCHIVED, dimension cannot be created
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
-				    } else {
-				        // Create a new indicator instance
-				        if (selNode == falseRoot)
-				            SystemStructurePanel.this.selectDimForCreate = null;
-				        else {
-				            SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
-				        }
-				        SystemStructurePanel.this.showIndicInstanceCreatePanel();
-				    }
-				}
-			});
-            
+                    } else {
+                        // Create a new indicator instance
+                        if (selNode == falseRoot)
+                            SystemStructurePanel.this.selectDimForCreate = null;
+                        else {
+                            SystemStructurePanel.this.selectDimForCreate = selNode.getSource().getDimension();
+                        }
+                        SystemStructurePanel.this.showIndicInstanceCreatePanel();
+                    }
+                }
+            });
+
             if (node.isDimension()) {
                 MenuItem item1 = new MenuItem(getConstants().systemStrucDimDelete());
                 item1.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(MenuItemClickEvent event) {
-					    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
-	                        // If system is PUBLISH or ARCHIVED, cannot be deleted
-	                        final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
-	                        window.show();
-	                    } else {
-    					    DimensionDto dim = selNode.getSource().getDimension();
-    						selectedDimension = dim;
-    						dimensionDeleteConfirm.show();
-	                    }
-					}
-				});
+
+                    @Override
+                    public void onClick(MenuItemClickEvent event) {
+                        if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                            // If system is PUBLISH or ARCHIVED, cannot be deleted
+                            final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
+                            window.show();
+                        } else {
+                            DimensionDto dim = selNode.getSource().getDimension();
+                            selectedDimension = dim;
+                            dimensionDeleteConfirm.show();
+                        }
+                    }
+                });
                 menu.addItem(item1);
             }
-            
+
             menu.addItem(item3);
             menu.addItem(item4);
             return menu;
         }
-        
+
         private Menu buildContextMenuLeaf(IndSystemContentNode node) {
             final IndSystemContentNode selNode = node;
             Menu menu = new Menu();
             MenuItem item1 = new MenuItem(getConstants().systemStrucIndInstanceDelete());
             item1.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(MenuItemClickEvent event) {
-				    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+
+                @Override
+                public void onClick(MenuItemClickEvent event) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
                         // If system is PUBLISH or ARCHIVED, cannot be deleted
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
                     } else {
-    					IndicatorInstanceDto instance = selNode.getSource().getIndicatorInstance();
-    					selectedIndInstance = instance;
-    					indInstanceDeleteConfirm.show();
+                        IndicatorInstanceDto instance = selNode.getSource().getIndicatorInstance();
+                        selectedIndInstance = instance;
+                        indInstanceDeleteConfirm.show();
                     }
-				}
-			});
+                }
+            });
             menu.addItem(item1);
             return menu;
         }
-        
-	}
-	
-	private class DimensionPanel extends VLayout {
-	    
-		private InternationalMainFormLayout mainFormLayout;
-		
-		private GroupDynamicForm form;
-		private GroupDynamicForm editForm;
-		
-		private boolean createMode;
-		
+
+    }
+
+    private class DimensionPanel extends VLayout {
+
+        private InternationalMainFormLayout mainFormLayout;
+
+        private GroupDynamicForm            form;
+        private GroupDynamicForm            editForm;
+
+        private boolean                     createMode;
+
         public DimensionPanel() {
             mainFormLayout = new InternationalMainFormLayout();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle());
             mainFormLayout.setMargin(0);
-            
+
             createViewForm();
             createEditForm();
-            
+
             this.addMember(mainFormLayout);
             // Init
             createMode = false;
             bindEvents();
         }
-        
-        public void onDimensionSaved(DimensionDto dimensionDto) {
-			mainFormLayout.setViewMode();
-			setDimension(dimensionDto);
-		}
-        
-//        public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-//            selectDimension(dimensionDto, true);
-//        }
 
-		private void bindEvents() {
+        public void onDimensionSaved(DimensionDto dimensionDto) {
+            mainFormLayout.setViewMode();
+            setDimension(dimensionDto);
+        }
+
+        // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
+        // selectDimension(dimensionDto, true);
+        // }
+
+        private void bindEvents() {
             // Remove handler from edit button
             mainFormLayout.getEditHandlerRegistration().removeHandler();
             mainFormLayout.getEditToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         // Create a new version of the indicator
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
-//                        window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-//                            @Override
-//                            public void onClick(ClickEvent event) {
-//                                window.destroy();
-//                                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
-//                                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-//                                    @Override
-//                                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-//                                        if (versionWindow.validateForm()) {
-//                                            uiHandlers.versioningIndicatorsSystemByDimension(system.getUuid(), versionWindow.getSelectedVersion());
-//                                            versionWindow.destroy();
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                        });
+                        // window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                        // @Override
+                        // public void onClick(ClickEvent event) {
+                        // window.destroy();
+                        // final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+                        // versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                        // @Override
+                        // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        // if (versionWindow.validateForm()) {
+                        // uiHandlers.versioningIndicatorsSystemByDimension(system.getUuid(), versionWindow.getSelectedVersion());
+                        // versionWindow.destroy();
+                        // }
+                        // }
+                        // });
+                        // }
+                        // });
                     } else {
                         setEditionMode();
                     }
                 }
             });
-		    
+
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (editForm.validate(false)) {
@@ -685,24 +700,26 @@ public class SystemStructurePanel extends HLayout {
                     }
                 }
             });
-           	mainFormLayout.getTranslateToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
-					form.setTranslationsShowed(translationsShowed);
-					editForm.setTranslationsShowed(translationsShowed);
-				}
-			});
-           	mainFormLayout.getCancelToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-           	    @Override
-           	    public void onClick(ClickEvent event) {
-           	        if (createMode) {
-           	            DimensionPanel.this.hide();
-           	        }
-           	    }
-           	});
+            mainFormLayout.getTranslateToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
+                    form.setTranslationsShowed(translationsShowed);
+                    editForm.setTranslationsShowed(translationsShowed);
+                }
+            });
+            mainFormLayout.getCancelToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (createMode) {
+                        DimensionPanel.this.hide();
+                    }
+                }
+            });
         }
-        
+
         public void setDimension(DimensionDto dimensionDto) {
             createMode = dimensionDto.getUuid() == null;
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle() + ": " + InternationalStringUtils.getLocalisedString(dimensionDto.getTitle()));
@@ -710,41 +727,41 @@ public class SystemStructurePanel extends HLayout {
             setDimensionEdit(dimensionDto);
             this.markForRedraw();
         }
-        
+
         public void resetTitle() {
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucDimTitle());
         }
-        
+
         public void setEditionMode() {
             mainFormLayout.setEditionMode();
         }
-        
+
         public void clearForms() {
             createMode = true;
-        	form.clearValues();
-        	editForm.clearValues();
+            form.clearValues();
+            editForm.clearValues();
         }
-        
+
         private DimensionDto fillDimension(DimensionDto dim) {
-            dim.setTitle((InternationalStringDto)(editForm.getValue(DimensionDS.TITLE)));
+            dim.setTitle((InternationalStringDto) (editForm.getValue(DimensionDS.TITLE)));
             return dim;
         }
-        
+
         private void setDimensionView(DimensionDto dim) {
-        	form.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+            form.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
         }
-        
+
         private void setDimensionEdit(DimensionDto dim) {
-        	editForm.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
+            editForm.setValue(DimensionDS.TITLE, RecordUtils.getInternationalStringRecord(dim.getTitle()));
         }
-        
+
         private void createViewForm() {
-        	form = new GroupDynamicForm(getConstants().systemStrucDimTitle());
+            form = new GroupDynamicForm(getConstants().systemStrucDimTitle());
             ViewMultiLanguageTextItem name = new ViewMultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName());
             form.setFields(name);
             mainFormLayout.addViewCanvas(form);
         }
-        
+
         private void createEditForm() {
             editForm = new GroupDynamicForm(getConstants().systemStrucDimTitle());
             MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName());
@@ -752,73 +769,74 @@ public class SystemStructurePanel extends HLayout {
             editForm.setFields(name);
             mainFormLayout.addEditionCanvas(editForm);
         }
-	}
-	
-	private class IndicatorInstancePanel extends VLayout {
-	    
-        private InternationalMainFormLayout mainFormLayout;
-        private GroupDynamicForm form; 
-        private GroupDynamicForm editionForm;
-        private boolean createMode;
-        
+    }
+
+    private class IndicatorInstancePanel extends VLayout {
+
+        private InternationalMainFormLayout      mainFormLayout;
+        private GroupDynamicForm                 form;
+        private GroupDynamicForm                 editionForm;
+        private boolean                          createMode;
+
         private List<GeographicalGranularityDto> geographicalGranularityDtos;
-        
-        
+
         public IndicatorInstancePanel() {
             mainFormLayout = new InternationalMainFormLayout();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
             mainFormLayout.setMargin(0);
-            
+
             createViewForm();
             createEditForm();
-            
+
             this.addMember(mainFormLayout);
             // Init
             createMode = false;
             bindEvents();
         }
-        
+
         public void onIndicatorInstanceSaved(IndicatorInstanceDto indicatorInstance) {
-			mainFormLayout.setViewMode();
-			setIndicatorInstance(indicatorInstance);
-		}
-        
-//        public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-//            selectIndicatorInstance(indicatorInstanceDto, true);
-//        }
-        
+            mainFormLayout.setViewMode();
+            setIndicatorInstance(indicatorInstance);
+        }
+
+        // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
+        // selectIndicatorInstance(indicatorInstanceDto, true);
+        // }
+
         private void bindEvents() {
             // Remove handler from edit button
             mainFormLayout.getEditHandlerRegistration().removeHandler();
             mainFormLayout.getEditToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
-//                        window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-//                            @Override
-//                            public void onClick(ClickEvent event) {
-//                                window.destroy();
-//                                final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
-//                                versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-//                                    @Override
-//                                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-//                                        if (versionWindow.validateForm()) {
-//                                            uiHandlers.versioningIndicatorsSystemByInstance(system.getUuid(), versionWindow.getSelectedVersion());
-//                                            versionWindow.destroy();
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                        });
+                        // window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                        // @Override
+                        // public void onClick(ClickEvent event) {
+                        // window.destroy();
+                        // final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
+                        // versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+                        // @Override
+                        // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        // if (versionWindow.validateForm()) {
+                        // uiHandlers.versioningIndicatorsSystemByInstance(system.getUuid(), versionWindow.getSelectedVersion());
+                        // versionWindow.destroy();
+                        // }
+                        // }
+                        // });
+                        // }
+                        // });
                     } else {
                         setEditionMode();
                     }
                 }
             });
-            
+
             mainFormLayout.getSave().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (editionForm.validate(false)) {
@@ -832,16 +850,18 @@ public class SystemStructurePanel extends HLayout {
                     }
                 }
             });
-           
-        	mainFormLayout.getTranslateToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					boolean translationsShowed =  mainFormLayout.getTranslateToolStripButton().isSelected();
-					form.setTranslationsShowed(translationsShowed);
-					editionForm.setTranslationsShowed(translationsShowed);
-				}
-			});
+
+            mainFormLayout.getTranslateToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
+                    form.setTranslationsShowed(translationsShowed);
+                    editionForm.setTranslationsShowed(translationsShowed);
+                }
+            });
             mainFormLayout.getCancelToolStripButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
                 @Override
                 public void onClick(ClickEvent event) {
                     if (createMode) {
@@ -850,190 +870,198 @@ public class SystemStructurePanel extends HLayout {
                 }
             });
         }
-        
+
         public void resetTitle() {
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
         }
-        
+
         public void setEditionMode() {
             mainFormLayout.setEditionMode();
         }
-        
+
         public void clearForms() {
             createMode = true;
-        	form.clearValues();
-        	editionForm.clearValues();
+            form.clearValues();
+            editionForm.clearValues();
         }
-        
+
         private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
-        	indicatorInstanceDto.setTitle((InternationalStringDto)(editionForm.getValue(IndicatorInstanceDS.TITLE)));
-        	indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(editionForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
-        	indicatorInstanceDto.setTimeGranularity(editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(editionForm.getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
-        	indicatorInstanceDto.setTimeValue(editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
-        	indicatorInstanceDto.setGeographicalGranularityUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).isVisible() ? CommonUtils.getUuidString(editionForm.getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)) : null);
-        	indicatorInstanceDto.setGeographicalValueUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue()) : null);
-        	return indicatorInstanceDto;
+            indicatorInstanceDto.setTitle((InternationalStringDto) (editionForm.getValue(IndicatorInstanceDS.TITLE)));
+            indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(editionForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
+            indicatorInstanceDto.setTimeGranularity(editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(editionForm
+                    .getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
+            indicatorInstanceDto.setTimeValue(editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
+            indicatorInstanceDto.setGeographicalGranularityUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).isVisible() ? CommonUtils.getUuidString(editionForm
+                    .getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)) : null);
+            indicatorInstanceDto.setGeographicalValueUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) editionForm
+                    .getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue()) : null);
+            return indicatorInstanceDto;
         }
-        
+
         public void setIndicatorInstance(IndicatorInstanceDto indInst) {
             createMode = indInst.getUuid() == null;
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle() + ": " + InternationalStringUtils.getLocalisedString(indInst.getTitle()));
-            //We need indicators in order to fill select item
+            // We need indicators in order to fill select item
             uiHandlers.retrieveIndicators();
             setIndicatorInstanceView(indInst);
             setIndicatorInstanceEdit(indInst);
         }
-        
+
         public void setIndicators(List<IndicatorDto> indicators) {
-            LinkedHashMap<String,String> indicatorsMap = CommonUtils.getIndicatorsValueMap(indicators);
-            ((SelectItem)editionForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
+            LinkedHashMap<String, String> indicatorsMap = CommonUtils.getIndicatorsValueMap(indicators);
+            ((SelectItem) editionForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
         }
 
         public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
             this.geographicalGranularityDtos = geographicalGranularityDtos;
             LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
-            ((SelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)).setValueMap(CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos));
-            ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularitiesValueMap(valueMap);
+            ((SelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)).setValueMap(CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos));
+            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularitiesValueMap(valueMap);
         }
-        
+
         public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-            ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
         }
-        
+
         public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
             // View form
-            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) :  new String());
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE,
+                    geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) : new String());
             // Edition form
             if (geographicalValueDto != null) {
-                ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
+                ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
                 // Make sure value map is set properly
                 uiHandlers.retrieveGeographicalValues(geographicalValueDto.getGranularityUuid());
             }
         }
-        
+
         private void setIndicator(IndicatorDto indicator) {
             form.setValue(IndicatorInstanceDS.IND_TITLE, indicator.getCode() + " - " + getLocalisedString(indicator.getTitle()));
         }
-        
+
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
-        	form.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        	
-        	form.setValue(IndicatorInstanceDS.IND_TITLE, new String()); // Indicator title set in setIndicator method 
-        	uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());
-        	
-        	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
-        	form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
-        	form.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTimeGranularity() != null ? (getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + indInst.getTimeGranularity().getName())) : "");
-        	form.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
-        	
-        	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
-        	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE  + "-text", getGeoSelectionType(indInst));
-        	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
-        	
-        	// Geographical value set in setGeographicalValue method
-        	form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
-        	if (indInst.getGeographicalValueUuid() != null && !indInst.getGeographicalValueUuid().isEmpty()) {
+            form.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+
+            form.setValue(IndicatorInstanceDS.IND_TITLE, new String()); // Indicator title set in setIndicator method
+            uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());
+
+            form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
+            form.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
+            form.setValue(IndicatorInstanceDS.TIME_GRANULARITY,
+                    indInst.getTimeGranularity() != null ? (getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + indInst.getTimeGranularity().getName())) : "");
+            form.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
+
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getGeoSelectionType(indInst));
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
+
+            // Geographical value set in setGeographicalValue method
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
+            if (indInst.getGeographicalValueUuid() != null && !indInst.getGeographicalValueUuid().isEmpty()) {
                 uiHandlers.retrieveGeographicalValue(indInst.getGeographicalValueUuid());
             }
-        	
-        	form.markForRedraw();
+
+            form.markForRedraw();
         }
-        
+
         private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
-        	editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        	editionForm.setValue(IndicatorInstanceDS.IND_UUID, indInst.getIndicatorUuid());
-        	
-        	editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
-        	editionForm.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTimeGranularity() != null ? indInst.getTimeGranularity().toString() : "");
-        	editionForm.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
-        
-        	editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
-        	editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, indInst.getGeographicalGranularityUuid());
-        	((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValue(indInst.getGeographicalValueUuid());
+            editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+            editionForm.setValue(IndicatorInstanceDS.IND_UUID, indInst.getIndicatorUuid());
+
+            editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
+            editionForm.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTimeGranularity() != null ? indInst.getTimeGranularity().toString() : "");
+            editionForm.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
+
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, indInst.getGeographicalGranularityUuid());
+            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValue(indInst.getGeographicalValueUuid());
         }
-        
+
         private void createViewForm() {
             form = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
-            
+
             ViewMultiLanguageTextItem name = new ViewMultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
-            
+
             ViewTextItem indicatorNameItem = new ViewTextItem(IndicatorInstanceDS.IND_TITLE, getConstants().systemStrucIndInstanceIndicator());
-            
+
             // Time
-            
+
             ViewTextItem timeSelection = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
             timeSelection.setVisible(false);
-            
+
             ViewTextItem timeSelectionText = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getConstants().instanceTimeSelection());
-            
+
             ViewTextItem timeGranularityItem = new ViewTextItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
             timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction());
-            
+
             ViewTextItem timeValue = new ViewTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
             timeValue.setShowIfCondition(getTimeValueIfFunction());
-            
+
             // Geographic
-            
+
             ViewTextItem geographicSelection = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
             geographicSelection.setVisible(false);
-            
+
             ViewTextItem geographicSelectionText = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getConstants().instanceGeographicalSelection());
-            
+
             ViewTextItem geoGranularity = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
             geoGranularity.setShowIfCondition(getGeoGranularityIfFunction());
-            
+
             ViewTextItem geoValue = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
             geoValue.setShowIfCondition(getGeoValueIfFunction());
-            
-            form.setFields(name,indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity, geoValue);
+
+            form.setFields(name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity, geoValue);
             mainFormLayout.addViewCanvas(form);
         }
-        
+
         private void createEditForm() {
             editionForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
-            
+
             MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
             name.setRequired(true);
-            
+
             RequiredSelectItem indicatorsItem = new RequiredSelectItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
-            
+
             // Time
-            
+
             RequiredSelectItem timeSelectionType = new RequiredSelectItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
             timeSelectionType.setValueMap(CommonUtils.getTimeSelectionTypeMap());
             timeSelectionType.addChangedHandler(new ChangedHandler() {
+
                 @Override
                 public void onChanged(ChangedEvent event) {
                     editionForm.markForRedraw();
                 }
             });
-            
+
             RequiredSelectItem timeGranularityItem = new RequiredSelectItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
             timeGranularityItem.setValueMap(CommonUtils.getTimeGranularityValueMap());
             timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction());
-            
+
             RequiredTextItem timeValue = new RequiredTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
             timeValue.setShowIfCondition(getTimeValueIfFunction());
             timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
-            
+
             // Geographical
-            
+
             SelectItem geographicalSelectionType = new SelectItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
             geographicalSelectionType.setValueMap(CommonUtils.getGeographicalSelectionTypeValueMap());
             geographicalSelectionType.addChangedHandler(new ChangedHandler() {
+
                 @Override
                 public void onChanged(ChangedEvent event) {
                     editionForm.markForRedraw();
                 }
             });
-            
+
             RequiredSelectItem geographicalGranularity = new RequiredSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
             geographicalGranularity.setShowIfCondition(getGeoGranularityIfFunction());
-            
+
             final GeographicalSelectItem geographicalValue = new GeographicalSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
             geographicalValue.setRequired(true);
             geographicalValue.setShowIfCondition(getGeoValueIfFunction());
             geographicalValue.getGeoGranularity().addChangedHandler(new ChangedHandler() {
+
                 @Override
                 public void onChanged(ChangedEvent event) {
                     // Clear geographical value
@@ -1045,15 +1073,16 @@ public class SystemStructurePanel extends HLayout {
                     }
                 }
             });
-            
+
             editionForm.setFields(name, indicatorsItem, timeSelectionType, timeGranularityItem, timeValue, geographicalSelectionType, geographicalGranularity, geographicalValue);
             mainFormLayout.addEditionCanvas(editionForm);
         }
-        
+
         // Time functions
-        
+
         private FormItemIfFunction getTimeGranularityIfFunction() {
             return new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     String type = form.getValueAsString(IndicatorInstanceDS.TIME_SELECTION_TYPE);
@@ -1061,9 +1090,10 @@ public class SystemStructurePanel extends HLayout {
                 }
             };
         }
-        
+
         private FormItemIfFunction getTimeValueIfFunction() {
             return new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     String type = form.getValueAsString(IndicatorInstanceDS.TIME_SELECTION_TYPE);
@@ -1071,7 +1101,7 @@ public class SystemStructurePanel extends HLayout {
                 }
             };
         }
-        
+
         private String getTimeSelectionType(IndicatorInstanceDto indicatorInstanceDto) {
             TimeSelectionTypeEnum type = getTimeSelectionTypeEnum(indicatorInstanceDto);
             if (type != null) {
@@ -1079,20 +1109,21 @@ public class SystemStructurePanel extends HLayout {
             }
             return new String();
         }
-        
+
         private TimeSelectionTypeEnum getTimeSelectionTypeEnum(IndicatorInstanceDto indicatorInstanceDto) {
             if (indicatorInstanceDto.getTimeValue() != null && !indicatorInstanceDto.getTimeValue().isEmpty()) {
                 return TimeSelectionTypeEnum.VALUE;
-            } else if (indicatorInstanceDto.getTimeGranularity() != null) { 
+            } else if (indicatorInstanceDto.getTimeGranularity() != null) {
                 return TimeSelectionTypeEnum.GRANULARITY;
             }
             return null;
         }
-        
+
         // Geographical functions
-        
+
         private FormItemIfFunction getGeoGranularityIfFunction() {
             return new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     String type = form.getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE);
@@ -1100,9 +1131,10 @@ public class SystemStructurePanel extends HLayout {
                 }
             };
         }
-        
+
         private FormItemIfFunction getGeoValueIfFunction() {
             return new FormItemIfFunction() {
+
                 @Override
                 public boolean execute(FormItem item, Object value, DynamicForm form) {
                     String type = form.getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE);
@@ -1110,7 +1142,7 @@ public class SystemStructurePanel extends HLayout {
                 }
             };
         }
-        
+
         private String getGeoSelectionType(IndicatorInstanceDto indicatorInstanceDto) {
             GeographicalSelectionTypeEnum type = getGeographicalSelectionTypeEnum(indicatorInstanceDto);
             if (type != null) {
@@ -1118,7 +1150,7 @@ public class SystemStructurePanel extends HLayout {
             }
             return new String();
         }
-        
+
         private GeographicalSelectionTypeEnum getGeographicalSelectionTypeEnum(IndicatorInstanceDto indicatorInstanceDto) {
             if (indicatorInstanceDto.getGeographicalGranularityUuid() != null && !indicatorInstanceDto.getGeographicalGranularityUuid().isEmpty()) {
                 return GeographicalSelectionTypeEnum.GRANULARITY;
@@ -1127,7 +1159,7 @@ public class SystemStructurePanel extends HLayout {
             }
             return null;
         }
-        
+
         private String getGeographicalGranularityTitle(String uuid) {
             if (uuid != null && !uuid.isEmpty()) {
                 for (GeographicalGranularityDto dto : geographicalGranularityDtos) {
@@ -1138,7 +1170,7 @@ public class SystemStructurePanel extends HLayout {
             }
             return new String();
         }
-        
+
     }
 
 }

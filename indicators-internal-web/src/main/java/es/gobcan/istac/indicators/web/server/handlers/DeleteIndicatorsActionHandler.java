@@ -29,7 +29,7 @@ public class DeleteIndicatorsActionHandler extends AbstractActionHandler<DeleteI
     public DeleteIndicatorsResult execute(DeleteIndicatorsAction action, ExecutionContext context) throws ActionException {
         try {
             for (String uuid : action.getUuids()) {
-                indicatorsServiceFacade.deleteIndicator(ServiceContextHelper.getServiceContext(),uuid);
+                indicatorsServiceFacade.deleteIndicator(ServiceContextHelper.getServiceContext(), uuid);
             }
             return new DeleteIndicatorsResult();
         } catch (MetamacException e) {

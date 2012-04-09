@@ -16,13 +16,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
 
-
 @Component
 public class PublishIndicatorsSystemActionHandler extends AbstractActionHandler<PublishIndicatorsSystemAction, PublishIndicatorsSystemResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public PublishIndicatorsSystemActionHandler() {
         super(PublishIndicatorsSystemAction.class);
     }
@@ -39,7 +38,7 @@ public class PublishIndicatorsSystemActionHandler extends AbstractActionHandler<
 
     @Override
     public void undo(PublishIndicatorsSystemAction action, PublishIndicatorsSystemResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

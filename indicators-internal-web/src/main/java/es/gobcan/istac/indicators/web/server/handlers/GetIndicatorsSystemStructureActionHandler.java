@@ -20,8 +20,7 @@ public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHan
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public GetIndicatorsSystemStructureActionHandler() {
         super(GetIndicatorsSystemStructureAction.class);
     }

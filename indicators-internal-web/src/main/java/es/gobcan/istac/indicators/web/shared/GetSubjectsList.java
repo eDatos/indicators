@@ -7,11 +7,10 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
 
-
 @GenDispatch(isSecure = false)
 public class GetSubjectsList {
 
     @Out(1)
     List<SubjectDto> subjectDtos;
-    
+
 }

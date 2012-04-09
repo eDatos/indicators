@@ -16,17 +16,16 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 
-
 @Component
 public class ArchiveIndicatorActionHandler extends AbstractActionHandler<ArchiveIndicatorAction, ArchiveIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     public ArchiveIndicatorActionHandler() {
         super(ArchiveIndicatorAction.class);
     }
-    
+
     @Override
     public ArchiveIndicatorResult execute(ArchiveIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
@@ -39,7 +38,7 @@ public class ArchiveIndicatorActionHandler extends AbstractActionHandler<Archive
 
     @Override
     public void undo(ArchiveIndicatorAction action, ArchiveIndicatorResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

@@ -20,8 +20,7 @@ public class DeleteDimensionActionHandler extends AbstractActionHandler<DeleteDi
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public DeleteDimensionActionHandler() {
         super(DeleteDimensionAction.class);
     }
@@ -29,7 +28,7 @@ public class DeleteDimensionActionHandler extends AbstractActionHandler<DeleteDi
     @Override
     public DeleteDimensionResult execute(DeleteDimensionAction action, ExecutionContext context) throws ActionException {
         try {
-            indicatorsServiceFacade.deleteDimension(ServiceContextHelper.getServiceContext(),action.getDimensionUuid());
+            indicatorsServiceFacade.deleteDimension(ServiceContextHelper.getServiceContext(), action.getDimensionUuid());
             return new DeleteDimensionResult();
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

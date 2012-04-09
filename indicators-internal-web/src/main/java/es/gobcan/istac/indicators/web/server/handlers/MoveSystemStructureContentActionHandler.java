@@ -21,8 +21,7 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public MoveSystemStructureContentActionHandler() {
         super(MoveSystemStructureContentAction.class);
     }
@@ -47,5 +46,5 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
     public void undo(MoveSystemStructureContentAction action, MoveSystemStructureContentResult result, ExecutionContext context) throws ActionException {
 
     }
-    
+
 }

@@ -18,7 +18,6 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 
-
 @Component
 public class GetDataSourcesListActionHandler extends AbstractActionHandler<GetDataSourcesListAction, GetDataSourcesListResult> {
 
@@ -41,7 +40,7 @@ public class GetDataSourcesListActionHandler extends AbstractActionHandler<GetDa
 
     @Override
     public void undo(GetDataSourcesListAction action, GetDataSourcesListResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

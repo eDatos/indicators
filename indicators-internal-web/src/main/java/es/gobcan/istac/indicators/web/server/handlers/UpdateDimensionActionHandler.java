@@ -21,8 +21,7 @@ public class UpdateDimensionActionHandler extends AbstractActionHandler<UpdateDi
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    
+
     public UpdateDimensionActionHandler() {
         super(UpdateDimensionAction.class);
     }

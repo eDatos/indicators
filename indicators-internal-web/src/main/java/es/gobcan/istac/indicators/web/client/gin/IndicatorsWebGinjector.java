@@ -14,16 +14,15 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 
-
-
 @GinModules({DispatchAsyncModule.class, ClientModule.class})
-public interface IndicatorsWebGinjector  extends Ginjector {
-	PlaceManager getPlaceManager();
-	EventBus getEventBus();
-	
-	Provider<MainPagePresenter> getMainPagePresenter();
-	AsyncProvider<SystemListPresenter> getSystemListPresenter();
-	AsyncProvider<SystemPresenter> getSystemPresenter();
-	AsyncProvider<IndicatorListPresenter> getIndicatorListPresenter();
-	AsyncProvider<IndicatorPresenter> getIndicatorPresenter();
+public interface IndicatorsWebGinjector extends Ginjector {
+
+    PlaceManager getPlaceManager();
+    EventBus getEventBus();
+
+    Provider<MainPagePresenter> getMainPagePresenter();
+    AsyncProvider<SystemListPresenter> getSystemListPresenter();
+    AsyncProvider<SystemPresenter> getSystemPresenter();
+    AsyncProvider<IndicatorListPresenter> getIndicatorListPresenter();
+    AsyncProvider<IndicatorPresenter> getIndicatorPresenter();
 }

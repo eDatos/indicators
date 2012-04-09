@@ -7,10 +7,10 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
 
-@GenDispatch(isSecure=false)
+@GenDispatch(isSecure = false)
 public class GetGeographicalGranularities {
 
     @Out(1)
     List<GeographicalGranularityDto> geographicalGranularityDtos;
-    
+
 }

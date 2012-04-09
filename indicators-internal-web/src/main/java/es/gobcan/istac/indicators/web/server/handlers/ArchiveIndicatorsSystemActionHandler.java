@@ -16,7 +16,6 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 
-
 @Component
 public class ArchiveIndicatorsSystemActionHandler extends AbstractActionHandler<ArchiveIndicatorsSystemAction, ArchiveIndicatorsSystemResult> {
 
@@ -39,7 +38,7 @@ public class ArchiveIndicatorsSystemActionHandler extends AbstractActionHandler<
 
     @Override
     public void undo(ArchiveIndicatorsSystemAction action, ArchiveIndicatorsSystemResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

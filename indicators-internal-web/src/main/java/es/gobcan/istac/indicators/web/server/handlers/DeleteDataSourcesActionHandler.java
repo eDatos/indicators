@@ -15,7 +15,6 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
 
-
 @Component
 public class DeleteDataSourcesActionHandler extends AbstractActionHandler<DeleteDataSourcesAction, DeleteDataSourcesResult> {
 
@@ -36,12 +35,12 @@ public class DeleteDataSourcesActionHandler extends AbstractActionHandler<Delete
             }
         }
         return new DeleteDataSourcesResult();
-        
+
     }
 
     @Override
     public void undo(DeleteDataSourcesAction action, DeleteDataSourcesResult result, ExecutionContext context) throws ActionException {
-        
+
     }
 
 }

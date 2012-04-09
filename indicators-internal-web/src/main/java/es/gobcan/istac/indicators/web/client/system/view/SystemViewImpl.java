@@ -28,103 +28,104 @@ import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
-	private SystemUiHandler uiHandlers;
-	private VLayout panel;
-	private Label indSysLabel;
-	private TabSet tabSet;
-	private Tab generalTab;
-	private Tab structureTab;
-	
-	//Panels
-	private SystemGeneralPanel generalPanel;
-	private SystemStructurePanel structurePanel;
-	
-	
-	@Inject
-	public SystemViewImpl() {
-		this.structurePanel = new SystemStructurePanel();
-		this.generalPanel = new SystemGeneralPanel();
-		panel = new VLayout();
-		tabSet = new TabSet();
-		
-		indSysLabel = new Label();
-		indSysLabel.setAlign(Alignment.LEFT);
-		indSysLabel.setOverflow(Overflow.HIDDEN);
-		indSysLabel.setHeight(40);
-		indSysLabel.setStyleName("sectionTitle");
-		
-		generalTab = new Tab(getConstants().systemDetailGeneral());
-		generalTab.setPane(generalPanel);
-		
-		structureTab = new Tab(getConstants().systemDetailStructure());
-		structureTab.setPane(structurePanel);
-		
-		tabSet.addTab(generalTab);
-		tabSet.addTab(structureTab);
-		
-		panel.addMember(indSysLabel);
-		panel.addMember(tabSet);
-		
-		bindEvents();
-	}
-	
-	@Override
-	public void init() {
-		tabSet.selectTab(0);
-	}
-	
-	@Override
-	public Widget asWidget() {
-		return panel;
-	}
-	
-	private void bindEvents() {
-		structureTab.addTabSelectedHandler(new TabSelectedHandler() {
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				uiHandlers.retrieveSystemStructure();
-			}
-		});
-	}
-	
-	@Override
-	public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
-	    indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
-	    generalPanel.setIndicatorsSystem(indSystem);
-	    structurePanel.setIndicatorsSystem(indSystem);
-	}
-	
-	@Override
-	public void setIndicatorsSystemStructure(IndicatorsSystemDto indicatosSystem, IndicatorsSystemStructureDto structure) {
-		structurePanel.setIndicatorSystemStructure(indicatosSystem, structure);
-	}
-	
-	@Override
-	public void setIndicatorFromIndicatorInstance(IndicatorDto indicator) {
-	    structurePanel.setIndicatorFromIndicatorInstance(indicator);
-	}
-	
-	@Override
-	public void setIndicators(List<IndicatorDto> indicators) {
-	    structurePanel.setIndicators(indicators);
-	}
-	
-	@Override
-	public void setUiHandlers(SystemUiHandler uiHandlers) {
-		this.uiHandlers = uiHandlers;
-		this.structurePanel.setUiHandlers(uiHandlers);
-		this.generalPanel.setUiHandlers(uiHandlers);
-	}
-	
-	@Override
-	public void onDimensionSaved(DimensionDto dimension) {
-		structurePanel.onDimensionSaved(dimension);
-	}
-	
-	@Override
-	public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
-		structurePanel.onIndicatorInstanceSaved(instance);
-	}
+
+    private SystemUiHandler      uiHandlers;
+    private VLayout              panel;
+    private Label                indSysLabel;
+    private TabSet               tabSet;
+    private Tab                  generalTab;
+    private Tab                  structureTab;
+
+    // Panels
+    private SystemGeneralPanel   generalPanel;
+    private SystemStructurePanel structurePanel;
+
+    @Inject
+    public SystemViewImpl() {
+        this.structurePanel = new SystemStructurePanel();
+        this.generalPanel = new SystemGeneralPanel();
+        panel = new VLayout();
+        tabSet = new TabSet();
+
+        indSysLabel = new Label();
+        indSysLabel.setAlign(Alignment.LEFT);
+        indSysLabel.setOverflow(Overflow.HIDDEN);
+        indSysLabel.setHeight(40);
+        indSysLabel.setStyleName("sectionTitle");
+
+        generalTab = new Tab(getConstants().systemDetailGeneral());
+        generalTab.setPane(generalPanel);
+
+        structureTab = new Tab(getConstants().systemDetailStructure());
+        structureTab.setPane(structurePanel);
+
+        tabSet.addTab(generalTab);
+        tabSet.addTab(structureTab);
+
+        panel.addMember(indSysLabel);
+        panel.addMember(tabSet);
+
+        bindEvents();
+    }
+
+    @Override
+    public void init() {
+        tabSet.selectTab(0);
+    }
+
+    @Override
+    public Widget asWidget() {
+        return panel;
+    }
+
+    private void bindEvents() {
+        structureTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                uiHandlers.retrieveSystemStructure();
+            }
+        });
+    }
+
+    @Override
+    public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
+        indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
+        generalPanel.setIndicatorsSystem(indSystem);
+        structurePanel.setIndicatorsSystem(indSystem);
+    }
+
+    @Override
+    public void setIndicatorsSystemStructure(IndicatorsSystemDto indicatosSystem, IndicatorsSystemStructureDto structure) {
+        structurePanel.setIndicatorSystemStructure(indicatosSystem, structure);
+    }
+
+    @Override
+    public void setIndicatorFromIndicatorInstance(IndicatorDto indicator) {
+        structurePanel.setIndicatorFromIndicatorInstance(indicator);
+    }
+
+    @Override
+    public void setIndicators(List<IndicatorDto> indicators) {
+        structurePanel.setIndicators(indicators);
+    }
+
+    @Override
+    public void setUiHandlers(SystemUiHandler uiHandlers) {
+        this.uiHandlers = uiHandlers;
+        this.structurePanel.setUiHandlers(uiHandlers);
+        this.generalPanel.setUiHandlers(uiHandlers);
+    }
+
+    @Override
+    public void onDimensionSaved(DimensionDto dimension) {
+        structurePanel.onDimensionSaved(dimension);
+    }
+
+    @Override
+    public void onIndicatorInstanceSaved(IndicatorInstanceDto instance) {
+        structurePanel.onIndicatorInstanceSaved(instance);
+    }
 
     @Override
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
@@ -147,15 +148,14 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
         structurePanel.setIndicatorsSystem(indicatorSystem);
     }
 
-//    @Override
-//    public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-//        structurePanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
-//    }
+    // @Override
+    // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
+    // structurePanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
+    // }
 
-//    @Override
-//    public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-//        structurePanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
-//    }
-	
+    // @Override
+    // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
+    // structurePanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
+    // }
+
 }
-

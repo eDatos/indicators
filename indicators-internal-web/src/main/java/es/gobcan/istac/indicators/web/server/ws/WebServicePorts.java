@@ -5,11 +5,11 @@ import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatist
 public class WebServicePorts {
 
     private MetamacStatisticalOperationsInternalInterfaceV10 metamacStatisticalOperationsInternalInterface;
-    
+
     public MetamacStatisticalOperationsInternalInterfaceV10 getMetamacStatisticalOperationsInternalInterface() {
         return metamacStatisticalOperationsInternalInterface;
     }
-    
+
     public void setMetamacStatisticalOperationsInternalInterface(MetamacStatisticalOperationsInternalInterfaceV10 metamacStatisticalOperationsInternalInterface) {
         this.metamacStatisticalOperationsInternalInterface = metamacStatisticalOperationsInternalInterface;
     }

@@ -17,15 +17,15 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 @Component
 public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
 
-    private static final Logger log = LoggerFactory.getLogger(IndicatorsServiceWrapperImpl.class);
-    
+    private static final Logger     log = LoggerFactory.getLogger(IndicatorsServiceWrapperImpl.class);
+
     @Autowired
     private IndicatorsServiceFacade indicatorsService;
 
     @Deprecated
     @Override
     public IndicatorsSystemStructureDto retrieveIndicatorsSystemStructureByCode(ServiceContext ctx, String code) throws MetamacException {
-        IndicatorsSystemDto system = indicatorsService.retrieveIndicatorsSystemByCode(ctx,code,null);
+        IndicatorsSystemDto system = indicatorsService.retrieveIndicatorsSystemByCode(ctx, code, null);
         IndicatorsSystemStructureDto structure = null;
         if (!StringUtils.isEmpty(system.getUuid())) {
             structure = indicatorsService.retrieveIndicatorsSystemStructure(ctx, system.getUuid(), null);
@@ -40,7 +40,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
             log.info("Working in a system not persisted. Indicator with code " + indicatorsSystemDto.getCode() + " is going to be persisted");
             indicatorsSystemDto = indicatorsService.createIndicatorsSystem(ctx, indicatorsSystemDto);
         }
-        return indicatorsService.createDimension(ctx,indicatorsSystemDto.getUuid(), dimensionDto);
+        return indicatorsService.createDimension(ctx, indicatorsSystemDto.getUuid(), dimensionDto);
     }
 
     @Deprecated
@@ -50,7 +50,7 @@ public class IndicatorsServiceWrapperImpl implements IndicatorsServiceWrapper {
             log.info("Working without persisting. Indicator with code " + indicatorsSystemDto.getCode() + " is going to be persisted");
             indicatorsSystemDto = indicatorsService.createIndicatorsSystem(ctx, indicatorsSystemDto);
         }
-        return indicatorsService.createIndicatorInstance(ctx,indicatorsSystemDto.getUuid(), indicatorInstanceDto);
+        return indicatorsService.createIndicatorInstance(ctx, indicatorsSystemDto.getUuid(), indicatorInstanceDto);
     }
 
 }

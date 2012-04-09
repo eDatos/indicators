@@ -18,14 +18,12 @@ import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 
-
 @Component
 public class GetGeographicalGranularitiesActionHandler extends AbstractActionHandler<GetGeographicalGranularitiesAction, GetGeographicalGranularitiesResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
- 
-    
+
     public GetGeographicalGranularitiesActionHandler() {
         super(GetGeographicalGranularitiesAction.class);
     }
@@ -42,7 +40,7 @@ public class GetGeographicalGranularitiesActionHandler extends AbstractActionHan
 
     @Override
     public void undo(GetGeographicalGranularitiesAction action, GetGeographicalGranularitiesResult result, ExecutionContext context) throws ActionException {
-        
+
     }
-    
+
 }

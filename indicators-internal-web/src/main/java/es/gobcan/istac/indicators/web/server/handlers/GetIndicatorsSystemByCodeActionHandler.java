@@ -21,12 +21,11 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemByCodeAction, GetIndicatorsSystemByCodeResult> {
 
     @Autowired
-    private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
-    
-    
+
     public GetIndicatorsSystemByCodeActionHandler() {
         super(GetIndicatorsSystemByCodeAction.class);
     }
@@ -35,7 +34,7 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
     public GetIndicatorsSystemByCodeResult execute(GetIndicatorsSystemByCodeAction action, ExecutionContext context) throws ActionException {
         // Check if operation (indicators system) exists in the DB
         try {
-            // If exists, return indicators system 
+            // If exists, return indicators system
             // TODO Values should be updated with the operation ones????
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
             return new GetIndicatorsSystemByCodeResult(indicatorsSystemDto);
