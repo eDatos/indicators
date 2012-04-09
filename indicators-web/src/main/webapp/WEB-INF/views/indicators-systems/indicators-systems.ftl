@@ -5,16 +5,20 @@
 <script src="[@spring.url "/theme/js/libs/underscore-min.js" /]"></script>
 <script src="[@spring.url "/theme/js/libs/backbone-min.js" /]"></script>
 <script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
+<script src="[@spring.url "/theme/js/indicators/libs/strings.js" /]"></script>
 
 <div id="indicatorsSystems-search">
 	<input type="text" class="search">
 </div>
 
+<div class="clearfix" ></div>
+<div class="sep-20">&nbsp;</div>
+
 <div id="indicatorsSystems"></div>
 
 <script type="text/html" id="indicatorsSystemTmpl">
 	<div class="indicatorsSystems-item">
-		<p><strong>Code :</strong> <%= code %></p>
+		<p><%= code %></p>
 	</div>
 </script>
 
@@ -24,11 +28,7 @@
 
 <script>
 
-	function containsLowerCase(a, b){
-		return a.toLowerCase().indexOf(b.toLowerCase()) != -1;     
-	};
-
-	var IndicatorsSystems = Backbone.Collection.extend({
+	var IndicatorsSystemsCollection = Backbone.Collection.extend({
 		
 		initialize : function(){
 			_.bindAll(this);
@@ -40,7 +40,7 @@
 		},
 		
 		filtered : function() {			
-      		if(this.query && this.query.length > 0){
+      		if (this.query && this.query.length > 0) {
       			var query = this.query;
       			return this.filter(function(indicatorsSystem){ 
       				var code = indicatorsSystem.get('code');
@@ -70,7 +70,7 @@
 		
 		render : function(){
 			var filtered = this.collection.filtered();
-			if(filtered.length > 0){
+			if (filtered.length > 0){
 				var self = this;
 				//TODO esto se puede optimizar para no hacer una única inserción en el DOM
 				$(self.el).html("");
@@ -80,7 +80,7 @@
 					
 					$(self.el).append(subViewHtml); 
 				});
-			}else{
+			} else {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}
 		}
@@ -98,10 +98,10 @@
 	});
 	
 	$(function(){
-		var indicatorsSystems = new IndicatorsSystems(${indicatorsSystems});
-		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystems});
+		var indicatorsSystemsCollection = new IndicatorsSystemsCollection(${indicatorsSystems});
+		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystemsCollection});
 		indicatorsSystemsView.render();
-		new SearchView({el : $("#indicatorsSystems-search"), collection : indicatorsSystems});
+		new SearchView({el : $("#indicatorsSystems-search"), collection : indicatorsSystemsCollection});
 	});
 	
 </script>

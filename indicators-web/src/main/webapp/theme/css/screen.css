@@ -61,6 +61,10 @@ h1 {
 	float: left;
 }
 
+strong {
+	font-weight: bold;	
+}
+
 /*	##################################
    	BODY
 	################################## */
@@ -430,36 +434,22 @@ div #change-visual-element {
 }
 
 /*	##################################
-   	IMAGES	
+   	SEARCH
 	################################## */
-.img-user-add {
-	height: 16px;
-	width: 16px;
-	vertical-align: middle;
-}
 
-.img-user-add {
-	background-image: url("../../img-2/user--plus.png");
-}
-
-.search-result-list {
-	margin-top: 10px;
-	width: 69%;
-	float: left;
-}
-
-.facet-container {
-	margin-top: 10px;
-	width: 29%;
+.search {
+	display: inline-block;
 	float: right;
-}
-
-.facet-constraints li {
-	margin-top: 5px;
-}
-
-.facet-constraints a {
-	text-decoration: underline;
+	width: 210px;
+	height: 18px;
+	padding: 4px 14px;
+	margin-bottom: 9px;
+	/*font-size: 13px;*/
+	line-height: 18px;
+	color: #555;
+	border: 1px solid #CCC;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	border-radius: 14px;
 }
 
 .search-facet {
@@ -492,46 +482,9 @@ div #change-visual-element {
 	float: right;
 }
 
-/* ########################
-	Dataset
-   ######################## */
-#dataset-content-left {
-	width: 30%;
-}
-
-#dataset-content-left ul {
-	list-style: disc;
-	margin-left: 20px;
-	line-height: 21px;
-}
-
-#dataset-content-right {
-	width: 69%;
-	margin-left: 1%;
-	position: relative;
-}
-
-#dataset-categories {
-	margin: 10px 0px 10px 0px;
-}
-
-#dataset-description {
-	margin: 10px 15px 30px 15px;
-}
-
-.search {
-	display: inline-block;
-	width: 210px;
-	height: 18px;
-	padding: 4px 14px;
-	margin-bottom: 9px;
-	font-size: 13px;
-	line-height: 18px;
-	color: #555;
-	border: 1px solid #CCC;
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-	border-radius: 14px;
-}
+/*	##################################
+   	OTHERS
+	################################## */
 
 input:focus,textarea:focus {
 	box-shadow: 0 0 8px rgba(203, 115, 14, 0.6);
@@ -555,4 +508,25 @@ input:focus,textarea:focus {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	color: #C09853;
+}
+
+/*	##################################
+   	INDICATORS SYSTEMS
+	################################## */
+#indicatorsSystems {
+}
+
+.indicatorsSystems-item {
+	margin-bottom: 10px;
+	background-color: #F5F5F5;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.indicatorsSystems-item p{
+	margin: 5px;	
+}
+
+.indicatorsSystems-item a{
+	padding: 0;	
 }
