@@ -84,7 +84,7 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
 
     @Test
     public void testPopulateIndicatorData() throws Exception {
-        // TODO Auto-generated method stub
+        //Tests in IndicatorsDataServiceTest
     }    
     
     @Override

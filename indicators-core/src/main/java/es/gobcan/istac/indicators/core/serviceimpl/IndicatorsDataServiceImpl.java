@@ -122,72 +122,116 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Validation
         InvocationValidator.checkPopulateIndicatorData(indicatorUuid, indicatorVersionNumber, null);
 
+        DatasetRepositoryDto datasetRepoDto = null;
         try {
             IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
             List<DataSource> dataSources = getIndicatorsService().retrieveDataSourcesByIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-
-            DatasetRepositoryDto datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber);
-
+            
             // Transform list to process first load operations
-            List<DataOperation> dataOps = orderDataSourceForProcessing(dataSources);
+            List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
+            
+            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber);
 
-            // Data will be stored in a map, because the same json can be requested many times
-            Map<String, Data> dataMap = new HashMap<String, Data>();
+            // Data will be stored in a map (cache), because the same json can be requested many times
+            Map<String, Data> dataCache = new HashMap<String, Data>();
+            
+            //Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
-                // Load data
-                Data data = dataMap.get(dataOperation.getDataGpeUuid());
-                if (data == null) {
-                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataOperation.getDataGpeUuid());
-                    data = jsonToData(json);
-                    dataMap.put(dataOperation.getDataGpeUuid(), data);
-                }
-
-                // Get geographic and time values
-                List<String> geoValues = getGeographicValue(dataOperation, data);
-                List<String> timeValues = getTimeValue(dataOperation, data);
-
-                List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
-                for (String geoVal : geoValues) {
-                    for (String timeVal : timeValues) {
-                        // Map for querying the data from the json
-                        Map<String, String> varCodes = new HashMap<String, String>();
-
-                        // Only include geographical and time values if a variable has been selected
-                        if (dataOperation.hasGeographicalVariable()) {
-                            varCodes.put(dataOperation.getGeographicalVariable(), geoVal);
-                        }
-                        if (dataOperation.hasTimeVariable()) {
-                            varCodes.put(dataOperation.getTimeVariable(), timeVal);
-                        }
-                        for (DataSourceVariable var : dataOperation.getOtherVariables()) {
-                            varCodes.put(var.getVariable(), var.getCategory());
-                        }
-
-                        ObservationExtendedDto observation = null;
-                        if (RateDerivationMethodTypeEnum.LOAD.equals(dataOperation.getMethodType())) {
-                            observation = getObservationValue(dataOperation, data, varCodes, geoVal, timeVal);
-                        } else if (RateDerivationMethodTypeEnum.CALCULATE.equals(dataOperation.getMethodType())) {
-                            observation = getCalculatedValue(dataOperation, datasetRepoDto.getDatasetId(), geoVal, timeVal);
-                        } else {
-                            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
-                        }
-                        observations.add(observation);
-                    }
-                }
+                Data data = retrieveData(ctx, dataOperation, dataCache);
+                List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
-            String oldDatasetId = indicatorVersion.getDataRepositoryId();
-            indicatorVersion.setDataRepositoryId(datasetRepoDto.getDatasetId());
-            indicatorVersion.setDataRepositoryTableName(datasetRepoDto.getTableName());
-            getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
-            if (oldDatasetId != null) {
+            replaceDatasetRepository(ctx, indicatorVersion, datasetRepoDto);
+        } catch (MetamacException e) {
+            deleteDatasetRepositoryIfExists(datasetRepoDto);
+            throw e;
+        } catch (Exception e) {
+            deleteDatasetRepositoryIfExists(datasetRepoDto);
+            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
+        }
+    }
+    
+    private void replaceDatasetRepository(ServiceContext ctx, IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
+        String oldDatasetId = indicatorVersion.getDataRepositoryId();
+        indicatorVersion.setDataRepositoryId(datasetRepoDto.getDatasetId());
+        indicatorVersion.setDataRepositoryTableName(datasetRepoDto.getTableName());
+        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+        if (oldDatasetId != null) {
+            try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
+            } catch (ApplicationException e) {
+                //TODO: Log warning level showing that old data source could not be deleted
             }
+        }
+    }
+    
+    private List<ObservationExtendedDto> createObservationsFromDataOperationData(DataOperation dataOperation, Data data, String datasetId ) throws MetamacException {
+     // Get geographic and time values
+        List<String> geoValues = getGeographicValue(dataOperation, data);
+        List<String> timeValues = getTimeValue(dataOperation, data);
+        
+        List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
+        for (String geoVal : geoValues) {
+            for (String timeVal : timeValues) {
+                // Map for querying the data from the json
+                Map<String, String> varCodesForQuery = new HashMap<String, String>();
+
+                // Only include geographical and time values if a variable has been selected
+                if (dataOperation.hasGeographicalVariable()) {
+                    varCodesForQuery.put(dataOperation.getGeographicalVariable(), geoVal);
+                }
+                if (dataOperation.hasTimeVariable()) {
+                    varCodesForQuery.put(dataOperation.getTimeVariable(), timeVal);
+                }
+                for (DataSourceVariable var : dataOperation.getOtherVariables()) {
+                    varCodesForQuery.put(var.getVariable(), var.getCategory());
+                }
+
+                ObservationExtendedDto observation = null;
+                if (RateDerivationMethodTypeEnum.LOAD.equals(dataOperation.getMethodType())) {
+                    observation = getObservationValue(dataOperation, data, varCodesForQuery, geoVal, timeVal);
+                } else if (RateDerivationMethodTypeEnum.CALCULATE.equals(dataOperation.getMethodType())) {
+                    observation = getCalculatedValue(dataOperation, datasetId, geoVal, timeVal);
+                } else {
+                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
+                }
+                observations.add(observation);
+            }
+        }
+        return observations;
+    }
+    
+    private void deleteDatasetRepositoryIfExists(DatasetRepositoryDto datasetRepositoryDto) {
+        try {
+            if (datasetRepositoryDto != null && datasetRepositoryDto.getDatasetId() != null) {
+                datasetRepositoriesServiceFacade.deleteDatasetRepository(datasetRepositoryDto.getDatasetId());
+            }
+        } catch (ApplicationException e) {
+            //TODO: Log warning level showing that new failing data source could not be deleted
+        }
+    }
+    
+    /*
+     * Retrieve data from IndicatorDataProvider
+     * The data is not always asked to the service, sometimes the requested data is in the data cache.
+     */
+    private Data retrieveData(ServiceContext ctx, DataOperation dataOperation, Map<String,Data> dataCache) throws MetamacException {
+        try {
+            Data data = dataCache.get(dataOperation.getDataGpeUuid());
+            if (data == null) {
+                String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataOperation.getDataGpeUuid());
+                if (json == null) {
+                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataOperation.getDataGpeUuid(),dataOperation.getDataSourceUuid());
+                }
+                data = jsonToData(json);
+                dataCache.put(dataOperation.getDataGpeUuid(), data);
+            }
+            return data;
         } catch (MetamacException e) {
             throw e;
         } catch (Exception e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
+            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR,dataOperation.getDataGpeUuid(),dataOperation.getDataSourceUuid());
         }
     }
 
@@ -392,7 +436,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Transform list of datasources to a list of simpler operations, sorted by precedence
      * Load operations must be executed prior calculated operation.
      */
-    private List<DataOperation> orderDataSourceForProcessing(List<DataSource> dataSources) {
+    private List<DataOperation> transformDataSourcesForProcessing(List<DataSource> dataSources) {
         LinkedList<DataOperation> dataOperations = new LinkedList<DataOperation>();
         // Load operations are posisionated first
         for (DataSource dataSource : dataSources) {

@@ -133,7 +133,7 @@
     <!-- **************************************************************************************	-->
 	<!--    INDICATOR 1											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with spatial and temporal				-->
+	<!--		- One datasource, linked to a query with spatial and temporal				-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="1"
@@ -273,7 +273,7 @@
     <!-- **************************************************************************************	-->
 	<!--    INDICATOR 2											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with spatial VARIABLE     			-->
+	<!--		- One datasource, linked to a query with spatial VARIABLE     			-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="2"
@@ -414,7 +414,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 3											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with temporal							-->
+	<!--		- One datasource, linked to a query with temporal							-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="3"
@@ -554,7 +554,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 4											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated without temporal and spatials						-->
+	<!--		- One datasource, with neither temporal nor spatials						-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="4"
@@ -815,7 +815,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 6											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with spatial and temporal, with dot notation	-->
+	<!--		- One datasource, linked to a query with spatial and temporal, with dot notation	-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="6"
@@ -954,7 +954,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 7											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with temporal							-->
+	<!--		- One datasource, linked to a query with temporal							-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="7"
@@ -1235,7 +1235,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 8											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with temporal							-->
+	<!--		- One datasource, linked to a query with temporal							-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="8"
@@ -1717,7 +1717,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 9											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with temporal,						-->
+	<!--		- One datasource, linked to a query with temporal,						-->
 	<!--		Rates values are taken from contvariable										-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
@@ -1980,7 +1980,7 @@
 		<!-- **************************************************************************************	-->
 	<!--    INDICATOR 10											                      			-->
 	<!--		- Version 1: draft															    	-->
-	<!--		- One datasource, associated with a query with temporal,							-->
+	<!--		- One datasource, linked to a query with temporal,							-->
 	<!--		Rates values are taken from observation value from 5 different data sources			-->
 	<!-- *************************************************************************************		-->
 	<TB_INDICATORS
@@ -2103,7 +2103,7 @@
 				<TB_DATA_SOURCES
 					ID="1012"
 					UUID="Indicator-10-v1-DataSource-2"
-					DATA_GPE_UUID="Indicator-10-v1-DataSource-2-GPE-ANNUAL_PERC"
+					DATA_GPE_UUID="Indicator-10-v1-DataSource-2-GPE-ANNUAL-PERC"
 					PX_URI="Indicator-10-v1-DataSource-2-PX"
 					TIME_VARIABLE="Periodos"
 					TIME_VALUE="[null]"
@@ -2430,7 +2430,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATOR 11											                   			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with spatial and temporal				-->
+	<!--		- One datasource, linked to a query with spatial and temporal				-->
 	<!--		- ERROR: Invalid absolute method												-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
@@ -2692,7 +2692,7 @@
 		<!-- **************************************************************************************	-->
 	<!--    INDICATOR 13											                      			-->
 	<!--		- Version 1: draft															    -->
-	<!--		- One datasource, associated with a query with temporal							-->
+	<!--		- One datasource, linked to a query with temporal							-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS
 		ID="13"
@@ -2853,6 +2853,285 @@
 						VARIABLE="Naturaleza jurídica"
 						CATEGORY="T"
 						DATA_SOURCE_FK="1311"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 14											                      			-->
+	<!--		- Version 1: draft															    -->
+	<!--		- One datasource, linked to a query with spatial and temporal, with dot notation	-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS
+		ID="14"
+		UUID="Indicator-14"
+		CODE="CODE-14"
+		PRODUCTION_ID="14"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TB_INDICATORS_VERSIONS
+				ID="141"
+				UUID="Indicator-14-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/14"
+	  			INDICATOR_FK="14"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/14"
+				SUBJECT_CODE="1"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="1411"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TB_QUANTITIES
+				  	ID="1411"
+  					UUID="Quantity-1411"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+  					DECIMAL_PLACES="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TB_DATA_SOURCES
+					ID="1411"
+					UUID="Indicator-14-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-14-v1-DataSource-1-GPE-NOT-EXISTS"
+					PX_URI="Indicator-14-v1-DataSource-1-PX"
+					TIME_VARIABLE="Periodos"
+					TIME_VALUE="[null]"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+					INDICATOR_VERSION_FK="141"
+					INTERPERIOD_PUNTUAL_RATE_FK="[null]" 
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+					ANNUAL_PUNTUAL_RATE_FK="[null]"
+					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code"
+ 					SOURCE_SURVEY_URL="http"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="6"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+					ABSOLUTE_METHOD="##OBS_VALUE##"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+
+					<TB_DATA_SOURCES_VARIABLES
+						ID="14111"
+						UUID="Indicator-14-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="1411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TB_DATA_SOURCES_VARIABLES
+						ID="14112"
+						UUID="Indicator-14-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="1411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 14											                      			-->
+	<!--		- Version 1: draft															    -->
+	<!--		- One datasource, linked to a query with errors	-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS
+		ID="15"
+		UUID="Indicator-15"
+		CODE="CODE-15"
+		PRODUCTION_ID="15"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
+			
+			<TB_INDICATORS_VERSIONS
+				ID="151"
+				UUID="Indicator-15-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/15"
+	  			INDICATOR_FK="15"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/15"
+				SUBJECT_CODE="1"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="1511"
+				IS_LAST_VERSION="1"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TB_QUANTITIES
+				  	ID="1511"
+  					UUID="Quantity-1511"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+  					DECIMAL_PLACES="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+			
+				<TB_DATA_SOURCES
+					ID="1511"
+					UUID="Indicator-15-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-15-v1-DataSource-1-GPE-WRONG"
+					PX_URI="Indicator-15-v1-DataSource-1-PX"
+					TIME_VARIABLE="Periodos"
+					TIME_VALUE="[null]"
+					GEOGRAPHICAL_VALUE_FK="[null]"
+					GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+					INDICATOR_VERSION_FK="151"
+					INTERPERIOD_PUNTUAL_RATE_FK="[null]" 
+					INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+					ANNUAL_PUNTUAL_RATE_FK="[null]"
+					ANNUAL_PERCENTAGE_RATE_FK="[null]"
+					SOURCE_SURVEY_CODE="code"
+ 					SOURCE_SURVEY_URL="http"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="6"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+					ABSOLUTE_METHOD="##OBS_VALUE##"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+
+					<TB_DATA_SOURCES_VARIABLES
+						ID="15111"
+						UUID="Indicator-15-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="1511"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TB_DATA_SOURCES_VARIABLES
+						ID="15112"
+						UUID="Indicator-15-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="1511"
 						
 						VERSION="1"
 						CREATED_BY="user1"

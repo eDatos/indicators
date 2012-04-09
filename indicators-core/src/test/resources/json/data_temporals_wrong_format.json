@@ -6,7 +6,7 @@
    ],
    "heading":[
       "Naturaleza jurídica",
-      "Indicadores"
+      "Indicadores", <- Error
    ],
    "categories":[
       {
@@ -113,7 +113,7 @@
          ]
       },
       {
-         "Valor":"..",
+         "Valor":"1.925",
          "dimCodes":[
             "2009M11",
             "T",

@@ -63,4 +63,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_POPULATE_INVALID_CONTVARIABLE_LOAD_METHOD        = create("exception.indicators.data.populate.invalid.contvariable.load.method");
     public static final CommonServiceExceptionType DATA_POPULATE_INVALID_NOCONTVARIABLE_LOAD_METHOD      = create("exception.indicators.data.populate.invalid.nocontvariable.load.method");
     public static final CommonServiceExceptionType DATA_POPULATE_OBSERVATION_CALCULATE_ERROR             = create("exception.indicators.data.populate.calculate.observation.parse.error");
+    public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_ERROR                     = create("exception.indicators.data.populate.retrieve.data.error");
+    public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_EMPTY                     = create("exception.indicators.data.populate.retrieve.data.empty");
 }
