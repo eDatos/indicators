@@ -35,12 +35,13 @@
 
 <script>
 	function getLabel(internationalString, locale){
-		for (i in internationalString.texts) {
-			var text =internationalString.texts[i];
-			if (text.locale == locale) {
-				return text.label;
-			}
-		}
+		var localisedString = _.find(internationalString.texts, function(text) {
+			return text.locale == locale;
+		});
+		if (localisedString) {
+			return localisedString.label;
+		} 
+		return 'REVISAAAAAR';
 	};
 
 	function containsLowerCase(a, b){

@@ -6,8 +6,7 @@ body {
 	padding: 0px;
 	background-color: #C4D0DC;
 	color: #4a4a4a;
-	font-family: "Helvetica Neue", Helvetica, Verdana, sans-serif;
-	font-size: 12px;
+	font: 70% Arial,Helvetica,sans-serif;
 }
 
 a {
@@ -68,7 +67,11 @@ strong {
 /*	##################################
    	BODY
 	################################## */
-.container {
+html #bloq_interior {
+    margin: 15px 0 0;
+}
+
+.bloq_interior {
 	width: 762px;
 	background-color: #FFFFFF;
 	border-style: none;
@@ -518,7 +521,6 @@ input:focus,textarea:focus {
 
 .indicatorsSystems-item {
 	margin-bottom: 10px;
-	background-color: #F5F5F5;
 	padding: 10px;
 	border-radius: 5px;
 }
@@ -537,17 +539,25 @@ input:focus,textarea:focus {
 #indicators {
 }
 
-.indicators-item {
+.indicators-by-subject-item {
 	margin-bottom: 10px;
-	background-color: #F5F5F5;
 	padding: 10px;
 	border-radius: 5px;
 }
 
-.indicators-item p{
+.indicators-by-subject-item p {
 	margin: 5px;	
 }
 
-.indicators-item a{
+.indicators-by-subject-item a{
 	padding: 0;	
+}
+
+.indicator-subject {
+    background: url("../images/flecha_menulat.gif") no-repeat scroll left top transparent;
+    border-bottom: 1px dotted #A4A4A4;
+    color: #000000;
+    font-weight: bold;
+    padding: 0 0 3px 10px;
+    width: 96%;
 }
