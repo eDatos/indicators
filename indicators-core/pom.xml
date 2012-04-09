@@ -275,7 +275,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>src/main/generated/java</source>
+								<source>src/generated/java</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -288,7 +288,7 @@
 						<configuration>
 							<resources>
 								<resource>
-									<directory>src/main/generated/resources</directory>
+									<directory>src/generated/resources</directory>
 								</resource>
 							</resources>
 						</configuration>
