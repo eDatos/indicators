@@ -5,7 +5,6 @@
 <script src="[@spring.url "/theme/js/libs/underscore-min.js" /]"></script>
 <script src="[@spring.url "/theme/js/libs/backbone-min.js" /]"></script>
 <script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
-<script src="[@spring.url "/theme/js/indicators/libs/strings.js" /]"></script>
 
 <div id="indicatorsSystems-search">
 	<input type="text" class="search">
@@ -27,6 +26,10 @@
 </script>
 
 <script>
+
+	function containsLowerCase(a, b){
+		return a.toLowerCase().indexOf(b.toLowerCase()) != -1;     
+	};
 
 	var IndicatorsSystemsCollection = Backbone.Collection.extend({
 		
