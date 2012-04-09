@@ -530,3 +530,24 @@ input:focus,textarea:focus {
 .indicatorsSystems-item a{
 	padding: 0;	
 }
+
+/*	##################################
+   	INDICATORS
+	################################## */
+#indicators {
+}
+
+.indicators-item {
+	margin-bottom: 10px;
+	background-color: #F5F5F5;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.indicators-item p{
+	margin: 5px;	
+}
+
+.indicators-item a{
+	padding: 0;	
+}
