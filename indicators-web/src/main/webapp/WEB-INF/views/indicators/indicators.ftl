@@ -16,8 +16,16 @@
 <div id="indicators"></div>
 
 <script type="text/html" id="indicatorsTmpl">
-	<div class="indicators-item">
-		<p><%= code %></p>
+	<div class="indicators-by-subject-item">
+		<div class="indicator-subject">
+			<p><%= getLabel(subject.title, 'es') %></p>
+		</div>
+		
+		<% for (i in indicators) {
+			var indicator = indicators[i]; 
+		%>
+			<p><%= getLabel(indicator.title, 'es') %></p>			
+		<% } %>
 	</div>
 </script>
 
@@ -26,6 +34,14 @@
 </script>
 
 <script>
+	function getLabel(internationalString, locale){
+		for (i in internationalString.texts) {
+			var text =internationalString.texts[i];
+			if (text.locale == locale) {
+				return text.label;
+			}
+		}
+	};
 
 	function containsLowerCase(a, b){
 		return a.toLowerCase().indexOf(b.toLowerCase()) != -1;     
@@ -101,7 +117,7 @@
 	});
 	
 	$(function(){
-		var indicatorsCollection = new IndicatorsCollection(${indicators});
+		var indicatorsCollection = new IndicatorsCollection(${indicatorsBySubject});
 		var indicatorsView = new IndicatorsView({el : $("#indicators"), collection : indicatorsCollection});
 		indicatorsView.render();
 		new SearchView({el : $("#indicators-search"), collection : indicatorsCollection});

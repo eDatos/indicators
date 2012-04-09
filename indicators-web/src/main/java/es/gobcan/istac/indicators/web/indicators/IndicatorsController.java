@@ -32,29 +32,26 @@ public class IndicatorsController extends BaseController {
         List<SubjectDto> subjectsDto = indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContext());
         List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext(), null);
         
-//        // Classify indicators by subject
-//        Map<String, IndicatorsBySubjectView> indicatorsBySubjectsViewMap = new HashMap<String, IndicatorsBySubjectView>();
-//        for (SubjectDto subjectDto : subjectsDto) {
-//            IndicatorsBySubjectView indicatorsBySubjectsView = new IndicatorsBySubjectView();
-//            indicatorsBySubjectsView.setSubject(subjectDto);
-//            indicatorsBySubjectsViewMap.put(subjectDto.getCode(), indicatorsBySubjectsView);
-//        }
-//        for (IndicatorDto indicatorDto : indicatorsDto) {
-//            String subjectCode = indicatorDto.getSubjectCode();
-//            IndicatorsBySubjectView indicatorsBySubjectsView = indicatorsBySubjectsViewMap.get(subjectCode);
-//            indicatorsBySubjectsView.getIndicators().add(indicatorDto);
-//        }
-//        
-//        // To Json
-//        ObjectMapper mapper = new ObjectMapper();
-//        String indicatorsBySubjectJson = mapper.writeValueAsString(indicatorsBySubjectsViewMap.values()); // TODO reducir tamaño del json
-
-      ObjectMapper mapper = new ObjectMapper();
-      String indicatorsBySubjectJson = mapper.writeValueAsString(indicatorsDto); // TODO reducir tamaño del json
+        // Classify indicators by subject
+        Map<String, IndicatorsBySubjectView> indicatorsBySubjectsViewMap = new HashMap<String, IndicatorsBySubjectView>();
+        for (SubjectDto subjectDto : subjectsDto) {
+            IndicatorsBySubjectView indicatorsBySubjectsView = new IndicatorsBySubjectView();
+            indicatorsBySubjectsView.setSubject(subjectDto);
+            indicatorsBySubjectsViewMap.put(subjectDto.getCode(), indicatorsBySubjectsView);
+        }
+        for (IndicatorDto indicatorDto : indicatorsDto) {
+            String subjectCode = indicatorDto.getSubjectCode();
+            IndicatorsBySubjectView indicatorsBySubjectsView = indicatorsBySubjectsViewMap.get(subjectCode);
+            indicatorsBySubjectsView.getIndicators().add(indicatorDto);
+        }
+        
+        // To Json
+        ObjectMapper mapper = new ObjectMapper();
+        String indicatorsBySubjectJson = mapper.writeValueAsString(indicatorsBySubjectsViewMap.values()); // TODO reducir tamaño del json
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_LIST);
-        modelAndView.addObject("indicators", indicatorsBySubjectJson);
+        modelAndView.addObject("indicatorsBySubject", indicatorsBySubjectJson);
  
         return modelAndView;
     }

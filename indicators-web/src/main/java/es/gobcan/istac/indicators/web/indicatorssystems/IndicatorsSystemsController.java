@@ -22,23 +22,10 @@ public class IndicatorsSystemsController extends BaseController {
 
     // TODO tratamiento de excepciones
     // TODO paginación
-//    @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
-//    public String findIndicatorsSystems(Model model) throws MetamacException {
-//
-//        // TODO llamada a servicio web para obtener los datos de cada sistema de indicadores
-//        
-//        
-//        
-//        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
-//        model.addAttribute("indicatorsSystems", indicatorsSystemsDto);
-//
-//        return WebConstants.VIEW_NAME_INDICATOR_LIST;
-//    }
-    
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
         
-        // Retrieve
+        // Retrieve all indicators system published
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
         
         // To Json
@@ -46,7 +33,7 @@ public class IndicatorsSystemsController extends BaseController {
         String indicatorsSystemsJson = mapper.writeValueAsString(indicatorsSystemsDto); // TODO reducir tamaño del json
 
         // View
-        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATOR_LIST);
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
         modelAndView.addObject("indicatorsSystems", indicatorsSystemsJson);
  
         return modelAndView;
