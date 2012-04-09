@@ -31,7 +31,7 @@ public class GetSubjectsListActionHandler extends AbstractActionHandler<GetSubje
     @Override
     public GetSubjectsListResult execute(GetSubjectsListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<SubjectDto> subjectDtos = indicatorsServiceFacade.findSubjects(ServiceContextHelper.getServiceContext());
+            List<SubjectDto> subjectDtos = indicatorsServiceFacade.retrieveSubjects(ServiceContextHelper.getServiceContext());
             return new GetSubjectsListResult(subjectDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

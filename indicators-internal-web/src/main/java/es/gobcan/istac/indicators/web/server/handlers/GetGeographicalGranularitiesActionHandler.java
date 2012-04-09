@@ -31,7 +31,7 @@ public class GetGeographicalGranularitiesActionHandler extends AbstractActionHan
     @Override
     public GetGeographicalGranularitiesResult execute(GetGeographicalGranularitiesAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.findGeographicalGranularities(ServiceContextHelper.getServiceContext());
+            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularities(ServiceContextHelper.getServiceContext());
             return new GetGeographicalGranularitiesResult(geographicalGranularityDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

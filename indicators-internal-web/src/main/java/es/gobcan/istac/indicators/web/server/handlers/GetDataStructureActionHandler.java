@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceFacade;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
@@ -20,7 +20,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 public class GetDataStructureActionHandler extends AbstractActionHandler<GetDataStructureAction, GetDataStructureResult> {
 
     @Autowired
-    private IndicatorsDataServiceFacade indicatorsDataServiceFacade;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
 
     public GetDataStructureActionHandler() {
         super(GetDataStructureAction.class);
@@ -29,7 +29,7 @@ public class GetDataStructureActionHandler extends AbstractActionHandler<GetData
     @Override
     public GetDataStructureResult execute(GetDataStructureAction action, ExecutionContext context) throws ActionException {
         try {
-            DataStructureDto dataStructureDto = indicatorsDataServiceFacade.retrieveDataStructure(ServiceContextHelper.getServiceContext(), action.getUuid());
+            DataStructureDto dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHelper.getServiceContext(), action.getUuid());
             return new GetDataStructureResult(dataStructureDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

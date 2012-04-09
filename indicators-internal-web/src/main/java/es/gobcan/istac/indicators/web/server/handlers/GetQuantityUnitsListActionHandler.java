@@ -31,7 +31,7 @@ public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<Get
     @Override
     public GetQuantityUnitsListResult execute(GetQuantityUnitsListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.findQuantityUnits(ServiceContextHelper.getServiceContext());
+            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.retrieveQuantityUnits(ServiceContextHelper.getServiceContext());
             return new GetQuantityUnitsListResult(quantityUnitDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

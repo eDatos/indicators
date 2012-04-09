@@ -44,7 +44,6 @@ import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToProd
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
@@ -87,7 +86,6 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionVal
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
-import es.gobcan.istac.indicators.web.shared.UpdateIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 
@@ -101,7 +99,6 @@ public class ServerModule extends HandlerModule {
     protected void configureHandlers() {
 
         // Indicators System
-        bindHandler(UpdateIndicatorsSystemAction.class, UpdateIndicatorsSystemActionHandler.class);
         bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
         bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
         bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);

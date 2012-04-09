@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceFacade;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
@@ -20,7 +20,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
 public class GetDataDefinitionActionHandler extends AbstractActionHandler<GetDataDefinitionAction, GetDataDefinitionResult> {
 
     @Autowired
-    private IndicatorsDataServiceFacade indicatorsDataServiceFacade;
+    private IndicatorsServiceFacade indicatorsServiceFacade;
 
     public GetDataDefinitionActionHandler() {
         super(GetDataDefinitionAction.class);
@@ -29,7 +29,7 @@ public class GetDataDefinitionActionHandler extends AbstractActionHandler<GetDat
     @Override
     public GetDataDefinitionResult execute(GetDataDefinitionAction action, ExecutionContext context) throws ActionException {
         try {
-            DataDefinitionDto dataDefinitionDto = indicatorsDataServiceFacade.retrieveDataDefinition(ServiceContextHelper.getServiceContext(), action.getUuid());
+            DataDefinitionDto dataDefinitionDto = indicatorsServiceFacade.retrieveDataDefinition(ServiceContextHelper.getServiceContext(), action.getUuid());
             return new GetDataDefinitionResult(dataDefinitionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
