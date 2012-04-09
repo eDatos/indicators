@@ -55,7 +55,7 @@
 		<joda-time.version>1.6.2</joda-time.version>
 		<joda-time-hibernate.version>1.2</joda-time-hibernate.version>
 
-		<!-- WEB -->
+		<!-- WEB INTERNAL-->
 		<gwt-maven-plugin.version>2.3.0-1</gwt-maven-plugin.version>
 		<icu4j.version>4.2.1</icu4j.version>
 		<gin.version>1.5.0</gin.version>
@@ -63,6 +63,10 @@
 		<gwt.version>2.3.0</gwt.version>
 		<smartgwt.version>3.0</smartgwt.version>
 		<gwtp.version>0.6</gwtp.version>
+		
+		<!-- WEB (PUBLIC, DIFFUSION) -->
+		<servlet-api.version>2.5</servlet-api.version>
+		<freemarker.version>2.3.18</freemarker.version>
 
 		<!-- TEST -->
 		<junit.version>4.8.2</junit.version>
@@ -70,7 +74,7 @@
 		<mockito.version>1.8.1</mockito.version>
 
 		<!-- STATISTIC DATASET REPOSITORY -->
-		<statistic-dataset-repository-version>1.0.0-SNAPSHOT</statistic-dataset-repository-version>
+		<statistic-dataset-repository.version>1.0.0-SNAPSHOT</statistic-dataset-repository.version>
 		
 		<!-- METAMAC -->
 		<metamac-core-common.version>1.0-SNAPSHOT</metamac-core-common.version>
@@ -374,7 +378,7 @@
 				<groupId>com.arte.statistic</groupId>
 				<artifactId>statistic-dataset-repository</artifactId>
 				<classifier>client-oracle</classifier>
-				<version>${statistic-dataset-repository-version}</version>
+				<version>${statistic-dataset-repository.version}</version>
     		</dependency>
 
 			<!-- METAMAC -->
@@ -496,9 +500,23 @@
 				<groupId>org.siemac.metamac.statistical.operations</groupId>
 				<artifactId>metamac-statistical-operations-ws-api</artifactId>
 				<version>${metamac-statistical-operations-ws-api.version}</version>
+			</dependency>			
+						
+			<!-- WEB COMMON -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<!-- Container-provided dependencies -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${servlet-api.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			
-			<!-- WEB -->
+			<!-- WEB INTERNAL -->
 			<dependency>
 				<groupId>org.siemac.metamac</groupId>
 				<artifactId>metamac-web-common</artifactId>
@@ -549,11 +567,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
+			
 			<!-- GIN -->
 			<dependency>
 				<groupId>com.google.gwt.inject</groupId>
@@ -575,6 +589,23 @@
 				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-assistedinject</artifactId>
 				<version>${guice.version}</version>
+			</dependency>
+			
+			<!-- WEB INTERNAL, DIFFUSION -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>${freemarker.version}</version>
 			</dependency>
 			
 			<!-- INDICATORS -->
