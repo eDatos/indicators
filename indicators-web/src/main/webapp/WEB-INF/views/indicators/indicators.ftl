@@ -6,21 +6,14 @@
 <script src="[@spring.url "/theme/js/libs/backbone-min-0.9.2.js" /]"></script>
 <script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
 
-<div id="indicators-search">
-	<input type="text" class="search">
+<div id="indicators-search" style="display:none;">
+	<input type="text">
 </div>
 
-<div class="clearfix" ></div>
-<div class="sep-20">&nbsp;</div>
-
 <div id="indicators"></div>
-
 <script type="text/html" id="indicatorsTmpl">
-	<div class="indicators-by-subject-item">
-		<div class="indicator-subject">
-			<p><%= getLabel(subject.title, 'es') %></p>
-		</div>
-		
+	<div>
+		<h3><%= getLabel(subject.title, 'es') %></h3>
 		<% for (i in indicators) {
 			var indicator = indicators[i]; 
 		%>
@@ -30,7 +23,7 @@
 </script>
 
 <script type="text/html" id="noResultsTmpl">
-	<div class="alert alert-block">No hay resultado para la búsqueda "<strong><%= query %></strong>"</div>
+	<div>No hay resultado para la búsqueda "<strong><%= query %></strong>"</div>
 </script>
 
 <script>

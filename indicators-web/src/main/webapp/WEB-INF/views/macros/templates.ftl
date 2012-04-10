@@ -65,18 +65,21 @@
 				</ul>
 			</div>
 
-			<div id="column-body">
-				[#nested]
+			<div id="bloq_interior">
+				<div class="bloque_completo">
+					<div class="conten">	
+						[#nested]
+					</div>
+				</div>
 			</div>
-	
-		  	<div id="footer">
-		  		<p class="left">[@apph.messageEscape 'app.footer.gobcan' /]</p>
-		  		<div class="right">
-		  			<ul>
-		  				<li>[@apph.messageEscape 'app.footer.legal-advice' /]</li>
-		  				<li>[@apph.messageEscape 'app.footer.suggests' /]</li>
-		  			</ul>
-		  		</div>
+			   <div id="pie">
+				<p class="izda">[@apph.messageEscape 'app.footer.gobcan' /]</p>
+				<div class="dcha">
+					<ul>
+						<li class="nobarra3"><a href="http://www.gobiernodecanarias.org/avisolegal.html">[@apph.messageEscape 'app.footer.legal-advice' /]</a></li>
+						<li><a href="http://www.gobiernodecanarias.org/sugrec/">[@apph.messageEscape 'app.footer.suggests' /]</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</body>
