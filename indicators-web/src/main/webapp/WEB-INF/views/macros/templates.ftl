@@ -16,19 +16,17 @@
 		
 	 	<!-- Css -->
 		<link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"/]" type="text/css" media="screen, projection" />
-		<!-- Css Gobierno de Canarias -->
 		<link rel="stylesheet" href="http://www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
-		<!-- Css Application -->		
 		<link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />
 
 		<script type="text/javascript">
 			var context = "[@spring.url '' /]";
 		</script>
 		
+		<!-- Js -->
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-1.7.1.js"                         /]" ></script>
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-ui-1.8.17.custom.js"              /]" ></script>
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery.json-2.3.min.js"                  /]" ></script>    
-        
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-disable-text-selection-1.0.0.js"  /]" ></script>
 	</head>
 	<body>
@@ -37,7 +35,7 @@
 				<div id="cab_superior">
 					<ul>
 						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.jsp" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="theme/gobcan/img/atom.png" title="RSS" alt="RSS" /> RSS</a></li>
-						 <li>|</li>
+						<li>|</li>
 						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.jsp" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
 				
 					</ul>

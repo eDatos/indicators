@@ -7,22 +7,18 @@
 <script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
 
 <div id="indicatorsSystems-search">
-	<input type="text" class="search">
+	<input type="text">
 </div>
-
-<div class="clearfix" ></div>
-<div class="sep-20">&nbsp;</div>
-
 <div id="indicatorsSystems"></div>
 
 <script type="text/html" id="indicatorsSystemTmpl">
-	<div class="indicatorsSystems-item">
+	<div>
 		<p><%= code %></p>
 	</div>
 </script>
 
 <script type="text/html" id="noResultsTmpl">
-	<div class="alert alert-block">No hay resultado para la búsqueda "<strong><%= query %></strong>"</div>
+	<div>No hay resultado para la búsqueda "<strong><%= query %></strong>"</div>
 </script>
 
 <script>
