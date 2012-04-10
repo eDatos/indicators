@@ -7,7 +7,7 @@
 <script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
 
 <div id="indicatorsSystems-search">
-	<input type="text">
+	<input id="indicatorsSystems-search-input" type="text">
 </div>
 <div id="indicatorsSystems"></div>
 
@@ -82,11 +82,11 @@
 	
 	var SearchView = Backbone.View.extend({
 		events : {
-			'keyup .search': 'searchBoxKeydown'
+			'keyup #indicatorsSystems-search-input': 'searchBoxKeydown'
 		},
 		
 		searchBoxKeydown : function(e){
-			var text = $(".search", this.el).val();		
+			var text = $("#indicatorsSystems-search-input", this.el).val();		
 			this.collection.search(text);
 		}
 	});
