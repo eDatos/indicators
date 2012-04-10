@@ -10,6 +10,8 @@ import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.Operati
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +32,8 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
-    // TODO tratamiento de excepciones
+    // TODO tratamiento de excepciones en todas las operaciones
+
     // TODO paginación?
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
@@ -68,5 +71,21 @@ public class IndicatorsSystemsController extends BaseController {
         return modelAndView;
     }
     
-    
+    @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
+    public ModelAndView setupForm(@PathVariable("code") String code, Model model) throws Exception {
+
+        // Retrieve operation
+        OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);       
+        IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
+        
+        // To Json
+        ObjectMapper mapper = new ObjectMapper();
+        String indicatorsSysteMJson = mapper.writeValueAsString(indicatorsSystemWebDto);
+
+        // View
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
+        modelAndView.addObject("indicatorsSystem", indicatorsSysteMJson);
+ 
+        return modelAndView;
+    }
 }

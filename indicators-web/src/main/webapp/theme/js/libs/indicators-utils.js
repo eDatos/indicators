@@ -1,4 +1,7 @@
 function getLabel(internationalString, locale) {
+	if (internationalString == null) {
+		return '';
+	}
 	var localisedString = _.find(internationalString.texts, function(text) {
 		return text.locale == locale;
 	});

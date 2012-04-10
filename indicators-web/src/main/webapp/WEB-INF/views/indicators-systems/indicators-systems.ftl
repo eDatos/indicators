@@ -2,10 +2,6 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
-<script src="[@spring.url "/theme/js/libs/underscore-min-1.3.1.js" /]"></script>
-<script src="[@spring.url "/theme/js/libs/backbone-min-0.9.2.js" /]"></script>
-<script src="[@spring.url "/theme/js/libs/i18n.js" /]"></script>
-
 <div id="indicatorsSystems-search">
 	<input id="indicatorsSystems-search-input" type="text">
 </div>
