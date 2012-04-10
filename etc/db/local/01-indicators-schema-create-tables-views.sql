@@ -51,6 +51,6 @@ SELECT id_consulta, autoincremento, consulta, fecha_creacion,
 fecha_disponible_fin, fecha_disponible_inicio, fecha_modificacion, fecha_modificacion_datos,
 id_operacion, uri_px, is_part_of, nombre_consulta, tipo_consulta,
 usuario_creacion, usuario_modificacion, uuid_consulta, version_px
-FROM USUARIO.tB_consulta
+FROM USUARIO_PROPIETARIO.tB_consulta
 ORDER BY id_consulta;
 
