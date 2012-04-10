@@ -40,7 +40,7 @@
 		</script>
 	</head>
 	<body>
-		<div class="container">
+		<div class="bloq_interior">
 			<div id="header">
 				<div id="top"></div> 
 				<h1><a href="[@spring.url "/index.html" /]">Indicators</a></h1>
@@ -48,6 +48,9 @@
 					<ul class="menu">
 						<li>
 							<a href="[@spring.url "/indicators-systems" /]">[@spring.message 'menu.indicators-systems' /]</a>
+						</li>
+						<li>
+							<a href="[@spring.url "/indicators" /]">[@spring.message 'menu.indicators' /]</a>
 						</li>
 					</ul>
 				</div>		

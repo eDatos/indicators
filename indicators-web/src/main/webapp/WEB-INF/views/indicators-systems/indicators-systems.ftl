@@ -83,7 +83,7 @@
 					
 					$(self.el).append(subViewHtml); 
 				});
-			} else {
+			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}
 		}
