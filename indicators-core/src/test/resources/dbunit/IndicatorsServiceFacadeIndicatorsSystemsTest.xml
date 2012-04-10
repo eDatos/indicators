@@ -1588,7 +1588,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="6"
-		LABEL="Objetive IndSys-1-v1"
+		LABEL="Objective IndSys-1-v1"
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="3"
@@ -1672,7 +1672,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="14"
-		LABEL="Objetive IndSys-1-v2"
+		LABEL="Objective IndSys-1-v2"
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="7"
