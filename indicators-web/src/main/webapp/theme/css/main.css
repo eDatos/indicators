@@ -1,0 +1,1429 @@
+/****************************************************/
+	/*            Estilos generales                     */
+	/****************************************************/
+table {
+	font-size: 1em;
+}
+
+input[type="image"] {
+	border: none;
+}
+
+/****************************************************/
+	/*              TABLAS  		                    */
+	/****************************************************/
+.tabla {
+	text-align: left;
+	background: #FFFFFF;
+}
+
+/* THEAD */
+.tabla thead th,.tabla thead td {
+	background: #E7EAF1; /* AZUL FLOJO */
+	cursor: pointer;
+	border-right: 1px solid #003366;
+	border-bottom: 1px solid #003366;
+}
+
+.tabla thead th a:hover,.tabla thead td a:hover {
+	text-decoration: none;
+}
+
+/* TBODY */
+.tabla tbody td {
+	border-bottom: 1px solid #003366;
+	border-right: 1px solid #003366;
+}
+
+.tabla tbody td:first-child {
+	border-left: none;
+}
+
+/* TFOOT */
+.tabla tfoot th,.tabla tfoot td {
+	background: #E7EAF1; /* AZUL FLOJO  */
+}
+
+/* FIREFOX */
+.gecko .tabla {
+	border-spacing: 0px;
+	empty-cells: show;
+	border: 1px solid #003366;
+}
+
+.gecko .tabla thead th:last-child,.gecko .tabla thead td:last-child {
+	border-right: none;
+}
+
+.gecko .tabla tbody th:last-child,.gecko .tabla tbody td:last-child {
+	border-right: none;
+}
+
+.gecko .scrollableTableDiv {
+	overflow-x: auto !important;
+}
+
+/* EXPLORER */
+.ie .tabla {
+	border-collapse: collapse;
+	border: 1px solid #003366;
+}
+
+.ie .scrollableTableDiv .tabla {
+	border: none;
+}
+
+.ie .scrollableTableDiv {
+	scrollbar-base-color: #E7EAF1; /* Sintaxis propietaria de EXPLORER */
+	border: 1px solid #003366;
+}
+
+.ie .tabla tfoot tr {
+	background: #003366; /* AZUL FUERTE */
+}
+
+.tabla_fila {
+	
+}
+
+.tabla_fila_impar {
+	
+}
+
+.tabla_fila_par {
+	
+}
+
+.tabla_fila_over,.tabla_fila_over a,.tabla_fila_over a:link,.tabla_fila_over a:hover,.tabla_fila_over a:visited
+	{
+	background: #3A7BBE;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.tabla_columna,.tabla_columna_encabezado {
+	text-align: center;
+}
+
+.tabla_columna_encabezado span,.tabla_columna_pie {
+	color: #003366;
+}
+
+a:link .tabla_columna_delete {
+	color: silver;
+}
+
+/****************************************************/
+	/*                   LAYOUT                         */
+	/****************************************************/
+.dcha {
+	text-align: right;
+}
+
+/****************************************************/
+	/*              TABLAS  CON DIV                     */
+	/****************************************************/
+.divTableFieldColumn,.divTableField2Columns {
+	padding-right: 0.5em;
+	float: left;
+	text-align: right;
+	font-weight: bold;
+}
+
+.divTableTextColumn,.divTableText2Columns,.divTableTextLargeColumn {
+	min-height: 1.23em;
+	float: left;
+	text-align: left;
+}
+
+.divTableFieldColumn {
+	width: 24%;
+}
+
+.divTableTextColumn {
+	width: 25%;
+}
+
+.divTableField2Columns {
+	width: 49%;
+}
+
+.divTableText2Columns {
+	width: 50%;
+}
+
+.divTableTextLargeColumn {
+	width: 75%;
+}
+
+/****************************************************/
+	/*                  PANELES                         */
+	/****************************************************/
+.panel {
+	border: 1px solid #003366;
+	text-align: left;
+	margin: 0.5em 0px;
+}
+
+.panelCabecera { /* background-color: #FFECA1; */
+	background-color: #FFF4CC;
+	font-weight: bold;
+	padding-left: 0.5em;
+}
+
+.panelCabeceraWarning {
+	background-image: url(../images/warning.gif);
+	background-position: 0.5em 50%;
+	background-repeat: no-repeat;
+	padding-left: 25px;
+}
+
+.panelCuerpoWarning {
+	
+}
+
+.panelCuerpo {
+	padding: 0.5em;
+}
+
+.panelCuerpo div {
+	margin: 0.5em 0pt;
+}
+
+.ie .panelCuerpo {
+	height: 1px;
+}
+
+/****************************************************/
+	/*				CLEAR							    */
+	/****************************************************/
+.gecko .clear:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.ie .clear {
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+	clear: both;
+}
+
+div.clear {
+	display: inline-block;
+	margin: 0pt;
+}
+
+/****************************************************/
+	/*				Mensajes						    */
+	/****************************************************/
+.messageSection UL LI {
+	background: none;
+}
+
+.errorMessage,.warnMessage,.infoMessage {
+	padding: 0px 5px 0px 26px;
+	cursor: auto !important;
+	font-weight: bold;
+	min-height: 16px;
+}
+
+span.errorMessage,span.infoMessage,span.warnMessage {
+	border: none;
+}
+
+.errorMessage {
+	background: transparent url(../images/error.png) no-repeat scroll 0.5em
+		50%;
+}
+
+.warnMessage {
+	background: transparent url(../images/warning.gif) no-repeat scroll
+		0.5em 50%;
+}
+
+.infoMessage {
+	background: transparent url(../images/info.gif) no-repeat scroll 0.5em
+		50%;
+	color: blue;
+}
+
+.messageSection span.errorMessage,.messageSection span.infoMessage,.messageSection span.warnMessage
+	{
+	display: block;
+}
+
+.messageSection span.errorMessage {
+	border: 1px solid #FF0000;
+}
+
+.messageSection span.infoMessage {
+	border: 1px solid #3A7BBE;
+}
+
+.messageSection span.warnMessage {
+	border: 1px solid #FFDF61;
+}
+
+/****************************************************/
+	/*				Formularios						    */
+	/****************************************************/
+#formulario .inputText {
+	margin: 0px;
+}
+
+#formulario .inputDate {
+	width: 10em;
+	margin: 0px;
+}
+
+#formulario .inputTextArea {
+	margin: 0px;
+	float: none;
+}
+
+#formulario .inputFile {
+	width: auto;
+	margin: 0px;
+}
+
+#formulario .inputRadio {
+	width: auto;
+	border: none;
+	background: transparent;
+	margin: 0px;
+}
+
+#formulario .inputCheckbox {
+	width: auto;
+	border: none;
+	background: transparent;
+	margin: 0px;
+}
+
+#formulario .selectOneMenu {
+	width: 100%;
+}
+
+#formulario .outputLabel {
+	padding: 0px;
+}
+
+/****************************************************/
+	/*				Botones							    */
+	/****************************************************/
+.commandButton {
+	width: auto !important;
+}
+
+/****************************************************/
+	/*				Enlaces con estilo de botton	    */
+	/****************************************************/
+a.rounded_button:hover,a:link .rounded_button,a:visited .rounded_button,a:
+	.rounded_button {
+	text-decoration: none !important;
+	font-weight: normal;
+}
+
+a.rounded_button,span.rounded_button-dis {
+	line-height: 12px;
+	/* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
+	height: 20px; /* Height of button background height */
+	margin-left: 2px;
+	margin-right: 2px;
+	display: block; /*opera*/
+	display: inline-block; /*ie*/
+	display: -moz-inline-box; /*ff*/
+}
+
+a.rounded_button {
+	background: transparent url('../images/botones/boton_accion.gif')
+		no-repeat right top;
+}
+
+A.rounded_button SPAN {
+	text-decoration: none !important;
+}
+
+span.rounded_button-dis {
+	background: transparent url('../images/botones/boton_accion-dis.gif')
+		no-repeat right top !important;
+}
+
+a.rounded_button {
+	cursor: hand;
+}
+
+a.rounded_button span,span.rounded_button-dis span {
+	height: 12px;
+	display: block;
+	display: inline-block;
+	padding: 4px 16px 4px 11px;
+	line-height: 12px;
+	color: black;
+}
+
+a.rounded_button span {
+	background: transparent url('../images/botones/boton_accion_left.gif')
+		no-repeat left top;
+}
+
+span.rounded_button-dis span {
+	background: transparent
+		url('../images/botones/boton_accion_left-dis.gif') no-repeat left top;
+	color: gray !important;
+	cursor: normal !important;
+}
+
+a.rounded_button:hover {
+	background-position: bottom right;
+}
+
+a.rounded_button:hover span {
+	background-position: bottom left;
+	cursor: pointer;
+}
+
+span.rounded_button-dis {
+	cursor: normal !important;
+}
+
+a.rounded_button-dis {
+	cursor: normal;
+}
+
+/****************************************************/
+	/*		         BOTONES IMÁGENES				    */
+	/****************************************************/
+.bottonTableAdd,.bottonTableEdit,.bottonTableDelete,.bottonTableSave,.bottonReload,.bottonEmailGo,.bottonBackward,.bottonSearch,.bottonApplicationDelete
+	{
+	border: 0px;
+	width: 20px;
+	height: 20px;
+}
+
+.bottonArrowFirst,.bottonArrowLast,.bottonArrowPrevious,.bottonArrowNext,.bottonArrowFastFordward,.bottonArrowFastRewind
+	{
+	border: 0px;
+	width: 19px;
+	height: 17px;
+}
+
+.bottonTableAdd {
+	background: transparent url(../images/table_add.png) no-repeat scroll;
+}
+
+.bottonTableEdit {
+	background: transparent url(../images/table_edit.png) no-repeat scroll;
+}
+
+.bottonTableDelete {
+	background: transparent url(../images/table_delete.png) no-repeat scroll
+		;
+}
+
+.bottonTableSave {
+	background: transparent url(../images/table_save.png) no-repeat scroll;
+}
+
+.bottonReload {
+	background: transparent url(../images/table_refresh.png) no-repeat
+		scroll 50%;
+}
+
+.bottonEmailGo {
+	background: transparent url(../images/email_go.png) no-repeat scroll;
+}
+
+.bottonBackward {
+	background: transparent url(../images/backward.gif) no-repeat scroll 50%
+		;
+}
+
+.bottonSearch {
+	background: transparent url(../images/search.gif) no-repeat scroll;
+}
+
+.bottonApplicationDelete {
+	background: transparent url(../images/application_delete.png) no-repeat
+		scroll;
+}
+
+.bottonArrowFirst {
+	background: transparent url(../images/arrow-first.gif) no-repeat scroll;
+}
+
+.bottonArrowLast {
+	background: transparent url(../images/arrow-last.gif) no-repeat scroll;
+}
+
+.bottonArrowPrevious {
+	background: transparent url(../images/arrow-previous.gif) no-repeat
+		scroll;
+}
+
+.bottonArrowNext {
+	background: transparent url(../images/arrow-next.gif) no-repeat scroll;
+}
+
+.bottonArrowFastFordward {
+	background: transparent url(../images/arrow-ff.gif) no-repeat scroll;
+}
+
+.bottonArrowFastRewind {
+	background: transparent url(../images/arrow-fr.gif) no-repeat scroll;
+}
+
+/****************************************************/
+	/*				Estilos para formularios 			*/
+	/****************************************************/
+span[title] {
+	cursor: none !important;
+}
+
+/* ******************************* */
+	/*           CONTENT               */
+	/* ******************************* */
+.content_20,.content_25,.content_33,content_40,.content_55,.content_60,.content_67,.content_75,.content_80
+	{
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.content_20 {
+	width: 20%;
+}
+
+.content_25 {
+	width: 25%;
+}
+
+.content_30 {
+	width: 30%;
+}
+
+.content_33 {
+	width: 33%;
+}
+
+.content_40 {
+	width: 40%;
+}
+
+.content_50 {
+	width: 49%;
+}
+
+.content_60 {
+	width: 59%;
+}
+
+.content_67 {
+	width: 67%;
+}
+
+.content_70 {
+	width: 70%;
+}
+
+.content_75 {
+	width: 75%;
+}
+
+.content_80 {
+	width: 80%;
+}
+
+.content_90 {
+	width: 90%;
+}
+
+.content_95 {
+	width: 95%;
+}
+
+.content_98 {
+	width: 98%;
+}
+
+.content_body {
+	padding: 2px;
+	padding-top: 10px;
+}
+
+.content_body_5 {
+	padding: 5px;
+}
+
+.content_body_menu {
+	width: 25%;
+	border-right: 1px solid silver;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+.content_body_separado {
+	margin-top: 15px;
+}
+
+/* ******************************* */
+	/*           FLOAT                 */
+	/* ******************************* */
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+/* ******************************* */
+	/*           Componentes           */
+	/* ******************************* */
+.label {
+	font-weight: bold;
+	text-align: left;
+	padding-right: 10px;
+}
+
+/* ******************************* */
+	/*           Formulario           */
+	/* ******************************* */
+.formulario {
+	background-color: rgb(248, 249, 251)
+}
+
+/* ******************************* */
+	/*           Pagina de error           */
+	/* ******************************* */
+.errorSistema {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+/* ******************************* */ /*           Padding           */
+	/* ******************************* */
+.padding10 {
+	padding: 10px;
+}
+
+.padding10left {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.padding10top {
+	padding-top: 10px;
+}
+
+/****************************************************/
+	/*			 Acciones de tablas						*/
+	/****************************************************/
+.accionTabla {
+	border: none !important;
+}
+
+.linkTabla {
+	color: #003399 !important;
+}
+
+.linkDescargaDocumento {
+	cursor: pointer !important;
+}
+
+/****************************************************/
+	/*			 Varios						*/
+	/****************************************************/
+.alignCenter {
+	text-align: center;
+}
+
+.inline {
+	display: inline;
+}
+
+/* ******************************* */ 
+/*       InputText  */
+/* ******************************* */
+.inputTextLarge {
+	width: 350px !important;
+}
+
+.inputTextMed {
+	width: 200px !important;
+}
+
+.inputTextSmall {
+	width: 100px !important;
+}
+
+/* ******************************* */ 
+/*  Resolucion  */
+/* ******************************* */
+.explorer1024 {
+	width: expression(( documentElement . clientWidth < 1024) ?   "715px" :
+		  "100%" );
+}
+
+.elementoLista {
+	line-height:1.5;
+	list-style-type:none;
+	margin:0.7em 0;
+	padding:5px 0 0 10px;
+}
+
+.input_seleccionados {	
+	-x-system-font:none;
+	background-color:transparent;
+	border:0 none;
+	font-size:8pt;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	margin:0;
+	padding:0px;
+}
+
+
+/* ******************************* */ 
+/*      TABLA PAGINADOR            */
+/* ******************************* */
+
+/* Pagination list styles */
+ul.fdtablePaginater {
+	display:table;
+	list-style:none;
+	padding:0;
+	margin:0 auto;
+	text-align:center;
+	height:2em;
+	width:auto;
+	margin-bottom:2em;
+}
+
+ul.fdtablePaginater li {
+        display:table-cell;
+        padding-right:4px;
+        color:#666;
+        list-style:none;
+        
+        -moz-user-select:none;
+        -khtml-user-select:none;
+        }
+
+/* Estilo enlace de los botones de paginacion */
+ul.fdtablePaginater li a.currentPage {
+	border-color:#1373b9 !important;
+	color: #535353;
+}
+        
+ul.fdtablePaginater li a:active {
+    border-color:#1373b9 !important;
+    color: #535353;
+}
+
+ul.fdtablePaginater li a,
+ul.fdtablePaginater li div {
+        display:block;
+        width:2em;
+        font-size:1em;
+        color:#535353;
+        padding:0;
+        margin:0;
+        text-decoration:none;
+        outline:none;
+        border:1px solid #ccc;
+}
+/**********************************************/
+        
+ul.fdtablePaginater li div {
+        cursor:normal;
+        opacity:.5;
+        filter:alpha(opacity=50);
+        }
+ul.fdtablePaginater li a span,
+ul.fdtablePaginater li div span {
+        display:block;
+        line-height:2em;
+        border:1px solid #fff;
+        background:#fff url(../images/gradient.gif) repeat-x 0 -20px;
+        }
+ul.fdtablePaginater li a {
+        cursor:pointer;
+        }
+ul.fdtablePaginater li a:focus {
+        color:#333;
+        text-decoration:none;
+        border-color:#aaa;
+        }
+.fdtablePaginaterWrap {
+        text-align:center;
+        clear:both;
+        text-decoration:none;
+        }
+ul.fdtablePaginater li .next-page span,
+ul.fdtablePaginater li .previous-page span,
+ul.fdtablePaginater li .first-page span,
+ul.fdtablePaginater li .last-page span {
+        font-weight:bold !important;
+        }
+        
+/* Keep the table columns an equal size during pagination */
+td.sized1 {
+        width:16em;
+        text-align:left;
+        }
+td.sized2 {
+        width:10em;
+        text-align:left;
+        }
+td.sized3 {
+        width:7em;
+        text-align:left;
+        }
+tfoot td {
+        text-align:right;
+        font-weight:bold;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        }
+#visibleTotal {
+        text-align:center;
+        letter-spacing:auto;
+        }
+* html ul.fdtablePaginater li div span,
+* html ul.fdtablePaginater li div span {
+        background:#eee;
+        }
+tr.invisibleRow {
+    display:none;
+    visibility:hidden;
+}
+
+tr.alt	{
+	background: #fff9dd;
+}
+        
+p.paginationText {
+        font-style:oblique;
+        }
+
+/* CELDAS de la tabla */
+td.dataCell {
+	text-align : right;
+	oveflow: hidden;
+}
+
+td.dataCellComment {
+	text-align : right;
+	oveflow: hidden;
+	background:  url(../../theme/images/esquinaNota.png) no-repeat scroll right top;
+}
+
+td.tableCellGr {
+	background: #1373b9; /* #50aaed*/
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+	overflow: hidden;
+	color: #FFFFFF;
+}
+
+td.tableCellMed {
+	background: #389feb; /* #78bef1 */
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+	overflow: hidden;
+}
+
+td.tableCellPeq {
+	background: #78bef1; /* #dadada; */
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+	overflow: hidden;
+}
+
+td.atableCellGr {
+	background: #1373b9;
+	text-align: left;
+	vertical-align: top;
+	padding: 5px;
+	overflow: hidden;
+	color: #FFFFFF;
+	width: 150px;
+}
+
+ul.fdtablePaginater {
+	_display:inline-block;
+	_display:inline;
+	_text-align:center;
+}
+
+ul.fdtablePaginater li {
+	_float:left;
+	background:  none repeat scroll 0 0
+}
+
+
+.tablaDatos {
+	overflow:hidden;
+	table-layout:fixed;
+	visibility:hidden;
+	
+	width:100%;
+	background: #f2f2f2;
+	border-left: 1px solid #f2f2f2;
+	padding: 0;
+	margin: 0 auto 1.5em;
+	border-collapse: collapse;
+}
+
+.tablaDatos td {
+	border-top:	1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	padding-right: 5px;	
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+
+.infoPX {
+	border-bottom:  1px dashed #A4A4A4;
+	border-top:  1px dashed #A4A4A4;
+	float: right;
+}
+
+/************************/
+/* BARRA DE HERRAMIENTA */
+.toolbar	{ 
+	margin-top:5px;
+	padding:7px 7px 5px;
+	background:#f2f2f2 none repeat scroll 0 0;
+	border:1px solid #dadada;
+
+}
+
+
+/* ************************ */
+.rollover a {
+	display:block;
+	width: 90px;
+	padding:10px 10px 10px 7px;
+	font: bold 13px sans-serif;;
+	color:#333;
+	background: url("rollover-image.gif") 0 0 no-repeat;
+	text-decoration: none;
+}
+
+.rollover a:hover { 
+	background-position: 0 -35px;
+	color: #049;
+}
+
+.rollover a:active {
+	background-position: 0 -70px;
+	color:#fff;
+}
+
+/* HORMIGAS DE LOCALIACION */
+#hormigas p.txt {
+	float:left;
+	margin:0;
+	padding-left:17px;
+}
+
+#hormigas ul li a 
+{
+background:url(../gobcan/img/listas/sig.gif) no-repeat right center;
+color:#535353;
+margin-right:5px;
+padding-right:8px;
+text-decoration:none;
+}
+
+#hormigas ul li a.sin 
+{
+background:url(../gobcan/img/listas/sig.gif) no-repeat right center;
+color:#535353;
+margin-right:5px;
+padding-right:8px;
+text-decoration:none;
+}
+
+#hormigas ul li a:hover 
+{
+text-decoration:underline;
+}
+
+#hormigas ul li strong  {
+	color:#000;
+}
+
+#hormigas ul li {
+	display:inline; 
+	font-size:1em;
+	padding-left: 0px;
+	background: none;
+	line-height: normal;
+}
+
+#hormigas ul {
+	float:left; 
+	list-style-type:none; 
+	margin:2px 0 0 0; 
+	padding-left: 5px;
+}
+
+#hormigas {
+	margin:0;
+	padding:0 0 7px;
+	width:100%;
+}
+
+/****************************************/
+/* Formato listado tablapagina.jsp */
+/****************************************/
+/*
+.listadoTablas ul li {
+	background:	transparent url(../images/tabla.gif) no-repeat scroll 0px 4px;
+	line-height:	1.6;
+	list-style-type:	none;
+	margin:	1.2em 0;
+	padding-left:	20px;
+}
+*/
+.listadoTablas ul li {
+	background:	none;
+}
+
+.listadoEnumeracion {
+	color: #535353;
+}
+
+/****************************************/
+/* OL notas de pagina*/
+/****************************************/
+.notas_tabla {
+	line-height: 1.6;
+	list-style-type: decimal;
+	padding-left: 12px;
+	margin:1.2em 0;
+	text-align: justify;
+}
+
+.estilo_prueba {
+	width: 100%;
+}
+
+hr {
+clear:both;
+display:block;
+visibility:hidden;} 
+
+/**************************/
+/* Div para tabla de informacion general (metadatos) */
+/**************************/
+
+div.base-layer {
+  color: #000000;
+  padding: 0; 
+  text-align: center; 
+  width: auto;
+  border: 1px solid #ebebeb;
+}
+
+div.table-row {
+  color: #000000;
+  margin-top: 0; 
+  margin-right: auto; 
+  margin-bottom: 1px; 
+  margin-left: auto;
+  padding: 0; 
+  text-align: center; 
+  width: 100%;
+background: none #ebebeb; 
+
+}
+
+div.left-cellON {
+  background: none #cccccc; 
+  text-align: left;
+  font-weight: bold;
+  float: left; 
+  margin: 0; 
+  padding: 0 10px;
+}
+
+div.left-cellOFF {
+	
+  text-align: left;
+  float: left; 
+  margin: 0; 
+  padding: 0 10px; 
+}
+
+div.left-cellOFF2 {
+  text-align: left;
+  float: left; 
+  margin: 0; 
+  padding: 0 10px; 
+}
+
+
+div.space-line {
+  clear: both; 
+  margin: 0; 
+  padding: 0; 
+  width: auto;
+}
+
+/* Watch out for this DIV... rule, it appears every now and then */
+
+div.space-line {
+  clear: both; margin: 0; padding: 0; width: auto;
+}
+
+/*****************************************
+ H2 overwrite
+*/
+.h2roundbox { 
+	background:  #c4d0dc;
+	width: 758px;
+	padding-bottom: 3px;	
+}
+
+.h2top { 
+	background: url(../images/h2overwrite/top.gif) no-repeat top; 
+	width: 100%;	
+	font-size: 1px;
+	height: 1px;
+}
+
+.h2content {
+	font-weight: bold;
+	font-size: 1em;
+	padding: 2px 0 0 7px;
+	margin: 0 0;
+}
+
+/**
+ * POPUP CONTAINER STYLES
+ */               
+body {padding:0; margin:0; height:100%; width:100%;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000; cursor:wait;}
+
+/* Container */
+#simplemodal-container {
+	height:380px; 
+	width:640px; 
+	background-color:#fff; 
+	border:3px solid #ccc;
+
+}
+#simplemodal-container a.modalCloseImg {
+
+	background-image: url(../images/close.png)!important;
+ 	background-image: none;
+ 	filter: none !important;
+ 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='theme/images/close.png');
+	
+	width:25px; 
+	height:29px; 
+	display:inline; 
+	z-index:3200; 
+	position:absolute; 
+	top:-15px; 
+	right:-18px; 
+	cursor:pointer;
+}
+#simplemodal-container #basicModalContent #footnotesModalContent {
+	padding:8px;
+}
+
+/* Overlay */
+#seleccion-overlay {background-color:#000; cursor:wait;}
+
+/* Container */
+#seleccion-container {
+	height:225px; 
+	width:640px; 
+	background-color:#fff; 
+	border:3px solid #ccc;
+
+}
+#seleccion-container a.modalCloseImg {
+	background-image: url(../images/close.png)!important;
+ 	background-image: none;
+ 	filter: none !important;
+ 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='theme/images/close.png');
+
+	width:25px; 
+	height:29px; 
+	display:inline; 
+	z-index:3200; 
+	position:absolute; 
+	top:-15px; 
+	right:-18px; 
+	cursor:pointer;
+}
+
+#seleccion-container  #seleccionModalContent {
+	padding:8px;
+}   
+                  
+
+/************************************************
+
+TABS
+
+*************************************************/
+
+#nav a, #nav a:active, #nav a:visited {
+	display:block;
+	float:left;
+	padding:5px 8px;
+	background:#DAF1C9;
+	color:green;
+	margin-right:10px;
+	text-decoration:none;
+	outline:none;
+	}
+#nav a.selected, #nav a.selected:active, #nav a.selected:visited {
+	background:#C51D1D;
+	color:#fff;
+	text-decoration:none;
+	outline:none;
+	}
+
+.hiddencontent {
+	padding:12px;
+	background:#eee;
+	display:none;
+	}
+
+
+/******
+ MIGAS 2 (pagina de seleccion de cateforias y de resultado)
+ 
+ */
+ 
+ #migas2 p.txt 
+{
+color:#0058b0;
+float:left;
+font-size:1em;
+margin:0;
+padding:8px 0 0 17px;
+}
+
+#migas2 ul li a 
+{
+background:url(../gobcan/img/listas/sig.gif) no-repeat right center;
+color:#535353;
+margin-right:5px;
+padding-right:8px;
+text-decoration:none;
+}
+
+#migas2 ul li a.sin 
+{
+background:url(../gobcan/img/listas/sig.gif) no-repeat right center;
+color:#535353;
+margin-right:5px;
+padding-right:8px;
+text-decoration:none;
+}
+
+#migas2 ul li a:hover 
+{
+text-decoration:underline;
+}
+
+#migas2 ul li strong 
+{
+color:#000;
+}
+
+#migas2 ul li 
+{
+color:#0058b0; 
+display:inline; 
+font-size:1em;
+background:none;
+padding-left: 0px;
+}
+
+#migas2 ul 
+{
+float:left; 
+list-style-type:none; 
+margin:2px 0 0 0; 
+padding:6px 0 0 5px;
+}
+
+#migas2 
+{
+	float:left;
+	margin:0;
+	padding:0 0 7px;
+	width:100%;
+}
+
+#migas2 ul li a.noSiguiente {
+	background: none;
+}
+
+
+
+/* Caution! Ensure accessibility in print and other media types... */
+@media projection, screen { /* Use class for showing/hiding tab content, so that visibility can be better controlled in different media types... */
+    .ui-tabs-hide {
+
+   position: absolute;
+    left: -10000px;
+	
+    }
+}
+
+/* Hide useless elements in print layouts... */
+@media print {
+    .ui-tabs-nav {
+        display: none;
+    }
+}
+
+/* Skin */
+.ui-tabs-nav, .ui-tabs-panel {
+    font-family: "Trebuchet MS", Trebuchet, Verdana, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+.ui-tabs-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1px;
+}
+.ui-tabs-nav:after { /* clearing without presentational markup, IE gets extra treatment */
+    display: block;
+    clear: both;
+    content: " ";
+}
+.ui-tabs-nav li {
+    float: left;
+    margin: 0px 0px 0px 3px;
+    min-width: 84px; /* be nice to Opera */
+}
+.ui-tabs-nav a, .ui-tabs-nav a span {
+    display: block;
+    padding: 0 10px;
+    background: url(../../theme/images/tab.png) no-repeat;
+}
+.ui-tabs-nav a {
+    margin: 1px 0 0; /* position: relative makes opacity fail for disabled tab in IE */
+    padding-left: 0;
+    color: #27537a;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap; /* required in IE 6 */    
+    outline: 0; /* prevent dotted border in Firefox */
+}
+.ui-tabs-nav .ui-tabs-selected a {
+    position: relative;
+    top: 1px;
+    z-index: 2;
+    margin-top: 0;
+    color: #000;
+}
+.ui-tabs-nav a span {
+    width: 64px; /* IE 6 treats width as min-width */
+    min-width: 64px;
+    height: 18px; /* IE 6 treats height as min-height */
+    min-height: 18px;
+    padding-top: 6px;
+    padding-right: 0;
+}
+*>.ui-tabs-nav a span { /* hide from IE 6 */
+    width: auto;
+    height: auto;
+}
+.ui-tabs-nav .ui-tabs-selected a span {
+    padding-bottom: 1px;
+}
+.ui-tabs-nav .ui-tabs-selected a, .ui-tabs-nav a:hover, .ui-tabs-nav a:focus, .ui-tabs-nav a:active {
+    background-position: 100% -150px;
+}
+.ui-tabs-nav a, .ui-tabs-nav .ui-tabs-disabled a:hover, .ui-tabs-nav .ui-tabs-disabled a:focus, .ui-tabs-nav .ui-tabs-disabled a:active {
+    background-position: 100% -100px;
+}
+.ui-tabs-nav .ui-tabs-selected a span, .ui-tabs-nav a:hover span, .ui-tabs-nav a:focus span, .ui-tabs-nav a:active span {
+    background-position: 0 -50px;
+}
+.ui-tabs-nav a span, .ui-tabs-nav .ui-tabs-disabled a:hover span, .ui-tabs-nav .ui-tabs-disabled a:focus span, .ui-tabs-nav .ui-tabs-disabled a:active span {
+    background-position: 0 0;
+}
+.ui-tabs-nav .ui-tabs-selected a:link, .ui-tabs-nav .ui-tabs-selected a:visited, .ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited { /* @ Opera, use pseudo classes otherwise it confuses cursor... */
+    cursor: text;
+}
+.ui-tabs-nav a:hover, .ui-tabs-nav a:focus, .ui-tabs-nav a:active,
+.ui-tabs-nav .ui-tabs-deselectable a:hover, .ui-tabs-nav .ui-tabs-deselectable a:focus, .ui-tabs-nav .ui-tabs-deselectable a:active { /* @ Opera, we need to be explicit again here now... */
+    cursor: pointer;
+}
+.ui-tabs-disabled {
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+.ui-tabs-panel {
+    border-top: 1px solid #97a5b0;
+    padding: 1em 8px;
+    background: #fff; /* declare background color for container to avoid distorted fonts in IE while fading */
+}
+.ui-tabs-loading em {
+    padding: 0 0 0 20px;
+    background: url(loading.gif) no-repeat 0 50%;
+}
+
+/* Additional IE specific bug fixes... */
+* html .ui-tabs-nav { /* auto clear, @ IE 6 & IE 7 Quirks Mode */
+    display: inline-block;
+}
+*:first-child+html .ui-tabs-nav  { /* @ IE 7 Standards Mode - do not group selectors, otherwise IE 6 will ignore complete rule (because of the unknown + combinator)... */
+    display: inline-block;
+}
+
+/* Mas estilos tabs */
+
+#container-1 ul {
+	margin: 0px;
+	padding: 0px 0px 0px 4px;
+	
+}
+
+#container-1 ul li {
+	background: none;
+	margin: 0px;
+	padding: 0px;
+	
+}
+
+
+/* Estilos en ayuda de toolbar */
+.ayuda_cell2{
+	float:left; 
+	padding-top:4px; 
+	padding-left: 20px;
+}
+
+

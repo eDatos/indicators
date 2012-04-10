@@ -5,16 +5,22 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />		
 		<meta http-equiv="Content-language" content="es" />	
-
+		<meta name="robots" content="all" />
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta name="keywords" content="gobierno canarias " />
+		<meta name="description" content=" Instituto Canario de Estadística " />
+		<meta http-equiv="imagetoolbar" content="no" />
+		
 		<title>[@spring.message "app.title" /]</title>
+		<link rel="shortcut icon" href="http://www.gobiernodecanarias.org/gc/img/favicon.ico"/>
 		
-		<link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"                   /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/clearfix.css"                /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/screen.css"                  /]" type="text/css" media="screen, projection" />		
-		<link rel="stylesheet" href="[@spring.url "/theme/css/jquery-ui-dataset-1.0.0.css" /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/jquery.jscrollpane.css"      /]" type="text/css" media="screen, projection" />
-		<link rel="stylesheet" href="[@spring.url "/theme/css/tables.css"                  /]" type="text/css" media="screen, projection" />
-		
+	 	<!-- Css -->
+		<link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"/]" type="text/css" media="screen, projection" />
+		<!-- Css Gobierno de Canarias -->
+		<link rel="stylesheet" href="http://www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
+		<!-- Css Application -->		
+		<link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />
+
 		<script type="text/javascript">
 			var context = "[@spring.url '' /]";
 		</script>
@@ -24,37 +30,41 @@
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery.json-2.3.min.js"                  /]" ></script>    
         
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-disable-text-selection-1.0.0.js"  /]" ></script>
-        
-		<script type="text/javascript" src="[@spring.url "/theme/js/libs/css_browser_selector.js"                 /]" ></script>
-		
-		<script type="text/javascript">
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-30024362-1']);
-		  _gaq.push(['_trackPageview']);
-		
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-		</script>
 	</head>
 	<body>
-		<div class="bloq_interior">
-			<div id="header">
-				<div id="top"></div> 
-				<h1><a href="[@spring.url "/index.html" /]">Indicators</a></h1>
-				<div id="menu">
-					<ul class="menu">
-						<li>
-							<a href="[@spring.url "/indicators-systems" /]">[@spring.message 'menu.indicators-systems' /]</a>
-						</li>
-						<li>
-							<a href="[@spring.url "/indicators" /]">[@spring.message 'menu.indicators' /]</a>
-						</li>
+		<div id="principal_interior">
+			<div id="cabecera">
+				<div id="cab_superior">
+					<ul>
+						<li><a href="http://www.gobiernodecanarias.org/istac/herramientas/rss.jsp" accesskey="r" title="Rich Site Summary (RSS) (tecla de acceso: r)"><img height="14" width="14" style="vertical-align: text-bottom; float: none;" src="theme/gobcan/img/atom.png" title="RSS" alt="RSS" /> RSS</a></li>
+						 <li>|</li>
+						<li><a href="http://www.gobiernodecanarias.org/istac/servicios/atencion.jsp" accesskey="o" title="Contacte con nosotros (tecla de acceso: o)">Contacto</a></li>
+				
 					</ul>
-				</div>		
+				</div>
+
+				<h1><a href="http://www.gobiernodecanarias.org/istac" title="P&aacute;gina principal del Instituto Canario de Estadística (ISTAC) - Opciones de accesibilidad (tecla de acceso: i)" accesskey="i">Instituto Canario de Estadística</a></h1>
+				<div id="menu_contextual">
+					<ul class="menu">
+						  <li class="selec"><a href="/istac/estadisticas.jsp" accesskey="2" title="Estadísticas (tecla de acceso: 2)">Estadísticas</a></li>
+						  <li class="inactive"><a href="/istac/el_istac.jsp" accesskey="3" title="El ISTAC (tecla de acceso: 3)">El ISTAC</a></li>
+						  <li class="inactive"><a href="/istac/webescolar" accesskey="4" title="WEB Escolar (tecla de acceso: 4)">WEB Escolar</a></li>
+					</ul>
+				</div>
 			</div>
+			<div style="clear:both;"></div>
+			<div id="migas">
+				<p class="txt">[@apph.messageEscape 'app.header.whereis'/]</p>
+				<ul>
+					<li>
+						<a href="/istac">Inicio</a>
+					</li>
+					<li>
+						<strong>TODO<strong>
+					</li>
+				</ul>
+			</div>
+
 			<div id="column-body">
 				[#nested]
 			</div>
