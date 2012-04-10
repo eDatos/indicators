@@ -22,6 +22,12 @@
             <classifier>client</classifier>
         </dependency>
 
+		<!-- METAMAC -->
+		<dependency>
+			<groupId>org.siemac.metamac.statistical.operations</groupId>
+			<artifactId>metamac-statistical-operations-ws-api</artifactId>
+		</dependency>        
+
         <!-- WEB -->
         <dependency>
             <groupId>javax.servlet</groupId>

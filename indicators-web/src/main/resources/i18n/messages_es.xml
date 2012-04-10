@@ -17,15 +17,15 @@
     
     <!-- MENU -->
     <entry key="menu.indicators-systems">INDICATORS SYSTEMS</entry>
+    <entry key="menu.indicators">INDICATORS</entry>
     <entry key="menu.left.title">Menú</entry>
     
-    <!-- Indicators systems List -->
+    <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Indicators systems</entry>
-    
-    <!-- Indicators systems -->    
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
-    <entry key="entity.indicators-system.code">Código</entry>
-    <entry key="entity.indindicators-system.uri">Uri</entry>
     
+    <!-- Indicators -->
+    <entry key="page.indicators-list.title">Indicators</entry>
+    <entry key="entity.indicators">Indicador</entry>
   
 </properties>

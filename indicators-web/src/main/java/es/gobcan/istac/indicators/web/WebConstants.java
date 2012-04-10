@@ -17,4 +17,7 @@ public interface WebConstants {
     // Locales
     public String LOCALE_ES                         = "es";
     public String LOCALE_EN                         = "en";
+    
+    // Configuration
+    public String METAMAC_STATISTICAL_OPERATIONS_INTERNAL_ENDPOINT_ADDRESS_PROPERTY = "indicators.ws.metamac.statistical.operations.internal.endpoint";
 }
