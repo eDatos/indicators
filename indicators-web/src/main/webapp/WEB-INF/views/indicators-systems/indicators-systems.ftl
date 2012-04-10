@@ -13,7 +13,7 @@
 
 <script type="text/html" id="indicatorsSystemTmpl">
 	<div>
-		<p><%= code %></p>
+		<p><a href='<%= context %>/indicators-systems/<%= code%>.html'><%= code %></a></p>
 	</div>
 </script>
 
@@ -22,11 +22,6 @@
 </script>
 
 <script>
-
-	function containsLowerCase(a, b){
-		return a.toLowerCase().indexOf(b.toLowerCase()) != -1;     
-	};
-
 	var IndicatorsSystemsCollection = Backbone.Collection.extend({
 		
 		initialize : function(){

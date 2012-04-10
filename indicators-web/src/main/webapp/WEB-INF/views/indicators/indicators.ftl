@@ -27,20 +27,6 @@
 </script>
 
 <script>
-	function getLabel(internationalString, locale){
-		var localisedString = _.find(internationalString.texts, function(text) {
-			return text.locale == locale;
-		});
-		if (localisedString) {
-			return localisedString.label;
-		} 
-		return '';
-	};
-
-	function containsLowerCase(a, b){
-		return a.toLowerCase().indexOf(b.toLowerCase()) != -1;     
-	};
-
 	var IndicatorsCollection = Backbone.Collection.extend({
 		
 		initialize : function(){

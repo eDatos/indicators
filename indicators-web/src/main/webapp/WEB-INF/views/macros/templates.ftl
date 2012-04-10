@@ -24,6 +24,7 @@
 		</script>
 		
 		<!-- Js -->
+		<script type="text/javascript" src="[@spring.url "/theme/js/libs/indicators-utils.js"                     /]" ></script>
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-1.7.1.js"                         /]" ></script>
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-ui-1.8.17.custom.js"              /]" ></script>
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery.json-2.3.min.js"                  /]" ></script>    
