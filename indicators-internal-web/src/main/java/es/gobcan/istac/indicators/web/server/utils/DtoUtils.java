@@ -2,41 +2,87 @@ package es.gobcan.istac.indicators.web.server.utils;
 
 import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
-import org.siemac.metamac.gopestat.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class DtoUtils {
 
     /**
-     * Fills {@link IndicatorsSystemDto} from a {@link OperationBase}
+     * Updates {@link IndicatorsSystemDtoWeb}
      * 
+     * @param indicatorsSystemDtoWeb
+     * @param indicatorsSystemDto
+     * @return
+     */
+    public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto) {
+        return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto, null);
+    }
+
+    /**
+     * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link OperationBase}
+     * 
+     * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
      * @param operationBase
      * @return
      */
-    public static IndicatorsSystemDto getIndicatorsSystemDtoFromOperationBase(IndicatorsSystemDto indicatorsSystemDto, OperationBase operationBase) {
-        indicatorsSystemDto.setUriGopestat(operationBase.getUri());
-        indicatorsSystemDto.setCode(operationBase.getCode());
-        indicatorsSystemDto.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
-        indicatorsSystemDto.setAcronym(getInternationalStringDtoFromInternationalString(operationBase.getAcronym()));
-        indicatorsSystemDto.setDescription(getInternationalStringDtoFromInternationalString(operationBase.getObjetive()));
-        indicatorsSystemDto.setObjetive(getInternationalStringDtoFromInternationalString(operationBase.getObjetive()));
-        indicatorsSystemDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
-        return indicatorsSystemDto;
+    public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto, OperationBase operationBase) {
+        if (indicatorsSystemDto != null) {
+            indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
+            indicatorsSystemDtoWeb.setVersionNumber(indicatorsSystemDto.getVersionNumber());
+            indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
+            indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
+            indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
+            indicatorsSystemDtoWeb.setProductionValidationDate(indicatorsSystemDto.getProductionValidationDate());
+            indicatorsSystemDtoWeb.setProductionValidationUser(indicatorsSystemDto.getProductionValidationUser());
+            indicatorsSystemDtoWeb.setDiffusionValidationDate(indicatorsSystemDto.getDiffusionValidationDate());
+            indicatorsSystemDtoWeb.setDiffusionValidationUser(indicatorsSystemDto.getDiffusionValidationUser());
+            indicatorsSystemDtoWeb.setPublicationDate(indicatorsSystemDto.getPublicationDate());
+            indicatorsSystemDtoWeb.setPublicationUser(indicatorsSystemDto.getPublicationUser());
+            indicatorsSystemDtoWeb.setArchiveDate(indicatorsSystemDto.getArchiveDate());
+            indicatorsSystemDtoWeb.setArchiveUser(indicatorsSystemDto.getArchiveUser());
+            indicatorsSystemDtoWeb.setProcStatus(indicatorsSystemDto.getProcStatus());
+            indicatorsSystemDtoWeb.setCreatedDate(indicatorsSystemDto.getCreatedDate());
+            indicatorsSystemDtoWeb.setCreatedBy(indicatorsSystemDto.getCreatedBy());
+            indicatorsSystemDtoWeb.setLastUpdated(indicatorsSystemDto.getLastUpdated());
+            indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
+        }
+        if (operationBase != null) {
+            indicatorsSystemDtoWeb.setStatisticalOperationUri(operationBase.getUri());
+            indicatorsSystemDtoWeb.setCode(operationBase.getCode());
+            indicatorsSystemDtoWeb.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
+            indicatorsSystemDtoWeb.setAcronym(getInternationalStringDtoFromInternationalString(operationBase.getAcronym()));
+            indicatorsSystemDtoWeb.setDescription(getInternationalStringDtoFromInternationalString(operationBase.getDescription()));
+            indicatorsSystemDtoWeb.setObjective(getInternationalStringDtoFromInternationalString(operationBase.getObjective()));
+        }
+        return indicatorsSystemDtoWeb;
     }
-
+    
+    /**
+     * Create an {@link IndicatorsSystemDtoWeb} from a {@link OperationBase}
+     * 
+     * @param operationBase
+     * @return
+     */
+    public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(OperationBase operationBase) {
+        IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
+        indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
+        return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
+    }
+    
     /**
      * Returns an {@link InternationalStringDto} from an {@link InternationalString}
      * 
      * @param internationalString
      * @return
      */
-    public static InternationalStringDto getInternationalStringDtoFromInternationalString(InternationalString internationalString) {
+    private static InternationalStringDto getInternationalStringDtoFromInternationalString(InternationalString internationalString) {
         if (internationalString != null) {
             InternationalStringDto internationalStringDto = new InternationalStringDto();
             LocalisedStringList localisedStringList = internationalString.getLocalisedStrings();
