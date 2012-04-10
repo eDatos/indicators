@@ -13,8 +13,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class SendIndicatorsSystemToProductionValidationActionHandler extends AbstractActionHandler<SendIndicatorsSystemToProductionValidationAction, SendIndicatorsSystemToProductionValidationResult> {
@@ -28,15 +30,17 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
 
     @Override
     public SendIndicatorsSystemToProductionValidationResult execute(SendIndicatorsSystemToProductionValidationAction action, ExecutionContext context) throws ActionException {
+        IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getSystemToSend();
+
         IndicatorsSystemDto indicatorsSystemDto = null;
         // If system does not exist, create and send to production validation
         try {
-            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getSystemToSend().getCode(), null);
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getCode(), null);
         } catch (MetamacException e) {
             try {
-                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), action.getSystemToSend());
+                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb);
                 indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid());
-                return new SendIndicatorsSystemToProductionValidationResult(indicatorsSystemDto);
+                return new SendIndicatorsSystemToProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
             } catch (MetamacException e1) {
                 throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
             }
@@ -47,7 +51,7 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
-        return new SendIndicatorsSystemToProductionValidationResult(indicatorsSystemDto);
+        return new SendIndicatorsSystemToProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
     }
 
     @Override

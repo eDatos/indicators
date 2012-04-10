@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
@@ -36,21 +37,19 @@ public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<
 
     @Override
     public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
-        List<IndicatorsSystemDto> indicatorsSystemDtos = new ArrayList<IndicatorsSystemDto>();
+        List<IndicatorsSystemDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemDtoWeb>();
         OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem();
-        if (operationBaseList.getOperation() != null) {
+        if (operationBaseList != null && operationBaseList.getOperation() != null) {
             for (OperationBase operationBase : operationBaseList.getOperation()) {
                 // Check if operation (indicators system) exists in the DB
                 try {
-                    // If exists, update its values with the operation ones
+                    // If exists, updates indicators system
                     IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), operationBase.getCode(), null);
-                    // indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(indicatorsSystemDto, operationBase);
-                    indicatorsSystemDtos.add(indicatorsSystemDto);
+                    indicatorsSystemDtos.add(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operationBase));
                 } catch (MetamacException e) {
-                    // If does not exist, create a new indicators system and set operation values
-                    IndicatorsSystemDto indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
-                    indicatorsSystemDtos.add(indicatorsSystemDto);
+                    indicatorsSystemDtos.add(DtoUtils.createIndicatorsSystemDtoWeb(operationBase));
                 }
+
             }
         }
         return new GetIndicatorsSystemListResult(indicatorsSystemDtos);

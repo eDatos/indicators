@@ -13,8 +13,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class RejectIndicatorsSystemValidationActionHandler extends AbstractActionHandler<RejectIndicatorsSystemValidationAction, RejectIndicatorsSystemValidationResult> {
@@ -29,8 +31,9 @@ public class RejectIndicatorsSystemValidationActionHandler extends AbstractActio
     @Override
     public RejectIndicatorsSystemValidationResult execute(RejectIndicatorsSystemValidationAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new RejectIndicatorsSystemValidationResult(indicatorsSystemDto);
+            IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getIndicatorsSystemToReject();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            return new RejectIndicatorsSystemValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

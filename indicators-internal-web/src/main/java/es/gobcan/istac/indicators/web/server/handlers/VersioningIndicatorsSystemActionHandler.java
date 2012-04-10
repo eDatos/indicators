@@ -13,8 +13,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class VersioningIndicatorsSystemActionHandler extends AbstractActionHandler<VersioningIndicatorsSystemAction, VersioningIndicatorsSystemResult> {
@@ -29,8 +31,10 @@ public class VersioningIndicatorsSystemActionHandler extends AbstractActionHandl
     @Override
     public VersioningIndicatorsSystemResult execute(VersioningIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.versioningIndicatorsSystem(ServiceContextHelper.getServiceContext(), action.getUuid(), action.getVersionType());
-            return new VersioningIndicatorsSystemResult(indicatorsSystemDto);
+            IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getIndicatorsSystemToVersioning();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.versioningIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid(),
+                    action.getVersionType());
+            return new VersioningIndicatorsSystemResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

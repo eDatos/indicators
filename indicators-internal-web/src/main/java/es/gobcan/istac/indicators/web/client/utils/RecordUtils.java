@@ -5,11 +5,11 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class RecordUtils {
 
@@ -19,7 +19,7 @@ public class RecordUtils {
         return record;
     }
 
-    public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDto indicatorsSystemDto) {
+    public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDtoWeb indicatorsSystemDto) {
         IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getCode(), getLocalisedString(indicatorsSystemDto.getTitle()), getCoreMessages()
                 .getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorsSystemDto.getProcStatus().getName()));
         return record;

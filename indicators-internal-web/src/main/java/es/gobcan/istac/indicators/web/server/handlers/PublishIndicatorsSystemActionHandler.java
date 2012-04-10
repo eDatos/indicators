@@ -13,8 +13,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class PublishIndicatorsSystemActionHandler extends AbstractActionHandler<PublishIndicatorsSystemAction, PublishIndicatorsSystemResult> {
@@ -29,8 +31,9 @@ public class PublishIndicatorsSystemActionHandler extends AbstractActionHandler<
     @Override
     public PublishIndicatorsSystemResult execute(PublishIndicatorsSystemAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.publishIndicatorsSystem(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new PublishIndicatorsSystemResult(indicatorsSystemDto);
+            IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getIndicatorsSystemToPublish();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.publishIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            return new PublishIndicatorsSystemResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

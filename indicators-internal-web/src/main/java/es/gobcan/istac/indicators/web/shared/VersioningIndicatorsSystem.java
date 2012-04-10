@@ -4,19 +4,19 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @GenDispatch(isSecure = false)
 public class VersioningIndicatorsSystem {
 
     @In(1)
-    String              uuid;
+    IndicatorsSystemDtoWeb indicatorsSystemToVersioning;
 
     @In(2)
-    VersionTypeEnum     versionType;
+    VersionTypeEnum        versionType;
 
     @Out(1)
-    IndicatorsSystemDto indicatorsSystemDto;
+    IndicatorsSystemDtoWeb indicatorsSystemDtoWeb;
 
 }

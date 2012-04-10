@@ -36,7 +36,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
@@ -83,6 +82,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler, UpdateGeographicalGranularitiesHandler {
 
@@ -97,7 +97,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     private DispatchAsync                             dispatcher;
 
     /* Models */
-    private IndicatorsSystemDto                       indSystem;
+    private IndicatorsSystemDtoWeb                    indSystem;
     private String                                    codeLastStructure;
 
     public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
@@ -106,9 +106,9 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
         void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
         void setIndicators(List<IndicatorDto> indicators);
-        void setIndicatorsSystem(IndicatorsSystemDto indicatorSystem);
-        void onIndicatorsSystemStatusChanged(IndicatorsSystemDto indicatorSystem);
-        void setIndicatorsSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure);
+        void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
+        void onIndicatorsSystemStatusChanged(IndicatorsSystemDtoWeb indicatorSystem);
+        void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
         void onDimensionSaved(DimensionDto dimension);
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
 
@@ -231,7 +231,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void createDimension(IndicatorsSystemDto system, DimensionDto dimension) {
+    public void createDimension(IndicatorsSystemDtoWeb system, DimensionDto dimension) {
         dispatcher.execute(new CreateDimensionAction(system, dimension), new AsyncCallback<CreateDimensionResult>() {
 
             @Override
@@ -281,7 +281,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void createIndicatorInstance(IndicatorsSystemDto system, IndicatorInstanceDto instance) {
+    public void createIndicatorInstance(IndicatorsSystemDtoWeb system, IndicatorInstanceDto instance) {
         dispatcher.execute(new CreateIndicatorInstanceAction(system, instance), new AsyncCallback<CreateIndicatorInstanceResult>() {
 
             @Override
@@ -399,7 +399,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void sendToProductionValidation(final IndicatorsSystemDto indicatorsSystemDto) {
+    public void sendToProductionValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
         dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(indicatorsSystemDto), new AsyncCallback<SendIndicatorsSystemToProductionValidationResult>() {
 
             @Override
@@ -410,35 +410,35 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onSuccess(SendIndicatorsSystemToProductionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToProductionValidation()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
 
     @Override
-    public void sendToDiffusionValidation(final String uuid) {
-        dispatcher.execute(new SendIndicatorsSystemToDiffusionValidationAction(uuid), new AsyncCallback<SendIndicatorsSystemToDiffusionValidationResult>() {
+    public void sendToDiffusionValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new SendIndicatorsSystemToDiffusionValidationAction(indicatorsSystemDto), new AsyncCallback<SendIndicatorsSystemToDiffusionValidationResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sendind to diffusion validation indicators system with uuid = " + uuid);
+                logger.log(Level.SEVERE, "Error sendind to diffusion validation indicators system with uuid = " + indicatorsSystemDto.getUuid());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToDiffusionValidation()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(SendIndicatorsSystemToDiffusionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
 
     @Override
-    public void rejectValidation(final String uuid) {
-        dispatcher.execute(new RejectIndicatorsSystemValidationAction(uuid), new AsyncCallback<RejectIndicatorsSystemValidationResult>() {
+    public void rejectValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new RejectIndicatorsSystemValidationAction(indicatorsSystemDto), new AsyncCallback<RejectIndicatorsSystemValidationResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + uuid);
+                logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
             }
             @Override
@@ -450,12 +450,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void publish(final String uuid) {
-        dispatcher.execute(new PublishIndicatorsSystemAction(uuid), new AsyncCallback<PublishIndicatorsSystemResult>() {
+    public void publish(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new AsyncCallback<PublishIndicatorsSystemResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + uuid);
+                logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + indicatorsSystemDto.getUuid());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingSystem()), MessageTypeEnum.ERROR);
             }
             @Override
@@ -467,25 +467,25 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void archive(final String uuid) {
-        dispatcher.execute(new ArchiveIndicatorsSystemAction(uuid), new AsyncCallback<ArchiveIndicatorsSystemResult>() {
+    public void archive(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new ArchiveIndicatorsSystemAction(indicatorsSystemDto), new AsyncCallback<ArchiveIndicatorsSystemResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error archiving indicators system with uuid = " + uuid);
+                logger.log(Level.SEVERE, "Error archiving indicators system with uuid = " + indicatorsSystemDto.getUuid());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorArchivingSystem()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onSuccess(ArchiveIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemArchived()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
 
     @Override
-    public void versioningIndicatorsSystem(String uuid, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersioningIndicatorsSystemAction(uuid, versionType), new AsyncCallback<VersioningIndicatorsSystemResult>() {
+    public void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType) {
+        dispatcher.execute(new VersioningIndicatorsSystemAction(indicatorsSystemDto, versionType), new AsyncCallback<VersioningIndicatorsSystemResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -494,7 +494,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onSuccess(VersioningIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
-                getView().setIndicatorsSystem(result.getIndicatorsSystemDto());
+                getView().setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }

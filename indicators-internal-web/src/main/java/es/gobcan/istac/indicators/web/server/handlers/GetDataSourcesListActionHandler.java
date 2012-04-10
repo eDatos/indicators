@@ -31,7 +31,8 @@ public class GetDataSourcesListActionHandler extends AbstractActionHandler<GetDa
     @Override
     public GetDataSourcesListResult execute(GetDataSourcesListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<DataSourceDto> dataSourceDtos = indicatorsServiceFacade.retrieveDataSourcesByIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getIndicatorVersion());
+            List<DataSourceDto> dataSourceDtos = indicatorsServiceFacade.retrieveDataSourcesByIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(),
+                    action.getIndicatorVersion());
             return new GetDataSourcesListResult(dataSourceDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

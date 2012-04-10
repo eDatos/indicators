@@ -46,7 +46,7 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
                 // Retrieve operation from WS
                 OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(action.getIndicatorsSystem().getCode());
                 // Set values to indicators system
-                indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
+                indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operationBase);
                 // Create indicators system
                 indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e2) {

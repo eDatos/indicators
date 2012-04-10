@@ -69,7 +69,6 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -82,11 +81,12 @@ import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNo
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemStructurePanel extends HLayout {
 
     private SystemUiHandler          uiHandlers;
-    private IndicatorsSystemDto      system;
+    private IndicatorsSystemDtoWeb   system;
 
     private EditableTreePanel        treePanelEdit;
 
@@ -146,7 +146,7 @@ public class SystemStructurePanel extends HLayout {
         });
     }
 
-    public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
+    public void setIndicatorsSystem(IndicatorsSystemDtoWeb indSys) {
         this.system = indSys;
         treePanelEdit.setIndicatorsSystem(indSys);
         hidePanels();
@@ -160,7 +160,7 @@ public class SystemStructurePanel extends HLayout {
         indicatorInstPanel.setIndicator(indicator);
     }
 
-    public void setIndicatorSystemStructure(IndicatorsSystemDto indicatorsSystem, IndicatorsSystemStructureDto structure) {
+    public void setIndicatorSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure) {
         if (this.system != null && indicatorsSystem != null) {
             if (this.system.getCode().equals(indicatorsSystem.getCode())) { // reloading same structure
                 // check if we have just persisted the system, in that case reload
@@ -342,7 +342,7 @@ public class SystemStructurePanel extends HLayout {
             }
         }
 
-        public void setIndicatorsSystem(IndicatorsSystemDto indSys) {
+        public void setIndicatorsSystem(IndicatorsSystemDtoWeb indSys) {
             falseRoot.setAttribute("Name", getLocalisedString(indSys.getTitle()));
             falseRoot.setAttribute("Source", indSys);
             treeGrid.redraw();

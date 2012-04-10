@@ -24,19 +24,19 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemListPresenter extends Presenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 
     public interface SystemListView extends View, HasUiHandlers<SystemListUiHandler> {
 
-        void setIndSystemList(List<IndicatorsSystemDto> indSysList);
+        void setIndSystemList(List<IndicatorsSystemDtoWeb> indSysList);
     }
 
     @ProxyCodeSplit

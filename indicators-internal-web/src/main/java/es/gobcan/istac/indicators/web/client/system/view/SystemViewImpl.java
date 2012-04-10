@@ -22,10 +22,10 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto
 import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
 
@@ -89,14 +89,14 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void setIndicatorsSystem(IndicatorsSystemDto indSystem) {
+    public void setIndicatorsSystem(IndicatorsSystemDtoWeb indSystem) {
         indSysLabel.setContents(getLocalisedString(indSystem.getTitle()));
         generalPanel.setIndicatorsSystem(indSystem);
         structurePanel.setIndicatorsSystem(indSystem);
     }
 
     @Override
-    public void setIndicatorsSystemStructure(IndicatorsSystemDto indicatosSystem, IndicatorsSystemStructureDto structure) {
+    public void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatosSystem, IndicatorsSystemStructureDto structure) {
         structurePanel.setIndicatorSystemStructure(indicatosSystem, structure);
     }
 
@@ -143,7 +143,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void onIndicatorsSystemStatusChanged(IndicatorsSystemDto indicatorSystem) {
+    public void onIndicatorsSystemStatusChanged(IndicatorsSystemDtoWeb indicatorSystem) {
         generalPanel.setIndicatorsSystem(indicatorSystem);
         structurePanel.setIndicatorsSystem(indicatorSystem);
     }

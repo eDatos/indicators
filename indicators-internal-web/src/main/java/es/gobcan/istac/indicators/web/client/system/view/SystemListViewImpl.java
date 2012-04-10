@@ -17,12 +17,12 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
@@ -67,10 +67,10 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
     }
 
     @Override
-    public void setIndSystemList(List<IndicatorsSystemDto> indicatorsSystemList) {
+    public void setIndSystemList(List<IndicatorsSystemDtoWeb> indicatorsSystemList) {
         IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
         int index = 0;
-        for (IndicatorsSystemDto indSys : indicatorsSystemList) {
+        for (IndicatorsSystemDtoWeb indSys : indicatorsSystemList) {
             records[index++] = RecordUtils.getIndicatorsSystemRecord(indSys);
         }
         indSystemListGrid.setData(records);

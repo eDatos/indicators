@@ -5,17 +5,17 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @GenDispatch(isSecure = false)
 public class CreateIndicatorInstance {
 
     @In(1)
-    IndicatorsSystemDto  indicatorsSystem;
+    IndicatorsSystemDtoWeb indicatorsSystem;
 
     @In(2)
-    IndicatorInstanceDto indicatorInstance;
+    IndicatorInstanceDto   indicatorInstance;
 
     @Out(1)
-    IndicatorInstanceDto createdIndicatorInstance;
+    IndicatorInstanceDto   createdIndicatorInstance;
 }

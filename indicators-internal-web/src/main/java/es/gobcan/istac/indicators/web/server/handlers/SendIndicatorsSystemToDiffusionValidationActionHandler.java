@@ -13,8 +13,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class SendIndicatorsSystemToDiffusionValidationActionHandler extends AbstractActionHandler<SendIndicatorsSystemToDiffusionValidationAction, SendIndicatorsSystemToDiffusionValidationResult> {
@@ -29,8 +31,9 @@ public class SendIndicatorsSystemToDiffusionValidationActionHandler extends Abst
     @Override
     public SendIndicatorsSystemToDiffusionValidationResult execute(SendIndicatorsSystemToDiffusionValidationAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new SendIndicatorsSystemToDiffusionValidationResult(indicatorsSystemDto);
+            IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getSystemToSend();
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            return new SendIndicatorsSystemToDiffusionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }

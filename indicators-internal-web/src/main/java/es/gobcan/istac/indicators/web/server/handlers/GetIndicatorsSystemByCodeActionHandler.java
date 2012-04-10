@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
 public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemByCodeAction, GetIndicatorsSystemByCodeResult> {
@@ -32,18 +33,15 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
 
     @Override
     public GetIndicatorsSystemByCodeResult execute(GetIndicatorsSystemByCodeAction action, ExecutionContext context) throws ActionException {
+        // Retrieve operation from WS
+        OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(action.getCode());
         // Check if operation (indicators system) exists in the DB
         try {
-            // If exists, return indicators system
-            // TODO Values should be updated with the operation ones????
+            // If exists, updates indicators system
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
-            return new GetIndicatorsSystemByCodeResult(indicatorsSystemDto);
+            return new GetIndicatorsSystemByCodeResult(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operationBase));
         } catch (MetamacException e) {
-            // If does not exist, create a new indicators system and set operation values
-            // Retrieve operation from WS
-            OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(action.getCode());
-            IndicatorsSystemDto indicatorsSystemDto = DtoUtils.getIndicatorsSystemDtoFromOperationBase(new IndicatorsSystemDto(), operationBase);
-            return new GetIndicatorsSystemByCodeResult(indicatorsSystemDto);
+            return new GetIndicatorsSystemByCodeResult(DtoUtils.createIndicatorsSystemDtoWeb(operationBase));
         }
     }
 

@@ -63,7 +63,7 @@ public class DtoUtils {
         }
         return indicatorsSystemDtoWeb;
     }
-    
+
     /**
      * Create an {@link IndicatorsSystemDtoWeb} from a {@link OperationBase}
      * 
@@ -75,7 +75,7 @@ public class DtoUtils {
         indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
     }
-    
+
     /**
      * Returns an {@link InternationalStringDto} from an {@link InternationalString}
      * 

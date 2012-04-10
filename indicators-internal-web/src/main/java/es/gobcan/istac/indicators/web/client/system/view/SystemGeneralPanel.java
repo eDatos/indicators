@@ -12,26 +12,26 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.widgets.SystemMainFormLayout;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemGeneralPanel extends VLayout {
 
-    private SystemUiHandler      uiHandlers;
+    private SystemUiHandler        uiHandlers;
 
-    private SystemMainFormLayout mainFormLayout;
+    private SystemMainFormLayout   mainFormLayout;
 
     /* VIEW FORM */
-    private GroupDynamicForm     identifiersForm;
-    private GroupDynamicForm     productionForm;
-    private GroupDynamicForm     diffusionForm;
-    private GroupDynamicForm     contentForm;
-    private GroupDynamicForm     publicationForm;
+    private GroupDynamicForm       identifiersForm;
+    private GroupDynamicForm       productionForm;
+    private GroupDynamicForm       diffusionForm;
+    private GroupDynamicForm       contentForm;
+    private GroupDynamicForm       publicationForm;
 
-    private IndicatorsSystemDto  indicatorsSystemDto;
+    private IndicatorsSystemDtoWeb indicatorsSystemDto;
 
     public SystemGeneralPanel() {
         super();
@@ -59,28 +59,28 @@ public class SystemGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.sendToDiffusionValidation(indicatorsSystemDto.getUuid());
+                uiHandlers.sendToDiffusionValidation(indicatorsSystemDto);
             }
         });
         mainFormLayout.getRejectValidation().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.rejectValidation(indicatorsSystemDto.getUuid());
+                uiHandlers.rejectValidation(indicatorsSystemDto);
             }
         });
         mainFormLayout.getPublish().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.publish(indicatorsSystemDto.getUuid());
+                uiHandlers.publish(indicatorsSystemDto);
             }
         });
         mainFormLayout.getArchive().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.archive(indicatorsSystemDto.getUuid());
+                uiHandlers.archive(indicatorsSystemDto);
             }
         });
         mainFormLayout.getVersioning().addClickHandler(new ClickHandler() {
@@ -93,7 +93,7 @@ public class SystemGeneralPanel extends VLayout {
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (versionWindow.validateForm()) {
-                            uiHandlers.versioningIndicatorsSystem(indicatorsSystemDto.getUuid(), versionWindow.getSelectedVersion());
+                            uiHandlers.versioningIndicatorsSystem(indicatorsSystemDto, versionWindow.getSelectedVersion());
                             versionWindow.destroy();
                         }
                     }
@@ -157,15 +157,14 @@ public class SystemGeneralPanel extends VLayout {
         mainFormLayout.addViewCanvas(publicationForm);
     }
 
-    public void setIndicatorsSystem(IndicatorsSystemDto indicatorSystemDto) {
+    public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
         this.indicatorsSystemDto = indicatorSystemDto;
         mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
 
         // Identifiers
         identifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
-        identifiersForm.setValue(IndicatorsSystemsDS.URI, indicatorSystemDto.getUriGopestat());
-        identifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
+        identifiersForm.setValue(IndicatorsSystemsDS.URI, indicatorSystemDto.getStatisticalOperationUri());
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
         identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorSystemDto.getProcStatus()));
@@ -182,7 +181,7 @@ public class SystemGeneralPanel extends VLayout {
 
         // Content Descriptors
         contentForm.setValue(IndicatorsSystemsDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getDescription()));
-        contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getObjetive()));
+        contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getObjective()));
 
         // Publication Descriptors
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, indicatorSystemDto.getPublicationDate() != null ? indicatorSystemDto.getPublicationDate().toString() : "");
