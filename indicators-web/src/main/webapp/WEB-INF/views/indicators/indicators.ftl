@@ -50,8 +50,7 @@
 		template : _.template($('#indicatorsTmpl').html()),
 		
 		render : function(){
-			$(this.el).html(this.template(this.model.toJSON()));
-			return this;
+			return this.template(this.model.toJSON());
 		}
 	});
 	
@@ -67,14 +66,13 @@
 			var filtered = this.collection.filtered();
 			if (filtered.length > 0){
 				var self = this;
-				//TODO esto se puede optimizar para no hacer una única inserción en el DOM
-				$(self.el).html("");
+				var viewHtml = '';
 				filtered.forEach(function(model){
 					var indicatorsView = new IndicatorView({ model : model});
-					var subViewHtml = indicatorsView.render().el;
-					
-					$(self.el).append(subViewHtml); 
+					var subViewHtml = indicatorsView.render();
+					viewHtml += subViewHtml; 
 				});
+				$(self.el).html(viewHtml);
 			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}

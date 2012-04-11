@@ -70,7 +70,8 @@
 	});
 	
 	var ElementsCollectionView = Backbone.View.extend({	
-			
+		el : $("#elements-view"), 
+		
 		render : function(){
 			var self = this;
 			var viewHtml = '';
@@ -88,7 +89,7 @@
 		indicatorsSystemView.render();
 		
 		var elementsCollection = new ElementsCollection(${indicatorsSystemStructure});
-		var elementsCollectionView = new ElementsCollectionView({el : $("#elements-view"), collection : elementsCollection});
+		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection});
 		elementsCollectionView.render();
 	});
 	
