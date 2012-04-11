@@ -18,16 +18,16 @@
     <entry key="date.long">dd/MM/yyyy HH:mm:ss</entry>
     
     <!-- MENU -->
-    <entry key="menu.indicators-systems">INDICATORS SYSTEMS</entry>
-    <entry key="menu.indicators">INDICATORS</entry>
+    <entry key="menu.indicators-systems">Sistemas de indicadores</entry>
+    <entry key="menu.indicators">Indicadores</entry>
     <entry key="menu.left.title">Menú</entry>
     
     <!-- Indicators systems -->
-    <entry key="page.indicators-system-list.title">Indicators systems</entry>
+    <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
     
     <!-- Indicators -->
-    <entry key="page.indicators-list.title">Indicators</entry>
+    <entry key="page.indicators-list.title">Indicadores</entry>
     <entry key="entity.indicators">Indicador</entry>
   
 </properties>

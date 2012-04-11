@@ -1,0 +1,40 @@
+/****************************************************/
+/*            GENERAL			                    */
+/****************************************************/
+table {
+	font-size: 1em;
+}
+
+input[type="image"] {
+	border: none;
+}
+
+/****************************************/
+/* LIST 								 */
+/****************************************/
+.listadoTablas ul li {
+	background:	none;
+}
+
+/*****************************************
+ H2 overwrite
+/****************************************/
+.h2roundbox { 
+	background: #c4d0dc;
+	width: 758px;
+	padding-bottom: 3px;	
+}
+
+.h2top { 
+	background: url(../images/h2overwrite/top.gif) no-repeat top; 
+	width: 100%;	
+	font-size: 1px;
+	height: 1px;
+}
+
+.h2content {
+	font-weight: bold;
+	font-size: 1em;
+	padding: 2px 0 0 7px;
+	margin: 0 0;
+}

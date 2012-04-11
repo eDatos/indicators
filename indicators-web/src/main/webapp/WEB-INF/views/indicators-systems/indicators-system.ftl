@@ -5,10 +5,17 @@
 <div id="indicators-system-view" />
 
 <script type="text/html" id="indicatorsSystemTmpl">
+	<div class="listadoTablas">
+		<div class="h2roundbox">
+			<div class="h2top"></div>
+			<div class="h2content">
+				<%= getLabel(title, 'es') %>
+			</div>
+		</div>
+	</div>
+	<br />		
 	<div>
-		<p><%= code %></p>
-		<p><%= getLabel(title, 'es') %></p>
-		<p><%= getLabel(description, 'es') %></p>
+		<p><%= getLabel(description, 'es') %>fdaf</p>
 	</div>
 </script>
 

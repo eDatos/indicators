@@ -14,7 +14,6 @@ public class WsToDtoMapperUtils {
     /**
      * Fills {@link IndicatorsSystemWebDto} from a {@link OperationBase}
      * 
-     * @param indicatorsSystemDto
      * @param operationBase
      * @return
      */
