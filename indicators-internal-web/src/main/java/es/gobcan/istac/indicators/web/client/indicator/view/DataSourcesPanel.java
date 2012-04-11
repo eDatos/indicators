@@ -123,8 +123,9 @@ public class DataSourcesPanel extends VLayout {
 
         dataSourcesListGrid = new CustomListGrid();
         dataSourcesListGrid.setHeight(150);
-        ListGridField queryField = new ListGridField(DataSourceDS.QUERY, IndicatorsWeb.getConstants().dataSourceQuery());
-        dataSourcesListGrid.setFields(queryField);
+        ListGridField uuidField = new ListGridField(DataSourceDS.UUID, IndicatorsWeb.getConstants().dataSourceUuid());
+        ListGridField pxField = new ListGridField(DataSourceDS.PX, IndicatorsWeb.getConstants().dataSourcePx());
+        dataSourcesListGrid.setFields(uuidField, pxField);
         // Show data source details when record clicked
         dataSourcesListGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
 
@@ -255,6 +256,8 @@ public class DataSourcesPanel extends VLayout {
 
     private void setDataSource(DataSourceDto dataSourceDto) {
         this.dataSourceDto = dataSourceDto;
+        // Update dataSource title
+        mainFormLayout.setTitleLabelContents(getConstants().dataSource() + (dataSourceDto.getUuid() != null ? " " + dataSourceDto.getUuid() : new String()));
         // Clear and load data structure
         dataStructureDto = null;
         if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
