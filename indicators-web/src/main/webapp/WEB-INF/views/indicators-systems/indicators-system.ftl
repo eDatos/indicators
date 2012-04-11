@@ -16,7 +16,7 @@
 	</div>
 	<br />		
 	<div>
-		<p><%= getLabel(description, 'es') %>fdaf</p>
+		<p><%= getLabel(description, 'es') %></p>
 	</div>
 </script>
 
@@ -38,6 +38,14 @@
 <script type="text/html" id="elementTemplate">
 	<div>
 		<%= orderInLevel %>
+		
+		<% if (elementTypeDimension) { %>
+			<p><%= getLabel(dimension.title, 'es') %></p>
+						
+		<% } else if (elementTypeIndicatorInstance) { %>
+		
+			<%= getLabel(indicatorInstance.title, 'es') %>
+		<% } %>
 	</div>
 </script>
 
