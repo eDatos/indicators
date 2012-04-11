@@ -65,7 +65,19 @@
 		template : _.template($('#elementTemplate').html()),
 		
 		render : function(){
+					
+			// Element
 			var html = this.template(this.model.toJSON());
+			
+			// Subelements
+			if (this.model.get('elementTypeDimension')) {
+				var subelements = this.model.get('subelements');
+				var subelementsCollection = new ElementsCollection(subelements);				
+				
+				var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection});				
+				html += subelementsCollectionView.render();
+			}
+			
 			return html;
 		}
 	});
@@ -78,17 +90,15 @@
 	});
 	
 	var ElementsCollectionView = Backbone.View.extend({	
-		el : $("#elements-view"), 
-		
+			
 		render : function(){
-			var self = this;
 			var viewHtml = '';
 			this.collection.forEach(function(model){
 				var elementView = new ElementView({ model : model});
 				var subViewHtml = elementView.render();
 				viewHtml += subViewHtml;
 			});
-			$(self.el).html(viewHtml);
+			return viewHtml;
 		}
 	});
 	
@@ -98,7 +108,8 @@
 		
 		var elementsCollection = new ElementsCollection(${indicatorsSystemStructure});
 		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection});
-		elementsCollectionView.render();
+		var elementsCollectionViewHtml = elementsCollectionView.render();
+		$("#elements-view").html(elementsCollectionViewHtml);
 	});
 	
 </script>
