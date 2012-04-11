@@ -1,8 +1,8 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
 import org.siemac.metamac.common.test.utils.MetamacMocks;
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 
 /**
  * Mocks

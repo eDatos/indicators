@@ -24,8 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
+import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
+import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 /**
  * Spring based transactional test with DbUnit support.
  */
