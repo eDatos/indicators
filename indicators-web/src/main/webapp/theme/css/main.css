@@ -13,21 +13,21 @@ input[type="image"] {
 /* LIST 								 */
 /****************************************/
 .listadoTablas ul li {
-	background:	none;
+	background: none;
 }
 
 /*****************************************
  H2 overwrite
 /****************************************/
-.h2roundbox { 
+.h2roundbox {
 	background: #c4d0dc;
 	width: 758px;
-	padding-bottom: 3px;	
+	padding-bottom: 3px;
 }
 
-.h2top { 
-	background: url(../images/h2overwrite/top.gif) no-repeat top; 
-	width: 100%;	
+.h2top {
+	background: url(../images/h2overwrite/top.gif) no-repeat top;
+	width: 100%;
 	font-size: 1px;
 	height: 1px;
 }
@@ -37,4 +37,44 @@ input[type="image"] {
 	font-size: 1em;
 	padding: 2px 0 0 7px;
 	margin: 0 0;
+}
+
+/*****************************************
+ Indicators system: elements
+/****************************************/
+.itemTabla {
+	float: left;
+	padding-top: 1px;
+}
+
+.itemSubSubcapitulo {
+	color: #000000;
+	font: bold 1em Tahoma, geneva, arial, sans-serif !important;
+	padding: 0 0 3px 0;
+}
+
+.itemSubcapitulo {
+	color: #000000;
+	font: bold 1em Tahoma, geneva, arial, sans-serif !important;
+	margin-left: 0;
+	padding: 0 0 3px 0;
+}
+
+.itemControlInfo {
+	float: left;
+	margin-right: 5px;
+}
+
+ul.subcaps>li {
+	margin-left: 0;
+	padding-left: 0 !important;
+}
+
+ul.subcaps,ul.subcaps>li>ul {
+	margin-left: 0;
+}
+
+ul.subcaps li {
+	margin-left: 0;
+	padding-left: 0;
 }

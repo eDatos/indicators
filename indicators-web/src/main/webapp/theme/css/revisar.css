@@ -1,0 +1,1078 @@
+#bloq_menu h1 a {
+    background: url("http://www2.gobiernodecanarias.org/istac/theme/gobcan/img/logos/logo_istac.jpg") no-repeat scroll 5px 5px transparent !important;
+    float: left;
+    height: 74px;
+    padding: 0 0 7px;
+    text-decoration: none;
+    width: 310px;
+}
+#migas ul li strong {
+    color: #000000;
+    font-weight: bold;
+}
+.left-cellOFF2 ul {
+    margin: -1em 0 0;
+}
+table {
+    font-size: 1em;
+}
+input[type="image"] {
+    border: medium none;
+}
+.footerWrapper {
+    background: none repeat scroll 0 0 #FFFFFF;
+    bottom: 0;
+    position: fixed;
+    z-index: 600;
+}
+.sliderWrapper {
+    width: 98%;
+}
+* + html .sliderWrapper {
+    width: 757px;
+}
+#footerSlider {
+    margin-bottom: 0;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+#pie {
+    margin: 10px auto auto;
+    width: 762px;
+}
+.tabla {
+    background: none repeat scroll 0 0 #FFFFFF;
+    text-align: left;
+}
+.tabla thead th, .tabla thead td {
+    background: none repeat scroll 0 0 #E7EAF1;
+    border-bottom: 1px solid #003366;
+    border-right: 1px solid #003366;
+    cursor: pointer;
+}
+.tabla thead th a:hover, .tabla thead td a:hover {
+    text-decoration: none;
+}
+.tabla tbody td {
+    border-bottom: 1px solid #003366;
+    border-right: 1px solid #003366;
+}
+.tabla tbody td:first-child {
+    border-left: medium none;
+}
+.tabla tfoot th, .tabla tfoot td {
+    background: none repeat scroll 0 0 #E7EAF1;
+}
+.gecko .tabla {
+    border: 1px solid #003366;
+    border-spacing: 0;
+    empty-cells: show;
+}
+.gecko .tabla thead th:last-child, .gecko .tabla thead td:last-child {
+    border-right: medium none;
+}
+.gecko .tabla tbody th:last-child, .gecko .tabla tbody td:last-child {
+    border-right: medium none;
+}
+.gecko .scrollableTableDiv {
+    overflow-x: auto !important;
+}
+.ie .tabla {
+    border: 1px solid #003366;
+    border-collapse: collapse;
+}
+.ie .scrollableTableDiv .tabla {
+    border: medium none;
+}
+.ie .scrollableTableDiv {
+    border: 1px solid #003366;
+}
+.ie .tabla tfoot tr {
+    background: none repeat scroll 0 0 #003366;
+}
+.tabla_fila {
+}
+.tabla_fila_impar {
+}
+.tabla_fila_par {
+}
+.tabla_fila_over, .tabla_fila_over a, .tabla_fila_over a:link, .tabla_fila_over a:hover, .tabla_fila_over a:visited {
+    background: none repeat scroll 0 0 #3A7BBE;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.tabla_columna, .tabla_columna_encabezado {
+    text-align: center;
+}
+.tabla_columna_encabezado span, .tabla_columna_pie {
+    color: #003366;
+}
+a:link .tabla_columna_delete {
+    color: silver;
+}
+.dcha {
+    text-align: right;
+}
+.divTableFieldColumn, .divTableField2Columns {
+    float: left;
+    font-weight: bold;
+    padding-right: 0.5em;
+    text-align: right;
+}
+.divTableTextColumn, .divTableText2Columns, .divTableTextLargeColumn {
+    float: left;
+    min-height: 1.23em;
+    text-align: left;
+}
+.divTableFieldColumn {
+    width: 24%;
+}
+.divTableTextColumn {
+    width: 25%;
+}
+.divTableField2Columns {
+    width: 49%;
+}
+.divTableText2Columns {
+    width: 50%;
+}
+.divTableTextLargeColumn {
+    width: 75%;
+}
+.panel {
+    border: 1px solid #003366;
+    margin: 0.5em 0;
+    text-align: left;
+}
+.panelCabecera {
+    background-color: #FFF4CC;
+    font-weight: bold;
+    padding-left: 0.5em;
+}
+.panelCabeceraWarning {
+    background-image: url("../../theme/images/warning.gif");
+    background-position: 0.5em 50%;
+    background-repeat: no-repeat;
+    padding-left: 25px;
+}
+.panelCuerpoWarning {
+}
+.panelCuerpo {
+    padding: 0.5em;
+}
+.panelCuerpo div {
+    margin: 0.5em 0;
+}
+.ie .panelCuerpo {
+    height: 1px;
+}
+.gecko .clear:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+.ie .clear {
+    clear: both;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+div.clear {
+    display: inline-block;
+    margin: 0;
+}
+.messageSection UL LI {
+    background: none repeat scroll 0 0 transparent;
+}
+.errorMessage, .warnMessage, .infoMessage {
+    cursor: auto !important;
+    font-weight: bold;
+    min-height: 16px;
+    padding: 0 5px 0 26px;
+}
+span.errorMessage, span.infoMessage, span.warnMessage {
+    border: medium none;
+}
+.errorMessage {
+    background: url("../../theme/images/error.png") no-repeat scroll 0.5em 50% transparent;
+}
+.warnMessage {
+    background: url("../../theme/images/warning.gif") no-repeat scroll 0.5em 50% transparent;
+}
+.infoMessage {
+    background: url("../../theme/images/info.gif") no-repeat scroll 0.5em 50% transparent;
+    color: blue;
+}
+.messageSection span.errorMessage, .messageSection span.infoMessage, .messageSection span.warnMessage {
+    display: block;
+}
+.messageSection span.errorMessage {
+    border: 1px solid #FF0000;
+}
+.messageSection span.infoMessage {
+    border: 1px solid #3A7BBE;
+}
+.messageSection span.warnMessage {
+    border: 1px solid #FFDF61;
+}
+#formulario .inputText {
+    margin: 0;
+}
+#formulario .inputDate {
+    margin: 0;
+    width: 10em;
+}
+#formulario .inputTextArea {
+    float: none;
+    margin: 0;
+}
+#formulario .inputFile {
+    margin: 0;
+    width: auto;
+}
+#formulario .inputRadio {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    margin: 0;
+    width: auto;
+}
+#formulario .inputCheckbox {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    margin: 0;
+    width: auto;
+}
+#formulario .selectOneMenu {
+    width: 100%;
+}
+#formulario .outputLabel {
+    padding: 0;
+}
+.commandButton {
+    width: auto !important;
+}
+a.rounded_button, span.rounded_button-dis {
+    display: -moz-inline-box;
+    height: 20px;
+    line-height: 12px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+a.rounded_button {
+    background: url("../../theme/images/botones/boton_accion.gif") no-repeat scroll right top transparent;
+}
+A.rounded_button SPAN {
+    text-decoration: none !important;
+}
+span.rounded_button-dis {
+    background: url("../../theme/images/botones/boton_accion-dis.gif") no-repeat scroll right top transparent !important;
+}
+a.rounded_button {
+}
+a.rounded_button span, span.rounded_button-dis span {
+    color: black;
+    display: inline-block;
+    height: 12px;
+    line-height: 12px;
+    padding: 4px 16px 4px 11px;
+}
+a.rounded_button span {
+    background: url("../../theme/images/botones/boton_accion_left.gif") no-repeat scroll left top transparent;
+}
+span.rounded_button-dis span {
+    background: url("../../theme/images/botones/boton_accion_left-dis.gif") no-repeat scroll left top transparent;
+    color: gray !important;
+}
+a.rounded_button:hover {
+    background-position: right bottom;
+}
+a.rounded_button:hover span {
+    background-position: left bottom;
+    cursor: pointer;
+}
+span.rounded_button-dis {
+}
+a.rounded_button-dis {
+}
+.bottonTableAdd, .bottonTableEdit, .bottonTableDelete, .bottonTableSave, .bottonReload, .bottonEmailGo, .bottonBackward, .bottonSearch, .bottonApplicationDelete {
+    border: 0 none;
+    height: 20px;
+    width: 20px;
+}
+.bottonArrowFirst, .bottonArrowLast, .bottonArrowPrevious, .bottonArrowNext, .bottonArrowFastFordward, .bottonArrowFastRewind {
+    border: 0 none;
+    height: 17px;
+    width: 19px;
+}
+.bottonTableAdd {
+    background: url("../../theme/images/table_add.png") no-repeat scroll 0 0 transparent;
+}
+.bottonTableEdit {
+    background: url("../../theme/images/table_edit.png") no-repeat scroll 0 0 transparent;
+}
+.bottonTableDelete {
+    background: url("../../theme/images/table_delete.png") no-repeat scroll 0 0 transparent;
+}
+.bottonTableSave {
+    background: url("../../theme/images/table_save.png") no-repeat scroll 0 0 transparent;
+}
+.bottonReload {
+    background: url("../../theme/images/table_refresh.png") no-repeat scroll 50% 50% transparent;
+}
+.bottonEmailGo {
+    background: url("../../theme/images/email_go.png") no-repeat scroll 0 0 transparent;
+}
+.bottonBackward {
+    background: url("../../theme/images/backward.gif") no-repeat scroll 50% 50% transparent;
+}
+.bottonSearch {
+    background: url("../../theme/images/search.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonApplicationDelete {
+    background: url("../../theme/images/application_delete.png") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowFirst {
+    background: url("../../theme/images/arrow-first.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowLast {
+    background: url("../../theme/images/arrow-last.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowPrevious {
+    background: url("../../theme/images/arrow-previous.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowNext {
+    background: url("../../theme/images/arrow-next.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowFastFordward {
+    background: url("../../theme/images/arrow-ff.gif") no-repeat scroll 0 0 transparent;
+}
+.bottonArrowFastRewind {
+    background: url("../../theme/images/arrow-fr.gif") no-repeat scroll 0 0 transparent;
+}
+span[title] {
+    cursor: none !important;
+}
+.content_20, .content_25, .content_33, content_40, .content_55, .content_60, .content_67, .content_75, .content_80 {
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+.content_20 {
+    width: 20%;
+}
+.content_25 {
+    width: 25%;
+}
+.content_30 {
+    width: 30%;
+}
+.content_33 {
+    width: 33%;
+}
+.content_40 {
+    width: 40%;
+}
+.content_50 {
+    width: 49%;
+}
+.content_60 {
+    width: 59%;
+}
+.content_67 {
+    width: 67%;
+}
+.content_70 {
+    width: 70%;
+}
+.content_75 {
+    width: 75%;
+}
+.content_80 {
+    width: 80%;
+}
+.content_90 {
+    width: 90%;
+}
+.content_95 {
+    width: 95%;
+}
+.content_98 {
+    width: 98%;
+}
+.content_body {
+    padding: 10px 2px 2px;
+}
+.content_body_5 {
+    padding: 5px;
+}
+.content_body_menu {
+    border-right: 1px solid silver;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: 25%;
+}
+.content_body_separado {
+    margin-top: 15px;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+.label {
+    font-weight: bold;
+    padding-right: 10px;
+    text-align: left;
+}
+.formulario {
+    background-color: #F8F9FB;
+}
+.errorSistema {
+    cursor: pointer;
+    font-weight: bold;
+}
+.padding10 {
+    padding: 10px;
+}
+.padding10left {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.padding10top {
+    padding-top: 10px;
+}
+.accionTabla {
+    border: medium none !important;
+}
+.linkTabla {
+    color: #003399 !important;
+}
+.linkDescargaDocumento {
+    cursor: pointer !important;
+}
+.alignCenter {
+    text-align: center;
+}
+.inline {
+    display: inline;
+}
+.inputTextLarge {
+    width: 350px !important;
+}
+.inputTextMed {
+    width: 200px !important;
+}
+.inputTextSmall {
+    width: 100px !important;
+}
+.explorer1024 {
+}
+.elementoLista {
+    line-height: 1.5;
+    list-style-type: none;
+    margin: 0.7em 0;
+    padding: 5px 0 0 10px;
+}
+.input_seleccionados {
+    background-color: transparent;
+    border: 0 none;
+    font-size: 8pt;
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+}
+ul.fdtablePaginater {
+    display: table;
+    height: 2em;
+    list-style: none outside none;
+    margin: 0 auto 2em;
+    padding: 0;
+    text-align: center;
+    width: auto;
+}
+ul.fdtablePaginater li {
+    -moz-user-select: none;
+    color: #666666;
+    display: table-cell;
+    list-style: none outside none;
+    padding-right: 4px;
+}
+ul.fdtablePaginater li a.currentPage {
+    border-color: #1373B9 !important;
+    color: #535353;
+}
+ul.fdtablePaginater li a:active {
+    border-color: #1373B9 !important;
+    color: #535353;
+}
+ul.fdtablePaginater li a, ul.fdtablePaginater li div {
+    border: 1px solid #CCCCCC;
+    color: #535353;
+    display: block;
+    font-size: 1em;
+    margin: 0;
+    outline: medium none;
+    padding: 0;
+    text-decoration: none;
+    width: 2em;
+}
+ul.fdtablePaginater li div {
+    opacity: 0.5;
+}
+ul.fdtablePaginater li a span, ul.fdtablePaginater li div span {
+    background: url("../../theme/images/gradient.gif") repeat-x scroll 0 -20px #FFFFFF;
+    border: 1px solid #FFFFFF;
+    display: block;
+    line-height: 2em;
+}
+ul.fdtablePaginater li a {
+    cursor: pointer;
+}
+ul.fdtablePaginater li a:focus {
+    border-color: #AAAAAA;
+    color: #333333;
+    text-decoration: none;
+}
+.fdtablePaginaterWrap {
+    clear: both;
+    text-align: center;
+    text-decoration: none;
+}
+ul.fdtablePaginater li .next-page span, ul.fdtablePaginater li .previous-page span, ul.fdtablePaginater li .first-page span, ul.fdtablePaginater li .last-page span {
+    font-weight: bold !important;
+}
+td.sized1 {
+    text-align: left;
+    width: 16em;
+}
+td.sized2 {
+    text-align: left;
+    width: 10em;
+}
+td.sized3 {
+    text-align: left;
+    width: 7em;
+}
+tfoot td {
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: right;
+    text-transform: uppercase;
+}
+#visibleTotal {
+    text-align: center;
+}
+* html ul.fdtablePaginater li div span, * html ul.fdtablePaginater li div span {
+    background: none repeat scroll 0 0 #EEEEEE;
+}
+tr.invisibleRow {
+    display: none;
+    visibility: hidden;
+}
+tr.alt {
+    background: none repeat scroll 0 0 #FFF9DD;
+}
+p.paginationText {
+    font-style: oblique;
+}
+td.dataCellHover {
+    background: none repeat scroll 0 0 #AAAAAA;
+    text-align: right;
+}
+td.dataCell {
+    text-align: right;
+}
+td.dataCellComment {
+    background: url("../../theme/images/esquinaNota.png") no-repeat scroll right top transparent;
+    text-align: right;
+}
+th.tableCellGr {
+    background: none repeat scroll 0 0 #1373B9;
+    color: #FFFFFF;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+    width: 100px;
+}
+th.tableCellMed {
+    background: none repeat scroll 0 0 #389FEB;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+th.atableCellGr {
+    background: none repeat scroll 0 0 #1373B9;
+    color: #FFFFFF;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+    width: 150px;
+}
+td.tableCellGr {
+    background: none repeat scroll 0 0 #1373B9;
+    color: #FFFFFF;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+td.tableCellMed {
+    background: none repeat scroll 0 0 #389FEB;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+td.tableCellPeq {
+    background: none repeat scroll 0 0 #78BEF1;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+td.atableCellGr {
+    background: none repeat scroll 0 0 #1373B9;
+    color: #FFFFFF;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+    width: 150px;
+}
+ul.fdtablePaginater {
+}
+ul.fdtablePaginater li {
+    background: none repeat scroll 0 0 transparent;
+}
+.tablaDatos {
+    background: none repeat scroll 0 0 #F2F2F2;
+    border-collapse: collapse;
+    border-left: 1px solid #F2F2F2;
+    margin: 0 auto 1.5em;
+    overflow: hidden;
+    padding: 0;
+    table-layout: fixed;
+    visibility: hidden;
+    width: 100%;
+}
+.tablaDatos td {
+    border-bottom: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+.tablaDatos th {
+    border-bottom: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+.infoPX {
+    border-bottom: 1px dashed #A4A4A4;
+    border-top: 1px dashed #A4A4A4;
+    float: right;
+}
+.toolbar {
+    background: none repeat scroll 0 0 #F2F2F2;
+    border: 1px solid #DADADA;
+    margin-top: 5px;
+    padding: 7px 7px 5px;
+}
+.rollover a {
+    background: url("../../theme/css/rollover-image.gif") no-repeat scroll 0 0 transparent;
+    color: #333333;
+    display: block;
+    font: bold 13px sans-serif;
+    padding: 10px 10px 10px 7px;
+    text-decoration: none;
+    width: 90px;
+}
+.rollover a:hover {
+    background-position: 0 -35px;
+    color: #004499;
+}
+.rollover a:active {
+    background-position: 0 -70px;
+    color: #FFFFFF;
+}
+#hormigas p.txt {
+    float: left;
+    margin: 0;
+    padding-left: 17px;
+}
+#hormigas ul li a {
+    background: url("../../theme/gobcan/img/listas/sig.gif") no-repeat scroll right center transparent;
+    color: #535353;
+    margin-right: 5px;
+    padding-right: 8px;
+    text-decoration: none;
+}
+#hormigas ul li a.sin {
+    background: url("../../theme/gobcan/img/listas/sig.gif") no-repeat scroll right center transparent;
+    color: #535353;
+    margin-right: 5px;
+    padding-right: 8px;
+    text-decoration: none;
+}
+#hormigas ul li a:hover {
+    text-decoration: underline;
+}
+#hormigas ul li strong {
+    color: #000000;
+}
+#hormigas ul li {
+    background: none repeat scroll 0 0 transparent;
+    display: inline;
+    font-size: 1em;
+    line-height: normal;
+    padding-left: 0;
+}
+#hormigas ul {
+    float: left;
+    list-style-type: none;
+    margin: 2px 0 0;
+    padding-left: 5px;
+}
+#hormigas {
+    margin: 0;
+    padding: 0 0 7px;
+    width: 100%;
+}
+.listadoTablas li {
+    background: none repeat scroll 0 0 transparent !important;
+}
+.listadoEnumeracion {
+    color: #535353;
+}
+.notas_tabla {
+    line-height: 1.6;
+    list-style-type: decimal;
+    margin: 1.2em 0;
+    padding-left: 12px;
+    text-align: justify;
+}
+.estilo_prueba {
+    width: 100%;
+}
+hr {
+    clear: both;
+    display: block;
+    visibility: hidden;
+}
+div.base-layer {
+    color: #000000;
+    padding: 0;
+    text-align: center;
+    width: auto;
+}
+div.table-row {
+    background: none repeat scroll 0 0 #EBEBEB;
+    color: #000000;
+    margin: 0 auto 1px;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+tr.table-row {
+    background: none repeat scroll 0 0 #EBEBEB;
+    padding: 0;
+}
+tr.table-row td {
+    border-bottom: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    min-width: 50px;
+    padding-left: 10px;
+}
+td.left-cellON {
+    background: none repeat scroll 0 0 #CCCCCC;
+    font-weight: bold;
+    text-align: left;
+}
+td.left-cellOFF {
+    text-align: left;
+}
+div.left-cellON {
+    background: none repeat scroll 0 0 #CCCCCC;
+    float: left;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 10px;
+    text-align: left;
+}
+div.left-cellOFF {
+    float: left;
+    margin: 0;
+    padding: 0 10px;
+    text-align: left;
+}
+div.left-cellOFF2 {
+    float: left;
+    margin: 0;
+    padding: 0 10px;
+    text-align: left;
+}
+div.space-line {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    width: auto;
+}
+div.space-line {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    width: auto;
+}
+.h2roundbox {
+    background: none repeat scroll 0 0 #C4D0DC;
+    padding-bottom: 3px;
+    width: 758px;
+}
+.h2top {
+    background: url("../../theme/images/h2overwrite/top.gif") no-repeat scroll center top transparent;
+    font-size: 1px;
+    height: 1px;
+    width: 100%;
+}
+.h2content {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 2px 0 0 7px;
+}
+#simplemodal-overlay {
+    background-color: #000000;
+}
+.simplemodal-wrap {
+    overflow-x: hidden;
+    overflow-y: auto !important;
+}
+#simplemodal-container {
+    background-color: #FFFFFF;
+    border: 3px solid #CCCCCC;
+    height: 400px;
+    width: 640px;
+}
+#simplemodal-container a.modalCloseImg {
+    background-image: url("../../theme/images/close.png") !important;
+    cursor: pointer;
+    display: inline;
+    filter: none !important;
+    height: 29px;
+    position: absolute;
+    right: -18px;
+    top: -15px;
+    width: 25px;
+    z-index: 3200;
+}
+#simplemodal-container #basicModalContent #footnotesModalContent {
+    padding: 8px;
+}
+#tablaConfigModal-overlay {
+    background-color: #000000;
+    height: 100% !important;
+}
+#tablaConfigModal-container {
+    background-color: #FFFFFF;
+    border: 3px solid #CCCCCC;
+    height: 80% !important;
+    width: 845px;
+}
+#tablaConfigModal-container a.modalCloseImg {
+    background-image: url("../../theme/images/close.png") !important;
+    cursor: pointer;
+    display: inline;
+    filter: none !important;
+    height: 29px;
+    position: absolute;
+    right: -18px;
+    top: -15px;
+    width: 25px;
+    z-index: 3200;
+}
+#tablaConfigModal-container #basicModalContent #footnotesModalContent {
+    padding: 8px;
+}
+#seleccion-overlay {
+    background-color: #000000;
+}
+#seleccion-container {
+    background-color: #FFFFFF;
+    border: 3px solid #CCCCCC;
+    height: 225px;
+    width: 640px;
+}
+#seleccion-container a.modalCloseImg {
+    background-image: url("../../theme/images/close.png") !important;
+    cursor: pointer;
+    display: inline;
+    filter: none !important;
+    height: 29px;
+    position: absolute;
+    right: -18px;
+    top: -15px;
+    width: 25px;
+    z-index: 3200;
+}
+#seleccion-container #seleccionModalContent {
+    padding: 8px;
+}
+#tabs {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 1em;
+}
+#migas2 p.txt {
+    color: #0058B0;
+    float: left;
+    font-size: 1em;
+    margin: 0;
+    padding: 8px 0 0 17px;
+}
+#migas2 ul li a {
+    color: #535353;
+    text-decoration: none;
+}
+#migas2 ul a.sin {
+    background: url("../../theme/gobcan/img/listas/sig.gif") no-repeat scroll right center transparent;
+    color: #535353;
+    margin-right: 5px;
+    padding-right: 8px;
+    text-decoration: none;
+}
+#migas2 ul a:hover {
+    text-decoration: underline;
+}
+#migas2 ul li.inline strong {
+    color: #000000;
+}
+#migas2 ul li.inline {
+    background: none repeat scroll 0 0 transparent;
+    color: #0058B0;
+    display: inline;
+    font-size: 1em;
+    padding-left: 0;
+}
+#migas2 ul li {
+    background: none repeat scroll 0 0 transparent;
+    color: #0058B0;
+    font-size: 1em;
+    margin: 0;
+}
+#migas2 ul {
+    float: left;
+    list-style-type: none;
+    margin: 2px 0 0;
+    padding: 6px 0 0 5px;
+    width: 80%;
+}
+#migas2 {
+    float: left;
+    margin: 0;
+    padding: 0 0 7px;
+    width: 100%;
+}
+#migas2 ul li.inline a {
+    background: none repeat scroll 0 0 transparent;
+}
+.ayuda_cell2 {
+    float: left;
+    padding-left: 20px;
+    padding-top: 4px;
+}
+.negrita {
+    font-weight: bold;
+}
+.dt_custom {
+    background: url("../../theme/gobcan/img/listas/li1.gif") no-repeat scroll left 7px transparent;
+    font-weight: normal !important;
+    line-height: 1.6;
+    list-style-type: none;
+    padding-left: 12px;
+}
+.dd_custom {
+    font-weight: normal !important;
+    margin: 0 0 1em 2em !important;
+}
+.itemTabla {
+    float: left;
+    padding-top: 1px;
+}
+.itemSubSubcapitulo {
+    color: #000000;
+    font: bold 1em Tahoma,geneva,arial,sans-serif !important;
+    padding: 0 0 3px 0;
+}
+.itemSubcapitulo {
+    color: #000000;
+    font: bold 1em Tahoma,geneva,arial,sans-serif !important;
+    margin-left: 0;
+    padding: 0 0 3px 0;
+}
+.itemControlInfo {
+    float: left;
+    margin-right: 5px;
+}
+ul.subcaps > li {
+    margin-left: 0;
+    padding-left: 0 !important;
+}
+ul.subcaps, ul.subcaps > li > ul {
+    margin-left: 0;
+}
+ul.subcaps li {
+    margin-left: 0;
+    padding-left: 0;
+}
+.popupInfoDescarga th {
+    font-weight: bold;
+    vertical-align: middle;
+}
+.popupInfoDescarga td {
+    padding-left: 1em;
+}
+.popupInfoDescarga th, td {
+    padding: 1px;
+}
+#olmap {
+    background-color: #F9F9F9;
+    border: 1px solid #757575;
+    height: 400px;
+}
+.olPopupContent {
+    color: black;
+}
+.clearfix:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+.clearfix {
+    display: inline-block;
+}
+html[xmlns] .clearfix {
+    display: block;
+}
+* html .clearfix {
+    height: 1%;
+}
+.clearBoth {
+    clear: both;
+}

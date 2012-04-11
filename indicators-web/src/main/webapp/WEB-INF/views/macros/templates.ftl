@@ -19,6 +19,7 @@
 		<link rel="stylesheet" href="http://www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/main.css"/]" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="[@spring.url "/theme/css/revisar.css"/]" type="text/css" media="screen, projection" />
 
 		<script type="text/javascript">
 			var context = "[@spring.url '' /]";
