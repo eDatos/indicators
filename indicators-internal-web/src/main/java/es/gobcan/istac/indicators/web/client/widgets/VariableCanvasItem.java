@@ -14,7 +14,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableCanvasItem extends CustomCanvasItem {
