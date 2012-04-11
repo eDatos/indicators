@@ -41,6 +41,7 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_BASE_LOCATION                = "q-loc";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_UUID = "q-ind-uuid";
     public static String QUANTITY_TYPE                         = "q-type";
+    public static String QUANTITY_TYPE_TEXT                    = "q-type-text";      // Not mapped in DTO
     public static String QUANTITY_PERCENTAGE_OF                = "q-perc-of";
     // DIFUSSION DESCRIPTORS
     public static String DIFFUSION_VERSION                     = "ind-dif-v";

@@ -5,14 +5,18 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.utils.LocaleMock;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.types.Visibility;
@@ -40,6 +44,7 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
@@ -52,8 +57,6 @@ import es.gobcan.istac.indicators.web.client.widgets.VariableListItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 
 public class DataSourcesPanel extends VLayout {
-
-    private Logger                   logger = Logger.getLogger(DataSourcesPanel.class.getName());
 
     private IndicatorDto             indicatorDto;
     private IndicatorUiHandler       uiHandlers;
@@ -267,6 +270,12 @@ public class DataSourcesPanel extends VLayout {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
         }
 
+        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
+        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyTitle()));
+        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_ACRONYM, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyAcronym()));
+        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
+        generalForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
+
         generalForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         generalForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         generalForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
@@ -289,6 +298,13 @@ public class DataSourcesPanel extends VLayout {
 
     private void setDataSourceEditionMode(DataSourceDto dataSourceDto) {
         generalEditionForm.setValue(DataSourceDS.QUERY, dataSourceDto.getDataGpeUuid());
+
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyTitle()));
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_ACRONYM, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyAcronym()));
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
+        generalEditionForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
+
         generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         generalEditionForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
@@ -310,6 +326,16 @@ public class DataSourcesPanel extends VLayout {
         generalForm = new GroupDynamicForm(getConstants().datasourceGeneral());
 
         ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
+
+        ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
+
+        ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
+
+        ViewMultiLanguageTextItem surveyAcronym = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_ACRONYM, getConstants().dataSourceSurveyAcronym());
+
+        ViewTextItem surveyUrl = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
+
+        ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
@@ -349,7 +375,7 @@ public class DataSourcesPanel extends VLayout {
 
         VariableListItem variables = new VariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
+        generalForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
 
         interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate());
 
@@ -376,6 +402,12 @@ public class DataSourcesPanel extends VLayout {
             public void onChanged(ChangedEvent event) {
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                     // Clear values
+                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
+                    ((ViewMultiLanguageTextItem)generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
+                    ((MultiLanguageTextItem)generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
+                    ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
+                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
+                    
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
                     ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
@@ -392,6 +424,16 @@ public class DataSourcesPanel extends VLayout {
                 }
             }
         });
+
+        ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
+
+        ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
+
+        MultiLanguageTextItem surveyAcronym = new MultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_ACRONYM, getConstants().dataSourceSurveyAcronym());
+
+        TextItem surveyUrl = new TextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
+
+        ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
@@ -431,15 +473,15 @@ public class DataSourcesPanel extends VLayout {
 
         VariableListItem variables = new VariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalEditionForm.setFields(query, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
+        generalEditionForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
 
-        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate());
+        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT);
 
-        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate());
+        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE);
 
-        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate());
+        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), QuantityTypeEnum.AMOUNT);
 
-        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate());
+        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE);
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
         mainFormLayout.addEditionCanvas(interperiodPuntualRateEditionForm);
@@ -458,6 +500,16 @@ public class DataSourcesPanel extends VLayout {
 
     public void setDataStructure(DataStructureDto dataStructureDto) {
         this.dataStructureDto = dataStructureDto;
+
+        // Source survey code
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
+
+        // Source survey title
+        InternationalStringDto internationalStringDto = InternationalStringUtils.updateInternationalString(LocaleMock.SPANISH, new InternationalStringDto(), dataStructureDto.getSurveyTitle());
+        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(internationalStringDto));
+
+        // Publishers
+        generalEditionForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataStructureDto.getPublishers()));
 
         // Temporal variable
         generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, dataStructureDto.getTemporalVariable());
@@ -487,12 +539,21 @@ public class DataSourcesPanel extends VLayout {
     public DataSourceDto getDataSourceDto() {
         dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
         dataSourceDto.setPxUri(dataStructureDto.getPxUri());
+
+        dataSourceDto.setSourceSurveyCode(dataStructureDto.getSurveyCode());
+        dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(LocaleMock.SPANISH, new InternationalStringDto(), dataStructureDto.getSurveyTitle()));
+        dataSourceDto.setSourceSurveyAcronym((InternationalStringDto) generalEditionForm.getValue(DataSourceDS.SOURCE_SURVEY_ACRONYM));
+        dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
+
+        dataSourceDto.setPublishers(dataStructureDto.getPublishers());
+
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
         dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible()
                 ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE))
                 : null);
+
         dataSourceDto.setInterperiodPuntualRate(interperiodPuntualRateEditionForm.getValue());
         dataSourceDto.setInterperiodPercentageRate(interperiodPercentageRateEditionForm.getValue());
         dataSourceDto.setAnnualPuntualRate(annualPuntualRateEditionForm.getValue());

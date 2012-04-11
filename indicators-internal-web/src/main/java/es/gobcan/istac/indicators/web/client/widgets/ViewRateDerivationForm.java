@@ -9,14 +9,13 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
-import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class ViewRateDerivationForm extends BaseRateDerivationForm {
 
-    public ViewRateDerivationForm(String groupTitle, DataSourceQuantityType dataSourceQuantityType) {
-        super(groupTitle, dataSourceQuantityType);
+    public ViewRateDerivationForm(String groupTitle) {
+        super(groupTitle);
 
         ViewTextItem method = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
 

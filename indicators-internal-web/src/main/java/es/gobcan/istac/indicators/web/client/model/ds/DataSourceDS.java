@@ -14,6 +14,12 @@ public class DataSourceDS extends DataSource {
     public static String TIME_VALUE                  = "ds-time-value";
     public static String GEO_VARIABLE                = "ds-geo-var";
     public static String GEO_VALUE                   = "ds-geo-val";
+    public static String SOURCE_SURVEY_CODE          = "ds-sur-code";
+    public static String SOURCE_SURVEY_TITLE         = "ds-sur-title";
+    public static String SOURCE_SURVEY_ACRONYM       = "ds-sur-acro";
+    public static String SOURCE_SURVEY_URL           = "ds-sur-url";
+    public static String PUBLISHERS                  = "ds-pub";
+
     public static String RATE_DERIVATION_METHOD      = "rate-method";
     public static String RATE_DERIVATION_METHOD_TYPE = "rate-method-type";
     public static String RATE_DERIVATION_ROUNDING    = "rate-rounding";

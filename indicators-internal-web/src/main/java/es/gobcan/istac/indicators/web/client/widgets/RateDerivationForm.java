@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.LinkedHashMap;
@@ -29,19 +30,22 @@ import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.web.client.enums.DataSourceQuantityType;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class RateDerivationForm extends BaseRateDerivationForm {
 
+    private QuantityTypeEnum  quantityType;
+
     private RateDerivationDto rateDerivationDto;
     private IndicatorDto      indicatorDto;
 
-    public RateDerivationForm(String groupTitle, final DataSourceQuantityType dataSourceQuantityType) {
-        super(groupTitle, dataSourceQuantityType);
+    public RateDerivationForm(String groupTitle, QuantityTypeEnum quantityType) {
+        super(groupTitle);
 
+        this.quantityType = quantityType;
+        
         RequiredTextItem method = new RequiredTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
 
         RequiredSelectItem methodType = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
@@ -67,21 +71,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         // QUANTITY
 
-        RequiredSelectItem type = new RequiredSelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
-        type.setValueMap(CommonUtils.getDataSourceQuantityTypeValueMap());
-        type.addChangedHandler(new ChangedHandler() {
+        ViewTextItem type = new ViewTextItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
+        type.setVisible(false);
 
-            @Override
-            public void onChanged(ChangedEvent event) {
-                if (event.getValue() != null && QuantityTypeEnum.CHANGE_RATE.toString().equals(event.getValue().toString())) {
-                    // If selected type if CHANGE_RATE, set current indicator as base quantity indicator
-                    setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, indicatorDto.getUuid());
-                } else {
-                    setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, new String());
-                }
-                RateDerivationForm.this.markForRedraw();
-            }
-        });
+        ViewTextItem typeText = new ViewTextItem(IndicatorDS.QUANTITY_TYPE_TEXT, getConstants().indicQuantityType());
 
         RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
 
@@ -124,7 +117,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setVisible(false);
 
-        setFields(method, methodType, rounding, type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, baseQuantityIndUuid);
+        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf,
+                baseQuantityIndUuid);
+
+        markForRedraw();
     }
 
     public void setValue(RateDerivationDto rateDerivationDto) {
@@ -136,31 +132,34 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, rateDerivationDto.getMethodType() != null ? rateDerivationDto.getMethodType().toString() : new String());
         setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : new String());
 
-        QuantityDto quantityDto = rateDerivationDto.getQuantity();
-
-        if (quantityDto != null) {
-            setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : null);
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
-            setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
-            if (quantityDto.getSignificantDigits() != null) {
-                setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
-            }
-            if (quantityDto.getDecimalPlaces() != null) {
-                setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces());
-            }
-            if (quantityDto.getMinimum() != null) {
-                setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum());
-            }
-            if (quantityDto.getMaximum() != null) {
-                setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum());
-            }
-            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, quantityDto.getDenominatorIndicatorUuid());
-            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, quantityDto.getNumeratorIndicatorUuid());
-            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
-
-            setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
-            setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
+        if (rateDerivationDto.getQuantity() == null) {
+            rateDerivationDto.setQuantity(new QuantityDto());
         }
+        
+        QuantityDto quantityDto = rateDerivationDto.getQuantity();
+        
+        setValue(IndicatorDS.QUANTITY_TYPE, quantityType.toString());
+        setValue(IndicatorDS.QUANTITY_TYPE_TEXT, getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()));
+        setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
+        setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, quantityDto.getUnitMultiplier());
+        if (quantityDto.getSignificantDigits() != null) {
+            setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
+        }
+        if (quantityDto.getDecimalPlaces() != null) {
+            setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces());
+        }
+        if (quantityDto.getMinimum() != null) {
+            setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum());
+        }
+        if (quantityDto.getMaximum() != null) {
+            setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum());
+        }
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, quantityDto.getDenominatorIndicatorUuid());
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, quantityDto.getNumeratorIndicatorUuid());
+        setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
+
+        setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
+        setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
 
     }
 
@@ -178,8 +177,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             quantityDto = new QuantityDto();
         }
 
-        quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum
-                .valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
+        quantityDto.setType(quantityType);
         quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
         quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer) getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer) getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
@@ -194,7 +192,13 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean
                 .valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false) : null);
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem) getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
-        quantityDto.setBaseQuantityIndicatorUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)));
+        
+        if (QuantityTypeEnum.CHANGE_RATE.toString().equals(getValueAsString(IndicatorDS.QUANTITY_TYPE))) {
+            // If selected type if CHANGE_RATE, set current indicator as base quantity indicator
+            quantityDto.setBaseQuantityIndicatorUuid(indicatorDto.getUuid());
+        } else {
+            quantityDto.setBaseQuantityIndicatorUuid(null);
+        }
 
         rateDerivationDto.setQuantity(quantityDto);
 
