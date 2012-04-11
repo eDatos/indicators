@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.core.dto.serviceapi;
+package es.gobcan.istac.indicators.core.dto;
 
 /**
  * Dto for element of level. Can be a dimension or an indicator instance
