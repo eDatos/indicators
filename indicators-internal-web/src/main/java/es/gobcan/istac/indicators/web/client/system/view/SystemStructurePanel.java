@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -63,13 +63,13 @@ import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
 import com.smartgwt.client.widgets.tree.events.LeafContextClickEvent;
 import com.smartgwt.client.widgets.tree.events.LeafContextClickHandler;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
@@ -326,14 +326,14 @@ public class SystemStructurePanel extends HLayout {
         private void buildNodes(TreeNode parentNode, List<ElementLevelDto> elementsLevel) {
             String parentId = parentNode.getAttribute("ID");
             for (ElementLevelDto elemLevel : elementsLevel) {
-                if (elemLevel.isDimension()) {
+                if (elemLevel.isElementTypeDimension()) {
                     DimensionDto dim = elemLevel.getDimension();
                     IndSystemContentNode node = new IndSystemContentNode(dim.getUuid(), InternationalStringUtils.getLocalisedString(dim.getTitle()), parentId, elemLevel);
                     tree.add(node, parentNode);
                     sourceMapping.put(elemLevel, node);
                     List<ElementLevelDto> children = buildChildrenList(elemLevel.getSubelements());
                     buildNodes(node, children);
-                } else if (elemLevel.isIndicatorInstance()) {
+                } else if (elemLevel.isElementTypeIndicatorInstance()) {
                     IndicatorInstanceDto indInst = elemLevel.getIndicatorInstance();
                     IndSystemContentNode node = new IndSystemContentNode(indInst.getUuid(), InternationalStringUtils.getLocalisedString(indInst.getTitle()), parentId, elemLevel);
                     tree.add(node, parentNode);

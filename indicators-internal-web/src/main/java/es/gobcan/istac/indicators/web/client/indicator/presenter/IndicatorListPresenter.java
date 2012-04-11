@@ -26,8 +26,8 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;

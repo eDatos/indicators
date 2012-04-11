@@ -3,10 +3,10 @@ package es.gobcan.istac.indicators.web.server.services;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 
 public interface IndicatorsServiceWrapper {
 

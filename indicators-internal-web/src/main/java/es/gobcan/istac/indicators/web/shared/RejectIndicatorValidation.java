@@ -4,7 +4,7 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 
 @GenDispatch(isSecure = false)
 public class RejectIndicatorValidation {

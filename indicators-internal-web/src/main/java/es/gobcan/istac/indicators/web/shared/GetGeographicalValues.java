@@ -6,7 +6,7 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 @GenDispatch(isSecure = false)
 public class GetGeographicalValues {

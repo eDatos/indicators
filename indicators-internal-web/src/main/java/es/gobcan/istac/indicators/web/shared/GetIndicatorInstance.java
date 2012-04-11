@@ -4,7 +4,7 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 
 @GenDispatch(isSecure = false)
 public class GetIndicatorInstance {

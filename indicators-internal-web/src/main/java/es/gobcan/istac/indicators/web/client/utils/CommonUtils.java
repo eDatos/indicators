@@ -5,15 +5,15 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;

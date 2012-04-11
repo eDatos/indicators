@@ -10,7 +10,7 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
@@ -31,9 +31,9 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
         try {
             ElementLevelDto level = action.getLevel();
             Long order = action.getTargetOrderInLevel();
-            if (level.isDimension()) {
+            if (level.isElementTypeDimension()) {
                 indicatorsServiceFacade.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
-            } else if (level.isIndicatorInstance()) {
+            } else if (level.isElementTypeIndicatorInstance()) {
                 indicatorsServiceFacade.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(), order++);
             }
             return new MoveSystemStructureContentResult();

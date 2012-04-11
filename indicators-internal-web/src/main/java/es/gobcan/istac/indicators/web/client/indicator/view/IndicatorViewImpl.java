@@ -14,14 +14,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.DataStructureDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {

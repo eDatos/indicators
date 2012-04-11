@@ -5,7 +5,7 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
+import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 
 @GenDispatch(isSecure = false)
 public class GetDataDefinitions {

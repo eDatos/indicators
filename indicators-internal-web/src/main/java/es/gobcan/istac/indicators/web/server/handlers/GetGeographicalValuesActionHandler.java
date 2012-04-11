@@ -16,7 +16,7 @@ import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropert
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;

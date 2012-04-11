@@ -27,8 +27,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;

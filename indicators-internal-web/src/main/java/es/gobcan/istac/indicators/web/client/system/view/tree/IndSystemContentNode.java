@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.client.system.view.tree;
 
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.ElementLevelDto;
+import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 
 public class IndSystemContentNode extends TreeNode {
 
@@ -21,9 +21,9 @@ public class IndSystemContentNode extends TreeNode {
         IndSystemContentNodeType type = null;
         if (source == null) {
             type = IndSystemContentNodeType.ROOT;
-        } else if (source.isDimension()) {
+        } else if (source.isElementTypeDimension()) {
             type = IndSystemContentNodeType.DIMENSION;
-        } else if (source.isIndicatorInstance()) {
+        } else if (source.isElementTypeIndicatorInstance()) {
             type = IndSystemContentNodeType.INDICATOR;
         }
         this.setAttribute(ATTR_TYPE, type);

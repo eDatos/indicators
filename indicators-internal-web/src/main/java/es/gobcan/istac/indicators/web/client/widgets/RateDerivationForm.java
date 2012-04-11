@@ -23,10 +23,10 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;

@@ -7,7 +7,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -23,11 +23,11 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;

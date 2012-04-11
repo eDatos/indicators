@@ -1,13 +1,13 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 

@@ -6,7 +6,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 public class UpdateGeographicalValuesEvent extends GwtEvent<UpdateGeographicalValuesEvent.UpdateGeographicalValuesHandler> {
 

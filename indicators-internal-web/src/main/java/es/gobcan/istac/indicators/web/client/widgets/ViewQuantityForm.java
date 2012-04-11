@@ -8,8 +8,8 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 

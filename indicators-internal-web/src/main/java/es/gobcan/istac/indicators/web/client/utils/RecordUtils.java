@@ -2,9 +2,9 @@ package es.gobcan.istac.indicators.web.client.utils;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;

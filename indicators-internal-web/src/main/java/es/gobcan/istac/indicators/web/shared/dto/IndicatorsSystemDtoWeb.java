@@ -1,8 +1,8 @@
 package es.gobcan.istac.indicators.web.shared.dto;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 
 public class IndicatorsSystemDtoWeb extends IndicatorsSystemDto {
 

@@ -5,7 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -19,9 +19,9 @@ import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 

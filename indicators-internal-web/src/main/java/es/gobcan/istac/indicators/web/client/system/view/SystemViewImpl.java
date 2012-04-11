@@ -17,12 +17,12 @@ import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;

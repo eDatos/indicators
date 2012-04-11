@@ -5,7 +5,7 @@ import java.util.List;
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 
 @GenDispatch(isSecure = false)
 public class GetQuantityUnitsList {

@@ -6,7 +6,7 @@ import static org.siemac.metamac.web.common.client.resources.GlobalResources.RES
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -36,14 +36,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataDefinitionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataStructureDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalGranularityDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.QuantityUnitDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.DataStructureDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;

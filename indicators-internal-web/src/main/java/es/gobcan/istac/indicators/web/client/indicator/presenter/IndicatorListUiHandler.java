@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 
 public interface IndicatorListUiHandler extends UiHandlers {
 

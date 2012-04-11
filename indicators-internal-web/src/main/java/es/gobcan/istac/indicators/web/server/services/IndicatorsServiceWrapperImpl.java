@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorInstanceDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
 @Component

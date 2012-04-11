@@ -11,8 +11,8 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DimensionDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
