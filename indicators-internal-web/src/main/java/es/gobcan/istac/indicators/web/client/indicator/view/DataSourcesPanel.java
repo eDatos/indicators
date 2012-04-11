@@ -406,11 +406,11 @@ public class DataSourcesPanel extends VLayout {
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
                     // Clear values
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
-                    ((ViewMultiLanguageTextItem)generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
-                    ((MultiLanguageTextItem)generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
+                    ((ViewMultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
+                    ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
                     ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
-                    
+
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
                     ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();

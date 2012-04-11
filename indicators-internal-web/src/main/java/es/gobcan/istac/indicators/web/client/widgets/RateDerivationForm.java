@@ -45,7 +45,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         super(groupTitle);
 
         this.quantityType = quantityType;
-        
+
         RequiredTextItem method = new RequiredTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
 
         RequiredSelectItem methodType = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
@@ -135,9 +135,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         if (rateDerivationDto.getQuantity() == null) {
             rateDerivationDto.setQuantity(new QuantityDto());
         }
-        
+
         QuantityDto quantityDto = rateDerivationDto.getQuantity();
-        
+
         setValue(IndicatorDS.QUANTITY_TYPE, quantityType.toString());
         setValue(IndicatorDS.QUANTITY_TYPE_TEXT, getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()));
         setValue(IndicatorDS.QUANTITY_UNIT_UUID, quantityDto.getUnitUuid());
@@ -192,7 +192,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean
                 .valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false) : null);
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem) getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
-        
+
         if (QuantityTypeEnum.CHANGE_RATE.toString().equals(getValueAsString(IndicatorDS.QUANTITY_TYPE))) {
             // If selected type if CHANGE_RATE, set current indicator as base quantity indicator
             quantityDto.setBaseQuantityIndicatorUuid(indicatorDto.getUuid());

@@ -9,23 +9,21 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 
-
 public class DataSourceMainFormLayout extends InternationalMainFormLayout {
 
     private ToolStripButton editQueryButton;
-    
 
     public DataSourceMainFormLayout() {
         super();
-        
+
         editQueryButton = new ToolStripButton(getConstants().editQuery(), IndicatorsResources.RESOURCE.reset().getURL());
 
         toolStrip.addSeparator();
         toolStrip.addButton(editQueryButton);
     }
-    
+
     public HasClickHandlers getEditQueryToolStripButton() {
         return editQueryButton;
     }
-    
+
 }
