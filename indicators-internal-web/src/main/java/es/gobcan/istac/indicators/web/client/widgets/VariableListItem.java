@@ -1,34 +1,46 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.grid.EditorValueMapFunction;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.EditorEnterEvent;
+import com.smartgwt.client.widgets.grid.events.EditorEnterHandler;
+import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
+import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableListItem extends CustomCanvasItem {
 
+    private Logger                                     logger                 = Logger.getLogger(VariableListItem.class.getName());
+
     protected ListGrid                                 variableList;
 
     protected boolean                                  required;
 
-    private List<DataSourceVariableDto>                dataSourceVariableDtos;
+    private List<DataSourceVariableDto>                dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
 
-    private Map<String, LinkedHashMap<String, String>> variableValueMaps = new java.util.HashMap<String, LinkedHashMap<String, String>>();
+    private Map<String, LinkedHashMap<String, String>> variableValueMaps      = new java.util.HashMap<String, LinkedHashMap<String, String>>();
 
     public VariableListItem(String name, String title) {
         super(name, title);
@@ -42,6 +54,7 @@ public class VariableListItem extends CustomCanvasItem {
         variableList.setWidth(300);
         variableList.setHeight(150);
         variableList.setAlwaysShowEditors(true);
+        variableList.setAutoSaveEdits(true);
         variableList.addRecordClickHandler(new RecordClickHandler() {
 
             @Override
@@ -56,7 +69,33 @@ public class VariableListItem extends CustomCanvasItem {
 
         ListGridField categoryField = new ListGridField(DataSourceDS.VARIABLE_CATEGORY, "category");
         categoryField.setCanEdit(true);
-        categoryField.setEditorType(new SelectItem());
+
+        final SelectItem selectItem = new SelectItem();
+        selectItem.addChangedHandler(new com.smartgwt.client.widgets.form.fields.events.ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                selectItem.setValue(event.getValue());
+
+            }
+        });
+
+        categoryField.setEditorType(selectItem);
+
+        categoryField.addEditorEnterHandler(new EditorEnterHandler() {
+
+            @Override
+            public void onEditorEnter(EditorEnterEvent event) {
+                System.out.println();
+            }
+        });
+        categoryField.addEditorExitHandler(new EditorExitHandler() {
+
+            @Override
+            public void onEditorExit(EditorExitEvent event) {
+
+            }
+        });
 
         // Dynamic valueMap. Its values depends on the record.
         EditorValueMapFunction editorValueMapFunction = new EditorValueMapFunction() {
@@ -106,6 +145,17 @@ public class VariableListItem extends CustomCanvasItem {
         return true;
     }
 
+    public void setVariablesAndCategories(List<String> variables, Map<String, List<String>> categoryCodes, Map<String, List<String>> categoryLabels) {
+        for (String var : variables) {
+            if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
+                addVariableAndCategories(var, categoryCodes.get(var), categoryLabels.get(var));
+
+            } else {
+                logger.log(Level.SEVERE, "Something wrong with variables and its category labels and codes");
+            }
+        }
+    }
+
     public void addVariableAndCategories(String variable, List<String> categoryCodes, List<String> categoryLabels) {
         variableValueMaps.put(variable, CommonUtils.getVariableCategoriesValueMap(categoryCodes, categoryLabels));
 
@@ -126,7 +176,22 @@ public class VariableListItem extends CustomCanvasItem {
     }
 
     public List<DataSourceVariableDto> getValue() {
-        // TODO
+        List<DataSourceVariableDto> dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
+        ListGridRecord[] records = variableList.getRecords();
+        if (records != null) {
+            for (int i = 0; i < records.length; i++) {
+                if (records[i] instanceof DataSourceVariableRecord) {
+                    String name = ((DataSourceVariableRecord) records[i]).getVariableName();
+                    String category = ((DataSourceVariableRecord) records[i]).getVariableCategory();
+                    if (!StringUtils.isBlank(name) && !StringUtils.isBlank(category)) {
+                        DataSourceVariableDto dataSourceVariableDto = new DataSourceVariableDto();
+                        dataSourceVariableDto.setVariable(name);
+                        dataSourceVariableDto.setCategory(category);
+                        dataSourceVariableDtos.add(dataSourceVariableDto);
+                    }
+                }
+            }
+        }
         return dataSourceVariableDtos;
     }
 
