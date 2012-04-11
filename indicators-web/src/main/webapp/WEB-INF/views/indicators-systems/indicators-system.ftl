@@ -32,17 +32,16 @@
 		<div style="clear: both;" ></div>
 		<% if (level == 1) { %>
 			<br />
-			<h3 id="cab_1">ES DIMENSIÓN DE NIVEL 1 <%= getLabel(dimension.title, 'es') %></a></h3>
+			<h3 id="cab_1"><%= getLabel(dimension.title, 'es') %></a></h3>
 		<% } else if (level == 2) { %>
 			<li>
-				<span class="itemSubcapitulo">ES DIMENSIÓN DE NIVEL 2 <%= getLabel(dimension.title, 'es') %></span>
+				<span class="itemSubcapitulo"><%= getLabel(dimension.title, 'es') %></span>
 			</li>
 		<% } else { %>
-			<li>
-				<span style="margin-left:<%= level * 20 %>px"></span>ES DIMENSIÓN DE NIVEL > 2 <%= getLabel(dimension.title, 'es') %></span>
+			<li style="font-weight: bold;">
+				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(dimension.title, 'es') %></span>
 			</li>
 		<% } %>	
-		<ul class="subcaps">
 	<% } else if (elementTypeIndicatorInstance) { %>
 		<li>		
 	  		<div style="clear: both;">
@@ -81,10 +80,13 @@
 			// Subelements
 			if (this.model.get('elementTypeDimension')) {
 				var subelements = this.model.get('subelements');
-				var subelementsCollection = new ElementsCollection(subelements);				
-				
-				var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection, level : this.options.level + 1});				
-				html += subelementsCollectionView.render();
+				if (subelements != '') {
+					html += '<ul class="subcaps">';
+					var subelementsCollection = new ElementsCollection(subelements);				
+					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection, level : this.options.level + 1});				
+					html += subelementsCollectionView.render();
+					html += '</ul>';
+				}
 			}
 			
 			return html;

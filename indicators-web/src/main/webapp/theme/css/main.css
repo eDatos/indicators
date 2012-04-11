@@ -48,14 +48,12 @@ input[type="image"] {
 }
 
 .itemSubSubcapitulo {
-	color: #000000;
-	font: bold 1em Tahoma, geneva, arial, sans-serif !important;
+	font-weight: bold;
 	padding: 0 0 3px 0;
 }
 
 .itemSubcapitulo {
-	color: #000000;
-	font: bold 1em Tahoma, geneva, arial, sans-serif !important;
+	font-weight: bold;
 	margin-left: 0;
 	padding: 0 0 3px 0;
 }
