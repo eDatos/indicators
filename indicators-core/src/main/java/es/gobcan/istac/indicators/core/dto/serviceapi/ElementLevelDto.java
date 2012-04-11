@@ -13,14 +13,14 @@ public class ElementLevelDto extends ElementLevelDtoBase {
     /**
      * @return True when element is a dimension
      */
-    public Boolean isDimension() {
+    public Boolean isElementTypeDimension() {
         return getDimension() != null;
     }
 
     /**
      * @return True when element is an indicator instance
      */
-    public Boolean isIndicatorInstance() {
+    public Boolean isElementTypeIndicatorInstance() {
         return getIndicatorInstance() != null;
     }
 
@@ -28,9 +28,9 @@ public class ElementLevelDto extends ElementLevelDtoBase {
      * Order in level of element
      */
     public Long getOrderInLevel() {
-        if (isDimension()) {
+        if (isElementTypeDimension()) {
             return getDimension().getOrderInLevel();
-        } else if (isIndicatorInstance()) {
+        } else if (isElementTypeIndicatorInstance()) {
             return getIndicatorInstance().getOrderInLevel();
         }
         return null;
@@ -40,9 +40,9 @@ public class ElementLevelDto extends ElementLevelDtoBase {
      * Parent dimension of element
      */
     public String getParentUuid() {
-        if (isDimension()) {
+        if (isElementTypeDimension()) {
             return getDimension().getParentUuid();
-        } else if (isIndicatorInstance()) {
+        } else if (isElementTypeIndicatorInstance()) {
             return getIndicatorInstance().getParentUuid();
         }
         return null;
