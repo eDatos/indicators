@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.BaseController;
 import es.gobcan.istac.indicators.web.WebConstants;
@@ -74,17 +75,23 @@ public class IndicatorsSystemsController extends BaseController {
     @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
     public ModelAndView setupForm(@PathVariable("code") String code, Model model) throws Exception {
 
-        // Retrieve operation
+        // Retrieve indicators system
         OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);       
         IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
+        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
+        
+        // Retrieve dimensions and indicators instances
+        IndicatorsSystemStructureDto structureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), indicatorsSystemDto.getUuid(), indicatorsSystemDto.getVersionNumber());
         
         // To Json
         ObjectMapper mapper = new ObjectMapper();
-        String indicatorsSysteMJson = mapper.writeValueAsString(indicatorsSystemWebDto);
+        String indicatorsSystemJson = mapper.writeValueAsString(indicatorsSystemWebDto);
+        String structureJson = mapper.writeValueAsString(structureDto.getElements());
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
-        modelAndView.addObject("indicatorsSystem", indicatorsSysteMJson);
+        modelAndView.addObject("indicatorsSystem", indicatorsSystemJson);
+        modelAndView.addObject("indicatorsSystemStructure", structureJson);
  
         return modelAndView;
     }
