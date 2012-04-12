@@ -49,7 +49,7 @@
 					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" />
 				</div>
 				<div class="itemTabla">
-					<a class="nouline" href="URL_TO_JAXI"><%= getLabel(indicatorInstance.title, 'es') %></a>
+					<a class="nouline" href="PENDIENTE_CONF/jaxi-web/tabla.do?indicators=IDENTIFIER"><%= getLabel(indicatorInstance.title, 'es') %></a>
 				</div>
 			</div>								
 		</li>
