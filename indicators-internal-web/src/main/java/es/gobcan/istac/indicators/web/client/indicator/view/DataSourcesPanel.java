@@ -53,8 +53,9 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
-import es.gobcan.istac.indicators.web.client.widgets.VariableListItem;
+import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
 
 public class DataSourcesPanel extends VLayout {
 
@@ -258,11 +259,6 @@ public class DataSourcesPanel extends VLayout {
         this.dataSourceDto = dataSourceDto;
         // Update dataSource title
         mainFormLayout.setTitleLabelContents(getConstants().dataSource() + (dataSourceDto.getUuid() != null ? " " + dataSourceDto.getUuid() : new String()));
-        // Clear and load data structure
-        dataStructureDto = null;
-        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
-            uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
-        }
         setDataSourceViewMode(dataSourceDto);
         setDataSourceEditionMode(dataSourceDto);
     }
@@ -287,8 +283,7 @@ public class DataSourcesPanel extends VLayout {
             uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
         }
 
-        // TODO Set other variables
-        // ((ViewVariableListItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue();
+        ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
 
         interperiodPuntualRateForm.setValue(dataSourceDto.getInterperiodPuntualRate());
 
@@ -376,7 +371,7 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
-        VariableListItem variables = new VariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
+        ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
         generalForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
 
@@ -415,7 +410,7 @@ public class DataSourcesPanel extends VLayout {
                     ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
                     ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
                     ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
-                    ((VariableListItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+                    ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
 
                     // Retrieve data structure
                     uiHandlers.retrieveDataStructure(event.getValue().toString());
@@ -474,7 +469,7 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
-        VariableListItem variables = new VariableListItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
+        VariableCanvasItem variables = new VariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
         generalEditionForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
 
@@ -521,12 +516,12 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataStructureDto.getSpatialVariable());
 
         // Variables and categories
-        ((VariableListItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+        ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
 
         List<String> variables = dataStructureDto.getVariables();
         Map<String, List<String>> categoryCodes = dataStructureDto.getValueCodes();
         Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
-        ((VariableListItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(variables, categoryCodes, categoryLabels);
+        ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(variables, categoryCodes, categoryLabels);
 
         generalEditionForm.markForRedraw();
     }
@@ -563,7 +558,7 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setAnnualPercentageRate(annualPercentageRateEditionForm.getValue());
 
         dataSourceDto.getOtherVariables().clear();
-        dataSourceDto.getOtherVariables().addAll(((VariableListItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());
+        dataSourceDto.getOtherVariables().addAll(((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());
 
         return dataSourceDto;
     }
