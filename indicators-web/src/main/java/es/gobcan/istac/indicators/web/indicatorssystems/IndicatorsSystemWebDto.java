@@ -2,7 +2,7 @@ package es.gobcan.istac.indicators.web.indicatorssystems;
 
 import java.util.Date;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 
 /**
  * Dto for indicators system

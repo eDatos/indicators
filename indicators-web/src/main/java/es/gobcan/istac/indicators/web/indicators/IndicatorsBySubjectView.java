@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.web.indicators;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.gobcan.istac.indicators.core.dto.serviceapi.IndicatorDto;
-import es.gobcan.istac.indicators.core.dto.serviceapi.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.SubjectDto;
 
 /**
  * Contains one subject and all indicators published with this subject

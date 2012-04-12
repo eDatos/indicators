@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.web.ws;
 
-import org.siemac.metamac.core.common.dto.serviceapi.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.serviceapi.LocalisedStringDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
