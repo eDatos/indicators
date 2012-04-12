@@ -5,7 +5,7 @@
 <div class="listadoTablas">
 	<div id="indicators-system-view"></div>
 	<div>
-		<ul style="margin: 0px; padding-left: 4px;">
+		<ul class="subcaps" style="margin: 0px; padding-left: 4px;">
 			<div id="elements-view"></div>
 		</ul>
 	</div>
