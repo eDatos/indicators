@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.indicatorssystems;
+package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
 import java.util.Date;
 

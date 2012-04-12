@@ -24,7 +24,7 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
     	<property name="converters">
         	<list>
-	            <bean class="es.gobcan.istac.indicators.web.converter.InternationalStringConverter"/>
+	            <bean class="es.gobcan.istac.indicators.web.diffusion.converter.InternationalStringConverter"/>
     	    </list>
     	</property>
 	</bean>
@@ -41,7 +41,7 @@
           <property name="prefix" value="" />
           <property name="suffix" value=".ftl" />
           <property name="contentType" value="text/html; charset=UTF-8" />
-          <property name="viewClass" value="es.gobcan.istac.indicators.view.FreeMarkerHelperView" />
+          <property name="viewClass" value="es.gobcan.istac.indicators.web.diffusion.view.FreeMarkerHelperView" />
           <property name="exposeSpringMacroHelpers" value="true" />
           <property name="exposeRequestAttributes" value="true" />
           <property name="exposeSessionAttributes" value="true" />

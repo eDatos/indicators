@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.ws;
+package es.gobcan.istac.indicators.web.diffusion.ws;
 
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteria;
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteriaConjunctionRestriction;

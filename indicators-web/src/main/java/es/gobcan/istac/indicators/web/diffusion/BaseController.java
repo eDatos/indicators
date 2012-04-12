@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web;
+package es.gobcan.istac.indicators.web.diffusion;
 
 import javax.servlet.http.HttpServletRequest;
 

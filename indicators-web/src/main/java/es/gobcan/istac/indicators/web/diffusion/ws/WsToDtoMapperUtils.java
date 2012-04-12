@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.ws;
+package es.gobcan.istac.indicators.web.diffusion.ws;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
@@ -7,7 +7,7 @@ import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 
-import es.gobcan.istac.indicators.web.indicatorssystems.IndicatorsSystemWebDto;
+import es.gobcan.istac.indicators.web.diffusion.indicatorssystems.IndicatorsSystemWebDto;
 
 public class WsToDtoMapperUtils {
 

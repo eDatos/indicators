@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.ws;
+package es.gobcan.istac.indicators.web.diffusion.ws;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import es.gobcan.istac.indicators.web.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 
 @Component
 public class WebServicesLocator {

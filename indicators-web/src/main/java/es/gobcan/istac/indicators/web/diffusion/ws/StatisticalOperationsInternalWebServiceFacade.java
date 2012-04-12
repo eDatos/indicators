@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.ws;
+package es.gobcan.istac.indicators.web.diffusion.ws;
 
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacExceptionFault;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;

@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.web.indicators;
+package es.gobcan.istac.indicators.web.diffusion.indicators;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.BaseController;
-import es.gobcan.istac.indicators.web.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.BaseController;
+import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 
 @Controller
 public class IndicatorsController extends BaseController {

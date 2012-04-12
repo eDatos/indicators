@@ -1,4 +1,4 @@
-package es.gobcan.istac.indicators.view;
+package es.gobcan.istac.indicators.web.diffusion.view;
 
 import java.util.Map;
 

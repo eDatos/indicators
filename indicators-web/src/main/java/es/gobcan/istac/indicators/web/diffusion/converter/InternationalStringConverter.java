@@ -1,10 +1,10 @@
-package es.gobcan.istac.indicators.web.converter;
+package es.gobcan.istac.indicators.web.diffusion.converter;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.springframework.core.convert.converter.Converter;
 
-import es.gobcan.istac.indicators.web.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 
 // TODO mensajes en diferentes idiomas. Por ahora sólo devuelve español
 // TODO coger el locale del navegador web

@@ -9,8 +9,8 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-<!--     <context:component-scan base-package="es.gobcan.istac.indicators.rest" /> -->
+<!--     <context:component-scan base-package="es.gobcan.istac.indicators.web.diffusion.rest" /> -->
     
-<!--     <bean class="es.gobcan.istac.indicators.web.rest.spring.JacksonFix" /> -->
+<!--     <bean class="es.gobcan.istac.indicators.web.diffusion.rest.spring.JacksonFix" /> -->
 
 </beans>
