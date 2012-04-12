@@ -1,5 +1,9 @@
-<html>
-	<body>
-		<h1>Page not found</h1>
-	</body>
-</html>
+[#ftl]
+[#include "/inc/includes.ftl"]
+[@template.base]
+	
+<div class="error">
+	<p style="font-weight: bold;">[@apph.messageEscape 'page.error.page-not-found'/]</p>
+</div>
+
+[/@template.base]

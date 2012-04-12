@@ -76,3 +76,11 @@ ul.subcaps li {
 	margin-left: 0;
 	padding-left: 0;
 }
+
+/*****************************************
+ Errors
+/****************************************/
+.error {
+	text-align: center;
+	font-weight: bold;
+}
