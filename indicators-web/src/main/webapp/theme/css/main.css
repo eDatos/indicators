@@ -26,7 +26,7 @@ input[type="image"] {
 }
 
 .h2top {
-	background: url(../images/h2overwrite/top.gif) no-repeat top;
+	background: url(../images/top.gif) no-repeat top;
 	width: 100%;
 	font-size: 1px;
 	height: 1px;
