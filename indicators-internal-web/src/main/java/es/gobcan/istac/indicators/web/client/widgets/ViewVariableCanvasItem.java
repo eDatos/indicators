@@ -20,6 +20,8 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
     public ViewVariableCanvasItem(String name, String title) {
         super(name, title);
 
+        setTitleStyle("staticFormItemTitle");
+
         setCellStyle("variableCanvasCell");
         setCellHeight(30);
         setTextBoxStyle("variableCanvasCell");

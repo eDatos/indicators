@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.client.indicator.presenter;
 
+import java.util.List;
+
 import com.gwtplatform.mvp.client.UiHandlers;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -31,5 +33,6 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveGeographicalValueDS(String uuid);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
+    void deleteDataSource(List<String> uuid);
 
 }

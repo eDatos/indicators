@@ -1,17 +1,18 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
+import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.LocaleMock;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
+import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
@@ -30,11 +31,10 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.toolbar.ToolStrip;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -54,36 +54,36 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
+import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
-import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
 
 public class DataSourcesPanel extends VLayout {
 
-    private IndicatorDto             indicatorDto;
-    private IndicatorUiHandler       uiHandlers;
+    private IndicatorDto              indicatorDto;
+    private IndicatorUiHandler        uiHandlers;
 
-    private ToolStripButton          newDataSourceButton;
-    private ToolStripButton          deleteDatasourceButton;
-    private CustomListGrid           dataSourcesListGrid;
+    private CustomListGrid            dataSourcesListGrid;
 
-    private DataSourceMainFormLayout mainFormLayout;
+    private ListGridToolStrip         toolStrip;
+    private DataSourceMainFormLayout  mainFormLayout;
 
     // View Form
-    private GroupDynamicForm         generalForm;
-    private ViewRateDerivationForm   interperiodPuntualRateForm;
-    private ViewRateDerivationForm   annualPuntualRateForm;
-    private ViewRateDerivationForm   interperiodPercentageRateForm;
-    private ViewRateDerivationForm   annualPercentageRateForm;
+    private ViewDataSourceGeneralForm generalForm;
+    private ViewRateDerivationForm    interperiodPuntualRateForm;
+    private ViewRateDerivationForm    annualPuntualRateForm;
+    private ViewRateDerivationForm    interperiodPercentageRateForm;
+    private ViewRateDerivationForm    annualPercentageRateForm;
 
     // Edition Form
-    private GroupDynamicForm         generalEditionForm;
-    private RateDerivationForm       interperiodPuntualRateEditionForm;
-    private RateDerivationForm       annualPuntualRateEditionForm;
-    private RateDerivationForm       interperiodPercentageRateEditionForm;
-    private RateDerivationForm       annualPercentageRateEditionForm;
+    private GroupDynamicForm          generalEditionForm;
+    private ViewDataSourceGeneralForm generalStaticEditionForm;
+    private RateDerivationForm        interperiodPuntualRateEditionForm;
+    private RateDerivationForm        annualPuntualRateEditionForm;
+    private RateDerivationForm        interperiodPercentageRateEditionForm;
+    private RateDerivationForm        annualPercentageRateEditionForm;
 
-    private DataSourceDto            dataSourceDto;
-    private DataStructureDto         dataStructureDto;
+    private DataSourceDto             dataSourceDto;
+    private DataStructureDto          dataStructureDto;
 
     public DataSourcesPanel() {
         super();
@@ -91,10 +91,8 @@ public class DataSourcesPanel extends VLayout {
 
         // ToolStrip
 
-        ToolStrip toolStrip = new ToolStrip();
-        toolStrip.setWidth100();
-        newDataSourceButton = new ToolStripButton(getConstants().indicNew(), RESOURCE.newListGrid().getURL());
-        newDataSourceButton.addClickHandler(new ClickHandler() {
+        toolStrip = new ListGridToolStrip(getMessages().dataSourcesDeleteTitle(), getMessages().dataSourcesConfirmDelete());
+        toolStrip.getNewButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -107,18 +105,13 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
-        deleteDatasourceButton = new ToolStripButton(getConstants().indicDelete(), RESOURCE.deleteListGrid().getURL());
-        deleteDatasourceButton.setVisibility(Visibility.HIDDEN);
-        deleteDatasourceButton.addClickHandler(new ClickHandler() {
+        toolStrip.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Delete DataSource
+                uiHandlers.deleteDataSource(getSelectedDataSources());
             }
         });
-
-        toolStrip.addButton(newDataSourceButton);
-        toolStrip.addButton(deleteDatasourceButton);
 
         // ListGrid
 
@@ -141,7 +134,7 @@ public class DataSourcesPanel extends VLayout {
                     deselectDatasource();
                     if (dataSourcesListGrid.getSelectedRecords().length > 1) {
                         // Delete more than one dimension with one click
-                        deleteDatasourceButton.show();
+                        toolStrip.getDeleteButton().show();
                     }
                 }
             }
@@ -152,6 +145,14 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout = new DataSourceMainFormLayout();
         mainFormLayout.setTitleLabelContents(getConstants().dataSource());
         mainFormLayout.setVisibility(Visibility.HIDDEN);
+
+        mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                setViewQueryMode();
+            }
+        });
 
         mainFormLayout.getSave().addClickHandler(new ClickHandler() {
 
@@ -179,6 +180,7 @@ public class DataSourcesPanel extends VLayout {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                 generalForm.setTranslationsShowed(translationsShowed);
                 generalEditionForm.setTranslationsShowed(translationsShowed);
+                generalStaticEditionForm.setTranslationsShowed(translationsShowed);
                 interperiodPuntualRateForm.setTranslationsShowed(translationsShowed);
                 interperiodPuntualRateEditionForm.setTranslationsShowed(translationsShowed);
                 interperiodPercentageRateForm.setTranslationsShowed(translationsShowed);
@@ -194,7 +196,7 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO start editing query form
+                setEditionQueryMode();
             }
         });
 
@@ -231,6 +233,8 @@ public class DataSourcesPanel extends VLayout {
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
+        generalForm.setUiHandlers(uiHandlers);
+        generalStaticEditionForm.setUiHandlers(uiHandlers);
         interperiodPuntualRateForm.setUiHandlers(uiHandlers);
         interperiodPuntualRateEditionForm.setUiHandlers(uiHandlers);
         interperiodPercentageRateForm.setUiHandlers(uiHandlers);
@@ -243,47 +247,48 @@ public class DataSourcesPanel extends VLayout {
 
     private void selectDataSource(DataSourceDto dataSourceDto) {
         if (dataSourceDto.getUuid() != null) {
+            toolStrip.getDeleteButton().show();
             mainFormLayout.setViewMode();
         } else {
+            toolStrip.getDeleteButton().hide();
+            dataSourcesListGrid.deselectAllRecords();
             mainFormLayout.setEditionMode();
         }
+
         mainFormLayout.show();
         setDataSource(dataSourceDto);
     }
 
     private void deselectDatasource() {
+        toolStrip.getDeleteButton().hide();
         mainFormLayout.hide();
     }
 
     private void setDataSource(DataSourceDto dataSourceDto) {
         this.dataSourceDto = dataSourceDto;
+
         // Update dataSource title
         mainFormLayout.setTitleLabelContents(getConstants().dataSource() + (dataSourceDto.getUuid() != null ? " " + dataSourceDto.getUuid() : new String()));
+
+        // Clear and load data structure
+        // dataStructureDto = null;
+        // if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
+        // uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
+        // }
+
+        // Set query form visibility
+        if (dataSourceDto.getUuid() == null) {
+            setEditionQueryMode();
+        } else {
+            setViewQueryMode();
+        }
+
         setDataSourceViewMode(dataSourceDto);
         setDataSourceEditionMode(dataSourceDto);
     }
 
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
-        generalForm.setValue(DataSourceDS.QUERY, ""); // Set in method setDataDefinition
-        if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid())) {
-            uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
-        }
-
-        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
-        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyTitle()));
-        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_ACRONYM, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyAcronym()));
-        generalForm.setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
-        generalForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
-
-        generalForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
-        generalForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
-        generalForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
-        generalForm.setValue(DataSourceDS.GEO_VALUE, ""); // Set in method setGeographicalValue
-        if (dataSourceDto.getGeographicalValueUuid() != null && !dataSourceDto.getGeographicalValueUuid().isEmpty()) {
-            uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
-        }
-
-        ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
+        generalForm.setValue(dataSourceDto);
 
         interperiodPuntualRateForm.setValue(dataSourceDto.getInterperiodPuntualRate());
 
@@ -295,21 +300,10 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void setDataSourceEditionMode(DataSourceDto dataSourceDto) {
-        generalEditionForm.setValue(DataSourceDS.QUERY, dataSourceDto.getDataGpeUuid());
+        // Clear query values
+        generalEditionForm.clearValues();
 
-        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataSourceDto.getSourceSurveyCode());
-        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_TITLE, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyTitle()));
-        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_ACRONYM, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyAcronym()));
-        generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
-        generalEditionForm.setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
-
-        generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
-        generalEditionForm.setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
-        generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataSourceDto.getGeographicalVariable());
-        generalEditionForm.setValue(DataSourceDS.GEO_VALUE, dataSourceDto.getGeographicalValueUuid());
-
-        // TODO Set other variables
-        // ((VariableListItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
+        generalStaticEditionForm.setValue(dataSourceDto);
 
         interperiodPuntualRateEditionForm.setValue(dataSourceDto.getInterperiodPuntualRate());
 
@@ -321,59 +315,7 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void createViewForm() {
-        generalForm = new GroupDynamicForm(getConstants().datasourceGeneral());
-
-        ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
-
-        ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
-
-        ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
-
-        ViewMultiLanguageTextItem surveyAcronym = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_ACRONYM, getConstants().dataSourceSurveyAcronym());
-
-        ViewTextItem surveyUrl = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
-
-        ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
-
-        ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
-        timeVariable.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return value != null && !value.toString().isEmpty();
-            }
-        });
-
-        ViewTextItem timeValue = new ViewTextItem(DataSourceDS.TIME_VALUE, getConstants().dataSourceTimeValue());
-        timeValue.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return !form.getItem(DataSourceDS.TIME_VARIABLE).isVisible();
-            }
-        });
-
-        ViewTextItem geographicalVariable = new ViewTextItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
-        geographicalVariable.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return value != null && !value.toString().isEmpty();
-            }
-        });
-
-        ViewTextItem geographicalValue = new ViewTextItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
-        geographicalValue.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return !form.getItem(DataSourceDS.GEO_VARIABLE).isVisible();
-            }
-        });
-
-        ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
-
-        generalForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
+        generalForm = new ViewDataSourceGeneralForm(getConstants().datasourceGeneral());
 
         interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate());
 
@@ -391,6 +333,8 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void createEditionForm() {
+        generalStaticEditionForm = new ViewDataSourceGeneralForm(getConstants().datasourceGeneral());
+
         generalEditionForm = new GroupDynamicForm(getConstants().datasourceGeneral());
 
         RequiredSelectItem query = new RequiredSelectItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
@@ -482,6 +426,7 @@ public class DataSourcesPanel extends VLayout {
         annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE);
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
+        mainFormLayout.addEditionCanvas(generalStaticEditionForm);
         mainFormLayout.addEditionCanvas(interperiodPuntualRateEditionForm);
         mainFormLayout.addEditionCanvas(interperiodPercentageRateEditionForm);
         mainFormLayout.addEditionCanvas(annualPuntualRateEditionForm);
@@ -494,6 +439,7 @@ public class DataSourcesPanel extends VLayout {
 
     public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
         generalForm.setValue(DataSourceDS.QUERY, dataDefinitionDto.getName());
+        generalStaticEditionForm.setValue(DataSourceDS.QUERY, dataDefinitionDto.getName());
     }
 
     public void setDataStructure(DataStructureDto dataStructureDto) {
@@ -532,6 +478,7 @@ public class DataSourcesPanel extends VLayout {
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         generalForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
+        generalStaticEditionForm.setValue(DataSourceDS.GEO_VALUE, InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
     }
 
     public DataSourceDto getDataSourceDto() {
@@ -597,6 +544,26 @@ public class DataSourcesPanel extends VLayout {
 
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         // TODO
+    }
+
+    private List<String> getSelectedDataSources() {
+        List<String> codes = new ArrayList<String>();
+        for (ListGridRecord record : dataSourcesListGrid.getSelectedRecords()) {
+            codes.add(record.getAttribute(DataSourceDS.UUID));
+        }
+        return codes;
+    }
+
+    private void setViewQueryMode() {
+        generalEditionForm.hide();
+        generalStaticEditionForm.show();
+        mainFormLayout.markForRedraw();
+    }
+
+    private void setEditionQueryMode() {
+        generalEditionForm.show();
+        generalStaticEditionForm.hide();
+        mainFormLayout.markForRedraw();
     }
 
 }

@@ -45,6 +45,8 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
+import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
@@ -88,6 +90,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     private DispatchAsync dispatcher;
     private String        indicatorCode;
+    private IndicatorDto  indicatorDto;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.indicatorPage)
@@ -137,6 +140,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         indicatorCode = request.getParameter(PlaceRequestParams.indicatorParam, null);
+        indicatorDto = null;
     }
 
     @Override
@@ -155,7 +159,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onSuccess(GetIndicatorByCodeResult result) {
-                final IndicatorDto indicatorDto = result.getIndicator();
+                indicatorDto = result.getIndicator();
                 dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
 
                     @Override
@@ -455,6 +459,23 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onSuccess(SaveDataSourceResult result) {
                 getView().onDataSourceSaved(result.getDataSourceDto());
+            }
+        });
+    }
+
+    @Override
+    public void deleteDataSource(List<String> uuids) {
+        dispatcher.execute(new DeleteDataSourcesAction(uuids), new AsyncCallback<DeleteDataSourcesResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error deleting datasources");
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().dataSourcesErrorDelete()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(DeleteDataSourcesResult result) {
+                retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourcesDeleted()), MessageTypeEnum.SUCCESS);
             }
         });
     }
