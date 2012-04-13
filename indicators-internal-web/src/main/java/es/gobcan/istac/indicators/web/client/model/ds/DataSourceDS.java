@@ -14,6 +14,7 @@ public class DataSourceDS extends DataSource {
     public static String TIME_VALUE                  = "ds-time-value";
     public static String GEO_VARIABLE                = "ds-geo-var";
     public static String GEO_VALUE                   = "ds-geo-val";
+    public static String MEASURE_VARIABLE            = "ds-meas-var";
     public static String SOURCE_SURVEY_CODE          = "ds-sur-code";
     public static String SOURCE_SURVEY_TITLE         = "ds-sur-title";
     public static String SOURCE_SURVEY_ACRONYM       = "ds-sur-acro";

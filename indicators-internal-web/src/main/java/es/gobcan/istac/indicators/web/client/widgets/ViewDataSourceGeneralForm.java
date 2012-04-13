@@ -40,7 +40,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return value != null && !value.toString().isEmpty();
+                return value != null && !StringUtils.isBlank(value.toString());
             }
         });
 
@@ -58,7 +58,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return value != null && !value.toString().isEmpty();
+                return value != null && !StringUtils.isBlank(value.toString());
             }
         });
 
@@ -71,9 +71,18 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
             }
         });
 
+        ViewTextItem measureVariable = new ViewTextItem(DataSourceDS.MEASURE_VARIABLE, getConstants().dataSourceMeasureVariable());
+        measureVariable.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !StringUtils.isBlank(value.toString());
+            }
+        });
+
         ViewVariableCanvasItem variables = new ViewVariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
+        setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
 
     }
 
@@ -96,6 +105,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         if (dataSourceDto.getGeographicalValueUuid() != null && !dataSourceDto.getGeographicalValueUuid().isEmpty()) {
             uiHandlers.retrieveGeographicalValueDS(dataSourceDto.getGeographicalValueUuid());
         }
+        setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
         ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
     }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.LocaleMock;
@@ -179,8 +180,8 @@ public class DataSourcesPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                 generalForm.setTranslationsShowed(translationsShowed);
-                generalEditionForm.setTranslationsShowed(translationsShowed);
                 generalStaticEditionForm.setTranslationsShowed(translationsShowed);
+                generalEditionForm.setTranslationsShowed(translationsShowed);
                 interperiodPuntualRateForm.setTranslationsShowed(translationsShowed);
                 interperiodPuntualRateEditionForm.setTranslationsShowed(translationsShowed);
                 interperiodPercentageRateForm.setTranslationsShowed(translationsShowed);
@@ -196,6 +197,9 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
+                // Clear query form values
+                generalEditionForm.clearValues();
+
                 setEditionQueryMode();
             }
         });
@@ -271,10 +275,10 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.setTitleLabelContents(getConstants().dataSource() + (dataSourceDto.getUuid() != null ? " " + dataSourceDto.getUuid() : new String()));
 
         // Clear and load data structure
-        // dataStructureDto = null;
-        // if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
-        // uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
-        // }
+        dataStructureDto = null;
+        if (dataSourceDto.getDataGpeUuid() != null && !dataSourceDto.getDataGpeUuid().isEmpty()) {
+            uiHandlers.retrieveDataStructure(dataSourceDto.getDataGpeUuid());
+        }
 
         // Set query form visibility
         if (dataSourceDto.getUuid() == null) {
@@ -300,10 +304,11 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void setDataSourceEditionMode(DataSourceDto dataSourceDto) {
-        // Clear query values
-        generalEditionForm.clearValues();
 
         generalStaticEditionForm.setValue(dataSourceDto);
+
+        // Edition values are not set. When edit query button is clicked, values will be cleared.
+        // generalEditionForm.setValue();
 
         interperiodPuntualRateEditionForm.setValue(dataSourceDto.getInterperiodPuntualRate());
 
@@ -413,9 +418,19 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
+        ViewTextItem measureVariable = new ViewTextItem(DataSourceDS.MEASURE_VARIABLE, getConstants().dataSourceMeasureVariable());
+        measureVariable.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return value != null && !StringUtils.isBlank(value.toString());
+            }
+        });
+
         VariableCanvasItem variables = new VariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalEditionForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, variables);
+        generalEditionForm
+                .setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
 
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT);
 
@@ -461,6 +476,11 @@ public class DataSourcesPanel extends VLayout {
         // Spatial variable
         generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, dataStructureDto.getSpatialVariable());
 
+        // Measure variable
+        generalForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
+        generalStaticEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
+        generalEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
+
         // Variables and categories
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
 
@@ -469,6 +489,8 @@ public class DataSourcesPanel extends VLayout {
         Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(variables, categoryCodes, categoryLabels);
 
+        generalForm.markForRedraw();
+        generalStaticEditionForm.markForRedraw();
         generalEditionForm.markForRedraw();
     }
 
