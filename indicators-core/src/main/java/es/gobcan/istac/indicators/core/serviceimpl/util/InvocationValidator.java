@@ -209,7 +209,7 @@ public class InvocationValidator {
     public static void checkFindIndicatorsSystemsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkFindIndicatorsSystems(criteria, exceptions);
     }
-    
+
     public static void checkRetrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -549,7 +549,8 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -685,27 +686,27 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveDataDefinitions(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         // nothing
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkRetrieveDataDefinition(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException{
+
+    public static void checkRetrieveDataDefinition(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(uuid, "UUID", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveDataStructure(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -715,7 +716,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkPopulateIndicatorData(String indicatorUuid, String version, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -725,7 +726,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, "INDICATORS_SYSTEM", exceptions);
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion.getIndicatorsSystem(), "INDICATORS_SYSTEM", exceptions);
@@ -748,7 +749,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), "INDICATOR_INSTANCE.TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
         if (ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "INDICATOR_INSTANCE.TIME_GRANULARITY", "INDICATOR_INSTANCE.TIME_VALUE"));
         }
         if (!ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
@@ -843,6 +844,10 @@ public class InvocationValidator {
         }
     }
 
+    private static Boolean isRateDerivationMethodTypeLoad(RateDerivation rateDerivation) {
+        return rateDerivation != null && RateDerivationMethodTypeEnum.LOAD.equals(rateDerivation.getMethodType());
+    }
+
     private static void checkDataSource(DataSource dataSource, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(dataSource, "DATA_SOURCE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), "DATA_SOURCE.DATA_GPE_UUID", exceptions);
@@ -850,16 +855,23 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), "DATA_SOURCE.SOURCE_SURVEY_CODE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyTitle(), "DATA_SOURCE.SOURCE_SURVEY_TITLE", exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPublishers(), "DATA_SOURCE.PUBLISHERS", exceptions);
-        
+
+        if (ValidationUtils.isEmpty(dataSource.getAbsoluteMethod())) {
+            // If absoluteMethod is null, any rate must be load
+            if (!isRateDerivationMethodTypeLoad(dataSource.getAnnualPuntualRate()) && !isRateDerivationMethodTypeLoad(dataSource.getAnnualPercentageRate())
+                    && !isRateDerivationMethodTypeLoad(dataSource.getInterperiodPuntualRate()) && !isRateDerivationMethodTypeLoad(dataSource.getInterperiodPercentageRate())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "DATA_SOURCE.ABSOLUTE_METHOD"));
+            }
+        }
         // Rates
         checkRateDerivation(dataSource.getAnnualPuntualRate(), "DATA_SOURCE.ANNUAL_PUNTUAL_RATE", Boolean.FALSE, exceptions);
         checkRateDerivation(dataSource.getAnnualPercentageRate(), "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
         checkRateDerivation(dataSource.getInterperiodPuntualRate(), "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE", Boolean.FALSE, exceptions);
         checkRateDerivation(dataSource.getInterperiodPercentageRate(), "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE", Boolean.TRUE, exceptions);
-        
+
         // Time
         if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "DATA_SOURCE.TIME_VARIABLE", "DATA_SOURCE.TIME_VALUE"));
         }
         if (!ValidationUtils.isEmpty(dataSource.getTimeVariable())) {
@@ -868,17 +880,16 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(dataSource.getTimeValue()) && !TimeVariableUtils.isTimeValue(dataSource.getTimeValue())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, "DATA_SOURCE.TIME_VALUE"));
         }
-        
+
         // Geographical
         if (ValidationUtils.isEmpty(dataSource.getGeographicalVariable()) && ValidationUtils.isEmpty(dataSource.getGeographicalValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos? 
+            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, "DATA_SOURCE.GEOGRAPHICAL_VARIABLE", "DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID"));
         }
         if (!ValidationUtils.isEmpty(dataSource.getGeographicalVariable())) {
             ValidationUtils.checkMetadataEmpty(dataSource.getTimeValue(), "DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", exceptions);
         }
     }
-
     private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, Boolean isPercentage, List<MetamacExceptionItem> exceptions) {
 
         if (ValidationUtils.isEmpty(rateDerivation)) {
