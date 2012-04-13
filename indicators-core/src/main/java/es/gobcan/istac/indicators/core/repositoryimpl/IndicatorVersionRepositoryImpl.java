@@ -60,6 +60,9 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
                         criteria.createAlias("indicator", "ind");
                         criteria.add(Restrictions.eq("ind.code", propertyRestriction.getStringValue()).ignoreCase());
                         break;
+                    case NEEDS_UPDATE:
+                        criteria.add(Restrictions.eq("ind.needsUpdate", propertyRestriction.getBooleanValue()));
+                        break;
                     case PROC_STATUS:
                         criteria.add(Restrictions.eq("procStatus", propertyRestriction.getEnumValue()));
                         break;

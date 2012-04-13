@@ -67,6 +67,40 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
         assertTrue(indicatorVersionCreated.getIsLastVersion());
     }
+    
+    @Test
+    public void testUpdateIndicator() throws Exception {
+        
+        IndicatorVersion indicatorVersion = new IndicatorVersion();
+        indicatorVersion.setIndicator(new Indicator());
+        indicatorVersion.getIndicator().setCode(IndicatorsMocks.mockString(10));
+        indicatorVersion.setTitle(new InternationalString());
+        indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
+        indicatorVersion.setSubjectTitle(new InternationalString());
+        indicatorVersion.setQuantity(new Quantity());
+        indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
+        indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
+        indicatorVersion.getQuantity().setUnitMultiplier(Integer.valueOf(1));
+        
+        // Create
+        IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContext(), indicatorVersion);
+        
+        Indicator indicator = indicatorVersionCreated.getIndicator();
+        
+        //Check after creation needsUpdate is false
+        assertFalse(indicatorVersionCreated.getIndicator().getNeedsUpdate());
+        
+        indicator.setNeedsUpdate(Boolean.TRUE);
+        
+        Indicator indicatorUpdated = indicatorService.updateIndicator(getServiceContext(), indicator);
+        assertTrue(indicatorUpdated.getNeedsUpdate());
+        
+        // Validate properties are not in Dto
+        String uuid = indicatorVersionCreated.getIndicator().getUuid();
+        String version = indicatorVersionCreated.getVersionNumber();
+        IndicatorVersion indicatorVersionUpdated = indicatorService.retrieveIndicator(getServiceContext(), uuid, version);
+        assertTrue(indicatorVersionUpdated.getIndicator().getNeedsUpdate());
+    }
 
     @Test
     public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {

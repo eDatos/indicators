@@ -32,10 +32,9 @@ public class DataStructure {
     private Map<String, List<String>> valueCodes;
 
     @JsonProperty
-    private List<String> temporals;
+    private String temporalVariable;
 
-    @JsonProperty
-    private List<String> spatials;
+    private String spatialVariable;
 
     @JsonProperty
     private String contVariable;
@@ -56,7 +55,7 @@ public class DataStructure {
     private List<String> publishers;
 
     @JsonProperty("categories")
-    public void setCategories(List<Object> categories) {
+    public void processCategories(List<Object> categories) {
         for (Object varDef : categories) {
             Map<String, Object> mapa = (Map) varDef;
             String var = (String) mapa.get("variable");
@@ -64,6 +63,24 @@ public class DataStructure {
             List<String> codes = (List<String>) mapa.get("codes");
             addValueLabels(var, labels);
             addValueCodes(var, codes);
+        }
+    }
+    
+    @JsonProperty("spatials")
+    public void processSpatials(List<String> spatials) {
+        if (spatials == null || spatials.size() == 0) {
+            spatialVariable = null;
+        } else {
+            spatialVariable = spatials.get(0);
+        }
+    }
+    
+    @JsonProperty("temporals")
+    public void processTemporals(List<String> temporals) {
+        if (temporals == null || temporals.size() == 0) {
+            temporalVariable = null;
+        } else {
+            temporalVariable = temporals.get(0);
         }
     }
 
@@ -127,20 +144,24 @@ public class DataStructure {
         this.valueCodes = valueCodes;
     }
 
-    public List<String> getTemporals() {
-        return temporals;
+    
+    public String getTemporalVariable() {
+        return temporalVariable;
     }
 
-    public void setTemporals(List<String> temporals) {
-        this.temporals = temporals;
+    
+    public void setTemporalVariable(String temporalVariable) {
+        this.temporalVariable = temporalVariable;
     }
 
-    public List<String> getSpatials() {
-        return spatials;
+    
+    public String getSpatialVariable() {
+        return spatialVariable;
     }
 
-    public void setSpatials(List<String> spatials) {
-        this.spatials = spatials;
+    
+    public void setSpatialVariable(String spatialVariable) {
+        this.spatialVariable = spatialVariable;
     }
 
     public String getContVariable() {

@@ -21,31 +21,23 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     }
 
     public List<DataDefinition> findCurrentDataDefinitions() {
-        List<DataDefinition> finalResult = new ArrayList<DataDefinition>();
         Date now = Calendar.getInstance().getTime();
         // Criteria
         org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
         
         Criteria criteria = session.createCriteria(DataDefinition.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        //filter future published 
         criteria.add(Restrictions.lt("availableStartDate", now));
+        //filter archived
         criteria.add(Restrictions.isNull("availableEndDate"));
         
+        criteria.addOrder(Order.asc("uuid"));
         criteria.addOrder(Order.asc("availableStartDate"));
         // find
         List<DataDefinition> result = criteria.list();
-        List<String> processed = new ArrayList<String>();
         
-        //For every uuid we add only the last query, getting the first item
-        //provided the list is sorted by date
-        for (DataDefinition dataDefinition: result) {
-            if (!processed.contains(dataDefinition.getUuid())) {
-                processed.add(dataDefinition.getUuid());
-                finalResult.add(dataDefinition);
-            }
-        }
-        
-        return finalResult;
+        return filterNotAvailableDataDefinitions(result);
     }
     
     public DataDefinition findCurrentDataDefinition(String uuid) {
@@ -67,5 +59,46 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         } else {
             return null;
         }
+    }
+    @Override
+    public List<String> findDataDefinitionsWithDataUpdatedAfter(Date date) {
+        Date now = Calendar.getInstance().getTime();
+        // Criteria
+        org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
+        
+        Criteria criteria = session.createCriteria(DataDefinition.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        //data has been updated?
+        criteria.add(Restrictions.gt("dataUpdateDate", date));
+        //is available right now?
+        criteria.add(Restrictions.lt("availableStartDate", now));
+        criteria.add(Restrictions.isNull("availableEndDate"));
+        
+        criteria.addOrder(Order.asc("uuid"));
+        criteria.addOrder(Order.asc("availableStartDate"));
+        
+        // first result is the current available query
+        List<DataDefinition> result = criteria.list();
+        List<DataDefinition> dataDefinitions = filterNotAvailableDataDefinitions(result);
+        List<String> dataDefinitionsUuids = new ArrayList<String>();
+        for (DataDefinition dataDefinition : dataDefinitions) {
+            dataDefinitionsUuids.add(dataDefinition.getUuid());
+        }
+        return dataDefinitionsUuids;
+    }
+    
+    private List<DataDefinition> filterNotAvailableDataDefinitions(List<DataDefinition> dataDefinitions) {
+        List<String> processed = new ArrayList<String>();
+        List<DataDefinition> finalResult = new ArrayList<DataDefinition>();
+        //For every uuid we add only the last query, getting the first item
+        //provided the list is sorted by date
+        for (DataDefinition dataDefinition: dataDefinitions) {
+            if (!processed.contains(dataDefinition.getUuid())) {
+                processed.add(dataDefinition.getUuid());
+                finalResult.add(dataDefinition);
+            }
+        }
+        
+        return finalResult;
     }
 }

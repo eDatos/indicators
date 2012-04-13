@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.dto;
 
+import es.gobcan.istac.indicators.core.domain.DataSource;
 
 
 /**
@@ -9,7 +10,7 @@ public class DataSourceDto extends DataSourceDtoBase {
     private static final long serialVersionUID = 1L;
     
     public static final String OBS_VALUE = "##OBS_VALUE##";
-
+    
     public DataSourceDto() {
     }
     
@@ -31,5 +32,9 @@ public class DataSourceDto extends DataSourceDtoBase {
     
     public void setAbsoluteMethodObsValue() {
         setAbsoluteMethod(OBS_VALUE);
+    }
+    
+    public static boolean isObsValue(String value) {
+        return OBS_VALUE.equals(value);
     }
 }

@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -18,6 +19,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRes
 import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.Quantity;
@@ -40,7 +42,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     public IndicatorsServiceImpl() {
     }
-
+    
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
@@ -53,6 +55,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Save indicator
         indicator.setDiffusionVersion(null);
         indicator.setIsPublished(Boolean.FALSE);
+        indicator.setNeedsUpdate(Boolean.FALSE);
         indicator = getIndicatorRepository().save(indicator);
 
         // Save draft version
@@ -177,10 +180,21 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    // CAUTION: This method should never be called from any facade. This is just for internal use
+    public Indicator updateIndicator(ServiceContext ctx, Indicator indicator) throws MetamacException {
+        // Validation
+        InvocationValidator.checkUpdateIndicator(indicator, null);
+
+        // Update
+        indicator = getIndicatorRepository().save(indicator);
+        return indicator;
+    }
+
+    @Override
     public IndicatorVersion updateIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
         // Validation
-        InvocationValidator.checkUpdateIndicator(indicatorVersion, null);
+        InvocationValidator.checkUpdateIndicatorVersion(indicatorVersion, null);
 
         // Validate indicators system proc status and linked indicators
         checkIndicatorVersionInProduction(indicatorVersion);
@@ -268,7 +282,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         List<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
         return indicatorsVersions;
     }
-
+    
     @Override
     public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -558,7 +572,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         List<Subject> subjects = getSubjectRepository().findSubjects();
         return subjects;
     }
-    
+
     /**
      * This operation retrieves subjects from indicators table
      */
@@ -680,7 +694,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             // Check other conditions
             checkConditionsToPublish(ctx, indicatorVersion, exceptions);
         }
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -721,7 +735,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     /**
      * - Check quantity is complete
      * - Must exists at least one datasource
@@ -736,7 +750,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_MUST_HAVE_DATA_SOURCES, indicatorVersion.getIndicator().getUuid()));
         }
     }
-    
+
     /**
      * - Validations when send to diffusion validation
      * - Checks dataset repository is completed
@@ -749,15 +763,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Check information of data in repository
         ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryId(), "INDICATOR.DATA_REPOSITORY_ID", exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryTableName(), "INDICATOR.DATA_REPOSITORY_TABLE_NAME", exceptions);
-        
+
         // Check linked indicators
         checkQuantityIndicatorsPublished(ctx, indicatorVersion, exceptions);
     }
 
     /**
      * Checks linked indicators are published:
-     *  a) Checks numerator and denominator are published (for indicator and all datasources) 
-     *  b) Checks base quantity is published (if it is not own indicator) (for indicator and all datasources)
+     * a) Checks numerator and denominator are published (for indicator and all datasources)
+     * b) Checks base quantity is published (if it is not own indicator) (for indicator and all datasources)
      */
     private void checkQuantityIndicatorsPublished(ServiceContext ctx, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
 
@@ -814,13 +828,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             checkIndicatorsLinkedInQuantity(dataSource.getAnnualPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY");
         }
         if (dataSource.getInterperiodPuntualRate() != null) {
-            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY");
+            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
+                    "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY");
         }
         if (dataSource.getAnnualPercentageRate() != null) {
             checkIndicatorsLinkedInQuantity(dataSource.getAnnualPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY");
         }
         if (dataSource.getInterperiodPercentageRate() != null) {
-            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE.QUANTITY");
+            checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
+                    "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE.QUANTITY");
         }
     }
 

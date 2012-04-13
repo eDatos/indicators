@@ -9,6 +9,7 @@ public enum IndicatorCriteriaPropertyInternalEnum {
     PROC_STATUS,
     SUBJECT_CODE,
     IS_LAST_VERSION,
+    NEEDS_UPDATE,
     VERSION_NUMBER;
     
     public String value() {

@@ -80,6 +80,7 @@ Application Indicators {
 	    	@IndicatorVersion retrieveIndicatorPublished(String uuid) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorByCode(String code, String versionNumber) throws MetamacException;
 	    	@IndicatorVersion retrieveIndicatorPublishedByCode(String code) throws MetamacException;
+	    	@Indicator updateIndicator(@Indicator indicator) throws MetamacException;
 	    	@IndicatorVersion updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	List<@IndicatorVersion> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
@@ -111,7 +112,9 @@ Application Indicators {
     	"Provides access to indicators data"
     	Service IndicatorsDataService {
     		> @IndicatorsDataProviderService
-    		> @IndicatorsService
+    		> @IndicatorsConfigurationService
+    		> @IndicatorRepository
+    		> @IndicatorVersionRepository
     		> @DataGpeRepository
     		
 			"Retrieves all Data containing basic info only"
@@ -122,6 +125,8 @@ Application Indicators {
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Updates data for all published indicators"
+	    	updateIndicatorsData() throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -130,6 +135,14 @@ Application Indicators {
 		    String retrieveDataStructureJson(String uuid) throws MetamacException;
 	     	"Retrieves Data content"
     		String retrieveDataJson(String uuid) throws MetamacException;
+    	}
+    	
+    	"Provides access to indicators data from Jaxi"
+    	Service IndicatorsConfigurationService {
+    		> @ConfigurationRepository
+    		"Retrieves last successful query date to Gpe"
+		    DateTimestamp retrieveLastSuccessfulGpeQueryDate() throws MetamacException;
+		    setLastSuccessfulGpeQueryDate(DateTimestamp date) throws MetamacException;
     	}
 			    
     	"Provides access to indicators, indicators systems..."
@@ -470,6 +483,8 @@ Application Indicators {
 			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";
 			"Indicator instances"
 			- Bag<@IndicatorInstance> indicatorsInstances cascade="none" fetch="lazy" inverse <-> indicator;
+			"True if indicator needs to be updated"
+            Boolean needsUpdate not nullable;
 			
 			Repository IndicatorRepository {
 		   		@Indicator save(@Indicator entity);
@@ -477,6 +492,8 @@ Application Indicators {
             	protected List<@Indicator> findByQuery;
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
+            	List<@Indicator> findIndicatorsNeedsUpdate() throws MetamacException;
+            	List<@Indicator> findIndicatorsWithPublishedVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid);
 			}
 		}
@@ -597,6 +614,8 @@ Application Indicators {
 	    Entity RateDerivation {
         	databaseTable = "TB_RATES_DERIVATIONS"
         	hint="idSequence=RATES_DERIVATIONS"
+        	
+        	gap
 
 	    	"Method type"
 			- @RateDerivationMethodTypeEnum methodType not nullable;
@@ -627,6 +646,8 @@ Application Indicators {
         Entity DataSource {
         	databaseTable = "TB_DATA_SOURCES"
         	hint="idSequence=DATA_SOURCES"
+        	
+        	gap
         	
 			"Query in GPE"
 			String dataGpeUuid not nullable;
@@ -824,6 +845,23 @@ Application Indicators {
        		Repository DataGpeRepository {
             	List<@DataDefinition> findCurrentDataDefinitions;
             	@DataDefinition findCurrentDataDefinition(String uuid);
+            	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
+			}
+        }
+        
+        "Table view for Data basic information"
+	    Entity Configuration {
+        	databaseTable = "TB_CONFIGURATION"
+        	hint="idSequence=CONFIGURATION"
+			!auditable
+			!optimisticLocking
+			
+			Long id not nullable key;			
+			DateTimestamp lastSuccessfulGpeQueryDate;
+			
+			Repository ConfigurationRepository {
+				findAll;
+				@Configuration save(@Configuration entity);
 			}
         }
 	}
@@ -906,6 +944,8 @@ Application Indicators {
        		"Number of version in diffusion"   		
 			String diffusionVersion;		
 			
+			"Indicates whether needs update its data or not"
+			Boolean needsUpdate not nullable;
        		"Identifier in repository of observations"
        		String dataRepositoryId;       		
        		"Table name in repository of observations"

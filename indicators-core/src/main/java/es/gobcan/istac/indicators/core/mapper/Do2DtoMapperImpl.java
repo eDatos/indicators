@@ -141,6 +141,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
         target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
 
+        target.setNeedsUpdate(source.getIndicator().getNeedsUpdate());
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
         
@@ -283,6 +284,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSurveyCode(source.getSurveyCode());
         target.setSurveyTitle(source.getSurveyTitle());
         target.setPublishers(source.getPublishers());
+        target.setTemporalVariable(source.getTemporalVariable());
+        target.setSpatialVariable(source.getSpatialVariable());
         
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
@@ -290,12 +293,6 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         if (source.getValueLabels() != null) {
             target.setValueLabels(source.getValueLabels());
-        }
-        if (source.getTemporals() != null && source.getTemporals().size() > 0) {
-            target.setTemporalVariable(source.getTemporals().get(0));
-        }
-        if (source.getSpatials() != null && source.getSpatials().size() > 0) {
-            target.setSpatialVariable(source.getSpatials().get(0));
         }
         if (!StringUtils.isEmpty(source.getContVariable())) {
             target.setContVariable(source.getContVariable());

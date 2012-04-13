@@ -16,6 +16,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestri
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -301,7 +302,18 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkUpdateIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkUpdateIndicator(Indicator indicator, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        ValidationUtils.checkMetadataRequired(indicator.getId(), "INDICATOR.UUID", exceptions); // uuid never is null: it is initialized when create object
+        // unmodifiable metadatas are checked in Dto2DoMapper
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkUpdateIndicatorVersion(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }

@@ -1,0 +1,124 @@
+{
+   "title":"Sociedades mercantiles que amplían capital Gran PX.",
+   "uriPx":"urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e",
+   "stub":[
+      "Periodos"
+   ],
+   "heading":[
+      "Naturaleza jurídica",
+      "Indicadores"
+   ],
+   "categories":[
+      {
+         "variable":"Periodos",
+         "labels":[
+            "2012 Febrero",
+            "29 de Febrero de 2012",
+            "28 de Febrero de 2012",
+            "27 de Febrero de 2012",
+            "2011 Febrero",
+            "28 de Febrero de 2011",
+            "27 de Febrero de 2011"
+         ],
+         "codes":[
+            "2012M02",
+            "20120229",
+            "20120228",
+            "20120227",
+            "2011M02",
+            "20110228",
+            "20110227"
+         ]
+      },
+      {
+         "variable":"Naturaleza jurídica",
+         "labels":[
+            "TOTAL DE SOCIEDADES"
+         ],
+         "codes":[
+            "T"
+         ]
+      },
+      {
+         "variable":"Indicadores",
+         "labels":[
+            "Número de sociedades"
+         ],
+         "codes":[
+            "NumSoc"
+         ]
+      }
+   ],
+   "temporals":[
+      "Periodos"
+   ],
+   "spatials":[
+   ],
+   "notes":[
+      "(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."
+   ],
+   "source":"Instituto Canario de Estadística (ISTAC) a partir de datos del Instituto Nacional de Estadística (INE).",
+   "surveyCode":"C00040A",
+   "surveyTitle":"Estadística de Sociedades Mercantiles",
+   "publishers":[
+      "Instituto Canario de Estadística (ISTAC)"
+   ],
+   "data":[
+      {
+         "Valor":"34.413",
+         "dimCodes":[
+            "2012M02",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"2.471",
+         "dimCodes":[
+            "20120229",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"2.507",
+         "dimCodes":[
+            "20120228",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"2.036",
+         "dimCodes":[
+            "20120227",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"30.413",
+         "dimCodes":[
+            "2011M02",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"1.952",
+         "dimCodes":[
+          	"20110228",
+            "T",
+            "NumSoc"
+         ]
+      },
+      {
+         "Valor":"1.925",
+         "dimCodes":[
+            "20110227",
+            "T",
+            "NumSoc"
+         ]
+      }
+   ]
+}

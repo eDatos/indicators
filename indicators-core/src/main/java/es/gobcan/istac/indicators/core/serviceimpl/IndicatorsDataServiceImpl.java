@@ -4,6 +4,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +16,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
@@ -34,6 +40,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -42,6 +49,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatiblilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 
@@ -51,16 +59,19 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 @Service("indicatorsDataService")
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
-    public static final String               GEO_DIMENSION     = "GEOGRAPHIC";
-    public static final String               TIME_DIMENSION    = "TIME";
-    public static final String               MEASURE_DIMENSION = "MEASURE";
-    public static final String               CODE_ATTR         = "CODE";
-    public static final String               CODE_ATTR_LOC     = "es";
-    public static final String               OBS_CONF_ATTR     = "OBS_CONF";
-    public static final String               OBS_CONF_LOC      = "es";
+    private final Logger                     LOG                = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String               DOT_UNAVAILABLE   = "..";
-    public static final Double               ZERO_RANGE        = 1E-6;
+    public static final String               GEO_DIMENSION      = "GEOGRAPHIC";
+    public static final String               TIME_DIMENSION     = "TIME";
+    public static final String               MEASURE_DIMENSION  = "MEASURE";
+    public static final String               CODE_ATTR          = "CODE";
+    public static final String               CODE_ATTR_LOC      = "es";
+    public static final String               OBS_CONF_ATTR      = "OBS_CONF";
+    public static final String               OBS_CONF_LOC       = "es";
+
+    public static final String               DOT_NOT_APPLICABLE = ".";
+    public static final String               DOT_UNAVAILABLE    = "..";
+    public static final Double               ZERO_RANGE         = 1E-6;
 
     private static final Map<String, String> DOT_NOTATION_MAPPING;
 
@@ -112,7 +123,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String json = getIndicatorsDataProviderService().retrieveDataStructureJson(ctx, uuid);
             return jsonToDataStructure(json);
         } catch (Exception e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
+            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
     }
 
@@ -123,53 +134,121 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         DatasetRepositoryDto datasetRepoDto = null;
         try {
-            IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-            List<DataSource> dataSources = getIndicatorsService().retrieveDataSourcesByIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-            
-            // Transform list to process first load operations
-            List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
-            
-            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber);
+            IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+            List<DataSource> dataSources = indicatorVersion.getDataSources();
 
             // Data will be stored in a map (cache), because the same json can be requested many times
-            Map<String, Data> dataCache = new HashMap<String, Data>();
-            
-            //Process observations for each dataOperation
+            Map<String, Data> dataCache = retrieveDatasFromProvider(ctx, dataSources);
+
+            checkDataSourcesDataCompatibility(dataSources, dataCache);
+
+            // Transform list to process first load operations
+            List<DataOperation> dataOps = transformDataSourcesForProcessing(dataSources);
+
+            datasetRepoDto = createDatasetRepositoryDefinition(indicatorUuid, indicatorVersionNumber);
+
+            // Process observations for each dataOperation
             for (DataOperation dataOperation : dataOps) {
-                Data data = retrieveData(ctx, dataOperation, dataCache);
+                Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
                 datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
-            replaceDatasetRepository(ctx, indicatorVersion, datasetRepoDto);
-        } catch (MetamacException e) {
-            deleteDatasetRepositoryIfExists(datasetRepoDto);
-            throw e;
+            setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
-            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
+            }
         }
     }
-    
-    private void replaceDatasetRepository(ServiceContext ctx, IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
+
+    private void checkDataSourcesDataCompatibility(List<DataSource> dataSources, Map<String, Data> dataCache) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        for (DataSource dataSource : dataSources) {
+            Data data = dataCache.get(dataSource.getDataGpeUuid());
+            exceptionItems.addAll(DataSourceCompatiblilityChecker.check(dataSource, data));
+        }
+        if (exceptionItems.size() > 0) {
+            throw new MetamacException(exceptionItems);
+        }
+    }
+
+    @Override
+    public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+        LOG.info("Starting Indicators data update process");
+        Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
+
+        markIndicatorsWithUpdatedData(ctx, lastQueryDate);
+
+        List<Indicator> pendingIndicators = getIndicatorRepository().findIndicatorsNeedsUpdate();
+        for (Indicator indicator : pendingIndicators) {
+            String diffusionVersion = indicator.getDiffusionVersion().getVersionNumber();
+            String indicatorUuid = indicator.getUuid();
+            try {
+                populateIndicatorData(ctx, indicatorUuid, diffusionVersion);
+                markIndicatorNeedsUpdate(ctx, indicator, Boolean.FALSE);
+            } catch (MetamacException e) {
+                LOG.warn("Error populating indicator or marking it as no update needed indicatorUuid:" + indicatorUuid, e);
+            }
+        }
+        LOG.info("Finished Indicators data update process");
+    }
+
+    private void markIndicatorsWithUpdatedData(ServiceContext ctx, Date lastQuery) throws MetamacException {
+        Date newQueryDate = Calendar.getInstance().getTime();
+        List<String> dataDefinitionsUuids = null;
+        try {
+            dataDefinitionsUuids = getDataGpeRepository().findDataDefinitionsWithDataUpdatedAfter(lastQuery);
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
+        }
+
+        List<Indicator> newPendingIndicators = getIndicatorRepository().findIndicatorsWithPublishedVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
+        markIndicatorsNeedsUpdateTransactional(ctx, newPendingIndicators);
+        getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
+    }
+
+    @Transactional(value = "txManager")
+    private void markIndicatorsNeedsUpdateTransactional(ServiceContext ctx, List<Indicator> indicators) throws MetamacException {
+        for (Indicator indicator : indicators) {
+            markIndicatorNeedsUpdate(ctx, indicator, Boolean.TRUE);
+        }
+    }
+
+    private void markIndicatorNeedsUpdate(ServiceContext ctx, Indicator indicator, boolean needsUpdate) throws MetamacException {
+        indicator.setNeedsUpdate(needsUpdate);
+        getIndicatorRepository().save(indicator);
+    }
+
+    /*
+     * Given an indicator, the old dataset repository is replaced and deleted and a new one is assigned
+     */
+    private void setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
         String oldDatasetId = indicatorVersion.getDataRepositoryId();
         indicatorVersion.setDataRepositoryId(datasetRepoDto.getDatasetId());
         indicatorVersion.setDataRepositoryTableName(datasetRepoDto.getTableName());
-        getIndicatorsService().updateIndicatorVersion(ctx, indicatorVersion);
+        getIndicatorVersionRepository().save(indicatorVersion);
         if (oldDatasetId != null) {
             try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
             } catch (ApplicationException e) {
-                //TODO: Log warning level showing that old data source could not be deleted
+                // TODO: Log warning level showing that old data source could not be deleted
+                LOG.error("Old dataset repository could not be deleted", e);
             }
         }
     }
-    
-    private List<ObservationExtendedDto> createObservationsFromDataOperationData(DataOperation dataOperation, Data data, String datasetId ) throws MetamacException {
-     // Get geographic and time values
+
+    /*
+     * Given a DataOperation and its Data, A list of observations is created
+     */
+    private List<ObservationExtendedDto> createObservationsFromDataOperationData(DataOperation dataOperation, Data data, String datasetId) throws MetamacException {
+        // Get geographic and time values
         List<String> geoValues = getGeographicValue(dataOperation, data);
         List<String> timeValues = getTimeValue(dataOperation, data);
-        
+
         List<ObservationExtendedDto> observations = new ArrayList<ObservationExtendedDto>();
         for (String geoVal : geoValues) {
             for (String timeVal : timeValues) {
@@ -200,28 +279,29 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return observations;
     }
-    
+
     private void deleteDatasetRepositoryIfExists(DatasetRepositoryDto datasetRepositoryDto) {
         try {
             if (datasetRepositoryDto != null && datasetRepositoryDto.getDatasetId() != null) {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(datasetRepositoryDto.getDatasetId());
             }
         } catch (ApplicationException e) {
-            //TODO: Log warning level showing that new failing data source could not be deleted
+            // TODO: Log showing that new failing data source could not be deleted
+            LOG.error("Temporal Dataset repository could not be deleted DatasetId:" + datasetRepositoryDto.getDatasetId(), e);
         }
     }
-    
+
     /*
      * Retrieve data from IndicatorDataProvider
      * The data is not always asked to the service, sometimes the requested data is in the data cache.
      */
-    private Data retrieveData(ServiceContext ctx, DataOperation dataOperation, Map<String,Data> dataCache) throws MetamacException {
+    private Data retrieveDataFromCacheOrService(ServiceContext ctx, DataOperation dataOperation, Map<String, Data> dataCache) throws MetamacException {
         try {
             Data data = dataCache.get(dataOperation.getDataGpeUuid());
             if (data == null) {
                 String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataOperation.getDataGpeUuid());
                 if (json == null) {
-                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataOperation.getDataGpeUuid(),dataOperation.getDataSourceUuid());
+                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataOperation.getDataGpeUuid(), dataOperation.getDataSourceUuid());
                 }
                 data = jsonToData(json);
                 dataCache.put(dataOperation.getDataGpeUuid(), data);
@@ -230,8 +310,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         } catch (MetamacException e) {
             throw e;
         } catch (Exception e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR,dataOperation.getDataGpeUuid(),dataOperation.getDataSourceUuid());
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataOperation.getDataGpeUuid(), dataOperation.getDataSourceUuid());
         }
+    }
+
+    /*
+     * Retrieve data from IndicatorDataProvider
+     * The data is not always asked to the service, sometimes the requested data is in the data cache.
+     */
+    private Map<String, Data> retrieveDatasFromProvider(ServiceContext ctx, List<DataSource> dataSources) throws MetamacException {
+        Map<String, Data> dataCache = new HashMap<String, Data>();
+        for (DataSource dataSource : dataSources) {
+            try {
+                Data data = dataCache.get(dataSource.getDataGpeUuid());
+                if (data == null) {
+                    String json = getIndicatorsDataProviderService().retrieveDataJson(ctx, dataSource.getDataGpeUuid());
+                    if (json == null) {
+                        throw new MetamacException(ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_EMPTY, dataSource.getDataGpeUuid(), dataSource.getUuid());
+                    }
+                    data = jsonToData(json);
+                    dataCache.put(dataSource.getDataGpeUuid(), data);
+                }
+            } catch (MetamacException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_RETRIEVE_DATA_ERROR, dataSource.getDataGpeUuid(), dataSource.getUuid());
+            }
+        }
+        return dataCache;
     }
 
     /*
@@ -317,7 +423,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private DataContent getValue(DataOperation dataOperation, Data data, Map<String, String> varCodes) throws MetamacException {
         Map<String, String> codes = new HashMap<String, String>(varCodes);
         if (data.hasContVariable()) {
-            if (DataSourceDto.OBS_VALUE.equals(dataOperation.getMethod())) { // INCOMPATIBLE DataSource, got obs_value but the query has contvariable
+            if (DataSourceDto.isObsValue(dataOperation.getMethod())) { // INCOMPATIBLE DataSource, got obs_value but the query has contvariable
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_INVALID_CONTVARIABLE_LOAD_METHOD, dataOperation.getMethod());
             } else {
                 List<String> contVarCodes = data.getValueCodes().get(data.getContVariable());
@@ -329,7 +435,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
             }
         } else {
-            if (DataSourceDto.OBS_VALUE.equals(dataOperation.getMethod())) {
+            if (DataSourceDto.isObsValue(dataOperation.getMethod())) {
                 return data.getDataContent(codes);
             } else {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_INVALID_NOCONTVARIABLE_LOAD_METHOD, dataOperation.getMethod());
@@ -342,6 +448,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
      */
     private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String timeValue) throws MetamacException {
+        // Create base for observation
+        ObservationExtendedDto observation = new ObservationExtendedDto();
+        observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
+        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
+        observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
+        
         String previousTimeValue = null;
         if (dataOperation.isAnnualMethod()) {
             previousTimeValue = TimeVariableUtils.calculatePreviousYearTimeValue(timeValue);
@@ -351,7 +464,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
         }
 
-        ConditionDimensionDto geoConditionDto = createCondition(GEO_DIMENSION,geoValue);
+        if (previousTimeValue == null) {
+
+            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(DOT_NOT_APPLICABLE)));
+            observation.setPrimaryMeasure(null);
+            return observation;
+        }
+        // TODO: if previousTimeValue is null put No procede ("..")
+
+        ConditionDimensionDto geoConditionDto = createCondition(GEO_DIMENSION, geoValue);
         ConditionDimensionDto timeConditionDto = createCondition(TIME_DIMENSION, previousTimeValue, timeValue);
         ConditionDimensionDto measureConditionDto = createCondition(MEASURE_DIMENSION, MeasureDimensionTypeEnum.ABSOLUTE.name());
         List<ConditionDimensionDto> conditions = Arrays.asList(geoConditionDto, timeConditionDto, measureConditionDto);
@@ -359,46 +480,35 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(datasetId, conditions);
         } catch (ApplicationException e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_POPULATE_DATASETREPO_FIND_ERROR);
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_FIND_ERROR);
         }
-        
-        String keyCurrentTimeObs = generateObservationUniqueKey(geoValue, timeValue, MeasureDimensionTypeEnum.ABSOLUTE.name());
-        String keyPreviousTimeObs = generateObservationUniqueKey(geoValue, previousTimeValue, MeasureDimensionTypeEnum.ABSOLUTE.name());
 
-        ObservationExtendedDto currentObs = observationsMap.get(keyCurrentTimeObs);
-        ObservationExtendedDto previousObs = observationsMap.get(keyPreviousTimeObs);
+        ObservationExtendedDto currentObs = getObservationExtendedFromMap(geoValue,timeValue,MeasureDimensionTypeEnum.ABSOLUTE.name(),observationsMap);
+        ObservationExtendedDto previousObs = getObservationExtendedFromMap(geoValue,previousTimeValue,MeasureDimensionTypeEnum.ABSOLUTE.name(),observationsMap);
 
-        
-        //Create base for observation
-        ObservationExtendedDto observation = new ObservationExtendedDto();
-        observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
-        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
-        observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
-        
-        /* Some observations were not found*/
+        /* Some observations were not found */
         if (currentObs == null || previousObs == null) {
             observation.setPrimaryMeasure(null);
             observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(DOT_UNAVAILABLE)));
             return observation;
         }
-        
+
         /* Some observations have dot notation values */
         if (currentObs.getPrimaryMeasure() == null || previousObs.getPrimaryMeasure() == null) {
             observation.setPrimaryMeasure(null);
             observation.addAttribute(mergeObsConfAttribute(currentObs, previousObs));
             return observation;
-        }  else { //Calculate
+        } else { // Calculate
             Double currentValue = null;
             Double previousValue = null;
             try {
-                //Data format is: 5.300,05 it should be => 5300.05
+                // Data format is: 5.300,05 it should be => 5300.05
                 String currentValStr = currentObs.getPrimaryMeasure().replace(".", "").replace(",", ".");
                 String previousValStr = previousObs.getPrimaryMeasure().replace(".", "").replace(",", ".");
                 currentValue = Double.parseDouble(currentValStr);
                 previousValue = Double.parseDouble(previousValStr);
             } catch (NumberFormatException e) {
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_CALCULATE_ERROR,currentObs.getPrimaryMeasure(),previousObs.getPrimaryMeasure());
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_CALCULATE_ERROR, currentObs.getPrimaryMeasure(), previousObs.getPrimaryMeasure());
             }
             Double calculatedValue = null;
             if (dataOperation.isPercentageMethod()) {
@@ -408,7 +518,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
-                calculatedValue = ((currentValue - previousValue)/previousValue) * quantity.getUnitMultiplier();
+                calculatedValue = ((currentValue - previousValue) / previousValue) * quantity.getUnitMultiplier();
             } else if (dataOperation.isPuntualMethod()) {
                 calculatedValue = currentValue - previousValue;
             } else {
@@ -419,16 +529,27 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return observation;
     }
+    
+    
+    private ObservationExtendedDto getObservationExtendedFromMap(String geoValue, String timeValue, String measureValue, Map<String, ObservationExtendedDto> observationsMap) {
+        String generatedKey = generateObservationUniqueKey(geoValue, timeValue, measureValue);
+        return observationsMap.get(generatedKey);
+    }
+
     private String formatCalculatedValue(Double value, DataOperation dataOperation) {
         DecimalFormat formatter = new DecimalFormat();
-        if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
-            formatter.setRoundingMode(RoundingMode.HALF_UP);
-        } else if (RateDerivationRoundingEnum.DOWN.equals(dataOperation.getRateRounding())) {
-            formatter.setRoundingMode(RoundingMode.HALF_DOWN);
+        if (dataOperation.shouldBeRounded()) {
+            if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
+                formatter.setRoundingMode(RoundingMode.HALF_UP);
+            } else if (RateDerivationRoundingEnum.DOWN.equals(dataOperation.getRateRounding())) {
+                formatter.setRoundingMode(RoundingMode.DOWN); // Truncate
+            }
+            formatter.setMaximumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
+            formatter.setMinimumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
+            return formatter.format(value);
+        } else {
+            return formatter.format(value);
         }
-        formatter.setMaximumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
-        formatter.setMinimumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
-        return formatter.format(value);
     }
 
     /*

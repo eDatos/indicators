@@ -110,16 +110,8 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
         assertEquals(dbo.getValueLabels(),dto.getValueLabels());
         List<String> variables = new ArrayList<String>(dbo.getValueCodes().keySet());
         assertEquals(variables,dto.getVariables());
-        if (dbo.getSpatials() == null || dbo.getSpatials().size() == 0) {
-            assertNull(dto.getSpatialVariable());
-        } else {
-            assertEquals(dbo.getSpatials().get(0),dto.getSpatialVariable());
-        }
-        if (dbo.getTemporals() == null || dbo.getTemporals().size() == 0) {
-            assertNull(dto.getTemporalVariable());
-        } else {
-            assertEquals(dbo.getTemporals().get(0),dto.getTemporalVariable());
-        }
+        assertEquals(dbo.getSpatialVariable(),dto.getSpatialVariable());
+        assertEquals(dbo.getTemporalVariable(),dto.getTemporalVariable());
         assertEquals(dbo.getContVariable(),dto.getContVariable());
         
     }
@@ -145,8 +137,8 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
         dataStructure1.setValueLabels(labels);
         dataStructure1.setHeading(getList("var1","var2"));
         dataStructure1.setStub(getList("var3"));
-        dataStructure1.setTemporals(getList("var1"));
-        dataStructure1.setSpatials(getList("var2"));
+        dataStructure1.setTemporalVariable("var1");
+        dataStructure1.setSpatialVariable("var2");
         dataStructure1.setSurveyCode("SCODE");
         dataStructure1.setSurveyTitle("Survey title");
         dataStructure1.setPublishers(getList("pub1","pub2"));

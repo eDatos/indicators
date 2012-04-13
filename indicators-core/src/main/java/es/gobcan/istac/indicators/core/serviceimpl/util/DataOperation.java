@@ -40,6 +40,14 @@ public class DataOperation {
         return null;
     }
     
+    public boolean shouldBeRounded() {
+        if (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public boolean isAnnualMethod() {
         if (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureDimension)) {
             return true;
