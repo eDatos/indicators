@@ -39,6 +39,7 @@ public class IndicatorsSystemsController extends BaseController {
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
         
+        // TODO cuando se establezca la paginación se obtendrá primero findIndicatorsSystemsPublished (paginado) y después se invocará el ws para obtener la info de cada uno
         // Retrieves all indicators system published from web service and from indicators core
         OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem();
         List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
