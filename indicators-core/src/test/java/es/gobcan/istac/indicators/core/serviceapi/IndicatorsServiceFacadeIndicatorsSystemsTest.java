@@ -15,15 +15,19 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
+import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -1538,9 +1542,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testFindIndicatorsSystems() throws Exception {
 
         // Retrieve last versions...
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), null);
-        assertEquals(9, indicatorsSystemsDto.size());
-
+        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), null);
+        assertEquals(9, result.getResults().size());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
+        
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(0).getProcStatus());
 
@@ -1568,12 +1573,86 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(8).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getProcStatus());
     }
+    
+    @Test
+    public void testFindIndicatorsSystemsByCriteria() throws Exception {
+
+        // Retrieve code = y or z
+        MetamacCriteria criteria = new MetamacCriteria();
+        MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-3"));
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-6"));
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-9"));
+        criteria.setRestriction(disjunction);
+
+        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
+        assertEquals(3, result.getResults().size());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
+        assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(0).getUuid());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
+
+        assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(1).getUuid());
+        assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(1).getProcStatus());
+
+        assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(2).getUuid());
+        assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(2).getProcStatus());
+    }
+    
+    @Test
+    public void testFindIndicatorsSystemsByCriteriaPaginated() throws Exception {
+
+        // Retrieve code = y or z, paginated
+        MetamacCriteria criteria = new MetamacCriteria();
+        MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-3"));
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-6"));
+        disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-9"));
+        criteria.setRestriction(disjunction);
+
+        MetamacCriteriaPaginator paginator = new MetamacCriteriaPaginator();
+        paginator.setCountTotalResults(Boolean.TRUE);
+        paginator.setMaximumResultSize(Integer.valueOf(2));
+        criteria.setPaginator(paginator);
+        
+        {
+            // Page 1
+            criteria.getPaginator().setFirstResult(Integer.valueOf(0));
+            
+            MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
+            assertEquals(2, result.getResults().size());
+            assertEquals(Integer.valueOf(3), result.getTotalResults());
+            assertEquals(Integer.valueOf(0), result.getFirstResult());
+            assertEquals(Integer.valueOf(2), result.getMaximumResultSize());
+            List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
+            
+            assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(0).getUuid());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
+    
+            assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(1).getUuid());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(1).getProcStatus());
+        }
+        {
+            // Page 2
+            criteria.getPaginator().setFirstResult(Integer.valueOf(2));
+            
+            MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
+            assertEquals(1, result.getResults().size());
+            assertEquals(Integer.valueOf(3), result.getTotalResults());
+            assertEquals(Integer.valueOf(2), result.getFirstResult());
+            assertEquals(Integer.valueOf(2), result.getMaximumResultSize());
+            List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
+    
+            assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(0).getUuid());
+            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(0).getProcStatus());
+        }
+    }
 
     @Test
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
-        assertEquals(3, indicatorsSystemsDto.size());
+        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
+        assertEquals(3, result.getResults().size());
+        List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
@@ -3675,9 +3754,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // All
         {
-            List<GeographicalValueDto> geographicalValues = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), null);
-            assertEquals(4, geographicalValues.size());
+            MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), null);
+            assertEquals(Integer.valueOf(0), geographicalValuesResult.getFirstResult());
+            assertEquals(Integer.valueOf(25), geographicalValuesResult.getMaximumResultSize());
+            assertEquals(Integer.valueOf(4), geographicalValuesResult.getTotalResults());
+            assertEquals(4, geographicalValuesResult.getResults().size());
     
+            List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(1).getUuid());
@@ -3688,15 +3771,59 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("ES-MD", geographicalValues.get(3).getCode());
         }
         
+        // All, only 2 results
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);
+            assertEquals(Integer.valueOf(0), geographicalValuesResult.getFirstResult());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getMaximumResultSize());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
+    
+            List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
+            assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
+            assertEquals("ES", geographicalValues.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(1).getUuid());
+            assertEquals("EN-LN", geographicalValues.get(1).getCode());
+        }
+        
+        // All, only 2 results second page
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
+            criteria.getPaginator().setFirstResult(Integer.valueOf(2));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getFirstResult());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getMaximumResultSize());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
+    
+            List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
+            assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
+            assertEquals("FR", geographicalValues.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(1).getUuid());
+            assertEquals("ES-MD", geographicalValues.get(1).getCode());
+        }
+        
         // By granularity
         {
-            IndicatorsCriteria criteria = new IndicatorsCriteria();
-            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1));
+            MetamacCriteria criteria = new MetamacCriteria();
+            MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
+            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1));
+            criteria.setRestriction(conjuction);
 
-            List<GeographicalValueDto> geographicalValues = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);
-            assertEquals(2, geographicalValues.size());
+            MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);
+            assertEquals(Integer.valueOf(0), geographicalValuesResult.getFirstResult());
+            assertEquals(Integer.valueOf(25), geographicalValuesResult.getMaximumResultSize());
+            assertEquals(Integer.valueOf(2), geographicalValuesResult.getTotalResults());
+            assertEquals(2, geographicalValuesResult.getResults().size());
     
+            List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());

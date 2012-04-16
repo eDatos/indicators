@@ -7,4 +7,7 @@ public enum GeographicalValueCriteriaPropertyEnum  {
     public String value() {
         return name();
     }
+    public static GeographicalValueCriteriaPropertyEnum fromValue(String v) {
+        return valueOf(v);
+    }
 }

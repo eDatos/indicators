@@ -3,17 +3,14 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 
-import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
@@ -187,28 +184,19 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsSystems(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-
-        // Checks properties names of criteria restrictions
-        if (criteria != null && criteria.getConjunctionRestriction() != null) {
-            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
-                try {
-                    IndicatorsSystemCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
-                } catch (IllegalArgumentException e) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
-                }
-            }
-        }
+        
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
 
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsSystemsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkFindIndicatorsSystems(criteria, exceptions);
+    public static void checkFindIndicatorsSystemsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkFindIndicatorsSystems(conditions, pagingParameter, exceptions);
     }
 
     public static void checkRetrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -446,28 +434,19 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicators(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // Checks properties names of criteria restrictions
-        if (criteria != null && criteria.getConjunctionRestriction() != null) {
-            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
-                try {
-                    IndicatorCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
-                } catch (IllegalArgumentException e) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
-                }
-            }
-        }
-
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+        
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsPublished(IndicatorsCriteria criteria, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        checkFindIndicators(criteria, exceptions);
+    public static void checkFindIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkFindIndicators(conditions, pagingParameter, exceptions);
     }
 
     public static void checkCreateDataSource(String indicatorUuid, DataSource dataSource, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -659,22 +638,13 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, IndicatorsCriteria criteria) throws MetamacException {
+    public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        // Checks properties names of criteria restrictions
-        if (criteria != null && criteria.getConjunctionRestriction() != null) {
-            for (IndicatorsCriteriaPropertyRestriction propertyRestriction : criteria.getConjunctionRestriction().getRestrictions()) {
-                try {
-                    GeographicalValueCriteriaPropertyEnum.valueOf(propertyRestriction.getPropertyName());
-                } catch (IllegalArgumentException e) {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_INCORRECT, "CRITERIA"));
-                }
-            }
-        }
-
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+        
         ExceptionUtils.throwIfException(exceptions);
     }
 

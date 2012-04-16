@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
+import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -14,21 +20,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaConjunctionRestriction;
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteriaPropertyRestriction;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Indicator;
-import es.gobcan.istac.indicators.core.domain.IndicatorRepository;
+import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.repositoryimpl.finders.IndicatorCriteriaPropertyInternalEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -50,7 +53,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validation of parameters
         InvocationValidator.checkCreateIndicator(indicatorVersion, null);
-        checkIndicatorCodeUnique(ctx, indicator.getCode(), null);
+        checkIndicatorCodeUnique(ctx, indicator.getCode());
 
         // Save indicator
         indicator.setDiffusionVersion(null);
@@ -127,26 +130,26 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorByCode(code, null);
 
-        // Retrieve indicator by code, version requested or last version
-        IndicatorsCriteria criteria = new IndicatorsCriteria();
-        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.CODE.name(), code));
+        // Prepare criteria (indicator version by code, version requested or last version)
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(new LeafProperty<IndicatorVersion>("indicator", "code", false, IndicatorVersion.class)).eq(code);
         if (versionNumber != null) {
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.VERSION_NUMBER.name(), versionNumber));
+            conditionRoot.withProperty(IndicatorVersionProperties.versionNumber()).eq(versionNumber);
         } else {
-            criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
+            conditionRoot.withProperty(IndicatorVersionProperties.isLastVersion()).eq(Boolean.TRUE);
         }
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
-        List<IndicatorVersion> indicatorsVersion = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
-        if (indicatorsVersion.size() == 0) {
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        if (result.getValues().size() == 0) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_FOUND_WITH_CODE, code);
-        } else if (indicatorsVersion.size() > 1) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
         }
 
         // Return unique result
-        return indicatorsVersion.get(0);
+        return result.getValues().get(0);
     }
 
     @Override
@@ -155,18 +158,17 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkRetrieveIndicatorPublishedByCode(code, null);
 
-        // Retrieve indicator by code, published
-        IndicatorsCriteria criteria = new IndicatorsCriteria();
-        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.CODE.name(), code));
-        criteria.getConjunctionRestriction().getRestrictions()
-                .add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.PROC_STATUS.name(), IndicatorProcStatusEnum.PUBLISHED));
+        // Prepare criteria (indicator version by code, published)
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+        ConditionRoot<IndicatorVersion> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class);
+        conditionRoot.withProperty(new LeafProperty<IndicatorVersion>("indicator", "code", false, IndicatorVersion.class)).eq(code);
+        conditionRoot.withProperty(IndicatorVersionProperties.procStatus()).eq(IndicatorProcStatusEnum.PUBLISHED);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
-        List<IndicatorVersion> indicatorsVersion = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
-        if (indicatorsVersion.size() > 1) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found more than one indicator with code " + code);
-        } else if (indicatorsVersion.size() == 0) {
+        PagedResult<IndicatorVersion> result = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
+
+        if (result.getValues().size() == 0) {
             // Try retrieve any version with code, to throws specific exception
             IndicatorVersion indicatorVersionLastVersion = retrieveIndicatorByCode(ctx, code, null);
             if (indicatorVersionLastVersion != null) {
@@ -176,7 +178,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         // Return unique result
-        return indicatorsVersion.get(0);
+        return result.getValues().get(0);
     }
 
     @Override
@@ -243,43 +245,36 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public List<IndicatorVersion> findIndicators(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
+    public PagedResult<IndicatorVersion> findIndicators(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicators(criteria, null);
+        InvocationValidator.checkFindIndicators(conditions, pagingParameter, null);
 
         // Retrieve last versions
-        if (criteria == null) {
-            criteria = new IndicatorsCriteria();
+        if (conditions == null) {
+            conditions = new ArrayList<ConditionalCriteria>();
         }
-        if (criteria.getConjunctionRestriction() == null) {
-            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        }
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.isLastVersion(), Boolean.TRUE));
 
         // Find
-        List<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
+        PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
         return indicatorsVersions;
     }
 
     @Override
-    public List<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
+    public PagedResult<IndicatorVersion> findIndicatorsPublished(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkFindIndicatorsPublished(criteria, null);
+        InvocationValidator.checkFindIndicatorsPublished(conditions, pagingParameter, null);
 
         // Retrieve published
-        if (criteria == null) {
-            criteria = new IndicatorsCriteria();
+        if (conditions == null) {
+            conditions = new ArrayList<ConditionalCriteria>();
         }
-        if (criteria.getConjunctionRestriction() == null) {
-            criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        }
-        criteria.getConjunctionRestriction().getRestrictions()
-                .add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.PROC_STATUS.name(), IndicatorProcStatusEnum.PUBLISHED));
+        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.procStatus(), IndicatorProcStatusEnum.PUBLISHED));
 
         // Find
-        List<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
+        PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
         return indicatorsVersions;
     }
     
@@ -588,24 +583,23 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     /**
-     * Checks not exists another indicator with same code. Checks indicator retrieved not is actual indicator.
+     * Checks not exists another indicator with same code
      */
-    private void checkIndicatorCodeUnique(ServiceContext ctx, String code, String actualUuid) throws MetamacException {
-
-        // Criteria
-        IndicatorsCriteria criteria = new IndicatorsCriteria();
-        criteria.setConjunctionRestriction(new IndicatorsCriteriaConjunctionRestriction());
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.CODE.name(), code));
-        // to get only one result
-        criteria.getConjunctionRestriction().getRestrictions().add(new IndicatorsCriteriaPropertyRestriction(IndicatorCriteriaPropertyInternalEnum.IS_LAST_VERSION.name(), Boolean.TRUE));
+    private void checkIndicatorCodeUnique(ServiceContext ctx, String code) throws MetamacException {
+        
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+        ConditionRoot<Indicator> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(Indicator.class);
+        conditionRoot.withProperty(IndicatorProperties.code()).ignoreCaseEq(code);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
 
         // Find
-        List<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findIndicatorsVersions(criteria);
-        if (indicatorsVersions != null && indicatorsVersions.size() != 0 && !indicatorsVersions.get(0).getIndicator().getUuid().equals(actualUuid)) {
+        PagedResult<Indicator> result = getIndicatorRepository().findByCondition(conditions, pagingParameter);
+        if (result.getValues().size() != 0) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
         }
     }
-
+    
     /**
      * Retrieves version of an indicator in production
      */

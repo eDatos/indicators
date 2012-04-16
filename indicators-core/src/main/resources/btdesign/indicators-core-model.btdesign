@@ -30,8 +30,8 @@ Application Indicators {
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemPublishedByCode(String code) throws MetamacException;
 	    	List<@ElementLevel> retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystems(IndicatorsCriteria criteria) throws MetamacException;
-	    	List<@IndicatorsSystemVersion> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
+	    	PagedResult<@IndicatorsSystemVersion> findIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	PagedResult<@IndicatorsSystemVersion> findIndicatorsSystemsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
@@ -58,7 +58,7 @@ Application Indicators {
 	    	
 	    	// Geographical values
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
-	    	List<@GeographicalValue> findGeographicalValues(IndicatorsCriteria criteria) throws MetamacException;
+	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
@@ -83,8 +83,8 @@ Application Indicators {
 	    	@Indicator updateIndicator(@Indicator indicator) throws MetamacException;
 	    	@IndicatorVersion updateIndicatorVersion(@IndicatorVersion indicatorVersion) throws MetamacException;
 	    	deleteIndicator(String uuid) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
-	    	List<@IndicatorVersion> findIndicatorsPublished(IndicatorsCriteria criteria) throws MetamacException;
+	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorValidation(String uuid) throws MetamacException;
@@ -177,9 +177,9 @@ Application Indicators {
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators systems by criteria. Retrieves last versions"
-	    	List<@IndicatorsSystemDto> findIndicatorsSystems(IndicatorsCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@IndicatorsSystemDto> findIndicatorsSystems(MetamacCriteria criteria) throws MetamacException;
 	    	"Finds published indicators systems by criteria"
-	    	List<@IndicatorsSystemDto> findIndicatorsSystemsPublished(IndicatorsCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@IndicatorsSystemDto> findIndicatorsSystemsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves all indicators system published where indicator is"
@@ -217,7 +217,7 @@ Application Indicators {
 	    	"Retrieves geographical value"
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	"Find geographical values by criteria"
-	    	List<@GeographicalValueDto> findGeographicalValues(IndicatorsCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
 
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
@@ -253,9 +253,9 @@ Application Indicators {
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
 	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	"Finds indicators by criteria. Retrieves last versions"
-	    	List<@IndicatorDto> findIndicators(IndicatorsCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@IndicatorDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
 	    	"Finds published indicators by criteria"
-	    	List<@IndicatorDto> findIndicatorsPublished(IndicatorsCriteria criteria) throws MetamacException;
+	    	MetamacCriteriaResult<@IndicatorDto> findIndicatorsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
@@ -322,6 +322,7 @@ Application Indicators {
             	protected List<@IndicatorsSystem> findByQuery;
             	protected List<@IndicatorsSystem> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystem retrieveIndicatorsSystem(String uuid);
+            	findByCondition(PagingParameter pagingParameter);
 			}
 		} 
 		
@@ -367,7 +368,7 @@ Application Indicators {
             	protected List<@IndicatorsSystemVersion> findByQuery;
             	protected List<@IndicatorsSystemVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorsSystemVersion retrieveIndicatorsSystemVersion(String uuid, String versionNumber);
-            	List<@IndicatorsSystemVersion> findIndicatorsSystemsVersions(IndicatorsCriteria criteria) throws MetamacException;
+            	findByCondition(PagingParameter pagingParameter);
             	List<@IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 			}
 		} 
@@ -492,6 +493,7 @@ Application Indicators {
             	protected List<@Indicator> findByQuery;
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
+            	findByCondition(PagingParameter pagingParameter);
             	List<@Indicator> findIndicatorsNeedsUpdate() throws MetamacException;
             	List<@Indicator> findIndicatorsWithPublishedVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid);
@@ -563,7 +565,7 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
-            	List<@IndicatorVersion> findIndicatorsVersions(IndicatorsCriteria criteria) throws MetamacException;
+            	findByCondition(PagingParameter pagingParameter);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
             	"Find all distinct subjects in published indicators"
             	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
@@ -755,7 +757,7 @@ Application Indicators {
             	protected List<@GeographicalValue> findByQuery;
             	protected List<@GeographicalValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@GeographicalValue retrieveGeographicalValue(String uuid);
-            	List<@GeographicalValue> findGeographicalValues(IndicatorsCriteria criteria) throws MetamacException;
+            	findByCondition(PagingParameter pagingParameter);
 			}
         }
         

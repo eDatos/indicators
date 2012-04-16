@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.util.Date;
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.accessapi.SaveAccess;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Service;

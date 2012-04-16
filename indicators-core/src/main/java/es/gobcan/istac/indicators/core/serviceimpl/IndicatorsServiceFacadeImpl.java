@@ -3,12 +3,16 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.core.criteria.IndicatorsCriteria;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -36,6 +40,8 @@ import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
+import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
+import es.gobcan.istac.indicators.core.mapper.SculptorCriteria2MetamacCriteriaMapper;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 /**
@@ -45,10 +51,16 @@ import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorRe
 public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase {
 
     @Autowired
-    private Do2DtoMapper do2DtoMapper;
+    private Do2DtoMapper                   do2DtoMapper;
 
     @Autowired
-    private Dto2DoMapper dto2DoMapper;
+    private Dto2DoMapper                   dto2DoMapper;
+
+    @Autowired
+    private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    private SculptorCriteria2MetamacCriteriaMapper sculptorCriteria2MetamacCriteriaMapper;
 
     public IndicatorsServiceFacadeImpl() {
     }
@@ -189,33 +201,33 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
-
-        // Find
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystems(ctx, criteria);
+    public MetamacCriteriaResult<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
-        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
-            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
-        }
+        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformCriteria(criteria);
+        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformPagingParameter(criteria);
 
-        return indicatorsSystemsDto;
+        // Find
+        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystems(ctx, conditions, pagingParameter);
+
+        // Transform
+        MetamacCriteriaResult<IndicatorsSystemDto> dtoResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result);
+        return dtoResult;
     }
 
     @Override
-    public List<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
-
-        // Retrieve published
-        List<IndicatorsSystemVersion> indicatorsSystemsVersion = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, criteria);
+    public MetamacCriteriaResult<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<IndicatorsSystemDto> indicatorsSystemsDto = new ArrayList<IndicatorsSystemDto>();
-        for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemsVersion) {
-            indicatorsSystemsDto.add(do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion));
-        }
+        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformCriteria(criteria);
+        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformPagingParameter(criteria);
 
-        return indicatorsSystemsDto;
+        // Find
+        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, conditions, pagingParameter);
+
+        // Transform
+        MetamacCriteriaResult<IndicatorsSystemDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result);
+        return metamacCriteriaResult;
     }
 
     @Override
@@ -384,18 +396,27 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
-
-        // Retrieve geographicalValues
-        List<GeographicalValue> geographicalValues = getIndicatorsSystemsService().findGeographicalValues(ctx, criteria);
+    public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<GeographicalValueDto> geographicalValuesDto = new ArrayList<GeographicalValueDto>();
-        for (GeographicalValue geographicalValue : geographicalValues) {
-            geographicalValuesDto.add(do2DtoMapper.geographicalValueDoToDto(geographicalValue));
-        }
+        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaTransform().transformCriteria(criteria);
+        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaTransform().transformPagingParameter(criteria);
 
-        return geographicalValuesDto;
+        // Find
+        PagedResult<GeographicalValue> geographicalValuesResult = getIndicatorsSystemsService().findGeographicalValues(ctx, conditions, pagingParameter);
+
+        // Transform
+        MetamacCriteriaResult<GeographicalValueDto> geographicalValuesDtoResult = new MetamacCriteriaResult<GeographicalValueDto>();
+        geographicalValuesDtoResult.setFirstResult(geographicalValuesResult.getStartRow());
+        geographicalValuesDtoResult.setMaximumResultSize(geographicalValuesResult.getPageSize());
+        geographicalValuesDtoResult.setTotalResults(geographicalValuesResult.getRowCount());
+        if (geographicalValuesResult.getValues() != null) {
+            geographicalValuesDtoResult.setResults(new ArrayList<GeographicalValueDto>());
+            for (GeographicalValue geographicalValue : geographicalValuesResult.getValues()) {
+                geographicalValuesDtoResult.getResults().add(do2DtoMapper.geographicalValueDoToDto(geographicalValue));
+            }
+        }
+        return geographicalValuesDtoResult;
     }
 
     @Override
@@ -557,33 +578,33 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<IndicatorDto> findIndicators(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
-
-        // Find
-        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicators(ctx, criteria);
+    public MetamacCriteriaResult<IndicatorDto> findIndicators(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();
-        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
-            indicatorsDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
-        }
+        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformCriteria(criteria);
+        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformPagingParameter(criteria);
 
-        return indicatorsDto;
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, conditions, pagingParameter);
+
+        // Transform
+        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result);
+        return metamacCriteriaResult;
     }
 
     @Override
-    public List<IndicatorDto> findIndicatorsPublished(ServiceContext ctx, IndicatorsCriteria criteria) throws MetamacException {
-
-        // Retrieve published
-        List<IndicatorVersion> indicatorsVersion = getIndicatorsService().findIndicatorsPublished(ctx, criteria);
+    public MetamacCriteriaResult<IndicatorDto> findIndicatorsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<IndicatorDto> indicatorsDto = new ArrayList<IndicatorDto>();
-        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
-            indicatorsDto.add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
-        }
+        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformCriteria(criteria);
+        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformPagingParameter(criteria);
 
-        return indicatorsDto;
+        // Find
+        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicatorsPublished(ctx, conditions, pagingParameter);
+
+        // Transform
+        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result);
+        return metamacCriteriaResult;
     }
 
     @Override
@@ -711,26 +732,26 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return subjectsDto;
     }
-    
+
     @Override
     public List<DataDefinitionDto> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
         // Service call
         List<DataDefinition> dataDefs = getIndicatorsDataService().retrieveDataDefinitions(ctx);
-        
-        //Transform
+
+        // Transform
         List<DataDefinitionDto> dtos = new ArrayList<DataDefinitionDto>();
         for (DataDefinition basic : dataDefs) {
             dtos.add(do2DtoMapper.dataDefinitionDoToDto(basic));
         }
         return dtos;
     }
-    
+
     @Override
-    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx,String uuid) throws MetamacException {
+    public DataDefinitionDto retrieveDataDefinition(ServiceContext ctx, String uuid) throws MetamacException {
         // Service call
-        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx,uuid);
-        
-        //Transform
+        DataDefinition dataDef = getIndicatorsDataService().retrieveDataDefinition(ctx, uuid);
+
+        // Transform
         DataDefinitionDto dto = null;
         if (dataDef != null) {
             dto = do2DtoMapper.dataDefinitionDoToDto(dataDef);
@@ -740,10 +761,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public DataStructureDto retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
-        //Service call
+        // Service call
         DataStructure dataStruc = getIndicatorsDataService().retrieveDataStructure(ctx, uuid);
-        
-        //Transform
+
+        // Transform
         return do2DtoMapper.dataStructureDoToDto(dataStruc);
     }
 
