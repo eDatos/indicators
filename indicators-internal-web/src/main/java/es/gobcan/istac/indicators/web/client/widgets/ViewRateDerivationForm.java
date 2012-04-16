@@ -7,6 +7,7 @@ import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
@@ -60,9 +61,15 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
     public void setValue(RateDerivationDto rateDerivationDto) {
         clearValues();
 
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, rateDerivationDto.getMethod());
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE,
                 rateDerivationDto.getMethodType() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + rateDerivationDto.getMethodType().getName()) : new String());
+
+        if (DataSourceDto.OBS_VALUE.equals(rateDerivationDto.getMethod())) {
+            setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, getConstants().dataSourceObsValue());
+        } else {
+            setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, rateDerivationDto.getMethod());
+        }
+
         setValue(DataSourceDS.RATE_DERIVATION_ROUNDING,
                 rateDerivationDto.getRounding() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationRoundingEnum() + rateDerivationDto.getRounding().getName()) : new String());
 
