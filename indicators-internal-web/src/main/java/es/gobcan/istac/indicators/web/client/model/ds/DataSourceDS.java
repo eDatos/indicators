@@ -21,9 +21,10 @@ public class DataSourceDS extends DataSource {
     public static String SOURCE_SURVEY_URL                 = "ds-sur-url";
     public static String PUBLISHERS                        = "ds-pub";
 
-    public static String RATE_DERIVATION_METHOD_VIEW       = "rate-method";          // Not mapped in DTO
-    public static String RATE_DERIVATION_METHOD_CALCULATED = "rate-method-cal";
-    public static String RATE_DERIVATION_METHOD_LOAD       = "rate-method-load";
+    public static String RATE_DERIVATION_METHOD_VIEW       = "rate-method";
+    public static String RATE_DERIVATION_METHOD_CALCULATED = "rate-method-cal";      // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_LOAD       = "rate-method-load";     // Not mapped in DTO
+    public static String RATE_DERIVATION_METHOD_LOAD_VIEW  = "rate-method-load-view"; // Not mapped in DTO
 
     public static String RATE_DERIVATION_METHOD_TYPE_VIEW  = "rate-method-type-view"; // Not mapped in DTO
     public static String RATE_DERIVATION_METHOD_TYPE       = "rate-method-type";
