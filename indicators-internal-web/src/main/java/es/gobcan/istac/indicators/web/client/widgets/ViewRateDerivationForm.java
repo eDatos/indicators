@@ -17,9 +17,9 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
     public ViewRateDerivationForm(String groupTitle) {
         super(groupTitle);
 
-        ViewTextItem method = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
-
         ViewTextItem methodType = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
+
+        ViewTextItem method = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, getConstants().datasourceMethod());
 
         ViewTextItem rounding = new ViewTextItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
 
@@ -54,13 +54,13 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem percentageOf = new ViewTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
-        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf);
+        setFields(methodType, method, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf);
     }
 
     public void setValue(RateDerivationDto rateDerivationDto) {
         clearValues();
 
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, rateDerivationDto.getMethod());
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE,
                 rateDerivationDto.getMethodType() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + rateDerivationDto.getMethodType().getName()) : new String());
         setValue(DataSourceDS.RATE_DERIVATION_ROUNDING,
