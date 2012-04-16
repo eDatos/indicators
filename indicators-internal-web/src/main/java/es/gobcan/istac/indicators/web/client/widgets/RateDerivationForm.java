@@ -107,6 +107,24 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                 return false;
             }
         });
+        
+        // Showed when editing, method type is LOAD and contVariable (measure variable) is not set
+        ViewTextItem viewMethodLoad = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().datasourceMethod());
+        viewMethodLoad.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW).isVisible()) {
+                    String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
+                    if (!StringUtils.isBlank(methodType) && RateDerivationMethodTypeEnum.LOAD.toString().equals(methodType)) { // If method type is LOAD
+                        if (value != null && !StringUtils.isBlank(value.toString())) { // If contVariable (measure variable) is not set
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
 
         // Showed when editing, method type is LOAD and contVariable (measure variable) is set
         // ValueMap set in setMeasureVariableValues
@@ -119,24 +137,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                     String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
                     if (!StringUtils.isBlank(methodType) && RateDerivationMethodTypeEnum.LOAD.toString().equals(methodType)) { // If method type is LOAD
                         if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()) { // If contVariable (measure variable) is set
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-
-        // Showed when editing, method type is LOAD and contVariable (measure variable) is not set
-        ViewTextItem viewMethodLoad = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().datasourceMethod());
-        viewMethodLoad.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW).isVisible()) {
-                    String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
-                    if (!StringUtils.isBlank(methodType) && RateDerivationMethodTypeEnum.LOAD.toString().equals(methodType)) { // If method type is LOAD
-                        if (value != null && !StringUtils.isBlank(value.toString())) { // If contVariable (measure variable) is not set
                             return true;
                         }
                     }
