@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableCanvasItem extends CustomCanvasItem {
@@ -61,21 +62,28 @@ public class VariableCanvasItem extends CustomCanvasItem {
         return true;
     }
 
-    public void setVariablesAndCategories(List<String> variables, Map<String, List<String>> categoryCodes, Map<String, List<String>> categoryLabels) {
+    public void setVariablesAndCategories(DataStructureDto dataStructureDto) {
+        List<String> variables = dataStructureDto.getVariables();
+        Map<String, List<String>> categoryCodes = dataStructureDto.getValueCodes();
+        Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
         if (variables != null) {
-            FormItem[] formItems = new FormItem[variables.size()];
+            List<FormItem> formItems = new ArrayList<FormItem>();
             for (int i = 0; i < variables.size(); i++) {
                 String var = variables.get(i);
-                if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
-                    SelectItem selectItem = new SelectItem("variable-" + i, var);
-                    selectItem.setValueMap(CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(var), categoryLabels.get(var)));
-                    formItems[i] = selectItem;
-                } else {
-                    logger.log(Level.SEVERE, "Something wrong with variables and its category labels and codes");
+                if (includeVariable(dataStructureDto, var)) {
+                    if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
+                        SelectItem selectItem = new SelectItem("variable-" + i, var);
+                        selectItem.setValueMap(CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(var), categoryLabels.get(var)));
+                        formItems.add(selectItem);
+                    } else {
+                        logger.log(Level.SEVERE, "Something wrong with variables and its category labels and codes");
+                    }
                 }
             }
-            form.setFields(formItems);
-            form.markForRedraw();
+            if (!formItems.isEmpty()) {
+                form.setFields(formItems.toArray(new FormItem[formItems.size()]));
+                form.markForRedraw();
+            }
         }
     }
 
@@ -95,6 +103,23 @@ public class VariableCanvasItem extends CustomCanvasItem {
             }
         }
         return dataSourceVariableDtos;
+    }
+
+    /**
+     * The variable can be included if is not the temporal, geographical or measure (contVariable) one
+     * 
+     * @param var
+     * @param dataStructureDto
+     * @return
+     */
+    private boolean includeVariable(DataStructureDto dataStructureDto, String var) {
+        String temporalVariable = dataStructureDto.getTemporalVariable();
+        String geographicalVariable = dataStructureDto.getSpatialVariable();
+        String measureVariable = dataStructureDto.getContVariable();
+        if (var.equals(temporalVariable) || var.equals(geographicalVariable) || var.equals(measureVariable)) {
+            return false;
+        }
+        return true;
     }
 
 }
