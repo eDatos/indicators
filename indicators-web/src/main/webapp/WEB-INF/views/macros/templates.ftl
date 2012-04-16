@@ -15,10 +15,16 @@
 		<link rel="shortcut icon" href="http://www.gobiernodecanarias.org/gc/img/favicon.ico"/>
 		
 	 	<!-- Css -->
+	 	
 		<link rel="stylesheet" href="[@spring.url "/theme/css/reset.css"/]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="http://www.gobiernodecanarias.org/gc/css/estilos.css" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="[@spring.url "/theme/css/libs/jquery-ui/jquery-ui-1.8.18.custom.css"/]" type="text/css" media="screen, projection" />
+		
 		<link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/main.css"/]" type="text/css" media="screen, projection" />
+		<link rel="stylesheet" href="[@spring.url "/theme/css/widgets.css"/]" type="text/css" media="screen, projection" />
+
+
 
 		<script type="text/javascript">
 			var context = "[@spring.url '' /]";
@@ -33,6 +39,9 @@
         <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore-min-1.3.1.js" 				  /]"></script>
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/backbone-min-0.9.2.js"					  /]"></script>
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/i18n.js"								  /]"></script>
+		
+		<link rel="stylesheet" href="[@spring.url "/theme/js/libs/colorpicker/css/colorpicker.min.css"/]" type="text/css" media="screen, projection" />
+		<script type="text/javascript" src="[@spring.url "/theme/js/libs/colorpicker/js/colorpicker.js"/]"></script>
 	</head>
 	<body>
 		<div id="principal_interior">
@@ -63,7 +72,7 @@
 						<a href="/istac">Inicio</a>
 					</li>
 					<li>
-						<strong>TODO<strong>
+						<strong>TODO</strong>
 					</li>
 				</ul>
 			</div>
