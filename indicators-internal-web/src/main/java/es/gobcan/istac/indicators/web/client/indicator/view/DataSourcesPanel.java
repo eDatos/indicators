@@ -4,6 +4,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,11 +98,15 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                DataSourceDto dataSourceDto = new DataSourceDto();
+                // Clear query dependent fields
+                clearQueryDependentFields();
+
+                dataSourceDto = new DataSourceDto();
                 dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
                 dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
                 dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
                 dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+
                 selectDataSource(dataSourceDto);
             }
         });
@@ -348,18 +353,8 @@ public class DataSourcesPanel extends VLayout {
             @Override
             public void onChanged(ChangedEvent event) {
                 if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    // Clear values
-                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
-                    ((ViewMultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
-                    ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
-                    ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
-                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
-
-                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
-                    ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
-                    ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
-                    ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
-                    ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+                    // Clear query dependent field values
+                    clearQueryDependentFields();
 
                     // Retrieve data structure
                     uiHandlers.retrieveDataStructure(event.getValue().toString());
@@ -480,18 +475,27 @@ public class DataSourcesPanel extends VLayout {
         generalForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
         generalStaticEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
         generalEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
+        if (!StringUtils.isBlank(dataStructureDto.getContVariable())) {
+            // If there is a contVariable (measure variable), set variable values
+            interperiodPuntualRateEditionForm
+                    .setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
+            interperiodPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
+                    dataStructureDto.getValueLabels()));
+            annualPuntualRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
+            annualPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
+        } else {
+            // If not, set OBS_VALUE to load rate methods
+            interperiodPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, DataSourceDto.OBS_VALUE);
+            interperiodPercentageRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, DataSourceDto.OBS_VALUE);
+            annualPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, DataSourceDto.OBS_VALUE);
+            annualPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, DataSourceDto.OBS_VALUE);
+        }
 
         // Variables and categories
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+        ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(dataStructureDto);
 
-        List<String> variables = dataStructureDto.getVariables();
-        Map<String, List<String>> categoryCodes = dataStructureDto.getValueCodes();
-        Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
-        ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(variables, categoryCodes, categoryLabels);
-
-        generalForm.markForRedraw();
-        generalStaticEditionForm.markForRedraw();
-        generalEditionForm.markForRedraw();
+        redrawForms();
     }
 
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
@@ -576,16 +580,82 @@ public class DataSourcesPanel extends VLayout {
         return codes;
     }
 
+    /**
+     * In edition mode, shows query form in view mode
+     */
     private void setViewQueryMode() {
         generalEditionForm.hide();
         generalStaticEditionForm.show();
+
+        interperiodPuntualRateEditionForm.setViewQueryMode();
+        annualPuntualRateEditionForm.setViewQueryMode();
+        interperiodPercentageRateEditionForm.setViewQueryMode();
+        annualPercentageRateEditionForm.setViewQueryMode();
+
         mainFormLayout.markForRedraw();
     }
 
+    /**
+     * In edition mode, shows query form in edition mode
+     */
     private void setEditionQueryMode() {
         generalEditionForm.show();
         generalStaticEditionForm.hide();
+
+        interperiodPuntualRateEditionForm.setEditionQueryMode();
+        annualPuntualRateEditionForm.setEditionQueryMode();
+        interperiodPercentageRateEditionForm.setEditionQueryMode();
+        annualPercentageRateEditionForm.setEditionQueryMode();
+
         mainFormLayout.markForRedraw();
+    }
+
+    private LinkedHashMap<String, String> getMeasureVariableValues(String contVariable, Map<String, List<String>> categoryCodes, Map<String, List<String>> categoryLabels) {
+        if (categoryCodes.containsKey(contVariable) && categoryLabels.containsKey(contVariable)) {
+            return CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(contVariable), categoryLabels.get(contVariable));
+        }
+        return null;
+    }
+
+    private void clearQueryDependentFields() {
+        ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
+        ((ViewMultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
+        ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
+        ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
+        ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
+
+        ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
+        ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
+        ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
+        ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
+        ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();
+        ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+
+        ((SelectItem) interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
+        ((SelectItem) interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
+        ((SelectItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
+        ((SelectItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
+        
+        ((SelectItem) interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
+        ((SelectItem) interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
+        ((SelectItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
+        ((SelectItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
+
+        ((ViewTextItem) interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
+        ((ViewTextItem) interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
+        ((ViewTextItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
+        ((ViewTextItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW)).clearValue();
+    }
+
+    private void redrawForms() {
+        generalForm.markForRedraw();
+        generalStaticEditionForm.markForRedraw();
+        generalEditionForm.markForRedraw();
+
+        interperiodPuntualRateEditionForm.markForRedraw();
+        interperiodPercentageRateEditionForm.markForRedraw();
+        annualPuntualRateEditionForm.markForRedraw();
+        annualPercentageRateEditionForm.markForRedraw();
     }
 
 }

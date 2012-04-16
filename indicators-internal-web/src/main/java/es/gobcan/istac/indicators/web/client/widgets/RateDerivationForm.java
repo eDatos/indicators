@@ -7,6 +7,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -14,6 +15,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectIt
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -41,12 +44,23 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     private RateDerivationDto rateDerivationDto;
     private IndicatorDto      indicatorDto;
 
+    private boolean           viewMode;         // If view mode is set, method and method type cannot be edited
+
     public RateDerivationForm(String groupTitle, QuantityTypeEnum quantityType) {
         super(groupTitle);
 
         this.quantityType = quantityType;
 
-        RequiredTextItem method = new RequiredTextItem(DataSourceDS.RATE_DERIVATION_METHOD, getConstants().datasourceMethod());
+        // Method type
+
+        ViewTextItem staticMethodType = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW, getConstants().datasourceMethodType());
+        staticMethodType.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return viewMode;
+            }
+        });
 
         RequiredSelectItem methodType = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
         methodType.setValueMap(CommonUtils.getRateDerivationMethodTypeValueMap());
@@ -57,6 +71,80 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                 RateDerivationForm.this.markForRedraw();
             }
         });
+        methodType.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW).isVisible();
+            }
+        });
+
+        // METHOD
+
+        // Showed when viewing
+        ViewTextItem viewMethod = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, getConstants().datasourceMethod());
+        viewMethod.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return viewMode;
+            }
+        });
+
+        // Showed when editing and method type is CALCULATED
+        RequiredTextItem methodCalculated = new RequiredTextItem(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED, getConstants().datasourceMethod());
+        methodCalculated.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW).isVisible()) {
+                    String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
+                    if (!StringUtils.isBlank(methodType)) {
+                        return RateDerivationMethodTypeEnum.CALCULATE.toString().equals(methodType);
+                    }
+                }
+                return false;
+            }
+        });
+
+        // Showed when editing, method type is LOAD and contVariable (measure variable) is set
+        // ValueMap set in setMeasureVariableValues
+        RequiredSelectItem methodLoad = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD, getConstants().datasourceMethod());
+        methodLoad.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW).isVisible()) {
+                    String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
+                    if (!StringUtils.isBlank(methodType) && RateDerivationMethodTypeEnum.LOAD.toString().equals(methodType)) { // If method type is LOAD
+                        if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()) { // If contVariable (measure variable) is set
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+        // Showed when editing, method type is LOAD and contVariable (measure variable) is not set
+        ViewTextItem viewMethodLoad = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().datasourceMethod());
+        viewMethodLoad.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                if (!form.getItem(DataSourceDS.RATE_DERIVATION_METHOD_VIEW).isVisible()) {
+                    String methodType = form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null ? (String) form.getValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) : null;
+                    if (!StringUtils.isBlank(methodType) && RateDerivationMethodTypeEnum.LOAD.toString().equals(methodType)) { // If method type is LOAD
+                        if (value != null && !StringUtils.isBlank(value.toString())) { // If contVariable (measure variable) is not set
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+        // Rounding
 
         SelectItem rounding = new SelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
@@ -117,8 +205,8 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setVisible(false);
 
-        setFields(method, methodType, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf,
-                baseQuantityIndUuid);
+        setFields(staticMethodType, methodType, viewMethod, methodCalculated, viewMethodLoad, methodLoad, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max,
+                denominatorUuid, numeratorUuid, isPercentange, percentageOf, baseQuantityIndUuid);
 
         markForRedraw();
     }
@@ -128,7 +216,11 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         clearValues();
 
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD, rateDerivationDto.getMethod());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW,
+                rateDerivationDto.getMethodType() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + rateDerivationDto.getMethodType().toString()) : new String());
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, rateDerivationDto.getMethodType() != null ? rateDerivationDto.getMethodType().toString() : new String());
         setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : new String());
 
@@ -164,7 +256,8 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     }
 
     public RateDerivationDto getValue() {
-        rateDerivationDto.setMethod(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD));
+        // TODO get value (if its visible or not)
+        rateDerivationDto.setMethod(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED));
         rateDerivationDto.setMethodType(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE).isEmpty()
                 ? RateDerivationMethodTypeEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE))
                 : null);
@@ -237,6 +330,25 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
         ((SelectItem) getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
         ((SelectItem) getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
+    }
+
+    /**
+     * In edition mode, shows query dependent fields in view mode
+     */
+    public void setViewQueryMode() {
+        this.viewMode = true;
+    }
+
+    /**
+     * In edition mode, shows query dependent fields in view mode
+     */
+    public void setEditionQueryMode() {
+        this.viewMode = false;
+        // TODO clear query dependent values (method and method type)
+    }
+
+    public void setMeasureVariableValues(LinkedHashMap<String, String> valueMap) {
+        getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).setValueMap(valueMap);
     }
 
 }
