@@ -1,45 +1,33 @@
+/* Common widget */
+
 .istac-widget {
-	border: 3px solid;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #333;
+    border: 3px solid;
 	border-radius: 3px;
-}
-
-#widget-options, #widget-preview {
-	float: left;
-	width: 371px;	
-}
-
-#widget-preview {
-	margin-left: 20px;	
-}
-
-.widget {
-	margin-top: 20px;
-	margin-bottom: 20px;
     background-color: #fff;
 }
 
-.widget-export {
-		
+.istac-widget-title {
+    font-size: 13px;
+    line-height: 25px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
 }
 
-.widget-export textarea {
-	display : block;
-	width: 100%;
-	height: 200px;	
-}
-
-.istac-widget-lastData  {
-	background-color: #fff;		
-}
-
+/* LastData Widget*/
 
 .istac-widget-lastData table {
-	width: 100%;		
+	width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 .istac-widget-lastData tbody tr:nth-child(odd) td, .istac-widget-lastData tbody tr:nth-child(odd) th {
 	background-color: #F9F9F9;
 }
+
 .istac-widget-lastData th, .istac-widget-lastData table td {
 	padding: 3px;
 	line-height: 18px;
@@ -52,8 +40,4 @@
 	font-weight:  bold;	
 }
 
-.istac-widget-title {
-	font-size: 13px;
-	line-height: 25px;
-	text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
-}
+/* Temporal Widget */

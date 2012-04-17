@@ -57,7 +57,7 @@
     <div id="widget-preview-content" class="widget"></div>
     <h3>Exportar</h3>
     <div class="widget-export">
-        <textarea id="code-container"></textarea>
+        <textarea id="code-container" readonly="readonly"></textarea>
         <p>Copia este código HTML en tu página</p>
     </div>
 </div>

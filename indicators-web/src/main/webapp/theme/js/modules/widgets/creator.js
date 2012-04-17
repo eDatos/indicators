@@ -169,7 +169,23 @@ var WidgetCodeView = Backbone.View.extend({
     },
 
     render : function () {
-        var opts = this.model.toJSON();
-        $(this.el).html(JSON.stringify(this.model));
+        var model = this.model.toJSON();
+        var clazz = model.type === 'temporal'? 'Temporal' : 'LastData';
+
+        var code = [];
+        code.push('<div id="istac-widget"></div>')
+        code.push('<script src="http://istac.com....../widgets/widget.min.js"></script>');
+        code.push('<script>');
+        code.push('new Istac.Widgets.' + clazz + '({');
+        code.push('     el : "#istac-widget",');
+        code.push('     title : "' + model.title  + '",' );
+        code.push('     width : ' + model.width  + ',' );
+        code.push('     borderColor : "' + model.borderColor  + '",' );
+        code.push('     textColor : "' + model.textColor  + '",' );
+        code.push('     indicators :  ' + JSON.stringify(model.indicators) + ',');
+        code.push('     visibleData : '+ JSON.stringify(model.visibleData) +' ');
+        code.push('});');
+        code.push('</script>');
+        $(this.el).text(code.join('\n'));
     }
 });

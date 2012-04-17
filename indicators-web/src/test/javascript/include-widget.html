@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+
+<div id="istac-widget"></div>
+
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/loader.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/libs/Class.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/libs/raphael-min.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/libs/elycharts.min.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/Base.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/Temporal.js"></script>
+<script src="http://localhost:8080/indicators-web/theme/js/widgets/LastData.js"></script>
+
+<script>
+    new Istac.Widgets.LastData({
+        el : "#istac-widget",
+        title : "default title",
+        width : 300,
+        borderColor : "#3478B0",
+        textColor : "#000000",
+        indicators :  [{"name":"indicator 0","data":{"absolute":0,"interanual":0,"interperiodic":0}},{"name":"indicator 1","data":{"absolute":10,"interanual":20,"interperiodic":30}},{"name":"indicator 2","data":{"absolute":20,"interanual":40,"interperiodic":60}},{"name":"indicator 3","data":{"absolute":30,"interanual":60,"interperiodic":90}},{"name":"indicator 4","data":{"absolute":40,"interanual":80,"interperiodic":120}},{"name":"indicator 5","data":{"absolute":50,"interanual":100,"interperiodic":150}},{"name":"indicator 6","data":{"absolute":60,"interanual":120,"interperiodic":180}},{"name":"indicator 7","data":{"absolute":70,"interanual":140,"interperiodic":210}},{"name":"indicator 8","data":{"absolute":80,"interanual":160,"interperiodic":240}},{"name":"indicator 9","data":{"absolute":90,"interanual":180,"interperiodic":270}}],
+        visibleData : {"absolute":true,"interanual":true,"interperiodic":true}
+    });
+</script>
+
+</body>
+</html>
