@@ -458,6 +458,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onSuccess(SaveDataSourceResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourceSaved()), MessageTypeEnum.SUCCESS);
                 getView().onDataSourceSaved(result.getDataSourceDto());
             }
         });
