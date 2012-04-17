@@ -107,7 +107,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                 return false;
             }
         });
-        
+
         // Showed when editing, method type is LOAD and contVariable (measure variable) is not set
         ViewTextItem viewMethodLoad = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().datasourceMethod());
         viewMethodLoad.setShowIfCondition(new FormItemIfFunction() {
@@ -260,7 +260,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         rateDerivationDto.setMethodType(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE).isEmpty()
                 ? RateDerivationMethodTypeEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE))
                 : null);
-        
+
         String method = new String();
         if (getItem(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED).isVisible()) {
             method = getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED);
@@ -270,7 +270,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             method = DataSourceDto.OBS_VALUE;
         }
         rateDerivationDto.setMethod(method);
-        
+
         rateDerivationDto.setRounding(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING).isEmpty()
                 ? RateDerivationRoundingEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING))
                 : null);
