@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +26,19 @@ public class IndicatorsController extends BaseController {
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    // TODO tratamiento de excepciones
     // TODO paginación
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public ModelAndView indicators() throws Exception {
         
         // Retrieve subjects and all indicators published
         List<SubjectDto> subjectsDto = indicatorsServiceFacade.retrieveSubjectsInPublishedIndicators(getServiceContext());
-        List<IndicatorDto> indicatorsDto = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext(), null);
+        
+        // Find indicators
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        metamacCriteria.setPaginator(new MetamacCriteriaPaginator());
+        metamacCriteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE); // TODO paginación
+        MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContext(), metamacCriteria);
+        List<IndicatorDto> indicatorsDto = result.getResults();
         
         // Classify indicators by subject
         Map<String, IndicatorsBySubjectView> indicatorsBySubjectsViewMap = new HashMap<String, IndicatorsBySubjectView>();

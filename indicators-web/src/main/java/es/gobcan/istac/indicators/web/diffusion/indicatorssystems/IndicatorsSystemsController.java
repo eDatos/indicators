@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +36,6 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
-    // TODO tratamiento de excepciones en todas las operaciones
-
     // TODO paginación?
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
@@ -42,7 +43,16 @@ public class IndicatorsSystemsController extends BaseController {
         // TODO cuando se establezca la paginación se obtendrá primero findIndicatorsSystemsPublished (paginado) y después se invocará el ws para obtener la info de cada uno
         // Retrieves all indicators system published from web service and from indicators core
         OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem();
-        List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
+
+        // Find indicators
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        metamacCriteria.setPaginator(new MetamacCriteriaPaginator());
+        metamacCriteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE); // TODO paginación
+        
+        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
+        List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
+        
+        // Merges information and retrieves only created in indicators core
         Map<String, OperationBase> operationsByCode = new HashMap<String, OperationBase>();        
         if (operationBaseList != null) {
             for (OperationBase operationBase : operationBaseList.getOperation()) {
@@ -50,7 +60,6 @@ public class IndicatorsSystemsController extends BaseController {
             }
         }
         
-        // Merges information and retrieves only created in indicators core
         List<IndicatorsSystemWebDto> indicatorsSystemsWebDto = new ArrayList<IndicatorsSystemWebDto>();
         for (IndicatorsSystemDto indicatorsSystemDto : indicatorsSystemsDto) {
             OperationBase operationBase = operationsByCode.get(indicatorsSystemDto.getCode());
