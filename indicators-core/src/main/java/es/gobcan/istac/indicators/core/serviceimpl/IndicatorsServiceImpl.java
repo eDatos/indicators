@@ -353,7 +353,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         IndicatorVersion indicatorInProduction = retrieveIndicatorProcStatusInProduction(ctx, uuid, false);
 
         // Validate to publish
-        checkIndicatorToPublish(ctx, uuid, indicatorInProduction);
+//        checkIndicatorToPublish(ctx, uuid, indicatorInProduction);
 
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);

@@ -2,7 +2,9 @@ package es.gobcan.istac.indicators.core.mapper;
 
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -53,25 +55,19 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
     private class GeographicalValueCriteriaCallback implements CriteriaCallback {
 
         @Override
-        public Property<GeographicalValue> retrieveProperty(String propertyName) throws MetamacException {
-            GeographicalValueCriteriaPropertyEnum propertyNameCriteria = GeographicalValueCriteriaPropertyEnum.fromValue(propertyName);
+        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+            GeographicalValueCriteriaPropertyEnum propertyNameCriteria = GeographicalValueCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case GEOGRAPHICAL_GRANULARITY_UUID:
-                    return new LeafProperty<GeographicalValue>("granularity", "uuid", false, GeographicalValue.class);
+                    return new SculptorPropertyCriteria(new LeafProperty<GeographicalValue>("granularity", "uuid", false, GeographicalValue.class), propertyRestriction.getStringValue());
                 default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyName);
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
-        public Object retrievePropertyValue(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            GeographicalValueCriteriaPropertyEnum propertyNameCriteria = GeographicalValueCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
-            switch (propertyNameCriteria) {
-                case GEOGRAPHICAL_GRANULARITY_UUID:
-                    return propertyRestriction.getStringValue();
-                default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
-            }
+        public Property<GeographicalValue> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
+            return null; // put default order
         }
 
         @Override
@@ -82,29 +78,21 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
     private class IndicatorVersionCriteriaCallback implements CriteriaCallback {
 
         @Override
-        public Property<IndicatorVersion> retrieveProperty(String propertyName) throws MetamacException {
-            IndicatorCriteriaPropertyEnum propertyNameCriteria = IndicatorCriteriaPropertyEnum.fromValue(propertyName);
+        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+            IndicatorCriteriaPropertyEnum propertyNameCriteria = IndicatorCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
-                    return new LeafProperty<IndicatorVersion>("indicator", "code", false, IndicatorVersion.class);
+                    return new SculptorPropertyCriteria(new LeafProperty<IndicatorVersion>("indicator", "code", false, IndicatorVersion.class), propertyRestriction.getStringValue());
                 case SUBJECT_CODE:
-                    return IndicatorVersionProperties.subjectCode();
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue());
                 default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyName);
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
-        public Object retrievePropertyValue(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            IndicatorCriteriaPropertyEnum propertyNameCriteria = IndicatorCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
-            switch (propertyNameCriteria) {
-                case CODE:
-                    return propertyRestriction.getStringValue();
-                case SUBJECT_CODE:
-                    return propertyRestriction.getStringValue();
-                default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
-            }
+        public Property<IndicatorVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
+            return null; // put default order
         }
 
         @Override
@@ -115,25 +103,20 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
     private class IndicatorsSystemVersionCriteriaCallback implements CriteriaCallback {
 
         @Override
-        public Property<IndicatorsSystemVersion> retrieveProperty(String propertyName) throws MetamacException {
-            IndicatorsSystemCriteriaPropertyEnum propertyNameCriteria = IndicatorsSystemCriteriaPropertyEnum.fromValue(propertyName);
+        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+            IndicatorsSystemCriteriaPropertyEnum propertyNameCriteria = IndicatorsSystemCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
-                    return new LeafProperty<IndicatorsSystemVersion>("indicatorsSystem", "code", false, IndicatorsSystemVersion.class);
+                    return new SculptorPropertyCriteria(new LeafProperty<IndicatorsSystemVersion>("indicatorsSystem", "code", false, IndicatorsSystemVersion.class),
+                            propertyRestriction.getStringValue());
                 default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyName);
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
 
         @Override
-        public Object retrievePropertyValue(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
-            IndicatorsSystemCriteriaPropertyEnum propertyNameCriteria = IndicatorsSystemCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
-            switch (propertyNameCriteria) {
-                case CODE:
-                    return propertyRestriction.getStringValue();
-                default:
-                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
-            }
+        public Property<IndicatorsSystemVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
+            return null; // put default order
         }
 
         @Override
