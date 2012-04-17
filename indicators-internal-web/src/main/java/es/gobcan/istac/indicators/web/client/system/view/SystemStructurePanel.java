@@ -789,7 +789,7 @@ public class SystemStructurePanel extends HLayout {
             createEditForm();
 
             this.addMember(mainFormLayout);
-            // Init
+
             createMode = false;
             bindEvents();
         }
@@ -798,10 +798,6 @@ public class SystemStructurePanel extends HLayout {
             mainFormLayout.setViewMode();
             setIndicatorInstance(indicatorInstance);
         }
-
-        // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-        // selectIndicatorInstance(indicatorInstanceDto, true);
-        // }
 
         private void bindEvents() {
             // Remove handler from edit button
@@ -813,22 +809,6 @@ public class SystemStructurePanel extends HLayout {
                     if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
-                        // window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-                        // @Override
-                        // public void onClick(ClickEvent event) {
-                        // window.destroy();
-                        // final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
-                        // versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-                        // @Override
-                        // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        // if (versionWindow.validateForm()) {
-                        // uiHandlers.versioningIndicatorsSystemByInstance(system.getUuid(), versionWindow.getSelectedVersion());
-                        // versionWindow.destroy();
-                        // }
-                        // }
-                        // });
-                        // }
-                        // });
                     } else {
                         setEditionMode();
                     }
