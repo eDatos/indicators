@@ -32,15 +32,15 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableListItem extends CustomCanvasItem {
 
-    private Logger                                     logger                 = Logger.getLogger(VariableListItem.class.getName());
+    private Logger                                     logger            = Logger.getLogger(VariableListItem.class.getName());
 
     protected ListGrid                                 variableList;
 
     protected boolean                                  required;
 
-    private List<DataSourceVariableDto>                dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
+    // private List<DataSourceVariableDto> dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
 
-    private Map<String, LinkedHashMap<String, String>> variableValueMaps      = new java.util.HashMap<String, LinkedHashMap<String, String>>();
+    private Map<String, LinkedHashMap<String, String>> variableValueMaps = new java.util.HashMap<String, LinkedHashMap<String, String>>();
 
     public VariableListItem(String name, String title) {
         super(name, title);
@@ -164,10 +164,9 @@ public class VariableListItem extends CustomCanvasItem {
     }
 
     public void setValue(List<DataSourceVariableDto> dataSourceVariableDtos) {
-        this.dataSourceVariableDtos = dataSourceVariableDtos;
+        // this.dataSourceVariableDtos = dataSourceVariableDtos;
         // Value map must be already set
         // In this method we should set the value selected of this valueMap
-        // TODO How can i do this?
 
         // ¿? for (DataSourceVariableDto dataSourceVariableDto : dataSourceVariableDtos) {
         // ¿? DataSourceVariableRecord record = RecordUtils.getDataSourceVariableRecord(dataSourceVariableDto);
