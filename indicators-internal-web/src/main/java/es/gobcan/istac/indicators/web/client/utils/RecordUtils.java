@@ -15,7 +15,7 @@ public class RecordUtils {
 
     public static IndicatorRecord getIndicatorRecord(IndicatorDto indicatorDto) {
         IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), indicatorDto.getCode(), getLocalisedString(indicatorDto.getTitle()), getCoreMessages().getString(
-                getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName()));
+                getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName()), indicatorDto.getNeedsUpdate());
         return record;
     }
 

@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -123,7 +124,11 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-        indicatorList.setFields(fieldCode, fieldName, status);
+        ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdated());
+        updated.setWidth(75);
+        updated.setType(ListGridFieldType.IMAGE);
+        updated.setAlign(Alignment.CENTER);
+        indicatorList.setFields(fieldCode, fieldName, status, updated);
 
         panel = new VLayout();
         panel.addMember(toolStrip);

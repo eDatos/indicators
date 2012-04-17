@@ -58,6 +58,8 @@ public class IndicatorDS extends DataSource {
     public static String NOTES                                 = "ind-notes";
     public static String COMMENTS                              = "ind-comments";
 
+    public static String NEEDS_UPDATE                          = "ind-needs-update";
+
     public IndicatorDS() {
         DataSourceIntegerField uuid = new DataSourceIntegerField(UUID, getConstants().indicDetailIdentifier());
         uuid.setPrimaryKey(true);
