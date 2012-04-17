@@ -5,6 +5,7 @@
 <div id="widget-options">
     <div class="widget-options-type">
         <h3>Selección del tipo de widget</h3>
+
         <div>
             <label>
                 Tipo de widget:
@@ -40,13 +41,13 @@
             <h4>Selección del único dato a visualizar. A elegir entre: absoluto, variación interanual o variación
                 interperiódica.</h4>
             <label>
-                <input type="checkbox" id="widget-options-data-visibleDataAbsolute" /> Absoluto
+                <input type="checkbox" id="widget-options-data-visibleDataAbsolute"/> Absoluto
             </label>
             <label>
-                <input type="checkbox" id="widget-options-data-visibleDataInteranual" /> Variación interanual
+                <input type="checkbox" id="widget-options-data-visibleDataInteranual"/> Variación interanual
             </label>
             <label>
-                <input type="checkbox" id="widget-options-data-visibleDataInterperiodic" /> Variación interperiódica
+                <input type="checkbox" id="widget-options-data-visibleDataInterperiodic"/> Variación interperiódica
             </label>
         </div>
     </div>
@@ -54,10 +55,13 @@
 
 <div id="widget-preview">
     <h3>Vista previa</h3>
+
     <div id="widget-preview-content" class="widget"></div>
     <h3>Exportar</h3>
+
     <div class="widget-export">
         <textarea id="code-container" readonly="readonly"></textarea>
+
         <p>Copia este código HTML en tu página</p>
     </div>
 </div>
@@ -72,6 +76,64 @@
 <script src="[@spring.url "/theme/js/widgets/Factory.js"/]"></script>
 
 <script src="[@spring.url "/theme/js/modules/widgets/creator.js"/]"></script>
+
+
+
+<div id="systems"></div>
+<div id="indicators"></div>
+
+<script type="text/html" id="paginationTmpl">
+    <div class="pagination">
+        <ul>
+                <% if (firstPage != page) { %>
+                    <li><a href="#" class="serverfirst ">First</a></li>
+                <% } else { %>
+                    <li class="disabled"><a href="#" class="serverfirst">First</a></li>
+                <% } %>
+
+                <% if (page > firstPage) { %>
+                    <li><a href="#" class="serverprevious">Previous</a></li>
+                <% } else { %>
+                    <li class="disabled"><a href="#" class="serverprevious">Previous</a></li>
+                <% }%>
+
+                <% for(p=1; p <= totalPages; p++){
+                %>
+                    <% if (page == p) { %>
+                        <li class="active"><a href="#" class="page"><%= p %></a></li>
+                    <% } else { %>
+                        <li><a href="#" class="page"><%= p %></a></li>
+                    <% } %>
+                <%
+                }%>
+
+                <% if (page < totalPages) { %>
+                    <li><a href="#" class="servernext">Next</a></li>
+                <% } else { %>
+                    <li class="disabled"><a href="#" class="servernext">Next</a></li>
+                <% } %>
+
+                <% if (lastPage != page) { %>
+                    <li><a href="#" class="serverlast">Last</a></li>
+                <% } else { %>
+                    <li class="disabled"><a href="#" class="serverlast">Last</a></li>
+                <% } %>
+        </ul>
+    </div>
+</script>
+
+<script id="systemsItem" type="text/html">
+    <div>
+        <%= name%>
+    </div>
+</script>
+
+<script id="indicatorsItem" type="text/html">
+    <div>
+        <%= name%>
+    </div>
+</script>
+
 
 <script>
 
@@ -94,5 +156,17 @@
 
 </script>
 
+
+<script src="[@spring.url "/theme/js/modules/widgets/PaginatedCollection.js"/]"></script>
+<script src="[@spring.url "/theme/js/modules/widgets/PaginatedView.js"/]"></script>
+<script src="[@spring.url "/theme/js/modules/widgets/Systems.js"/]"></script>
+<script src="[@spring.url "/theme/js/modules/widgets/Indicators.js"/]"></script>
+<script>
+    var systemsCollection = new SystemsCollection();
+    var systemsView = new SystemsView({el : '#systems', collection : systemsCollection});
+
+    var indicatorsCollection = new IndicatorsCollection();
+    var indicatorsView = new IndicatorsView({el : '#indicators', collection : indicatorsCollection});
+</script>
 
 [/@template.base]
