@@ -32,6 +32,7 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
@@ -47,12 +48,14 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
@@ -376,6 +379,7 @@ public class DataSourcesPanel extends VLayout {
         ViewMultiLanguageTextItem surveyTitle = new ViewMultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_TITLE, getConstants().dataSourceSurveyTitle());
 
         MultiLanguageTextItem surveyAcronym = new MultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_ACRONYM, getConstants().dataSourceSurveyAcronym());
+        surveyAcronym.setRequired(true);
 
         TextItem surveyUrl = new TextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
 
@@ -384,6 +388,28 @@ public class DataSourcesPanel extends VLayout {
         // Showed when contVariable (measure variable) is set
         // ValueMap set in setDataStructure
         SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceAbsoluteMethod());
+        CustomValidator absoluteMethodValidator = new CustomValidator() {
+
+            // If absolute method is not set, at least one rate type must be LOAD
+            @Override
+            protected boolean condition(Object value) {
+                if (value == null || StringUtils.isBlank(value.toString())) {
+                    String load = RateDerivationMethodTypeEnum.LOAD.toString();
+                    String interperiodPuntualMethodType = interperiodPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String interperiodPercentageMethodType = interperiodPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String annualPuntualMethodType = annualPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String annualPercentageMethodType = annualPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+
+                    if (!load.equals(interperiodPuntualMethodType) && !load.equals(interperiodPercentageMethodType) && !load.equals(annualPuntualMethodType)
+                            && !load.equals(annualPercentageMethodType)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        absoluteMethod.setValidators(absoluteMethodValidator);
+        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceAbsoluteMethod());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
@@ -402,6 +428,7 @@ public class DataSourcesPanel extends VLayout {
                 return !form.getItem(DataSourceDS.TIME_VARIABLE).isVisible();
             }
         });
+        timeValue.setValidators(TimeVariableWebUtils.getTimeCustomValidator());
 
         ViewTextItem geographicalVariable = new ViewTextItem(DataSourceDS.GEO_VARIABLE, getConstants().dataSourceGeographicalVariable());
         geographicalVariable.setShowIfCondition(new FormItemIfFunction() {
