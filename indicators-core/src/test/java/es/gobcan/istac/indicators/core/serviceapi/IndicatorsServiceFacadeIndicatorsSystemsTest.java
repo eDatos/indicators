@@ -87,14 +87,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
 
     // Geographical values
-    private static String             GEOGRAPHICAL_VALUE_1                          = "1";
-    private static String             GEOGRAPHICAL_VALUE_2                          = "2";
-    private static String             GEOGRAPHICAL_VALUE_3                          = "3";
-    private static String             GEOGRAPHICAL_VALUE_4                          = "4";
-    
+    private static String             GEOGRAPHICAL_VALUE_1                        = "1";
+    private static String             GEOGRAPHICAL_VALUE_2                        = "2";
+    private static String             GEOGRAPHICAL_VALUE_3                        = "3";
+    private static String             GEOGRAPHICAL_VALUE_4                        = "4";
+
     // Geographical granularities
-    private static String             GEOGRAPHICAL_GRANULARITY_1                    = "1";
-    private static String             GEOGRAPHICAL_GRANULARITY_2                    = "2";
+    private static String             GEOGRAPHICAL_GRANULARITY_1                  = "1";
+    private static String             GEOGRAPHICAL_GRANULARITY_2                  = "2";
 
     // Indicators
     private static String             INDICATOR_1                                 = "Indicator-1";
@@ -1545,7 +1545,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), null);
         assertEquals(9, result.getResults().size());
         List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
-        
+
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(0).getProcStatus());
 
@@ -1573,7 +1573,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(8).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(8).getProcStatus());
     }
-    
+
     @Test
     public void testFindIndicatorsSystemsByCriteria() throws Exception {
 
@@ -1597,7 +1597,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(2).getProcStatus());
     }
-    
+
     @Test
     public void testFindIndicatorsSystemsByCriteriaPaginated() throws Exception {
 
@@ -1613,35 +1613,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         paginator.setCountTotalResults(Boolean.TRUE);
         paginator.setMaximumResultSize(Integer.valueOf(2));
         criteria.setPaginator(paginator);
-        
+
         {
             // Page 1
             criteria.getPaginator().setFirstResult(Integer.valueOf(0));
-            
+
             MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
             assertEquals(2, result.getResults().size());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(0), result.getPaginatorResult().getFirstResult());
-//            assertEquals(Integer.valueOf(2), result.getMaximumResultSize());
+            // assertEquals(Integer.valueOf(2), result.getMaximumResultSize());
             List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
-            
+
             assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(0).getUuid());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
-    
+
             assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(1).getUuid());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(1).getProcStatus());
         }
         {
             // Page 2
             criteria.getPaginator().setFirstResult(Integer.valueOf(2));
-            
+
             MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContext(), criteria);
             assertEquals(1, result.getResults().size());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(2), result.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(2), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
-    
+
             assertEquals(INDICATORS_SYSTEM_9, indicatorsSystemsDto.get(0).getUuid());
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemsDto.get(0).getProcStatus());
         }
@@ -1663,7 +1663,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
     }
-    
+
     @Test
     public void testRetrieveIndicatorsSystemsPublishedWithIndicator() throws Exception {
 
@@ -1671,18 +1671,32 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Indicator 1
             List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_1);
             assertEquals(3, indicatorsSystemsDto.size());
-    
-            assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
-            assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
-            
-            assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemsDto.get(1).getUuid());
-            assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemsDto.get(1).getVersionNumber());
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(1).getProcStatus());
 
-            assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
-            assertEquals("1.000", indicatorsSystemsDto.get(2).getVersionNumber());
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getProcStatus());
+            Boolean indicator1 = Boolean.FALSE;
+            Boolean indicator3 = Boolean.FALSE;
+            Boolean indicator6 = Boolean.FALSE;
+
+            for (IndicatorsSystemDto indicatorsSystemDto : indicatorsSystemsDto) {
+                if (indicatorsSystemDto.getUuid().equals(INDICATORS_SYSTEM_1)) {
+                    indicator1 = Boolean.TRUE;
+                    assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemDto.getUuid());
+                    assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
+                    assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
+                } else if (indicatorsSystemDto.getUuid().equals(INDICATORS_SYSTEM_3)) {
+                    indicator3 = Boolean.TRUE;
+                    assertEquals(INDICATORS_SYSTEM_3, indicatorsSystemDto.getUuid());
+                    assertEquals(INDICATORS_SYSTEM_3_VERSION, indicatorsSystemDto.getVersionNumber());
+                    assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
+                } else if (indicatorsSystemDto.getUuid().equals(INDICATORS_SYSTEM_6)) {
+                    indicator6 = Boolean.TRUE;
+                    assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemDto.getUuid());
+                    assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
+                    assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
+                }
+            }
+            assertTrue(indicator1);
+            assertTrue(indicator3);
+            assertTrue(indicator6);
         }
         {
             // Indicator 2
@@ -1693,7 +1707,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Indicator 3
             List<IndicatorsSystemDto> indicatorsSystemsDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedForIndicator(getServiceContext(), INDICATOR_3);
             assertEquals(1, indicatorsSystemsDto.size());
-            
+
             assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(0).getUuid());
             assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
@@ -3577,7 +3591,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("2010xx", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCompareTimeGranularitiesErrorDifferentGranularities() throws Exception {
         try {
@@ -3614,7 +3628,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("2012W51xx", e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testCalculatePreviousTimeValue() throws Exception {
 
@@ -3656,10 +3670,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("20120505", TimeVariableUtils.calculatePreviousTimeValue("20120506"));
         assertEquals("20111231", TimeVariableUtils.calculatePreviousTimeValue("20120101"));
     }
-    
+
     @Test
     public void testCalculatePreviousYearTimeValue() throws Exception {
-        
+
         // Yearly
         assertEquals("2010", TimeVariableUtils.calculatePreviousYearTimeValue("2011"));
         assertEquals("1999", TimeVariableUtils.calculatePreviousYearTimeValue("2000"));
@@ -3759,7 +3773,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
             assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(4, geographicalValuesResult.getResults().size());
-    
+
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
@@ -3770,7 +3784,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(3).getUuid());
             assertEquals("ES-MD", geographicalValues.get(3).getCode());
         }
-        
+
         // All, only 2 results
         {
             MetamacCriteria criteria = new MetamacCriteria();
@@ -3782,14 +3796,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
             assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(2, geographicalValuesResult.getResults().size());
-    
+
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(1).getUuid());
             assertEquals("EN-LN", geographicalValues.get(1).getCode());
         }
-        
+
         // All, only 2 results second page
         {
             MetamacCriteria criteria = new MetamacCriteria();
@@ -3802,14 +3816,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
             assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(2, geographicalValuesResult.getResults().size());
-    
+
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
             assertEquals("FR", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(1).getUuid());
             assertEquals("ES-MD", geographicalValues.get(1).getCode());
         }
-        
+
         // By granularity
         {
             MetamacCriteria criteria = new MetamacCriteria();
@@ -3822,7 +3836,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
             assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getTotalResults());
             assertEquals(2, geographicalValuesResult.getResults().size());
-    
+
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());

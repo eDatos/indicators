@@ -4,13 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
+import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 
 /**
@@ -35,25 +39,23 @@ public class IndicatorsSystemVersionRepositoryImpl extends IndicatorsSystemVersi
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException {
 
-        // Criteria
-        org.hibernate.Session session = (org.hibernate.Session) getEntityManager().getDelegate();
-        Criteria criteria = session.createCriteria(IndicatorsSystemVersion.class);
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.eq("procStatus", IndicatorsSystemProcStatusEnum.PUBLISHED));
-
-        criteria.createAlias("childrenAllLevels", "children");
-        criteria.createAlias("children.indicatorInstance", "indicatorInstance");
-        criteria.createAlias("indicatorInstance.indicator", "indicator");
-        criteria.add(Restrictions.like("indicator.uuid", indicatorUuid));
-
-        criteria.addOrder(Order.asc("id"));
+        ConditionRoot<IndicatorsSystemVersion> criteria = ConditionalCriteriaBuilder.criteriaFor(IndicatorsSystemVersion.class);
         
+        // Restrictions
+        criteria.withProperty(IndicatorsSystemVersionProperties.procStatus()).eq(IndicatorsSystemProcStatusEnum.PUBLISHED);
+        criteria.withProperty(new LeafProperty<IndicatorsSystemVersion>("childrenAllLevels.indicatorInstance.indicator", "uuid", false, IndicatorsSystemVersion.class)).eq(indicatorUuid);
+        
+        // Distinct
+        criteria.distinctRoot();
+        
+        List<ConditionalCriteria> conditions = criteria.build();
+        PagingParameter pagingParameter = PagingParameter.noLimits();
+
         // Find
-        List<IndicatorsSystemVersion> result = criteria.list();
-        return result;
+        PagedResult<IndicatorsSystemVersion> result = findByCondition(conditions, pagingParameter);
+        return result.getValues();
     }
 }
