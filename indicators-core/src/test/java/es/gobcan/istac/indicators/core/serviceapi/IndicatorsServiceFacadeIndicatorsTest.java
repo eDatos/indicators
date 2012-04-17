@@ -397,7 +397,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setSubjectCode(SUBJECT_1);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
         indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(4000));
         indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
         indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
         indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());

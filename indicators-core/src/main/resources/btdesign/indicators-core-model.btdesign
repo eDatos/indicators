@@ -522,11 +522,11 @@ Application Indicators {
 			"Comments"
        		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
 			"Comments url"
-       		String commentsUrl nullable;
+       		String commentsUrl nullable length="4000";
 			"Notes"
        		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
        		"Notes url"
-       		String notesUrl nullable;
+       		String notesUrl nullable length="4000";
        		"True if this version is the last"
        		Boolean isLastVersion not nullable;
        		"Identifier in repository of observations"
@@ -672,9 +672,9 @@ Application Indicators {
 			"Source survey acronym"
 			- @InternationalString sourceSurveyAcronym cascade="all" nullable databaseColumn="SOURCE_SURVEY_ACRONYM_FK";
 			"Source survey url"
-			String sourceSurveyUrl nullable;
-			"Publishers (with ## as separtor)"
-			String publishers not nullable;
+			String sourceSurveyUrl nullable length="4000";
+			"Publishers (with ## as separator)"
+			String publishers not nullable length="4000";
 						
 			// Relations
             "Indicator version"
