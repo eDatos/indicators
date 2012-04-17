@@ -99,7 +99,12 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.SOURCE_SURVEY_ACRONYM, org.siemac.metamac.web.common.client.utils.RecordUtils.getInternationalStringRecord(dataSourceDto.getSourceSurveyAcronym()));
         setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
         setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
-        setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
+
+        if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
+            setValue(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceObsValue());
+        } else {
+            setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
+        }
 
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
