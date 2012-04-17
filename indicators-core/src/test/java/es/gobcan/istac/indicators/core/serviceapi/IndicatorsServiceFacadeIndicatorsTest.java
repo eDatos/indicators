@@ -2950,12 +2950,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
         dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
+        DataSourceVariableDto dataSourceVariableDto = new DataSourceVariableDto();
+        dataSourceVariableDto.setCategory("category");
+        dataSourceVariableDto.setVariable(null);
+        dataSourceDto.addOtherVariable(dataSourceVariableDto);
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), INDICATOR_1, dataSourceDto);
             fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(13, e.getExceptionItems().size());
+            assertEquals(14, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
@@ -3010,6 +3014,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(2, e.getExceptionItems().get(12).getMessageParameters().length);
             assertEquals("DATA_SOURCE.GEOGRAPHICAL_VARIABLE", e.getExceptionItems().get(12).getMessageParameters()[0]);
             assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", e.getExceptionItems().get(12).getMessageParameters()[1]);
+            
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(13).getCode());
+            assertEquals(1, e.getExceptionItems().get(13).getMessageParameters().length);
+            assertEquals("DATA_SOURCE.OTHER_VARIABLE.VARIABLE", e.getExceptionItems().get(13).getMessageParameters()[0]);
         }
     }
 
@@ -3461,6 +3469,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
+        dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setDataGpeUuid("newData");
         dataSourceDto.setTimeVariable("newTime");
         dataSourceDto.getOtherVariables().get(0).setCategory("new Category");
         DataSourceVariableDto dataSourceVariableDto3 = new DataSourceVariableDto();
@@ -3478,46 +3488,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDtoUpdated = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), uuid);
         assertEquals(3, dataSourceDtoUpdated.getOtherVariables().size());
         IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
-    }
-
-    @Test
-    public void testUpdateDataSourceErrorChangeMetadataUnmodifiable() throws Exception {
-
-        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
-        dataSourceDto.setDataGpeUuid("newQueryGpe");
-        dataSourceDto.setPxUri("newPx");
-
-        try {
-            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-            fail("Query GPE and px changed");
-        } catch (MetamacException e) {
-            assertEquals(2, e.getExceptionItems().size());
-
-            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.DATA_GPE_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
-
-            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.PX_URI", e.getExceptionItems().get(1).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testUpdateDataSourceErrorChangePx() throws Exception {
-
-        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
-        dataSourceDto.setPxUri("newPx");
-
-        try {
-            indicatorsServiceFacade.updateDataSource(getServiceContext(), dataSourceDto);
-            fail("Px changed");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.PX_URI", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
     }
 
     @Test

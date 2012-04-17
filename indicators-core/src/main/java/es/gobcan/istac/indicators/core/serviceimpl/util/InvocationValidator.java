@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -870,6 +871,14 @@ public class InvocationValidator {
         }
         if (!ValidationUtils.isEmpty(dataSource.getGeographicalVariable())) {
             ValidationUtils.checkMetadataEmpty(dataSource.getTimeValue(), "DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", exceptions);
+        }
+        
+        // Other variables
+        if (dataSource.getOtherVariables() != null) {
+            for (DataSourceVariable dataSourceVariable : dataSource.getOtherVariables()) {
+                ValidationUtils.checkMetadataRequired(dataSourceVariable.getVariable(), "DATA_SOURCE.OTHER_VARIABLE.VARIABLE", exceptions);
+                ValidationUtils.checkMetadataRequired(dataSourceVariable.getCategory(), "DATA_SOURCE.OTHER_VARIABLE.CATEGORY", exceptions);
+            }
         }
     }
     private static void checkRateDerivation(RateDerivation rateDerivation, String parameterName, Boolean isPercentage, List<MetamacExceptionItem> exceptions) {
