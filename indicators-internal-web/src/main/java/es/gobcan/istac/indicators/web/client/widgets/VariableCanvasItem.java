@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -30,6 +30,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
     public VariableCanvasItem(String name, String title) {
         super(name, title);
 
+        setTitleStyle("staticFormItemTitle");
         setCellStyle("variableCanvasCell");
         setCellHeight(30);
         setTextBoxStyle("variableCanvasCell");
@@ -59,8 +60,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
 
     @Override
     public Boolean validate() {
-        // Not required (at least for now)
-        return true;
+        return form.validate(false);
     }
 
     public void setVariablesAndCategories(DataStructureDto dataStructureDto) {
@@ -73,7 +73,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
                 String var = variables.get(i);
                 if (includeVariable(dataStructureDto, var)) {
                     if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
-                        SelectItem selectItem = new SelectItem("variable-" + i, var);
+                        RequiredSelectItem selectItem = new RequiredSelectItem("variable-" + i, var);
                         selectItem.setValueMap(CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(var), categoryLabels.get(var)));
                         formItems.add(selectItem);
                     } else {
