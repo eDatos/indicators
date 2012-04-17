@@ -57,6 +57,7 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.utils.TimeVariableWebUtils;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
+import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
@@ -238,9 +239,6 @@ public class DataSourcesPanel extends VLayout {
 
         // Load Data Definitions
         uiHandlers.retrieveDataDefinitions();
-
-        // Load Geographical Values
-        uiHandlers.retrieveGeographicalValuesDS();
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
@@ -388,6 +386,7 @@ public class DataSourcesPanel extends VLayout {
         // Showed when contVariable (measure variable) is set
         // ValueMap set in setDataStructure
         SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceAbsoluteMethod());
+        absoluteMethod.setValidateOnChange(true);
         CustomValidator absoluteMethodValidator = new CustomValidator() {
 
             // If absolute method is not set, at least one rate type must be LOAD
@@ -439,12 +438,26 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
-        RequiredSelectItem geographicalValue = new RequiredSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        final GeographicalSelectItem geographicalValue = new GeographicalSelectItem(DataSourceDS.GEO_VALUE, getConstants().dataSourceGeographicalValue());
+        geographicalValue.setRequired(true);
         geographicalValue.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 return !form.getItem(DataSourceDS.GEO_VARIABLE).isVisible();
+            }
+        });
+        geographicalValue.getGeoGranularity().addChangedHandler(new ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                // Clear geographical value
+                geographicalValue.setGeoValuesValueMap(new LinkedHashMap<String, String>());
+                geographicalValue.setGeoValue(new String());
+                // Set values with selected granularity
+                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
+                    uiHandlers.retrieveGeographicalValues(event.getValue().toString());
+                }
             }
         });
 
@@ -539,7 +552,7 @@ public class DataSourcesPanel extends VLayout {
     }
 
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
     }
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
@@ -563,9 +576,8 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
-        dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible()
-                ? CommonUtils.getUuidString(generalEditionForm.getValueAsString(DataSourceDS.GEO_VALUE))
-                : null);
+        dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm
+                .getItem(DataSourceDS.GEO_VALUE)).getSelectedGeoValue()) : null);
 
         dataSourceDto.setInterperiodPuntualRate(interperiodPuntualRateEditionForm.getValue());
         dataSourceDto.setInterperiodPercentageRate(interperiodPercentageRateEditionForm.getValue());
@@ -611,7 +623,8 @@ public class DataSourcesPanel extends VLayout {
     }
 
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        // TODO
+        LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoGranularitiesValueMap(valueMap);
     }
 
     private List<String> getSelectedDataSources() {
@@ -675,7 +688,7 @@ public class DataSourcesPanel extends VLayout {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.GEO_VARIABLE)).clearValue();
-        ((SelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
+        ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.MEASURE_VARIABLE)).clearValue();
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
 

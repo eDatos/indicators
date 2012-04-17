@@ -99,6 +99,7 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
         generalPanel.setGeographicalValues(geographicalValueDtos);
+        dataSourcesPanel.setGeographicalValues(geographicalValueDtos);
     }
 
     @Override

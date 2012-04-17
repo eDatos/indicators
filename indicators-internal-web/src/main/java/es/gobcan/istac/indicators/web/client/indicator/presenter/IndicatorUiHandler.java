@@ -29,7 +29,6 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveDataDefinitions();
     void retrieveDataDefinition(String uuid);
     void retrieveDataStructure(String uuid);
-    void retrieveGeographicalValuesDS();
     void retrieveGeographicalValueDS(String uuid);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);

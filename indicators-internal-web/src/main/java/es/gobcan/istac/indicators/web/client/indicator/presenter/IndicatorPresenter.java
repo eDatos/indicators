@@ -416,22 +416,6 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveGeographicalValuesDS() {
-        dispatcher.execute(new GetGeographicalValuesAction(null), new AsyncCallback<GetGeographicalValuesResult>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving geographical values");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValuesDS(result.getGeographicalValueDtos());
-            }
-        });
-    }
-
-    @Override
     public void retrieveGeographicalValueDS(final String uuid) {
         dispatcher.execute(new GetGeographicalValueAction(uuid), new AsyncCallback<GetGeographicalValueResult>() {
 
