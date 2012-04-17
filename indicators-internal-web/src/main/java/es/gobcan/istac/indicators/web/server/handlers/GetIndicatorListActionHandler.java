@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -10,6 +11,7 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
@@ -28,7 +30,8 @@ public class GetIndicatorListActionHandler extends AbstractActionHandler<GetIndi
     @Override
     public GetIndicatorListResult execute(GetIndicatorListAction action, ExecutionContext context) throws ActionException {
         try {
-            return new GetIndicatorListResult(indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext(), null));
+            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext(), null);
+            return new GetIndicatorListResult(result.getResults());
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
