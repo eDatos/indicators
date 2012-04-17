@@ -3,12 +3,11 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -204,14 +203,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public MetamacCriteriaResult<IndicatorsSystemDto> findIndicatorsSystems(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformCriteria(criteria);
-        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformPagingParameter(criteria);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystems(ctx, conditions, pagingParameter);
+        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystems(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorsSystemDto> dtoResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result);
+        MetamacCriteriaResult<IndicatorsSystemDto> dtoResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result, sculptorCriteria.getPageSize());
         return dtoResult;
     }
 
@@ -219,14 +217,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public MetamacCriteriaResult<IndicatorsSystemDto> findIndicatorsSystemsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformCriteria(criteria);
-        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaTransform().transformPagingParameter(criteria);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorsSystemVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, conditions, pagingParameter);
+        PagedResult<IndicatorsSystemVersion> result = getIndicatorsSystemsService().findIndicatorsSystemsPublished(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorsSystemDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result);
+        MetamacCriteriaResult<IndicatorsSystemDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorsSystem(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
 
@@ -396,27 +393,17 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
 
         // Transform
-        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaTransform().transformCriteria(criteria);
-        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaTransform().transformPagingParameter(criteria);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
 
         // Find
-        PagedResult<GeographicalValue> geographicalValuesResult = getIndicatorsSystemsService().findGeographicalValues(ctx, conditions, pagingParameter);
+        PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<GeographicalValueDto> geographicalValuesDtoResult = new MetamacCriteriaResult<GeographicalValueDto>();
-        geographicalValuesDtoResult.setFirstResult(geographicalValuesResult.getStartRow());
-        geographicalValuesDtoResult.setMaximumResultSize(geographicalValuesResult.getPageSize());
-        geographicalValuesDtoResult.setTotalResults(geographicalValuesResult.getRowCount());
-        if (geographicalValuesResult.getValues() != null) {
-            geographicalValuesDtoResult.setResults(new ArrayList<GeographicalValueDto>());
-            for (GeographicalValue geographicalValue : geographicalValuesResult.getValues()) {
-                geographicalValuesDtoResult.getResults().add(do2DtoMapper.geographicalValueDoToDto(geographicalValue));
-            }
-        }
-        return geographicalValuesDtoResult;
+        MetamacCriteriaResult<GeographicalValueDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
+        return metamacCriteriaResult;
     }
 
     @Override
@@ -581,14 +568,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public MetamacCriteriaResult<IndicatorDto> findIndicators(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformCriteria(criteria);
-        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformPagingParameter(criteria);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, conditions, pagingParameter);
+        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result);
+        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
 
@@ -596,14 +582,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public MetamacCriteriaResult<IndicatorDto> findIndicatorsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Transform
-        List<ConditionalCriteria> conditions = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformCriteria(criteria);
-        PagingParameter pagingParameter = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaTransform().transformPagingParameter(criteria);
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getIndicatorVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicatorsPublished(ctx, conditions, pagingParameter);
+        PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicatorsPublished(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result);
+        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
 

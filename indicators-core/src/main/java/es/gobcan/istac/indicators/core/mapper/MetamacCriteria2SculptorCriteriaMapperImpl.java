@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.core.mapper;
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaTransform;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaTransform.CriteriaCallback;
+import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
+import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Component;
 
@@ -22,32 +22,32 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 @Component
 public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriteria2SculptorCriteriaMapper {
 
-    private MetamacCriteriaTransform<GeographicalValue>       geographicalValueCriteriaTransform       = null;
-    private MetamacCriteriaTransform<IndicatorVersion>        indicatorVersionCriteriaTransform       = null;
-    private MetamacCriteriaTransform<IndicatorsSystemVersion> indicatorsSystemVersionCriteriaTransform = null;
+    private MetamacCriteria2SculptorCriteria<GeographicalValue>       geographicalValueCriteriaMapper       = null;
+    private MetamacCriteria2SculptorCriteria<IndicatorVersion>        indicatorVersionCriteriaMapper        = null;
+    private MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> indicatorsSystemVersionCriteriaMapper = null;
 
     public MetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        geographicalValueCriteriaTransform = new MetamacCriteriaTransform<GeographicalValue>(GeographicalValue.class, null, GeographicalValueCriteriaPropertyEnum.class,
+        geographicalValueCriteriaMapper = new MetamacCriteria2SculptorCriteria<GeographicalValue>(GeographicalValue.class, null, GeographicalValueCriteriaPropertyEnum.class,
                 new GeographicalValueCriteriaCallback());
-        indicatorVersionCriteriaTransform = new MetamacCriteriaTransform<IndicatorVersion>(IndicatorVersion.class, null, IndicatorCriteriaPropertyEnum.class,
+        indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, null, IndicatorCriteriaPropertyEnum.class,
                 new IndicatorVersionCriteriaCallback());
-        indicatorsSystemVersionCriteriaTransform = new MetamacCriteriaTransform<IndicatorsSystemVersion>(IndicatorsSystemVersion.class, null, IndicatorsSystemCriteriaPropertyEnum.class,
+        indicatorsSystemVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion>(IndicatorsSystemVersion.class, null, IndicatorsSystemCriteriaPropertyEnum.class,
                 new IndicatorsSystemVersionCriteriaCallback());
     }
 
     @Override
-    public MetamacCriteriaTransform<GeographicalValue> getGeographicalValueCriteriaTransform() {
-        return geographicalValueCriteriaTransform;
-    }
-    
-    @Override
-    public MetamacCriteriaTransform<IndicatorsSystemVersion> getIndicatorsSystemVersionCriteriaTransform() {
-        return indicatorsSystemVersionCriteriaTransform;
+    public MetamacCriteria2SculptorCriteria<GeographicalValue> getGeographicalValueCriteriaMapper() {
+        return geographicalValueCriteriaMapper;
     }
 
     @Override
-    public MetamacCriteriaTransform<IndicatorVersion> getIndicatorVersionCriteriaTransform() {
-        return indicatorVersionCriteriaTransform;
+    public MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> getIndicatorsSystemVersionCriteriaMapper() {
+        return indicatorsSystemVersionCriteriaMapper;
+    }
+
+    @Override
+    public MetamacCriteria2SculptorCriteria<IndicatorVersion> getIndicatorVersionCriteriaMapper() {
+        return indicatorVersionCriteriaMapper;
     }
 
     private class GeographicalValueCriteriaCallback implements CriteriaCallback {

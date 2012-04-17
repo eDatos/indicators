@@ -2591,8 +2591,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(3, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getTotalResults());
-            assertEquals(Integer.valueOf(3), result.getMaximumResultSize());
+            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
     
             assertEquals(INDICATOR_4, indicatorsDto.get(0).getUuid());
@@ -2609,8 +2609,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(3, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getTotalResults());
-            assertEquals(Integer.valueOf(3), result.getMaximumResultSize());
+            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_7, indicatorsDto.get(0).getUuid());
@@ -2627,8 +2627,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(1, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getTotalResults());
-            assertEquals(Integer.valueOf(3), result.getMaximumResultSize());
+            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
     
             assertEquals(INDICATOR_10, indicatorsDto.get(0).getUuid());
