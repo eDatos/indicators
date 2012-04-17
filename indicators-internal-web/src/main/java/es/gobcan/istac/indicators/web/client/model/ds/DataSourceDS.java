@@ -10,6 +10,9 @@ public class DataSourceDS extends DataSource {
     public static String UUID                              = "ds-uuid";
     public static String QUERY                             = "ds-query";
     public static String PX                                = "ds-px";
+
+    public static String ABSOLUTE_METHOD                   = "ds-abs-met";
+
     public static String TIME_VARIABLE                     = "ds-time-var";
     public static String TIME_VALUE                        = "ds-time-value";
     public static String GEO_VARIABLE                      = "ds-geo-var";

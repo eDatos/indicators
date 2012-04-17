@@ -50,6 +50,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
     }
 
     public void clearValue() {
+        form.clearValues();
         // Set an empty hidden item to remove fields from the form.
         ViewTextItem item = new ViewTextItem();
         item.setVisible(false);

@@ -98,8 +98,8 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                // Clear query dependent fields
-                clearQueryDependentFields();
+                // Clear all query dependent fields
+                clearAllQueryValues();
 
                 dataSourceDto = new DataSourceDto();
                 dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
@@ -203,7 +203,7 @@ public class DataSourcesPanel extends VLayout {
             @Override
             public void onClick(ClickEvent event) {
                 // Clear query form values
-                generalEditionForm.clearValues();
+                clearAllQueryValues();
 
                 setEditionQueryMode();
             }
@@ -263,6 +263,10 @@ public class DataSourcesPanel extends VLayout {
             dataSourcesListGrid.deselectAllRecords();
             mainFormLayout.setEditionMode();
         }
+
+        // Hide label and edit query button when we are going to create a new data source
+        mainFormLayout.getLabel().hide();
+        mainFormLayout.getEditQueryToolStripButton().hide();
 
         mainFormLayout.show();
         setDataSource(dataSourceDto);
@@ -377,6 +381,10 @@ public class DataSourcesPanel extends VLayout {
 
         ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
 
+        // Showed when contVariable (measure variable) is set
+        // ValueMap set in setDataStructure
+        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceAbsoluteMethod());
+
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
 
@@ -424,8 +432,8 @@ public class DataSourcesPanel extends VLayout {
 
         VariableCanvasItem variables = new VariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalEditionForm
-                .setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue, measureVariable, variables);
+        generalEditionForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
+                measureVariable, variables);
 
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT);
 
@@ -477,6 +485,9 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
         if (!StringUtils.isBlank(dataStructureDto.getContVariable())) {
             // If there is a contVariable (measure variable), set variable values
+            ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
+                    dataStructureDto.getValueLabels()));
+
             interperiodPuntualRateEditionForm
                     .setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
             interperiodPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
@@ -484,7 +495,9 @@ public class DataSourcesPanel extends VLayout {
             annualPuntualRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
             annualPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
         } else {
-            // If not, set OBS_VALUE to load rate methods
+            // If not, set OBS_VALUE value map
+            ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(CommonUtils.getObsValueLValueMap());
+
             interperiodPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
             interperiodPercentageRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
             annualPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
@@ -517,6 +530,8 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
 
         dataSourceDto.setPublishers(dataStructureDto.getPublishers());
+
+        dataSourceDto.setAbsoluteMethod(generalEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
 
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
@@ -617,12 +632,18 @@ public class DataSourcesPanel extends VLayout {
         return null;
     }
 
+    private void clearAllQueryValues() {
+        ((SelectItem) generalEditionForm.getItem(DataSourceDS.QUERY)).clearValue();
+        clearQueryDependentFields();
+    }
+
     private void clearQueryDependentFields() {
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_CODE)).clearValue();
         ((ViewMultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_TITLE)).clearValue();
         ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
+        ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).clearValue();
 
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();
@@ -635,7 +656,7 @@ public class DataSourcesPanel extends VLayout {
         ((SelectItem) interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
         ((SelectItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
         ((SelectItem) annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).clearValue();
-        
+
         ((SelectItem) interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
         ((SelectItem) interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());
         ((SelectItem) annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD)).setValueMap(new String());

@@ -9,7 +9,6 @@ import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
@@ -45,7 +44,7 @@ public class DataSourceMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(editQueryButton);
     }
 
-    public HasClickHandlers getEditQueryToolStripButton() {
+    public ToolStripButton getEditQueryToolStripButton() {
         return editQueryButton;
     }
 
@@ -61,6 +60,10 @@ public class DataSourceMainFormLayout extends InternationalMainFormLayout {
         editQueryButton.show();
         label.show();
         markForRedraw();
+    }
+
+    public Label getLabel() {
+        return label;
     }
 
 }
