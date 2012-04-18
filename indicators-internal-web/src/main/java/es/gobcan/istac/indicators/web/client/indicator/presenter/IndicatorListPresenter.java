@@ -32,26 +32,40 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsResult;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
 public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 
-    private Logger        logger = Logger.getLogger(IndicatorListPresenter.class.getName());
+    public static final int DEFAULT_MAX_RESULTS = 30;
 
-    private DispatchAsync dispatcher;
-    private PlaceManager  placeManager;
+    private Logger          logger              = Logger.getLogger(IndicatorListPresenter.class.getName());
+
+    private DispatchAsync   dispatcher;
+    private PlaceManager    placeManager;
+
+    private int             maxResults;
+    private int             firstResult;
+    private int             pageNumber;
+    private int             numberOfElements;
 
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 
         void setIndicatorList(List<IndicatorDto> indicatorList);
         void setSubjects(List<SubjectDto> subjectDtos);
+
+        StatusBar getStatusBar();
+        void refreshStatusBar();
+        void setNumberOfElements(int numberOfElements);
+        void setPageNumber(int pageNumber);
+        void removeSelectedData();
     }
 
     @ProxyCodeSplit
@@ -76,18 +90,50 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(IndicatorListPresenter.this, getConstants().indicators());
+
+        maxResults = DEFAULT_MAX_RESULTS;
+        firstResult = 0;
+        pageNumber = 1;
+        numberOfElements = maxResults;
+
         retrieveIndicatorList();
     }
 
     private void retrieveIndicatorList() {
-        dispatcher.execute(new GetIndicatorListAction(), new AsyncCallback<GetIndicatorListResult>() {
+        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new AsyncCallback<GetIndicatorPaginatedListResult>() {
 
             @Override
             public void onFailure(Throwable caught) {
                 ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
+
             @Override
-            public void onSuccess(GetIndicatorListResult result) {
+            public void onSuccess(GetIndicatorPaginatedListResult result) {
+                setNumberOfElements(result.getIndicatorList().size());
+
+                // update Selected label e.g "0 of 50 selected"
+                getView().setNumberOfElements(getNumberOfElements());
+                getView().setPageNumber(getPageNumber());
+                getView().refreshStatusBar();
+
+                // Log.debug("onSuccess() - firstResult: " + firstResult +
+                // " pageNumber: " + pageNumber + " numberOfElements: " +
+                // numberOfElements);
+
+                // enable/disable the pagination widgets
+                if (getPageNumber() == 1) {
+                    getView().getStatusBar().getResultSetFirstButton().disable();
+                    getView().getStatusBar().getResultSetPreviousButton().disable();
+                }
+
+                // enable/disable the pagination widgets
+                if (getNumberOfElements() < getMaxResults()) {
+                    getView().getStatusBar().getResultSetNextButton().disable();
+                } else {
+                    getView().getStatusBar().getResultSetNextButton().enable();
+                }
+
+                // pass the result set to the View
                 getView().setIndicatorList(result.getIndicatorList());
             }
         });
@@ -152,6 +198,81 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 getView().setSubjects(result.getSubjectDtos());
             }
         });
+    }
+
+    // PAGINATION
+
+    protected void resultSetFirstButtonClicked() {
+        firstResult = 0;
+        pageNumber = 1;
+
+        retrieveIndicatorList();
+    }
+
+    protected void resultSetPreviousButtonClicked() {
+        firstResult -= maxResults;
+        pageNumber--;
+
+        retrieveIndicatorList();
+    }
+
+    protected void resultSetNextButtonClicked() {
+        firstResult += numberOfElements;
+        pageNumber++;
+
+        retrieveIndicatorList();
+    }
+
+    protected int getMaxResults() {
+        return maxResults;
+    }
+
+    protected void setMaxResults(int maxResults) {
+        this.maxResults = maxResults;
+    }
+
+    protected int getFirstResult() {
+        return firstResult;
+    }
+
+    protected void setFirstResult(int firstResult) {
+        this.firstResult = firstResult;
+    }
+
+    protected int getPageNumber() {
+        return pageNumber;
+    }
+
+    protected void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    protected int getNumberOfElements() {
+        return numberOfElements;
+    }
+
+    protected void setNumberOfElements(int numberOfElements) {
+        this.numberOfElements = numberOfElements;
+    }
+
+    @Override
+    public void onResultSetFirstButtonClicked() {
+        resultSetFirstButtonClicked();
+
+        getView().getStatusBar().getResultSetFirstButton().disable();
+    }
+
+    @Override
+    public void onResultSetPreviousButtonClicked() {
+        resultSetPreviousButtonClicked();
+    }
+
+    @Override
+    public void onResultSetNextButtonClicked() {
+        resultSetNextButtonClicked();
+
+        getView().getStatusBar().getResultSetFirstButton().enable();
+        getView().getStatusBar().getResultSetPreviousButton().enable();
     }
 
 }

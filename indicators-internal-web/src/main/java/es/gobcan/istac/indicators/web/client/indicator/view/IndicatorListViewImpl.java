@@ -30,12 +30,14 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 
 public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
 
@@ -52,9 +54,17 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 
     private NewIndicatorWindow       window;
 
+    private int                      numberOfElements;
+    private int                      numberSelected;
+    private int                      pageNumber;
+
+    private final StatusBar          statusBar;
+
     @Inject
-    public IndicatorListViewImpl() {
+    public IndicatorListViewImpl(StatusBar statusBar) {
         super();
+
+        this.statusBar = statusBar;
 
         // ToolStrip
         ToolStrip toolStrip = new ToolStrip();
@@ -107,6 +117,14 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
                 } else {
                     deleteIndicatorActor.hide();
                 }
+
+                ListGridRecord[] records = event.getSelection();
+
+                setNumberSelected(records.length);
+
+                String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
+                IndicatorListViewImpl.this.statusBar.getSelectedLabel().setContents(selectedLabel);
+
             }
         });
         indicatorList.addRecordClickHandler(new RecordClickHandler() {
@@ -133,6 +151,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         panel = new VLayout();
         panel.addMember(toolStrip);
         panel.addMember(indicatorList);
+        panel.addMember(statusBar);
 
         // Delete confirmation window
         deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().appConfirmDeleteTitle(), getConstants().indicDeleteConfirm());
@@ -145,6 +164,8 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
                 deleteConfirmationWindow.hide();
             }
         });
+
+        initStatusBar();
 
     }
 
@@ -181,6 +202,84 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         if (window != null) {
             window.setSubjetcs(subjectDtos);
         }
+    }
+
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
+
+    public int getNumberOfElements() {
+        return numberOfElements;
+    }
+
+    public void setNumberOfElements(int numberOfElements) {
+        this.numberOfElements = numberOfElements;
+    }
+
+    public int getNumberSelected() {
+        return numberSelected;
+    }
+
+    public void setNumberSelected(int numberSelected) {
+        this.numberSelected = numberSelected;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public void refreshStatusBar() {
+        // update Selected label e.g "0 of 50 selected"
+        String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
+        getStatusBar().getSelectedLabel().setContents(selectedLabel);
+
+        // update Page number label e.g "Page 1"
+        String pageNumberLabel = IndicatorsWeb.getMessages().page(String.valueOf(getPageNumber()));
+        getStatusBar().getPageNumberLabel().setContents(pageNumberLabel);
+        getStatusBar().getPageNumberLabel().markForRedraw();
+    }
+
+    protected void initStatusBar() {
+
+        // "0 of 50 selected"
+
+        getStatusBar().getResultSetFirstButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetFirstButtonClicked();
+                }
+            }
+        });
+
+        getStatusBar().getResultSetPreviousButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetPreviousButtonClicked();
+                }
+            }
+        });
+
+        // "Page 1"
+
+        getStatusBar().getResultSetNextButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetNextButtonClicked();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void removeSelectedData() {
+        this.indicatorList.removeSelectedData();
     }
 
 }

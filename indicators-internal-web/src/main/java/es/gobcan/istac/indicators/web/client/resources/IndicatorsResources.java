@@ -32,4 +32,22 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @Source("images/reset.png")
     ImageResource reset();
 
+    @Source("images/resultsetnext.png")
+    ImageResource resultSetNext();
+
+    @Source("images/resultsetfirst.png")
+    ImageResource resultSetFirst();
+
+    @Source("images/resultsetprevious.png")
+    ImageResource resultSetPrevious();
+
+    @Source("images/resultsetnext_Disabled.png")
+    ImageResource resultSetNextDisabled();
+
+    @Source("images/resultsetfirst_Disabled.png")
+    ImageResource resultSetFirstDisabled();
+
+    @Source("images/resultsetprevious_Disabled.png")
+    ImageResource resultSetPreviousDisabled();
+
 }

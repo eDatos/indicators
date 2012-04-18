@@ -16,4 +16,8 @@ public interface IndicatorListUiHandler extends UiHandlers {
 
     void retrieveSubjectsList();
 
+    void onResultSetNextButtonClicked();
+    void onResultSetFirstButtonClicked();
+    void onResultSetPreviousButtonClicked();
+
 }
