@@ -34,7 +34,7 @@
 						<a href="/istac">Inicio</a>
 					</li>
 					<li>
-						<strong>TODO</strong>
+						<strong>PENDIENTE MIGAS</strong>
 					</li>
 				</ul>
 			</div>
