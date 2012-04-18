@@ -12,5 +12,7 @@
 			<ref bean="configurationService" />
 		</property>
 	</bean>
+	
+	<bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider"/>
 
 </beans>

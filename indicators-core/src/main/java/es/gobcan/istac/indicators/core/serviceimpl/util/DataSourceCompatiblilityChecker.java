@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.GeographicalValueRepository;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -43,7 +44,16 @@ public class DataSourceCompatiblilityChecker {
         if (!StringUtils.isEmpty(geographicVar)) { 
             //Must be an existent variable and must be marked as spatial variable
             if (data.getVariables().contains(geographicVar)) {
-                if (!geographicVar.equals(data.getSpatialVariable())) {
+                //Must be marked as spatial variable
+                if (geographicVar.equals(data.getSpatialVariable())) {
+                    //Checking every value is valid
+                    List<String> geoCodesProvided = data.getValueCodes().get(geographicVar);
+                    List<String> unknownCodes = detectInvalidGeographicalCodes(geoCodesProvided);
+                    if (unknownCodes.size() > 0) {
+                        String codes = StringUtils.join(unknownCodes,",");
+                        items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VALUES_INVALID,dataSource.getUuid(),codes));
+                    }
+                } else {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_GEOGRAPHIC, dataSource.getUuid()));
                 }
             } else {
@@ -58,6 +68,17 @@ public class DataSourceCompatiblilityChecker {
         }
         return items;
     }
+
+    private static List<String> detectInvalidGeographicalCodes(List<String> geoCodesProvided) {
+        List<String> unknownCodes = new ArrayList<String>();
+        for (String geoCode : geoCodesProvided) {
+            GeographicalValue geoValue = getGeographicalValueRepository().findGeographicalValueByCode(geoCode);
+            if (geoValue == null) {
+                unknownCodes.add(geoCode);
+            }
+        }
+        return unknownCodes;
+    }
     
     private static List<MetamacExceptionItem> checkTimeVariableConstraints(DataSource dataSource, Data data) {
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
@@ -66,7 +87,15 @@ public class DataSourceCompatiblilityChecker {
         if (!StringUtils.isEmpty(timeVar)) { 
             //Must be an existent variable and must be marked as temporal variable
             if (data.getVariables().contains(timeVar)) {
-                if (!timeVar.equals(data.getTemporalVariable())) {
+                if (timeVar.equals(data.getTemporalVariable())) {
+                  //Checking every value is valid
+                    List<String> timeCodesProvided = data.getValueCodes().get(timeVar);
+                    List<String> unknownCodes = detectInvalidTimeCodes(timeCodesProvided);
+                    if (unknownCodes.size() > 0) {
+                        String codes = StringUtils.join(unknownCodes,",");
+                        items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VALUES_INVALID,dataSource.getUuid(),codes));
+                    }
+                } else {
                     items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_TIME_VARIABLE_NOT_TEMPORAL, dataSource.getUuid()));
                 }
             } else {
@@ -81,6 +110,17 @@ public class DataSourceCompatiblilityChecker {
         }
         return items;
     }
+
+    private static List<String> detectInvalidTimeCodes(List<String> timeCodesProvided) {
+        List<String> unknownCodes = new ArrayList<String>();
+        for (String timeCode : timeCodesProvided) {
+            if (!TimeVariableUtils.isTimeValue(timeCode)) {
+                unknownCodes.add(timeCode);
+            }
+        }
+        return unknownCodes;
+    }
+    
     
     private static List<MetamacExceptionItem> checkAbsoluteMethodConstraints(DataSource dataSource, Data data) {
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
@@ -244,7 +284,6 @@ public class DataSourceCompatiblilityChecker {
     public static GeographicalValueRepository getGeographicalValueRepository() {
         if (geographicalValueRepository == null) {
             geographicalValueRepository = ApplicationContextProvider.getApplicationContext().getBean(GeographicalValueRepository.class);
-            
         }
         return geographicalValueRepository;
     }

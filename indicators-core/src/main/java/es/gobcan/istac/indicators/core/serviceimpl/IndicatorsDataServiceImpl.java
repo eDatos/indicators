@@ -62,7 +62,6 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatiblilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
-import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 
 /**
  * Implementation of IndicatorsDataService.
@@ -767,11 +766,28 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Returns the time value whether a geographical variable has been selected or a value
      * has been fixed
      */
-    private List<String> getTimeValue(DataOperation dataOperation, Data data) {
+    private List<String> getTimeValue(DataOperation dataOperation, Data data) throws MetamacException {
         List<String> timeValues = null;
         // Check whether time variable is fixed or not
-        if (dataOperation.getTimeVariable() != null) {
+        if (dataOperation.hasTimeVariable()) {
             timeValues = data.getValueCodes().get(dataOperation.getTimeVariable());
+            
+            
+            timeValues = new ArrayList<String>();
+            List<String> timeCodesProvided = data.getValueCodes().get(dataOperation.getTimeVariable());
+            List<String> unknownCodes = new ArrayList<String>();
+            for (String timeCode : timeCodesProvided) {
+                if (TimeVariableUtils.isTimeValue(timeCode)) {
+                    timeValues.add(timeCode);
+                } else {
+                    unknownCodes.add(timeCode);
+                }
+            }
+            if (unknownCodes.size() > 0) {
+                String codes = StringUtils.join(unknownCodes,",");
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE,dataOperation.getDataSourceUuid(),dataOperation.getDataSource().getDataGpeUuid(),codes);
+            }
+            
         } else {
             timeValues = new ArrayList<String>();
             timeValues.add(dataOperation.getTimeValue());

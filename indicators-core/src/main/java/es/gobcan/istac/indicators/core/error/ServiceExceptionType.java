@@ -75,9 +75,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_EXISTS        = create("exception.indicators.data.compatibility.geografic_var_not_exist");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_GEOGRAPHIC_VARIABLE_NOT_GEOGRAPHIC    = create("exception.indicators.data.compatibility.geografic_var_not_geographic");
+    public static final CommonServiceExceptionType DATA_COMPATIBILITY_GEOGRAPHIC_VALUES_INVALID             = create("exception.indicators.data.compatibility.geographic_values_invalid");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_GEOGRAPHIC_VALUE_ILLEGAL              = create("exception.indicators.data.compatibility.geografic_value_illegal");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_TIME_VARIABLE_NOT_EXISTS              = create("exception.indicators.data.compatibility.time_var_not_exist");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_TIME_VARIABLE_NOT_TEMPORAL            = create("exception.indicators.data.compatibility.time_var_not_temporal");
+    public static final CommonServiceExceptionType DATA_COMPATIBILITY_TIME_VALUES_INVALID                   = create("exception.indicators.data.compatibility.time_values_invalid");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_TIME_VALUE_ILLEGAL                    = create("exception.indicators.data.compatibility.time_value_illegal");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL     = create("exception.indicators.data.compatibility.absmethod_nocontvariable_illegal");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL        = create("exception.indicators.data.compatibility.absmethod_contvariable_illegal");
