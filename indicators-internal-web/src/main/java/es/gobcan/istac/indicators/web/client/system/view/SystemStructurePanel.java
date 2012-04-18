@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -35,6 +37,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -648,10 +651,6 @@ public class SystemStructurePanel extends HLayout {
             setDimension(dimensionDto);
         }
 
-        // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-        // selectDimension(dimensionDto, true);
-        // }
-
         private void bindEvents() {
             // Remove handler from edit button
             mainFormLayout.getEditHandlerRegistration().removeHandler();
@@ -663,22 +662,6 @@ public class SystemStructurePanel extends HLayout {
                         // Create a new version of the indicator
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
-                        // window.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-                        // @Override
-                        // public void onClick(ClickEvent event) {
-                        // window.destroy();
-                        // final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
-                        // versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-                        // @Override
-                        // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        // if (versionWindow.validateForm()) {
-                        // uiHandlers.versioningIndicatorsSystemByDimension(system.getUuid(), versionWindow.getSelectedVersion());
-                        // versionWindow.destroy();
-                        // }
-                        // }
-                        // });
-                        // }
-                        // });
                     } else {
                         setEditionMode();
                     }
@@ -780,6 +763,8 @@ public class SystemStructurePanel extends HLayout {
 
         private List<GeographicalGranularityDto> geographicalGranularityDtos;
 
+        private List<IndicatorDto>               indicatorDtos;
+
         public IndicatorInstancePanel() {
             mainFormLayout = new InternationalMainFormLayout();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
@@ -863,6 +848,9 @@ public class SystemStructurePanel extends HLayout {
             createMode = true;
             form.clearValues();
             editionForm.clearValues();
+            
+            // Clear icons
+            editionForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(Boolean.FALSE);
         }
 
         private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
@@ -888,6 +876,7 @@ public class SystemStructurePanel extends HLayout {
         }
 
         public void setIndicators(List<IndicatorDto> indicators) {
+            this.indicatorDtos = indicators;
             LinkedHashMap<String, String> indicatorsMap = CommonUtils.getIndicatorsValueMap(indicators);
             ((SelectItem) editionForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
         }
@@ -1000,7 +989,29 @@ public class SystemStructurePanel extends HLayout {
             MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
             name.setRequired(true);
 
-            RequiredSelectItem indicatorsItem = new RequiredSelectItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
+            final RequiredSelectItem indicatorsItem = new RequiredSelectItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
+            indicatorsItem.setShowIcons(false);
+            indicatorsItem.addChangedHandler(new ChangedHandler() {
+
+                @Override
+                public void onChanged(ChangedEvent event) {
+                    if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
+                        String uuid = event.getValue().toString();
+                        if (!isIndicatorUpdated(uuid)) {
+                            indicatorsItem.setShowIcons(Boolean.TRUE);
+                        } else {
+                            indicatorsItem.setShowIcons(Boolean.FALSE);
+                        }
+                    } else {
+                        indicatorsItem.setShowIcons(Boolean.FALSE);
+                    }
+                    editionForm.markForRedraw();
+                }
+            });
+            FormItemIcon infoIcon = new FormItemIcon();
+            infoIcon.setSrc(GlobalResources.RESOURCE.warn().getURL());
+            infoIcon.setPrompt(getMessages().infoIndicatorNoUpdated());
+            indicatorsItem.setIcons(infoIcon);
 
             // Time
 
@@ -1149,6 +1160,17 @@ public class SystemStructurePanel extends HLayout {
                 }
             }
             return new String();
+        }
+
+        private boolean isIndicatorUpdated(String uuid) {
+            for (IndicatorDto indicatorDto : indicatorDtos) {
+                if (indicatorDto.getUuid().equals(uuid)) {
+                    if (indicatorDto.getNeedsUpdate() != null && indicatorDto.getNeedsUpdate()) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
     }
