@@ -45,6 +45,10 @@
 		
 		<!-- Jackson -->
 		<jackson.version>1.9.4</jackson.version>
+		
+		<!-- Quartz -->
+		<quartz.version>2.1.2</quartz.version>
+       	<quartz-oracle.version>2.1.2</quartz-oracle.version>
 
 		<!-- LOGGING -->
 		<slf4j.version>1.6.1</slf4j.version>
