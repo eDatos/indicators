@@ -27,4 +27,24 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
             return result.get(0);
         }
     }
+    
+    @Override
+    public GeographicalValue findGeographicalValueByCode(String code) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("code", code);
+        List<GeographicalValue> result = findByQuery("from GeographicalValue gv where gv.code = :code", parameters, 1);
+        if (result == null || result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+    
+    @Override
+    public List<GeographicalValue> findGeographicalValuesWithGranularity(String granularityCode) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("code", granularityCode);
+        List<GeographicalValue> result = findByQuery("from GeographicalValue gv inner join gv.granularity as gra where gra.code = :code", parameters, 1);
+        return result;
+    }
 }

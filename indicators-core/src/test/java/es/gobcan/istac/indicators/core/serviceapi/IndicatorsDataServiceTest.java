@@ -9,14 +9,10 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -28,10 +24,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.hibernate.FlushMode;
-import org.hibernate.SessionFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -43,22 +36,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-import com.arte.statistic.dataset.repository.util.DtoUtils;
 
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 /**
@@ -410,9 +396,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
         List<String> data = Arrays.asList("3.585", "497", "56", "60", "49", "34.413", "4.546", "422", "487", "410", "2.471", "329", "36", "25", "38", "2.507", "347", "31", "44", "27", "2.036", "297",
@@ -510,9 +496,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR2_UUID, INDICATOR21_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR2_UUID, INDICATOR21_VERSION);
         List<String> data = Arrays.asList("3.585", "497", "56", "60", "49");
@@ -528,9 +514,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR3_UUID, INDICATOR3_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
         List<String> data = Arrays.asList("3.585", "34.413", "2.471", "2.507", "2.036", "2.156");
@@ -546,9 +532,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR4_UUID, INDICATOR4_VERSION);
         List<String> data = Arrays.asList("3.585");
@@ -564,9 +550,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR5_UUID, INDICATOR5_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR5_UUID, INDICATOR5_VERSION);
         List<String> data = Arrays.asList("3.585");
@@ -582,9 +568,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR6_UUID, INDICATOR6_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION);
         List<String> data = Arrays.asList("3.585", "497", "56", "60", "49", null, null, null, null, null, null, "329", "36", "25", "38", "2.507", "347", "31", "44", "27", "2.036", "297", "20", "46",
@@ -594,30 +580,30 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         Map<String, AttributeBasicDto> mapAttributes = new HashMap<String, AttributeBasicDto>();
         {
             String key = generateObservationUniqueKey("ES", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
         }
         {
             String key = generateObservationUniqueKey("ES61", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey("ES611", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad"));
         }
         {
             String key = generateObservationUniqueKey("ES612", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por secreto estadístico"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por secreto estadístico"));
         }
         {
             String key = generateObservationUniqueKey("ES613", "2010", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato incluido en otra categoría"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato incluido en otra categoría"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible por vacaciones o festivos"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible por vacaciones o festivos"));
         }
 
-        checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorsDataServiceImpl.OBS_CONF_ATTR, mapAttributes);
+        checkDataAttributes(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
     }
 
     /*
@@ -630,25 +616,25 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR3_UUID, INDICATOR3_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
         List<String> data = Arrays.asList("3.585", "34.413", "2.471", "2.507", "2.036", "2.156");
         checkDataDimensions(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, data);
 
         Map<String, AttributeBasicDto> mapAttributes = new HashMap<String, AttributeBasicDto>();
         // All observations must have CODE attribute
-        for (String geoValue : dimensionCodes.get(IndicatorsDataServiceImpl.GEO_DIMENSION)) {
-            for (String timeValue : dimensionCodes.get(IndicatorsDataServiceImpl.TIME_DIMENSION)) {
-                for (String measureValue : dimensionCodes.get(IndicatorsDataServiceImpl.MEASURE_DIMENSION)) {
+        for (String geoValue : dimensionCodes.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name())) {
+            for (String timeValue : dimensionCodes.get(IndicatorDataDimensionTypeEnum.TIME.name())) {
+                for (String measureValue : dimensionCodes.get(IndicatorDataDimensionTypeEnum.MEASURE.name())) {
                     String key = generateObservationUniqueKey(geoValue, timeValue, measureValue);
-                    mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.CODE_ATTR, IndicatorsDataServiceImpl.CODE_ATTR_LOC, INDICATOR3_DS_UUID));
+                    mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.CODE.name(), IndicatorsDataServiceImpl.CODE_ATTR_LOC, INDICATOR3_DS_UUID));
                 }
             }
         }
 
-        checkDataAttributes(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, IndicatorsDataServiceImpl.CODE_ATTR, mapAttributes);
+        checkDataAttributes(dimensionCodes, INDICATOR3_UUID, INDICATOR3_VERSION, IndicatorDataAttributeTypeEnum.CODE.name(), mapAttributes);
     }
 
     /*
@@ -661,9 +647,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR7_UUID, INDICATOR7_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         /* ABSOLUTE */
         List<String> absolute = Arrays.asList("34.413", "2.471", "2.507", "2.036", "30.413", "1.952", "1.925");
@@ -682,20 +668,20 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         checkDataDimensions(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION, data);
     }
-    
+
     /*
      * Populate Data with All rates calculated using only one data source with absolute values
      */
     @Test
     public void testPopulateIndicatorDataCalculateFebruary29() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA_29FEB);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR7_UUID, INDICATOR7_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2012M02", "20120229", "20120228", "20120227", "2011M02", "20110228", "20110227"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2012M02", "20120229", "20120228", "20120227", "2011M02", "20110228", "20110227"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         /* ABSOLUTE */
         List<String> absolute = Arrays.asList("34.413", "2.471", "2.507", "2.036", "30.413", "1.952", "1.925");
@@ -703,14 +689,14 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         List<String> interperiodPercentageRate = Arrays.asList(null, "-1,43", "23,13", null, null, "1,40", null);
         List<String> annualPuntualRate = Arrays.asList("4.000", null, "555", "111", null, null, null);
         List<String> interperiodPuntualRate = Arrays.asList(null, "-36", "471", null, null, "27", null);
-        
+
         List<String> data = new ArrayList<String>();
         data.addAll(absolute);
         data.addAll(annualPercentageRate);
         data.addAll(interperiodPercentageRate);
         data.addAll(annualPuntualRate);
         data.addAll(interperiodPuntualRate);
-        
+
         checkDataDimensions(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR7_UUID, INDICATOR7_VERSION, data);
     }
@@ -726,9 +712,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR13_UUID, INDICATOR13_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name()));
         /* ABSOLUTE */
         List<String> absolute = Arrays.asList("34.413", null/* ... */, null/* . */, "2.036", "30.413", "1.952", null /* .. */);
         List<String> interperiodPercentageRate = Arrays.asList("13,15", null, null, null, null, null, null);
@@ -743,42 +729,42 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         Map<String, AttributeBasicDto> mapAttributes = new HashMap<String, AttributeBasicDto>();
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.ABSOLUTE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
 
         {
             String key = generateObservationUniqueKey("ES", "2010M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad, No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato oculto por impreciso o baja calidad, No procede"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "No procede"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2010M10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
             String key = generateObservationUniqueKey("ES", "2009M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
-            mapAttributes.put(key, createAttribute(IndicatorsDataServiceImpl.OBS_CONF_ATTR, IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
-        checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorsDataServiceImpl.OBS_CONF_ATTR, mapAttributes);
+        checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);
     }
 
     /*
@@ -794,9 +780,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR8_UUID, INDICATOR8_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
         List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347", "2.036", "297", "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
@@ -814,7 +800,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         checkDataDimensions(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION);
         checkDataObservations(dimensionCodes, INDICATOR8_UUID, INDICATOR8_VERSION, data);
-        System.out.println(System.currentTimeMillis()-time);
+        System.out.println(System.currentTimeMillis() - time);
     }
 
     /*
@@ -829,9 +815,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR8_UUID, INDICATOR8_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2009", "2009M12", "2009M11"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2009", "2009M12", "2009M11"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
         List<String> absolute = Arrays.asList("34.413,25", "4.546,358", "2.471,256", "329,2", "2.507,23", "347,58", "33.413,85", "3.546,35", "1.471,25", "229,22", "1.507,73", "247,12");
@@ -861,9 +847,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR9_UUID, INDICATOR9_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
         List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347", "2.036", "297", "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
@@ -897,9 +883,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR10_UUID, INDICATOR10_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES", "ES61"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
         List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347", "2.036", "297", "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
@@ -928,9 +914,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
 
         indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR16_UUID, INDICATOR16_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
-        dimensionCodes.put(IndicatorsDataServiceImpl.TIME_DIMENSION, Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.GEO_DIMENSION, Arrays.asList("ES"));
-        dimensionCodes.put(IndicatorsDataServiceImpl.MEASURE_DIMENSION, Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR16_UUID, INDICATOR16_VERSION);
         List<String> data = Arrays.asList("3.585", "34.413", "2.471", "2.507", "2.036", "2.156");
@@ -1103,10 +1089,106 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     }
 
     @Test
-    @Ignore
+    @Override
+    public void testRetrieveGeographicalGranularitiesInIndicator() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[] {"COUNTRIES","COMMUNITIES","PROVINCES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+    
+    @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorFixedValue() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[] {"COUNTRIES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+    
+    @Override
+    public void testRetrieveGeographicalGranularitiesInIndicatorPublished() throws Exception {
+        //TODO: pending
+    }
+    
+    @Override
+    public void testRetrieveGeographicalValuesWithGranularityInIndicator() throws Exception {
+        //TODO: pending
+    }
+    
     @Override
     public void testUpdateIndicatorsData() throws Exception {
         /* See IndicatorsDataService_BatchUpdateTest.java */
+    }
+
+
+
+
+    @Override
+    public void testRetrieveGeographicalValuesWithGranularityInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveGeographicalValuesInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTimeGranularitiesInIndicator() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTimeGranularitiesInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTimeValuesWithGranularityInIndicator() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTimeValuesWithGranularityInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveTimeValuesInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void testFindObservationsByDimensionsInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+    @Override
+    public void testFindObservationsByDimensionsInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void testFindObservationsExtendedByDimensionsInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+    }
+
+    public void testFindObservationsExtendedByDimensionsInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
     }
 
     @Override

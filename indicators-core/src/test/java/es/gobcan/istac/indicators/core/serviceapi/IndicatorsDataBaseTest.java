@@ -30,9 +30,11 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
@@ -61,7 +63,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     }
     protected void checkElementsInCollection(String[] expected, List<String> collection) {
         for (String elem : expected) {
-            assertTrue(collection.contains(elem));
+            assertTrue("Element "+elem+" not in collection",collection.contains(elem));
         }
         assertEquals(expected.length, collection.size());
     }
@@ -107,13 +109,13 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
         int index = 0;
-        for (String measureCode : dimCodes.get(IndicatorsDataServiceImpl.MEASURE_DIMENSION)) {
-            for (String timeCode : dimCodes.get(IndicatorsDataServiceImpl.TIME_DIMENSION)) {
-                for (String geoCode : dimCodes.get(IndicatorsDataServiceImpl.GEO_DIMENSION)) {
+        for (String measureCode : dimCodes.get(IndicatorDataDimensionTypeEnum.MEASURE.name())) {
+            for (String timeCode : dimCodes.get(IndicatorDataDimensionTypeEnum.TIME.name())) {
+                for (String geoCode : dimCodes.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name())) {
                     ConditionObservationDto condition = new ConditionObservationDto();
-                    condition.addCodesDimension(new CodeDimensionDto(IndicatorsDataServiceImpl.TIME_DIMENSION, timeCode));
-                    condition.addCodesDimension(new CodeDimensionDto(IndicatorsDataServiceImpl.GEO_DIMENSION, geoCode));
-                    condition.addCodesDimension(new CodeDimensionDto(IndicatorsDataServiceImpl.MEASURE_DIMENSION, measureCode));
+                    condition.addCodesDimension(new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeCode));
+                    condition.addCodesDimension(new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geoCode));
+                    condition.addCodesDimension(new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureCode));
 
                     Map<String, ObservationDto> observations = getDatasetRepositoriesServiceFacade().findObservations(indicator.getDataRepositoryId(), Arrays.asList(condition));
                     assertNotNull(observations);
@@ -132,9 +134,9 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
 
-        ConditionDimensionDto geoCondition = createCondition(IndicatorsDataServiceImpl.GEO_DIMENSION, dimCodes.get(IndicatorsDataServiceImpl.GEO_DIMENSION));
-        ConditionDimensionDto timeCondition = createCondition(IndicatorsDataServiceImpl.TIME_DIMENSION, dimCodes.get(IndicatorsDataServiceImpl.TIME_DIMENSION));
-        ConditionDimensionDto measureCondition = createCondition(IndicatorsDataServiceImpl.MEASURE_DIMENSION, dimCodes.get(IndicatorsDataServiceImpl.MEASURE_DIMENSION));
+        ConditionDimensionDto geoCondition = createCondition(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), dimCodes.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()));
+        ConditionDimensionDto timeCondition = createCondition(IndicatorDataDimensionTypeEnum.TIME.name(), dimCodes.get(IndicatorDataDimensionTypeEnum.TIME.name()));
+        ConditionDimensionDto measureCondition = createCondition(IndicatorDataDimensionTypeEnum.MEASURE.name(), dimCodes.get(IndicatorDataDimensionTypeEnum.MEASURE.name()));
 
         Map<String, ObservationExtendedDto> observations = getDatasetRepositoriesServiceFacade().findObservationsExtendedByDimensions(indicator.getDataRepositoryId(),
                 Arrays.asList(geoCondition, timeCondition, measureCondition));
@@ -163,9 +165,9 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
      * Helper for generate id for observation maps
      */
     protected String generateObservationUniqueKey(String geoValue, String timeValue, String measureValue) {
-        CodeDimensionDto geoDimCode = new CodeDimensionDto(IndicatorsDataServiceImpl.GEO_DIMENSION, geoValue);
-        CodeDimensionDto timeDimCode = new CodeDimensionDto(IndicatorsDataServiceImpl.TIME_DIMENSION, timeValue);
-        CodeDimensionDto measureDimCode = new CodeDimensionDto(IndicatorsDataServiceImpl.MEASURE_DIMENSION, measureValue);
+        CodeDimensionDto geoDimCode = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geoValue);
+        CodeDimensionDto timeDimCode = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValue);
+        CodeDimensionDto measureDimCode = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValue);
         return DtoUtils.generateUniqueKey(Arrays.asList(geoDimCode, timeDimCode, measureDimCode));
     }
 
@@ -192,6 +194,28 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         condition.setDimensionId(dimensionId);
         condition.setCodesDimension(codeDimensions);
         return condition;
+    }
+    
+    protected List<String> getGeographicalGranularitiesCodes(List<GeographicalGranularity> granularities) {
+        if (granularities == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (GeographicalGranularity granularity : granularities) {
+            codes.add(granularity.getCode());
+        }
+        return codes;
+    }
+    
+    protected List<String> getGeographicalValuesCodes(List<GeographicalValue> geoValues) {
+        if (geoValues == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (GeographicalValue geoValue: geoValues) {
+            codes.add(geoValue.getCode());
+        }
+        return codes;
     }
 
 }

@@ -15,7 +15,6 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -44,7 +43,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     public IndicatorsServiceImpl() {
     }
-    
+
     @Override
     public IndicatorVersion createIndicator(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
 
@@ -276,7 +275,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         PagedResult<IndicatorVersion> indicatorsVersions = getIndicatorVersionRepository().findByCondition(conditions, pagingParameter);
         return indicatorsVersions;
     }
-    
+
     @Override
     public IndicatorVersion sendIndicatorToProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -342,7 +341,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorInProduction;
     }
 
-    // TODO Implica realizar también INDICADORES-CU-6
     @Override
     public IndicatorVersion publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -354,6 +352,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate to publish
         checkIndicatorToPublish(ctx, uuid, indicatorInProduction);
+
+        // Populate data
+        try {
+            getIndicatorsDataService().populateIndicatorData(ctx, uuid, indicatorInProduction.getVersionNumber());
+        } catch (MetamacException e) {
+            indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
+            indicatorInProduction.setPublicationFailedDate(new DateTime());
+            indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
+            return indicatorInProduction;
+        }
 
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
@@ -585,7 +593,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * Checks not exists another indicator with same code
      */
     private void checkIndicatorCodeUnique(ServiceContext ctx, String code) throws MetamacException {
-        
+
         // Prepare criteria
         PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
         ConditionRoot<Indicator> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(Indicator.class);
@@ -598,7 +606,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
         }
     }
-    
+
     /**
      * Retrieves version of an indicator in production
      */
@@ -752,10 +760,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void checkConditionsToPublish(ServiceContext ctx, IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
 
         checkConditionsToSendToProductionValidation(indicatorVersion, exceptions);
-
-        // Check information of data in repository
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryId(), "INDICATOR.DATA_REPOSITORY_ID", exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getDataRepositoryTableName(), "INDICATOR.DATA_REPOSITORY_TABLE_NAME", exceptions);
 
         // Check linked indicators
         checkQuantityIndicatorsPublished(ctx, indicatorVersion, exceptions);

@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -11,6 +12,10 @@ import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -36,6 +41,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
@@ -405,6 +411,33 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         MetamacCriteriaResult<GeographicalValueDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
+    
+    @Override
+    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, GeographicalGranularity granularity)
+            throws MetamacException {
+        //Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        
+        return geographicalValues;
+    }
+    
+    @Override
+    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, GeographicalGranularity granularity) throws MetamacException {
+        //Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
+        
+        return geographicalValues;
+    }
+    
+    @Override
+    public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        //Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        
+        return geographicalValues;
+    }
+    
+    
 
     @Override
     public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
@@ -430,6 +463,62 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
 
         return geographicalGranularitysDto;
+    }
+    
+    @Override
+    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        //Retreve
+        List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        
+        return geographicalGranularities;
+    }
+    
+    @Override
+    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicatorPublished(ctx, indicatorUuid);
+        
+        return geographicalGranularities;
+    }
+    
+    
+    @Override
+    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        //Retrieve
+        List<TimeGranularityEnum> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        
+        return timeGranularities;
+    }
+    
+    @Override
+    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        //Retrieve
+        List<TimeGranularityEnum> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorUuid);
+        
+        return timeGranularities;
+    }
+    
+    @Override
+    public List<String> retrieveTimeValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+        //Retrieve
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        
+        return timeValues;
+    }
+    
+    @Override
+    public List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+        //Retrieve
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
+
+        return timeValues;
+    }
+    
+    @Override
+    public List<String> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        //Retrieve
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        
+        return timeValues;
     }
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
@@ -756,5 +845,40 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public void populateIndicatorData(ServiceContext ctx, String indicatorUuid, String version) throws MetamacException {
         getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid, version);
+    }
+    
+    @Override
+    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
+        //Retrieve
+        Map<String, ObservationDto> observations = getIndicatorsDataService().findObservationsByDimensionsInIndicatorPublished(ctx, indicatorUuid, conditions);
+        
+        return observations;
+    }
+    
+    @Override
+    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions)
+            throws MetamacException {
+        //Retrieve
+        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorPublished(ctx, indicatorUuid, conditions);
+        
+        return observations;
+    }
+    
+    @Override
+    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
+            throws MetamacException {
+        //Retrieve
+        Map<String, ObservationDto> observations = getIndicatorsDataService().findObservationsByDimensionsInIndicatorInstance(ctx, indicatorInstanceUuid, conditions);
+        
+        return observations;
+    }
+    
+    @Override
+    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
+            throws MetamacException {
+        //Retrieve
+        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorInstance(ctx, indicatorInstanceUuid, conditions);
+        
+        return observations;
     }
 }

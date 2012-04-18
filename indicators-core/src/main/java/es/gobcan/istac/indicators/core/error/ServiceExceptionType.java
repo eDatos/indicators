@@ -41,6 +41,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_IN_INDICATORS_SYSTEMS              = create("exception.indicators.indicator.must_not_be_in_indicators_systems");
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR          = create("exception.indicators.indicator.must_not_be_linked_to_other_indicator");
     public static final CommonServiceExceptionType INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED      = create("exception.indicators.indicator.all_indicators_must_be_published");
+    public static final CommonServiceExceptionType INDICATOR_NOT_POPULATED                                  = create("exception.indicators.indicator.not_populated");
 
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                    = create("exception.indicators.data_source.not_found");
@@ -65,6 +66,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_POPULATE_OBSERVATION_CALCULATE_ERROR                = create("exception.indicators.data.populate.calculate.observation.parse.error");
     public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_ERROR                        = create("exception.indicators.data.populate.retrieve.data.error");
     public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_EMPTY                        = create("exception.indicators.data.populate.retrieve.data.empty");
+    public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE                   = create("exception.indicators.data.populate.unknown_geographic_value");
+    public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_TIME_VALUE                         = create("exception.indicators.data.populate.unknown_time_value");
 
     public static final CommonServiceExceptionType DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR                   = create("exception.indicators.data.update.indicators.gpe.check.error");
 
@@ -86,5 +89,10 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED = create("exception.indicators.data.compatibility.other_variables_contvariable_included");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES = create("exception.indicators.data.compatibility.other_variables_unspecified_variables");
     public static final CommonServiceExceptionType DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES     = create("exception.indicators.data.compatibility.other_variables_unknown_variables");
+
+    public static final CommonServiceExceptionType DATA_FIND_OBSERVATIONS_ERROR                             = create("exception.indicators.data.find_observations_error");
+    public static final CommonServiceExceptionType DATA_FIND_OBSERVATIONS_EXTENDED_ERROR                    = create("exception.indicators.data.find_observations_extended_error");
+    public static final CommonServiceExceptionType DATA_INSTANCES_FIND_OBSERVATIONS_ERROR                   = create("exception.indicators.data.instances.find_observations_error");
+    public static final CommonServiceExceptionType DATA_INSTANCES_FIND_OBSERVATIONS_EXTENDED_ERROR          = create("exception.indicators.data.instances.find_observations_extended_error");
 
 }

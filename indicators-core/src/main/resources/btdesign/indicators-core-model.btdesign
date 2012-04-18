@@ -72,6 +72,7 @@ Application Indicators {
     		> @DataSourceRepository
     		> @QuantityUnitRepository
     		> @SubjectRepository
+    		> @IndicatorsDataService
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -116,6 +117,9 @@ Application Indicators {
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
     		> @DataGpeRepository
+    		> @GeographicalGranularityRepository
+    		> @GeographicalValueRepository
+    		> @IndicatorInstanceRepository
     		
 			"Retrieves all Data containing basic info only"
 	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
@@ -127,6 +131,40 @@ Application Indicators {
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	updateIndicatorsData() throws MetamacException;
+	    	
+	    	//Geographic Values and granularities related to Indicator data
+	    	"Retrives geographic granularities in the indicator"
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrives geographic granularities in the published indicator"
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	"Retrives geographic values with granularity in the indicator"
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @GeographicalGranularity granularity) throws MetamacException;
+	    	"Retrives geographic values with granularity in the publidhed indicator"
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, @GeographicalGranularity granularity) throws MetamacException;
+	    	"Retrives geographic values in the indicator instance"
+	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	
+	    	//Time Values and granularities related to Indicator data
+	    	"Retrives time granularities in the indicator"
+	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrives time granularities in the published indicator"
+	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	"Retrives time values granularities in the indicator"
+	    	List<String> retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrives time values granularities in the publidhed indicator"
+	    	List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrives time values in the indicator instance"
+	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	
+	    	//Data finders
+	    	"Find Published Indicator's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator Instance's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator Instance's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -218,12 +256,38 @@ Application Indicators {
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
+	    	"Retrives geographic values with granularity in the indicator"
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @GeographicalGranularity granularity) throws MetamacException;
+	    	"Retrives geographic values with granularity in the publidhed indicator"
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, @GeographicalGranularity granularity) throws MetamacException;
+	    	"Retrives geographic values in the indicator instance"
+	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	
 
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	"Retrieves all geographical granularities"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
+	    	"Retrives geographic granularities in the indicator"
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrives geographic granularities in the published indicator"
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	
+	    	
+	    	// TIME GRANULARITIES
+	    	"Retrives time granularities in the indicator"
+	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrives time granularities in the published indicator"
+	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	
+	    	//TIME VALUES
+	    	"Retrives time values granularities in the indicator"
+	    	List<String> retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrives time values granularities in the publidhed indicator"
+	    	List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrives time values in the indicator instance"
+	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
@@ -292,6 +356,15 @@ Application Indicators {
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	//Data finders
+	    	"Find Published Indicator's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator Instance's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Published Indicator Instance's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    }
 
 	    // ----------------------------------------------------------------
@@ -544,6 +617,8 @@ Application Indicators {
 			String diffusionValidationUser nullable;
 			"Date when the indicator was published"
 			DateTimeTZ publicationDate nullable;
+			"Date when the indicator was supposed to be published but failed"
+			DateTimeTZ publicationFailedDate nullable;
 			"User who published"
 			String publicationUser nullable;
 			"Date when the indicator was archived"
@@ -757,6 +832,8 @@ Application Indicators {
             	protected List<@GeographicalValue> findByQuery;
             	protected List<@GeographicalValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@GeographicalValue retrieveGeographicalValue(String uuid);
+            	@GeographicalValue findGeographicalValueByCode(String code);
+            	List<@GeographicalValue> findGeographicalValuesWithGranularity(String granularityCode);
             	findByCondition(PagingParameter pagingParameter);
 			}
         }
@@ -965,7 +1042,7 @@ Application Indicators {
 			JAVADATE publicationFailedDate;
 			"User who publication failed"
 			String publicationFailedUser;
-			"Date when the indicators system was published"
+			"Date when the indicator was published"
 			JAVADATE publicationDate;
 			"User who published"
 			String publicationUser;
@@ -1308,6 +1385,19 @@ Application Indicators {
     		INTERPERIOD_PERCENTAGE_RATE,
     		ANNUAL_PUNTUAL_RATE,
     		INTERPERIOD_PUNTUAL_RATE
+    	}
+    	
+    	"Indicator Data Dimensions"
+    	enum IndicatorDataDimensionTypeEnum {
+    		GEOGRAPHICAL,
+    		TIME,
+    		MEASURE
+    	}
+    	
+    	"Indicator Data Attributes"
+    	enum IndicatorDataAttributeTypeEnum {
+    		CODE,
+    		OBS_CONF
     	}
 	}
 }
