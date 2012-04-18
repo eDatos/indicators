@@ -24,6 +24,8 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,6 +45,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEn
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.security.RoleEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
@@ -117,7 +120,24 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
-    
+
+    @Test
+    public void testRetrieveIndicatorsSystemErrorPrincipalWithoutRoleIndicators() throws Exception {
+
+        try {
+            ServiceContext ctx = getServiceContext();
+            assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
+            MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
+            access.setApplication(NOT_EXISTS);
+            access.setRole(RoleEnum.TECNICO_AYUDA_DIFUSION.getName());
+            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
+            fail("principal without role");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
 
@@ -486,6 +506,43 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getCreatedDate()));
         assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDtoCreated.getLastUpdated()));
         assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getLastUpdatedBy());
+    }
+
+    @Test
+    public void testCreateIndicatorsSystemWithUserNoAdministrator() throws Exception {
+
+        ServiceContext user = getServiceContextTecnicoSistemaIndicadores();
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+
+        // Create
+        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(user, indicatorsSystemDto);
+
+        // Validate
+        assertNotNull(indicatorsSystemDtoCreated.getUuid());
+        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorsSystem(user, indicatorsSystemDtoCreated.getUuid(), indicatorsSystemDtoCreated.getVersionNumber());
+        assertEquals(user.getUserId(), indicatorsSystemDtoRetrieved.getCreatedBy());
+    }
+    
+    @Test
+    public void testCreateIndicatorsSystemErrorOperationNotAllowed() throws Exception {
+
+        ServiceContext serviceContext = getServiceContextTecnicoProduccion();
+        
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+
+        try {
+            indicatorsServiceFacade.createIndicatorsSystem(serviceContext, indicatorsSystemDto);
+            fail("operation not allowed");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(serviceContext.getUserId(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Test
@@ -3845,7 +3902,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         {
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
-            conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
+            conjuction.getRestrictions().add(
+                    new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), GEOGRAPHICAL_GRANULARITY_1, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContext(), criteria);

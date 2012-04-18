@@ -22,20 +22,32 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     @Override
     protected ServiceContext getServiceContext() {
         ServiceContext serviceContext = super.getServiceContext();
-        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
-        metamacPrincipal.setUserId(serviceContext.getUserId());
-        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
-        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
         return serviceContext;
     }
     
     @Override
     protected ServiceContext getServiceContext2() {
         ServiceContext serviceContext = super.getServiceContext();
-        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
-        metamacPrincipal.setUserId(serviceContext.getUserId());
-        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
-        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
+        return serviceContext;
+    }
+    
+    protected ServiceContext getServiceContextTecnicoProduccion() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_PRODUCCION);
+        return serviceContext;
+    }
+
+    protected ServiceContext getServiceContextTecnicoAyudaProduccion() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_AYUDA_PRODUCCION);
+        return serviceContext;
+    }
+
+    protected ServiceContext getServiceContextTecnicoSistemaIndicadores() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_SISTEMA_INDICADORES);
         return serviceContext;
     }
     
@@ -120,5 +132,12 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             Assert.fail("Error Reading file "+filename);
             return null;
         }
+    }
+    
+    private void putMetamacPrincipalInServiceContext(ServiceContext serviceContext, RoleEnum role) {
+        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
+        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
     }
 }

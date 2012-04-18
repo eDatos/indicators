@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -17,9 +18,12 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestric
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
+import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,6 +44,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.security.RoleEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
@@ -89,6 +94,37 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             SUBJECT_2                    = "2";
     private static String             SUBJECT_3                    = "3";
     private static String             SUBJECT_4                    = "4";
+
+    @Test
+    public void testRetrieveIndicatorErrorPrincipalNotFound() throws Exception {
+
+        try {
+            ServiceContext ctx = getServiceContext();
+            ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
+            indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
+            fail("principal required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testRetrieveIndicatorErrorPrincipalWithoutRoleIndicators() throws Exception {
+
+        try {
+            ServiceContext ctx = getServiceContext();
+            assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
+            MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
+            access.setApplication(NOT_EXISTS);
+            access.setRole(RoleEnum.TECNICO_AYUDA_DIFUSION.getName());
+            indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
+            fail("principal without role");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -391,6 +427,36 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testCreateIndicatorWithUserNoAdministrator() throws Exception {
+
+        ServiceContext user = getServiceContextTecnicoProduccion();
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(4000));
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+
+        // Create
+        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
+
+        // Validate
+        assertNotNull(indicatorDtoCreated.getUuid());
+        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(user, indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
+        assertEquals(user.getUserId(), indicatorDtoRetrieved.getCreatedBy());
+    }
+    
+    @Test
     public void testCreateIndicatorQuantity() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
@@ -632,6 +698,37 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertNull(indicatorDtoRetrieved.getQuantity().getUnitUuid());
     }
 
+    @Test
+    public void testCreateIndicatorErrorOperationNotAllowed() throws Exception {
+
+        ServiceContext serviceContext = getServiceContextTecnicoSistemaIndicadores();
+        
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
+
+        try {
+            indicatorsServiceFacade.createIndicator(serviceContext, indicatorDto);
+            fail("operation not allowed");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(serviceContext.getUserId(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
     @Test
     public void testCreateIndicatorParametersRequired() throws Exception {
 
@@ -2475,10 +2572,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testFindIndicators() throws Exception {
 
         // Retrieve last versions...
-        MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), null);
+        MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextTecnicoProduccion(), null);
         assertEquals(10, result.getResults().size());
         List<IndicatorDto> indicatorsDto = result.getResults();
-
+        
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
 
@@ -2519,32 +2616,32 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
             criteria.setRestriction(conjuction);
-
+    
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(8, result.getResults().size());
             List<IndicatorDto> indicatorsDto = result.getResults();
-
+    
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
-
+    
             assertEquals(INDICATOR_4, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(1).getProcStatus());
-
+    
             assertEquals(INDICATOR_5, indicatorsDto.get(2).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
-
+    
             assertEquals(INDICATOR_6, indicatorsDto.get(3).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(3).getProcStatus());
-
+    
             assertEquals(INDICATOR_7, indicatorsDto.get(4).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(4).getProcStatus());
-
+    
             assertEquals(INDICATOR_8, indicatorsDto.get(5).getUuid());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(5).getProcStatus());
-
+    
             assertEquals(INDICATOR_9, indicatorsDto.get(6).getUuid());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(6).getProcStatus());
-
+    
             assertEquals(INDICATOR_10, indicatorsDto.get(7).getUuid());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(7).getProcStatus());
         }
@@ -2553,22 +2650,22 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             MetamacCriteria criteria = new MetamacCriteria();
             MetamacCriteriaConjunctionRestriction conjuction = new MetamacCriteriaConjunctionRestriction();
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
-
+            
             MetamacCriteriaDisjunctionRestriction disjunction = new MetamacCriteriaDisjunctionRestriction();
             disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-3", OperationType.EQ));
             disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-6", OperationType.EQ));
             disjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.CODE.name(), "CODE-9", OperationType.EQ));
             conjuction.getRestrictions().add(disjunction);
-
+            
             criteria.setRestriction(conjuction);
-
+    
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(3, result.getResults().size());
             List<IndicatorDto> indicatorsDto = result.getResults();
-
+    
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
-
+    
             assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
 
@@ -2576,7 +2673,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(2).getProcStatus());
         }
     }
-
+    
     @Test
     public void testFindIndicatorsByCriteriaPaginated() throws Exception {
 
@@ -2592,25 +2689,25 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         criteria.setPaginator(paginator);
         {
             paginator.setFirstResult(Integer.valueOf(1)); // do not obtain first result
-
+            
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(3, result.getResults().size());
             assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
-
+    
             assertEquals(INDICATOR_4, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(0).getProcStatus());
-
+    
             assertEquals(INDICATOR_5, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
-
+    
             assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
         }
         {
             paginator.setFirstResult(Integer.valueOf(4));
-
+            
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(3, result.getResults().size());
             assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
@@ -2619,22 +2716,22 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(INDICATOR_7, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(0).getProcStatus());
-
+    
             assertEquals(INDICATOR_8, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(1).getProcStatus());
-
+    
             assertEquals(INDICATOR_9, indicatorsDto.get(2).getUuid());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(2).getProcStatus());
         }
         {
             paginator.setFirstResult(Integer.valueOf(7));
-
+            
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContext(), criteria);
             assertEquals(1, result.getResults().size());
             assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
-
+    
             assertEquals(INDICATOR_10, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
         }
@@ -2841,7 +2938,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getPublishers().add("ISTAC");
         dataSourceDto.getPublishers().add("INE");
         dataSourceDto.getPublishers().add("IBESTAT");
-
+        
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -3020,7 +3117,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(2, e.getExceptionItems().get(12).getMessageParameters().length);
             assertEquals("DATA_SOURCE.GEOGRAPHICAL_VARIABLE", e.getExceptionItems().get(12).getMessageParameters()[0]);
             assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", e.getExceptionItems().get(12).getMessageParameters()[1]);
-
+            
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(13).getCode());
             assertEquals(1, e.getExceptionItems().get(13).getMessageParameters().length);
             assertEquals("DATA_SOURCE.OTHER_VARIABLE.VARIABLE", e.getExceptionItems().get(13).getMessageParameters()[0]);
@@ -3044,13 +3141,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-
+        
         dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
         dataSourceDto.getInterperiodPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
         dataSourceDto.getInterperiodPuntualRate().setMethod("Method3");
         dataSourceDto.getInterperiodPuntualRate().setRounding(RateDerivationRoundingEnum.DOWN);
         dataSourceDto.getInterperiodPuntualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE); // should be amount
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);  // should be amount
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setIsPercentage(Boolean.FALSE);
@@ -3078,7 +3175,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPuntualRate().setMethod("Method2");
         dataSourceDto.getAnnualPuntualRate().setRounding(RateDerivationRoundingEnum.UPWARD);
         dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
-        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE); // should be amount
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);  // should be amount
         dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
         dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
         dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
@@ -3090,11 +3187,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             indicatorsServiceFacade.createDataSource(getServiceContext(), uuidIndicator, dataSourceDto);
         } catch (MetamacException e) {
             assertEquals(4, e.getExceptionItems().size());
-
+            
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals("DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY.TYPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
-
+           
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
             assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.TYPE", e.getExceptionItems().get(1).getMessageParameters()[0]);
@@ -3198,7 +3295,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-
+        
         try {
             indicatorsServiceFacade.createDataSource(getServiceContext(), indicatorUuid, dataSourceDto);
             fail("Indicator not exists");
@@ -3251,7 +3348,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-
+        
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -3260,7 +3357,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setVariable("variable2");
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
-
+        
         dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
         dataSourceDto.getAnnualPercentageRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
         dataSourceDto.getAnnualPercentageRate().setMethod("Method2");
@@ -3297,7 +3394,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-
+        
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -3342,7 +3439,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-
+        
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
         dataSourceVariableDto1.setVariable("variable1");
         dataSourceVariableDto1.setCategory("category1");
@@ -3501,6 +3598,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicator = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), INDICATOR_1, INDICATOR_1_V2);
         assertTrue(indicator.getInconsistentData());
     }
+
     @Test
     public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
 
