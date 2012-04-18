@@ -43,6 +43,7 @@ import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
@@ -384,16 +385,18 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataStructure(String uuid) {
-        dispatcher.execute(new GetDataStructureAction(uuid), new AsyncCallback<GetDataStructureResult>() {
+        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallback<GetDataStructureResult>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onWaitFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error retrieving data structure");
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataStructure()), MessageTypeEnum.ERROR);
+                
             }
             @Override
-            public void onSuccess(GetDataStructureResult result) {
+            public void onWaitSuccess(GetDataStructureResult result) {
                 getView().setDataStructure(result.getDataStructureDto());
+                
             }
         });
 
