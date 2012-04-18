@@ -56,10 +56,10 @@ public class WaitPopup {
     private Canvas createModalMessage() {
         Img loadingIcon = new Img(GlobalResources.RESOURCE.loading().getURL(), 16, 16);
         loadingIcon.setShowEdges(false);
-        loadingIcon.setImageType(ImageStyle.NORMAL);
+        loadingIcon.setImageType(ImageStyle.STRETCH);
 
         label = new Label();
-        label.setWidth(100);
+        label.setWidth(50);
         label.setHeight100();
         label.setValign(VerticalAlignment.CENTER);
 
@@ -77,8 +77,8 @@ public class WaitPopup {
         window.setShowHeaderIcon(false);
         window.setIsModal(true);
         window.setShowModalMask(true);
-        window.setWidth(200);
-        window.setHeight(120);
+        window.setWidth(160);
+        window.setHeight(90);
         window.addItem(hLayout);
         window.centerInPage();
         return window;
