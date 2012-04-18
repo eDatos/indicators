@@ -391,12 +391,12 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error retrieving data structure");
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataStructure()), MessageTypeEnum.ERROR);
-                
+
             }
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
                 getView().setDataStructure(result.getDataStructureDto());
-                
+
             }
         });
 
