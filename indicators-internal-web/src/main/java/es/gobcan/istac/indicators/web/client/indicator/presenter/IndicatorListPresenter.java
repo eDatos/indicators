@@ -127,10 +127,10 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 }
 
                 // enable/disable the pagination widgets
-                if (getNumberOfElements() < getMaxResults()) {
-                    getView().getStatusBar().getResultSetNextButton().disable();
-                } else {
+                if ((result.getTotalResults() - (getPageNumber() - 1) * DEFAULT_MAX_RESULTS) > getNumberOfElements()) {
                     getView().getStatusBar().getResultSetNextButton().enable();
+                } else {
+                    getView().getStatusBar().getResultSetNextButton().disable();
                 }
 
                 // pass the result set to the View

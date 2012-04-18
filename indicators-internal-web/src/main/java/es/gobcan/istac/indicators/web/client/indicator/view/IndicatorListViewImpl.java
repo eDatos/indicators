@@ -104,8 +104,8 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         toolStrip.addButton(deleteIndicatorActor);
 
         indicatorList = new BaseCustomListGrid();
-        IndicatorDS indicatorDS = new IndicatorDS();
-        indicatorList.setDataSource(indicatorDS);
+        indicatorList.setHeight(680);
+        indicatorList.setDataSource(new IndicatorDS());
         indicatorList.setUseAllDataSourceFields(false);
         indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
         indicatorList.addSelectionChangedHandler(new SelectionChangedHandler() {

@@ -35,10 +35,11 @@ public class GetIndicatorPaginatedListActionHandler extends AbstractActionHandle
         criteria.setPaginator(new MetamacCriteriaPaginator());
         criteria.getPaginator().setFirstResult(action.getFirstResult());
         criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
+        criteria.getPaginator().setCountTotalResults(true);
 
         try {
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext(), criteria);
-            return new GetIndicatorPaginatedListResult(result.getResults());
+            return new GetIndicatorPaginatedListResult(result.getResults(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
