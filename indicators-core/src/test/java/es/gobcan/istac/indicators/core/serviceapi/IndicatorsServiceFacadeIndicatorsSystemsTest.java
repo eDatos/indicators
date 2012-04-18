@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
@@ -23,6 +24,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -102,6 +104,20 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_2                                 = "Indicator-2";
     private static String             INDICATOR_3                                 = "Indicator-3";
 
+    @Test
+    public void testRetrieveIndicatorsSystemErrorPrincipalNotFound() throws Exception {
+
+        try {
+            ServiceContext ctx = getServiceContext();
+            ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
+            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
+            fail("principal required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
 

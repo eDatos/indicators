@@ -86,6 +86,7 @@
 		<metamac-common-test.version>1.0-SNAPSHOT</metamac-common-test.version>
 		<metamac-web-common.version>1.0-SNAPSHOT</metamac-web-common.version>
 		<metamac-statistical-operations-ws-api.version>1.0-SNAPSHOT</metamac-statistical-operations-ws-api.version>
+		<metamac-sso-client.version>1.0-SNAPSHOT</metamac-sso-client.version>
 		
 		<!-- INDICATORS -->
 		<indicators.version>0.0.1-SNAPSHOT</indicators.version>
@@ -393,6 +394,11 @@
     		</dependency>
 
 			<!-- METAMAC -->
+			<dependency>
+				<groupId>org.siemac.metamac</groupId>
+				<artifactId>metamac-sso-client</artifactId>
+				<version>${metamac-sso-client.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.siemac.metamac</groupId>
 				<artifactId>metamac-core-common</artifactId>

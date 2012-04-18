@@ -7,11 +7,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Assert;
 import org.siemac.metamac.common.test.MetamacBaseTests;
+import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
+import org.siemac.metamac.sso.client.SsoClientConstants;
+
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.security.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
+    @Override
+    protected ServiceContext getServiceContext() {
+        ServiceContext serviceContext = super.getServiceContext();
+        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
+        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        return serviceContext;
+    }
+    
+    @Override
+    protected ServiceContext getServiceContext2() {
+        ServiceContext serviceContext = super.getServiceContext();
+        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
+        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        return serviceContext;
+    }
+    
     @Override
     public void setUpDatabaseTester() throws Exception {
         removeCyclicDependences();

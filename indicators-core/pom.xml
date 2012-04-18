@@ -233,6 +233,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
+			<artifactId>metamac-sso-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.siemac.metamac</groupId>
 			<artifactId>metamac-common-test</artifactId>
 		</dependency>
 	</dependencies>
