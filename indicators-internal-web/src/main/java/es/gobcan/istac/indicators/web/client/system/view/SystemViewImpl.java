@@ -51,7 +51,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
         indSysLabel.setAlign(Alignment.LEFT);
         indSysLabel.setOverflow(Overflow.HIDDEN);
         indSysLabel.setHeight(40);
-        indSysLabel.setStyleName("sectionTitle");
+        indSysLabel.setStyleName("sectionTitleLeftMargin");
 
         generalTab = new Tab(getConstants().systemDetailGeneral());
         generalTab.setPane(generalPanel);
