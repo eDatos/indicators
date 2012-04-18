@@ -9,7 +9,11 @@
   </bean>  
   <bean id="errorHandlingAdvice" class="org.fornax.cartridges.sculptor.framework.errorhandling.ErrorHandlingAdvice"/>  
   <bean id="hibernateErrorHandlingAdvice" class="org.fornax.cartridges.sculptor.framework.errorhandling.HibernateErrorHandlingAdvice"/>  
-  <bean id="serviceContextStoreAdvice" class="org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContextStoreAdvice"/>  
+  <bean id="serviceContextStoreAdvice" class="org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContextStoreAdvice"/>
+  
+  <!-- Logging interceptor -->
+  <bean id="loggingHandlingAdvice" class="org.siemac.metamac.core.common.aop.LoggingInterceptor" />
+  	
   <tx:advice id="txAdvice" transaction-manager="txManager"> 
     <tx:attributes> 
       <!-- all methods starting with 'get' or 'find' are read-only -->  
@@ -22,12 +26,20 @@
   <aop:config> 
     <aop:pointcut id="businessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.*(..))"/>  
     <aop:pointcut id="readOnlyBusinessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.get*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..))"/>  
+    <!-- Logging interceptor -->
+    <aop:pointcut id="facadeServicePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
+	
     <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->  
     <aop:pointcut id="updatingBusinessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.get*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>  
     <aop:advisor pointcut-ref="businessService" advice-ref="txAdvice" order="1"/>  
     <aop:advisor pointcut-ref="businessService" advice-ref="serviceContextStoreAdvice" order="2"/>  
     <aop:advisor pointcut-ref="businessService" advice-ref="errorHandlingAdvice" order="3"/>  
     <aop:advisor pointcut-ref="businessService" advice-ref="hibernateErrorHandlingAdvice" order="4"/>  
-    <aop:advisor pointcut-ref="updatingBusinessService" advice-ref="jpaInterceptorFlushEager" order="5"/> 
+    <aop:advisor pointcut-ref="updatingBusinessService" advice-ref="jpaInterceptorFlushEager" order="5"/>
+    
+    <!-- Logging interceptor -->
+    <aop:aspect id="afterThrowing" ref="loggingHandlingAdvice">
+    	<aop:after-throwing pointcut-ref="facadeServicePointCut" throwing="ex" method="afterThrowing"/>
+    </aop:aspect> 
   </aop:config> 
 </beans>
