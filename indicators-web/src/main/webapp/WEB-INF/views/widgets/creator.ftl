@@ -124,7 +124,7 @@
 
 <script id="systemsItem" type="text/html">
     <div>
-        <%= name%>
+        <a href="#" class="item"><%= name%></a>
     </div>
 </script>
 
@@ -159,14 +159,15 @@
 
 <script src="[@spring.url "/theme/js/modules/widgets/PaginatedCollection.js"/]"></script>
 <script src="[@spring.url "/theme/js/modules/widgets/PaginatedView.js"/]"></script>
+<script src="[@spring.url "/theme/js/modules/widgets/PaginatedViewWithSelection.js"/]"></script>
 <script src="[@spring.url "/theme/js/modules/widgets/Systems.js"/]"></script>
 <script src="[@spring.url "/theme/js/modules/widgets/Indicators.js"/]"></script>
 <script>
     var systemsCollection = new SystemsCollection();
     var systemsView = new SystemsView({el : '#systems', collection : systemsCollection});
 
-    var indicatorsCollection = new IndicatorsCollection();
-    var indicatorsView = new IndicatorsView({el : '#indicators', collection : indicatorsCollection});
+    //var indicatorsCollection = new IndicatorsCollection();
+    //var indicatorsView = new IndicatorsView({el : '#indicators', collection : indicatorsCollection});
 </script>
 
 [/@template.base]

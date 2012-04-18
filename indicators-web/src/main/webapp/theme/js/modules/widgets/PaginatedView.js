@@ -36,16 +36,20 @@ var PaginatedView = Backbone.View.extend({
     },
 
     renderContent : function(){
-        if(this.contentItemTemplate === undefined){
-            console.error("Content item template not defined");
-            return;
-        }
-
         var self = this;
         this.$elContent.empty();
         this.collection.each(function(item){
-            self.$elContent.append(self.contentItemTemplate(item.toJSON()));
+            self.$elContent.append(self.renderContentItem(item));
         });
+    },
+
+    renderContentItem : function(item){
+        if(this.contentItemTemplate === undefined){
+            console.error("Content item template not defined");
+            return;
+        };
+
+        return this.contentItemTemplate(item.toJSON());
     },
 
     nextResultPage: function (e) {
