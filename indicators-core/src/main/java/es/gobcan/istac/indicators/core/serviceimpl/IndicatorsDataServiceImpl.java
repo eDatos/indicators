@@ -59,7 +59,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
-import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatiblilityChecker;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 
@@ -601,7 +601,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (DataSource dataSource : dataSources) {
             Data data = dataCache.get(dataSource.getDataGpeUuid());
-            exceptionItems.addAll(DataSourceCompatiblilityChecker.check(dataSource, data));
+            exceptionItems.addAll(DataSourceCompatibilityChecker.check(dataSource, data));
         }
         if (exceptionItems.size() > 0) {
             throw new MetamacException(exceptionItems);
