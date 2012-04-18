@@ -9,8 +9,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
@@ -86,7 +89,11 @@ public class IndicatorsSystemsController extends BaseController {
     public ModelAndView setupForm(@PathVariable("code") String code, Model model) throws Exception {
 
         // Retrieve indicators system
-        OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);       
+        OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);
+        if (!ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus())) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not published externally with code" + code);
+            
+        }
         IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
         IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
         
