@@ -56,6 +56,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     private int             pageNumber;
     private int             numberOfElements;
 
+    private Integer         totalResults;
+
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 
         void setIndicatorList(List<IndicatorDto> indicatorList);
@@ -109,6 +111,8 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
             @Override
             public void onSuccess(GetIndicatorPaginatedListResult result) {
+                IndicatorListPresenter.this.totalResults = result.getTotalResults();
+
                 setNumberOfElements(result.getIndicatorList().size());
 
                 // update Selected label e.g "0 of 50 selected"
@@ -124,13 +128,18 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 if (getPageNumber() == 1) {
                     getView().getStatusBar().getResultSetFirstButton().disable();
                     getView().getStatusBar().getResultSetPreviousButton().disable();
+                } else {
+                    getView().getStatusBar().getResultSetFirstButton().enable();
+                    getView().getStatusBar().getResultSetPreviousButton().enable();
                 }
 
                 // enable/disable the pagination widgets
                 if ((result.getTotalResults() - (getPageNumber() - 1) * DEFAULT_MAX_RESULTS) > getNumberOfElements()) {
                     getView().getStatusBar().getResultSetNextButton().enable();
+                    getView().getStatusBar().getResultSetLastButton().enable();
                 } else {
                     getView().getStatusBar().getResultSetNextButton().disable();
+                    getView().getStatusBar().getResultSetLastButton().disable();
                 }
 
                 // pass the result set to the View
@@ -223,6 +232,17 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
         retrieveIndicatorList();
     }
 
+    protected void resultSetLastButtonClicked() {
+        int numPages = totalResults / DEFAULT_MAX_RESULTS;
+        firstResult = (numPages * DEFAULT_MAX_RESULTS);
+        if ((numPages * DEFAULT_MAX_RESULTS) < totalResults) {
+            numPages++;
+        }
+        pageNumber = numPages;
+        
+        retrieveIndicatorList();
+    }
+
     protected int getMaxResults() {
         return maxResults;
     }
@@ -258,8 +278,11 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     @Override
     public void onResultSetFirstButtonClicked() {
         resultSetFirstButtonClicked();
+    }
 
-        getView().getStatusBar().getResultSetFirstButton().disable();
+    @Override
+    public void onResultSetLastButtonClicked() {
+        resultSetLastButtonClicked();
     }
 
     @Override
@@ -270,9 +293,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     @Override
     public void onResultSetNextButtonClicked() {
         resultSetNextButtonClicked();
-
-        getView().getStatusBar().getResultSetFirstButton().enable();
-        getView().getStatusBar().getResultSetPreviousButton().enable();
     }
 
 }

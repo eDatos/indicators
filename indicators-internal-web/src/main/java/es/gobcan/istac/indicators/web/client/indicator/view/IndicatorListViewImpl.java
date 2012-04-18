@@ -275,6 +275,16 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
                 }
             }
         });
+
+        getStatusBar().getResultSetLastButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetLastButtonClicked();
+                }
+            }
+        });
     }
 
     @Override

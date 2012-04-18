@@ -38,6 +38,9 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @Source("images/resultsetfirst.png")
     ImageResource resultSetFirst();
 
+    @Source("images/resultsetlast.png")
+    ImageResource resultSetLast();
+
     @Source("images/resultsetprevious.png")
     ImageResource resultSetPrevious();
 
@@ -46,6 +49,9 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
 
     @Source("images/resultsetfirst_Disabled.png")
     ImageResource resultSetFirstDisabled();
+
+    @Source("images/resultsetlast_Disabled.png")
+    ImageResource resultSetLastDisabled();
 
     @Source("images/resultsetprevious_Disabled.png")
     ImageResource resultSetPreviousDisabled();

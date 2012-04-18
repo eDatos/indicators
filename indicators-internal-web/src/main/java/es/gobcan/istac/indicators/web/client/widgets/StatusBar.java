@@ -20,6 +20,7 @@ public class StatusBar extends HLayout {
 
     private final Label         selectedLabel;
     private final ImgButton     resultSetFirstButton;
+    private final ImgButton     resultSetLastButton;
     private final ImgButton     resultSetPreviousButton;
     private final Label         pageNumberLabel;
     private final ImgButton     resultSetNextButton;
@@ -49,6 +50,18 @@ public class StatusBar extends HLayout {
         // requires resultsetfirst_Disabled.png
         resultSetFirstButton.disable();
         resultSetFirstButton.setAlign(Alignment.RIGHT);
+
+        // initialize the Result Set First button
+        resultSetLastButton = new ImgButton();
+        resultSetLastButton.setShowRollOver(false);
+        resultSetLastButton.setShowDisabled(true);
+        resultSetLastButton.setShowDown(false);
+        resultSetLastButton.setSize(BUTTON_SIZE);
+        resultSetLastButton.setLayoutAlign(VerticalAlignment.CENTER);
+        resultSetLastButton.setSrc(IndicatorsResources.RESOURCE.resultSetLast().getURL());
+        // requires resultsetlast_Disabled.png
+        resultSetLastButton.disable();
+        resultSetLastButton.setAlign(Alignment.RIGHT);
 
         // initialize the Result Set Previous button
         resultSetPreviousButton = new ImgButton();
@@ -96,6 +109,7 @@ public class StatusBar extends HLayout {
         this.addMember(resultSetPreviousButton);
         this.addMember(pageNumberLabel);
         this.addMember(resultSetNextButton);
+        this.addMember(resultSetLastButton);
         // add some padding
         LayoutSpacer paddingRight = new LayoutSpacer();
         paddingRight.setWidth(8);
@@ -110,15 +124,20 @@ public class StatusBar extends HLayout {
         return resultSetFirstButton;
     }
 
+    public ImgButton getResultSetLastButton() {
+        return resultSetLastButton;
+    }
+
     public ImgButton getResultSetPreviousButton() {
         return resultSetPreviousButton;
+    }
+
+    public ImgButton getResultSetNextButton() {
+        return resultSetNextButton;
     }
 
     public Label getPageNumberLabel() {
         return pageNumberLabel;
     }
 
-    public ImgButton getResultSetNextButton() {
-        return resultSetNextButton;
-    }
 }
