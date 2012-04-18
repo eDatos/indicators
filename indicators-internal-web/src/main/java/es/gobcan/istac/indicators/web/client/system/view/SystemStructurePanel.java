@@ -848,7 +848,7 @@ public class SystemStructurePanel extends HLayout {
             createMode = true;
             form.clearValues();
             editionForm.clearValues();
-            
+
             // Clear icons
             editionForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(Boolean.FALSE);
         }

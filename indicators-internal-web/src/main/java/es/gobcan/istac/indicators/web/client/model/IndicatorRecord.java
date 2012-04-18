@@ -35,7 +35,7 @@ public class IndicatorRecord extends Record {
     public void setProcStatus(String value) {
         setAttribute(IndicatorDS.PROC_STATUS, value);
     }
-    
+
     public void setNeedsUpdate(Boolean value) {
         String imageURL = new String();
         if (value != null && value) {

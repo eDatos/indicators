@@ -45,11 +45,13 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
                 criteria.setPaginator(new MetamacCriteriaPaginator());
                 criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
                 criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
-                criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid(), OperationType.EQ));
+                criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid(),
+                        OperationType.EQ));
             }
             MetamacCriteriaResult<GeographicalValueDto> result = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), criteria);
             if (result.getResults().size() != result.getPaginatorResult().getTotalResults().intValue()) {
-                MetamacWebExceptionItem metamacWebExceptionItem = new MetamacWebExceptionItem("exception.web.geographical.value.result.limit", "Error retrieving geographical values. Please contact system administrator.");
+                MetamacWebExceptionItem metamacWebExceptionItem = new MetamacWebExceptionItem("exception.web.geographical.value.result.limit",
+                        "Error retrieving geographical values. Please contact system administrator.");
                 List<MetamacWebExceptionItem> exceptionItems = new ArrayList<MetamacWebExceptionItem>();
                 exceptionItems.add(metamacWebExceptionItem);
                 throw new MetamacWebException(exceptionItems);
