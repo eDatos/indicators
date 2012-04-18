@@ -20,7 +20,6 @@
 	</div>
 	[#include "/layout/language-selector.ftl"]
 	<% if (description != null) { %>
-		<br />	
 		<div>
 			<p><%= getLabel(description) %></p>
 		</div>

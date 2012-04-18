@@ -39,22 +39,28 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
-    // TODO paginación?
+    // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
         
-        // TODO cuando se establezca la paginación se obtendrá primero findIndicatorsSystemsPublished (paginado) y después se invocará el ws para obtener la info de cada uno
-        // Retrieves all indicators system published from web service and from indicators core
-        OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem();
-
-        // Find indicators
+        // Find indicators systems published
         MetamacCriteria metamacCriteria = new MetamacCriteria();
         metamacCriteria.setPaginator(new MetamacCriteriaPaginator());
-        metamacCriteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE); // TODO paginación
-        
-        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), null);
+        metamacCriteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
+        metamacCriteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), metamacCriteria);
+        if (result.getPaginatorResult().getTotalResults().intValue() != result.getResults().size()) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Pagination is not implemented and results size is greater of supported");
+        }
         List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
         
+        // Find operations metadata from web service
+        List<String> indicatorsSystemsCodes = new ArrayList<String>();
+        for (IndicatorsSystemDto indicatorsSystemDto : result.getResults()) {
+            indicatorsSystemsCodes.add(indicatorsSystemDto.getCode());
+        }
+        OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(indicatorsSystemsCodes);
+
         // Merges information and retrieves only created in indicators core
         Map<String, OperationBase> operationsByCode = new HashMap<String, OperationBase>();        
         if (operationBaseList != null) {

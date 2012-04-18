@@ -1,7 +1,11 @@
 package es.gobcan.istac.indicators.web.diffusion.ws;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteria;
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteriaConjunctionRestriction;
+import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.schema.common.v1_0.domain.MetamacCriteriaRestrictionList;
 import org.siemac.metamac.schema.common.v1_0.domain.OperationType;
@@ -25,26 +29,46 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
         return webservicesLocator.getMetamacStatisticalOperationsInternalInterface().retrieveOperation(operationCode);
     }
 
-    // TODO paginación? METAMAC-434
     @Override
-    public OperationBaseList findOperationsIndicatorsSystem() throws MetamacExceptionFault {
+    public OperationBaseList findOperationsIndicatorsSystem(List<String> indicatorsSystemsCodes) throws MetamacExceptionFault {
+        
         MetamacCriteria metamacCriteria = new MetamacCriteria();
-        metamacCriteria.setRestriction(new MetamacCriteriaConjunctionRestriction());
-        ((MetamacCriteriaConjunctionRestriction) metamacCriteria.getRestriction()).setRestrictions(new MetamacCriteriaRestrictionList());
+        
+        MetamacCriteriaConjunctionRestriction conjunction = new MetamacCriteriaConjunctionRestriction();
+        metamacCriteria.setRestriction(conjunction);
+        
+        conjunction.setRestrictions(new MetamacCriteriaRestrictionList());
 
         // Is indicators system
         MetamacCriteriaPropertyRestriction isIndicatorsSystemPropertyRestriction = new MetamacCriteriaPropertyRestriction();
         isIndicatorsSystemPropertyRestriction.setPropertyName(OperationCriteriaPropertyRestriction.IS_INDICATORS_SYSTEM.value());
         isIndicatorsSystemPropertyRestriction.setOperation(OperationType.EQ);
         isIndicatorsSystemPropertyRestriction.setBooleanValue(Boolean.TRUE);
-        ((MetamacCriteriaConjunctionRestriction) metamacCriteria.getRestriction()).getRestrictions().getRestriction().add(isIndicatorsSystemPropertyRestriction);
+        conjunction.getRestrictions().getRestriction().add(isIndicatorsSystemPropertyRestriction);
 
         // Only published externally
         MetamacCriteriaPropertyRestriction publishedExternallyRestriction = new MetamacCriteriaPropertyRestriction();
         publishedExternallyRestriction.setPropertyName(OperationCriteriaPropertyRestriction.PROC_STATUS.value());
         publishedExternallyRestriction.setOperation(OperationType.EQ);
         publishedExternallyRestriction.setStringValue(ProcStatusType.PUBLISH_EXTERNALLY.value());
-        ((MetamacCriteriaConjunctionRestriction) metamacCriteria.getRestriction()).getRestrictions().getRestriction().add(publishedExternallyRestriction);
+        conjunction.getRestrictions().getRestriction().add(publishedExternallyRestriction);
+        
+        // By codes
+        if (indicatorsSystemsCodes != null && indicatorsSystemsCodes.size() != 0) {
+            MetamacCriteriaDisjunctionRestriction disjunctionCodeRestriction = new MetamacCriteriaDisjunctionRestriction();
+            disjunctionCodeRestriction.setRestrictions(new MetamacCriteriaRestrictionList());
+            for (String indicatorsSystemCode : indicatorsSystemsCodes) {
+                MetamacCriteriaPropertyRestriction codePropertyRestriction = new MetamacCriteriaPropertyRestriction();
+                codePropertyRestriction.setPropertyName(OperationCriteriaPropertyRestriction.CODE.value());
+                codePropertyRestriction.setOperation(OperationType.EQ);
+                codePropertyRestriction.setStringValue(indicatorsSystemCode);
+                disjunctionCodeRestriction.getRestrictions().getRestriction().add(codePropertyRestriction);
+            }
+            conjunction.getRestrictions().getRestriction().add(disjunctionCodeRestriction);
+        }
+        
+        // All results
+        metamacCriteria.setMaxResults(BigInteger.valueOf(Integer.MAX_VALUE));
         
         // Find
         FindOperationsResult findOperationsResult = webservicesLocator.getMetamacStatisticalOperationsInternalInterface().findOperations(metamacCriteria);
