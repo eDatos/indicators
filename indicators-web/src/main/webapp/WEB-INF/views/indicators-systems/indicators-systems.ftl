@@ -4,9 +4,12 @@
 
 [#include "/layout/language-selector.ftl"]
 
-<div id="indicatorsSystems-search">
-	<input id="indicatorsSystems-search-input" type="text">
+<div style="display:none">
+	<div id="indicatorsSystems-search">
+		<input id="indicatorsSystems-search-input" type="text">
+	</div>
 </div>
+
 <div id="indicatorsSystems"></div>
 
 <script type="text/html" id="indicatorsSystemTmpl">
