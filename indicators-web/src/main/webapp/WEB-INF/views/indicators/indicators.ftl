@@ -2,18 +2,16 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
-<div id="indicators-search" style="display:none;">
-	<input type="text">
-</div>
+[#include "/inc/language-selector.ftl"]
 
 <div id="indicators"></div>
 <script type="text/html" id="indicatorsTmpl">
 	<div>
-		<h3><%= getLabel(subject.title, 'es') %></h3>
+		<h3><%= getLabel(subject.title) %></h3>
 		<% for (i in indicators) {
 			var indicator = indicators[i]; 
 		%>
-			<p><%= getLabel(indicator.title, 'es') %></p>			
+			<p><%= getLabel(indicator.title) %></p>			
 		<% } %>
 	</div>
 </script>

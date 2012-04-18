@@ -2,6 +2,8 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
+[#include "/inc/language-selector.ftl"]
+
 <div id="indicatorsSystems-search">
 	<input id="indicatorsSystems-search-input" type="text">
 </div>
@@ -9,7 +11,7 @@
 
 <script type="text/html" id="indicatorsSystemTmpl">
 	<div>
-		<p><a href='<%= context %>/indicators-systems/<%= code%>.html'><%= getLabel(title, 'es') %></a></p>
+		<p><a href='<%= context %>/indicators-systems/<%= code%>.html'><%= getLabel(title) %></a></p>
 	</div>
 </script>
 
@@ -86,6 +88,7 @@
 	});
 	
 	$(function(){
+	console.log(${indicatorsSystems});
 		var indicatorsSystemsCollection = new IndicatorsSystemsCollection(${indicatorsSystems});
 		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystemsCollection});
 		indicatorsSystemsView.render();

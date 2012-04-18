@@ -86,6 +86,16 @@ ul.subcaps li {
 }
 
 /*****************************************
+  Languages selector
+/****************************************/
+.languages-selector {
+	text-align: right;
+	font-style: italic;
+	font-size: 0.8em;
+	padding-top: 2px;
+}
+
+/*****************************************
  Widget creator
 /****************************************/
 #widget-options, #widget-preview {

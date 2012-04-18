@@ -2,6 +2,7 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
+
 <div class="listadoTablas">
 	<div id="indicators-system-view"></div>
 	<div>
@@ -15,13 +16,14 @@
 	<div class="h2roundbox">
 		<div class="h2top"></div>
 		<div class="h2content">
-			<%= getLabel(title, 'es') %>
+			<%= getLabel(title) %>
 		</div>
 	</div>
+	[#include "/inc/language-selector.ftl"]
 	<% if (description != null) { %>
 		<br />	
 		<div>
-			<p><%= getLabel(description, 'es') %></p>
+			<p><%= getLabel(description) %></p>
 		</div>
 	<% } %>	
 </script>
@@ -32,14 +34,14 @@
 		<div style="clear: both;" ></div>
 		<% if (level == 1) { %>
 			<br />
-			<h3 id="cab_1"><%= getLabel(dimension.title, 'es') %></a></h3>
+			<h3 id="cab_1"><%= getLabel(dimension.title) %></a></h3>
 		<% } else if (level == 2) { %>
 			<li>
-				<span class="itemSubcapitulo"><%= getLabel(dimension.title, 'es') %></span>
+				<span class="itemSubcapitulo"><%= getLabel(dimension.title) %></span>
 			</li>
 		<% } else { %>
 			<li style="font-weight: bold;">
-				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(dimension.title, 'es') %></span>
+				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(dimension.title) %></span>
 			</li>
 		<% } %>	
 	<% } else if (elementTypeIndicatorInstance) { %>
@@ -49,7 +51,7 @@
 					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" />
 				</div>
 				<div class="itemTabla">
-					<a class="nouline" href="PENDIENTE_CONF/jaxi-web/tabla.do?indicators=IDENTIFIER"><%= getLabel(indicatorInstance.title, 'es') %></a>
+					<a class="nouline" href="PENDIENTE_CONF/jaxi-web/tabla.do?indicators=IDENTIFIER"><%= getLabel(indicatorInstance.title) %></a>
 				</div>
 			</div>								
 		</li>

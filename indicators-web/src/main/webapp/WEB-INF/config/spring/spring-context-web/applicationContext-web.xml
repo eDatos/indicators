@@ -21,10 +21,10 @@
          Allows customization of various MVC-related aspects like binding and validation. -->
     <mvc:annotation-driven conversion-service="conversionService" />
     
+    <!-- Converters -->
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
     	<property name="converters">
         	<list>
-	            <bean class="es.gobcan.istac.indicators.web.diffusion.converter.InternationalStringConverter"/>
     	    </list>
     	</property>
 	</bean>
@@ -56,6 +56,15 @@
 <!--         <property name="maxUploadSize" value="100000"/> -->
 <!--     </bean> -->
     
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="es" />
+	</bean>
+	
+	<mvc:interceptors>  
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+              <property name="paramName" value="language"></property>
+        </bean>
+	</mvc:interceptors> 
     
     <!-- Imports user-defined @Controller beans that process client requests -->
     <import resource="applicationContext-web-controllers.xml" />

@@ -13,10 +13,13 @@
     <entry key="app.footer.legal-advice">Aviso Legal</entry>
     <entry key="app.footer.suggests">Sugerencias y Reclamaciones</entry>
     
-    <!-- MENU -->
+    <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemas de indicadores</entry>
     <entry key="menu.indicators">Indicadores</entry>
-    <entry key="menu.left.title">Menú</entry>
+    
+    <!-- Languages -->
+    <entry key="languages.spanish">Español</entry>
+    <entry key="languages.english">English</entry>
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>

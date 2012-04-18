@@ -24,12 +24,6 @@
 		<link rel="stylesheet" href="[@spring.url "/theme/css/main.css"/]" type="text/css" media="screen, projection" />
 		<link rel="stylesheet" href="[@spring.url "/theme/css/widgets.css"/]" type="text/css" media="screen, projection" />
 
-
-
-		<script type="text/javascript">
-			var context = "[@spring.url '' /]";
-		</script>
-		
 		<!-- Js -->
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/indicators-utils.js"                     /]" ></script>
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-1.7.1.js"                         /]" ></script>
@@ -42,6 +36,13 @@
 		
 		<link rel="stylesheet" href="[@spring.url "/theme/js/libs/colorpicker/css/colorpicker.min.css"/]" type="text/css" media="screen, projection" />
 		<script type="text/javascript" src="[@spring.url "/theme/js/libs/colorpicker/js/colorpicker.js"/]"></script>
+
+		<!-- Global variables -->
+		<script type="text/javascript">
+			var context = "[@spring.url '' /]";
+			var currentLocale = "[@apph.locale /]";
+			var defaultLocale = "es";
+		</script>
 	</head>
 	<body>
 		<div id="principal_interior">
