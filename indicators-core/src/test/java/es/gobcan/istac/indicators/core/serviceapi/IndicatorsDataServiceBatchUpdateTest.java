@@ -37,12 +37,11 @@ import org.springframework.transaction.TransactionStatus;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -114,10 +113,10 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private IndicatorsService                indicatorsService;
 
     @Autowired
-    private IndicatorRepository              indicatorRepository;
+    private IndicatorVersionRepository       indicatorVersionRepository;
 
     @Autowired
-    private JpaTransactionManager txManager;
+    private JpaTransactionManager            txManager;
 
     /*
      * Indicator with a single datasource
@@ -134,8 +133,8 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         checkDataContentForIndicator(INDICATOR1_UUID, INDICATOR1_VERSION);
 
-        Indicator ind = indicatorRepository.retrieveIndicator(INDICATOR1_UUID);
-        assertFalse(ind.getNeedsUpdate());
+        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID,INDICATOR1_VERSION);
+        assertFalse(indVersion.getNeedsUpdate());
     }
 
     /*
@@ -154,13 +153,13 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         checkDataContentForIndicator(INDICATOR2_UUID, INDICATOR2_VERSION);
 
-        Indicator ind = indicatorRepository.retrieveIndicator(INDICATOR2_UUID);
-        assertFalse(ind.getNeedsUpdate());
+        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR2_UUID,INDICATOR2_VERSION);
+        assertFalse(indVersion.getNeedsUpdate());
     }
 
     /*
      * Indicator with a single datasource
-     * data source refers to a nonexistent query in JAXI  
+     * data source refers to a nonexistent query in JAXI
      */
     @Test
     public void testUpdateIndicatorsDataPopulateRetrieveDataError() throws Exception {
@@ -176,7 +175,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         // Could not be populated, data should be null
         assertNull(indicatorVersion.getDataRepositoryId());
         // populate failed should be marked as needs update
-        assertTrue(indicatorVersion.getIndicator().getNeedsUpdate());
+        assertTrue(indicatorVersion.getNeedsUpdate());
     }
 
     /*
@@ -198,10 +197,10 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         checkDataContentForIndicator(INDICATOR4_UUID, INDICATOR4_VERSION);
         checkDataContentForIndicator(INDICATOR5_UUID, INDICATOR5_VERSION);
 
-        Indicator ind4 = indicatorRepository.retrieveIndicator(INDICATOR4_UUID);
-        Indicator ind5 = indicatorRepository.retrieveIndicator(INDICATOR5_UUID);
-        assertFalse(ind4.getNeedsUpdate());
-        assertFalse(ind5.getNeedsUpdate());
+        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID,INDICATOR4_VERSION);
+        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID,INDICATOR5_VERSION);
+        assertFalse(indVersion4.getNeedsUpdate());
+        assertFalse(indVersion5.getNeedsUpdate());
     }
 
     /*
@@ -213,7 +212,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
 
-        setNeedsUpdateTransaction(INDICATOR6_UUID);
+        setNeedsUpdateTransaction(INDICATOR6_UUID, INDICATOR6_VERSION);
 
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList(INDICATOR4_DS_GPE_UUID, INDICATOR5_DS_GPE_UUID);
@@ -227,42 +226,42 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         checkDataContentForIndicator(INDICATOR5_UUID, INDICATOR5_VERSION);
         checkDataContentForIndicator(INDICATOR6_UUID, INDICATOR6_VERSION);
 
-        Indicator ind4 = indicatorRepository.retrieveIndicator(INDICATOR4_UUID);
-        Indicator ind5 = indicatorRepository.retrieveIndicator(INDICATOR5_UUID);
-        Indicator ind6 = indicatorRepository.retrieveIndicator(INDICATOR6_UUID);
-        assertFalse(ind4.getNeedsUpdate());
-        assertFalse(ind5.getNeedsUpdate());
-        assertFalse(ind6.getNeedsUpdate());
+        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID,INDICATOR4_VERSION);
+        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID,INDICATOR5_VERSION);
+        IndicatorVersion indVersion6 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID,INDICATOR6_VERSION);
+        assertFalse(indVersion4.getNeedsUpdate());
+        assertFalse(indVersion5.getNeedsUpdate());
+        assertFalse(indVersion6.getNeedsUpdate());
     }
-    
+
     /*
      * Multiple indicators, only previous indicators needs Update
      */
     @Test
     public void testUpdateIndicatorsDataMultiIndicatorNotNewUpdateOnlyNeedsUpdate() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
-        
-        setNeedsUpdateTransaction(INDICATOR6_UUID);
-        
+
+        setNeedsUpdateTransaction(INDICATOR6_UUID, INDICATOR6_VERSION);
+
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList();
-        
+
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContext());
-        
+
         checkDataContentForIndicator(INDICATOR6_UUID, INDICATOR6_VERSION);
-        
-        Indicator ind6 = indicatorRepository.retrieveIndicator(INDICATOR6_UUID);
-        assertFalse(ind6.getNeedsUpdate());
+
+        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID,INDICATOR6_VERSION);
+        assertFalse(indVersion.getNeedsUpdate());
     }
 
-    private void setNeedsUpdateTransaction(String indicatorUuid) {
+    private void setNeedsUpdateTransaction(String indicatorUuid, String indicatorVersionNumber) {
         TransactionStatus status = txManager.getTransaction(null);
-        Indicator indicator = indicatorRepository.retrieveIndicator(INDICATOR6_UUID);
-        indicator.setNeedsUpdate(Boolean.TRUE);
-        indicator = indicatorRepository.save(indicator);
+        IndicatorVersion indicatorVersion = indicatorVersionRepository.retrieveIndicatorVersion(indicatorUuid,indicatorVersionNumber);
+        indicatorVersion.setNeedsUpdate(Boolean.TRUE);
+        indicatorVersion = indicatorVersionRepository.save(indicatorVersion);
         txManager.commit(status);
     }
 
@@ -316,18 +315,17 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         }
         return dimensionCodes;
     }
-    
+
     /* Utils for indicators base data */
     @Override
     protected IndicatorsService getIndicatorsService() {
         return indicatorsService;
     }
-    
+
     @Override
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
     }
-    
 
     @Override
     protected String getDataSetFile() {

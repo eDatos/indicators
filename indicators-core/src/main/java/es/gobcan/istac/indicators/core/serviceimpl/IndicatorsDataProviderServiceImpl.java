@@ -17,6 +17,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 
 @Service("indicatorsDataProviderService")
@@ -32,18 +33,26 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
 
     @Override
     public String retrieveDataStructureJson(ServiceContext ctx, String uuid) throws MetamacException {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("uuidConsulta", uuid);
-        params.put("type", "structure");
-        return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+        try {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("uuidConsulta", uuid);
+            params.put("type", "structure");
+            return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+        } catch (Exception e) {
+            throw new MetamacException(e,ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR,uuid);
+        }
     }
     
     @Override
     public String retrieveDataJson(ServiceContext ctx, String uuid) throws MetamacException {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("uuidConsulta", uuid);
-        params.put("type", "data");
-        return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+        try {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("uuidConsulta", uuid);
+            params.put("type", "data");
+            return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+        } catch (Exception e) {
+            throw new MetamacException(e,ServiceExceptionType.DATA_RETRIEVE_ERROR, uuid);
+        }
     }
    
     // retrieve from jaxi

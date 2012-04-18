@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +42,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -216,6 +218,12 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     private static final String              INDICATOR21_DS_GPE_UUID                  = "Indicator-21-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR21_GPE_JSON_DATA                = readFile("json/data_temporals_spatials_contvariable.json");
     private static final String              INDICATOR21_VERSION                      = "1.000";
+    
+    /* Error wrong absoluteMethod with contvariable */
+    private static final String              INDICATOR22_UUID                         = "Indicator-22";
+    private static final String              INDICATOR22_DS_GPE_UUID                  = "Indicator-22-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
+    private static final String              INDICATOR22_GPE_JSON_DATA                = readFile("json/data_fixed_contvariable.json");
+    private static final String              INDICATOR22_VERSION                      = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -388,6 +396,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     /*
      * Populate data using geographical and time variables provided by Jaxi
      * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testPopulateIndicatorData()
+     * Has been marked as inconsistent data, must be unmarked after populate
      */
     @Test
     @Override
@@ -494,15 +503,15 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testPopulateIndicatorDataSpatialVariableTemporalValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR2_UUID, INDICATOR21_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR2_UUID, INDICATOR2_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
-        checkDataDimensions(dimensionCodes, INDICATOR2_UUID, INDICATOR21_VERSION);
+        checkDataDimensions(dimensionCodes, INDICATOR2_UUID, INDICATOR2_VERSION);
         List<String> data = Arrays.asList("3.585", "497", "56", "60", "49");
-        checkDataObservations(dimensionCodes, INDICATOR2_UUID, INDICATOR21_VERSION, data);
+        checkDataObservations(dimensionCodes, INDICATOR2_UUID, INDICATOR2_VERSION, data);
     }
 
     /*
@@ -922,7 +931,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         List<String> data = Arrays.asList("3.585", "34.413", "2.471", "2.507", "2.036", "2.156");
         checkDataObservations(dimensionCodes, INDICATOR16_UUID, INDICATOR16_VERSION, data);
     }
-
+    
     /*
      * Indicator has a nonexistent geographic variable
      */
@@ -1087,6 +1096,22 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
             assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(4).getMessageParameters()[1]);
         }
     }
+    
+    /*
+     * Indicator has the inconsistent Data mark
+     */
+    @Test
+    public void testPopulateIndicatorDataInconsistentMark() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR22_DS_GPE_UUID))).thenReturn(INDICATOR22_GPE_JSON_DATA);
+        IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicator(getServiceContext(), INDICATOR22_UUID, INDICATOR22_VERSION);
+        
+        assertTrue(indicatorVersion.getInconsistentData());
+        
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR22_UUID, INDICATOR22_VERSION);
+        
+        indicatorVersion = indicatorsService.retrieveIndicator(getServiceContext(), INDICATOR22_UUID, INDICATOR22_VERSION);
+        assertFalse(indicatorVersion.getInconsistentData());
+    }
 
     @Test
     @Override
@@ -1113,6 +1138,30 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         checkElementsInCollection(expectedCodes, codes);
     }
     
+    @Test
+    @Override
+    public void testRetrieveTimeValuesInIndicator() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        
+        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        String[] expectedValues = new String[] {"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"};
+        checkElementsInCollection(expectedValues, timeValues);
+    }
+    
+    @Test
+    public void testRetrieveTimeValuesInIndicatorFixedValue() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        
+        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        String[] expectedValues = new String[] {"2010"};
+        checkElementsInCollection(expectedValues, timeValues);
+    }
+    
+    
     @Override
     public void testRetrieveGeographicalGranularitiesInIndicatorPublished() throws Exception {
         //TODO: pending
@@ -1128,43 +1177,39 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         /* See IndicatorsDataService_BatchUpdateTest.java */
     }
 
-
-
-
     @Override
     public void testRetrieveGeographicalValuesWithGranularityInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void testRetrieveGeographicalValuesInIndicatorInstance() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void testRetrieveTimeGranularitiesInIndicator() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void testRetrieveTimeGranularitiesInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void testRetrieveTimeValuesWithGranularityInIndicator() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void testRetrieveTimeValuesWithGranularityInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
-
+    }
+    
+    @Override
+    public void testRetrieveTimeValuesInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -1180,7 +1225,6 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Override
     public void testFindObservationsByDimensionsInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
-
     }
 
     public void testFindObservationsExtendedByDimensionsInIndicatorInstance() throws Exception {

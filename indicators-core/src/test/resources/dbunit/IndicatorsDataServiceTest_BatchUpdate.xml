@@ -14,7 +14,7 @@
 		TITLE_FK="1"
 	/>
   
-  	<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL GRANULARITIES                           -->
 	<!-- ************************************************************************************ -->
 	
@@ -22,6 +22,18 @@
 		ID="1"
 		CODE="COUNTRIES"
 		UUID="1"
+		TITLE_FK="4"
+	/>
+  	<TB_LIS_GEOGR_GRANULARITIES 
+		ID="2"
+		CODE="COMMUNITIES"
+		UUID="2"
+		TITLE_FK="4"
+	/>
+  	<TB_LIS_GEOGR_GRANULARITIES 
+		ID="3"
+		CODE="PROVINCES"
+		UUID="3"
 		TITLE_FK="4"
 	/>
   
@@ -36,6 +48,51 @@
   		UUID="1"
   		TITLE_FK="5" 
   		GRANULARITY_FK="1"
+  	/>
+  	<TB_LIS_GEOGR_VALUES 
+  		ID="2" 
+  		CODE="ES61" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="2"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="2"
+  	/>
+  	<TB_LIS_GEOGR_VALUES 
+  		ID="3" 
+  		CODE="ES611" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="3"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="3"
+  	/>
+  	<TB_LIS_GEOGR_VALUES 
+  		ID="4" 
+  		CODE="ES612" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="4"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="3"
+  	/>
+  	<TB_LIS_GEOGR_VALUES 
+  		ID="5" 
+  		CODE="ES613" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="5"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="3"
+  	/>
+  	<TB_LIS_GEOGR_VALUES 
+  		ID="6" 
+  		CODE="ES614" 
+  		LATITUDE="20.0656233" 
+  		LONGITUDE="-25.454564645" 
+  		UUID="6"
+  		TITLE_FK="5" 
+  		GRANULARITY_FK="3"
   	/>
   
    
@@ -55,7 +112,6 @@
 		DIFFUSION_ID="11"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -79,6 +135,9 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="111"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
+		
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -200,7 +259,7 @@
 		DIFFUSION_ID="21"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -224,6 +283,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="211"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -687,7 +748,7 @@
 		DIFFUSION_ID="31"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -711,6 +772,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="311"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -834,7 +897,7 @@
 		DIFFUSION_ID="41"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -858,6 +921,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="411"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -979,7 +1044,7 @@
 		DIFFUSION_ID="51"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -1003,6 +1068,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="511"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -1124,7 +1191,7 @@
 		DIFFUSION_ID="61"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -1148,6 +1215,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="611"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"
@@ -1268,7 +1337,7 @@
 		DIFFUSION_ID="71"
 		DIFFUSION_VERSION_NUMBER="1.000"
 		IS_PUBLISHED="1"
-		NEEDS_UPDATE="0"
+
 				
 		VERSION="1"
 		CREATED_BY="user1"
@@ -1292,6 +1361,8 @@
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="711"
 				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
 
 				PRODUCTION_VALIDATION_DATE="[null]"
 				PRODUCTION_VALIDATION_DATE_TZ="[null]"

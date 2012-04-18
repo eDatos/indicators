@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
@@ -90,4 +91,30 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
         } 
         return subjectsResults;
     }
+    
+    @Override
+    public List<IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException {
+        StringBuffer querySql = new StringBuffer();
+        if (dataGpeUuids == null || dataGpeUuids.size() == 0) {
+            return new ArrayList<IndicatorVersion>();
+        }
+
+        querySql.append("select indV ");
+        querySql.append("from IndicatorVersion as indV ");
+        querySql.append("inner join indV.dataSources as ds ");
+        querySql.append("where ds.dataGpeUuid in (:dataGpeUuids)");
+        
+        Query query = getEntityManager().createQuery(querySql.toString());
+        query.setParameter("dataGpeUuids", dataGpeUuids);
+        List<IndicatorVersion> results = query.getResultList();
+        return results;
+    }
+    
+    @Override
+    public List<IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException {
+        Query query = getEntityManager().createQuery("from IndicatorVersion iv where iv.needsUpdate = true");
+        List<IndicatorVersion> result = query.getResultList();
+        return result;
+    }
+
 }

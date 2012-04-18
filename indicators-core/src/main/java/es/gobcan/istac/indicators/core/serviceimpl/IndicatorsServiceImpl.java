@@ -56,12 +56,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Save indicator
         indicator.setDiffusionVersion(null);
         indicator.setIsPublished(Boolean.FALSE);
-        indicator.setNeedsUpdate(Boolean.FALSE);
         indicator = getIndicatorRepository().save(indicator);
 
         // Save draft version
         indicatorVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
         indicatorVersion.setIsLastVersion(Boolean.TRUE);
+        indicatorVersion.setInconsistentData(Boolean.FALSE);
+        indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setVersionNumber(ServiceUtils.generateVersionNumber(null, VersionTypeEnum.MAJOR));
         indicatorVersion.setIndicator(indicator);
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
@@ -465,6 +466,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Update indicator adding dataSource
         indicatorVersion.addDataSource(dataSource);
+        indicatorVersion.setInconsistentData(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
 
         return dataSource;
@@ -490,12 +492,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkUpdateDataSource(dataSource, null);
 
+        
         // Check indicator proc status and linked indicators
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
         checkIndicatorsLinkedInDatasource(dataSource, dataSource.getIndicatorVersion());
 
         // Update
-        return getDataSourceRepository().save(dataSource);
+        DataSource updatedDataSource = getDataSourceRepository().save(dataSource);
+        
+        IndicatorVersion indicatorVersion = updatedDataSource.getIndicatorVersion();
+        indicatorVersion.setInconsistentData(Boolean.TRUE);
+        
+        return updatedDataSource;
     }
 
     @Override
@@ -505,10 +513,14 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check indicator proc status
         DataSource dataSource = retrieveDataSource(ctx, uuid);
-        checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
-
+        IndicatorVersion indicatorVersion = dataSource.getIndicatorVersion();
+        checkIndicatorVersionInProduction(indicatorVersion);
+        
         // Delete
         getDataSourceRepository().delete(dataSource);
+        
+        indicatorVersion.setInconsistentData(Boolean.TRUE);
+        getIndicatorVersionRepository().save(indicatorVersion);
     }
 
     @Override

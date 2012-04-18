@@ -62,6 +62,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatiblilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 
 /**
  * Implementation of IndicatorsDataService.
@@ -166,7 +167,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
-            setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
+            indicatorVersion = setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
+            
+            //No more inconsistent data, no more needs update
+            markIndicatorVersionAsDataUpdated(indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
             if (e instanceof MetamacException) {
@@ -177,22 +181,31 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
+
+
     @Override
     public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
         LOG.info("Starting Indicators data update process");
+        
+        // Validation
+        InvocationValidator.checkUpdateIndicatorsData(null);
+        
         Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
 
-        markIndicatorsWithUpdatedData(ctx, lastQueryDate);
+        markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
 
-        List<Indicator> pendingIndicators = getIndicatorRepository().findIndicatorsNeedsUpdate();
-        for (Indicator indicator : pendingIndicators) {
-            String diffusionVersion = indicator.getDiffusionVersion().getVersionNumber();
+        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
+        for (IndicatorVersion indicatorVersion : pendingIndicators) {
+            Indicator indicator = indicatorVersion.getIndicator();
+            String diffusionVersion = indicator.getDiffusionVersion() != null ? indicator.getDiffusionVersion().getVersionNumber() : null;
+            
             String indicatorUuid = indicator.getUuid();
-            try {
-                populateIndicatorData(ctx, indicatorUuid, diffusionVersion);
-                markIndicatorNeedsUpdate(ctx, indicator, Boolean.FALSE);
-            } catch (MetamacException e) {
-                LOG.warn("Error populating indicator or marking it as no update needed indicatorUuid:" + indicatorUuid, e);
+            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
+                try {
+                    populateIndicatorData(ctx, indicatorUuid, diffusionVersion);
+                } catch (MetamacException e) {
+                    LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
+                }
             }
         }
         LOG.info("Finished Indicators data update process");
@@ -202,17 +215,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicator(indicatorUuid, indicatorVersionNumber, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return retrieveGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
+        return calculateGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
     }
 
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicatorPublished(indicatorUuid, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return retrieveGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
+        return calculateGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
     }
 
-    private List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<GeographicalGranularity> calculateGeographicalGranularitiesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
@@ -238,17 +257,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, GeographicalGranularity granularity)
             throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalValuesWithGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return retrieveGeographicalValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateGeographicalValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
 
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, GeographicalGranularity granularity) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalValuesWithGranularityInIndicatorPublished(indicatorUuid,granularity, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return retrieveGeographicalValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateGeographicalValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
 
-    private List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorVersion(GeographicalGranularity granularity, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<GeographicalValue> calculateGeographicalValuesWithGranularityInIndicatorVersion(GeographicalGranularity granularity, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
@@ -272,6 +297,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalValuesInIndicatorInstance(indicatorInstanceUuid, null);
+        
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         if (indInstance.getGeographicalValue() != null) {
             return Arrays.asList(indInstance.getGeographicalValue());
@@ -285,17 +313,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     
     @Override
     public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveTimeGranularitiesInIndicator(indicatorUuid, indicatorVersionNumber, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return retrieveTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
+        return calculateTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
     }
 
     @Override
     public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorPublished(indicatorUuid, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return retrieveTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
+        return calculateTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
     }
 
-    private List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeGranularityEnum> calculateTimeGranularitiesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
@@ -317,17 +351,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     
     @Override
     public List<String> retrieveTimeValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeValuesWithGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid,indicatorVersionNumber);
-        return retrieveTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
     
     @Override
     public List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeValuesWithGranularityInIndicatorPublished(indicatorUuid, granularity, null);
+        
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return retrieveTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
 
-    private List<String> retrieveTimeValuesWithGranularityInIndicatorVersion(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<String> calculateTimeValuesWithGranularityInIndicatorVersion(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
@@ -348,9 +388,51 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
+    
+    @Override
+    public List<String> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
+        
+        IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+        return calculateTimeValuesInIndicatorVersion(indicatorVersion);
+    }   
+    
+    @Override
+    public List<String> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeValuesInIndicatorPublished(indicatorUuid, null);
+        
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
+        return calculateTimeValuesInIndicatorVersion(indicatorVersion);
+    }
+
+    private List<String> calculateTimeValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
+        String datasetId = indicatorVersion.getDataRepositoryId();
+        if (datasetId != null) {
+            try {
+                List<String> timeValuesInIndicator = new ArrayList<String>();
+                List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
+                for (String timeCode : timeCodesInIndicator) {
+                    if (TimeVariableUtils.isTimeValue(timeCode)) {
+                        timeValuesInIndicator.add(timeCode);
+                    }
+                }
+                return timeValuesInIndicator;
+            } catch (ApplicationException e) {
+                // TODO: EXCEPTION TYPE
+                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+            }
+        } else {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        }
+    }
 
     @Override
     public List<String> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeValuesInIndicatorInstance(indicatorInstanceUuid, null);
+        
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         if (indInstance.getTimeValue() != null) {
             return Arrays.asList(indInstance.getTimeValue());
@@ -527,7 +609,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void markIndicatorsWithUpdatedData(ServiceContext ctx, Date lastQuery) throws MetamacException {
+    /* Mark only diffusionVersion */
+    private void markIndicatorsVersionWhichNeedsUpdate(ServiceContext ctx, Date lastQuery) throws MetamacException {
         Date newQueryDate = Calendar.getInstance().getTime();
         List<String> dataDefinitionsUuids = null;
         try {
@@ -536,31 +619,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR);
         }
 
-        List<Indicator> newPendingIndicators = getIndicatorRepository().findIndicatorsWithPublishedVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
-        markIndicatorsNeedsUpdateTransactional(ctx, newPendingIndicators);
+        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionLinkedToAnyDataGpeUuids(dataDefinitionsUuids);
+        markIndicatorsNeedsUpdateTransactional(ctx, pendingIndicators);
         getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
+    }
+    
+    //No more inconsistent data, no more needs update
+    private void markIndicatorVersionAsDataUpdated(IndicatorVersion indicatorVersion) {
+        indicatorVersion.setNeedsUpdate(Boolean.FALSE);
+        indicatorVersion.setInconsistentData(Boolean.FALSE);
+        getIndicatorVersionRepository().save(indicatorVersion);
     }
 
     @Transactional(value = "txManager")
-    private void markIndicatorsNeedsUpdateTransactional(ServiceContext ctx, List<Indicator> indicators) throws MetamacException {
-        for (Indicator indicator : indicators) {
-            markIndicatorNeedsUpdate(ctx, indicator, Boolean.TRUE);
+    private void markIndicatorsNeedsUpdateTransactional(ServiceContext ctx, List<IndicatorVersion> indicatorsVersion) throws MetamacException {
+        for (IndicatorVersion indicatorVersion : indicatorsVersion) {
+            indicatorVersion.setNeedsUpdate(Boolean.TRUE);
+            getIndicatorVersionRepository().save(indicatorVersion);
         }
-    }
-
-    private void markIndicatorNeedsUpdate(ServiceContext ctx, Indicator indicator, boolean needsUpdate) throws MetamacException {
-        indicator.setNeedsUpdate(needsUpdate);
-        getIndicatorRepository().save(indicator);
     }
 
     /*
      * Given an indicator, the old dataset repository is replaced and deleted and a new one is assigned
      */
-    private void setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
+    private IndicatorVersion setDatasetRepositoryDeleteOldOne(IndicatorVersion indicatorVersion, DatasetRepositoryDto datasetRepoDto) throws MetamacException {
         String oldDatasetId = indicatorVersion.getDataRepositoryId();
         indicatorVersion.setDataRepositoryId(datasetRepoDto.getDatasetId());
         indicatorVersion.setDataRepositoryTableName(datasetRepoDto.getTableName());
-        getIndicatorVersionRepository().save(indicatorVersion);
+        IndicatorVersion updatedIndicatorVerison = getIndicatorVersionRepository().save(indicatorVersion);
         if (oldDatasetId != null) {
             try {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(oldDatasetId);
@@ -568,6 +654,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 LOG.error("Old dataset repository could not be deleted", e);
             }
         }
+        return updatedIndicatorVerison;
     }
 
     /*

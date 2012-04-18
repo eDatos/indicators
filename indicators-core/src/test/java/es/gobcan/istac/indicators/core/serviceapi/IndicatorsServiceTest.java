@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -73,7 +75,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
-        indicatorVersion.getIndicator().setCode(IndicatorsMocks.mockString(10));
+        indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
         indicatorVersion.setTitle(new InternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorVersion.setSubjectTitle(new InternationalString());
@@ -85,21 +87,13 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContext(), indicatorVersion);
         
-        Indicator indicator = indicatorVersionCreated.getIndicator();
-        
         //Check after creation needsUpdate is false
-        assertFalse(indicatorVersionCreated.getIndicator().getNeedsUpdate());
+        assertFalse(indicatorVersionCreated.getNeedsUpdate());
         
-        indicator.setNeedsUpdate(Boolean.TRUE);
+        indicatorVersionCreated.setNeedsUpdate(Boolean.TRUE);
         
-        Indicator indicatorUpdated = indicatorService.updateIndicator(getServiceContext(), indicator);
-        assertTrue(indicatorUpdated.getNeedsUpdate());
-        
-        // Validate properties are not in Dto
-        String uuid = indicatorVersionCreated.getIndicator().getUuid();
-        String version = indicatorVersionCreated.getVersionNumber();
-        IndicatorVersion indicatorVersionUpdated = indicatorService.retrieveIndicator(getServiceContext(), uuid, version);
-        assertTrue(indicatorVersionUpdated.getIndicator().getNeedsUpdate());
+        IndicatorVersion indicatorVersionUpdated = indicatorService.updateIndicatorVersion(getServiceContext(), indicatorVersionCreated);
+        assertTrue(indicatorVersionUpdated.getNeedsUpdate());
     }
 
     @Test

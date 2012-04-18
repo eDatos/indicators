@@ -514,6 +514,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
     
     @Override
+    public List<String> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        //Retrieve
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        
+        return timeValues;
+    }
+    
+    @Override
+    public List<String> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        //Retrieve
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorPublished(ctx, indicatorUuid);
+        
+        return timeValues;
+    }
+    
+    @Override
     public List<String> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         //Retrieve
         List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);

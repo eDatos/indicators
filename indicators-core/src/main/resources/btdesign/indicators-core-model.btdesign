@@ -153,6 +153,10 @@ Application Indicators {
 	    	List<String> retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
 	    	List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrieves time values in the indicator"
+	    	List<String> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrieves time values in the publidhed indicator"
+	    	List<String> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time values in the indicator instance"
 	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
@@ -286,6 +290,10 @@ Application Indicators {
 	    	List<String> retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
 	    	List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrieves time values in the indicator"
+	    	List<String> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	"Retrieves time values in the publidhed indicator"
+	    	List<String> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time values in the indicator instance"
 	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
@@ -557,8 +565,6 @@ Application Indicators {
 			- Bag<@IndicatorVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> indicator orderby="versionNumber asc";
 			"Indicator instances"
 			- Bag<@IndicatorInstance> indicatorsInstances cascade="none" fetch="lazy" inverse <-> indicator;
-			"True if indicator needs to be updated"
-            Boolean needsUpdate not nullable;
 			
 			Repository IndicatorRepository {
 		   		@Indicator save(@Indicator entity);
@@ -567,8 +573,6 @@ Application Indicators {
             	protected List<@Indicator> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Indicator retrieveIndicator(String uuid);
             	findByCondition(PagingParameter pagingParameter);
-            	List<@Indicator> findIndicatorsNeedsUpdate() throws MetamacException;
-            	List<@Indicator> findIndicatorsWithPublishedVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	List<String> filterIndicatorsNotPublished(List<String> indicatorsUuid);
 			}
 		}
@@ -605,7 +609,11 @@ Application Indicators {
        		"Identifier in repository of observations"
        		String dataRepositoryId nullable;       		
        		"Table name in repository of observations"
-       		String dataRepositoryTableName nullable;       		
+       		String dataRepositoryTableName nullable;
+       		"True if indicator needs to be updated"
+            Boolean needsUpdate not nullable;  		
+       		"True if some fields are related to Data and has changed since last population"
+            Boolean inconsistentData not nullable;  		
        		
 			"Date when the indicator was sended to production validation"
 			DateTimeTZ productionValidationDate nullable;
@@ -644,6 +652,8 @@ Application Indicators {
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
             	findByCondition(PagingParameter pagingParameter);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
+            	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
+            	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
 			}
@@ -990,7 +1000,7 @@ Application Indicators {
 	    
 	    "Dto for indicator"
 	   	DataTransferObject IndicatorDto extends @AuditDto {
-			
+			gap
 			"Unique uuid"
 			String uuid;
 			"Version number of this indicator version"	
@@ -1026,7 +1036,9 @@ Application Indicators {
 			String diffusionVersion;		
 			
 			"Indicates whether needs update its data or not"
-			Boolean needsUpdate not nullable;
+			Boolean needsUpdate;
+			"Indicates whether data is inconsistent with the indicator definition"
+			Boolean inconsistentData;
        		"Identifier in repository of observations"
        		String dataRepositoryId;       		
        		"Table name in repository of observations"

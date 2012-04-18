@@ -46,6 +46,8 @@ public class DoCopyUtils {
         target.setCommentsUrl(source.getCommentsUrl());
         target.setQuantity(copy(source.getQuantity()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
+        target.setNeedsUpdate(source.getNeedsUpdate());
+        target.setInconsistentData(source.getInconsistentData());
 
         return target;
     }
