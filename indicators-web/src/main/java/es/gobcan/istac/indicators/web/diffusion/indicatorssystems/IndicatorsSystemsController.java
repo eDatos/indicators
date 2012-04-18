@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
@@ -38,6 +40,9 @@ public class IndicatorsSystemsController extends BaseController {
     
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
@@ -115,7 +120,13 @@ public class IndicatorsSystemsController extends BaseController {
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
         modelAndView.addObject("indicatorsSystem", indicatorsSystemJson);
         modelAndView.addObject("indicatorsSystemStructure", structureJson);
- 
+        // TODO propiedad de configuración en páginas ftl. Podría mejorarse accediendo al contexto de Spring desde la página, en lugar de añadir la propiedad en el modelo de vista
+        String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
+        if (jaxiUrlBase.endsWith("/")) {
+            jaxiUrlBase = StringUtils.removeEnd(jaxiUrlBase, "/");
+        }
+        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
+
         return modelAndView;
     }
 }

@@ -21,4 +21,5 @@ public interface WebConstants {
 
     // Configuration
     public String METAMAC_STATISTICAL_OPERATIONS_INTERNAL_ENDPOINT_ADDRESS_PROPERTY = "indicators.ws.metamac.statistical.operations.internal.endpoint";
+    public String JAXI_URL_PROPERTY                                                 = "indicators.jaxi.url";
 }

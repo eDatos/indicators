@@ -50,7 +50,8 @@
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
-					<a class="nouline" href="PENDIENTE_CONF/jaxi-web/tabla.do?indicators=IDENTIFIER"><%= getLabel(indicatorInstance.title) %></a>
+					
+					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?indicators=PENDIENTE_IDENTIFICADOR"><%= getLabel(indicatorInstance.title) %></a>
 				</div>
 			</div>								
 		</li>
