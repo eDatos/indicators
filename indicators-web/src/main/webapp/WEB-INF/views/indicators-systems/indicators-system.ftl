@@ -2,7 +2,6 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
-
 <div class="listadoTablas">
 	<div id="indicators-system-view"></div>
 	<div>
@@ -19,7 +18,7 @@
 			<%= getLabel(title) %>
 		</div>
 	</div>
-	[#include "/inc/language-selector.ftl"]
+	[#include "/layout/language-selector.ftl"]
 	<% if (description != null) { %>
 		<br />	
 		<div>

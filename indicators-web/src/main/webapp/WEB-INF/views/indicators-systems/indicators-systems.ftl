@@ -2,7 +2,7 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
-[#include "/inc/language-selector.ftl"]
+[#include "/layout/language-selector.ftl"]
 
 <div id="indicatorsSystems-search">
 	<input id="indicatorsSystems-search-input" type="text">
