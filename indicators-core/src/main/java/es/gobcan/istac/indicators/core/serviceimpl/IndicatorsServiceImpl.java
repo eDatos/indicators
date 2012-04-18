@@ -359,6 +359,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } catch (MetamacException e) {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
+            indicatorInProduction.setPublicationUser(ctx.getUserId());
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
             return indicatorInProduction;
         }
@@ -367,6 +368,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
+        indicatorInProduction.setPublicationFailedDate(null); // remove posible failed information 
+        indicatorInProduction.setPublicationFailedUser(null);
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
         Indicator indicator = indicatorInProduction.getIndicator();

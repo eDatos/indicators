@@ -5,7 +5,7 @@
 	<!-- **************************************************************************************	-->
 	<!--    INDICATORS SYSTEM 1											                      	-->
 	<!--		- Version 1: published															-->
-	<!--		- Version 2: draft																-->
+	<!--		- Version 2: draFt																-->
 	<!-- *************************************************************************************	-->
 	<TB_INDICATORS_SYSTEMS
 		ID="1"
@@ -1238,6 +1238,9 @@
 				PUBLICATION_DATE="2011-01-04 04:02:04"
 				PUBLICATION_DATE_TZ="Europe/London"
 				PUBLICATION_USER="user3"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
 				ARCHIVE_DATE="[null]"
 				ARCHIVE_DATE_TZ="[null]"
 				ARCHIVE_USER="[null]"
@@ -1319,6 +1322,9 @@
 				PUBLICATION_DATE="[null]"
 				PUBLICATION_DATE_TZ="[null]"
 				PUBLICATION_USER="[null]"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
 				ARCHIVE_DATE="[null]"
 				ARCHIVE_DATE_TZ="[null]"
 				ARCHIVE_USER="[null]"
@@ -1401,6 +1407,9 @@
 				PUBLICATION_DATE="[null]"
 				PUBLICATION_DATE_TZ="[null]"
 				PUBLICATION_USER="[null]"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
 				ARCHIVE_DATE="[null]"
 				ARCHIVE_DATE_TZ="[null]"
 				ARCHIVE_USER="[null]"

@@ -150,8 +150,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));
         target.setDiffusionValidationUser(source.getDiffusionValidationUser());
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
-        target.setPublicationFailedDate(dateDoToDto(source.getPublicationFailedDate()));
         target.setPublicationUser(source.getPublicationUser());
+        target.setPublicationFailedDate(dateDoToDto(source.getPublicationFailedDate()));
+        target.setPublicationFailedUser(source.getPublicationFailedUser());
         target.setArchiveDate(dateDoToDto(source.getArchiveDate()));
         target.setArchiveUser(source.getArchiveUser());
 

@@ -617,10 +617,12 @@ Application Indicators {
 			String diffusionValidationUser nullable;
 			"Date when the indicator was published"
 			DateTimeTZ publicationDate nullable;
-			"Date when the indicator was supposed to be published but failed"
-			DateTimeTZ publicationFailedDate nullable;
 			"User who published"
 			String publicationUser nullable;
+			"Date when the indicator was supposed to be published but failed"
+			DateTimeTZ publicationFailedDate nullable;
+			"User when the indicator was supposed to be published but failed"
+			String publicationFailedUser nullable;
 			"Date when the indicator was archived"
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
