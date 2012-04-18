@@ -15,7 +15,7 @@
 	<div class="h2roundbox">
 		<div class="h2top"></div>
 		<div class="h2content">
-			<%= getLabel(title) %>
+			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
 		</div>
 	</div>
 	[#include "/layout/language-selector.ftl"]
