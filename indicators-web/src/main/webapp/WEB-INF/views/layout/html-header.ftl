@@ -27,6 +27,7 @@
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery.json-2.3.min.js"                  /]" ></script>    
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/jquery-disable-text-selection-1.0.0.js"  /]" ></script>
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore-min-1.3.1.js" 				  /]"></script>
+<script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"	  /]"></script>
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/backbone-min-0.9.2.js"					  /]"></script>
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/i18n.js"								  /]"></script>
 

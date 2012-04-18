@@ -49,6 +49,7 @@
 					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" />
 				</div>
 				<div class="itemTabla">
+					<%= numeration %>
 					<a class="nouline" href="PENDIENTE_CONF/jaxi-web/tabla.do?indicators=IDENTIFIER"><%= getLabel(indicatorInstance.title) %></a>
 				</div>
 			</div>								
@@ -74,18 +75,27 @@
 			
 			this.model.set({level: this.options.level});
 			
+			var numerationBase = '';
+			if (this.options.numerationBase != '') {
+				numerationBase = this.options.numerationBase + '.';
+			}
+			numerationBase += _.string.lpad(this.options.numeration, 2, '0');
+			this.model.set({numeration: numerationBase});
+			
 			// Element
 			var html = this.template(this.model.toJSON());
 			
 			// Subelements
 			if (this.model.get('elementTypeDimension')) {
+				var subelementsNumeration = 1;
 				var subelements = this.model.get('subelements');
 				if (subelements != '') {
 					html += '<ul class="subcaps">';
 					var subelementsCollection = new ElementsCollection(subelements);				
-					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection, level : this.options.level + 1});				
+					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection, level : this.options.level + 1, numerationBase : numerationBase, numeration : subelementsNumeration});				
 					html += subelementsCollectionView.render();
 					html += '</ul>';
+					subelementsNumeration += 1;
 				}
 			}
 			
@@ -99,16 +109,14 @@
 	var ElementsCollectionView = Backbone.View.extend({	
 		
 		render : function(){
-		
 			var viewHtml = '';
 			var self = this;
+			var numeration = self.options.numeration;
 			this.collection.forEach(function(model){
-				var elementView = new ElementView({ model : model, level : self.options.level});
+				var elementView = new ElementView({ model : model, level : self.options.level, numerationBase : self.options.numerationBase, numeration : numeration});
 				var subViewHtml = elementView.render();
 				viewHtml += subViewHtml;
-				
-				console.log(subViewHtml);
-				
+				numeration += 1;
 			});
 			return viewHtml;
 		}
@@ -119,7 +127,7 @@
 		indicatorsSystemView.render();
 		
 		var elementsCollection = new ElementsCollection(${indicatorsSystemStructure});
-		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1});
+		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1, numerationBase : '', numeration : 1});
 		var elementsCollectionViewHtml = elementsCollectionView.render();
 		$("#elements-view").html(elementsCollectionViewHtml);
 	});
