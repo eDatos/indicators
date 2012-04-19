@@ -328,15 +328,6 @@ Application Indicators {
 	    	"Retrieves measure values in indicator instance"
 	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-
-	    	"Find geographical values by criteria"
-	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
-	    	"Retrieves geographic values with granularity in the indicator"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values with granularity in the publidhed indicator"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
-	    	"Retrieves geographic values in the indicator instance"
-	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
