@@ -161,12 +161,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     
     private ElementLevelType _elementsLevelsDoToType(ElementLevel source, final String baseURL) {
         ElementLevelType target = new ElementLevelType();
-        target.setId(source.getUuid());
         
         if (source.getDimension() != null) {
+            target.setId(source.getDimension().getUuid());
             target.setKind(RestConstants.KIND_INDICATOR_DIMENSION);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getDimension().getTitle()));
         } else{
+            target.setId(source.getIndicatorInstance().getUuid());
             target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle()));
             
