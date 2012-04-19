@@ -103,7 +103,7 @@ public class QuantityForm extends BaseQuantityForm {
         final GeographicalSelectItem baseLocation = new GeographicalSelectItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setRequired(true);
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
-        baseLocation.getGeoGranularity().addChangedHandler(new ChangedHandler() {
+        baseLocation.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
 
             @Override
             public void onChanged(ChangedEvent event) {

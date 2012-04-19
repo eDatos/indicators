@@ -447,7 +447,7 @@ public class DataSourcesPanel extends VLayout {
                 return !form.getItem(DataSourceDS.GEO_VARIABLE).isVisible();
             }
         });
-        geographicalValue.getGeoGranularity().addChangedHandler(new ChangedHandler() {
+        geographicalValue.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
 
             @Override
             public void onChanged(ChangedEvent event) {

@@ -50,11 +50,11 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         geoValueItem.setValue(value);
     }
 
-    public SelectItem getGeoGranularity() {
+    public SelectItem getGeoGranularitySelectItem() {
         return geoGranularitItem;
     }
 
-    public SelectItem getItem() {
+    public SelectItem getGeoValueSelectItem() {
         return geoValueItem;
     }
 
