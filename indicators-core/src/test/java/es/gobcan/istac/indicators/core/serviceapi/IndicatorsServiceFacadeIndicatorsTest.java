@@ -116,7 +116,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
             MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
             access.setApplication(NOT_EXISTS);
-            access.setRole(RoleEnum.TECNICO_AYUDA_DIFUSION.getName());
+            access.setRole(RoleEnum.TECNICO_APOYO_DIFUSION.getName());
             indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
             fail("principal without role");
         } catch (MetamacException e) {

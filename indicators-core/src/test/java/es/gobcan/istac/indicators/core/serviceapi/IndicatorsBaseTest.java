@@ -39,9 +39,9 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         return serviceContext;
     }
 
-    protected ServiceContext getServiceContextTecnicoAyudaProduccion() {
+    protected ServiceContext getServiceContextTecnicoApoyoProduccion() {
         ServiceContext serviceContext = super.getServiceContext();
-        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_AYUDA_PRODUCCION);
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_PRODUCCION);
         return serviceContext;
     }
 

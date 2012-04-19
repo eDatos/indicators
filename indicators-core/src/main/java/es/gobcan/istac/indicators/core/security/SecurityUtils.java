@@ -75,11 +75,11 @@ public class SecurityUtils {
                 return isTsi(metamacPrincipal);
             case TECNICO_PRODUCCION:
                 return isTp(metamacPrincipal);
-            case TECNICO_AYUDA_PRODUCCION:
+            case TECNICO_APOYO_PRODUCCION:
                 return isTap(metamacPrincipal);
             case TECNICO_DIFUSION:
                 return isTd(metamacPrincipal);
-            case TECNICO_AYUDA_DIFUSION:
+            case TECNICO_APOYO_DIFUSION:
                 return isTad(metamacPrincipal);
             default:
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not supported in security checker: " + role);
@@ -141,7 +141,7 @@ public class SecurityUtils {
     }
 
     private static Boolean isTap(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_AYUDA_PRODUCCION);
+        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
     private static Boolean isTp(MetamacPrincipal metamacPrincipal) {
@@ -149,7 +149,7 @@ public class SecurityUtils {
     }
 
     private static Boolean isTad(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_AYUDA_DIFUSION);
+        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
     private static Boolean isTd(MetamacPrincipal metamacPrincipal) {
