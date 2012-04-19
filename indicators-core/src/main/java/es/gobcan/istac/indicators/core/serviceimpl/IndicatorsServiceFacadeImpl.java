@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -586,6 +587,38 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         return geographicalValueDtos;
     }
+    
+    @Override
+    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        
+        // Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+
+        // Transform
+        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
+        for (GeographicalValue geoValue : geographicalValues) {
+            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
+        }
+        return geographicalValueDtos;
+    }
+    
+    @Override
+    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        
+        // Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicatorPublished(ctx, indicatorUuid);
+
+        // Transform
+        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
+        for (GeographicalValue geoValue : geographicalValues) {
+            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
+        }
+        return geographicalValueDtos;
+    }
 
     @Override
     public List<GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
@@ -747,6 +780,36 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve
         List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
         return timeValues;
+    }
+    
+    @Override
+    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        
+        // Retrieve
+        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        return measureValues;
+    }
+    
+    @Override
+    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        
+        // Retrieve
+        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicatorPublished(ctx, indicatorUuid);
+        return measureValues;
+    }
+    
+    @Override
+    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        
+        // Retrieve
+        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        return measureValues;
     }
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {

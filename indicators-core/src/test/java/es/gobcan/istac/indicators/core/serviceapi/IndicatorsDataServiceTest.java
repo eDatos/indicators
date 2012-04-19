@@ -360,6 +360,36 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testFindObservationsExtendedByDimensionsInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
     }
+    
+    @Override
+    public void testRetrieveGeographicalValuesInIndicator() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void testRetrieveGeographicalValuesInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicator() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicatorPublished() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     protected String getDataSetFile() {

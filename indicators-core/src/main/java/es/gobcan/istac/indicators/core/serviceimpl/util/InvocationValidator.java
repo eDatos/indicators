@@ -809,6 +809,27 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveGeographicalValuesInIndicator(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorVersionNumber, "INDICATOR_VERSION", exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveGeographicalValuesInIndicatorPublished(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkRetrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
@@ -887,6 +908,37 @@ public class InvocationValidator {
     }
 
     public static void checkRetrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorInstanceUuid, "INDICATOR_INSTANCE_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+        ValidationUtils.checkParameterRequired(indicatorVersionNumber, "INDICATOR_VERSION", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveMeasureValuesInIndicatorPublished(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
