@@ -13,8 +13,13 @@
         <constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService" />
     </bean>
 
+    <bean id="indicatorsService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsService" />
+    </bean>
+    
     <bean id="metamacStatisticalOperationsInternalInterfaceV10" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10" />
     </bean>
+
     
 </beans>

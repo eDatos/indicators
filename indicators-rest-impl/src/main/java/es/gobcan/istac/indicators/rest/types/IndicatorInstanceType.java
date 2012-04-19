@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
@@ -15,10 +16,17 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
     "timeValue",
     "geographicalGranularity",
     "geographicalValue",
-    "title"    
+    "decimalPlaces",
+    "title",
+    "childLink"
 })
-public class IndicatorInstanceType {
-
+public class IndicatorInstanceType implements Serializable {
+    
+    /**
+     * 
+     */
+    private static final long   serialVersionUID        = -2902494676944136458L;
+    
     private String              id                      = null;
     private String              kind                    = null;
     private String              selfLink                = null;
@@ -30,6 +38,7 @@ public class IndicatorInstanceType {
     private String              geographicalValue       = null;
     private Integer             decimalPlaces           = null;
     private Map<String, String> title                   = null;
+    private LinkType            childLink               = null;
 
     public String getId() {
         return id;
@@ -111,6 +120,12 @@ public class IndicatorInstanceType {
         this.decimalPlaces = decimalPlaces;
     }
 
-    // TODO PONER LOS CHILDS
+    public LinkType getChildLink() {
+        return childLink;
+    }
+
+    public void setChildLink(LinkType childLink) {
+        this.childLink = childLink;
+    }
 
 }

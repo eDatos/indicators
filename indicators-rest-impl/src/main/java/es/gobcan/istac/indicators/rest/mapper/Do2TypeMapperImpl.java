@@ -38,13 +38,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private MetamacStatisticalOperationsInternalInterfaceV10 statisticalOperations    = null;
 
     @Override
-    public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, UriComponentsBuilder uriComponentsBuilder) {
+    public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
         Assert.notNull(source);
-        Assert.notNull(uriComponentsBuilder);
+        Assert.notNull(baseURL);
         
         try {
             OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
-            IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, uriComponentsBuilder);
+            IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
             return target;
         } catch (MetamacExceptionFault e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -52,14 +52,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
     
     @Override
-    public IndicatorsSystemType indicatorsSystemDoToType(IndicatorsSystemVersion source, UriComponentsBuilder uriComponentsBuilder) {
+    public IndicatorsSystemType indicatorsSystemDoToType(IndicatorsSystemVersion source, final String baseURL) {
         Assert.notNull(source);
-        Assert.notNull(uriComponentsBuilder);
+        Assert.notNull(baseURL);
         
         try {
             OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
             
-            IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperationBase, uriComponentsBuilder);
+            IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperationBase, baseURL);
             return target;
         } catch (MetamacExceptionFault e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -67,15 +67,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(List<IndicatorsSystemVersion> sources, UriComponentsBuilder uriComponentsBuilder) {
+    public List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(List<IndicatorsSystemVersion> sources, final String baseURL) {
         Assert.notNull(sources);
-        Assert.notNull(uriComponentsBuilder);
+        Assert.notNull(baseURL);
 
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
             for (IndicatorsSystemVersion source : sources) {
                 OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
-                IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, uriComponentsBuilder);
+                IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
                 targets.add(target);
             }
             return targets;
@@ -85,74 +85,81 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public IndicatorInstanceType indicatorsInstanceDoToType(IndicatorInstance source, UriComponentsBuilder uriComponentsBuilder) {
+    public IndicatorInstanceType indicatorsInstanceDoToType(IndicatorInstance source, final String baseURL) {
         Assert.notNull(source);
-        Assert.notNull(uriComponentsBuilder);
+        Assert.notNull(baseURL);
         try {
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
-            String parentLinkURL = _createUrl(indicatorsSystem, uriComponentsBuilder); 
-            String selfLinkURL  = _createUrl(indicatorsSystem, source, uriComponentsBuilder);
+            String parentLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, baseURL);
+            String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source, baseURL);
+            String childLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, source, baseURL);
 
             IndicatorInstanceType target = new IndicatorInstanceType();
             target.setId(source.getUuid());
             target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
             target.setSelfLink(selfLinkURL);
+            
             LinkType parentLink = new LinkType();
             parentLink.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
             parentLink.setHref(parentLinkURL);
             target.setParentLink(parentLink);
+            
+            LinkType childLink = new LinkType();
+            childLink.setKind(RestConstants.KIND_INDICATOR_INSTANCE_DATA);
+            childLink.setHref(childLinkURL);
+            target.setChildLink(childLink);
+            
 
             target.setTimeGranularity(source.getTimeGranularity());
             target.setTimeValue(source.getTimeValue());
             target.setGeographicalGranularity(source.getGeographicalGranularity() != null ? source.getGeographicalGranularity().getCode() : null);
             target.setGeographicalValue(source.getGeographicalValue() != null ? source.getGeographicalValue().getCode() : null);
-            
+
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
             target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
 
-            return target;            
+            return target;
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
-
     }
 
     @Override
-    public List<IndicatorInstanceType> indicatorsInstanceDoToType(List<IndicatorInstance> sources, UriComponentsBuilder uriComponentsBuilder) {
+    public List<IndicatorInstanceType> indicatorsInstanceDoToType(List<IndicatorInstance> sources, final String baseURL) {
         Assert.notNull(sources);
 
         List<IndicatorInstanceType> targets = new ArrayList<IndicatorInstanceType>(sources.size());
         for (IndicatorInstance source : sources) {
-            IndicatorInstanceType target = indicatorsInstanceDoToType(source, uriComponentsBuilder);
+            IndicatorInstanceType target = indicatorsInstanceDoToType(source, baseURL);
             targets.add(target);
         }
         return  targets;
     }
     
-    private void _elementsLevelsDoToType(List<ElementLevel> sources, IndicatorsSystemType target, UriComponentsBuilder uriComponentsBuilder) {
+    private void _elementsLevelsDoToType(List<ElementLevel> sources, IndicatorsSystemType target, final String baseURL) {
         if (CollectionUtils.isEmpty(sources)) {
             return;
         }
 
-        List<ElementLevelType> targetElements = _elementsLevelsDoToType(sources, uriComponentsBuilder);
+        List<ElementLevelType> targetElements = _elementsLevelsDoToType(sources, baseURL);
         target.setElements(targetElements);
     }
     
-    private List<ElementLevelType> _elementsLevelsDoToType(List<ElementLevel> sources, UriComponentsBuilder uriComponentsBuilder) {
+    private List<ElementLevelType> _elementsLevelsDoToType(List<ElementLevel> sources, final String baseURL) {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
 
         List<ElementLevelType> targetElements = new ArrayList<ElementLevelType>();
         for (ElementLevel source : sources) {
-            ElementLevelType targetElement = _elementsLevelsDoToType(source, uriComponentsBuilder);
+            ElementLevelType targetElement = _elementsLevelsDoToType(source, baseURL);
             targetElements.add(targetElement);
         }
         return targetElements;
     }
     
-    private ElementLevelType _elementsLevelsDoToType(ElementLevel source, UriComponentsBuilder uriComponentsBuilder) {
+    private ElementLevelType _elementsLevelsDoToType(ElementLevel source, final String baseURL) {
         ElementLevelType target = new ElementLevelType();
         target.setId(source.getUuid());
         
@@ -164,36 +171,36 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle()));
             
             IndicatorsSystem indicatorsSystem = source.getIndicatorsSystemVersion().getIndicatorsSystem();
-            String selfLinkURL = _createUrl(indicatorsSystem, source.getIndicatorInstance(), uriComponentsBuilder);
+            String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source.getIndicatorInstance(), baseURL);
             target.setSelfLink(selfLinkURL);
         }
         
-        List<ElementLevelType> targetSubElements = _elementsLevelsDoToType(source.getChildren(), uriComponentsBuilder);
+        List<ElementLevelType> targetSubElements = _elementsLevelsDoToType(source.getChildren(), baseURL);
         target.setElements(targetSubElements);
         
         return target;
     }
 
     
-    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, UriComponentsBuilder uriComponentsBuilder) {
+    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
-        _indicatorsSystemDoToType(sourceIndicatorsSystem, target, uriComponentsBuilder);
-        _operationBaseDoToType(sourceOperationBase, target, uriComponentsBuilder);
+        _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
+        _operationBaseDoToType(sourceOperationBase, target, baseURL);
         return target;
     }
     
-    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, UriComponentsBuilder uriComponentsBuilder) {
+    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
         IndicatorsSystemType target = new IndicatorsSystemType();
-        _indicatorsSystemDoToType(sourceIndicatorsSystem, target, uriComponentsBuilder);
-        _operationBaseDoToType(sourceOperationBase, target, uriComponentsBuilder);
-        _elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target, uriComponentsBuilder);
+        _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
+        _operationBaseDoToType(sourceOperationBase, target, baseURL);
+        _elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target, baseURL);
         return target;
     }
     
     
     
-    private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemBaseType target, UriComponentsBuilder uriComponentsBuilder) {
-        String selfLinkURL = _createUrl(source.getIndicatorsSystem(), uriComponentsBuilder);
+    private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemBaseType target, final String baseURL) {
+        String selfLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(source.getIndicatorsSystem(), baseURL);
 
         target.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
         target.setSelfLink(selfLinkURL);
@@ -207,7 +214,19 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setStatisticalOperationLink(statisticalOperatioLink);
     }
     
-    private void _operationBaseDoToType(OperationBase sourceOperationBase, IndicatorsSystemBaseType target, UriComponentsBuilder uriComponentsBuilder) {
+    private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemType target, final String baseURL) {
+        _indicatorsSystemDoToType(source, (IndicatorsSystemBaseType)target, baseURL);
+
+        String childLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem_Instances(source.getIndicatorsSystem(), baseURL);
+        
+        LinkType childLink = new LinkType();
+        childLink.setKind(RestConstants.KIND_INDICATOR_INSTANCES);
+        childLink.setHref(childLinkURL);
+        
+        target.setChildLink(childLink);
+    }
+    
+    private void _operationBaseDoToType(OperationBase sourceOperationBase, IndicatorsSystemBaseType target, final String baseURL) {
         target.setId(sourceOperationBase.getCode());
         target.setCode(sourceOperationBase.getCode());
         target.setTitle(MapperUtil.getLocalisedLabel(sourceOperationBase.getTitle()));
@@ -217,23 +236,64 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
     
     
-    private String _createUrl(IndicatorsSystem indicatorsSystem, UriComponentsBuilder uriComponentsBuilder) {
-        uriComponentsBuilder.replacePath(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsSystem.getCode());
+    private String _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final String baseURL) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
+        _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);        
         return uriComponentsBuilder.build().encode().toUriString();
     }
     
-    private String _createUrl(IndicatorsSystem indicatorsSystem, IndicatorInstance indicatorsInstance, UriComponentsBuilder uriComponentsBuilder) {
-        uriComponentsBuilder.replacePath(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+    private String _createUrlIndicatorsSystems_IndicatorsSystem_Instances(final IndicatorsSystem indicatorsSystem, final String baseURL) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
+        _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
+        return uriComponentsBuilder.build().encode().toUriString();
+    }
+    
+    private String _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final String baseURL) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
+        _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
+        return uriComponentsBuilder.build().encode().toUriString();
+    }
+    
+    private String _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final String baseURL) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
+        _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
+        return uriComponentsBuilder.build().encode().toUriString();
+    }
+    
+
+    private void _createUrlIndicatorsSystems(UriComponentsBuilder uriComponentsBuilder) {
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
         uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsSystem.getCode());
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+    }
+    
+    private void _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
+        _createUrlIndicatorsSystems(uriComponentsBuilder);
+        
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(indicatorsSystem.getCode());        
+    }    
+
+
+    private void _createUrlIndicatorsSystems_IndicatorsSystem_Instances(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
+        _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);
+        
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES);
+    }
+    
+    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final UriComponentsBuilder uriComponentsBuilder) {
+        _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
+        
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(indicatorsInstance.getUuid());
-        return uriComponentsBuilder.build().encode().toUriString();
+    }
+    
+    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final UriComponentsBuilder uriComponentsBuilder) {
+        _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
+        
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA);   
     }
 
 }

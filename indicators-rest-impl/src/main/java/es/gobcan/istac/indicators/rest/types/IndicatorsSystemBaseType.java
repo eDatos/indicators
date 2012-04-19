@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
     "kind",
     "selfLink",
     "code",
-    "versionNumber",
+    "version",
     "publicationDate",
     "title",
     "acronym",

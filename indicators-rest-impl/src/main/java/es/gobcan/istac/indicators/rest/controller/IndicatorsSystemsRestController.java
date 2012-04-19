@@ -1,11 +1,5 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriTemplate;
 
+import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceDataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.NoPagedResultType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
-import es.gobcan.istac.indicators.rest.util.RESTURIUtil;
 
 @Controller("indicatorsSystemsRestController")
 @RequestMapping("/api/indicators/v1.0/*")
@@ -37,18 +31,6 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @Autowired
     private IndicatorSystemRestFacade indicatorSystemRestFacade = null;
     
-    // API
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public final void adminRoot(final HttpServletRequest request, final HttpServletResponse response) {
-        final String rootUri = request.getRequestURL().toString();
-
-        final URI uri = new UriTemplate("{rootUri}{resource}").expand(rootUri, "indicatorsSystems");
-        final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uri.toASCIIString(), RESTURIUtil.REL_COLLECTION);
-
-        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems));
-    }
-
     /**
      * @throws Exception
      * @throws ApplicationException
@@ -58,10 +40,13 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(final UriComponentsBuilder uriComponentsBuilder,
                                                                                            @RequestParam(required=false, value="limit") final Integer limit,
                                                                                            @RequestParam(required=false, value="offset") final Integer offset) throws Exception {
-        RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
-        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(uriComponentsBuilder, paginator);
         
-        HttpHeaders headers = HttpHeaderUtil.createPagedHeaders(uriComponentsBuilder, indicatorsSystemBaseTypes);
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
+        PagedResultType<IndicatorsSystemBaseType> indicatorsSystemBaseTypes = indicatorSystemRestFacade.findIndicatorsSystems(baseURL, paginator);
+        
+        baseURL = uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE).path(RestConstants.API_SLASH).path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS).build().toUriString();
+        HttpHeaders headers = HttpHeaderUtil.createPagedHeaders(baseURL, indicatorsSystemBaseTypes);
         ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> response = new ResponseEntity<PagedResultType<IndicatorsSystemBaseType>>(indicatorsSystemBaseTypes, headers, HttpStatus.OK);
         return response;
     }
@@ -72,10 +57,11 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      */
     @RequestMapping(value = "/indicatorsSystems/{idIndicatorSystem}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<IndicatorsSystemType> retrieveIndicatorsSystem(@PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                         final UriComponentsBuilder uriComponentsBuilder) throws Exception {
+    public ResponseEntity<IndicatorsSystemType> retrieveIndicatorsSystem(final UriComponentsBuilder uriComponentsBuilder,
+                                                                         @PathVariable("idIndicatorSystem") final String idIndicatorSystem) throws Exception {
 
-        IndicatorsSystemType indicatorsSystemBaseType = indicatorSystemRestFacade.retrieveIndicatorsSystem(uriComponentsBuilder, idIndicatorSystem);
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        IndicatorsSystemType indicatorsSystemBaseType = indicatorSystemRestFacade.retrieveIndicatorsSystem(baseURL, idIndicatorSystem);
         ResponseEntity<IndicatorsSystemType> response = new ResponseEntity<IndicatorsSystemType>(indicatorsSystemBaseType, HttpStatus.OK);
         return response;
     }
@@ -86,10 +72,11 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      */
     @RequestMapping(value = "/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<IndicatorInstanceType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
+    public ResponseEntity<NoPagedResultType<IndicatorInstanceType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
                                                                                    @PathVariable("idIndicatorSystem") final String idIndicatorSystem) throws Exception {
-        List<IndicatorInstanceType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(uriComponentsBuilder, idIndicatorSystem);
-        ResponseEntity<List<IndicatorInstanceType>> response = new ResponseEntity<List<IndicatorInstanceType>>(indicatorInstanceTypes, HttpStatus.OK);
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        NoPagedResultType<IndicatorInstanceType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem);
+        ResponseEntity<NoPagedResultType<IndicatorInstanceType>> response = new ResponseEntity<NoPagedResultType<IndicatorInstanceType>>(indicatorInstanceTypes, HttpStatus.OK);
         return response;
     }
     
@@ -102,10 +89,25 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     public ResponseEntity<IndicatorInstanceType> retrieveIndicatorsInstance(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
                                                                     @PathVariable("uuidIndicatorInstance") final String uuidIndicatorInstance) throws Exception {
-        IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorsInstance(uriComponentsBuilder, idIndicatorSystem, uuidIndicatorInstance);
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorsInstance(baseURL, idIndicatorSystem, uuidIndicatorInstance);
         ResponseEntity<IndicatorInstanceType> response = new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
         return response;
     }
     
-    // FALTA OBTENER LOS DATOS DE UNA INSTANCIA
+    /**
+     * @throws Exception
+     * @throws ApplicationException
+     */
+    @RequestMapping(value = "/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{uuidIndicatorInstance}/data", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<IndicatorInstanceDataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
+                                                                    @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
+                                                                    @PathVariable("uuidIndicatorInstance") final String uuidIndicatorInstance) throws Exception {
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        IndicatorInstanceDataType indicatorInstanceDataType = indicatorSystemRestFacade.retrieveIndicatorsInstanceData(baseURL, idIndicatorSystem, uuidIndicatorInstance);
+        ResponseEntity<IndicatorInstanceDataType> response = new ResponseEntity<IndicatorInstanceDataType>(indicatorInstanceDataType, HttpStatus.OK);
+        return response;
+    }
+    
 }

@@ -17,7 +17,8 @@ import es.gobcan.istac.indicators.rest.types.PagedResultType;
 public class HttpHeaderUtil {
 
     //
-    public static <T extends Serializable> HttpHeaders createPagedHeaders(final UriComponentsBuilder uriBuilder, final PagedResultType<T> pagedResultType) {
+    public static <T extends Serializable> HttpHeaders createPagedHeaders(final String httpUrl, final PagedResultType<T> pagedResultType) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(httpUrl);
 
         final StringBuilder linkHeader = new StringBuilder();
         if (hasNext(pagedResultType)) {
