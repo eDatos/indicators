@@ -44,7 +44,7 @@ public class GeographicalValueRepositoryImpl extends GeographicalValueRepository
     public List<GeographicalValue> findGeographicalValuesWithGranularity(String granularityCode) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("code", granularityCode);
-        List<GeographicalValue> result = findByQuery("from GeographicalValue gv inner join gv.granularity as gra where gra.code = :code", parameters, 1);
+        List<GeographicalValue> result = findByQuery("select gv from GeographicalValue gv inner join gv.granularity as gra where gra.code = :code", parameters);
         return result;
     }
 }
