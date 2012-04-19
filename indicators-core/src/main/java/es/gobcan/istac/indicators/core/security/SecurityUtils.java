@@ -1,17 +1,19 @@
 package es.gobcan.istac.indicators.core.security;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext; 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 public class SecurityUtils {
 
     // TODO acceso a cada operación en concreto. x ej. al consultar, buscar... hay que filtrar
+    // TODO poner en librería común?
 
     public static void checkOperationAllowed(ServiceContext ctx, RoleEnum... roles) throws MetamacException {
 

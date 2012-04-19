@@ -41,6 +41,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
@@ -48,7 +49,6 @@ import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
 import es.gobcan.istac.indicators.core.mapper.SculptorCriteria2MetamacCriteriaMapper;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
-import es.gobcan.istac.indicators.core.security.RoleEnum;
 import es.gobcan.istac.indicators.core.security.SecurityUtils;
 
 /**

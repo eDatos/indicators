@@ -1423,5 +1423,16 @@ Application Indicators {
     		CODE,
     		OBS_CONF
     	}
+    	
+    	"Roles"
+    	enum RoleEnum {
+    		ADMINISTRADOR,
+    		TECNICO_SISTEMA_INDICADORES,
+    		TECNICO_AYUDA_PRODUCCION,
+    		TECNICO_PRODUCCION,
+    		TECNICO_AYUDA_DIFUSION,
+    		TECNICO_DIFUSION,
+    		ANY_ROLE_ALLOWED
+    	}
 	}
 }
