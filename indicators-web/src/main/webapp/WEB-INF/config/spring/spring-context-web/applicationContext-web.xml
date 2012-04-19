@@ -10,7 +10,11 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-    <context:property-placeholder />
+    <bean id="propertyPlaceholderConfigurer" class="org.siemac.metamac.core.common.conf.ConfigurationServicePropertyPlaceholderConfigurer">
+        <property name="configurationService">
+            <ref bean="configurationService" />
+        </property>
+    </bean>
 
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -69,6 +73,7 @@
     <!-- Imports user-defined @Controller beans that process client requests -->
     <import resource="applicationContext-web-controllers.xml" />
     <import resource="applicationContext-web-resources.xml" />
-    <import resource="applicationContext-web-rest.xml" />
+    <import resource="applicationContext-web-clients.xml" />
+    <import resource="classpath:/spring/indicators-rest-applicationContext.xml" />
     
 </beans>
