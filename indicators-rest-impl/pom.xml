@@ -1,10 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>indicators</artifactId>
-    <groupId>es.gobcan.istac.indicators</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
-  <artifactId>indicators-rest-impl</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>es.gobcan.istac.indicators</groupId>
+        <artifactId>indicators-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../indicators-parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>indicators-rest-impl</artifactId>
+    <name>INDICATORS :: REST</name>
+
+    <dependencies>
+        <!-- INDICATORS -->
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-core</artifactId>
+            <classifier>client</classifier>
+        </dependency>
+
+        <!-- METAMAC -->
+        <dependency>
+            <groupId>org.siemac.metamac.statistical.operations</groupId>
+            <artifactId>metamac-statistical-operations-ws-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-sso-client</artifactId>
+        </dependency>
+
+        <!-- WEB -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <!-- JUNIT -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId> <!-- without hamcrest dep -->
+            <version>4.10</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- TODO -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+            <version>1.0.0.BUILD-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.5.5</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+
+
+
+    </dependencies>
 </project>
