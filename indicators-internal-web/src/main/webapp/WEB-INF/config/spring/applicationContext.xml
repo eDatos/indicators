@@ -30,11 +30,13 @@
 	<!-- Spring Beans for side server of GWT -->
 	<bean class="com.gwtplatform.dispatch.server.spring.configuration.DefaultModule" />
 	<bean class="com.gwtplatform.dispatch.server.spring.actionvalidator.DefaultActionValidator" />
+ 
+    <bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider"/>
 	
-	<!-- 	Logger aspect for logging exceptions thrown by actionHandlers -->
+	<!-- Logger aspect for logging exceptions thrown by actionHandlers -->
 	<bean id="logAspect" class="org.siemac.metamac.web.common.server.aspects.ActionHandlerLoggerAspect"/>	
 	
-<!-- 	Dispatch bean needs a logger bean declared  -->
+    <!-- Dispatch bean needs a logger bean declared  -->
 	<bean id="logger" class="com.gwtplatform.dispatch.server.spring.LoggerFactoryBean">
 		<constructor-arg>
 			<bean class="java.util.logging.Logger" factory-method="getAnonymousLogger">
