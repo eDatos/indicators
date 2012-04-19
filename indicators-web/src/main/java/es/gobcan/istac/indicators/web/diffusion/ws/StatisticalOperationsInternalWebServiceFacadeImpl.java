@@ -29,6 +29,7 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
         return webservicesLocator.getMetamacStatisticalOperationsInternalInterface().retrieveOperation(operationCode);
     }
 
+    // TODO Este método se va a utilizar para una página que no se va mostrar. Si se muestra, implementar la paginación
     @Override
     public OperationBaseList findOperationsIndicatorsSystem(List<String> indicatorsSystemsCodes) throws MetamacExceptionFault {
         
