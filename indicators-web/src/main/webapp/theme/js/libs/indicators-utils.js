@@ -26,11 +26,9 @@ function getLabelLocale(internationalString, locale) {
 	if (internationalString == null || locale == null) {
 		return '';
 	}
-	var localisedString = _.find(internationalString.texts, function(text) {
-		return text.locale == locale;
-	});
+	var localisedString = internationalString[locale];
 	if (localisedString) {
-		return localisedString.label;
+		return localisedString;
 	}
 	return '';
 };

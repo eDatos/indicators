@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -99,29 +100,11 @@ public class IndicatorsSystemsController extends BaseController {
     }
 
     @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
-    public ModelAndView setupForm(@PathVariable("code") String code, Model model) throws Exception {
-        //
-        // // Retrieve indicators system
-        // OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);
-        // if (!ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus())) {
-        // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not published externally with code" + code);
-        //
-        // }
-        // IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
-        // IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
-        //
-        // // Retrieve dimensions and indicators instances
-        // IndicatorsSystemStructureDto structureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), indicatorsSystemDto.getUuid(),
-        // indicatorsSystemDto.getVersionNumber());
-        //
-        // // To Json
-        // ObjectMapper mapper = new ObjectMapper();
-        // String indicatorsSystemJson = mapper.writeValueAsString(indicatorsSystemWebDto);
-        // String structureJson = mapper.writeValueAsString(structureDto.getElements());
-        //
+    public ModelAndView setupForm(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
 
-        // TODO url
-        URL url = new URL("http://localhost:8080/indicators-web/api/indicators/v1.0/indicatorsSystems/" + code);
+        // TODO Invocar REST desde página
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().encode().toUriString(); 
+        URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
