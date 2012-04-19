@@ -1,0 +1,47 @@
+package es.gobcan.istac.indicators.web.server.handlers;
+
+import java.util.List;
+
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.gwtplatform.dispatch.server.ExecutionContext;
+import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
+import com.gwtplatform.dispatch.shared.ActionException;
+
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
+
+@Component
+public class GetGeographicalGranularitiesInIndicatorActionHandler extends AbstractActionHandler<GetGeographicalGranularitiesInIndicatorAction, GetGeographicalGranularitiesInIndicatorResult> {
+
+    @Autowired
+    private IndicatorsServiceFacade indicatorsServiceFacade;
+
+    public GetGeographicalGranularitiesInIndicatorActionHandler() {
+        super(GetGeographicalGranularitiesInIndicatorAction.class);
+    }
+
+    @Override
+    public GetGeographicalGranularitiesInIndicatorResult execute(GetGeographicalGranularitiesInIndicatorAction action, ExecutionContext context) throws ActionException {
+        try {
+            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularitiesInIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getIndicatorVersion());
+            return new GetGeographicalGranularitiesInIndicatorResult(geographicalGranularityDtos);
+        } catch (MetamacException e) {
+            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+        }
+
+    }
+
+    @Override
+    public void undo(GetGeographicalGranularitiesInIndicatorAction action, GetGeographicalGranularitiesInIndicatorResult result, ExecutionContext context) throws ActionException {
+
+    }
+
+}
