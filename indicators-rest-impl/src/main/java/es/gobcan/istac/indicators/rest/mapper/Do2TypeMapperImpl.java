@@ -15,13 +15,11 @@ import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
-import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
