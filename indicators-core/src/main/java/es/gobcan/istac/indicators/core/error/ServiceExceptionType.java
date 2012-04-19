@@ -45,6 +45,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_MUST_NOT_BE_LINKED_TO_OTHER_INDICATOR          = create("exception.indicators.indicator.must_not_be_linked_to_other_indicator");
     public static final CommonServiceExceptionType INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED      = create("exception.indicators.indicator.all_indicators_must_be_published");
     public static final CommonServiceExceptionType INDICATOR_NOT_POPULATED                                  = create("exception.indicators.indicator.not_populated");
+    public static final CommonServiceExceptionType INDICATOR_FIND_DIMENSION_CODES_ERROR                     = create("exception.indicators.indicator.find_dimension_codes_error");
 
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                    = create("exception.indicators.data_source.not_found");

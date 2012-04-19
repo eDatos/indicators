@@ -144,7 +144,6 @@ public class TimeVariableUtils {
         
         String feb29 = "0229";
         if (feb29.equals(value.substring(4))) {
-            //TODO: Wait for Alberto Answer to decide what to do
             return null;
         }
         year = year-1;

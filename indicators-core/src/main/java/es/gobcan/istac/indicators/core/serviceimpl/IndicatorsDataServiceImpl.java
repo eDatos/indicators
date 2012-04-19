@@ -245,8 +245,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                // TODO: EXCEPTION TYPE
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -287,8 +286,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                // TODO: EXCEPTION TYPE
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -341,8 +339,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<TimeGranularityEnum>(timeGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                // TODO: EXCEPTION TYPE
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -381,8 +378,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                // TODO: EXCEPTION TYPE
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -420,8 +416,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                // TODO: EXCEPTION TYPE
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());

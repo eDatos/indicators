@@ -290,7 +290,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveIndicatorsSystemByDimension(ServiceContext ctx, String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
