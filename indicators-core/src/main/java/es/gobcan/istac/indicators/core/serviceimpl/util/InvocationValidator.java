@@ -766,25 +766,25 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
     
-    public static void checkRetrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, GeographicalGranularity granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
         ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
         ValidationUtils.checkParameterRequired(indicatorVersionNumber, "INDICATOR_VERSION", exceptions);
-        ValidationUtils.checkParameterRequired(granularity, "GRANULARITY", exceptions);
+        ValidationUtils.checkParameterRequired(granularityUuid, "GRANULARITY_UUID", exceptions);
         
         ExceptionUtils.throwIfException(exceptions);
     }
     
-    public static void checkRetrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, GeographicalGranularity granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
         
         ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
-        ValidationUtils.checkParameterRequired(granularity, "GRANULARITY", exceptions);
+        ValidationUtils.checkParameterRequired(granularityUuid, "GRANULARITY_UUID", exceptions);
         
         ExceptionUtils.throwIfException(exceptions);
     }

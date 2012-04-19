@@ -140,9 +140,9 @@ Application Indicators {
 	    	"Retrieves geographic granularities in the published indicator"
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @GeographicalGranularity granularity) throws MetamacException;
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the publidhed indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, @GeographicalGranularity granularity) throws MetamacException;
+	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
@@ -265,11 +265,11 @@ Application Indicators {
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @GeographicalGranularity granularity) throws MetamacException;
+	    	List<@GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the publidhed indicator"
-	    	List<@GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, @GeographicalGranularity granularity) throws MetamacException;
+	    	List<@GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
-	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 
 	    	// GEOGRAPHICAL GRANULARITIES
@@ -278,9 +278,9 @@ Application Indicators {
 	    	"Retrieves all geographical granularities"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
-	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves geographic granularities in the published indicator"
-	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	
 	    	
 	    	// TIME GRANULARITIES

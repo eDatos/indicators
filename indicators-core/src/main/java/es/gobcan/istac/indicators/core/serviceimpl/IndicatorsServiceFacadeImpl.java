@@ -521,32 +521,43 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
     
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, GeographicalGranularity granularity)
+    public List<GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
             throws MetamacException {
         
         // Security
         SecurityUtils.checkOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
         
-        return geographicalValues;
+        
+        //Transform
+        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
+        for (GeographicalValue geoValue : geographicalValues) {
+            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
+        }
+        return geographicalValueDtos;
     }
     
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, GeographicalGranularity granularity) throws MetamacException {
+    public List<GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
         
-        return geographicalValues;
+        // Retrieve
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularityUuid);
+        
+        //Transform
+        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
+        for (GeographicalValue geoValue : geographicalValues) {
+            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
+        }
+        return geographicalValueDtos;
     }
     
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -554,7 +565,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         // Retrieve
         List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
         
-        return geographicalValues;
+        //Transform
+        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
+        for (GeographicalValue geoValue : geographicalValues) {
+            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
+        }
+        return geographicalValueDtos;
     }
     
     
@@ -592,25 +608,39 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
     
     @Override
-    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         // Security
         SecurityUtils.checkOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
         List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-        return geographicalGranularities;
+        
+        // Transform
+        List<GeographicalGranularityDto> geographicalGranularityDtos = new ArrayList<GeographicalGranularityDto>();
+        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
+            geographicalGranularityDtos.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
+        }
+
+        return geographicalGranularityDtos;
     }
     
     @Override
-    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
         List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicatorPublished(ctx, indicatorUuid);
-        return geographicalGranularities;
+        
+        // Transform
+        List<GeographicalGranularityDto> geographicalGranularityDtos = new ArrayList<GeographicalGranularityDto>();
+        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
+            geographicalGranularityDtos.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
+        }
+
+        return geographicalGranularityDtos;
     }
     
     
