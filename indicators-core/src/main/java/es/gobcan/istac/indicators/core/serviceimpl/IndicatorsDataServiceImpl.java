@@ -196,6 +196,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
+            // TODO comprobar indicator.getIsPublished
             String diffusionVersion = indicator.getDiffusionVersion() != null ? indicator.getDiffusionVersion().getVersionNumber() : null;
             
             String indicatorUuid = indicator.getUuid();
@@ -572,6 +573,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
+        // TODO comprobar indicator.getIsPublished
         if (indicator.getDiffusionVersion() != null) {
             return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
         } else {
