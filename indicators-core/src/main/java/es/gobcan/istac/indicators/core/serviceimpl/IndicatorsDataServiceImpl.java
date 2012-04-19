@@ -196,8 +196,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
-            // TODO comprobar indicator.getIsPublished
-            String diffusionVersion = indicator.getDiffusionVersion() != null ? indicator.getDiffusionVersion().getVersionNumber() : null;
+            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
             
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
@@ -538,12 +537,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /* Private methods */
 
     private List<String> findCodesForDimensionInIndicator(IndicatorVersion indicatorVersion, IndicatorDataDimensionTypeEnum dimension) throws ApplicationException {
-        List<String> codes = null;
+        List<String> codes = new ArrayList<String>();
         List<ConditionObservationDto> conditions = datasetRepositoriesServiceFacade.findCodeDimensions(indicatorVersion.getDataRepositoryId());
         for (ConditionObservationDto condition : conditions) {
             if (condition.getCodesDimension().size() > 0) {
                 if (dimension.name().equals(condition.getCodesDimension().get(0).getDimensionId())) {
-                    codes = new ArrayList<String>();
                     for (CodeDimensionDto codeDim : condition.getCodesDimension()) {
                         codes.add(codeDim.getCodeDimensionId());
                     }
@@ -574,8 +572,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private IndicatorVersion getIndicatorPublishedVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
-        // TODO comprobar indicator.getIsPublished
-        if (indicator.getDiffusionVersion() != null) {
+        if (indicator.getIsPublished()) {
             return getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, indicatorUuid);
