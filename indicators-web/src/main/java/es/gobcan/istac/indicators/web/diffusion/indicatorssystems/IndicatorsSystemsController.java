@@ -1,5 +1,9 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +18,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
@@ -36,18 +38,18 @@ import es.gobcan.istac.indicators.web.diffusion.ws.WsToDtoMapperUtils;
 public class IndicatorsSystemsController extends BaseController {
 
     @Autowired
-    private IndicatorsServiceFacade indicatorsServiceFacade;
-    
+    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ConfigurationService                          configurationService;
 
     // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems() throws Exception {
-        
+
         // Find indicators systems published
         MetamacCriteria metamacCriteria = new MetamacCriteria();
         metamacCriteria.setPaginator(new MetamacCriteriaPaginator());
@@ -58,7 +60,7 @@ public class IndicatorsSystemsController extends BaseController {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Pagination is not implemented and results size is greater of supported");
         }
         List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
-        
+
         // Find operations metadata from web service
         List<String> indicatorsSystemsCodes = new ArrayList<String>();
         for (IndicatorsSystemDto indicatorsSystemDto : result.getResults()) {
@@ -67,13 +69,13 @@ public class IndicatorsSystemsController extends BaseController {
         OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(indicatorsSystemsCodes);
 
         // Merges information and retrieves only created in indicators core
-        Map<String, OperationBase> operationsByCode = new HashMap<String, OperationBase>();        
+        Map<String, OperationBase> operationsByCode = new HashMap<String, OperationBase>();
         if (operationBaseList != null) {
             for (OperationBase operationBase : operationBaseList.getOperation()) {
                 operationsByCode.put(operationBase.getCode(), operationBase);
             }
         }
-        
+
         List<IndicatorsSystemWebDto> indicatorsSystemsWebDto = new ArrayList<IndicatorsSystemWebDto>();
         for (IndicatorsSystemDto indicatorsSystemDto : indicatorsSystemsDto) {
             OperationBase operationBase = operationsByCode.get(indicatorsSystemDto.getCode());
@@ -84,7 +86,7 @@ public class IndicatorsSystemsController extends BaseController {
                 // TODO dar error si no existe la operacion en statistical operations?
             }
         }
-        
+
         // To Json
         ObjectMapper mapper = new ObjectMapper();
         String indicatorsSystemsJson = mapper.writeValueAsString(indicatorsSystemsWebDto);
@@ -92,34 +94,53 @@ public class IndicatorsSystemsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
         modelAndView.addObject("indicatorsSystems", indicatorsSystemsJson);
- 
+
         return modelAndView;
     }
-    
+
     @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
     public ModelAndView setupForm(@PathVariable("code") String code, Model model) throws Exception {
+        //
+        // // Retrieve indicators system
+        // OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);
+        // if (!ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus())) {
+        // throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not published externally with code" + code);
+        //
+        // }
+        // IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
+        // IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
+        //
+        // // Retrieve dimensions and indicators instances
+        // IndicatorsSystemStructureDto structureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), indicatorsSystemDto.getUuid(),
+        // indicatorsSystemDto.getVersionNumber());
+        //
+        // // To Json
+        // ObjectMapper mapper = new ObjectMapper();
+        // String indicatorsSystemJson = mapper.writeValueAsString(indicatorsSystemWebDto);
+        // String structureJson = mapper.writeValueAsString(structureDto.getElements());
+        //
 
-        // Retrieve indicators system
-        OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(code);
-        if (!ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not published externally with code" + code);
-            
+        // TODO url
+        URL url = new URL("http://localhost:8080/indicators-web/api/indicators/v1.0/indicatorsSystems/" + code);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "application/json");
+
+        if (conn.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
         }
-        IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
-        IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemPublishedByCode(getServiceContext(), code);
-        
-        // Retrieve dimensions and indicators instances
-        IndicatorsSystemStructureDto structureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContext(), indicatorsSystemDto.getUuid(), indicatorsSystemDto.getVersionNumber());
-        
-        // To Json
-        ObjectMapper mapper = new ObjectMapper();
-        String indicatorsSystemJson = mapper.writeValueAsString(indicatorsSystemWebDto);
-        String structureJson = mapper.writeValueAsString(structureDto.getElements());
+
+        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+        StringBuffer json = new StringBuffer();
+        String output = null;
+        while ((output = br.readLine()) != null) {
+            json.append(output);
+        }
+        conn.disconnect();
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
-        modelAndView.addObject("indicatorsSystem", indicatorsSystemJson);
-        modelAndView.addObject("indicatorsSystemStructure", structureJson);
+        modelAndView.addObject("indicatorsSystem", json);
         // TODO propiedad de configuración en páginas ftl. Podría mejorarse accediendo al contexto de Spring desde la página, en lugar de añadir la propiedad en el modelo de vista
         String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
         if (jaxiUrlBase.endsWith("/")) {

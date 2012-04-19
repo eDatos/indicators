@@ -28,21 +28,21 @@
 
 <script type="text/html" id="elementTemplate">
 
-	<% if (elementTypeDimension) { %>
+	<% if (kind == 'indicators#indicatorDimension') { %>
 		<div style="clear: both;" ></div>
 		<% if (level == 1) { %>
 			<br />
-			<h3 id="cab_1"><%= getLabel(dimension.title) %></a></h3>
+			<h3 id="cab_1"><%= getLabel(title) %></a></h3>
 		<% } else if (level == 2) { %>
 			<li>
-				<span class="itemSubcapitulo"><%= getLabel(dimension.title) %></span>
+				<span class="itemSubcapitulo"><%= getLabel(title) %></span>
 			</li>
 		<% } else { %>
 			<li style="font-weight: bold;">
-				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(dimension.title) %></span>
+				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(title) %></span>
 			</li>
 		<% } %>	
-	<% } else if (elementTypeIndicatorInstance) { %>
+	<% } else if (kind == 'indicators#indicatorInstance') { %>
 		<li>		
 	  		<div style="clear: both;">
 				<div class="itemControlInfo">
@@ -50,8 +50,7 @@
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
-					
-					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?indicators=PENDIENTE_IDENTIFICADOR"><%= getLabel(indicatorInstance.title) %></a>
+					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?indicators=PENDIENTE_IDENTIFICADOR"><%= getLabel(title) %></a>
 				</div>
 			</div>								
 		</li>
@@ -87,9 +86,10 @@
 			var html = this.template(this.model.toJSON());
 			
 			// Subelements
-			if (this.model.get('elementTypeDimension')) {
+			var kind = this.model.get('kind');
+			if (kind == 'indicators#indicatorDimension') {
 				var subelementsNumeration = 1;
-				var subelements = this.model.get('subelements');
+				var subelements = this.model.get('elements');
 				if (subelements != '') {
 					html += '<ul class="subcaps">';
 					var subelementsCollection = new ElementsCollection(subelements);				
@@ -124,15 +124,17 @@
 	});
 	
 	$(function(){
-		var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: ${indicatorsSystem}});
+
+		var indicatorsSystem = ${indicatorsSystem};
+
+		var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystem});
 		indicatorsSystemView.render();
 		
-		var elementsCollection = new ElementsCollection(${indicatorsSystemStructure});
+		var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
 		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1, numerationBase : '', numeration : 1});
 		var elementsCollectionViewHtml = elementsCollectionView.render();
 		$("#elements-view").html(elementsCollectionViewHtml);
 	});
 	
 </script>
-
 [/@template.base]
