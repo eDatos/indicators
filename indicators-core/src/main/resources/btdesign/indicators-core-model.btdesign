@@ -33,8 +33,9 @@ Application Indicators {
 	    	PagedResult<@IndicatorsSystemVersion> findIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	PagedResult<@IndicatorsSystemVersion> findIndicatorsSystemsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
+	    	@IndicatorsSystemVersion rejectIndicatorsSystemProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
-	    	@IndicatorsSystemVersion rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
+	    	@IndicatorsSystemVersion rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorsSystemVersion publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorsSystemVersion versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
@@ -87,8 +88,9 @@ Application Indicators {
 	    	PagedResult<@IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	PagedResult<@IndicatorVersion> findIndicatorsPublished(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToProductionValidation(String uuid) throws MetamacException;
+			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
-	    	@IndicatorVersion rejectIndicatorValidation(String uuid) throws MetamacException;
+	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
@@ -208,10 +210,12 @@ Application Indicators {
 	    	deleteIndicatorsSystem(String uuid) throws MetamacException;
 	    	"Sends indicators system to production validation"
 	    	@IndicatorsSystemDto sendIndicatorsSystemToProductionValidation(String uuid) throws MetamacException;
+	    	"Rejects production validation of indicators system"
+	    	@IndicatorsSystemDto rejectIndicatorsSystemProductionValidation(String uuid) throws MetamacException;
 	    	"Sends indicators system to diffusion validation"
 	    	@IndicatorsSystemDto sendIndicatorsSystemToDiffusionValidation(String uuid) throws MetamacException;
-	    	"Rejects validation of indicators system"
-	    	@IndicatorsSystemDto rejectIndicatorsSystemValidation(String uuid) throws MetamacException;
+	    	"Rejects diffusion validation of indicators system"
+	    	@IndicatorsSystemDto rejectIndicatorsSystemDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicators system"
 	    	@IndicatorsSystemDto publishIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicators system"
@@ -314,10 +318,12 @@ Application Indicators {
 	    	deleteIndicator(String uuid) throws MetamacException;
 	    	"Sends indicator to production validation"
 	    	@IndicatorDto sendIndicatorToProductionValidation(String uuid) throws MetamacException;
+	    	"Rejects production validation of indicator"
+	    	@IndicatorDto rejectIndicatorProductionValidation(String uuid) throws MetamacException;
 	    	"Sends indicator to diffusion validation"
 	    	@IndicatorDto sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
-	    	"Rejects validation of indicator"
-	    	@IndicatorDto rejectIndicatorValidation(String uuid) throws MetamacException;
+	    	"Rejects diffusion validation of indicator"
+	    	@IndicatorDto rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
 	    	@IndicatorDto publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicator"

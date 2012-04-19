@@ -966,7 +966,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testRejectIndicatorsSystemValidation() throws Exception {
+    public void testRejectIndicatorsSystemProductionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_4;
         String versionNumber = "1.000";
@@ -979,7 +979,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Rejects validation
-        IndicatorsSystemDto indicatorsSystemDtoV1Updated = indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+        IndicatorsSystemDto indicatorsSystemDtoV1Updated = indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContext(), uuid);
 
         // Validation
         {
@@ -1010,9 +1010,47 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
+    
+    @Test
+    public void testRejectIndicatorsSystemProductionValidationErrorNotExists() throws Exception {
+
+        try {
+            indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContext(), NOT_EXISTS);
+            fail("Indicators system not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testRejectIndicatorsSystemProductionValidationErrorWrongProcStatus() throws Exception {
+
+        String uuid = INDICATORS_SYSTEM_2;
+
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemDto.getProcStatus());
+            assertEquals("1.000", indicatorsSystemDto.getProductionVersion());
+            assertEquals(null, indicatorsSystemDto.getDiffusionVersion());
+        }
+
+        try {
+            indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContext(), uuid);
+            fail("Indicators system is not in validation");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
 
     @Test
-    public void testRejectIndicatorsSystemValidationInDiffusionValidation() throws Exception {
+    public void testRejectIndicatorsSystemDiffusionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_5;
         String versionNumber = "1.000";
@@ -1025,7 +1063,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Rejects validation
-        indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+        indicatorsServiceFacade.rejectIndicatorsSystemDiffusionValidation(getServiceContext(), uuid);
 
         // Validation
         {
@@ -1035,12 +1073,12 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
         }
     }
-
+    
     @Test
-    public void testRejectIndicatorsSystemValidationErrorNotExists() throws Exception {
+    public void testRejectIndicatorsSystemDiffusionValidationErrorNotExists() throws Exception {
 
         try {
-            indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), NOT_EXISTS);
+            indicatorsServiceFacade.rejectIndicatorsSystemDiffusionValidation(getServiceContext(), NOT_EXISTS);
             fail("Indicators system not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -1051,7 +1089,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testRejectIndicatorsSystemValidationErrorWrongProcStatusProduction() throws Exception {
+    public void testRejectIndicatorsSystemDiffusionValidationErrorWrongProcStatus() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
 
@@ -1063,20 +1101,19 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         try {
-            indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsServiceFacade.rejectIndicatorsSystemDiffusionValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
     @Test
-    public void testRejectIndicatorsSystemValidationErrorWrongProcStatusDiffusion() throws Exception {
+    public void testRejectIndicatorsSystemDiffusionValidationErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
 
@@ -1088,15 +1125,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         try {
-            indicatorsServiceFacade.rejectIndicatorsSystemValidation(getServiceContext(), uuid);
+            indicatorsServiceFacade.rejectIndicatorsSystemDiffusionValidation(getServiceContext(), uuid);
             fail("Indicators system is not in validation");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 

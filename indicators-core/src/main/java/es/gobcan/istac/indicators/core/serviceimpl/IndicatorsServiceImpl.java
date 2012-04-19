@@ -299,6 +299,29 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public IndicatorVersion rejectIndicatorProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRejectIndicatorProductionValidation(uuid, null);
+
+        // Retrieve version in production
+        IndicatorVersion indicatorInProduction = retrieveIndicatorProcStatusInProduction(ctx, uuid, false);
+
+        // Validate to reject
+        checkIndicatorToRejectProductionValidation(ctx, uuid, indicatorInProduction);
+
+        // Update proc status
+        indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.VALIDATION_REJECTED);
+        indicatorInProduction.setProductionValidationDate(null);
+        indicatorInProduction.setProductionValidationUser(null);
+        indicatorInProduction.setDiffusionValidationDate(null);
+        indicatorInProduction.setDiffusionValidationUser(null);
+        indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
+
+        return indicatorInProduction;
+    }
+
+    @Override
     public IndicatorVersion sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -320,16 +343,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public IndicatorVersion rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorVersion rejectIndicatorDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRejectIndicatorValidation(uuid, null);
+        InvocationValidator.checkRejectIndicatorDiffusionValidation(uuid, null);
 
-        // Retrieve version in production (proc status can be production or diffusion validation)
+        // Retrieve version in production
         IndicatorVersion indicatorInProduction = retrieveIndicatorProcStatusInProduction(ctx, uuid, false);
 
         // Validate to reject
-        checkIndicatorToReject(ctx, uuid, indicatorInProduction);
+        checkIndicatorToRejectDiffusionValidation(ctx, uuid, indicatorInProduction);
 
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.VALIDATION_REJECTED);
@@ -369,7 +392,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
         indicatorInProduction.setPublicationUser(ctx.getUserId());
-        indicatorInProduction.setPublicationFailedDate(null); // remove posible failed information 
+        indicatorInProduction.setPublicationFailedDate(null); // remove posible failed information
         indicatorInProduction.setPublicationFailedUser(null);
         indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
 
@@ -492,18 +515,17 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkUpdateDataSource(dataSource, null);
 
-        
         // Check indicator proc status and linked indicators
         checkIndicatorVersionInProduction(dataSource.getIndicatorVersion());
         checkIndicatorsLinkedInDatasource(dataSource, dataSource.getIndicatorVersion());
 
         // Update
         DataSource updatedDataSource = getDataSourceRepository().save(dataSource);
-        
+
         IndicatorVersion indicatorVersion = updatedDataSource.getIndicatorVersion();
         indicatorVersion.setInconsistentData(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
-        
+
         return updatedDataSource;
     }
 
@@ -516,10 +538,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         DataSource dataSource = retrieveDataSource(ctx, uuid);
         IndicatorVersion indicatorVersion = dataSource.getIndicatorVersion();
         checkIndicatorVersionInProduction(indicatorVersion);
-        
+
         // Delete
         getDataSourceRepository().delete(dataSource);
-        
+
         indicatorVersion.setInconsistentData(Boolean.TRUE);
         getIndicatorVersionRepository().save(indicatorVersion);
     }
@@ -675,6 +697,24 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     /**
+     * Makes validations to reject production validation
+     * - Check actual processing status
+     */
+    private void checkIndicatorToRejectProductionValidation(ServiceContext ctx, String uuid, IndicatorVersion indicatorVersion) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorVersion == null || !IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PRODUCTION_VALIDATION}));
+        } else {
+            // nothing more to check
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
      * Makes validations to sent to diffusion validation
      * Checks actual processing status and if it is correct checks same conditions to send to production validation
      */
@@ -688,6 +728,24 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         } else {
             // Check other conditions
             checkConditionsToSendToProductionValidation(indicatorVersion, exceptions);
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    /**
+     * Makes validations to reject
+     * - Check actual processing status
+     */
+    private void checkIndicatorToRejectDiffusionValidation(ServiceContext ctx, String uuid, IndicatorVersion indicatorVersion) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorVersion == null || !IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DIFFUSION_VALIDATION}));
+        } else {
+            // nothing more to check
         }
 
         ExceptionUtils.throwIfException(exceptions);
@@ -726,26 +784,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Check proc status
         if (indicatorVersion == null || !IndicatorProcStatusEnum.PUBLISHED.equals(indicatorVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PUBLISHED}));
-        } else {
-            // nothing more to check
-        }
-
-        ExceptionUtils.throwIfException(exceptions);
-    }
-
-    /**
-     * Makes validations to reject
-     * - Check actual processing status
-     */
-    private void checkIndicatorToReject(ServiceContext ctx, String uuid, IndicatorVersion indicatorVersion) throws MetamacException {
-
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-
-        // Check proc status
-        if (indicatorVersion == null
-                || (!IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorVersion.getProcStatus()) && !IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorVersion.getProcStatus()))) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PRODUCTION_VALIDATION,
-                    IndicatorProcStatusEnum.DIFFUSION_VALIDATION}));
         } else {
             // nothing more to check
         }

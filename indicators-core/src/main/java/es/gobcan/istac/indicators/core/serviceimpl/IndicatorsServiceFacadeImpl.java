@@ -182,6 +182,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public IndicatorsSystemDto rejectIndicatorsSystemProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION);
+
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemProductionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
+        return indicatorsSystemDto;
+    }
+
+    @Override
     public IndicatorsSystemDto sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security
@@ -195,12 +208,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorsSystemDto rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemDto rejectIndicatorsSystemDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security
-        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION); // TODO TECNICO_DIFFUSION
+        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION);
 
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemValidation(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemDiffusionValidation(ctx, uuid);
 
         // Transform to Dto
         IndicatorsSystemDto indicatorsSystemDto = do2DtoMapper.indicatorsSystemDoToDto(indicatorsSystemVersion);
@@ -787,6 +800,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public IndicatorDto rejectIndicatorProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION);
+
+        IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorProductionValidation(ctx, uuid);
+
+        // Transform to Dto
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
+        return indicatorDto;
+    }
+
+    @Override
     public IndicatorDto sendIndicatorToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security
@@ -800,12 +826,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorDto rejectIndicatorValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorDto rejectIndicatorDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security
-        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION); // TODO TECNICO_DIFFUSION
+        SecurityUtils.checkOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION);
 
-        IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorValidation(ctx, uuid);
+        IndicatorVersion indicatorVersion = getIndicatorsService().rejectIndicatorDiffusionValidation(ctx, uuid);
 
         // Transform to Dto
         IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);

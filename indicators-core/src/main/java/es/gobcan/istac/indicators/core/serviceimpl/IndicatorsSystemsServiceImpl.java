@@ -274,6 +274,29 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         return indicatorsSystemInProduction;
     }
+    
+    @Override
+    public IndicatorsSystemVersion rejectIndicatorsSystemProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRejectIndicatorsSystemProductionValidation(uuid, null);
+
+        // Retrieve version in production
+        IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
+
+        // Validate to reject
+        checkIndicatorsSystemToRejectProductionValidation(ctx, uuid, indicatorsSystemInProduction);
+
+        // Update proc status
+        indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED);
+        indicatorsSystemInProduction.setProductionValidationDate(null);
+        indicatorsSystemInProduction.setProductionValidationUser(null);
+        indicatorsSystemInProduction.setDiffusionValidationDate(null);
+        indicatorsSystemInProduction.setDiffusionValidationUser(null);
+        indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
+
+        return indicatorsSystemInProduction;
+    }
 
     @Override
     public IndicatorsSystemVersion sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
@@ -297,16 +320,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
-    public IndicatorsSystemVersion rejectIndicatorsSystemValidation(ServiceContext ctx, String uuid) throws MetamacException {
+    public IndicatorsSystemVersion rejectIndicatorsSystemDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
-        InvocationValidator.checkRejectIndicatorsSystemValidation(uuid, null);
+        InvocationValidator.checkRejectIndicatorsSystemDiffusionValidation(uuid, null);
 
         // Retrieve version in production
         IndicatorsSystemVersion indicatorsSystemInProduction = retrieveIndicatorsSystemProcStatusInProduction(ctx, uuid, false);
 
         // Validate to reject
-        checkIndicatorsSystemToReject(ctx, uuid, indicatorsSystemInProduction);
+        checkIndicatorsSystemToRejectDiffusionValidation(ctx, uuid, indicatorsSystemInProduction);
 
         // Update proc status
         indicatorsSystemInProduction.setProcStatus(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED);
@@ -651,7 +674,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         PagedResult<IndicatorsSystem> result = getIndicatorsSystemRepository().findByCondition(conditions, pagingParameter);
         if (result.getValues().size() != 0) {
             throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_ALREADY_EXIST_CODE_DUPLICATED, code);
-        }        
+        }
     }
 
     /**
@@ -721,6 +744,25 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     /**
+     * Makes validations to reject production validation
+     * Checks actual processing status
+     */
+    private void checkIndicatorsSystemToRejectProductionValidation(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+
+        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
+
+        // Check proc status
+        if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
+                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION}));
+        } else {
+            // Nothing more to check
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    /**
      * Makes validations to sent to diffusion validation
      * Checks actual processing status and if it is correct checks same conditions to send to production validation
      */
@@ -741,19 +783,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     /**
-     * Makes validations to reject
+     * Makes validations to reject diffusion validation
      * Checks actual processing status
      */
-    private void checkIndicatorsSystemToReject(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+    private void checkIndicatorsSystemToRejectDiffusionValidation(ServiceContext ctx, String uuid, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
 
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         // Check proc status
-        if (indicatorsSystemVersion == null
-                || (!IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus()) && !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION
-                        .equals(indicatorsSystemVersion.getProcStatus()))) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{
-                    IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
+        if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
+                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
         } else {
             // Nothing more to check
         }
