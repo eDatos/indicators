@@ -13,7 +13,6 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 public class SecurityUtils {
 
     // TODO poner en librería común algunos métodos?
-    // TODO refactor  --> poner *Apoyo*
 
     /**
      * Checks user can execute any operation, if has any role of requested roles
