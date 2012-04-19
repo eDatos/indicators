@@ -15,16 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
-import es.gobcan.istac.indicators.web.diffusion.ws.StatisticalOperationsInternalWebServiceFacade;
 
 @Controller
 public class WidgetsCreatorController extends BaseController {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
-    
-    @Autowired
-    private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
     
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
     public ModelAndView creator() throws Exception {
