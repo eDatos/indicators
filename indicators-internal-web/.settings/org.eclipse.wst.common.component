@@ -5,24 +5,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/gwt"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
-        <dependent-module archiveName="metamac-web-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/metamac-web-common/metamac-web-common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="metamac-core-common-1.0-SNAPSHOT-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/metamac-core-common/metamac-core-common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="metamac-statistical-operations-ws-api-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/metamac-statistical-operations-ws-api/metamac-statistical-operations-ws-api">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="metamac-api-domain-1.0-SNAPSHOT-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/metamac-api-domain/metamac-api-domain">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="indicators-core-0.0.1-SNAPSHOT-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/indicators-core/indicators-core">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="statistic-dataset-repository-1.0.0-SNAPSHOT-client-oracle.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/statistic-dataset-repository/statistic-dataset-repository">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="java-output-path" value="/${module}/target/www/WEB-INF/classes"/>
         <property name="context-root" value="indicators-internal-web"/>
   </wb-module>
