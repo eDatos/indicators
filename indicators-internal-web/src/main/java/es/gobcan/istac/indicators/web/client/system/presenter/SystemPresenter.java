@@ -37,6 +37,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
@@ -73,8 +74,10 @@ import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationResult;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
@@ -439,19 +442,35 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void rejectValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new RejectIndicatorsSystemValidationAction(indicatorsSystemDto), new AsyncCallback<RejectIndicatorsSystemValidationResult>() {
+        if (IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemDto.getProcStatus())) {
+            dispatcher.execute(new RejectIndicatorsSystemProductionValidationAction(indicatorsSystemDto), new AsyncCallback<RejectIndicatorsSystemProductionValidationResult>() {
 
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(RejectIndicatorsSystemValidationResult result) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
-            }
-        });
+                @Override
+                public void onFailure(Throwable caught) {
+                    logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onSuccess(RejectIndicatorsSystemProductionValidationResult result) {
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                }
+            });
+        } else if (IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemDto.getProcStatus())) {
+            dispatcher.execute(new RejectIndicatorsSystemDiffusionValidationAction(indicatorsSystemDto), new AsyncCallback<RejectIndicatorsSystemDiffusionValidationResult>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onSuccess(RejectIndicatorsSystemDiffusionValidationResult result) {
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                }
+            });
+        }
     }
 
     @Override

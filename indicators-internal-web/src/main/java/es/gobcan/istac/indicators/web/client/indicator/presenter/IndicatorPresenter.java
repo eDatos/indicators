@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
@@ -68,8 +69,10 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationResult;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceResult;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
@@ -286,20 +289,36 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void rejectValidation(final String uuid) {
-        dispatcher.execute(new RejectIndicatorValidationAction(uuid), new AsyncCallback<RejectIndicatorValidationResult>() {
+    public void rejectValidation(final IndicatorDto indicatorDto) {
+        if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorDto.getProcStatus())) {
+            dispatcher.execute(new RejectIndicatorProductionValidationAction(indicatorDto.getUuid()), new AsyncCallback<RejectIndicatorProductionValidationResult>() {
 
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(RejectIndicatorValidationResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
-                getView().setIndicator(result.getIndicatorDto());
-            }
-        });
+                @Override
+                public void onFailure(Throwable caught) {
+                    logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + indicatorDto.getUuid());
+                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onSuccess(RejectIndicatorProductionValidationResult result) {
+                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    getView().setIndicator(result.getIndicatorDto());
+                }
+            });
+        } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorDto.getProcStatus())) {
+            dispatcher.execute(new RejectIndicatorDiffusionValidationAction(indicatorDto.getUuid()), new AsyncCallback<RejectIndicatorDiffusionValidationResult>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + indicatorDto.getUuid());
+                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onSuccess(RejectIndicatorDiffusionValidationResult result) {
+                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    getView().setIndicator(result.getIndicatorDto());
+                }
+            });
+        }
     }
 
     @Override

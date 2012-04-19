@@ -7,7 +7,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @GenDispatch(isSecure = false)
-public class RejectIndicatorsSystemValidation {
+public class RejectIndicatorsSystemProductionValidation {
 
     @In(1)
     IndicatorsSystemDtoWeb indicatorsSystemToReject;

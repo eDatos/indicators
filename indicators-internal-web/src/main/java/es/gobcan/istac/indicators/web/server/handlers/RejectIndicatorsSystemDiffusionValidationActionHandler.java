@@ -14,33 +14,33 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
-public class RejectIndicatorsSystemValidationActionHandler extends AbstractActionHandler<RejectIndicatorsSystemValidationAction, RejectIndicatorsSystemValidationResult> {
+public class RejectIndicatorsSystemDiffusionValidationActionHandler extends AbstractActionHandler<RejectIndicatorsSystemDiffusionValidationAction, RejectIndicatorsSystemDiffusionValidationResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    public RejectIndicatorsSystemValidationActionHandler() {
-        super(RejectIndicatorsSystemValidationAction.class);
+    public RejectIndicatorsSystemDiffusionValidationActionHandler() {
+        super(RejectIndicatorsSystemDiffusionValidationAction.class);
     }
 
     @Override
-    public RejectIndicatorsSystemValidationResult execute(RejectIndicatorsSystemValidationAction action, ExecutionContext context) throws ActionException {
+    public RejectIndicatorsSystemDiffusionValidationResult execute(RejectIndicatorsSystemDiffusionValidationAction action, ExecutionContext context) throws ActionException {
         try {
             IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getIndicatorsSystemToReject();
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
-            return new RejectIndicatorsSystemValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemDiffusionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            return new RejectIndicatorsSystemDiffusionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(RejectIndicatorsSystemValidationAction action, RejectIndicatorsSystemValidationResult result, ExecutionContext context) throws ActionException {
+    public void undo(RejectIndicatorsSystemDiffusionValidationAction action, RejectIndicatorsSystemDiffusionValidationResult result, ExecutionContext context) throws ActionException {
 
     }
 

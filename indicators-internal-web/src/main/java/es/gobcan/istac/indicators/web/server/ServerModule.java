@@ -20,8 +20,10 @@ import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHa
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesWithGranularityInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstanceActionHandler;
@@ -32,12 +34,16 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListAct
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorsSystemActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorValidationActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorDiffusionValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorProductionValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemDiffusionValidationActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveDataSourceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
@@ -64,8 +70,10 @@ import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
@@ -76,12 +84,16 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
+import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
@@ -123,7 +135,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(SendIndicatorsSystemToProductionValidationAction.class, SendIndicatorsSystemToProductionValidationActionHandler.class);
         bindHandler(SendIndicatorsSystemToDiffusionValidationAction.class, SendIndicatorsSystemToDiffusionValidationActionHandler.class);
         bindHandler(PublishIndicatorsSystemAction.class, PublishIndicatorsSystemActionHandler.class);
-        bindHandler(RejectIndicatorsSystemValidationAction.class, RejectIndicatorsSystemValidationActionHandler.class);
+        bindHandler(RejectIndicatorsSystemDiffusionValidationAction.class, RejectIndicatorsSystemDiffusionValidationActionHandler.class);
+        bindHandler(RejectIndicatorsSystemProductionValidationAction.class, RejectIndicatorsSystemProductionValidationActionHandler.class);
         bindHandler(VersioningIndicatorsSystemAction.class, VersioningIndicatorsSystemActionHandler.class);
 
         // Indicators
@@ -140,7 +153,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(SendIndicatorToProductionValidationAction.class, SendIndicatorToProductionValidationActionHandler.class);
         bindHandler(SendIndicatorToDiffusionValidationAction.class, SendIndicatorToDiffusionValidationActionHandler.class);
         bindHandler(PublishIndicatorAction.class, PublishIndicatorActionHandler.class);
-        bindHandler(RejectIndicatorValidationAction.class, RejectIndicatorValidationActionHandler.class);
+        bindHandler(RejectIndicatorDiffusionValidationAction.class, RejectIndicatorDiffusionValidationActionHandler.class);
+        bindHandler(RejectIndicatorProductionValidationAction.class, RejectIndicatorProductionValidationActionHandler.class);
         bindHandler(VersioningIndicatorAction.class, VersioningIndicatorActionHandler.class);
 
         // Indicators DataSources
@@ -157,6 +171,12 @@ public class ServerModule extends HandlerModule {
         
         bindHandler(PopulateIndicatorDataAction.class, PopulateIndicatorDataActionHandler.class);
 
+        // Indicators geographical and temporal variables and values
+        bindHandler(GetGeographicalGranularitiesInIndicatorAction.class, GetGeographicalGranularitiesInIndicatorActionHandler.class);
+        bindHandler(GetGeographicalValuesWithGranularityInIndicatorAction.class, GetGeographicalValuesWithGranularityInIndicatorActionHandler.class);
+        bindHandler(GetTimeGranularitiesInIndicatorAction.class, GetTimeGranularitiesInIndicatorActionHandler.class);
+        bindHandler(GetTimeValuesInIndicatorAction.class, GetTimeValuesInIndicatorActionHandler.class);
+        
         // Data Sources
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
         bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);

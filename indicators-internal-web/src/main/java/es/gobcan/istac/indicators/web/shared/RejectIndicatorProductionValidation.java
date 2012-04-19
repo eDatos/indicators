@@ -7,7 +7,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 
 @GenDispatch(isSecure = false)
-public class RejectIndicatorValidation {
+public class RejectIndicatorProductionValidation {
 
     @In(1)
     String       uuid;

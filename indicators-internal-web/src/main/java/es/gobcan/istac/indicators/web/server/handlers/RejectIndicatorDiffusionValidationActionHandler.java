@@ -13,31 +13,31 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
-import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationResult;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
+import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationResult;
 
 @Component
-public class RejectIndicatorValidationActionHandler extends AbstractActionHandler<RejectIndicatorValidationAction, RejectIndicatorValidationResult> {
+public class RejectIndicatorDiffusionValidationActionHandler extends AbstractActionHandler<RejectIndicatorDiffusionValidationAction, RejectIndicatorDiffusionValidationResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    public RejectIndicatorValidationActionHandler() {
-        super(RejectIndicatorValidationAction.class);
+    public RejectIndicatorDiffusionValidationActionHandler() {
+        super(RejectIndicatorDiffusionValidationAction.class);
     }
 
     @Override
-    public RejectIndicatorValidationResult execute(RejectIndicatorValidationAction action, ExecutionContext context) throws ActionException {
+    public RejectIndicatorDiffusionValidationResult execute(RejectIndicatorDiffusionValidationAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.rejectIndicatorValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
-            return new RejectIndicatorValidationResult(indicatorDto);
+            IndicatorDto indicatorDto = indicatorsServiceFacade.rejectIndicatorDiffusionValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
+            return new RejectIndicatorDiffusionValidationResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(RejectIndicatorValidationAction action, RejectIndicatorValidationResult result, ExecutionContext context) throws ActionException {
+    public void undo(RejectIndicatorDiffusionValidationAction action, RejectIndicatorDiffusionValidationResult result, ExecutionContext context) throws ActionException {
 
     }
 
