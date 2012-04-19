@@ -27,7 +27,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
     @Autowired
@@ -69,10 +69,10 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
         assertTrue(indicatorVersionCreated.getIsLastVersion());
     }
-    
+
     @Test
     public void testUpdateIndicator() throws Exception {
-        
+
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
@@ -83,15 +83,15 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         indicatorVersion.getQuantity().setQuantityType(QuantityTypeEnum.AMOUNT);
         indicatorVersion.getQuantity().setUnit(quantityUnitRepository.retrieveQuantityUnit(QUANTITY_UNIT_1));
         indicatorVersion.getQuantity().setUnitMultiplier(Integer.valueOf(1));
-        
+
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContext(), indicatorVersion);
-        
-        //Check after creation needsUpdate is false
+
+        // Check after creation needsUpdate is false
         assertFalse(indicatorVersionCreated.getNeedsUpdate());
-        
+
         indicatorVersionCreated.setNeedsUpdate(Boolean.TRUE);
-        
+
         IndicatorVersion indicatorVersionUpdated = indicatorService.updateIndicatorVersion(getServiceContext(), indicatorVersionCreated);
         assertTrue(indicatorVersionUpdated.getNeedsUpdate());
     }
