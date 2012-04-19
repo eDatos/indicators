@@ -43,6 +43,22 @@ public class CommonUtils {
         }
         return valueMap;
     }
+    
+    public static LinkedHashMap<String, String> getTimeGranularityValueMap(List<TimeGranularityEnum> timeGranularityEnums) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (TimeGranularityEnum type : timeGranularityEnums) {
+            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getTimeValueValueMap(List<String> timeValues) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (String timeValue : timeValues) {
+            valueMap.put(timeValue, timeValue);
+        }
+        return valueMap;
+    }
 
     public static LinkedHashMap<String, String> getQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
@@ -154,16 +170,6 @@ public class CommonUtils {
         return valueMap;
     }
 
-    /**
-     * Returns null if UUID parameter is blank
-     * 
-     * @param uuid
-     * @return
-     */
-    public static String getUuidString(String uuid) {
-        return StringUtils.isBlank(uuid) ? null : uuid;
-    }
-
     public static LinkedHashMap<String, String> getVariableCategoriesValueMap(List<String> codes, List<String> labels) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
@@ -178,6 +184,22 @@ public class CommonUtils {
         valueMap.put(new String(), new String());
         valueMap.put(DataSourceDto.OBS_VALUE, IndicatorsWeb.getConstants().dataSourceObsValue());
         return valueMap;
+    }
+
+    /**
+     * Returns null if UUID parameter is blank
+     * 
+     * @param uuid
+     * @return
+     */
+    public static String getUuidString(String uuid) {
+        return StringUtils.isBlank(uuid) ? null : uuid;
+    }
+
+    public static String getIndicatorProcStatus(IndicatorDto indicatorDto) {
+        // TODO
+        // getMessages().indicatorPrevisou
+        return null;
     }
 
 }

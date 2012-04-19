@@ -26,7 +26,6 @@ public interface SystemUiHandler extends UiHandlers {
     void retrieveIndicators();
     void retrieveIndicator(String uuid);
 
-    void retrieveGeographicalValues(String geographicalGranularityUuid);
     void retrieveGeographicalValue(String geographicalValueUuid);
 
     void sendToProductionValidation(IndicatorsSystemDtoWeb indicatorsSystemDto);
@@ -38,5 +37,11 @@ public interface SystemUiHandler extends UiHandlers {
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);
     
     void populateIndicatorData(String uuid, String version);
+    
+    // Geographical and temporal values and variables for indicators (in instance creation)
+    void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
+    void retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersion);
+    void retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
+    void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid);
 
 }

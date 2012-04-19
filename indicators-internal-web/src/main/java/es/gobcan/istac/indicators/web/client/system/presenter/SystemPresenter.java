@@ -22,7 +22,6 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -38,11 +37,10 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
-import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
@@ -56,10 +54,12 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
@@ -68,6 +68,10 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
+import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
@@ -90,7 +94,7 @@ import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
-public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler, UpdateGeographicalGranularitiesHandler {
+public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler {
 
     private Logger                                    logger         = Logger.getLogger(SystemPresenter.class.getName());
 
@@ -120,9 +124,14 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
         void onIndicatorDataPopulated(IndicatorDto indicatorDto);
 
-        void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos);
-        void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
+
+        // Instance
+        void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums);
+        void setTemporalValuesFormIndicator(List<String> timeValues);
+        void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos);
+        void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
+
     }
 
     @ProxyCodeSplit
@@ -371,27 +380,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void retrieveGeographicalValues(String geographicalGranularityUuid) {
-        dispatcher.execute(new GetGeographicalValuesAction(geographicalGranularityUuid), new AsyncCallback<GetGeographicalValuesResult>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(GetGeographicalValuesResult result) {
-                getView().setGeographicalValues(result.getGeographicalValueDtos());
-            }
-        });
-    }
-
-    @ProxyEvent
-    @Override
-    public void onUpdateGeographicalGranularities(UpdateGeographicalGranularitiesEvent event) {
-        getView().setGeographicalGranularities(event.getGeographicalGranularities());
-    }
-
-    @Override
     public void retrieveGeographicalValue(String geographicalValueUuid) {
         dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new AsyncCallback<GetGeographicalValueResult>() {
 
@@ -531,13 +519,74 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
             }
-
             @Override
             public void onWaitSuccess(PopulateIndicatorDataResult result) {
                 getView().onIndicatorDataPopulated(result.getIndicatorDto());
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
             }
         });
+    }
+
+    @Override
+    public void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion) {
+        dispatcher.execute(new GetTimeGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetTimeGranularitiesInIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorTimeGranularities()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetTimeGranularitiesInIndicatorResult result) {
+                getView().setTemporalGranularitiesForIndicator(result.getTimeGranularityEnums());
+            }
+        });
+
+    }
+
+    @Override
+    public void retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersion) {
+        dispatcher.execute(new GetTimeValuesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetTimeValuesInIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorTimeValues()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetTimeValuesInIndicatorResult result) {
+                getView().setTemporalValuesFormIndicator(result.getTimeValues());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersion) {
+        dispatcher.execute(new GetGeographicalGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetGeographicalGranularitiesInIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorGeographicalGranularities()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetGeographicalGranularitiesInIndicatorResult result) {
+                getView().setGeographicalGranularitiesForIndicator(result.getGeographicalGranularities());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid) {
+        dispatcher.execute(new GetGeographicalValuesWithGranularityInIndicatorAction(indicatorUuid, indicatorVersion, geographicalGranularityUuid),
+                new WaitingAsyncCallback<GetGeographicalValuesWithGranularityInIndicatorResult>() {
+
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorGeographicalValues()), MessageTypeEnum.ERROR);
+                    }
+                    @Override
+                    public void onWaitSuccess(GetGeographicalValuesWithGranularityInIndicatorResult result) {
+                        getView().setGeographicalValuesForIndicator(result.getGeographicalValueDtos());
+                    }
+                });
     }
 
 }

@@ -23,6 +23,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -128,13 +129,13 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-        structurePanel.setGeographicalGranularities(geographicalGranularityDtos);
+    public void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos) {
+        structurePanel.setGeographicalGranularitiesForIndicator(geographicalGranularityDtos);
     }
 
     @Override
-    public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-        structurePanel.setGeographicalValues(geographicalValueDtos);
+    public void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos) {
+        structurePanel.setGeographicalValuesForIndicatorForIndicator(geographicalValueDtos);
     }
 
     @Override
@@ -151,6 +152,16 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     @Override
     public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
         structurePanel.onIndicatorDataPopulated(indicatorDto);
+    }
+
+    @Override
+    public void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums) {
+        structurePanel.setTemporalGranularitiesForIndicator(timeGranularityEnums);
+    }
+
+    @Override
+    public void setTemporalValuesFormIndicator(List<String> timeValues) {
+        structurePanel.setTemporalValuesFormIndicator(timeValues);
     }
 
 }
