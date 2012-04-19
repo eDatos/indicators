@@ -6,7 +6,7 @@
   <context:annotation-config/>  
 
   <!-- scans for @Components, @Repositories, @Services, ... -->  
-  <context:component-scan base-package="es.gobcan.istac.indicators,org.siemac.metamac.core.common"> 
+  <context:component-scan base-package="es.gobcan.istac.indicators.core,org.siemac.metamac.core.common"> 
     <context:exclude-filter type="regex" expression=".*web.*"/> 
   </context:component-scan>  
 
