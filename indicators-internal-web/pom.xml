@@ -128,7 +128,13 @@
 			<artifactId>indicators-core</artifactId>
 			<classifier>client</classifier>
 		</dependency>
-
+  
+        <!-- METAMAC SSO -->
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-sso-client</artifactId>
+            <version>${metamac-sso-client.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>
