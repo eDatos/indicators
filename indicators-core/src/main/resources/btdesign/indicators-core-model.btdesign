@@ -48,6 +48,7 @@ Application Indicators {
 	    	@Dimension retrieveDimension(String uuid) throws MetamacException;
 	    	deleteDimension(String uuid) throws MetamacException;
 	    	List<@Dimension> retrieveDimensionsByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByDimension(String uuid) throws MetamacException;
 	    	
 	    	// Indicators instances
 	    	@IndicatorInstance createIndicatorInstance(String indicatorsSystemUuid, @IndicatorInstance indicatorInstance) throws MetamacException;
@@ -56,7 +57,8 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	List<@IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
-	    	
+	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(String uuid) throws MetamacException;
+	    		    	
 	    	// Geographical values
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;

@@ -522,6 +522,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return dimensions;
     }
+    
+    @Override
+    public IndicatorsSystemVersion retrieveIndicatorsSystemByDimension(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemByDimension(ctx, uuid, null);
+
+        // Retrieve indicators system version
+        Dimension dimension = retrieveDimension(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
+        return indicatorsSystemVersion;
+    }
 
     @Override
     public IndicatorInstance createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstance indicatorInstance) throws MetamacException {
@@ -607,6 +619,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
         return indicatorsInstances;
+    }
+    
+    @Override
+    public IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemByIndicatorInstance(ctx, uuid, null);
+
+        // Retrieve indicators system version
+        IndicatorInstance indicatorInstance = retrieveIndicatorInstance(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
+        return indicatorsSystemVersion;
     }
 
     @Override

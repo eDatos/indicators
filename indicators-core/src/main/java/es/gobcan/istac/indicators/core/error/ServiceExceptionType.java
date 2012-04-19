@@ -4,6 +4,9 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 
 public class ServiceExceptionType extends CommonServiceExceptionType {
 
+    // Security
+    public static final CommonServiceExceptionType SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED            = create("exception.indicators.security.access_indicators_system_not_allowed");
+
     // Indicators systems
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_NOT_FOUND                              = create("exception.indicators.indicators_system.not_found");
     public static final CommonServiceExceptionType INDICATORS_SYSTEM_VERSION_NOT_FOUND                      = create("exception.indicators.indicators_system.vesion_not_found");
