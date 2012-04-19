@@ -137,7 +137,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     private void putMetamacPrincipalInServiceContext(ServiceContext serviceContext, RoleEnum role) {
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
-        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(role.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "nada"));
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(role.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
     }
 }
