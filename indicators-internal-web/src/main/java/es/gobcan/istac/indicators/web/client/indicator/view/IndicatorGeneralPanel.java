@@ -116,22 +116,6 @@ public class IndicatorGeneralPanel extends VLayout {
                     // Create a new version of the indicator
                     final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
                     window.show();
-                    // window.getYesButton().addClickHandler(new ClickHandler() {
-                    // @Override
-                    // public void onClick(ClickEvent event) {
-                    // window.destroy();
-                    // final AskVersionWindow versionWindow = new AskVersionWindow(getConstants().indicatorVersionType());
-                    // versionWindow.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-                    // @Override
-                    // public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                    // if (versionWindow.validateForm()) {
-                    // uiHandlers.versioningIndicator(indicator.getUuid(), versionWindow.getSelectedVersion());
-                    // versionWindow.destroy();
-                    // }
-                    // }
-                    // });
-                    // }
-                    // });
                 } else {
                     // Default behavior
                     setEditionMode();
@@ -167,7 +151,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.rejectValidation(indicator.getUuid());
+                uiHandlers.rejectValidation(indicator);
             }
         });
         mainFormLayout.getPublish().addClickHandler(new ClickHandler() {

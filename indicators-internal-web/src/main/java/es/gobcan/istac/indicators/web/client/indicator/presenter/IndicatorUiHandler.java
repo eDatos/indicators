@@ -18,7 +18,7 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void sendToProductionValidation(String uuid);
     void sendToDiffusionValidation(String uuid);
-    void rejectValidation(String uuid);
+    void rejectValidation(IndicatorDto indicatorDto);
     void publish(String uuid);
     void archive(String uuid);
 
