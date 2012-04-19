@@ -33,6 +33,7 @@ import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
+import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
@@ -102,15 +103,15 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
     }
 
     private void retrieveIndicatorList() {
-        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new AsyncCallback<GetIndicatorPaginatedListResult>() {
+        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallback<GetIndicatorPaginatedListResult>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
             }
 
             @Override
-            public void onSuccess(GetIndicatorPaginatedListResult result) {
+            public void onWaitSuccess(GetIndicatorPaginatedListResult result) {
                 IndicatorListPresenter.this.totalResults = result.getTotalResults();
 
                 setNumberOfElements(result.getIndicatorList().size());
