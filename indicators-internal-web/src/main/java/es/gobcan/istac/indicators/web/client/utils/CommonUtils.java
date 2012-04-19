@@ -24,6 +24,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class CommonUtils {
 
@@ -197,9 +198,19 @@ public class CommonUtils {
     }
 
     public static String getIndicatorProcStatus(IndicatorDto indicatorDto) {
-        // TODO
-        // getMessages().indicatorPrevisou
-        return null;
+        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName());
+        if (!StringUtils.isBlank(indicatorDto.getPublishedVersion())) {
+            procStatus += IndicatorsWeb.getMessages().indicatorPreviousVersion(indicatorDto.getPublishedVersion());
+        }
+        return procStatus;
     }
-
+    
+    public static String getIndicatorSystemProcStatus(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemDtoWeb.getProcStatus().getName());
+        if (!StringUtils.isBlank(indicatorsSystemDtoWeb.getPublishedVersion())) {
+            procStatus += IndicatorsWeb.getMessages().indicatorPreviousVersion(indicatorsSystemDtoWeb.getPublishedVersion());
+        }
+        return procStatus;
+    }
+    
 }

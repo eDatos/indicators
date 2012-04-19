@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -14,14 +13,13 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 public class RecordUtils {
 
     public static IndicatorRecord getIndicatorRecord(IndicatorDto indicatorDto) {
-        IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), indicatorDto.getCode(), getLocalisedString(indicatorDto.getTitle()), getCoreMessages().getString(
-                getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName()), indicatorDto.getNeedsUpdate());
+        IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), indicatorDto.getCode(), getLocalisedString(indicatorDto.getTitle()), CommonUtils.getIndicatorProcStatus(indicatorDto),
+                indicatorDto.getNeedsUpdate());
         return record;
     }
-
-    public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getCode(), getLocalisedString(indicatorsSystemDto.getTitle()), getCoreMessages()
-                .getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorsSystemDto.getProcStatus().getName()));
+    public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDtoWeb.getUuid(), indicatorsSystemDtoWeb.getCode(), getLocalisedString(indicatorsSystemDtoWeb.getTitle()),
+                CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb));
         return record;
     }
 

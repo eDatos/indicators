@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.client.indicator.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.LinkedHashMap;
@@ -233,13 +232,15 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Publication Descriptors Form
         publicationDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
+        ViewTextItem pubVersion = new ViewTextItem(IndicatorDS.PUBLICATION_VERSION, getConstants().indicatorPublicationVersion());
         ViewTextItem pubFailedDate = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_DATE, getConstants().indicDetailPublicationFailedDate());
         ViewTextItem pubFailedUser = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_USER, getConstants().indicDetailPublicationFailedUser());
         ViewTextItem pubDate = new ViewTextItem(IndicatorDS.PUBLICATION_DATE, getConstants().indicDetailPublicationDate());
         ViewTextItem pubUser = new ViewTextItem(IndicatorDS.PUBLICATION_USER, getConstants().indicDetailPublicationUser());
+        ViewTextItem archVersion = new ViewTextItem(IndicatorDS.ARCHIVED_VERSION, getConstants().indicatorArchivedVersion());
         ViewTextItem archDate = new ViewTextItem(IndicatorDS.ARCHIVED_DATE, getConstants().indicDetailArchivedDate());
         ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
-        publicationDescriptorsForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
+        publicationDescriptorsForm.setFields(pubVersion, pubFailedDate, pubFailedUser, pubDate, pubUser, archVersion, archDate, archUser);
 
         // Annotations Form
         annotationsForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
@@ -297,13 +298,15 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Publication Descriptors
         publicationDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
+        ViewTextItem pubVersion = new ViewTextItem(IndicatorDS.PUBLICATION_VERSION, getConstants().indicatorPublicationVersion());
         ViewTextItem pubFailedDate = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_DATE, getConstants().indicDetailPublicationFailedDate());
         ViewTextItem pubFailedUser = new ViewTextItem(IndicatorDS.PUBLICATION_FAILED_USER, getConstants().indicDetailPublicationFailedUser());
         ViewTextItem pubDate = new ViewTextItem(IndicatorDS.PUBLICATION_DATE, getConstants().indicDetailPublicationDate());
         ViewTextItem pubUser = new ViewTextItem(IndicatorDS.PUBLICATION_USER, getConstants().indicDetailPublicationUser());
+        ViewTextItem archVersion = new ViewTextItem(IndicatorDS.ARCHIVED_VERSION, getConstants().indicatorArchivedVersion());
         ViewTextItem archDate = new ViewTextItem(IndicatorDS.ARCHIVED_DATE, getConstants().indicDetailArchivedDate());
         ViewTextItem archUser = new ViewTextItem(IndicatorDS.ARCHIVED_USER, getConstants().indicDetailArchivedUser());
-        publicationDescriptorsEditionForm.setFields(pubFailedDate, pubFailedUser, pubDate, pubUser, archDate, archUser);
+        publicationDescriptorsEditionForm.setFields(pubVersion, pubFailedDate, pubFailedUser, pubDate, pubUser, archVersion, archDate, archUser);
 
         // Annotations Form
         annotationsEditionForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
@@ -339,7 +342,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
         identifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
-        identifiersForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
+        identifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
         identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 
@@ -363,10 +366,12 @@ public class IndicatorGeneralPanel extends VLayout {
         diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 
         // Publication Descriptors
+        publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_VERSION, indicatorDto.getPublishedVersion());
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
+        publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_VERSION, indicatorDto.getArchivedVersion());
         publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
         publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 
@@ -381,7 +386,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
         identifiersEditionForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersEditionForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
-        identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus()));
+        identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
         identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
 
@@ -407,10 +412,12 @@ public class IndicatorGeneralPanel extends VLayout {
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 
         // Publication Descriptors
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_VERSION, indicatorDto.getPublishedVersion());
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_VERSION, indicatorDto.getArchivedVersion());
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 

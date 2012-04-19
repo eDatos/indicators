@@ -27,8 +27,10 @@ public class IndicatorsSystemsDS extends DataSource {
     public static String DESCRIPTION     = "indsys-desc";
     public static String OBJECTIVE       = "indsys-obj";
     // PUBLICATION DESCRIPTORS
+    public static String PUBL_VERSION    = "indsys-publ-ver";
     public static String PUBL_DATE       = "indsys-publ-date";
     public static String PUBL_USER       = "indsys-publ-user";
+    public static String ARCH_VERSION    = "indsys-arch-ver";
     public static String ARCH_DATE       = "indsys-arch-date";
     public static String ARCH_USER       = "indsys-arch-user";
 

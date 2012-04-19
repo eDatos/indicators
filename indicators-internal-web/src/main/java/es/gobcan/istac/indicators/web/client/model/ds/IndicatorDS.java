@@ -22,7 +22,7 @@ public class IndicatorDS extends DataSource {
     // CONTENT DESCRIPTORS
     public static String CONCEPT_DESCRIPTION                   = "ind-concept";
     // PRODUCTION DESCRIPTORS
-    public static String PRODUCTION_VERSION                    = "indprod-v-";
+    public static String PRODUCTION_VERSION                    = "ind-prod-v-";
     public static String PRODUCTION_VALIDATION_DATE            = "ind-prod-date";
     public static String PRODUCTION_VALIDATION_USER            = "ind-prod-user";
     // QUANTITY
@@ -47,10 +47,12 @@ public class IndicatorDS extends DataSource {
     public static String DIFFUSION_VALIDATION_DATE             = "ind-diff-date";
     public static String DIFFUSION_VALIDATION_USER             = "ind-diff-user";
     // PUBLICATION DESCRIPTORS
+    public static String PUBLICATION_VERSION                   = "ind-pun-ver";
     public static String PUBLICATION_FAILED_DATE               = "ind-pub-fail-date";
     public static String PUBLICATION_FAILED_USER               = "ind-pub-fail-user";
     public static String PUBLICATION_DATE                      = "ind-pub-date";
     public static String PUBLICATION_USER                      = "ind-pub-user";
+    public static String ARCHIVED_VERSION                      = "ind-arch-ver";
     public static String ARCHIVED_DATE                         = "ind-arch-date";
     public static String ARCHIVED_USER                         = "ind-arch-user";
     // ANNOTATIONS

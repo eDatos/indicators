@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -15,6 +14,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.SystemMainFormLayout;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
@@ -143,11 +143,13 @@ public class SystemGeneralPanel extends VLayout {
 
         // Publication Descriptors
         publicationForm = new GroupDynamicForm(getConstants().systemDetailPublicationDescriptors());
+        ViewTextItem publicationVersion = new ViewTextItem(IndicatorsSystemsDS.PUBL_VERSION, getConstants().systemPublicationVersion());
         ViewTextItem publicationDate = new ViewTextItem(IndicatorsSystemsDS.PUBL_DATE, getConstants().systemDetailPublicationDate());
         ViewTextItem publicationUser = new ViewTextItem(IndicatorsSystemsDS.PUBL_USER, getConstants().systemDetailPublicationUser());
+        ViewTextItem archiveVersion = new ViewTextItem(IndicatorsSystemsDS.ARCH_VERSION, getConstants().systemArchivedVersion());
         ViewTextItem archiveDate = new ViewTextItem(IndicatorsSystemsDS.ARCH_DATE, getConstants().systemDetailArchiveDate());
         ViewTextItem archiveUser = new ViewTextItem(IndicatorsSystemsDS.ARCH_USER, getConstants().systemDetailArchiveUser());
-        publicationForm.setFields(publicationDate, publicationUser, archiveDate, archiveUser);
+        publicationForm.setFields(publicationVersion, publicationDate, publicationUser, archiveVersion, archiveDate, archiveUser);
 
         mainFormLayout.addViewCanvas(identifiersForm);
         mainFormLayout.addViewCanvas(productionForm);
@@ -166,7 +168,7 @@ public class SystemGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorsSystemsDS.URI, indicatorSystemDto.getStatisticalOperationUri());
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
-        identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, getCoreMessages().getString(getCoreMessages().indicatorsSystemProcStatusEnum() + indicatorSystemDto.getProcStatus()));
+        identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
 
         // Production Descriptors
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
@@ -182,10 +184,12 @@ public class SystemGeneralPanel extends VLayout {
         contentForm.setValue(IndicatorsSystemsDS.OBJECTIVE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getObjective()));
 
         // Publication Descriptors
+        publicationForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, indicatorSystemDto.getPublicationDate() != null ? indicatorSystemDto.getPublicationDate().toString() : "");
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
-        publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, indicatorSystemDto.getPublicationDate() != null ? indicatorSystemDto.getPublicationDate().toString() : "");
-        publicationForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
+        publicationForm.setValue(IndicatorsSystemsDS.ARCH_VERSION, indicatorSystemDto.getArchivedVersion());
+        publicationForm.setValue(IndicatorsSystemsDS.ARCH_DATE, indicatorSystemDto.getArchiveDate() != null ? indicatorSystemDto.getArchiveDate().toString() : "");
+        publicationForm.setValue(IndicatorsSystemsDS.ARCH_USER, indicatorSystemDto.getArchiveUser());
 
         mainFormLayout.setViewMode();
     }
