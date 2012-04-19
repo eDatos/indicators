@@ -40,7 +40,7 @@ public class IndicatorRecord extends Record {
         String imageURL = new String();
         if (value != null && value) {
             // Needs to be updated update
-            imageURL = GlobalResources.RESOURCE.warn().getURL();
+            imageURL = GlobalResources.RESOURCE.errorSmart().getURL();
         } else {
             // Does not need to be updated
             imageURL = GlobalResources.RESOURCE.success().getURL();

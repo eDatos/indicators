@@ -148,14 +148,9 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
         structurePanel.setIndicatorsSystem(indicatorSystem);
     }
 
-    // @Override
-    // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-    // structurePanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
-    // }
-
-    // @Override
-    // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-    // structurePanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
-    // }
+    @Override
+    public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
+        structurePanel.onIndicatorDataPopulated(indicatorDto);
+    }
 
 }

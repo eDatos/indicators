@@ -41,6 +41,8 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -79,6 +81,7 @@ import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.model.ds.DimensionDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorInstanceDS;
+import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNode;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -277,13 +280,9 @@ public class SystemStructurePanel extends HLayout {
         indicatorInstPanel.setGeographicalValue(geographicalValueDto);
     }
 
-    // public void onVersioningIndicatorsSystemByInstance(IndicatorInstanceDto indicatorInstanceDto) {
-    // indicatorInstPanel.onVersioningIndicatorsSystemByInstance(indicatorInstanceDto);
-    // }
-
-    // public void onVersioningIndicatorsSystemByDimension(DimensionDto dimensionDto) {
-    // dimensionPanel.onVersioningIndicatorsSystemByDimension(dimensionDto);
-    // }
+    public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
+        indicatorInstPanel.onIndicatorDataPopulated(indicatorDto);
+    }
 
     private class TreePanel extends VLayout {
 
@@ -999,7 +998,8 @@ public class SystemStructurePanel extends HLayout {
                 public void onChanged(ChangedEvent event) {
                     if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
                         String uuid = event.getValue().toString();
-                        if (!isIndicatorUpdated(uuid)) {
+                        IndicatorDto indicatorDto = getIndicatorDtoByUuid(uuid);
+                        if (indicatorDto != null && indicatorDto.needsBePopulated()) {
                             indicatorsItem.setShowIcons(Boolean.TRUE);
                         } else {
                             indicatorsItem.setShowIcons(Boolean.FALSE);
@@ -1010,10 +1010,30 @@ public class SystemStructurePanel extends HLayout {
                     editionForm.markForRedraw();
                 }
             });
+            // Warning icon
             FormItemIcon infoIcon = new FormItemIcon();
             infoIcon.setSrc(GlobalResources.RESOURCE.warn().getURL());
-            infoIcon.setPrompt(getMessages().infoIndicatorNoUpdated());
-            indicatorsItem.setIcons(infoIcon);
+            infoIcon.setPrompt(getMessages().indicatorInconsistentData());
+            // Populate data icon
+            FormItemIcon populateData = new FormItemIcon();
+            populateData.setSrc(IndicatorsResources.RESOURCE.populateData().getURL());
+            populateData.setPrompt(getConstants().indicatorPopulateData());
+            indicatorsItem.setIcons(infoIcon, populateData);
+            populateData.addFormItemClickHandler(new FormItemClickHandler() {
+
+                @Override
+                public void onFormItemClick(FormItemIconClickEvent event) {
+                    if (event.getItem().getValue() != null) {
+                        String indicatorUuid = event.getItem().getValue().toString();
+                        if (!StringUtils.isBlank(indicatorUuid)) {
+                            IndicatorDto indicatorDto = getIndicatorDtoByUuid(indicatorUuid);
+                            if (indicatorDto != null) {
+                                uiHandlers.populateIndicatorData(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+                            }
+                        }
+                    }
+                }
+            });
 
             // Time
 
@@ -1070,7 +1090,6 @@ public class SystemStructurePanel extends HLayout {
             editionForm.setFields(name, indicatorsItem, timeSelectionType, timeGranularityItem, timeValue, geographicalSelectionType, geographicalGranularity, geographicalValue);
             mainFormLayout.addEditionCanvas(editionForm);
         }
-
         // Time functions
 
         private FormItemIfFunction getTimeGranularityIfFunction() {
@@ -1164,15 +1183,30 @@ public class SystemStructurePanel extends HLayout {
             return new String();
         }
 
-        private boolean isIndicatorUpdated(String uuid) {
+        private IndicatorDto getIndicatorDtoByUuid(String uuid) {
             for (IndicatorDto indicatorDto : indicatorDtos) {
                 if (indicatorDto.getUuid().equals(uuid)) {
-                    if (indicatorDto.getNeedsUpdate() != null && indicatorDto.getNeedsUpdate()) {
-                        return false;
-                    }
+                    return indicatorDto;
                 }
             }
-            return true;
+            return null;
+        }
+
+        public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
+            // Hide warning and populate data icon
+            editionForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(false);
+            editionForm.markForRedraw();
+
+            // Replace indicator in indicatorDtos
+            int indexToRemove = -1;
+            for (int i = 0; i < indicatorDtos.size(); i++) {
+                if (indicatorDto.getUuid().equals(indicatorDtos.get(i))) {
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            indicatorDtos.remove(indexToRemove);
+            indicatorDtos.add(indicatorDto);
         }
 
     }

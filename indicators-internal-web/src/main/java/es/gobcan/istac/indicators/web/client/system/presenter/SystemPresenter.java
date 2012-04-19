@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularit
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -68,6 +69,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
+import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemValidationAction;
@@ -111,6 +114,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
         void onDimensionSaved(DimensionDto dimension);
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
+
+        void onIndicatorDataPopulated(IndicatorDto indicatorDto);
 
         void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos);
         void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos);
@@ -495,6 +500,23 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onSuccess(VersioningIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
                 getView().setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
+            }
+        });
+    }
+
+    @Override
+    public void populateIndicatorData(String uuid, String version) {
+        dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
+            }
+
+            @Override
+            public void onWaitSuccess(PopulateIndicatorDataResult result) {
+                getView().onIndicatorDataPopulated(result.getIndicatorDto());
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
             }
         });
     }

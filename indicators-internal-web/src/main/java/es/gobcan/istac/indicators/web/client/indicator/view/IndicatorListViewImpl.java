@@ -142,7 +142,7 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-        ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdated());
+        ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         updated.setWidth(75);
         updated.setType(ListGridFieldType.IMAGE);
         updated.setAlign(Alignment.CENTER);

@@ -33,6 +33,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructu
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorValidationActionHandler;
@@ -76,6 +77,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
+import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorValidationAction;
@@ -152,6 +154,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
         bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
+        
+        bindHandler(PopulateIndicatorDataAction.class, PopulateIndicatorDataActionHandler.class);
 
         // Data Sources
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
