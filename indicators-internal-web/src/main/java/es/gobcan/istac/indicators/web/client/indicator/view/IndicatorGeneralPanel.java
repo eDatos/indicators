@@ -227,10 +227,9 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Diffusion Descriptors Form
         diffusionDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
-        ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
         ViewTextItem diffValDate = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_DATE, getConstants().indicDetailDiffusionValidationDate());
         ViewTextItem diffValUser = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_USER, getConstants().indicDetailDiffusionValidationUser());
-        diffusionDescriptorsForm.setFields(diffVersion, diffValDate, diffValUser);
+        diffusionDescriptorsForm.setFields(diffValDate, diffValUser);
 
         // Publication Descriptors Form
         publicationDescriptorsForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
@@ -292,10 +291,9 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Diffusion Descriptors Form
         diffusionDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailDiffusionDescriptors());
-        ViewTextItem diffVersion = new ViewTextItem(IndicatorDS.DIFFUSION_VERSION, getConstants().indicDetailDiffusionVersion());
         ViewTextItem diffValDate = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_DATE, getConstants().indicDetailDiffusionValidationDate());
         ViewTextItem diffValUser = new ViewTextItem(IndicatorDS.DIFFUSION_VALIDATION_USER, getConstants().indicDetailDiffusionValidationUser());
-        diffusionDescriptorsEditionForm.setFields(diffVersion, diffValDate, diffValUser);
+        diffusionDescriptorsEditionForm.setFields(diffValDate, diffValUser);
 
         // Publication Descriptors
         publicationDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailPublicationDescriptors());
@@ -361,7 +359,6 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityForm.setValue(indicatorDto.getQuantity());
 
         // Diffusion Descriptors
-        diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
         diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
         diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 
@@ -406,7 +403,6 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setValue(indicatorDto.getQuantity());
 
         // Diffusion Descriptors
-        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VERSION, indicatorDto.getDiffusionVersion());
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 

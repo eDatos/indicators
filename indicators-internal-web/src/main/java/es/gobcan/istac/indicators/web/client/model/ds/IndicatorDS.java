@@ -44,7 +44,6 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_TYPE_TEXT                    = "q-type-text";      // Not mapped in DTO
     public static String QUANTITY_PERCENTAGE_OF                = "q-perc-of";
     // DIFUSSION DESCRIPTORS
-    public static String DIFFUSION_VERSION                     = "ind-dif-v";
     public static String DIFFUSION_VALIDATION_DATE             = "ind-diff-date";
     public static String DIFFUSION_VALIDATION_USER             = "ind-diff-user";
     // PUBLICATION DESCRIPTORS
