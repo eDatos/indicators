@@ -131,10 +131,9 @@ public class SystemGeneralPanel extends VLayout {
 
         // Diffusion Descriptors
         diffusionForm = new GroupDynamicForm(getConstants().systemDetailDiffusionDescriptors());
-        ViewTextItem diffVersion = new ViewTextItem(IndicatorsSystemsDS.DIFF_VERSION, getConstants().systemDetailDiffVersion());
         ViewTextItem diffValidDate = new ViewTextItem(IndicatorsSystemsDS.DIFF_VALID_DATE, getConstants().systemDetailDiffValidDate());
         ViewTextItem diffValidUser = new ViewTextItem(IndicatorsSystemsDS.DIFF_VALID_USER, getConstants().systemDetailDiffValidUser());
-        diffusionForm.setFields(diffVersion, diffValidDate, diffValidUser);
+        diffusionForm.setFields(diffValidDate, diffValidUser);
 
         // Content Descriptors
         contentForm = new GroupDynamicForm(getConstants().systemDetailContentDescriptors());
@@ -175,7 +174,6 @@ public class SystemGeneralPanel extends VLayout {
         productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_USER, indicatorSystemDto.getProductionValidationUser());
 
         // Diffusion Descriptors
-        diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VERSION, indicatorSystemDto.getDiffusionVersion());
         diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_DATE, indicatorSystemDto.getDiffusionValidationDate() != null ? indicatorSystemDto.getDiffusionValidationDate().toString() : "");
         diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_USER, indicatorSystemDto.getDiffusionValidationUser());
 
