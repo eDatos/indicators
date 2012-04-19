@@ -14,7 +14,7 @@
 
 <script type="text/html" id="indicatorsSystemTmpl">
 	<div>
-		<p><a href='<%= context %>/indicators-systems/<%= code%>.html'><%= getLabel(title) %></a></p>
+		<p><a href='<%= context %>/indicators-systems/<%=code%>.html'><%= getLabel(title) %></a></p>
 	</div>
 </script>
 
@@ -91,8 +91,9 @@
 	});
 	
 	$(function(){
-	console.log(${indicatorsSystems});
-		var indicatorsSystemsCollection = new IndicatorsSystemsCollection(${indicatorsSystems});
+		var indicatorsSystems = ${indicatorsSystems};
+		
+		var indicatorsSystemsCollection = new IndicatorsSystemsCollection(indicatorsSystems.items);
 		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystemsCollection});
 		indicatorsSystemsView.render();
 		new SearchView({el : $("#indicatorsSystems-search"), collection : indicatorsSystemsCollection});

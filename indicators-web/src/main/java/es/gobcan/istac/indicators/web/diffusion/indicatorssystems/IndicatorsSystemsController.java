@@ -4,20 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.criteria.MetamacCriteria;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,74 +16,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
-import es.gobcan.istac.indicators.web.diffusion.ws.StatisticalOperationsInternalWebServiceFacade;
-import es.gobcan.istac.indicators.web.diffusion.ws.WsToDtoMapperUtils;
 
 @Controller
 public class IndicatorsSystemsController extends BaseController {
-
-    @Autowired
-    private IndicatorsServiceFacade                       indicatorsServiceFacade;
-
-    @Autowired
-    private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
     @Autowired
     private ConfigurationService                          configurationService;
 
     // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
-    public ModelAndView indicatorsSystems() throws Exception {
+    public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
-        // Find indicators systems published
-        MetamacCriteria metamacCriteria = new MetamacCriteria();
-        metamacCriteria.setPaginator(new MetamacCriteriaPaginator());
-        metamacCriteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
-        metamacCriteria.getPaginator().setCountTotalResults(Boolean.TRUE);
-        MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContext(), metamacCriteria);
-        if (result.getPaginatorResult().getTotalResults().intValue() != result.getResults().size()) {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Pagination is not implemented and results size is greater of supported");
-        }
-        List<IndicatorsSystemDto> indicatorsSystemsDto = result.getResults();
-
-        // Find operations metadata from web service
-        List<String> indicatorsSystemsCodes = new ArrayList<String>();
-        for (IndicatorsSystemDto indicatorsSystemDto : result.getResults()) {
-            indicatorsSystemsCodes.add(indicatorsSystemDto.getCode());
-        }
-        OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(indicatorsSystemsCodes);
-
-        // Merges information and retrieves only created in indicators core
-        Map<String, OperationBase> operationsByCode = new HashMap<String, OperationBase>();
-        if (operationBaseList != null) {
-            for (OperationBase operationBase : operationBaseList.getOperation()) {
-                operationsByCode.put(operationBase.getCode(), operationBase);
-            }
-        }
-
-        List<IndicatorsSystemWebDto> indicatorsSystemsWebDto = new ArrayList<IndicatorsSystemWebDto>();
-        for (IndicatorsSystemDto indicatorsSystemDto : indicatorsSystemsDto) {
-            OperationBase operationBase = operationsByCode.get(indicatorsSystemDto.getCode());
-            if (operationBase != null) {
-                IndicatorsSystemWebDto indicatorsSystemWebDto = WsToDtoMapperUtils.getIndicatorsSystemDtoFromOperationBase(operationBase);
-                indicatorsSystemsWebDto.add(indicatorsSystemWebDto);
-            } else {
-                // TODO dar error si no existe la operacion en statistical operations?
-            }
-        }
-
-        // To Json
-        ObjectMapper mapper = new ObjectMapper();
-        String indicatorsSystemsJson = mapper.writeValueAsString(indicatorsSystemsWebDto);
+        // Get json from API
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems?limit=1000").build().toUriString(); 
+        String json = getJson(uriComponentsBuilder, urlPath);
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("indicatorsSystems", indicatorsSystemsJson);
+        modelAndView.addObject("indicatorsSystems", json);
 
         return modelAndView;
     }
@@ -102,8 +43,26 @@ public class IndicatorsSystemsController extends BaseController {
     @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
     public ModelAndView setupForm(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
 
-        // TODO Invocar REST desde página
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().encode().toUriString(); 
+        // Get json from API
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().toUriString(); 
+        String json = getJson(uriComponentsBuilder, urlPath);
+        
+        // View
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
+        modelAndView.addObject("indicatorsSystem", json);
+        // TODO propiedad de configuración en páginas ftl. Podría mejorarse accediendo al contexto de Spring desde la página, en lugar de añadir la propiedad en el modelo de vista
+        String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
+        if (jaxiUrlBase.endsWith("/")) {
+            jaxiUrlBase = StringUtils.removeEnd(jaxiUrlBase, "/");
+        }
+        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
+
+        return modelAndView;
+    }
+    
+    
+    // TODO Invocar REST desde página
+    private String getJson(UriComponentsBuilder uriComponentsBuilder, String urlPath) throws Exception {
         URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -120,17 +79,6 @@ public class IndicatorsSystemsController extends BaseController {
             json.append(output);
         }
         conn.disconnect();
-
-        // View
-        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
-        modelAndView.addObject("indicatorsSystem", json);
-        // TODO propiedad de configuración en páginas ftl. Podría mejorarse accediendo al contexto de Spring desde la página, en lugar de añadir la propiedad en el modelo de vista
-        String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
-        if (jaxiUrlBase.endsWith("/")) {
-            jaxiUrlBase = StringUtils.removeEnd(jaxiUrlBase, "/");
-        }
-        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
-
-        return modelAndView;
+        return json.toString();
     }
 }
