@@ -6,7 +6,7 @@ import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.security.RoleEnum;
+import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public class ServiceContextHelper {
 
