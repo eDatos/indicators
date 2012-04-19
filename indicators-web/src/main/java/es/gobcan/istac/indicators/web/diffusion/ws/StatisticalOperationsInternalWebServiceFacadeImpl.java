@@ -68,7 +68,7 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
         }
         
         // All results
-        metamacCriteria.setMaxResults(BigInteger.valueOf(Integer.MAX_VALUE));
+        metamacCriteria.setMaximumResultSize(BigInteger.valueOf(Integer.MAX_VALUE));
         
         // Find
         FindOperationsResult findOperationsResult = webservicesLocator.getMetamacStatisticalOperationsInternalInterface().findOperations(metamacCriteria);
