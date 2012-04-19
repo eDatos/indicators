@@ -29,6 +29,8 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 public class TimeVariableUtils {
 
+    // TODO: Extender del proyecto metamac-core-common de la clase TimeUtils.
+    
     private static Pattern patternTimeValue     = Pattern.compile(START + TIME_VALUE_PATTERN + END);
 
     private static Pattern patternYearlyValue   = Pattern.compile(START + YEARLY_PATTERN + END);

@@ -12,6 +12,8 @@ package es.gobcan.istac.indicators.core.constants;
  */
 public class TimeVariableConstants {
 
+    // TODO: Eliminar esta clase y usar la de la web que se llama TimeConstants
+    
     public static final String START               = "^";
     public static final String END                 = "$";
 
