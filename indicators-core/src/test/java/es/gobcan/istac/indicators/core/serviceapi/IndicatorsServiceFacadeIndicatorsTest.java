@@ -135,8 +135,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertNotNull(indicatorDto);
         assertEquals(uuid, indicatorDto.getUuid());
         assertEquals(versionNumber, indicatorDto.getVersionNumber());
-        assertEquals("1.000", indicatorDto.getDiffusionVersion());
         assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("1.000", indicatorDto.getPublishedVersion());
+        assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
         assertEquals(SUBJECT_1, indicatorDto.getSubjectCode());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getSubjectTitle(), "es", "Área temática 1", null, null);
@@ -181,24 +182,26 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         String uuid = INDICATOR_1;
         String versionNumberProduction = "2.000";
-        String versionNumberDiffusion = "1.000";
+        String versionNumberPublished = "1.000";
 
         // Without version (retrieve last)
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
             assertEquals(uuid, indicatorDto.getUuid());
             assertEquals(versionNumberProduction, indicatorDto.getVersionNumber());
-            assertEquals(versionNumberDiffusion, indicatorDto.getDiffusionVersion());
             assertEquals(versionNumberProduction, indicatorDto.getProductionVersion());
+            assertEquals(versionNumberPublished, indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
         }
 
         // With version 1
         {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumberDiffusion);
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumberPublished);
             assertEquals(uuid, indicatorDto.getUuid());
-            assertEquals(versionNumberDiffusion, indicatorDto.getVersionNumber());
-            assertEquals(versionNumberDiffusion, indicatorDto.getDiffusionVersion());
+            assertEquals(versionNumberPublished, indicatorDto.getVersionNumber());
             assertEquals(versionNumberProduction, indicatorDto.getProductionVersion());
+            assertEquals(versionNumberPublished, indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
         }
 
         // With version 2
@@ -206,8 +209,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumberProduction);
             assertEquals(uuid, indicatorDto.getUuid());
             assertEquals(versionNumberProduction, indicatorDto.getVersionNumber());
-            assertEquals(versionNumberDiffusion, indicatorDto.getDiffusionVersion());
             assertEquals(versionNumberProduction, indicatorDto.getProductionVersion());
+            assertEquals(versionNumberPublished, indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
         }
     }
 
@@ -342,8 +346,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertNotNull(indicatorDto);
         assertEquals(INDICATOR_1, indicatorDto.getUuid());
         assertEquals("1.000", indicatorDto.getVersionNumber());
-        assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        assertEquals("1.000", indicatorDto.getPublishedVersion());
         assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
     }
 
@@ -357,8 +362,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertNotNull(indicatorDto);
         assertEquals(INDICATOR_1, indicatorDto.getUuid());
         assertEquals(indicatorDto.getProductionVersion(), indicatorDto.getVersionNumber());
-        assertEquals("1.000", indicatorDto.getDiffusionVersion());
         assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("1.000", indicatorDto.getPublishedVersion());
+        assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
     }
 
@@ -386,9 +392,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertNotNull(indicatorDto);
         assertEquals(INDICATOR_1, indicatorDto.getUuid());
-        assertEquals(indicatorDto.getDiffusionVersion(), indicatorDto.getVersionNumber());
-        assertEquals("1.000", indicatorDto.getDiffusionVersion());
+        assertEquals(indicatorDto.getPublishedVersion(), indicatorDto.getVersionNumber());
         assertEquals("2.000", indicatorDto.getProductionVersion());
+        assertEquals("1.000", indicatorDto.getPublishedVersion());
+        assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
     }
 
@@ -486,7 +493,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoCreated.getProcStatus());
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoRetrieved.getProcStatus());
         assertEquals("1.000", indicatorDtoRetrieved.getProductionVersion());
-        assertNull(indicatorDtoRetrieved.getDiffusionVersion());
+        assertNull(indicatorDtoRetrieved.getPublishedVersion());
+        assertNull(indicatorDtoRetrieved.getArchivedVersion());
         assertNull(indicatorDtoRetrieved.getProductionValidationDate());
         assertNull(indicatorDtoRetrieved.getProductionValidationUser());
         assertNull(indicatorDtoRetrieved.getDiffusionValidationDate());
@@ -1135,8 +1143,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(uuid, indicatorDto.getUuid());
             assertEquals("1.000", indicatorDto.getVersionNumber());
-            assertEquals("1.000", indicatorDto.getDiffusionVersion());
+            assertEquals("1.000", indicatorDto.getPublishedVersion());
             assertEquals("2.000", indicatorDto.getProductionVersion());
+            assertNull(indicatorDto.getArchivedVersion());
         }
 
         // Delete indicator
@@ -1148,7 +1157,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(uuid, indicatorDto.getUuid());
             assertEquals("1.000", indicatorDto.getVersionNumber());
-            assertEquals("1.000", indicatorDto.getDiffusionVersion());
+            assertEquals("1.000", indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
             assertEquals(null, indicatorDto.getProductionVersion());
         }
         // Version 2 not exists
@@ -1538,13 +1548,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testSendIndicatorToProductionValidation() throws Exception {
 
         String uuid = INDICATOR_1;
-        String diffusionVersion = "1.000";
+        String publishedVersion = "1.000";
         String productionVersion = "2.000";
 
         {
-            IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
+            IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, publishedVersion);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
-            assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(publishedVersion, indicatorDtoV1.getPublishedVersion());
             assertEquals(productionVersion, indicatorDtoV2.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoV2.getProcStatus());
@@ -1555,7 +1565,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validation
         {
-            assertEquals(diffusionVersion, indicatorDtoV2Updated.getDiffusionVersion());
+            assertEquals(publishedVersion, indicatorDtoV2Updated.getPublishedVersion());
             assertEquals(productionVersion, indicatorDtoV2Updated.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDtoV2Updated.getProcStatus());
 
@@ -1569,11 +1579,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertNull(indicatorDtoV2Updated.getArchiveUser());
         }
         {
-            IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
+            IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, publishedVersion);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
-            assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(publishedVersion, indicatorDtoV1.getPublishedVersion());
             assertEquals(productionVersion, indicatorDtoV1.getProductionVersion());
-            assertEquals(diffusionVersion, indicatorDtoV2.getDiffusionVersion());
+            assertEquals(publishedVersion, indicatorDtoV2.getPublishedVersion());
             assertEquals(productionVersion, indicatorDtoV2.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDtoV2.getProcStatus());
@@ -1598,7 +1608,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorDto.getProductionVersion());
-            assertNull(indicatorDto.getDiffusionVersion());
+            assertNull(indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
         }
 
@@ -1609,7 +1620,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorDto.getProductionVersion());
-            assertNull(indicatorDto.getDiffusionVersion());
+            assertNull(indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
         }
     }
@@ -1722,7 +1734,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertNull(indicatorDto.getPublishedVersion());
+            assertNull(indicatorDto.getArchivedVersion());
             assertEquals("1.000", indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
         }
@@ -1732,7 +1745,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validation
         {
-            assertEquals(null, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals(null, indicatorDtoV1Updated.getPublishedVersion());
+            assertEquals(null, indicatorDtoV1Updated.getArchivedVersion());
             assertEquals("1.000", indicatorDtoV1Updated.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDtoV1Updated.getProcStatus());
 
@@ -1747,7 +1761,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals("1.000", indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
 
@@ -1785,7 +1800,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
             assertEquals("1.000", indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
         }
 
         try {
@@ -1809,7 +1824,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -1832,7 +1848,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
             assertEquals("1.000", indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
         }
@@ -1842,7 +1858,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Validation
         {
-            assertEquals(null, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals(null, indicatorDtoV1Updated.getPublishedVersion());
+            assertEquals(null, indicatorDtoV1Updated.getArchivedVersion());
             assertEquals(versionNumber, indicatorDtoV1Updated.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDtoV1Updated.getProcStatus());
 
@@ -1857,7 +1874,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(versionNumber, indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
 
@@ -1895,7 +1913,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
             assertEquals("1.000", indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
         }
 
         try {
@@ -1918,7 +1936,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals("1.000", indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
         }
@@ -1929,7 +1948,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Validation
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals("1.000", indicatorDto.getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
         }
@@ -1958,7 +1978,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
             assertEquals("1.000", indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -1982,7 +2003,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -2006,7 +2028,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(versionNumber, indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
         }
 
@@ -2016,7 +2039,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Validation
         {
             assertEquals(null, indicatorDtoV1Updated.getProductionVersion());
-            assertEquals(versionNumber, indicatorDtoV1Updated.getDiffusionVersion());
+            assertEquals(versionNumber, indicatorDtoV1Updated.getPublishedVersion());
+            assertEquals(null, indicatorDtoV1Updated.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1Updated.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorDtoV1Updated.getProductionValidationDate());
@@ -2031,7 +2055,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(versionNumber, indicatorDto.getDiffusionVersion());
+            assertEquals(versionNumber, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorDto.getProductionValidationDate());
@@ -2056,7 +2081,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersionBefore);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorDtoV1.getProductionVersion());
-            assertEquals(diffusionVersionBefore, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(diffusionVersionBefore, indicatorDtoV1.getPublishedVersion());
+            assertEquals(null, indicatorDtoV1.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDtoV2.getProcStatus());
         }
@@ -2081,7 +2107,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Actual version in diffusion is version 2
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals("2.000", indicatorDto.getDiffusionVersion());
+            assertEquals("2.000", indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
         }
     }
@@ -2097,7 +2124,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersionBefore);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(productionVersionBefore, indicatorDtoV1.getProductionVersion());
-            assertEquals(diffusionVersionBefore, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(null, indicatorDtoV1.getPublishedVersion());
+            assertEquals(diffusionVersionBefore, indicatorDtoV1.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDtoV2.getProcStatus());
         }
@@ -2122,7 +2150,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             // Actual version in diffusion is version 2
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersionBefore);
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals("2.000", indicatorDto.getDiffusionVersion());
+            assertEquals("2.000", indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
         }
     }
@@ -2150,7 +2179,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
             assertEquals("1.000", indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -2175,7 +2205,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, INDICATOR_3_VERSION);
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -2314,7 +2345,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
         }
 
@@ -2324,7 +2356,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         // Validation
         {
             assertEquals(null, indicatorDtoUpdated.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDtoUpdated.getDiffusionVersion());
+            assertEquals(null, indicatorDtoUpdated.getPublishedVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoUpdated.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDtoUpdated.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorDtoUpdated.getProductionValidationDate());
@@ -2339,7 +2372,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, versionNumber);
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDto.getProcStatus());
 
             IndicatorsAsserts.assertEqualsDate("2011-03-03 01:02:04", indicatorDto.getProductionValidationDate());
@@ -2364,7 +2398,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, productionVersion);
             assertEquals(productionVersion, indicatorDtoV1.getProductionVersion());
-            assertEquals(diffusionVersion, indicatorDtoV1.getDiffusionVersion());
+            assertEquals(diffusionVersion, indicatorDtoV1.getPublishedVersion());
+            assertEquals(null, indicatorDtoV1.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoV2.getProcStatus());
         }
@@ -2376,7 +2411,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, diffusionVersion);
             assertEquals(productionVersion, indicatorDto.getProductionVersion());
-            assertEquals(diffusionVersion, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(diffusionVersion, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDto.getProcStatus());
         }
     }
@@ -2404,7 +2440,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
             assertEquals("1.000", indicatorDto.getProductionVersion());
-            assertEquals(null, indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals(null, indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -2428,7 +2465,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, "1.000");
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDto.getProcStatus());
             assertEquals(null, indicatorDto.getProductionVersion());
-            assertEquals("1.000", indicatorDto.getDiffusionVersion());
+            assertEquals(null, indicatorDto.getPublishedVersion());
+            assertEquals("1.000", indicatorDto.getArchivedVersion());
         }
 
         try {
@@ -2452,14 +2490,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
         assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
         assertEquals(null, indicatorDto.getProductionVersion());
-        assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+        assertEquals(null, indicatorDto.getArchivedVersion());
 
         IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
         assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
-        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getPublishedVersion());
+        assertEquals(null, indicatorDtoVersioned.getArchivedVersion());
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
 
         {
@@ -2471,7 +2511,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoProduction.getProcStatus());
             assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
             assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getPublishedVersion());
+            assertEquals(null, indicatorDtoProduction.getArchivedVersion());
             // Data sources
             List<DataSourceDto> dataSources = indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContext(), indicatorDtoProduction.getUuid(),
                     indicatorDtoProduction.getProductionVersion());
@@ -2530,7 +2571,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoDiffusion.getProcStatus());
             assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
             assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getPublishedVersion());
+            assertEquals(null, indicatorDtoDiffusion.getArchivedVersion());
         }
     }
 
@@ -2543,14 +2585,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContext(), uuid, null);
         assertEquals(INDICATOR_3_VERSION, indicatorDto.getVersionNumber());
         assertEquals(null, indicatorDto.getProductionVersion());
-        assertEquals(INDICATOR_3_VERSION, indicatorDto.getDiffusionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDto.getPublishedVersion());
+        assertEquals(null, indicatorDto.getArchivedVersion());
 
         IndicatorDto indicatorDtoVersioned = indicatorsServiceFacade.versioningIndicator(getServiceContext(), uuid, VersionTypeEnum.MINOR);
 
         // Validate
         assertEquals(newVersionExpected, indicatorDtoVersioned.getVersionNumber());
         assertEquals(newVersionExpected, indicatorDtoVersioned.getProductionVersion());
-        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getDiffusionVersion());
+        assertEquals(INDICATOR_3_VERSION, indicatorDtoVersioned.getPublishedVersion());
+        assertEquals(null, indicatorDtoVersioned.getArchivedVersion());
         IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoVersioned);
 
         {
@@ -2562,12 +2606,14 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDtoProduction.getProcStatus());
             assertEquals(newVersionExpected, indicatorDtoProduction.getVersionNumber());
             assertEquals(newVersionExpected, indicatorDtoProduction.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoProduction.getPublishedVersion());
+            assertEquals(null, indicatorDtoProduction.getArchivedVersion());
 
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoDiffusion.getProcStatus());
             assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getVersionNumber());
             assertEquals(newVersionExpected, indicatorDtoDiffusion.getProductionVersion());
-            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getDiffusionVersion());
+            assertEquals(INDICATOR_3_VERSION, indicatorDtoDiffusion.getPublishedVersion());
+            assertEquals(null, indicatorDtoDiffusion.getArchivedVersion());
         }
     }
 

@@ -63,7 +63,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(source.getIndicatorsSystem().getCode());
         target.setProcStatus(source.getProcStatus());
         target.setProductionVersion(source.getIndicatorsSystem().getProductionVersion() != null ? source.getIndicatorsSystem().getProductionVersion().getVersionNumber() : null);
-        target.setDiffusionVersion(source.getIndicatorsSystem().getDiffusionVersion() != null ? source.getIndicatorsSystem().getDiffusionVersion().getVersionNumber() : null);
+        if (source.getIndicatorsSystem().getDiffusionVersion() == null) {
+            target.setPublishedVersion(null);
+            target.setArchivedVersion(null);
+        } else if (source.getIndicatorsSystem().getIsPublished()) {
+            target.setPublishedVersion(source.getIndicatorsSystem().getDiffusionVersion().getVersionNumber());
+        } else {
+            target.setArchivedVersion(source.getIndicatorsSystem().getDiffusionVersion().getVersionNumber());
+        }
 
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());
@@ -139,7 +146,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setNotesUrl(source.getNotesUrl());
         target.setProcStatus(source.getProcStatus());
         target.setProductionVersion(source.getIndicator().getProductionVersion() != null ? source.getIndicator().getProductionVersion().getVersionNumber() : null);
-        target.setDiffusionVersion(source.getIndicator().getDiffusionVersion() != null ? source.getIndicator().getDiffusionVersion().getVersionNumber() : null);
+        if (source.getIndicator().getDiffusionVersion() == null) {
+            target.setPublishedVersion(null);
+            target.setArchivedVersion(null);
+        } else if (source.getIndicator().getIsPublished()) {
+            target.setPublishedVersion(source.getIndicator().getDiffusionVersion().getVersionNumber());
+        } else {
+            target.setArchivedVersion(source.getIndicator().getDiffusionVersion().getVersionNumber());
+        }
 
         target.setNeedsUpdate(source.getNeedsUpdate());
         target.setInconsistentData(source.getInconsistentData());

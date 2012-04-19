@@ -983,8 +983,10 @@ Application Indicators {
        		String code;
        		"Number of version in production"
        		String productionVersion;
-       		"Number of version in diffusion"   		
-			String diffusionVersion;			
+       		"Number of version published"   		
+			String publishedVersion;			
+       		"Number of version archived"   		
+			String archivedVersion;			
 			
 			"Date when the indicators system was sended to production validation"
 			JAVADATE productionValidationDate;
@@ -1038,8 +1040,10 @@ Application Indicators {
        		
        		"Number of version in production"
        		String productionVersion;
-       		"Number of version in diffusion"   		
-			String diffusionVersion;		
+       		"Number of version published"   		
+			String publishedVersion;		
+       		"Number of version archived"   		
+			String archivedVersion;		
 			
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;

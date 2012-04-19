@@ -49,6 +49,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, version);
         assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
         assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
+        assertNull(indicatorsSystemCreated.getIndicatorsSystem().getDiffusionVersion());
     }
 
     @Test
