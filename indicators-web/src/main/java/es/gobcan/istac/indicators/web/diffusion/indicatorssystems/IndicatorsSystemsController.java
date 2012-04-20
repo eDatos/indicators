@@ -30,7 +30,7 @@ public class IndicatorsSystemsController extends BaseController {
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
         // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems?limit=1000").build().toUriString(); 
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/?limit=1000").build().toUriString(); 
         String json = getJson(uriComponentsBuilder, urlPath);
 
         // View
