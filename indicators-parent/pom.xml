@@ -429,6 +429,16 @@
                 <artifactId>statistic-dataset-repository</artifactId>
                 <classifier>client-oracle</classifier>
                 <version>${statistic-dataset-repository.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- METAMAC -->
@@ -555,6 +565,16 @@
                 <groupId>org.siemac.metamac.statistical.operations</groupId>
                 <artifactId>metamac-statistical-operations-ws-api</artifactId>
                 <version>${metamac-statistical-operations-ws-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                    </exclusion>                                        
+                </exclusions>                
             </dependency>
 
             <!-- WEB COMMON -->
