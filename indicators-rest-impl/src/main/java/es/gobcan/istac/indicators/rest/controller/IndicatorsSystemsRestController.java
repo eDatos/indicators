@@ -15,8 +15,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceDataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
@@ -102,12 +102,12 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      */
     @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{uuidIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<IndicatorInstanceDataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
+    public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
                                                                     @PathVariable("uuidIndicatorInstance") final String uuidIndicatorInstance) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
-        IndicatorInstanceDataType indicatorInstanceDataType = indicatorSystemRestFacade.retrieveIndicatorsInstanceData(baseURL, idIndicatorSystem, uuidIndicatorInstance);
-        ResponseEntity<IndicatorInstanceDataType> response = new ResponseEntity<IndicatorInstanceDataType>(indicatorInstanceDataType, HttpStatus.OK);
+        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorsInstanceData(baseURL, idIndicatorSystem, uuidIndicatorInstance);
+        ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }
     

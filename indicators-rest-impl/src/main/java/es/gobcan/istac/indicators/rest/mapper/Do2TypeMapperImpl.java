@@ -226,109 +226,152 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         _indicatorDoToType(source, (IndicatorBaseType) target, baseURL);
 
         List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        if (CollectionUtils.isNotEmpty(geographicalGranularities)) {
-            List<GeographicalGranularityType> geographicalGranularityTypes = new ArrayList<GeographicalGranularityType>(geographicalGranularities.size());
-            for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
-                GeographicalGranularityType geographicalGranularityType = new GeographicalGranularityType();
-                geographicalGranularityType.setCode(geographicalGranularity.getCode());
-                geographicalGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
-                geographicalGranularityTypes.add(geographicalGranularityType);
-            }
-            target.setGeographicalGranularities(geographicalGranularityTypes);
-        }
+        target.setGeographicalGranularities(_geographicalGranulrityDoToType(geographicalGranularities));
+
 
         List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        if (CollectionUtils.isNotEmpty(timeGranularities)) {
-            List<TimeGranularityType> timeGranularityTypes = new ArrayList<TimeGranularityType>(timeGranularities.size());
-            for (TimeGranularityEnum timeGranularity : timeGranularities) {
-                TimeGranularityType timeGranularityType = new TimeGranularityType();
-                timeGranularityType.setCode(timeGranularity.name());
-                // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle()));
-                timeGranularityTypes.add(timeGranularityType);
-            }
-            target.setTimeGranularities(timeGranularityTypes);
-        }
+        target.setTimeGranularities(_timeGranularitiesDoToType(timeGranularities));
 
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        if (CollectionUtils.isNotEmpty(geographicalValues)) {
-            List<GeographicalValueType> geographicalValueTypes = new ArrayList<GeographicalValueType>(geographicalValues.size());
-            for (GeographicalValue geographicalValue : geographicalValues) {
-                GeographicalValueType geographicalValueType = new GeographicalValueType();
-                geographicalValueType.setCode(geographicalValue.getCode());
-                geographicalValueType.setLatitude(geographicalValue.getLatitude());
-                geographicalValueType.setLongitude(geographicalValue.getLongitude());
-                geographicalValueType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
-                geographicalValueTypes.add(geographicalValueType);
-            }
-            target.setGeographicalValues(geographicalValueTypes);
-        }
+        target.setGeographicalValues(_geographicalValueDoToType(geographicalValues));
+
 
         List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        if (CollectionUtils.isNotEmpty(timeValues)) {
-            List<TimeValueType> timeValueTypes = new ArrayList<TimeValueType>(timeValues.size());
-            for (String timeValue : timeValues) {
-                TimeValueType timeValueType = new TimeValueType();
-                timeValueType.setCode(timeValue);
-                // timeValueType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
-                timeValueTypes.add(timeValueType);
-            }
-            target.setTimeValues(timeValueTypes);
-        }
+        target.setTimeValues(_timeValueDoToType(timeValues));
 
         List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        if (CollectionUtils.isNotEmpty(measureValues)) {
-            List<MeasureValueType> measureValueTypes = new ArrayList<MeasureValueType>(measureValues.size());
-            for (MeasureDimensionTypeEnum measureValue : measureValues) {
-                MeasureValueType measureValueType = new MeasureValueType();
-                measureValueType.setCode(measureValue.name());
-                // measureValueType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle()));
-                measureValueTypes.add(measureValueType);
-            }
-            target.setMeasureValues(measureValueTypes);
-        }
-        
+        target.setMeasureValues(_measureValueDoToType(measureValues));
+
         target.setChildLink(_createLinkTypeIndicatorData(source.getIndicator(), baseURL));
     }
     
     private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceBaseType target, final String baseURL) {
         Assert.notNull(source);
         Assert.notNull(baseURL);
+
+        IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
+        String parentLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, baseURL);
+        String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source, baseURL);
+
+        target.setId(source.getUuid());
+        target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
+        target.setSelfLink(selfLinkURL);
+        
+        LinkType parentLink = new LinkType();
+        parentLink.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
+        parentLink.setHref(parentLinkURL);
+        target.setParentLink(parentLink);
+
+        target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
+    }
+    
+    private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
         try {
+            _indicatorsInstanceDoToType(source, (IndicatorInstanceBaseType)target, baseURL);
+    
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
-            String parentLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, baseURL);
-            String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source, baseURL);
 
-            target.setId(source.getUuid());
-            target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
-            target.setSelfLink(selfLinkURL);
+            // TODO AÑADIR LAS GRANULADIDADES
+            //List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrievegeoretrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            //target.setGeographicalGranularities(_geographicalGranulrityDoToType(geographicalGranularities));
+    
+    
+            //List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getUuid(), source.getVersionNumber());
+            //target.setTimeGranularities(_timeGranularitiesDoToType(timeGranularities));
+    
+            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            target.setGeographicalValues(_geographicalValueDoToType(geographicalValues));
+    
+    
+            List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            target.setTimeValues(_timeValueDoToType(timeValues));
+    
+            List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            target.setMeasureValues(_measureValueDoToType(measureValues));
             
-            LinkType parentLink = new LinkType();
-            parentLink.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
-            parentLink.setHref(parentLinkURL);
-            target.setParentLink(parentLink);
-
-            target.setTimeGranularity(source.getTimeGranularity());
-            target.setTimeValue(source.getTimeValue());
-            target.setGeographicalGranularity(source.getGeographicalGranularity() != null ? source.getGeographicalGranularity().getCode() : null);
-            target.setGeographicalValue(source.getGeographicalValue() != null ? source.getGeographicalValue().getCode() : null);
-
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
-            target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
+
+            String childLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, source, baseURL);
+            LinkType childLink = new LinkType();
+            childLink.setKind(RestConstants.KIND_INDICATOR_INSTANCE_DATA);
+            childLink.setHref(childLinkURL);
+            target.setChildLink(childLink);
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
     }
     
-    private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
-        _indicatorsInstanceDoToType(source, (IndicatorInstanceBaseType)target, baseURL);
-
-        IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
-        String childLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, source, baseURL);
-        LinkType childLink = new LinkType();
-        childLink.setKind(RestConstants.KIND_INDICATOR_INSTANCE_DATA);
-        childLink.setHref(childLinkURL);
-        target.setChildLink(childLink);
+    private List<GeographicalGranularityType> _geographicalGranulrityDoToType(List<GeographicalGranularity> geographicalGranularities) {
+        if (CollectionUtils.isEmpty(geographicalGranularities)) {
+            return null;
+        }
+        List<GeographicalGranularityType> geographicalGranularityTypes = new ArrayList<GeographicalGranularityType>(geographicalGranularities.size());
+        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
+            GeographicalGranularityType geographicalGranularityType = new GeographicalGranularityType();
+            geographicalGranularityType.setCode(geographicalGranularity.getCode());
+            geographicalGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
+            geographicalGranularityTypes.add(geographicalGranularityType);
+        }
+        return geographicalGranularityTypes;
+    }
+    
+    private List<TimeGranularityType> _timeGranularitiesDoToType(List<TimeGranularityEnum> timeGranularities) {
+        if (CollectionUtils.isEmpty(timeGranularities)) {
+            return null;
+        }
+        List<TimeGranularityType> timeGranularityTypes = new ArrayList<TimeGranularityType>(timeGranularities.size());
+        for (TimeGranularityEnum timeGranularity : timeGranularities) {
+            TimeGranularityType timeGranularityType = new TimeGranularityType();
+            timeGranularityType.setCode(timeGranularity.name());
+            // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle()));
+            timeGranularityTypes.add(timeGranularityType);
+        }
+        return timeGranularityTypes;
+    }
+    
+    private List<GeographicalValueType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
+        if (CollectionUtils.isEmpty(geographicalValues)) {
+            return null;
+        }
+        List<GeographicalValueType> geographicalValueTypes = new ArrayList<GeographicalValueType>(geographicalValues.size());
+        for (GeographicalValue geographicalValue : geographicalValues) {
+            GeographicalValueType geographicalValueType = new GeographicalValueType();
+            geographicalValueType.setCode(geographicalValue.getCode());
+            geographicalValueType.setLatitude(geographicalValue.getLatitude());
+            geographicalValueType.setLongitude(geographicalValue.getLongitude());
+            geographicalValueType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            geographicalValueTypes.add(geographicalValueType);
+        }
+        return geographicalValueTypes;
+    }
+    
+    private List<TimeValueType> _timeValueDoToType(List<String> timeValues) {
+        if (CollectionUtils.isEmpty(timeValues)) {
+            return null;
+        }
+        List<TimeValueType> timeValueTypes = new ArrayList<TimeValueType>(timeValues.size());
+        for (String timeValue : timeValues) {
+            TimeValueType timeValueType = new TimeValueType();
+            timeValueType.setCode(timeValue);
+            // timeValueType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
+            timeValueTypes.add(timeValueType);
+        }
+        return timeValueTypes;
+    }
+    
+    private List<MeasureValueType> _measureValueDoToType(List<MeasureDimensionTypeEnum> measureValues) {
+        if (CollectionUtils.isEmpty(measureValues)) {
+            return null;
+        }
+        List<MeasureValueType> measureValueTypes = new ArrayList<MeasureValueType>(measureValues.size());
+        for (MeasureDimensionTypeEnum measureValue : measureValues) {
+            MeasureValueType measureValueType = new MeasureValueType();
+            measureValueType.setCode(measureValue.name());
+            // measureValueType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle()));
+            measureValueTypes.add(measureValueType);
+        }
+        return measureValueTypes;
     }
     
     private LinkType _createLinkType(final Indicator indicator, final String baseURL) {

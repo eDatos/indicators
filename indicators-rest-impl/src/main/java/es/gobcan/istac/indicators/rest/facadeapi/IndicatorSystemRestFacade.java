@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.rest.facadeapi;
 
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceDataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
@@ -15,6 +15,6 @@ public interface IndicatorSystemRestFacade {
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseUrl, final RestCriteriaPaginator paginator) throws Exception;
     public NoPagedResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem) throws Exception;
     public IndicatorInstanceType retrieveIndicatorsInstance(final String baseUrl, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception;
-    public IndicatorInstanceDataType retrieveIndicatorsInstanceData(final String baseUrl, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception;
+    public DataType retrieveIndicatorsInstanceData(final String baseUrl, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception;
 
 }

@@ -22,6 +22,7 @@ import org.springframework.web.util.UriTemplate;
 
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
@@ -41,7 +42,7 @@ public class ResourcesRestController extends AbstractRestController {
     public final void adminRoot(final HttpServletRequest request, final HttpServletResponse response) {
         final String rootUri = request.getRequestURL().toString();
 
-        final URI uriIndicators = new UriTemplate("{rootUri}{resource}{indicators}").expand(rootUri, RestConstants.API_INDICATORS_RESOURCES, RestConstants.API_INDICATORS_INDICATORS);
+        final URI uriIndicators = new UriTemplate("{rootUri}{resource}/{indicators}").expand(rootUri, RestConstants.API_INDICATORS_RESOURCES, RestConstants.API_INDICATORS_INDICATORS);
         final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
 
         response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicators));
@@ -82,4 +83,19 @@ public class ResourcesRestController extends AbstractRestController {
         ResponseEntity<IndicatorBaseType> response = new ResponseEntity<IndicatorBaseType>(indicatorBaseType, null, HttpStatus.OK);
         return response;
     }
+    
+    /**
+     * @throws Exception
+     * @throws ApplicationException
+     */
+    @RequestMapping(value = "/indicators/{indicatorCode}/data", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
+                                                                    @PathVariable("indicatorCode") final String indicatorCode) throws Exception {
+        String baseURL = uriComponentsBuilder.build().toUriString();
+        DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode);
+        ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
+        return response;
+    }
+    
 }
