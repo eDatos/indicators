@@ -41,7 +41,9 @@
 			<li style="font-weight: bold;">
 				<span class="itemSubSubcapitulo" style="margin-left:<%= (level - 2)* 20 %>px"></span><%= getLabel(title) %></span>
 			</li>
-		<% } %>	
+		<% } %>
+		<ul class="dimensionSubElement" style="margin-left: 0px;">
+		</ul>	
 	<% } else if (kind == 'indicators#indicatorInstance') { %>
 		<li>		
 	  		<div style="clear: both;">
@@ -88,26 +90,32 @@
 			this.model.set({numeration: numerationBase});
 			
 			// Element
-			var html = this.template(this.model.toJSON());
-			
+			var html = this.template(this.model.toJSON());			
+			this.$el.html(html);
+
 			// Subelements
 			var kind = this.model.get('kind');
 			if (kind == 'indicators#dimension') {
 				var subelementsNumeration = 1;
 				var subelements = this.model.get('elements');
 				if (subelements != '') {
-					html += '<ul class="subcaps">';
-					var subelementsCollection = new ElementsCollection(subelements);				
-					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection,
+					var subelementsCollection = new ElementsCollection(subelements);
+					var htmlUbication = $('.dimensionSubElement', this.$el);				
+					var subelementsCollectionView = new ElementsCollectionView({el : htmlUbication,
+																				collection : subelementsCollection,
 																				level : this.options.level + 1,
 																				numerationBase : numerationBase,
 																				numeration : subelementsNumeration,
-																				indicatorsSystemCode : this.options.indicatorsSystemCode});				
-					html += subelementsCollectionView.render();
-					html += '</ul>';
+																				indicatorsSystemCode : this.options.indicatorsSystemCode});
+																								
+					subelementsCollectionView.render();					
+					
 					subelementsNumeration += 1;
 				}
 			}
+			
+			
+			
 			
 			return html;
 		}
@@ -119,7 +127,6 @@
 	var ElementsCollectionView = Backbone.View.extend({	
 		
 		render : function(){
-			var viewHtml = '';
 			var self = this;
 			var numeration = self.options.numeration;
 			this.collection.forEach(function(model){
@@ -128,11 +135,13 @@
 													numerationBase : self.options.numerationBase,
 													numeration : numeration,
 													indicatorsSystemCode : self.options.indicatorsSystemCode});
-				var subViewHtml = elementView.render();
-				viewHtml += subViewHtml;
+				elementView.render();
+				
+				self.$el.append(elementView.el);
+				
 				numeration += 1;
 			});
-			return viewHtml;
+			return this;
 		}
 	});
 	
@@ -145,9 +154,8 @@
 		indicatorsSystemView.render();
 		
 		var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
-		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
-		var elementsCollectionViewHtml = elementsCollectionView.render();
-		$("#elements-view").html(elementsCollectionViewHtml);
+		var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
+		elementsCollectionView.render();
 	});
 	
 </script>
