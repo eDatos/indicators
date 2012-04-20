@@ -34,6 +34,11 @@
         <servlet-name>remoteLogging</servlet-name>
         <url-pattern>/IndicatorsWeb/remote_logging</url-pattern>
     </servlet-mapping>
+    
+	<listener>
+		<listener-class>es.gobcan.istac.indicators.web.server.servlet.QuartzInitializerListener</listener-class>
+	</listener>
+
 
 <!-- 	<filter> -->
 <!-- 		<filter-name>guiceFilter</filter-name> -->

@@ -22,6 +22,11 @@ public class IndicatorsUpdateJob implements Job {
     private IndicatorsDataService indicatorsDataService;
     
     
+    
+    public IndicatorsUpdateJob() {
+        // TODO Auto-generated constructor stub
+    }
+    
     public IndicatorsDataService getIndicatorsDataService() {
         if (indicatorsDataService == null) {
             indicatorsDataService = ApplicationContextProvider.getApplicationContext().getBean(IndicatorsDataService.class);
@@ -32,7 +37,7 @@ public class IndicatorsUpdateJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         
-        ServiceContext serviceContext = new ServiceContext("import", context.getFireInstanceId(), "metamac-core");
+        ServiceContext serviceContext = new ServiceContext("updateJob", context.getFireInstanceId(), "metamac-core");
         try {
             getIndicatorsDataService().updateIndicatorsData(serviceContext);
         } catch (MetamacException e) {
