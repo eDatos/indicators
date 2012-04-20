@@ -28,7 +28,7 @@
 
 <script type="text/html" id="elementTemplate">
 
-	<% if (kind == 'indicators#indicatorDimension') { %>
+	<% if (kind == 'indicators#dimension') { %>
 		<div style="clear: both;" ></div>
 		<% if (level == 1) { %>
 			<br />
@@ -87,7 +87,7 @@
 			
 			// Subelements
 			var kind = this.model.get('kind');
-			if (kind == 'indicators#indicatorDimension') {
+			if (kind == 'indicators#dimension') {
 				var subelementsNumeration = 1;
 				var subelements = this.model.get('elements');
 				if (subelements != '') {
