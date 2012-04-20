@@ -16,7 +16,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -31,6 +30,7 @@ import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
@@ -43,7 +43,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
-public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
+public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 
     public static final int DEFAULT_MAX_RESULTS = 30;
 
@@ -51,13 +51,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
     private DispatchAsync   dispatcher;
     private PlaceManager    placeManager;
-
-    private int             maxResults;
-    private int             firstResult;
-    private int             pageNumber;
-    private int             numberOfElements;
-
-    private Integer         totalResults;
 
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 
@@ -78,7 +71,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
     @Inject
     public IndicatorListPresenter(EventBus eventBus, IndicatorListView view, IndicatorListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
-        super(eventBus, view, proxy);
+        super(eventBus, view, proxy, dispatcher, DEFAULT_MAX_RESULTS);
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
         this.placeManager = placeManager;
@@ -99,10 +92,11 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
         pageNumber = 1;
         numberOfElements = maxResults;
 
-        retrieveIndicatorList();
+        retrieveResultSet();
     }
 
-    private void retrieveIndicatorList() {
+    @Override
+    public void retrieveResultSet() {
         dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallback<GetIndicatorPaginatedListResult>() {
 
             @Override
@@ -168,7 +162,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
             @Override
             public void onSuccess(CreateIndicatorResult result) {
                 logger.log(Level.INFO, "Indicator created successfully");
-                retrieveIndicatorList();
+                retrieveResultSet();
                 ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicCreated()), MessageTypeEnum.SUCCESS);
             }
         });
@@ -176,7 +170,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
 
     @Override
     public void reloadIndicatorList() {
-        retrieveIndicatorList();
+        retrieveResultSet();
     }
 
     @Override
@@ -189,7 +183,7 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
             }
             @Override
             public void onSuccess(DeleteIndicatorsResult result) {
-                retrieveIndicatorList();
+                retrieveResultSet();
                 ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicDeleted()), MessageTypeEnum.SUCCESS);
             }
         });
@@ -208,92 +202,6 @@ public class IndicatorListPresenter extends Presenter<IndicatorListPresenter.Ind
                 getView().setSubjects(result.getSubjectDtos());
             }
         });
-    }
-
-    // PAGINATION
-
-    protected void resultSetFirstButtonClicked() {
-        firstResult = 0;
-        pageNumber = 1;
-
-        retrieveIndicatorList();
-    }
-
-    protected void resultSetPreviousButtonClicked() {
-        firstResult -= maxResults;
-        pageNumber--;
-
-        retrieveIndicatorList();
-    }
-
-    protected void resultSetNextButtonClicked() {
-        firstResult += numberOfElements;
-        pageNumber++;
-
-        retrieveIndicatorList();
-    }
-
-    protected void resultSetLastButtonClicked() {
-        int numPages = totalResults / DEFAULT_MAX_RESULTS;
-        firstResult = (numPages * DEFAULT_MAX_RESULTS);
-        if ((numPages * DEFAULT_MAX_RESULTS) < totalResults) {
-            numPages++;
-        }
-        pageNumber = numPages;
-        
-        retrieveIndicatorList();
-    }
-
-    protected int getMaxResults() {
-        return maxResults;
-    }
-
-    protected void setMaxResults(int maxResults) {
-        this.maxResults = maxResults;
-    }
-
-    protected int getFirstResult() {
-        return firstResult;
-    }
-
-    protected void setFirstResult(int firstResult) {
-        this.firstResult = firstResult;
-    }
-
-    protected int getPageNumber() {
-        return pageNumber;
-    }
-
-    protected void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    protected int getNumberOfElements() {
-        return numberOfElements;
-    }
-
-    protected void setNumberOfElements(int numberOfElements) {
-        this.numberOfElements = numberOfElements;
-    }
-
-    @Override
-    public void onResultSetFirstButtonClicked() {
-        resultSetFirstButtonClicked();
-    }
-
-    @Override
-    public void onResultSetLastButtonClicked() {
-        resultSetLastButtonClicked();
-    }
-
-    @Override
-    public void onResultSetPreviousButtonClicked() {
-        resultSetPreviousButtonClicked();
-    }
-
-    @Override
-    public void onResultSetNextButtonClicked() {
-        resultSetNextButtonClicked();
     }
 
 }

@@ -11,7 +11,6 @@ import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionAppearance;
@@ -37,9 +36,10 @@ import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindo
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 
-public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPresenter.IndicatorListView {
+public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPresenter> implements IndicatorListPresenter.IndicatorListView {
 
     private IndicatorListUiHandler   uiHandlers;
 
@@ -54,17 +54,9 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
 
     private NewIndicatorWindow       window;
 
-    private int                      numberOfElements;
-    private int                      numberSelected;
-    private int                      pageNumber;
-
-    private final StatusBar          statusBar;
-
     @Inject
     public IndicatorListViewImpl(StatusBar statusBar) {
-        super();
-
-        this.statusBar = statusBar;
+        super(statusBar);
 
         // ToolStrip
         ToolStrip toolStrip = new ToolStrip();
@@ -202,34 +194,6 @@ public class IndicatorListViewImpl extends ViewImpl implements IndicatorListPres
         if (window != null) {
             window.setSubjetcs(subjectDtos);
         }
-    }
-
-    public StatusBar getStatusBar() {
-        return statusBar;
-    }
-
-    public int getNumberOfElements() {
-        return numberOfElements;
-    }
-
-    public void setNumberOfElements(int numberOfElements) {
-        this.numberOfElements = numberOfElements;
-    }
-
-    public int getNumberSelected() {
-        return numberSelected;
-    }
-
-    public void setNumberSelected(int numberSelected) {
-        this.numberSelected = numberSelected;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
     }
 
     public void refreshStatusBar() {
