@@ -71,7 +71,7 @@ public class IndicatorsSystemsController extends BaseController {
             throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
         StringBuffer json = new StringBuffer();
         String output = null;
         while ((output = br.readLine()) != null) {
