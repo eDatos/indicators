@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.module.SimpleModule;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class JacksonFix {
                 SimpleModule stat4youModule = new SimpleModule("indicators", new Version(1, 0, 0, null));
                 stat4youModule.addSerializer(DateTime.class, new DateTimeSerializer());
                 objectMapper.registerModule(stat4youModule);
+                objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+                
                 m.setObjectMapper(objectMapper);
             }
         }

@@ -29,6 +29,7 @@ import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceDataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
@@ -36,12 +37,10 @@ import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.NoPagedResultType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
 
 @Service("indicatorSystemRestFacade")
 public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade {
-
-    public static Integer            MAXIMUM_RESULT_SIZE_DEFAULT = Integer.valueOf(25);
-    public static Integer            MAXIMUM_RESULT_SIZE_ALLOWED = Integer.valueOf(1000);
 
     private Logger                   logger                      = LoggerFactory.getLogger(getClass());
 
@@ -56,7 +55,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseURL, final RestCriteriaPaginator paginator) throws Exception {
-        PagingParameter pagingParameter = createPagingParameter(paginator);
+        PagingParameter pagingParameter = CriteriaUtil.createPagingParameter(paginator);
         PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsSystemsService.findIndicatorsSystemsPublished(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
 
         List<IndicatorsSystemBaseType> result = dto2TypeMapper.indicatorsSystemDoToBaseType(indicatorsSystemVersions.getValues(), baseURL);
@@ -78,12 +77,12 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public NoPagedResultType<IndicatorInstanceType> retrieveIndicatorsInstances(final String baseURL, final String idIndicatorSystem) throws Exception {
+    public NoPagedResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseURL, final String idIndicatorSystem) throws Exception {
         IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorSystem);
         List<IndicatorInstance> indicatorInstances = indicatorsSystemsService.retrieveIndicatorsInstancesByIndicatorsSystem(RestConstants.SERVICE_CONTEXT, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), indicatorsSystemVersion.getVersionNumber());
-        List<IndicatorInstanceType> indicatorInstanceTypes = dto2TypeMapper.indicatorsInstanceDoToType(indicatorInstances, baseURL);
+        List<IndicatorInstanceBaseType> indicatorInstanceTypes = dto2TypeMapper.indicatorsInstanceDoToBaseType(indicatorInstances, baseURL);
         
-        NoPagedResultType<IndicatorInstanceType> result = new NoPagedResultType<IndicatorInstanceType>();
+        NoPagedResultType<IndicatorInstanceBaseType> result = new NoPagedResultType<IndicatorInstanceBaseType>();
         result.setKind(RestConstants.KIND_INDICATOR_INSTANCES);
         result.setItems(indicatorInstanceTypes);
         result.setTotal(indicatorInstanceTypes.size());
@@ -174,19 +173,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return indicatorInstance;
     }
 
-    private PagingParameter createPagingParameter(final RestCriteriaPaginator paginator) {
-        if (paginator.getOffset() == null || paginator.getOffset() < 0) {
-            paginator.setOffset(0);
-        }
 
-        if (paginator.getLimit() == null || paginator.getLimit() < 0) {
-            paginator.setLimit(MAXIMUM_RESULT_SIZE_DEFAULT);
-        }
-
-        if (paginator.getLimit() > MAXIMUM_RESULT_SIZE_ALLOWED) {
-            paginator.setLimit(MAXIMUM_RESULT_SIZE_ALLOWED);
-        }
-        return PagingParameter.rowAccess(paginator.getOffset(), paginator.getOffset() + paginator.getLimit(), Boolean.TRUE);
-    }
 
 }

@@ -25,10 +25,12 @@ public class IndicatorsDiscoveryRestController extends AbstractRestController {
     public final void adminRoot(final HttpServletRequest request, final HttpServletResponse response) {
         final String rootUri = request.getRequestURL().toString();
 
-        final URI uri = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
-        final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uri.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+        final URI uriResources = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_RESOURCES);
+        final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToIndicators = RESTURIUtil.createLinkHeader(uriResources.toASCIIString(), RESTURIUtil.REL_COLLECTION);
 
-        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems));
+        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems, linkToIndicators));
     }
 
 }
