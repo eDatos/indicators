@@ -9,22 +9,27 @@ import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
+import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresenter.SystemListView;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemListUiHandler;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
+import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
-public class SystemListViewImpl extends ViewImpl implements SystemListView {
+public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> implements SystemListView {
 
     private SystemListUiHandler      uiHandlers;
 
@@ -32,8 +37,11 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
     private VLayout                  panel;
 
     @Inject
-    public SystemListViewImpl() {
+    public SystemListViewImpl(StatusBar statusBar) {
+        super(statusBar);
+        
         indSystemListGrid = new BaseCustomListGrid();
+        indSystemListGrid.setHeight(680);
         IndicatorsSystemsDS datasource = new IndicatorsSystemsDS();
         indSystemListGrid.setDataSource(datasource);
         indSystemListGrid.setUseAllDataSourceFields(false);
@@ -51,8 +59,11 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
 
         panel = new VLayout();
         panel.addMember(indSystemListGrid);
+        panel.addMember(statusBar);
 
         bindEvents();
+        
+        initStatusBar();
     }
 
     private void bindEvents() {
@@ -82,8 +93,63 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
     }
 
     @Override
-    public void setUiHandlers(SystemListUiHandler uiHandlers) {
+    public void setUiHandlers(SystemListPresenter uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+    
+    public void refreshStatusBar() {
+        // update Selected label e.g "0 of 50 selected"
+        String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
+        getStatusBar().getSelectedLabel().setContents(selectedLabel);
+
+        // update Page number label e.g "Page 1"
+        String pageNumberLabel = IndicatorsWeb.getMessages().page(String.valueOf(getPageNumber()));
+        getStatusBar().getPageNumberLabel().setContents(pageNumberLabel);
+        getStatusBar().getPageNumberLabel().markForRedraw();
+    }
+
+    protected void initStatusBar() {
+
+        // "0 of 50 selected"
+
+        getStatusBar().getResultSetFirstButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetFirstButtonClicked();
+                }
+            }
+        });
+
+        getStatusBar().getResultSetPreviousButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetPreviousButtonClicked();
+                }
+            }
+        });
+
+        // "Page 1"
+
+        getStatusBar().getResultSetNextButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetNextButtonClicked();
+                }
+            }
+        });
+
+        getStatusBar().getResultSetLastButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (uiHandlers != null) {
+                    uiHandlers.onResultSetLastButtonClicked();
+                }
+            }
+        });
     }
 
     /* Util */
@@ -93,6 +159,11 @@ public class SystemListViewImpl extends ViewImpl implements SystemListView {
             codes.add(record.getAttribute(IndicatorsSystemsDS.CODE));
         }
         return codes;
+    }
+
+    @Override
+    public void removeSelectedData() {
+        this.indSystemListGrid.removeSelectedData();
     }
 
 }
