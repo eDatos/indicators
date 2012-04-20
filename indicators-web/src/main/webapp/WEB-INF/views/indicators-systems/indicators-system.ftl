@@ -46,11 +46,14 @@
 		<li>		
 	  		<div style="clear: both;">
 				<div class="itemControlInfo">
-					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" />
+					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" onclick='$("#<%= id%>").toggle(200);'>
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
 					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?indicators=PENDIENTE_IDENTIFICADOR"><%= getLabel(title) %></a>
+					<div id="<%=id %>" style="display: none;">
+						<a href="<%= selfLink %>">[@apph.messageEscape 'page.indicators-system.indicator-instance.detail'/]</a>
+					</div>
 				</div>
 			</div>								
 		</li>

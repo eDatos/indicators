@@ -23,6 +23,7 @@
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
+    <entry key="page.indicators-system.indicator-instance.detail">Más información</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
     
     <!-- Indicators -->
