@@ -30,7 +30,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstanceAction
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
@@ -80,7 +80,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
@@ -115,7 +115,7 @@ public class ServerModule extends HandlerModule {
     protected void configureHandlers() {
 
         // Indicators System
-        bindHandler(GetIndicatorsSystemListAction.class, GetIndicatorsSystemListActionHandler.class);
+        bindHandler(GetIndicatorsSystemPaginatedListAction.class, GetIndicatorsSystemPaginatedListActionHandler.class);
         bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
         bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
 

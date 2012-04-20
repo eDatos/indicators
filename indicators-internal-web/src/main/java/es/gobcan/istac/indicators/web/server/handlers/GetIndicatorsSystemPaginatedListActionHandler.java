@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.FindOperationsResult;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,12 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemListResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
-public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<GetIndicatorsSystemListAction, GetIndicatorsSystemListResult> {
+public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActionHandler<GetIndicatorsSystemPaginatedListAction, GetIndicatorsSystemPaginatedListResult> {
 
     @Autowired
     private IndicatorsServiceFacade                       indicatorsServiceFacade;
@@ -31,15 +32,18 @@ public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<
     @Autowired
     private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
 
-    public GetIndicatorsSystemListActionHandler() {
-        super(GetIndicatorsSystemListAction.class);
+    public GetIndicatorsSystemPaginatedListActionHandler() {
+        super(GetIndicatorsSystemPaginatedListAction.class);
     }
 
     @Override
-    public GetIndicatorsSystemListResult execute(GetIndicatorsSystemListAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorsSystemPaginatedListResult execute(GetIndicatorsSystemPaginatedListAction action, ExecutionContext context) throws ActionException {
         List<IndicatorsSystemDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemDtoWeb>();
-        OperationBaseList operationBaseList = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem();
+        int totalResults = 0;
+        FindOperationsResult findOperationsResult = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
+        OperationBaseList operationBaseList = findOperationsResult.getOperations();
         if (operationBaseList != null && operationBaseList.getOperation() != null) {
+            totalResults = findOperationsResult.getTotalResults().intValue();
             for (OperationBase operationBase : operationBaseList.getOperation()) {
                 // Check if operation (indicators system) exists in the DB
                 try {
@@ -52,11 +56,12 @@ public class GetIndicatorsSystemListActionHandler extends AbstractActionHandler<
 
             }
         }
-        return new GetIndicatorsSystemListResult(indicatorsSystemDtos);
+        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemDtos, totalResults);
     }
 
     @Override
-    public void undo(GetIndicatorsSystemListAction action, GetIndicatorsSystemListResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetIndicatorsSystemPaginatedListAction action, GetIndicatorsSystemPaginatedListResult result, ExecutionContext context) throws ActionException {
+
     }
 
 }

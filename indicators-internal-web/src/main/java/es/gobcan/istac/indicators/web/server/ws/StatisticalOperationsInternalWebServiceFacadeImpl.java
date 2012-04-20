@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.web.server.ws;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -11,7 +12,6 @@ import org.siemac.metamac.schema.common.v1_0.domain.OperationType;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacExceptionFault;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.FindOperationsResult;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -36,9 +36,8 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
         }
     }
 
-    // TODO pendiente de paginación METAMAC-434
     @Override
-    public OperationBaseList findOperationsIndicatorsSystem() throws MetamacWebException {
+    public FindOperationsResult findOperationsIndicatorsSystem(int firstResult, int maxResult) throws MetamacWebException {
         try {
             MetamacCriteria metamacCriteria = new MetamacCriteria();
             metamacCriteria.setRestriction(new MetamacCriteriaConjunctionRestriction());
@@ -51,8 +50,13 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
             isIndicatorsSystemPropertyRestriction.setBooleanValue(Boolean.TRUE);
             ((MetamacCriteriaConjunctionRestriction) metamacCriteria.getRestriction()).getRestrictions().getRestriction().add(isIndicatorsSystemPropertyRestriction);
 
+            // Pagination
+            metamacCriteria.setFirstResult(BigInteger.valueOf(firstResult));
+            metamacCriteria.setMaximumResultSize(BigInteger.valueOf(maxResult));
+            metamacCriteria.setCountTotalResults(true);
+
             FindOperationsResult findOperationsResult = webservicesLocator.getMetamacStatisticalOperationsInternalInterface().findOperations(metamacCriteria);
-            return findOperationsResult.getOperations();
+            return findOperationsResult;
         } catch (MetamacExceptionFault e) {
             List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e.getFaultInfo().getExceptionItems());
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
