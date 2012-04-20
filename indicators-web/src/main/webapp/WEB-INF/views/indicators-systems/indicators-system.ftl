@@ -61,8 +61,8 @@
 </script>
 
 <script type="text/html" id="indicatorInstanceTemplate">
-	<div>
-		<p>[@apph.messageEscape 'entity.indicator-instance.self-link'/]: <%= selfLink %></p>
+	<div style="padding-top: 2px;">
+		<p><a href="<%= selfLink %>" target="_blank"><%= selfLink %></a></p>
 		<% if (geographicalValue != null) { %>
 			<p>[@apph.messageEscape 'entity.indicator-instance.geographic-value'/]: <%= geographicalValue %></p>
 		<% } %>
