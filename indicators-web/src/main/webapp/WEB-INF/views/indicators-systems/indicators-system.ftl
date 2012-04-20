@@ -63,10 +63,18 @@
 <script type="text/html" id="indicatorInstanceTemplate">
 	<div>
 		<p>[@apph.messageEscape 'entity.indicator-instance.self-link'/]: <%= selfLink %></p>
-		<p>[@apph.messageEscape 'entity.indicator-instance.geographic-value'/]: <%= geographicalValue %></p>
-		<p>[@apph.messageEscape 'entity.indicator-instance.geographic-granularity'/]: <%= geographicalGranularity %></p>
-		<p>[@apph.messageEscape 'entity.indicator-instance.time-granularity'/]: <%= timeValue %></p>
-		<p>[@apph.messageEscape 'entity.indicator-instance.time-value'/]: <%= timeGranularity %></p>
+		<% if (geographicalValue != null) { %>
+			<p>[@apph.messageEscape 'entity.indicator-instance.geographic-value'/]: <%= geographicalValue %></p>
+		<% } %>
+		<% if (geographicalGranularity != null) { %>
+			<p>[@apph.messageEscape 'entity.indicator-instance.geographic-granularity'/]: <%= geographicalGranularity %></p>
+		<% } %>			
+		<% if (timeValue != null) { %>
+			<p>[@apph.messageEscape 'entity.indicator-instance.time-granularity'/]: <%= timeValue %></p>
+		<% } %>
+		<% if (timeGranularity != null) { %>
+			<p>[@apph.messageEscape 'entity.indicator-instance.time-value'/]: <%= timeGranularity %></p>
+		<% } %>
 	</div>
 </script>
 
