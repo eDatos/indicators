@@ -26,6 +26,13 @@
     <entry key="page.indicators-system.indicator-instance.detail">More information</entry>
     <entry key="entity.indicators-system">Indicators system</entry>
     
+	<!-- Indicator instance -->
+	<entry key="entity.indicator-instance.geographic-granularity">Geographical granularity</entry>
+	<entry key="entity.indicator-instance.geographic-value">Geographical value</entry>
+	<entry key="entity.indicator-instance.time-granularity">Temporal granularity</entry>
+	<entry key="entity.indicator-instance.time-value">Temporal value</entry>	    
+	<entry key="entity.indicator-instance.self-link">API</entry>
+    
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicators</entry>
     <entry key="entity.indicators">Indicator</entry>

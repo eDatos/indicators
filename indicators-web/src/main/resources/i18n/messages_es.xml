@@ -23,9 +23,15 @@
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
-    <entry key="page.indicators-system.indicator-instance.detail">Más información</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
-    
+
+	<!-- Indicator instance -->
+	<entry key="entity.indicator-instance.geographic-granularity">Granularidad geográfica</entry>
+	<entry key="entity.indicator-instance.geographic-value">Valor geográfico</entry>
+	<entry key="entity.indicator-instance.time-granularity">Granularidad temporal</entry>
+	<entry key="entity.indicator-instance.time-value">Valor temporal</entry>	    
+	<entry key="entity.indicator-instance.self-link">API</entry>
+	
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicadores</entry>
     <entry key="entity.indicators">Indicador</entry>

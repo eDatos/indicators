@@ -48,18 +48,26 @@
 		<li>		
 	  		<div style="clear: both;">
 				<div class="itemControlInfo">
-					<img style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]" onclick='$("#<%= id%>").toggle(200);'>
+					<img id="<%= id %>" style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]">
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
 					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?uuidInstanciaIndicador=<%= id %>&codigoSistemaIndicadores=<%= indicatorsSystemCode %>&accion=html"><%= getLabel(title) %></a>
-					<div id="<%=id %>" style="display: none;">
-						<a href="<%= selfLink %>" target="_blank">[@apph.messageEscape 'page.indicators-system.indicator-instance.detail'/]</a>
-					</div>
+					<div class="indicatorInstanceDetail"></div>
 				</div>
 			</div>								
 		</li>
 	<% } %>		
+</script>
+
+<script type="text/html" id="indicatorInstanceTemplate">
+	<div>
+		<p>[@apph.messageEscape 'entity.indicator-instance.self-link'/]: <%= selfLink %></p>
+		<p>[@apph.messageEscape 'entity.indicator-instance.geographic-value'/]: <%= geographicalValue %></p>
+		<p>[@apph.messageEscape 'entity.indicator-instance.geographic-granularity'/]: <%= geographicalGranularity %></p>
+		<p>[@apph.messageEscape 'entity.indicator-instance.time-granularity'/]: <%= timeValue %></p>
+		<p>[@apph.messageEscape 'entity.indicator-instance.time-value'/]: <%= timeGranularity %></p>
+	</div>
 </script>
 
 <script>
@@ -73,8 +81,31 @@
 		}
 	});
 	
+	var IndicatorInstanceDetail = Backbone.View.extend({
+		template : _.template($('#indicatorInstanceTemplate').html()),
+	
+		render : function(){
+			$(this.el).html(this.template(this.model));
+			return this;
+		}	
+	});
+	
+	
 	var ElementView = Backbone.View.extend({
 		template : _.template($('#elementTemplate').html()),
+		
+		showIndicatorInstanceDetail : function(){
+			var self = this;
+			$.get(this.model.get('selfLink'))
+		       .success(function(indicatorInstance){		       		
+		       		var $detail = $('.indicatorInstanceDetail', self.el);
+		       		var view = new IndicatorInstanceDetail({el : $detail, model : indicatorInstance});
+		       		view.render();
+		       })
+		       .error(function(){
+		    	   console.log('Error!');
+		       });
+		},
 		
 		render : function(){
 			
@@ -92,6 +123,11 @@
 			// Element
 			var html = this.template(this.model.toJSON());			
 			this.$el.html(html);
+
+			var self = this;
+			$('img', this.$el).bind('click', function() {
+				self.showIndicatorInstanceDetail();
+			});
 
 			// Subelements
 			var kind = this.model.get('kind');
@@ -112,11 +148,7 @@
 					
 					subelementsNumeration += 1;
 				}
-			}
-			
-			
-			
-			
+			}			
 			return html;
 		}
 	});
