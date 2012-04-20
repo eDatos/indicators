@@ -63,17 +63,31 @@
 <script type="text/html" id="indicatorInstanceTemplate">
 	<div style="padding-top: 2px;">
 		<p><a href="<%= selfLink %>" target="_blank"><%= selfLink %></a></p>
-		<% if (geographicalValue != null) { %>
-			<p>[@apph.messageEscape 'entity.indicator-instance.geographic-value'/]: <%= geographicalValue %></p>
+		<% if (geographicalValues != null) { %>
+			<p>
+				[@apph.messageEscape 'entity.indicator-instance.geographic-values'/]:
+		<%		
+			 for (i in geographicalValues) {
+				var geographicalValue = geographicalValues[i];
+		%>
+				<%= geographicalValue.code %> 
+		<%		
+			 } 
+		%>
+			</p>
 		<% } %>
-		<% if (geographicalGranularity != null) { %>
-			<p>[@apph.messageEscape 'entity.indicator-instance.geographic-granularity'/]: <%= geographicalGranularity %></p>
-		<% } %>			
-		<% if (timeValue != null) { %>
-			<p>[@apph.messageEscape 'entity.indicator-instance.time-granularity'/]: <%= timeValue %></p>
-		<% } %>
-		<% if (timeGranularity != null) { %>
-			<p>[@apph.messageEscape 'entity.indicator-instance.time-value'/]: <%= timeGranularity %></p>
+		<% if (timeValues != null) { %>
+			<p>
+				[@apph.messageEscape 'entity.indicator-instance.time-values'/]:
+		<%		
+			 for (i in timeValues) {
+				var timeValue = timeValues[i];
+		%>
+				<%= timeValue.code %> 
+		<%		
+			 } 
+		%>
+			</p>
 		<% } %>
 	</div>
 </script>
