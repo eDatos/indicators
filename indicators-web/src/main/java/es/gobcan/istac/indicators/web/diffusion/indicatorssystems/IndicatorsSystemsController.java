@@ -60,22 +60,7 @@ public class IndicatorsSystemsController extends BaseController {
         return modelAndView;
     }
     
-    // TODO hacerlo con router en la misma página de sistema de indicadores
-    @RequestMapping(value = "/indicatorsSystems/{code}/indicatorsInstances/{uuid}", method = RequestMethod.GET)
-    public ModelAndView setupForm(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, @PathVariable("uuid") String uuid, Model model) throws Exception {
-
-        // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).path("/indicatorInstances").path(uuid).build().toUriString(); 
-        String json = getJson(uriComponentsBuilder, urlPath);
-        
-        // View
-        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
-        modelAndView.addObject("indicatorInstance", json);
-
-        return modelAndView;
-    }
-    
-    // TODO Invocar REST desde página
+    // TODO hacer petición REST desde página?
     private String getJson(UriComponentsBuilder uriComponentsBuilder, String urlPath) throws Exception {
         URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
