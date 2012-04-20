@@ -50,9 +50,9 @@
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
-					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?indicators=PENDIENTE_IDENTIFICADOR"><%= getLabel(title) %></a>
+					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?uuidInstanciaIndicador=<%= id %>&codigoSistemaIndicadores=<%= indicatorsSystemCode %>&accion=html"><%= getLabel(title) %></a>
 					<div id="<%=id %>" style="display: none;">
-						<a href="<%= selfLink %>">[@apph.messageEscape 'page.indicators-system.indicator-instance.detail'/]</a>
+						<a href="<%= selfLink %>" target="_blank">[@apph.messageEscape 'page.indicators-system.indicator-instance.detail'/]</a>
 					</div>
 				</div>
 			</div>								
@@ -77,7 +77,9 @@
 		render : function(){
 			
 			this.model.set({level: this.options.level});
+			this.model.set({indicatorsSystemCode: this.options.indicatorsSystemCode});
 			
+			// Numeration
 			var numerationBase = '';
 			if (this.options.numerationBase != '') {
 				numerationBase = this.options.numerationBase + '.';
@@ -96,7 +98,11 @@
 				if (subelements != '') {
 					html += '<ul class="subcaps">';
 					var subelementsCollection = new ElementsCollection(subelements);				
-					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection, level : this.options.level + 1, numerationBase : numerationBase, numeration : subelementsNumeration});				
+					var subelementsCollectionView = new ElementsCollectionView({collection : subelementsCollection,
+																				level : this.options.level + 1,
+																				numerationBase : numerationBase,
+																				numeration : subelementsNumeration,
+																				indicatorsSystemCode : this.options.indicatorsSystemCode});				
 					html += subelementsCollectionView.render();
 					html += '</ul>';
 					subelementsNumeration += 1;
@@ -117,7 +123,11 @@
 			var self = this;
 			var numeration = self.options.numeration;
 			this.collection.forEach(function(model){
-				var elementView = new ElementView({ model : model, level : self.options.level, numerationBase : self.options.numerationBase, numeration : numeration});
+				var elementView = new ElementView({ model : model,
+													level : self.options.level,
+													numerationBase : self.options.numerationBase,
+													numeration : numeration,
+													indicatorsSystemCode : self.options.indicatorsSystemCode});
 				var subViewHtml = elementView.render();
 				viewHtml += subViewHtml;
 				numeration += 1;
@@ -129,12 +139,13 @@
 	$(function(){
 
 		var indicatorsSystem = ${indicatorsSystem};
-
+		var indicatorsSystemCode = indicatorsSystem.code;
+		
 		var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystem});
 		indicatorsSystemView.render();
 		
 		var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
-		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1, numerationBase : '', numeration : 1});
+		var elementsCollectionView = new ElementsCollectionView({collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
 		var elementsCollectionViewHtml = elementsCollectionView.render();
 		$("#elements-view").html(elementsCollectionViewHtml);
 	});
