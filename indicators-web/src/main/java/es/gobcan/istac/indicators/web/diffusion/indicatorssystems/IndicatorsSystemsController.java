@@ -26,7 +26,7 @@ public class IndicatorsSystemsController extends BaseController {
     private ConfigurationService                          configurationService;
 
     // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
-    @RequestMapping(value = "/indicators-systems", method = RequestMethod.GET)
+    @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
         // Get json from API
@@ -40,8 +40,8 @@ public class IndicatorsSystemsController extends BaseController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/indicators-systems/{code}", method = RequestMethod.GET)
-    public ModelAndView setupForm(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
+    @RequestMapping(value = "/indicatorsSystems/{code}", method = RequestMethod.GET)
+    public ModelAndView indicatorsSystem(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
 
         // Get json from API
         String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().toUriString(); 
@@ -60,6 +60,20 @@ public class IndicatorsSystemsController extends BaseController {
         return modelAndView;
     }
     
+    // TODO hacerlo con router en la misma página de sistema de indicadores
+    @RequestMapping(value = "/indicatorsSystems/{code}/indicatorsInstances/{uuid}", method = RequestMethod.GET)
+    public ModelAndView setupForm(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, @PathVariable("uuid") String uuid, Model model) throws Exception {
+
+        // Get json from API
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).path("/indicatorInstances").path(uuid).build().toUriString(); 
+        String json = getJson(uriComponentsBuilder, urlPath);
+        
+        // View
+        ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
+        modelAndView.addObject("indicatorInstance", json);
+
+        return modelAndView;
+    }
     
     // TODO Invocar REST desde página
     private String getJson(UriComponentsBuilder uriComponentsBuilder, String urlPath) throws Exception {
