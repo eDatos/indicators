@@ -14,7 +14,6 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageH
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -34,6 +33,7 @@ import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularit
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
@@ -101,28 +101,28 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     }
 
     private void loadQuantityUnits() {
-        dispatcher.execute(new GetQuantityUnitsListAction(), new AsyncCallback<GetQuantityUnitsListResult>() {
+        dispatcher.execute(new GetQuantityUnitsListAction(), new WaitingAsyncCallback<GetQuantityUnitsListResult>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingQuantityUnits()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onSuccess(GetQuantityUnitsListResult result) {
+            public void onWaitSuccess(GetQuantityUnitsListResult result) {
                 UpdateQuantityUnitsEvent.fire(MainPagePresenter.this, result.getQuantityUnits());
             }
         });
     }
 
     private void loadGeographicalGranularities() {
-        dispatcher.execute(new GetGeographicalGranularitiesAction(), new AsyncCallback<GetGeographicalGranularitiesResult>() {
+        dispatcher.execute(new GetGeographicalGranularitiesAction(), new WaitingAsyncCallback<GetGeographicalGranularitiesResult>() {
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularities()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onSuccess(GetGeographicalGranularitiesResult result) {
+            public void onWaitSuccess(GetGeographicalGranularitiesResult result) {
                 UpdateGeographicalGranularitiesEvent.fire(MainPagePresenter.this, result.getGeographicalGranularityDtos());
             }
         });

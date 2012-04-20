@@ -6,4 +6,11 @@ public interface SystemListUiHandler extends UiHandlers {
 
     void reloadIndicatorsSystemList();
     void goToIndicatorsSystem(String indSystem);
+
+    // Pagination
+    void onResultSetNextButtonClicked();
+    void onResultSetFirstButtonClicked();
+    void onResultSetLastButtonClicked();
+    void onResultSetPreviousButtonClicked();
+
 }

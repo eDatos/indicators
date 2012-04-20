@@ -111,4 +111,11 @@ public abstract class PaginationPresenter<V extends View, Proxy_ extends Proxy<?
         resultSetNextButtonClicked();
     }
 
+    protected void initializePaginationSettings() {
+        maxResults = defultMaxResults;
+        firstResult = 0;
+        pageNumber = 1;
+        numberOfElements = maxResults;
+    }
+    
 }
