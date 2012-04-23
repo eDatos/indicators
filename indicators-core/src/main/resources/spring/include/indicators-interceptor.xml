@@ -24,20 +24,19 @@
     </tx:attributes> 
   </tx:advice>  
   <aop:config> 
-    <aop:pointcut id="businessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.*(..))"/>  
-    <aop:pointcut id="facadeServicePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
+    <aop:pointcut id="serviceFacadePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
     <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->  
-    <aop:pointcut id="updatingBusinessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.retrieve*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>
+    <aop:pointcut id="updatingServiceFacadePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.retrieve*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>
       
-    <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="txAdvice" order="1"/>  
-    <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="serviceContextStoreAdvice" order="2"/>  
-    <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="errorHandlingAdvice" order="3"/>  
-    <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="hibernateErrorHandlingAdvice" order="4"/>  
-    <aop:advisor pointcut-ref="updatingBusinessService" advice-ref="jpaInterceptorFlushEager" order="5"/>
+    <aop:advisor pointcut-ref="serviceFacadePointCut" advice-ref="txAdvice" order="1"/>  
+    <aop:advisor pointcut-ref="serviceFacadePointCut" advice-ref="serviceContextStoreAdvice" order="2"/>  
+    <aop:advisor pointcut-ref="serviceFacadePointCut" advice-ref="errorHandlingAdvice" order="3"/>  
+    <aop:advisor pointcut-ref="serviceFacadePointCut" advice-ref="hibernateErrorHandlingAdvice" order="4"/>  
+    <aop:advisor pointcut-ref="updatingServiceFacadePointCut" advice-ref="jpaInterceptorFlushEager" order="5"/>
     
     <!-- Logging interceptor -->
     <aop:aspect id="afterThrowing" ref="loggingHandlingAdvice">
-        <aop:after-throwing pointcut-ref="facadeServicePointCut" throwing="ex" method="afterThrowing"/>
+        <aop:after-throwing pointcut-ref="serviceFacadePointCut" throwing="ex" method="afterThrowing"/>
     </aop:aspect> 
   </aop:config> 
 </beans>
