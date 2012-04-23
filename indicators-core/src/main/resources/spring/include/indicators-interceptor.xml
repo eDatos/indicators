@@ -27,7 +27,7 @@
     <aop:pointcut id="businessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.*(..))"/>  
     <aop:pointcut id="facadeServicePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
     <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->  
-    <aop:pointcut id="updatingBusinessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.retrieve*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>
+    <aop:pointcut id="updatingBusinessService" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.retrieve*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>
       
     <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="txAdvice" order="1"/>  
     <aop:advisor pointcut-ref="facadeServicePointCut" advice-ref="serviceContextStoreAdvice" order="2"/>  
