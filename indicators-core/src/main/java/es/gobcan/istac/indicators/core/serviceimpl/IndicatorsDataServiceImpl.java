@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -252,6 +251,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
+    
+    @Override
+    public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
+        
+        IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
+        if (indInstance.getGeographicalValue() != null) {
+            return Arrays.asList(indInstance.getGeographicalValue().getGranularity());
+        } else if (indInstance.getGeographicalGranularity() != null) {
+            return Arrays.asList(indInstance.getGeographicalGranularity()); 
+        } else {
+            return retrieveGeographicalGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
+        }
+    }
 
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
@@ -339,12 +353,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         InvocationValidator.checkRetrieveGeographicalValuesInIndicatorInstance(indicatorInstanceUuid, null);
         
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        if (indInstance.getGeographicalValue() != null) {
+        if (indInstance.getGeographicalValue() != null) { //Fixed value
             return Arrays.asList(indInstance.getGeographicalValue());
-        } else if (indInstance.getGeographicalGranularity() != null) {
+        } else if (indInstance.getGeographicalGranularity() != null) { //fixed granularity
             return retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getGeographicalGranularity().getUuid());
+        } else { //nothing is fixed
+            return retrieveGeographicalValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
-        return Arrays.asList();
     }
 
     /* Time granularities and values */
@@ -383,6 +398,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        }
+    }
+    
+    @Override
+    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+        //Validation
+        InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
+        
+        IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
+        
+        if (indInstance.getTimeValue() != null) {
+            return Arrays.asList(TimeVariableUtils.guessTimeGranularity(indInstance.getTimeValue()));
+        } else if (indInstance.getTimeGranularity() != null) {
+            return Arrays.asList(indInstance.getTimeGranularity());
+        } else {
+            return retrieveTimeGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
     }
     
@@ -473,8 +504,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return Arrays.asList(indInstance.getTimeValue());
         } else if (indInstance.getTimeGranularity() != null) {
             return retrieveTimeValuesWithGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getTimeGranularity());
+        } else {
+            return retrieveTimeValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
-        return Arrays.asList();
     }
     
     @Override

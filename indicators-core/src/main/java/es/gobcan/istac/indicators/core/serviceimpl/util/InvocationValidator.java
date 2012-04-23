@@ -785,6 +785,16 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorInstanceUuid, "INDICATOR_INSTANCE_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkRetrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid, List<MetamacExceptionItem> exceptions)
             throws MetamacException {
@@ -858,6 +868,16 @@ public class InvocationValidator {
         }
 
         ValidationUtils.checkParameterRequired(indicatorUuid, "INDICATOR_UUID", exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorInstanceUuid, "INDICATOR_INSTANCE_UUID", exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

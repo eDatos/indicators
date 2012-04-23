@@ -376,19 +376,26 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Override
     public void testRetrieveMeasureValuesInIndicator() throws Exception {
         // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void testRetrieveMeasureValuesInIndicatorInstance() throws Exception {
         // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void testRetrieveMeasureValuesInIndicatorPublished() throws Exception {
         // TODO Auto-generated method stub
-        
+    }
+    
+    @Override
+    public void testRetrieveGeographicalGranularitiesInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void testRetrieveTimeGranularitiesInIndicatorInstance() throws Exception {
+        // TODO Auto-generated method stub
     }
 
     @Override
