@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,7 +18,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
+import org.dbunit.DataSourceDatabaseTester;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.ext.oracle.OracleDataTypeFactory;
+import org.dbunit.operation.DatabaseOperation;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
@@ -242,4 +255,146 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return codes;
     }
 
+    
+    /*
+     * DBUnit methods and helpers
+     */
+    
+    protected abstract String getDataSetDSRepoFile();
+    
+    private JdbcTemplate             jdbcTemplate;
+    private DataSourceDatabaseTester databaseTester = null;
+
+    @Autowired
+    @Qualifier("dataSourceDatasetRepository")
+    public void setDatasourceDSRepository(DataSource ds) {
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
+
+    @Override
+    public void setUpDatabaseTester() throws Exception {
+        super.setUpDatabaseTester();
+        setUpDatabaseTester(getClass(), jdbcTemplate.getDataSource(), getDataSetDSRepoFile());
+    }
+
+    private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String datasetFileName) throws Exception {
+        // Setup database tester
+        if (databaseTester == null) {
+            databaseTester = new OracleDataSourceDatabaseTester(dataSource, dataSource.getConnection().getMetaData().getUserName());
+        }
+
+        // Create dataset
+        ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(clazz.getClassLoader().getResource(datasetFileName)));
+        dataSetReplacement.addReplacementObject("[NULL]", null);
+        dataSetReplacement.addReplacementObject("[null]", null);
+        dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
+
+        // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys constraint
+        // violation.
+        // Since version 2.0, the DatabaseSequenceFilter can now be used to automatically determine the tables order using foreign/exported keys information.
+        /*
+         * ITableFilter filter = new DatabaseSequenceFilter(databaseTester.getConnection());
+         * IDataSet dataset = new (filter, dataSetReplacement);
+         */
+
+        // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
+        initializeDatabase(databaseTester.getConnection().getConnection());
+
+        databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
+        databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
+        databaseTester.setDataSet(dataSetReplacement);
+        databaseTester.onSetup();
+    }
+
+    private void initializeDatabase(Connection connection) throws Exception {
+        // Remove tables content
+        List<String> tableNamesToDelete = getDSRepoTablesToDelete();
+        for (String tableNameToDelete : tableNamesToDelete) {
+            connection.prepareStatement("DELETE FROM " + tableNameToDelete).execute();
+        }
+
+        List<String> sequencesNamesToDrop = getDSRepoSequencesToDrop();
+        for (String sequenceNameToDrop : sequencesNamesToDrop) {
+            connection.prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
+        }
+
+        List<String> tableNamesToDrop = getDSRepoTablesToDrop();
+        for (String tableNameToDrop : tableNamesToDrop) {
+            connection.prepareStatement("DROP TABLE " + tableNameToDrop).execute();
+        }
+
+        // Restart sequences
+        List<String> sequences = getDSRepoSequencesToRestart();
+        if (sequences != null) {
+            for (String sequence : sequences) {
+                restartSequence(databaseTester.getConnection(), sequence);
+            }
+        }
+    }
+
+    private List<String> getDSRepoTablesToDrop() throws Exception {
+        List<String> dynamicTables = new ArrayList<String>();
+        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+            if (tableName.startsWith("DATA_")) {
+                dynamicTables.add(tableName);
+            }
+        }
+        return dynamicTables;
+    }
+
+    private List<String> getDSRepoSequencesToDrop() throws Exception {
+        List<String> dynamicTables = new ArrayList<String>();
+        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+            if (tableName.startsWith("DATA_")) {
+                String seqName = tableName.replaceFirst("DATA", "SEQ");
+                dynamicTables.add(seqName);
+            }
+        }
+        return dynamicTables;
+    }
+
+    private List<String> getDSRepoTablesToDelete() throws Exception {
+        List<String> dynamicTables = new ArrayList<String>();
+        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+            if (tableName.startsWith("TB_")) {
+                dynamicTables.add(tableName);
+            }
+        }
+        return dynamicTables;
+    }
+
+    private List<String> getDSRepoSequencesToRestart() {
+        List<String> sequences = new ArrayList<String>();
+        sequences.add("SEQ_DATASETS");
+        sequences.add("SEQ_DASET_DIMS");
+        sequences.add("SEQ_ATTRIBUTES");
+        sequences.add("SEQ_ATTR_DIMS");
+        sequences.add("SEQ_I18NSTRS");
+        sequences.add("SEQ_L10NSTRS");
+        return sequences;
+    }
+
+    @Override
+    public void tearDownDatabaseTester() throws Exception {
+        //NOTHING 
+    }
+
+    /**
+     * DatasourceTester with support for Oracle data types.
+     */
+
+    private class OracleDataSourceDatabaseTester extends DataSourceDatabaseTester {
+
+        public OracleDataSourceDatabaseTester(DataSource dataSource, String schema) {
+            super(dataSource, schema);
+        }
+
+        @Override
+        public IDatabaseConnection getConnection() throws Exception {
+            IDatabaseConnection connection = super.getConnection();
+
+            connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new OracleDataTypeFactory());
+            return connection;
+        }
+    }
 }

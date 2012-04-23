@@ -976,6 +976,8 @@ Application Indicators {
 			Clob isPartOf nullable databaseColumn="IS_PART_OF";
 			
        		Repository DataGpeRepository {
+       			protected List<@DataDefinition> findByQuery;
+            	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	List<@DataDefinition> findCurrentDataDefinitions;
             	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
