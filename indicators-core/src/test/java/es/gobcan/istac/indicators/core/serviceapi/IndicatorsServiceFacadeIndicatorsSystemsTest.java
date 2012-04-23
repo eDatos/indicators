@@ -24,9 +24,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.sso.client.MetamacPrincipal;
-import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
-import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,7 +39,6 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
@@ -106,37 +102,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_1                                 = "Indicator-1";
     private static String             INDICATOR_2                                 = "Indicator-2";
     private static String             INDICATOR_3                                 = "Indicator-3";
-
-    @Test
-    public void testRetrieveIndicatorsSystemErrorPrincipalNotFound() throws Exception {
-
-        try {
-            ServiceContext ctx = getServiceContext();
-            ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
-            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
-            fail("principal required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorsSystemErrorPrincipalWithoutRoleIndicators() throws Exception {
-
-        try {
-            ServiceContext ctx = getServiceContext();
-            assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
-            MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
-            access.setApplication(NOT_EXISTS);
-            access.setRole(RoleEnum.TECNICO_APOYO_DIFUSION.getName());
-            indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
-            fail("principal without role");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -516,23 +481,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(getServiceContext().getUserId(), indicatorsSystemDtoCreated.getLastUpdatedBy());
     }
 
-    @Test
-    public void testCreateIndicatorsSystemWithUserNoAdministrator() throws Exception {
-
-        ServiceContext user = getServiceContextTecnicoSistemaIndicadores();
-
-        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
-        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
-
-        // Create
-        IndicatorsSystemDto indicatorsSystemDtoCreated = indicatorsServiceFacade.createIndicatorsSystem(user, indicatorsSystemDto);
-
-        // Validate
-        assertNotNull(indicatorsSystemDtoCreated.getUuid());
-        IndicatorsSystemDto indicatorsSystemDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorsSystem(user, indicatorsSystemDtoCreated.getUuid(), indicatorsSystemDtoCreated.getVersionNumber());
-        assertEquals(user.getUserId(), indicatorsSystemDtoRetrieved.getCreatedBy());
-    }
-    
     @Test
     public void testCreateIndicatorsSystemErrorOperationNotAllowed() throws Exception {
 

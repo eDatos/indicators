@@ -21,9 +21,6 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.sso.client.MetamacPrincipal;
-import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
-import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,7 +39,6 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
-import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
@@ -93,37 +89,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             SUBJECT_2                    = "2";
     private static String             SUBJECT_3                    = "3";
     private static String             SUBJECT_4                    = "4";
-
-    @Test
-    public void testRetrieveIndicatorErrorPrincipalNotFound() throws Exception {
-
-        try {
-            ServiceContext ctx = getServiceContext();
-            ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
-            indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
-            fail("principal required");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
-
-    @Test
-    public void testRetrieveIndicatorErrorPrincipalWithoutRoleIndicators() throws Exception {
-
-        try {
-            ServiceContext ctx = getServiceContext();
-            assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
-            MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
-            access.setApplication(NOT_EXISTS);
-            access.setRole(RoleEnum.TECNICO_APOYO_DIFUSION.getName());
-            indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
-            fail("principal without role");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-    }
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -430,36 +395,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
-    }
-
-    @Test
-    public void testCreateIndicatorWithUserNoAdministrator() throws Exception {
-
-        ServiceContext user = getServiceContextTecnicoProduccion();
-
-        IndicatorDto indicatorDto = new IndicatorDto();
-        indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setCommentsUrl(IndicatorsMocks.mockString(4000));
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotesUrl(IndicatorsMocks.mockString(100));
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setQuantity(new QuantityDto());
-        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
-        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
-
-        // Create
-        IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContext(), indicatorDto);
-
-        // Validate
-        assertNotNull(indicatorDtoCreated.getUuid());
-        IndicatorDto indicatorDtoRetrieved = indicatorsServiceFacade.retrieveIndicator(user, indicatorDtoCreated.getUuid(), indicatorDtoCreated.getVersionNumber());
-        assertEquals(user.getUserId(), indicatorDtoRetrieved.getCreatedBy());
     }
 
     @Test
