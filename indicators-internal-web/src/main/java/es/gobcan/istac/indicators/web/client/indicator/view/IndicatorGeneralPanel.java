@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
@@ -357,24 +358,24 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Production Descriptors
         productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
-        productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null ? indicatorDto.getProductionValidationDate().toString() : "");
+        productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getProductionValidationDate()));
         productionDescriptorsForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
 
         // Quantity
         quantityForm.setValue(indicatorDto.getQuantity());
 
         // Diffusion Descriptors
-        diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
+        diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getDiffusionValidationDate()));
         diffusionDescriptorsForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 
         // Publication Descriptors
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_VERSION, indicatorDto.getPublishedVersion());
-        publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
+        publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, DateUtils.getFormattedDate(indicatorDto.getPublicationFailedDate()));
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
-        publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
+        publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_DATE, DateUtils.getFormattedDate(indicatorDto.getPublicationDate()));
         publicationDescriptorsForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
         publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_VERSION, indicatorDto.getArchivedVersion());
-        publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
+        publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_DATE, DateUtils.getFormattedDate(indicatorDto.getArchiveDate()));
         publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 
         // Annotations
@@ -400,9 +401,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Production Descriptors
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VERSION, indicatorDto.getProductionVersion());
-        productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, indicatorDto.getProductionValidationDate() != null
-                ? indicatorDto.getProductionValidationDate().toString()
-                : "");
+        productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getProductionValidationDate()));
         productionDescriptorsEditionForm.setValue(IndicatorDS.PRODUCTION_VALIDATION_USER, indicatorDto.getProductionValidationUser());
 
         // Quantity
@@ -410,17 +409,17 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setValue(indicatorDto.getQuantity());
 
         // Diffusion Descriptors
-        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, indicatorDto.getDiffusionValidationDate() != null ? indicatorDto.getDiffusionValidationDate().toString() : "");
+        diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_DATE, DateUtils.getFormattedDate(indicatorDto.getDiffusionValidationDate()));
         diffusionDescriptorsEditionForm.setValue(IndicatorDS.DIFFUSION_VALIDATION_USER, indicatorDto.getDiffusionValidationUser());
 
         // Publication Descriptors
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_VERSION, indicatorDto.getPublishedVersion());
-        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, indicatorDto.getPublicationFailedDate() != null ? indicatorDto.getPublicationFailedDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_DATE, DateUtils.getFormattedDate(indicatorDto.getPublicationFailedDate()));
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_FAILED_USER, indicatorDto.getPublicationFailedUser());
-        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_DATE, indicatorDto.getPublicationDate() != null ? indicatorDto.getPublicationDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_DATE, DateUtils.getFormattedDate(indicatorDto.getPublicationDate()));
         publicationDescriptorsEditionForm.setValue(IndicatorDS.PUBLICATION_USER, indicatorDto.getPublicationUser());
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_VERSION, indicatorDto.getArchivedVersion());
-        publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_DATE, indicatorDto.getArchiveDate() != null ? indicatorDto.getArchiveDate().toString() : "");
+        publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_DATE, DateUtils.getFormattedDate(indicatorDto.getArchiveDate()));
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 
         // Annotations

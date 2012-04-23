@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.system.view;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 
+import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -172,11 +173,11 @@ public class SystemGeneralPanel extends VLayout {
 
         // Production Descriptors
         productionForm.setValue(IndicatorsSystemsDS.PROD_VERSION, indicatorSystemDto.getProductionVersion());
-        productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_DATE, indicatorSystemDto.getProductionValidationDate() != null ? indicatorSystemDto.getProductionValidationDate().toString() : "");
+        productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getProductionValidationDate()));
         productionForm.setValue(IndicatorsSystemsDS.PROD_VALID_USER, indicatorSystemDto.getProductionValidationUser());
 
         // Diffusion Descriptors
-        diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_DATE, indicatorSystemDto.getDiffusionValidationDate() != null ? indicatorSystemDto.getDiffusionValidationDate().toString() : "");
+        diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getDiffusionValidationDate()));
         diffusionForm.setValue(IndicatorsSystemsDS.DIFF_VALID_USER, indicatorSystemDto.getDiffusionValidationUser());
 
         // Content Descriptors
@@ -185,10 +186,10 @@ public class SystemGeneralPanel extends VLayout {
 
         // Publication Descriptors
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_VERSION, indicatorSystemDto.getPublishedVersion());
-        publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, indicatorSystemDto.getPublicationDate() != null ? indicatorSystemDto.getPublicationDate().toString() : "");
+        publicationForm.setValue(IndicatorsSystemsDS.PUBL_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getPublicationDate()));
         publicationForm.setValue(IndicatorsSystemsDS.PUBL_USER, indicatorSystemDto.getPublicationUser());
         publicationForm.setValue(IndicatorsSystemsDS.ARCH_VERSION, indicatorSystemDto.getArchivedVersion());
-        publicationForm.setValue(IndicatorsSystemsDS.ARCH_DATE, indicatorSystemDto.getArchiveDate() != null ? indicatorSystemDto.getArchiveDate().toString() : "");
+        publicationForm.setValue(IndicatorsSystemsDS.ARCH_DATE, DateUtils.getFormattedDate(indicatorSystemDto.getArchiveDate()));
         publicationForm.setValue(IndicatorsSystemsDS.ARCH_USER, indicatorSystemDto.getArchiveUser());
 
         mainFormLayout.setViewMode();
