@@ -54,6 +54,15 @@
 <!-- 		<listener-class>es.gobcan.istac.indicators.web.server.IndicatorsWebGuiceServletContextListener</listener-class> -->
 <!-- 	</listener> -->
 
+    <filter>
+        <filter-name>headersFilter</filter-name>
+        <filter-class>es.gobcan.istac.indicators.web.server.filters.GWTCacheControlFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>headersFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
 	<!-- Servlets -->
 
 	<!-- Default page to serve -->
