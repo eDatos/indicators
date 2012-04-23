@@ -7,8 +7,7 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({
-    "formatId",
-    "formatSize",
+    "format",
     "dimension",
     "observation"
 })
@@ -18,10 +17,9 @@ public class DataType implements Serializable {
      * 
      */
     private static final long              serialVersionUID = 8269216607592124587L;
-    private List<String>                   observation      = null;
-    private List<String>                   formatId         = null;
-    private List<Integer>                  formatSize       = null;
+    private List<String>                   format           = null;
     private Map<String, DataDimensionType> dimension        = null;
+    private List<String>                   observation      = null;
 
     public List<String> getObservation() {
         return observation;
@@ -31,20 +29,12 @@ public class DataType implements Serializable {
         this.observation = observation;
     }
 
-    public List<String> getFormatId() {
-        return formatId;
+    public List<String> getFormat() {
+        return format;
     }
 
-    public void setFormatId(List<String> formatId) {
-        this.formatId = formatId;
-    }
-
-    public List<Integer> getFormatSize() {
-        return formatSize;
-    }
-
-    public void setFormatSize(List<Integer> formatSize) {
-        this.formatSize = formatSize;
+    public void setFormat(List<String> format) {
+        this.format = format;
     }
 
     public Map<String, DataDimensionType> getDimension() {

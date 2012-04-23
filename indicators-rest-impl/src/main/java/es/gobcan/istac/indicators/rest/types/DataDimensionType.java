@@ -1,20 +1,19 @@
 package es.gobcan.istac.indicators.rest.types;
 
-import java.util.Map;
-
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@JsonPropertyOrder({"representationIndex"})
+@JsonPropertyOrder({
+    "representation"
+})
 public class DataDimensionType {
 
-    private Map<String, Integer> representationIndex = null;
+    private DataRepresentationType representation = null;
 
-    public Map<String, Integer> getRepresentationIndex() {
-        return representationIndex;
+    public DataRepresentationType getRepresentation() {
+        return representation;
     }
 
-    public void setRepresentationIndex(Map<String, Integer> representationIndex) {
-        this.representationIndex = representationIndex;
+    public void setRepresentation(DataRepresentationType representation) {
+        this.representation = representation;
     }
-
 }

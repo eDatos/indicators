@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.rest.types;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
@@ -11,11 +11,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "selfLink",
     "parentLink",
     "title",
-    "geographicalGranularities",
-    "timeGranularities",
-    "geographicalValues",
-    "timeValues",
-    "measureValues",
+    "dimension",
     "decimalPlaces",
     "childLink"
 })
@@ -24,54 +20,18 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
     /**
      * 
      */
-    private static final long                 serialVersionUID          = 4307766622180932870L;
+    private static final long                  serialVersionUID = 4307766622180932870L;
 
-    private List<GeographicalGranularityType> geographicalGranularities = null;
-    private List<TimeGranularityType>         timeGranularities         = null;
-    private List<GeographicalValueType>       geographicalValues        = null;
-    private List<TimeValueType>               timeValues                = null;
-    private List<MeasureValueType>            measureValues             = null;
-    private Integer                           decimalPlaces             = null;
-    private LinkType                          childLink                 = null;
+    private Map<String, MetadataDimensionType> dimension        = null;
+    private Integer                            decimalPlaces    = null;
+    private LinkType                           childLink        = null;
 
-    public List<GeographicalGranularityType> getGeographicalGranularities() {
-        return geographicalGranularities;
+    public  Map<String,MetadataDimensionType> getDimension() {
+        return dimension;
     }
 
-    public void setGeographicalGranularities(List<GeographicalGranularityType> geographicalGranularities) {
-        this.geographicalGranularities = geographicalGranularities;
-    }
-
-    public List<TimeGranularityType> getTimeGranularities() {
-        return timeGranularities;
-    }
-
-    public void setTimeGranularities(List<TimeGranularityType> timeGranularities) {
-        this.timeGranularities = timeGranularities;
-    }
-
-    public List<GeographicalValueType> getGeographicalValues() {
-        return geographicalValues;
-    }
-
-    public void setGeographicalValues(List<GeographicalValueType> geographicalValues) {
-        this.geographicalValues = geographicalValues;
-    }
-
-    public List<TimeValueType> getTimeValues() {
-        return timeValues;
-    }
-
-    public void setTimeValues(List<TimeValueType> timeValues) {
-        this.timeValues = timeValues;
-    }
-
-    public List<MeasureValueType> getMeasureValues() {
-        return measureValues;
-    }
-
-    public void setMeasureValues(List<MeasureValueType> measureValues) {
-        this.measureValues = measureValues;
+    public void setDimension( Map<String,MetadataDimensionType> dimension) {
+        this.dimension = dimension;
     }
 
     public LinkType getChildLink() {

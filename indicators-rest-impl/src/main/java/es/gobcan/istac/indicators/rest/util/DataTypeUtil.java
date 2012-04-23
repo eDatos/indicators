@@ -11,46 +11,52 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
+import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 
 public class DataTypeUtil {
 
     public static DataType createDataType(List<GeographicalValue> geographicalValues, List<String> timeValues, List<MeasureDimensionTypeEnum> measureValues, Map<String, ObservationDto> observationMap) {
         List<String> observations = new ArrayList<String>();
-        List<String> formatIds = new ArrayList<String>();
-        List<Integer> formatSizes = new ArrayList<Integer>();
+        List<String> format = new ArrayList<String>();
         Map<String, DataDimensionType> dimension = new LinkedHashMap<String, DataDimensionType>();
 
-        formatIds.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        formatIds.add(IndicatorDataDimensionTypeEnum.TIME.name());
-        formatIds.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
-        formatSizes.add(geographicalValues.size());
-        formatSizes.add(timeValues.size());
-        formatSizes.add(measureValues.size());
+        format.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        format.add(IndicatorDataDimensionTypeEnum.TIME.name());
+        format.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
 
+        DataRepresentationType dataRepresentationTypeGeographical = new DataRepresentationType();
+        dataRepresentationTypeGeographical.setSize(geographicalValues.size());
+        dataRepresentationTypeGeographical.setIndex(new LinkedHashMap<String, Integer>());
         DataDimensionType dataDimensionTypeGeographical = new DataDimensionType();
-        dataDimensionTypeGeographical.setRepresentationIndex(new LinkedHashMap<String, Integer>());
+        dataDimensionTypeGeographical.setRepresentation(dataRepresentationTypeGeographical);        
         dimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), dataDimensionTypeGeographical);
 
+        DataRepresentationType dataRepresentationTypeTime = new DataRepresentationType();
+        dataRepresentationTypeTime.setSize(timeValues.size());
+        dataRepresentationTypeTime.setIndex(new LinkedHashMap<String, Integer>());
         DataDimensionType dataDimensionTypeTime = new DataDimensionType();
-        dataDimensionTypeTime.setRepresentationIndex(new LinkedHashMap<String, Integer>());
+        dataDimensionTypeTime.setRepresentation(dataRepresentationTypeTime);
         dimension.put(IndicatorDataDimensionTypeEnum.TIME.name(), dataDimensionTypeTime);
 
+        DataRepresentationType dataRepresentationTypeMeasure = new DataRepresentationType();
+        dataRepresentationTypeMeasure.setSize(measureValues.size());
+        dataRepresentationTypeMeasure.setIndex(new LinkedHashMap<String, Integer>());
         DataDimensionType dataDimensionTypeMeasure = new DataDimensionType();
-        dataDimensionTypeMeasure.setRepresentationIndex(new LinkedHashMap<String, Integer>());
+        dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
         dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
 
         for (int i = 0; i < geographicalValues.size(); i++) {
             GeographicalValue geographicalValue = geographicalValues.get(i);
-            dimension.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name()).getRepresentationIndex().put(geographicalValue.getCode(), i);
+            dataRepresentationTypeGeographical.getIndex().put(geographicalValue.getCode(), i);
 
             for (int j = 0; j < timeValues.size(); j++) {
                 String timeValue = timeValues.get(j);
-                dimension.get(IndicatorDataDimensionTypeEnum.TIME.name()).getRepresentationIndex().put(timeValue, j);
+                dataRepresentationTypeTime.getIndex().put(timeValue, j);
 
                 for (int k = 0; k < measureValues.size(); k++) {
                     MeasureDimensionTypeEnum measureValue = measureValues.get(k);
-                    dimension.get(IndicatorDataDimensionTypeEnum.MEASURE.name()).getRepresentationIndex().put(measureValue.name(), k);
+                    dataRepresentationTypeMeasure.getIndex().put(measureValue.name(), k);
 
                     // Observation ID: Be careful!!! don't change order of ids
                     String id = new StringBuilder().append(geographicalValue.getCode()).append("#").append(timeValue).append("#").append(measureValue).toString();
@@ -65,10 +71,9 @@ public class DataTypeUtil {
         }
 
         DataType dataType = new DataType();
-        dataType.setObservation(observations);
-        dataType.setFormatId(formatIds);
-        dataType.setFormatSize(formatSizes);
+        dataType.setFormat(format);
         dataType.setDimension(dimension);
+        dataType.setObservation(observations);
         return dataType;
     }
 }

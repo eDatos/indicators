@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -23,6 +24,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
@@ -31,8 +33,6 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
-import es.gobcan.istac.indicators.rest.types.GeographicalGranularityType;
-import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
@@ -40,10 +40,10 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
-import es.gobcan.istac.indicators.rest.types.MeasureValueType;
+import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
+import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
+import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.QuantityType;
-import es.gobcan.istac.indicators.rest.types.TimeGranularityType;
-import es.gobcan.istac.indicators.rest.types.TimeValueType;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -224,24 +224,30 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     
     private void _indicatorDoToType(IndicatorVersion source, IndicatorType target, String baseURL) throws Exception {
         _indicatorDoToType(source, (IndicatorBaseType) target, baseURL);
-
+        
+        target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
+        
+        // GEOGRAPHICAL        
         List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        target.setGeographicalGranularities(_geographicalGranulrityDoToType(geographicalGranularities));
-
-
-        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        target.setTimeGranularities(_timeGranularitiesDoToType(timeGranularities));
-
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        target.setGeographicalValues(_geographicalValueDoToType(geographicalValues));
-
-
+        
+        MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
+        target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+        
+        // TIME
+        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
         List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        target.setTimeValues(_timeValueDoToType(timeValues));
 
+        MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);            
+        target.getDimension().put(timeDimension.getCode(), timeDimension);
+        
+        // MEASURE
         List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        target.setMeasureValues(_measureValueDoToType(measureValues));
 
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+        target.getDimension().put(measureDimension.getCode(), measureDimension);
+      
+        // CHILD LINK
         target.setChildLink(_createLinkTypeIndicatorData(source.getIndicator(), baseURL));
     }
     
@@ -270,25 +276,29 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             _indicatorsInstanceDoToType(source, (IndicatorInstanceBaseType)target, baseURL);
     
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
-
-            // TODO AÑADIR LAS GRANULADIDADES
-            //List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrievegeoretrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            //target.setGeographicalGranularities(_geographicalGranulrityDoToType(geographicalGranularities));
-    
-    
-            //List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getUuid(), source.getVersionNumber());
-            //target.setTimeGranularities(_timeGranularitiesDoToType(timeGranularities));
-    
-            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            target.setGeographicalValues(_geographicalValueDoToType(geographicalValues));
-    
-    
-            List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            target.setTimeValues(_timeValueDoToType(timeValues));
-    
-            List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            target.setMeasureValues(_measureValueDoToType(measureValues));
+            target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
             
+            // GEOGRAPHICAL
+            List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            
+            MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
+            target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+
+            // TIME
+            List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            
+            MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
+            target.getDimension().put(timeDimension.getCode(), timeDimension);
+
+            // MEASURE
+            List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+            target.getDimension().put(measureDimension.getCode(), measureDimension);
+
+            // DECIMAL PLACES
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
 
@@ -301,75 +311,100 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
     }
+
+    private MetadataDimensionType createMeasureDimension(List<MeasureDimensionTypeEnum> measureValues) {
+        MetadataDimensionType measureDimension = new MetadataDimensionType();
+        measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
+        measureDimension.setRepresentation(_measureValueDoToType(measureValues));
+        return measureDimension;
+    }
+
+    private MetadataDimensionType _createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValue> geographicalValues) {
+        MetadataDimensionType geographicaDimension = new MetadataDimensionType();
+        geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+        // geographicaDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
+        geographicaDimension.setGranularity(_geographicalGranulrityDoToType(geographicalGranularities));
+        geographicaDimension.setRepresentation(_geographicalValueDoToType(geographicalValues));
+        return geographicaDimension;
+    }
     
-    private List<GeographicalGranularityType> _geographicalGranulrityDoToType(List<GeographicalGranularity> geographicalGranularities) {
+    private MetadataDimensionType _createTimeDimension(List<TimeGranularityEnum> timeGranularities, List<String> timeValues) {
+        MetadataDimensionType timeDimension = new MetadataDimensionType();
+        timeDimension.setCode(IndicatorDataDimensionTypeEnum.TIME.name());
+        timeDimension.setGranularity(_timeGranularitiesDoToType(timeGranularities));
+        // timeDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
+        timeDimension.setRepresentation(_timeValueDoToType(timeValues));
+        return timeDimension;
+    }
+    
+    private List<MetadataGranularityType> _geographicalGranulrityDoToType(List<GeographicalGranularity> geographicalGranularities) {
         if (CollectionUtils.isEmpty(geographicalGranularities)) {
             return null;
         }
-        List<GeographicalGranularityType> geographicalGranularityTypes = new ArrayList<GeographicalGranularityType>(geographicalGranularities.size());
+        List<MetadataGranularityType> geographicalGranularityTypes = new ArrayList<MetadataGranularityType>(geographicalGranularities.size());
         for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
-            GeographicalGranularityType geographicalGranularityType = new GeographicalGranularityType();
-            geographicalGranularityType.setCode(geographicalGranularity.getCode());
-            geographicalGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
-            geographicalGranularityTypes.add(geographicalGranularityType);
+            MetadataGranularityType metadataGranularityType = new MetadataGranularityType();
+            metadataGranularityType.setCode(geographicalGranularity.getCode());
+            metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
+            geographicalGranularityTypes.add(metadataGranularityType);
         }
         return geographicalGranularityTypes;
     }
     
-    private List<TimeGranularityType> _timeGranularitiesDoToType(List<TimeGranularityEnum> timeGranularities) {
+    private List<MetadataGranularityType> _timeGranularitiesDoToType(List<TimeGranularityEnum> timeGranularities) {
         if (CollectionUtils.isEmpty(timeGranularities)) {
             return null;
         }
-        List<TimeGranularityType> timeGranularityTypes = new ArrayList<TimeGranularityType>(timeGranularities.size());
+        List<MetadataGranularityType> timeGranularityTypes = new ArrayList<MetadataGranularityType>(timeGranularities.size());
         for (TimeGranularityEnum timeGranularity : timeGranularities) {
-            TimeGranularityType timeGranularityType = new TimeGranularityType();
+            MetadataGranularityType timeGranularityType = new MetadataGranularityType();
             timeGranularityType.setCode(timeGranularity.name());
-            // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle()));
+            // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle())); // TODO PUT TITLE
             timeGranularityTypes.add(timeGranularityType);
         }
         return timeGranularityTypes;
     }
     
-    private List<GeographicalValueType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
+    private List<MetadataRepresentationType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
-        List<GeographicalValueType> geographicalValueTypes = new ArrayList<GeographicalValueType>(geographicalValues.size());
+        List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
         for (GeographicalValue geographicalValue : geographicalValues) {
-            GeographicalValueType geographicalValueType = new GeographicalValueType();
-            geographicalValueType.setCode(geographicalValue.getCode());
-            geographicalValueType.setLatitude(geographicalValue.getLatitude());
-            geographicalValueType.setLongitude(geographicalValue.getLongitude());
-            geographicalValueType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
-            geographicalValueTypes.add(geographicalValueType);
+            MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+            metadataRepresentationType.setCode(geographicalValue.getCode());
+            metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
+            metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
+            metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            geographicalValueTypes.add(metadataRepresentationType);
         }
         return geographicalValueTypes;
     }
     
-    private List<TimeValueType> _timeValueDoToType(List<String> timeValues) {
+    private List<MetadataRepresentationType> _timeValueDoToType(List<String> timeValues) {
         if (CollectionUtils.isEmpty(timeValues)) {
             return null;
         }
-        List<TimeValueType> timeValueTypes = new ArrayList<TimeValueType>(timeValues.size());
+        List<MetadataRepresentationType> timeValueTypes = new ArrayList<MetadataRepresentationType>(timeValues.size());
         for (String timeValue : timeValues) {
-            TimeValueType timeValueType = new TimeValueType();
-            timeValueType.setCode(timeValue);
+            MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+            metadataRepresentationType.setCode(timeValue);
             // timeValueType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
-            timeValueTypes.add(timeValueType);
+            timeValueTypes.add(metadataRepresentationType);
         }
         return timeValueTypes;
     }
     
-    private List<MeasureValueType> _measureValueDoToType(List<MeasureDimensionTypeEnum> measureValues) {
+    private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureDimensionTypeEnum> measureValues) {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
-        List<MeasureValueType> measureValueTypes = new ArrayList<MeasureValueType>(measureValues.size());
+        List<MetadataRepresentationType> measureValueTypes = new ArrayList<MetadataRepresentationType>(measureValues.size());
         for (MeasureDimensionTypeEnum measureValue : measureValues) {
-            MeasureValueType measureValueType = new MeasureValueType();
-            measureValueType.setCode(measureValue.name());
+            MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+            metadataRepresentationType.setCode(measureValue.name());
             // measureValueType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle()));
-            measureValueTypes.add(measureValueType);
+            measureValueTypes.add(metadataRepresentationType);
         }
         return measureValueTypes;
     }

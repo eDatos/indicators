@@ -9,6 +9,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 
 @JsonPropertyOrder({
+    "type",
     "unitSymbol",
     "untiSymbolPosition",
     "unitMultiplier",
@@ -16,9 +17,10 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEn
     "decimalPlaces",
     "min",
     "max",
-    "denominator",
-    "numerator",
+    "denominatorLink",
+    "numeratorLink",
     "isPercentage",
+    "percentageOf",
     "baseValue",
     "baseTime",
     "baseLocation",
