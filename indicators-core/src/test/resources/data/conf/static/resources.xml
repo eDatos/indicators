@@ -3,5 +3,4 @@
 <properties>
   <comment>Configurations</comment>
   <entry key="indicators.jaxi.url">http://rcorrod:9080/jaxi-web</entry>
-  <entry key="indicators.ws.metamac.gopestat.internal.endpoint">http://localhost:8080/gopestat-web/ws/gopestat/internal/v1.0/gopestatInternalInterface</entry>
 </properties>
