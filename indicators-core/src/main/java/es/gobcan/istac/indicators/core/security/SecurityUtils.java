@@ -36,9 +36,9 @@ public class SecurityUtils {
         }
         throw new MetamacException(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED, metamacPrincipal.getUserId());
     }
-    
+
     /**
-     * Checks user has access to an operation or indicators system. To have access, user must have this indicators system in any role of requested roles 
+     * Checks user has access to an operation or indicators system. To have access, user must have this indicators system in any role of requested roles
      */
     public static void checkResourceIndicatorsSystemAllowed(ServiceContext ctx, String operationCode, RoleEnum... roles) throws MetamacException {
 
@@ -48,7 +48,7 @@ public class SecurityUtils {
         if (isAdministrator(metamacPrincipal)) {
             return;
         }
-        // Checks indicators system is in any role 
+        // Checks indicators system is in any role
         if (roles != null) {
             for (int i = 0; i < roles.length; i++) {
                 RoleEnum role = roles[i];
@@ -61,32 +61,19 @@ public class SecurityUtils {
     }
 
     /**
-     * Checks user has any rol
+     * Checks user has requested rol
      */
     private static boolean isUserInRol(MetamacPrincipal metamacPrincipal, RoleEnum role) throws MetamacException {
 
-        switch (role) {
-            case ADMINISTRADOR:
-                return isAdministrator(metamacPrincipal);
-            case ANY_ROLE_ALLOWED:
-                return isAnyIndicatorsRole(metamacPrincipal);
-            case TECNICO_SISTEMA_INDICADORES:
-                return isTsi(metamacPrincipal);
-            case TECNICO_PRODUCCION:
-                return isTp(metamacPrincipal);
-            case TECNICO_APOYO_PRODUCCION:
-                return isTap(metamacPrincipal);
-            case TECNICO_DIFUSION:
-                return isTd(metamacPrincipal);
-            case TECNICO_APOYO_DIFUSION:
-                return isTad(metamacPrincipal);
-            default:
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Operation not supported in security checker: " + role);
+        if (RoleEnum.ANY_ROLE_ALLOWED.equals(role)) {
+            return isAnyIndicatorsRole(metamacPrincipal);
+        } else {
+            return isRoleInAccesses(metamacPrincipal, role);
         }
     }
-    
+
     /**
-     * Checks if user has access to an operation. To have access, any access must exists to specified rol and operation, or has any access with 
+     * Checks if user has access to an operation. To have access, any access must exists to specified rol and operation, or has any access with
      * role and operation with 'null' value
      */
     private static boolean haveAccessToOperationInRol(MetamacPrincipal metamacPrincipal, RoleEnum role, String operation) throws MetamacException {
@@ -127,31 +114,13 @@ public class SecurityUtils {
         return Boolean.FALSE;
     }
 
-    private static Boolean isAnyIndicatorsRole(MetamacPrincipal metamacPrincipal) {
-        return isAdministrator(metamacPrincipal) || isTsi(metamacPrincipal) || isTap(metamacPrincipal) || isTp(metamacPrincipal) || isTad(metamacPrincipal) || isTd(metamacPrincipal);
-    }
-
     private static Boolean isAdministrator(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.ADMINISTRADOR);
     }
 
-    private static Boolean isTsi(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_SISTEMA_INDICADORES);
-    }
-
-    private static Boolean isTap(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_PRODUCCION);
-    }
-
-    private static Boolean isTp(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_PRODUCCION);
-    }
-
-    private static Boolean isTad(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_DIFUSION);
-    }
-
-    private static Boolean isTd(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_DIFUSION);
+    private static Boolean isAnyIndicatorsRole(MetamacPrincipal metamacPrincipal) {
+        return isRoleInAccesses(metamacPrincipal, RoleEnum.ADMINISTRADOR) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_SISTEMA_INDICADORES)
+                || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_PRODUCCION) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_PRODUCCION)
+                || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_DIFUSION) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_DIFUSION);
     }
 }

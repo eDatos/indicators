@@ -33,6 +33,18 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         return serviceContext;
     }
     
+    protected ServiceContext getServiceContextAdministrador() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
+        return serviceContext;
+    }
+    
+    protected ServiceContext getServiceContextAdministrador2() {
+        ServiceContext serviceContext = super.getServiceContext2();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
+        return serviceContext;
+    }
+
     protected ServiceContext getServiceContextTecnicoProduccion() {
         ServiceContext serviceContext = super.getServiceContext();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_PRODUCCION);
@@ -45,6 +57,17 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         return serviceContext;
     }
 
+    protected ServiceContext getServiceContextTecnicoDifusion() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_DIFUSION);
+        return serviceContext;
+    }
+
+    protected ServiceContext getServiceContextTecnicoApoyoDifusion() {
+        ServiceContext serviceContext = super.getServiceContext();
+        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_DIFUSION);
+        return serviceContext;
+    }
     protected ServiceContext getServiceContextTecnicoSistemaIndicadores() {
         ServiceContext serviceContext = super.getServiceContext();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_SISTEMA_INDICADORES);
