@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.security.SecurityUtils;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
@@ -59,7 +61,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     private static String             GEOGRAPHICAL_GRANULARITY_2                  = "2";
 
     @Test
-    public void testRetrieveIndicatorsSystemErrorPrincipalNotFound() throws Exception {
+    public void testErrorPrincipalNotFound() throws Exception {
 
         try {
             ServiceContext ctx = getServiceContext();
@@ -73,7 +75,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testRetrieveIndicatorsSystemErrorPrincipalWithoutRoleIndicators() throws Exception {
+    public void testErrorPrincipalWithoutRoleIndicators() throws Exception {
 
         try {
             ServiceContext ctx = getServiceContext();
@@ -132,6 +134,52 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+        
+    @Test
+    public void testCreateIndicatorsSystemWithAccessOnlyToIndicatorsSystem1() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        
+        ServiceContext ctx = getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, indicatorsSystemDto.getCode()));
+        
+        indicatorsServiceFacade.createIndicatorsSystem(ctx, indicatorsSystemDto);
+    }
+    
+    @Test
+    public void testCreateIndicatorsSystemErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        try {
+            indicatorsServiceFacade.createIndicatorsSystem(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), indicatorsSystemDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
+    @Test
+    public void testCreateIndicatorsSystemErrorWithoutAccessToIndicatorsSystem1InRequestedRole() throws Exception {
+
+        IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
+        indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
+        
+        ServiceContext ctx = getServiceContextTecnicoSistemaIndicadores();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "other"));
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_APOYO_DIFUSION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, indicatorsSystemDto.getCode()));
+        
+        try {
+            indicatorsServiceFacade.createIndicatorsSystem(ctx, indicatorsSystemDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -186,9 +234,14 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testDeleteIndicatorsSystemRoleTecnicoSistemaIndicadores() throws Exception {
         indicatorsServiceFacade.deleteIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_2);
     }
+    
+    @Test
+    public void testDeleteIndicatorsSystemWithAccessOnlyToIndicatorsSystem2() throws Exception {
+        indicatorsServiceFacade.deleteIndicatorsSystem(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), INDICATORS_SYSTEM_2);
+    }
 
     @Test
-    public void testDeleteIndicatorsSystemErrorWithoutAccess() throws Exception {
+    public void testDeleteIndicatorsSystemErrorWithoutRole() throws Exception {
         try {
             indicatorsServiceFacade.deleteIndicatorsSystem(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_2);
             fail("without access");
@@ -218,6 +271,17 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testDeleteIndicatorsSystemErrorWithoutAccessToIndicatorSystem1() throws Exception {
+        try {
+            indicatorsServiceFacade.deleteIndicatorsSystem(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), INDICATORS_SYSTEM_2);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testSendIndicatorsSystemToProductionValidation() throws Exception {
@@ -227,9 +291,13 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testSendIndicatorsSystemToProductionValidationTecnicoSistemaIndicadores() throws Exception {
         indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1);
     }
+    @Test
+    public void testSendIndicatorsSystemToProductionValidationWithAccessOnlyToIndicatorSystem1() throws Exception {
+        indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), INDICATORS_SYSTEM_1);
+    }
 
     @Test
-    public void testSendIndicatorsSystemToProductionValidationErrorWithoutAccess() throws Exception {
+    public void testSendIndicatorsSystemToProductionValidationErrorWithoutRole() throws Exception {
 
         try {
             indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_1);
@@ -260,6 +328,18 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testSendIndicatorsSystemToProductionValidationErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+
+        try {
+            indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), INDICATORS_SYSTEM_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testRejectIndicatorsSystemProductionValidation() throws Exception {
@@ -267,7 +347,15 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testRejectIndicatorsSystemProductionValidationErrorWithoutAccess() throws Exception {
+    public void testRejectIndicatorsSystemProductionValidationWithAccessToIndicatorSystem4() throws Exception {
+        ServiceContext ctx = getServiceContextTecnicoDifusion();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_PRODUCCION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-4"));
+        indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(ctx, INDICATORS_SYSTEM_4);
+    }
+    
+    @Test
+    public void testRejectIndicatorsSystemProductionValidationErrorWithoutRole() throws Exception {
 
         // Without access
         try {
@@ -308,7 +396,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testSendIndicatorsSystemToDiffusionValidationErrorWithoutAccess() throws Exception {
+    public void testSendIndicatorsSystemToDiffusionValidationErrorWithoutRole() throws Exception {
 
         // Without access
         try {
@@ -339,7 +427,17 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
-
+    }
+    
+    @Test
+    public void testSendIndicatorsSystemToDiffusionValidationErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+        try {
+            indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), INDICATORS_SYSTEM_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
     }
 
     @Test
@@ -348,7 +446,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testRejectIndicatorsSystemDiffusionValidationErrorWithoutAccess() throws Exception {
+    public void testRejectIndicatorsSystemDiffusionValidationErrorWithoutRole() throws Exception {
 
         // Without access
         try {
@@ -385,13 +483,22 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testPublishIndicatorsSystem() throws Exception {
         indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextTecnicoDifusion(), INDICATORS_SYSTEM_5);
     }
+    
     @Test
     public void testPublishIndicatorsSystemTecnicoApoyoDifusion() throws Exception {
         indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextTecnicoApoyoDifusion(), INDICATORS_SYSTEM_5);
     }
-
+    
     @Test
-    public void testPublishIndicatorsSystemErrorWithoutAccess() throws Exception {
+    public void testPublishIndicatorsSystemWithAccessToIndicatorSystem5() throws Exception {
+        ServiceContext ctx = getServiceContextTecnicoDifusion();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_DIFUSION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-5"));
+        indicatorsServiceFacade.publishIndicatorsSystem(ctx, INDICATORS_SYSTEM_5);
+    }
+    
+    @Test
+    public void testPublishIndicatorsSystemErrorWithoutRole() throws Exception {
         // Without access
         try {
             indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_5);
@@ -415,6 +522,22 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testPublishIndicatorsSystemErrorWithoutAccessToIndicatorsSystem5() throws Exception {
+
+        ServiceContext ctx = getServiceContextTecnicoDifusion();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
+        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_DIFUSION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "other"));
+        
+        try {
+            indicatorsServiceFacade.publishIndicatorsSystem(ctx, INDICATORS_SYSTEM_5);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testArchiveIndicatorsSystem() throws Exception {
@@ -422,7 +545,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
-    public void testArchiveIndicatorsSystemErrorWithoutAccess() throws Exception {
+    public void testArchiveIndicatorsSystemErrorWithoutRole() throws Exception {
         // Without access
         try {
             indicatorsServiceFacade.archiveIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_3);
@@ -458,9 +581,9 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testVersioningIndicatorsSystem() throws Exception {
         indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_3, VersionTypeEnum.MAJOR);
     }
-
+    
     @Test
-    public void testVersioningIndicatorsSystemErrorWithoutAccess() throws Exception {
+    public void testVersioningIndicatorsSystemErrorWithoutRole() throws Exception {
         try {
             indicatorsServiceFacade.versioningIndicatorsSystem(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_3, VersionTypeEnum.MAJOR);
             fail("without access");
@@ -574,6 +697,38 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testCreateDimensionOnlyAccessToIndicatorsSystem1() throws Exception {
+
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentUuid(null);
+        dimensionDto.setOrderInLevel(Long.valueOf(1));
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+
+        // With access
+        indicatorsServiceFacade.createDimension(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), uuidIndicatorsSystem, dimensionDto);
+    }
+    
+    @Test
+    public void testCreateDimensionErrorOnlyAccessToIndicatorsSystem2() throws Exception {
+
+        DimensionDto dimensionDto = new DimensionDto();
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setParentUuid(null);
+        dimensionDto.setOrderInLevel(Long.valueOf(1));
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+
+        // Without access
+        try {
+            indicatorsServiceFacade.createDimension(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), uuidIndicatorsSystem, dimensionDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testUpdateDimension() throws Exception {
@@ -619,9 +774,15 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoSistemaIndicadores(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
     }
+    
+    @Test
+    public void testUpdateDimensionLocationWithAccessOnlyToIndicatorsSystem1() throws Exception {
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
+    }
 
     @Test
-    public void testUpdateDimensionLocationErrorWithoutAccess() throws Exception {
+    public void testUpdateDimensionLocationErrorWithoutRole() throws Exception {
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoProduccion(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
@@ -652,6 +813,18 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testUpdateDimensionErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        try {
+            indicatorsServiceFacade.updateDimension(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), dimensionDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }  
 
     @Test
     public void testRetrieveDimension() throws Exception {
@@ -667,9 +840,14 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testDeleteDimension() throws Exception {
         indicatorsServiceFacade.deleteDimension(getServiceContextTecnicoSistemaIndicadores(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
     }
+    
+    @Test
+    public void testDeleteDimensionOnlyAccessToIndicatorsSystem1() throws Exception {
+        indicatorsServiceFacade.deleteDimension(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+    }
 
     @Test
-    public void testDeleteDimensionErrorWithoutAccess() throws Exception {
+    public void testDeleteDimensionErrorWithoutRole() throws Exception {
 
         try {
             indicatorsServiceFacade.deleteDimension(getServiceContextTecnicoProduccion(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
@@ -700,6 +878,18 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testDeleteDimensionErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+
+        try {
+            indicatorsServiceFacade.deleteDimension(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
 
@@ -758,6 +948,44 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testCreateIndicatorInstanceOnlyAccessToIndicatorsSystem1() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        indicatorInstanceDto.setTimeValue("2012");
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+
+        // With access
+        indicatorsServiceFacade.createIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), uuidIndicatorsSystem, indicatorInstanceDto);
+    }
+    
+    @Test
+    public void testCreateIndicatorInstanceErrorOnlyWithoutAccessToIndicatorsSystem1() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
+        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        indicatorInstanceDto.setTimeValue("2012");
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+
+        // Without access
+        try {
+            indicatorsServiceFacade.createIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), uuidIndicatorsSystem, indicatorInstanceDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
 
     @Test
     public void testUpdateIndicatorInstance() throws Exception {
@@ -797,15 +1025,45 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
+    
+    @Test
+    public void testUpdateIndicatorInstanceErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        try {
+            indicatorsServiceFacade.updateIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), indicatorInstanceDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }  
 
     @Test
     public void testUpdateIndicatorInstanceLocation() throws Exception {
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadores(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
     }
-
+    
     @Test
-    public void testUpdateIndicatorInstanceLocationErrorWithoutAccess() throws Exception {
+    public void testUpdateIndicatorInstanceLocationOnlyAccessToIndicatorsSystem1() throws Exception {
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
+    }   
+    
+    @Test
+    public void testUpdateIndicatorInstanceLocationErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        try {
+            indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }  
+    
+    @Test
+    public void testUpdateIndicatorInstanceLocationErrorWithoutRole() throws Exception {
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoProduccion(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
@@ -851,9 +1109,14 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testDeleteIndicatorInstance() throws Exception {
         indicatorsServiceFacade.deleteIndicatorInstance(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
     }
+    
+    @Test
+    public void testDeleteIndicatorInstanceOnlyAccessToIndicatorsSystem1() throws Exception {
+        indicatorsServiceFacade.deleteIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+    }
 
     @Test
-    public void testDeleteIndicatorInstanceErrorWithoutAccess() throws Exception {
+    public void testDeleteIndicatorInstanceErrorWithoutRole() throws Exception {
 
         try {
             indicatorsServiceFacade.deleteIndicatorInstance(getServiceContextTecnicoProduccion(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
@@ -884,6 +1147,18 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
+    @Test
+    public void testDeleteIndicatorInstanceErrorWithoutAccessToIndicatorsSystem1() throws Exception {
+
+        try {
+            indicatorsServiceFacade.deleteIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
 

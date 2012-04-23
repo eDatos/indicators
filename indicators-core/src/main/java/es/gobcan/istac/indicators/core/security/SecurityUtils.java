@@ -90,7 +90,7 @@ public class SecurityUtils {
     /**
      * Retrieves MetamacPrincipal in ServiceContext
      */
-    private static MetamacPrincipal getMetamacPrincipal(ServiceContext ctx) throws MetamacException {
+    public static MetamacPrincipal getMetamacPrincipal(ServiceContext ctx) throws MetamacException {
         Object principalProperty = ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE);
         if (principalProperty == null) {
             throw new MetamacException(ServiceExceptionType.SECURITY_PRINCIPAL_NOT_FOUND);

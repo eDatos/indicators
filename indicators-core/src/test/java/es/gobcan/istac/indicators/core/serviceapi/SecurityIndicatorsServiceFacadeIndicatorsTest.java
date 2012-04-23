@@ -57,7 +57,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     private static String             SUBJECT_1                    = "1";
     
     @Test
-    public void testRetrieveIndicatorErrorPrincipalNotFound() throws Exception {
+    public void testErrorPrincipalNotFound() throws Exception {
 
         try {
             ServiceContext ctx = getServiceContext();
@@ -71,7 +71,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     }
 
     @Test
-    public void testRetrieveIndicatorErrorPrincipalWithoutRoleIndicators() throws Exception {
+    public void testErrorPrincipalWithoutRoleIndicators() throws Exception {
 
         try {
             ServiceContext ctx = getServiceContext();
@@ -667,11 +667,30 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     @Test
     public void testRetrieveDataSourcesByIndicator() throws Exception {
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextAdministrador(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, "1.000");
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoProduccion(), INDICATOR_1, "1.000");
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, "1.000");
-        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, "1.000");
+
+        try {
+            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, "1.000");
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, "1.000");
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, "1.000");
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
     }
 
     @Test

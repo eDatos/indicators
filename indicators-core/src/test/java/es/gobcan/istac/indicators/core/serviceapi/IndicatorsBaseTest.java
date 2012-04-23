@@ -62,7 +62,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_DIFUSION);
         return serviceContext;
     }
-
+    
     protected ServiceContext getServiceContextTecnicoApoyoDifusion() {
         ServiceContext serviceContext = super.getServiceContext();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_DIFUSION);
@@ -71,6 +71,24 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     protected ServiceContext getServiceContextTecnicoSistemaIndicadores() {
         ServiceContext serviceContext = super.getServiceContext();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_SISTEMA_INDICADORES);
+        return serviceContext;
+    }
+    
+    protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1() {
+        ServiceContext serviceContext = super.getServiceContext();
+        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
+        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-1"));
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+        return serviceContext;
+    }
+    
+    protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2() {
+        ServiceContext serviceContext = super.getServiceContext();
+        MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
+        metamacPrincipal.setUserId(serviceContext.getUserId());
+        metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-2"));
+        serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         return serviceContext;
     }
     
