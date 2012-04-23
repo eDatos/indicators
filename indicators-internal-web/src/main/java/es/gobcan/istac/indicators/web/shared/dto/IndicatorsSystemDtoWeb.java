@@ -13,6 +13,7 @@ public class IndicatorsSystemDtoWeb extends IndicatorsSystemDto {
     private InternationalStringDto acronym;
     private InternationalStringDto description;
     private InternationalStringDto objective;
+    private boolean                operationExternallyPublished;
 
     public String getStatisticalOperationUri() {
         return statisticalOperationUri;
@@ -52,6 +53,14 @@ public class IndicatorsSystemDtoWeb extends IndicatorsSystemDto {
 
     public void setObjective(InternationalStringDto objective) {
         this.objective = objective;
+    }
+
+    public boolean isOperationExternallyPublished() {
+        return operationExternallyPublished;
+    }
+
+    public void setOperationExternallyPublished(boolean operationExternallyPublished) {
+        this.operationExternallyPublished = operationExternallyPublished;
     }
 
 }

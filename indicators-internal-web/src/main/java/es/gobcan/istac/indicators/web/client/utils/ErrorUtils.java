@@ -17,7 +17,7 @@ public class ErrorUtils extends CommonErrorUtils {
 
     public static List<String> getErrorMessages(Throwable caught, String alternativeMessage) {
         List<String> list = new ArrayList<String>();
-        if (caught instanceof MetamacWebException) {
+        if (caught != null && caught instanceof MetamacWebException) {
             List<MetamacWebExceptionItem> metamacExceptionItems = ((MetamacWebException) caught).getWebExceptionItems();
             if (metamacExceptionItems.isEmpty()) {
                 list.add(alternativeMessage);

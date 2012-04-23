@@ -462,19 +462,23 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void publish(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallback<PublishIndicatorsSystemResult>() {
+        if (indicatorsSystemDto.isOperationExternallyPublished()) {
+            dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallback<PublishIndicatorsSystemResult>() {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingSystem()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(PublishIndicatorsSystemResult result) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
-            }
-        });
+                @Override
+                public void onWaitFailure(Throwable caught) {
+                    logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + indicatorsSystemDto.getUuid());
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingSystem()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onWaitSuccess(PublishIndicatorsSystemResult result) {
+                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
+                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                }
+            });
+        } else {
+            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(null, getMessages().errorPublishingSystemOperationNotPublished()), MessageTypeEnum.ERROR);
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
@@ -38,6 +39,8 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setVersionNumber(indicatorsSystemDto.getVersionNumber());
             indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
             indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
+            indicatorsSystemDtoWeb.setPublishedVersion(indicatorsSystemDto.getPublishedVersion());
+            indicatorsSystemDtoWeb.setArchivedVersion(indicatorsSystemDto.getArchivedVersion());
             indicatorsSystemDtoWeb.setProductionValidationDate(indicatorsSystemDto.getProductionValidationDate());
             indicatorsSystemDtoWeb.setProductionValidationUser(indicatorsSystemDto.getProductionValidationUser());
             indicatorsSystemDtoWeb.setDiffusionValidationDate(indicatorsSystemDto.getDiffusionValidationDate());
@@ -59,6 +62,7 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setAcronym(getInternationalStringDtoFromInternationalString(operationBase.getAcronym()));
             indicatorsSystemDtoWeb.setDescription(getInternationalStringDtoFromInternationalString(operationBase.getDescription()));
             indicatorsSystemDtoWeb.setObjective(getInternationalStringDtoFromInternationalString(operationBase.getObjective()));
+            indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus()));
         }
         return indicatorsSystemDtoWeb;
     }
