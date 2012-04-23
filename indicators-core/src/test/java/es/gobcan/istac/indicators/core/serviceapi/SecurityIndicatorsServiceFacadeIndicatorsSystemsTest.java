@@ -64,7 +64,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testErrorPrincipalNotFound() throws Exception {
 
         try {
-            ServiceContext ctx = getServiceContext();
+            ServiceContext ctx = getServiceContextAdministrador();
             ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
             indicatorsServiceFacade.retrieveIndicatorsSystem(ctx, INDICATORS_SYSTEM_1, null);
             fail("principal required");
@@ -78,7 +78,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testErrorPrincipalWithoutRoleIndicators() throws Exception {
 
         try {
-            ServiceContext ctx = getServiceContext();
+            ServiceContext ctx = getServiceContextAdministrador();
             assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
             MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
             access.setApplication(NOT_EXISTS);
@@ -732,7 +732,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testUpdateDimension() throws Exception {
-        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
 
         // With access
         indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDto);
@@ -771,19 +771,19 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testUpdateDimensionLocation() throws Exception {
-        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoSistemaIndicadores(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
     }
     
     @Test
     public void testUpdateDimensionLocationWithAccessOnlyToIndicatorsSystem1() throws Exception {
-        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
     }
 
     @Test
     public void testUpdateDimensionLocationErrorWithoutRole() throws Exception {
-        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContext(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
+        DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateDimensionLocation(getServiceContextTecnicoProduccion(), dimensionDto.getUuid(), dimensionDto.getParentUuid(), Long.valueOf(4));
             fail("without access");
@@ -989,7 +989,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testUpdateIndicatorInstance() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
 
         // With access
         indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
@@ -1028,7 +1028,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     
     @Test
     public void testUpdateIndicatorInstanceErrorWithoutAccessToIndicatorsSystem1() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), indicatorInstanceDto);
             fail("without access");
@@ -1040,19 +1040,19 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testUpdateIndicatorInstanceLocation() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadores(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
     }
     
     @Test
     public void testUpdateIndicatorInstanceLocationOnlyAccessToIndicatorsSystem1() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
     }   
     
     @Test
     public void testUpdateIndicatorInstanceLocationErrorWithoutAccessToIndicatorsSystem1() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
             fail("without access");
@@ -1064,7 +1064,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     
     @Test
     public void testUpdateIndicatorInstanceLocationErrorWithoutRole() throws Exception {
-        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContext(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
         try {
             indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextTecnicoProduccion(), indicatorInstanceDto.getUuid(), indicatorInstanceDto.getParentUuid(), Long.valueOf(4));
             fail("without access");

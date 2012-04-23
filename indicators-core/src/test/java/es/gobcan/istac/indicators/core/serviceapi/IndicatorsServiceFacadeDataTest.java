@@ -57,27 +57,27 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
     
     @Test
     public void testRetrieveDataDefinitions() throws Exception {
-        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.retrieveDataDefinitions(getServiceContext());
+        List<DataDefinitionDto> dtos = indicatorsDataServiceFacade.retrieveDataDefinitions(getServiceContextAdministrador());
         assertNotNull(dtos);
         compareDoDto(dataDefinition1, dtos.get(0));
     }
     
     @Test
     public void testRetrieveDataDefinition() throws Exception {
-        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContext(),dataDefinition1.getUuid());
+        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContextAdministrador(),dataDefinition1.getUuid());
         assertNotNull(dto);
         compareDoDto(dataDefinition1, dto);
     }
     
     @Test
     public void testFindDataDefinitionNotFound() throws Exception {
-        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContext(),"NOT_EXIST");
+        DataDefinitionDto dto = indicatorsDataServiceFacade.retrieveDataDefinition(getServiceContextAdministrador(),"NOT_EXIST");
         assertNull(dto);
     }
     
     @Test
     public void testRetrieveDataStructure() throws Exception {
-        DataStructureDto dto = indicatorsDataServiceFacade.retrieveDataStructure(getServiceContext(), dataStructure1.getUuid());
+        DataStructureDto dto = indicatorsDataServiceFacade.retrieveDataStructure(getServiceContextAdministrador(), dataStructure1.getUuid());
         assertNotNull(dto);
         compareDoDto(dataStructure1, dto);
     }

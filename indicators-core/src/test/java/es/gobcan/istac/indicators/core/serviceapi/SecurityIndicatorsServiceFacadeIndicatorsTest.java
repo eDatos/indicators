@@ -60,7 +60,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     public void testErrorPrincipalNotFound() throws Exception {
 
         try {
-            ServiceContext ctx = getServiceContext();
+            ServiceContext ctx = getServiceContextAdministrador();
             ctx.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, null);
             indicatorsServiceFacade.retrieveIndicator(ctx, INDICATOR_1, null);
             fail("principal required");
@@ -74,7 +74,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     public void testErrorPrincipalWithoutRoleIndicators() throws Exception {
 
         try {
-            ServiceContext ctx = getServiceContext();
+            ServiceContext ctx = getServiceContextAdministrador();
             assertEquals(1, ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().size());
             MetamacPrincipalAccess access = ((MetamacPrincipal) ctx.getProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE)).getAccesses().get(0);
             access.setApplication(NOT_EXISTS);
@@ -567,7 +567,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testUpdateDataSource() throws Exception {
-        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContext(), DATA_SOURCE_1_INDICATOR_1_V2);
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V2);
 
         // With access
         indicatorsServiceFacade.updateDataSource(getServiceContextTecnicoProduccion(), dataSourceDto);

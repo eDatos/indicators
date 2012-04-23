@@ -71,13 +71,13 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     }
 
     protected void assertIndicatorEmptyData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContext(), indicatorUuid, indicatorVersionNumber);
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersionNumber);
         assertNotNull(indicatorVersion);
         assertNull(indicatorVersion.getDataRepositoryId());
     }
 
     protected void checkDataDimensions(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion) throws Exception {
-        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContext(), indicatorUuid, indicatorVersion);
+        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
         List<ConditionObservationDto> conditionObservationsList = getDatasetRepositoriesServiceFacade().findCodeDimensions(indicator.getDataRepositoryId());
@@ -107,7 +107,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     }
 
     protected void checkDataObservations(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, List<String> plainData) throws Exception {
-        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContext(), indicatorUuid, indicatorVersion);
+        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
         int index = 0;
@@ -132,7 +132,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
     protected void checkDataAttributes(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, String attrId, Map<String, AttributeBasicDto> expectedAttributes)
             throws Exception {
-        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContext(), indicatorUuid, indicatorVersion);
+        IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
 

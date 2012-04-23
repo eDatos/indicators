@@ -20,90 +20,77 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
     @Override
-    protected ServiceContext getServiceContext() {
-        ServiceContext serviceContext = super.getServiceContext();
-        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
-        return serviceContext;
-    }
-    
-    @Override
-    protected ServiceContext getServiceContext2() {
-        ServiceContext serviceContext = super.getServiceContext();
-        putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
-        return serviceContext;
-    }
-    
     protected ServiceContext getServiceContextAdministrador() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
         return serviceContext;
     }
-    
+
     protected ServiceContext getServiceContextAdministrador2() {
-        ServiceContext serviceContext = super.getServiceContext2();
+        ServiceContext serviceContext = new ServiceContext("junit2", "junit", "app");
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoProduccion() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_PRODUCCION);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoApoyoProduccion() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_PRODUCCION);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoDifusion() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_DIFUSION);
         return serviceContext;
     }
-    
+
     protected ServiceContext getServiceContextTecnicoApoyoDifusion() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_DIFUSION);
         return serviceContext;
     }
     protected ServiceContext getServiceContextTecnicoSistemaIndicadores() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_SISTEMA_INDICADORES);
         return serviceContext;
     }
-    
+
     protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-1"));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         return serviceContext;
     }
-    
+
     protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2() {
-        ServiceContext serviceContext = super.getServiceContext();
+        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-2"));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         return serviceContext;
     }
-    
+
     @Override
     public void setUpDatabaseTester() throws Exception {
         removeCyclicDependences();
         super.setUpDatabaseTester();
     }
-    
+
     @Override
     public void tearDownDatabaseTester() throws Exception {
         removeCyclicDependences();
         super.tearDownDatabaseTester();
     }
-    
+
     @Override
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
@@ -149,16 +136,16 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
         return sequences;
     }
-    
+
     private void removeCyclicDependences() throws Exception {
         Connection connection = getConnection().getConnection();
         connection.prepareStatement("UPDATE TB_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
     }
-    
+
     public static <T> List<T> getList(T... values) {
         return Arrays.asList(values);
     }
-    
+
     public static String readFile(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(IndicatorsBaseTest.class.getClassLoader().getResourceAsStream(filename)));
@@ -170,11 +157,11 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             }
             return strbuf.toString();
         } catch (Exception e) {
-            Assert.fail("Error Reading file "+filename);
+            Assert.fail("Error Reading file " + filename);
             return null;
         }
     }
-    
+
     private void putMetamacPrincipalInServiceContext(ServiceContext serviceContext, RoleEnum role) {
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());

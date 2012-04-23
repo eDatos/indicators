@@ -129,7 +129,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR1_UUID, INDICATOR1_VERSION);
 
@@ -149,7 +149,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR2_UUID, INDICATOR2_VERSION);
 
@@ -169,9 +169,9 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
-        IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(getServiceContext(), INDICATOR3_UUID);
+        IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(getServiceContextAdministrador(), INDICATOR3_UUID);
         // Could not be populated, data should be null
         assertNull(indicatorVersion.getDataRepositoryId());
         // populate failed should be marked as needs update
@@ -192,7 +192,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, INDICATOR4_VERSION);
         checkDataContentForIndicator(INDICATOR5_UUID, INDICATOR5_VERSION);
@@ -220,7 +220,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, INDICATOR4_VERSION);
         checkDataContentForIndicator(INDICATOR5_UUID, INDICATOR5_VERSION);
@@ -249,7 +249,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
         when(dataGpeRepository.findDataDefinitionsWithDataUpdatedAfter(Matchers.eq(lastUpdateDate))).thenReturn(indicatorsToUpdate);
 
-        indicatorsDataService.updateIndicatorsData(getServiceContext());
+        indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR6_UUID, INDICATOR6_VERSION);
 

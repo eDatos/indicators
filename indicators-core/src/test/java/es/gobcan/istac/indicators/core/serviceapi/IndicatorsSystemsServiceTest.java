@@ -41,12 +41,12 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         indicatorsSystemVersion.getIndicatorsSystem().setCode(IndicatorsMocks.mockString(10));
 
         // Create
-        IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContext(), indicatorsSystemVersion);
+        IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion);
 
         // Validate properties are not in Dto
         String uuid = indicatorsSystemVersionCreated.getIndicatorsSystem().getUuid();
         String version = indicatorsSystemVersionCreated.getVersionNumber();
-        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, version);
+        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, version);
         assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
         assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
         assertNull(indicatorsSystemCreated.getIndicatorsSystem().getDiffusionVersion());
@@ -59,19 +59,19 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
         // Retrieve before delete
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "1.000");
             assertFalse(indicatorsSystemVersion1.getIsLastVersion());
-            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "2.000");
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "2.000");
             assertTrue(indicatorsSystemVersion2.getIsLastVersion());
         }
 
         // Delete indicator
-        indicatorsSystemService.deleteIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemService.deleteIndicatorsSystem(getServiceContextAdministrador(), uuid);
 
         // Validation
         // Retrieve after delete
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, "1.000");
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, "1.000");
             assertTrue(indicatorsSystemVersion1.getIsLastVersion());
             assertNull(indicatorsSystemVersion1.getIndicatorsSystem().getProductionVersion());
         }
@@ -84,18 +84,18 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
         // Retrieve before versioning
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertTrue(indicatorsSystemVersion1.getIsLastVersion());
         }
 
         // Versioning
-        IndicatorsSystemVersion newVersion = indicatorsSystemService.versioningIndicatorsSystem(getServiceContext(), uuid, VersionTypeEnum.MAJOR);
+        IndicatorsSystemVersion newVersion = indicatorsSystemService.versioningIndicatorsSystem(getServiceContextAdministrador(), uuid, VersionTypeEnum.MAJOR);
 
         // Retrieve after delete
         {
-            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, INDICATORS_SYSTEM_3_VERSION);
+            IndicatorsSystemVersion indicatorsSystemVersion1 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, INDICATORS_SYSTEM_3_VERSION);
             assertFalse(indicatorsSystemVersion1.getIsLastVersion());
-            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, newVersion.getVersionNumber());
+            IndicatorsSystemVersion indicatorsSystemVersion2 = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorsSystemVersion2.getIsLastVersion());
         }
     }
@@ -107,10 +107,10 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         String versionNumber = "1.000";
 
         // Publish
-        indicatorsSystemService.publishIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemService.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
 
         // Validate properties are not in Dto
-        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
         assertTrue(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
     }
 
@@ -121,10 +121,10 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         String versionNumber = INDICATORS_SYSTEM_3_VERSION;
 
         // Archive
-        indicatorsSystemService.archiveIndicatorsSystem(getServiceContext(), uuid);
+        indicatorsSystemService.archiveIndicatorsSystem(getServiceContextAdministrador(), uuid);
 
         // Validate properties are not in Dto
-        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContext(), uuid, versionNumber);
+        IndicatorsSystemVersion indicatorsSystemCreated = indicatorsSystemService.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
         assertFalse(indicatorsSystemCreated.getIndicatorsSystem().getIsPublished());
     }
 

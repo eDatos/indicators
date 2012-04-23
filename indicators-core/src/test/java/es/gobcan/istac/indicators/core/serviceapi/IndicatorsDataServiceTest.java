@@ -84,7 +84,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Test
     @Override
     public void testRetrieveDataDefinitions() throws Exception {
-        List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContext());
+        List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
         assertEquals(1, dataDefs.size());
         assertTrue(1 == dataDefs.get(0).getId());
     }
@@ -92,7 +92,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Test
     public void testRetrieveDataDefinitionUuidNull() throws Exception {
         try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContext(), null);
+            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), null);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -107,14 +107,14 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveDataDefinition() throws Exception {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
 
-        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContext(), CONSULTA1_UUID);
+        DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertTrue(1 == dataDef.getId());
     }
 
     @Test
     public void testRetrieveDataDefinitionNotExist() throws Exception {
         try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContext(), "NOT_EXIST");
+            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), "NOT_EXIST");
             fail("Should throws an exception");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -126,7 +126,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Test
     public void testRetrieveDataDefinitionArchived() throws Exception {
         try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContext(), CONSULTA2_UUID);
+            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA2_UUID);
             fail("Should throws an exception");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -141,7 +141,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Test
     public void testRetrieveDataDefinitionPublishedUnavailable() throws Exception {
         try {
-            indicatorsDataService.retrieveDataDefinition(getServiceContext(), CONSULTA3_UUID);
+            indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA3_UUID);
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
             assertEquals(1, e.getExceptionItems().size());
@@ -158,7 +158,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveDataStructure() throws Exception {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
 
-        DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContext(), CONSULTA1_UUID);
+        DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals("Sociedades mercantiles que amplían capital Gran PX.", dataStruc.getTitle());
         assertEquals("urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e", dataStruc.getPxUri());
 
@@ -209,7 +209,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     @Test
     public void testRetrieveDataStructureUuidNull() throws Exception {
         try {
-            indicatorsDataService.retrieveDataStructure(getServiceContext(), null);
+            indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), null);
             fail("parameter required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -223,7 +223,7 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveDataStructureRetrieveError() throws Exception {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA4_UUID))).thenReturn(CONSULTA4_JSON_STRUC);
         try {
-            indicatorsDataService.retrieveDataStructure(getServiceContext(), CONSULTA4_UUID);
+            indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA4_UUID);
             fail("Should throws a retrieve error exception");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -238,9 +238,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveGeographicalGranularitiesInIndicator() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         
-        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         List<String> codes = getGeographicalGranularitiesCodes(granularities);
         String[] expectedCodes = new String[] {"COUNTRIES","COMMUNITIES","PROVINCES"};
         checkElementsInCollection(expectedCodes, codes);
@@ -250,9 +250,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveGeographicalGranularitiesInIndicatorFixedValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
         
-        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         
-        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         List<String> codes = getGeographicalGranularitiesCodes(granularities);
         String[] expectedCodes = new String[] {"COUNTRIES"};
         checkElementsInCollection(expectedCodes, codes);
@@ -263,9 +263,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveTimeValuesInIndicator() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContext(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         String[] expectedValues = new String[] {"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsInCollection(expectedValues, timeValues);
     }
@@ -274,9 +274,9 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
     public void testRetrieveTimeValuesInIndicatorFixedValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
         
-        indicatorsDataService.populateIndicatorData(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContext(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         String[] expectedValues = new String[] {"2010"};
         checkElementsInCollection(expectedValues, timeValues);
     }
