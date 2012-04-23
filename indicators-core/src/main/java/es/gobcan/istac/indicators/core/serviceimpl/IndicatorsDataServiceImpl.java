@@ -268,32 +268,32 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
+    public List<GeographicalValue> retrieveGeographicalValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
             throws MetamacException {
         // Validation
-        InvocationValidator.checkRetrieveGeographicalValuesWithGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularityUuid, null);
+        InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularityUuid, null);
         
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return calculateGeographicalValuesWithGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
+        return calculateGeographicalValuesByGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
     }
 
     @Override
-    public List<GeographicalValue> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
+    public List<GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
         // Validation
-        InvocationValidator.checkRetrieveGeographicalValuesWithGranularityInIndicatorPublished(indicatorUuid,granularityUuid, null);
+        InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicatorPublished(indicatorUuid,granularityUuid, null);
         
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return calculateGeographicalValuesWithGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
+        return calculateGeographicalValuesByGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
     }
 
-    private List<GeographicalValue> calculateGeographicalValuesWithGranularityInIndicatorVersion(String granularityUuid, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<GeographicalValue> calculateGeographicalValuesByGranularityInIndicatorVersion(String granularityUuid, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
                 GeographicalGranularity granularity = getGeographicalGranularityRepository().retrieveGeographicalGranularity(granularityUuid);
                 List<GeographicalValue> geographicalValuesInIndicator = new ArrayList<GeographicalValue>();
                 List<String> geographicalCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
-                List<GeographicalValue> geographicalValuesInGranularity = getGeographicalValueRepository().findGeographicalValuesWithGranularity(granularity.getCode());
+                List<GeographicalValue> geographicalValuesInGranularity = getGeographicalValueRepository().findGeographicalValuesByGranularity(granularity.getCode());
                 for (GeographicalValue geoValue : geographicalValuesInGranularity) {
                     if (geographicalCodesInIndicator.contains(geoValue.getCode())) {
                         geographicalValuesInIndicator.add(geoValue);
@@ -356,7 +356,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (indInstance.getGeographicalValue() != null) { //Fixed value
             return Arrays.asList(indInstance.getGeographicalValue());
         } else if (indInstance.getGeographicalGranularity() != null) { //fixed granularity
-            return retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getGeographicalGranularity().getUuid());
+            return retrieveGeographicalValuesByGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getGeographicalGranularity().getUuid());
         } else { //nothing is fixed
             return retrieveGeographicalValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
@@ -418,24 +418,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     @Override
-    public List<String> retrieveTimeValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+    public List<String> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
         //Validation
-        InvocationValidator.checkRetrieveTimeValuesWithGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
+        InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
         
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid,indicatorVersionNumber);
-        return calculateTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesByGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
     
     @Override
-    public List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+    public List<String> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
         //Validation
-        InvocationValidator.checkRetrieveTimeValuesWithGranularityInIndicatorPublished(indicatorUuid, granularity, null);
+        InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorPublished(indicatorUuid, granularity, null);
         
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return calculateTimeValuesWithGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesByGranularityInIndicatorVersion(granularity, indicatorVersion);
     }
 
-    private List<String> calculateTimeValuesWithGranularityInIndicatorVersion(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<String> calculateTimeValuesByGranularityInIndicatorVersion(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
@@ -503,7 +503,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         if (indInstance.getTimeValue() != null) {
             return Arrays.asList(indInstance.getTimeValue());
         } else if (indInstance.getTimeGranularity() != null) {
-            return retrieveTimeValuesWithGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getTimeGranularity());
+            return retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getTimeGranularity());
         } else {
             return retrieveTimeValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
@@ -588,7 +588,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
         List<String> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
 
-        List<ConditionDimensionDto> newConditions = filterConditionsWithValues(conditions, geoValues, timeValues);
+        List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
             return findObservationsByDimensions(ctx, indicatorVersion, newConditions);
         } catch (ApplicationException e) {
@@ -605,7 +605,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
         List<String> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
 
-        List<ConditionDimensionDto> newConditions = filterConditionsWithValues(conditions, geoValues, timeValues);
+        List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
             return findObservationsExtendedByDimensions(ctx, indicatorVersion, newConditions);
         } catch (ApplicationException e) {
@@ -619,7 +619,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
-    private List<ConditionDimensionDto> filterConditionsWithValues(List<ConditionDimensionDto> conditions, List<GeographicalValue> geoValues, List<String> timeValues) {
+    private List<ConditionDimensionDto> filterConditionsByValues(List<ConditionDimensionDto> conditions, List<GeographicalValue> geoValues, List<String> timeValues) {
         List<ConditionDimensionDto> rawConditions = new ArrayList<ConditionDimensionDto>(); 
         if (conditions != null) {
             rawConditions = conditions;

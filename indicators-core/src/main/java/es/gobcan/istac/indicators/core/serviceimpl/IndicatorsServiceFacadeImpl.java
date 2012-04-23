@@ -554,14 +554,14 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
+    public List<GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
             throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularityUuid);
 
         // Transform
         List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
@@ -572,13 +572,13 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<GeographicalValueDto> retrieveGeographicalValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
+    public List<GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularityUuid);
+        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularityUuid);
 
         // Transform
         List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
@@ -755,24 +755,24 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<String> retrieveTimeValuesWithGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+    public List<String> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesWithGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
         return timeValues;
     }
 
     @Override
-    public List<String> retrieveTimeValuesWithGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+    public List<String> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesWithGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
+        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
         return timeValues;
     }
 

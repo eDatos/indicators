@@ -796,7 +796,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid, List<MetamacExceptionItem> exceptions)
+    public static void checkRetrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid, List<MetamacExceptionItem> exceptions)
             throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -809,7 +809,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveGeographicalValuesWithGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -882,7 +882,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions)
+    public static void checkRetrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions)
             throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -895,7 +895,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkRetrieveTimeValuesWithGranularityInIndicatorPublished(String indicatorUuid, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkRetrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }

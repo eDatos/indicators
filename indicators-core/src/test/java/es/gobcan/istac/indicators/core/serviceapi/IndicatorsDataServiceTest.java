@@ -281,76 +281,109 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         checkElementsInCollection(expectedValues, timeValues);
     }
     
-    
-    @Override
-    public void testRetrieveGeographicalGranularitiesInIndicatorPublished() throws Exception {
-        //TODO: pending
-    }
-    
-    @Override
-    public void testRetrieveGeographicalValuesWithGranularityInIndicator() throws Exception {
-        //TODO: pending
-    }
-    
     @Override
     public void testPopulateIndicatorData() throws Exception {
         /* See IndicatorsDataServicePopulateTest.java */
-        
     }
     
     @Override
     public void testUpdateIndicatorsData() throws Exception {
         /* See IndicatorsDataServiceBatchUpdateTest.java */
     }
+    
+    @Override
+    public void testRetrieveGeographicalGranularitiesInIndicatorPublished() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveGeographicalValuesByGranularityInIndicator() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
 
     @Override
-    public void testRetrieveGeographicalValuesWithGranularityInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorPublished() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
     public void testRetrieveGeographicalValuesInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
     public void testRetrieveTimeGranularitiesInIndicator() throws Exception {
-        // TODO Auto-generated method stub
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
     public void testRetrieveTimeGranularitiesInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
-    public void testRetrieveTimeValuesWithGranularityInIndicator() throws Exception {
-        // TODO Auto-generated method stub
+    public void testRetrieveTimeValuesByGranularityInIndicator() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
-    public void testRetrieveTimeValuesWithGranularityInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
+    public void testRetrieveTimeValuesByGranularityInIndicatorPublished() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
     
     @Override
     public void testRetrieveTimeValuesInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
     @Override
     public void testRetrieveTimeValuesInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
     }
 
+    @Override
+    public void testRetrieveGeographicalValuesInIndicator() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveGeographicalValuesInIndicatorPublished() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicator() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicatorInstance() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveMeasureValuesInIndicatorPublished() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveGeographicalGranularitiesInIndicatorInstance() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
+    @Override
+    public void testRetrieveTimeGranularitiesInIndicatorInstance() throws Exception {
+        /* See IndicatorsDataServiceRetrieveGeoTimeTest.java */
+    }
+    
     @Override
     public void testFindObservationsByDimensionsInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
-
+        /* TODO Pending */
     }
+    
     @Override
     public void testFindObservationsByDimensionsInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
+        /* TODO Pending */
     }
 
     public void testFindObservationsExtendedByDimensionsInIndicatorInstance() throws Exception {
@@ -361,42 +394,6 @@ public class IndicatorsDataServiceTest extends IndicatorsDataBaseTest implements
         // TODO Auto-generated method stub
     }
     
-    @Override
-    public void testRetrieveGeographicalValuesInIndicator() throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void testRetrieveGeographicalValuesInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void testRetrieveMeasureValuesInIndicator() throws Exception {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void testRetrieveMeasureValuesInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void testRetrieveMeasureValuesInIndicatorPublished() throws Exception {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void testRetrieveGeographicalGranularitiesInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void testRetrieveTimeGranularitiesInIndicatorInstance() throws Exception {
-        // TODO Auto-generated method stub
-    }
 
     @Override
     protected String getDataSetFile() {

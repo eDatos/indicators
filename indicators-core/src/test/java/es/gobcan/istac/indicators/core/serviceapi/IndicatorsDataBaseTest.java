@@ -34,6 +34,8 @@ import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
@@ -203,6 +205,28 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         List<String> codes = new ArrayList<String>();
         for (GeographicalGranularity granularity : granularities) {
             codes.add(granularity.getCode());
+        }
+        return codes;
+    }
+    
+    protected List<String> getTimeGranularitiesNames(List<TimeGranularityEnum> granularities) {
+        if (granularities == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (TimeGranularityEnum granularity : granularities) {
+            codes.add(granularity.getName());
+        }
+        return codes;
+    }
+    
+    protected List<String> getMeasureNames(List<MeasureDimensionTypeEnum> measures) {
+        if (measures == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (MeasureDimensionTypeEnum measure : measures) {
+            codes.add(measure.getName());
         }
         return codes;
     }
