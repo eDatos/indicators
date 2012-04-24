@@ -22,7 +22,16 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private IndicatorProcStatusEnum status;
 
     public IndicatorMainFormLayout() {
-
+        super();
+        common();
+    }
+    
+    public IndicatorMainFormLayout(boolean canEdit) {
+        super(canEdit);
+        common();
+    }
+    
+    private void common() {
         // Remove handler from edit button
         editHandlerRegistration.removeHandler();
 
