@@ -38,6 +38,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
@@ -100,7 +101,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -215,7 +216,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

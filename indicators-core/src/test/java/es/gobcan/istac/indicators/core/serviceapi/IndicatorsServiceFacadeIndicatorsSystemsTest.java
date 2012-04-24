@@ -41,6 +41,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -175,7 +176,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -264,7 +265,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -515,7 +516,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATORS_SYSTEM.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1852,7 +1853,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2044,11 +2045,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -2067,7 +2068,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2086,7 +2087,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2283,7 +2284,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testretrieveDimensionsByIndicatorsSystem() throws Exception {
+    public void testRetrieveDimensionsByIndicatorsSystem() throws Exception {
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
@@ -2308,7 +2309,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testretrieveDimensionsByIndicatorsSystemErrorNotExists() throws Exception {
+    public void testRetrieveDimensionsByIndicatorsSystemErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
 
@@ -2358,11 +2359,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_PARENT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DIMENSION.ORDER_IN_LEVEL", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
 
         // Put parent null
@@ -2376,7 +2377,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DIMENSION.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_PARENT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2621,7 +2622,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("PARENT_TARGET_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_PARENT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2652,7 +2653,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2688,7 +2689,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2903,20 +2904,20 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.INDICATOR_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(2, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TIME_GRANULARITY", e.getExceptionItems().get(2).getMessageParameters()[0]);
-            assertEquals("INDICATOR_INSTANCE.TIME_VALUE", e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_GRANULARITY, e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUE, e.getExceptionItems().get(2).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(3).getMessageParameters()[0]);
         }
     }
 
@@ -2939,7 +2940,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2962,7 +2963,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -2986,7 +2987,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.TIME_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3313,15 +3314,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.ORDER_IN_LEVEL", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(2).getMessageParameters()[0]);
         }
 
         // Put parent null
@@ -3336,7 +3337,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_INSTANCE.PARENT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3594,7 +3595,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("ORDER_IN_LEVEL", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3853,7 +3854,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3980,7 +3981,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

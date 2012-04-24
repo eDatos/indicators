@@ -29,6 +29,8 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParametersInternal;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
@@ -199,7 +201,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Validate indicators system proc status and linked indicators
         checkIndicatorVersionInProduction(indicatorVersion);
-        checkIndicatorsLinkedInQuantity(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, "INDICATOR.QUANTITY");
+        checkIndicatorsLinkedInQuantity(indicatorVersion.getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.FALSE, ServiceExceptionParameters.INDICATOR);
 
         // Update
         indicatorVersion = getIndicatorVersionRepository().save(indicatorVersion);
@@ -732,7 +734,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     /**
      * Makes validations to reject
      * - Check actual processing status
@@ -798,7 +800,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void checkConditionsToSendToProductionValidation(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
 
         // Check quantity is complete
-        InvocationValidator.checkQuantity(indicatorVersion.getQuantity(), "INDICATOR.QUANTITY", true, exceptions);
+        InvocationValidator.checkQuantity(indicatorVersion.getQuantity(), ServiceExceptionParameters.INDICATOR, true, exceptions);
 
         // Check indicator has at least one data source
         if (indicatorVersion.getDataSources().size() == 0) {
@@ -876,18 +878,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     private void checkIndicatorsLinkedInDatasource(DataSource dataSource, IndicatorVersion indicatorVersion) throws MetamacException {
         if (dataSource.getAnnualPuntualRate() != null) {
-            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY");
+            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
+                    ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE);
         }
         if (dataSource.getInterperiodPuntualRate() != null) {
             checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPuntualRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
-                    "DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY");
+                    ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE);
         }
         if (dataSource.getAnnualPercentageRate() != null) {
-            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE, "DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY");
+            checkIndicatorsLinkedInQuantity(dataSource.getAnnualPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
+                    ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE);
         }
         if (dataSource.getInterperiodPercentageRate() != null) {
             checkIndicatorsLinkedInQuantity(dataSource.getInterperiodPercentageRate().getQuantity(), indicatorVersion.getIndicator().getUuid(), Boolean.TRUE,
-                    "DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE.QUANTITY");
+                    ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE);
         }
     }
 
@@ -897,19 +901,19 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      */
     private void checkIndicatorsLinkedInQuantity(Quantity quantity, String indicatorUuid, Boolean isDataSource, String parameterName) throws MetamacException {
         if (quantity.getNumerator() != null && quantity.getNumerator().getUuid().equals(indicatorUuid)) {
-            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".NUMERATOR_INDICATOR_UUID");
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_NUMERATOR_INDICATOR_UUID);
         }
         if (quantity.getDenominator() != null && quantity.getDenominator().getUuid().equals(indicatorUuid)) {
-            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".DENOMINATOR_INDICATOR_UUID");
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_DENOMINATOR_INDICATOR_UUID);
         }
         if (quantity.getBaseQuantity() != null) {
             if (isDataSource) {
                 if (!quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
-                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_QUANTITY_INDICATOR_UUID");
+                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_QUANTITY_INDICATOR_UUID);
                 }
             } else {
                 if (quantity.getBaseQuantity().getUuid().equals(indicatorUuid)) {
-                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ".BASE_QUANTITY_INDICATOR_UUID");
+                    throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_QUANTITY_INDICATOR_UUID);
                 }
             }
         }

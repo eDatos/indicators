@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
@@ -102,13 +103,13 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             // This metadatas are modified in specific operation
-            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "DIMENSION.PARENT_UUID", exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), "DIMENSION.ORDER_IN_LEVEL", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), ServiceExceptionParameters.DIMENSION_PARENT_UUID, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
         // Metadata modifiable
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "DIMENSION.TITLE"));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.DIMENSION_TITLE));
 
         // Related entities
         if (source.getParentUuid() != null) {
@@ -140,14 +141,14 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             // Metadata unmodifiable (these metadatas are modified in specific operation)
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-            ValidationUtils.checkMetadataUnmodifiable(source.getIndicatorUuid(), target.getIndicator().getUuid(), "INDICATOR_INSTANCE.INDICATOR_UUID", exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), "INDICATOR_INSTANCE.PARENT_UUID", exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), "INDICATOR_INSTANCE.ORDER_IN_LEVEL", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getIndicatorUuid(), target.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
         // Metadata modifiable
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR_INSTANCE.TITLE"));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE));
 
         if (source.getGeographicalGranularityUuid() != null) {
             target.setGeographicalGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGeographicalGranularityUuid()));
@@ -194,31 +195,31 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-            ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), "INDICATOR.CODE", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
             // These attributes are modified by service, not by user
-            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryId(), source.getDataRepositoryId(), "INDICATOR.DATA_REPOSITORY_ID", exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), "INDICATOR.DATA_REPOSITORY_TABLE_NAME", exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryId(), source.getDataRepositoryId(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_ID, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_TABLE_NAME, exceptions);
             
             ExceptionUtils.throwIfException(exceptions);
         }
 
         // Attributes modifiables
-        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), "INDICATOR.TITLE"));
-        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), "INDICATOR.ACRONYM"));
-        target.setComments(internationalStringToDo(ctx, source.getComments(), target.getComments(), "INDICATOR.COMMENTS"));
+        target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
+        target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATOR_ACRONYM));
+        target.setComments(internationalStringToDo(ctx, source.getComments(), target.getComments(), ServiceExceptionParameters.INDICATOR_COMMENTS));
         target.setCommentsUrl(source.getCommentsUrl());
-        target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), "INDICATOR.CONCEPT_DESCRIPTION"));
-        target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), "INDICATOR.NOTES"));
+        target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), ServiceExceptionParameters.INDICATOR_CONCEPT_DESCRIPTION));
+        target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), ServiceExceptionParameters.INDICATOR_NOTES));
         target.setNotesUrl(source.getNotesUrl());
 
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
             Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
             if (source.getSubjectTitle() != null && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getTitle().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
-                throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, "INDICATOR.SUBJECT_TITLE");
+                throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE);
             }
             target.setSubjectCode(source.getSubjectCode());
-            target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), "INDICATOR.SUBJECT_TITLE"));
+            target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
         } else {
             target.setSubjectCode(null);
             target.setSubjectTitle(null);
@@ -261,8 +262,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
         target.setAbsoluteMethod(source.getAbsoluteMethod());
         target.setSourceSurveyCode(source.getSourceSurveyCode());
-        target.setSourceSurveyTitle(internationalStringToDo(ctx, source.getSourceSurveyTitle(), target.getSourceSurveyTitle(), "DATA_SOURCE.SOURCE_SURVEY_TITLE"));
-        target.setSourceSurveyAcronym(internationalStringToDo(ctx, source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), "DATA_SOURCE.SOURCE_SURVEY_ACRONYM"));
+        target.setSourceSurveyTitle(internationalStringToDo(ctx, source.getSourceSurveyTitle(), target.getSourceSurveyTitle(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE));
+        target.setSourceSurveyAcronym(internationalStringToDo(ctx, source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.dtoList2DtoString(source.getPublishers()));
         
@@ -436,7 +437,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.setDenominator(null);
         }
         target.setIsPercentage(source.getIsPercentage());
-        target.setPercentageOf(internationalStringToDo(ctx, source.getPercentageOf(), target.getPercentageOf(), "INDICATOR.QUANTITY.PERCENTAGE_OF"));
+        target.setPercentageOf(internationalStringToDo(ctx, source.getPercentageOf(), target.getPercentageOf(), ServiceExceptionParameters.INDICATOR_QUANTITY_PERCENTAGE_OF));
         target.setBaseValue(source.getBaseValue());
         target.setBaseTime(source.getBaseTime());
 

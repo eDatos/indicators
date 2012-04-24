@@ -45,6 +45,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
@@ -268,7 +269,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

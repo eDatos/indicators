@@ -40,6 +40,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEn
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -192,7 +193,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -281,7 +282,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -689,19 +690,19 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.TITLE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_TITLE, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR.SUBJECT_CODE", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, e.getExceptionItems().get(3).getMessageParameters()[0]);
         }
     }
 
@@ -741,11 +742,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_TIME, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_LOCATION_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -786,43 +787,43 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.MINIMUM", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_MINIMUM, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.MAXIMUM", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_MAXIMUM, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_NUMERATOR_INDICATOR_UUID, e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_DENOMINATOR_INDICATOR_UUID, e.getExceptionItems().get(3).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(4).getCode());
             assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(4).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_IS_PERCENTAGE, e.getExceptionItems().get(4).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(5).getCode());
             assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.PERCENTAGE_OF", e.getExceptionItems().get(5).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_PERCENTAGE_OF, e.getExceptionItems().get(5).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(6).getCode());
             assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_VALUE", e.getExceptionItems().get(6).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_VALUE, e.getExceptionItems().get(6).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(7).getCode());
             assertEquals(1, e.getExceptionItems().get(7).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(7).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_TIME, e.getExceptionItems().get(7).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_LOCATION_UUID", e.getExceptionItems().get(8).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_LOCATION_UUID, e.getExceptionItems().get(8).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(9).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_QUANTITY_INDICATOR_UUID, e.getExceptionItems().get(9).getMessageParameters()[0]);
         }
     }
 
@@ -949,7 +950,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.SUBJECT_TITLE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -980,7 +981,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1009,7 +1010,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_TIME", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_TIME, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1426,7 +1427,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1449,11 +1450,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.DATA_REPOSITORY_ID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_ID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.DATA_REPOSITORY_TABLE_NAME", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_TABLE_NAME, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -1475,7 +1476,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.NUMERATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_NUMERATOR_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -1649,15 +1650,15 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.UNIT_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_UNIT_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.IS_PERCENTAGE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_IS_PERCENTAGE, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("INDICATOR.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_BASE_QUANTITY_INDICATOR_UUID, e.getExceptionItems().get(2).getMessageParameters()[0]);
         }
     }
 
@@ -2918,7 +2919,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3082,61 +3083,61 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.DATA_GPE_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.SOURCE_SURVEY_CODE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_CODE, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.SOURCE_SURVEY_TITLE", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_TITLE, e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.PUBLISHERS", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_PUBLISHERS, e.getExceptionItems().get(3).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(4).getCode());
             assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.METHOD", e.getExceptionItems().get(4).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_METHOD, e.getExceptionItems().get(4).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(5).getCode());
             assertEquals(1, e.getExceptionItems().get(5).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.ROUNDING", e.getExceptionItems().get(5).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_ROUNDING, e.getExceptionItems().get(5).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(6).getCode());
             assertEquals(1, e.getExceptionItems().get(6).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.TYPE", e.getExceptionItems().get(6).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_TYPE, e.getExceptionItems().get(6).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(7).getCode());
             assertEquals(1, e.getExceptionItems().get(7).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.UNIT_UUID", e.getExceptionItems().get(7).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_UNIT_UUID, e.getExceptionItems().get(7).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.METHOD_TYPE", e.getExceptionItems().get(8).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD_TYPE, e.getExceptionItems().get(8).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.METHOD", e.getExceptionItems().get(9).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD, e.getExceptionItems().get(9).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(10).getCode());
             assertEquals(1, e.getExceptionItems().get(10).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY", e.getExceptionItems().get(10).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY, e.getExceptionItems().get(10).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(11).getCode());
             assertEquals(2, e.getExceptionItems().get(11).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.TIME_VARIABLE", e.getExceptionItems().get(11).getMessageParameters()[0]);
-            assertEquals("DATA_SOURCE.TIME_VALUE", e.getExceptionItems().get(11).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VARIABLE, e.getExceptionItems().get(11).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(11).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(12).getCode());
             assertEquals(2, e.getExceptionItems().get(12).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.GEOGRAPHICAL_VARIABLE", e.getExceptionItems().get(12).getMessageParameters()[0]);
-            assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", e.getExceptionItems().get(12).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VARIABLE, e.getExceptionItems().get(12).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, e.getExceptionItems().get(12).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(13).getCode());
             assertEquals(1, e.getExceptionItems().get(13).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.OTHER_VARIABLE.VARIABLE", e.getExceptionItems().get(13).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_OTHER_VARIABLE_VARIABLE, e.getExceptionItems().get(13).getMessageParameters()[0]);
         }
     }
 
@@ -3206,19 +3207,19 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PUNTUAL_RATE.QUANTITY.TYPE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE_QUANTITY_TYPE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.TYPE", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_TYPE, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_PUNTUAL_RATE.QUANTITY.TYPE", e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_TYPE, e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.INTERPERIOD_PERCENTAGE_RATE.QUANTITY.TYPE", e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_TYPE, e.getExceptionItems().get(3).getMessageParameters()[0]);
         }
     }
 
@@ -3251,7 +3252,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.TIME_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3289,11 +3290,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.TIME_VALUE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNEXPECTED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.GEOGRAPHICAL_VALUE_UUID", e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
@@ -3392,7 +3393,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.BASE_QUANTITY_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_BASE_QUANTITY_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3437,7 +3438,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("DATA_SOURCE.ANNUAL_PERCENTAGE_RATE.QUANTITY.DENOMINATOR_INDICATOR_UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_DENOMINATOR_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3547,7 +3548,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testretrieveDataSourcesByIndicator() throws Exception {
+    public void testRetrieveDataSourcesByIndicator() throws Exception {
 
         String uuidIndicator = INDICATOR_1;
 
@@ -3678,7 +3679,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("UUID", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -3736,7 +3737,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("CODE", e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

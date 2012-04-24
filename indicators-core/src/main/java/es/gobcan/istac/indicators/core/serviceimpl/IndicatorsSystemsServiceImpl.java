@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
@@ -1089,7 +1090,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Checks orders
         if (!orders.isEmpty()) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
+            if (elementToAdd.isDimension()) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);    
+            } else {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL);
+            }            
         }
     }
 
@@ -1110,7 +1115,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Checks orders
         if (orderAfterUpdate > elementsAtLevel.size()) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "ORDER_IN_LEVEL");
+            if (elementToChangeOrder.isDimension()) {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);    
+            } else {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL);
+            }
         }
 
         // Update orders
@@ -1141,7 +1150,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         ElementLevel dimensionParent = dimensionTarget.getElementLevel().getParent();
         while (dimensionParent != null) {
             if (dimensionParent.isDimension() && dimensionParent.getElementUuid().equals(dimension.getUuid())) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, "PARENT_TARGET_UUID");
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_PARENT_UUID);
             }
             dimensionParent = dimensionParent.getParent();
         }
