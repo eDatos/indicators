@@ -138,18 +138,53 @@
 	</dependencies>
 
 	<build>
+         <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.gwt.xml</include>
+                    <include>**/*.css</include>
+                    <include>**/*.png</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+ 
 		<!-- Generate compiled stuff in the folder used for developing mode -->
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
 		<plugins>
 
+            <!-- Maven Compiler Plugin -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/gwt</generatedSourcesDirectory>
+                </configuration>
+            </plugin>
+
 			<!-- GWT Maven Plugin -->
+   
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<version>2.3.0-1</version>
 				<executions>
 					<execution>
+                        <configuration>
+                            <servicePattern>**/client/service/**/*Service.java</servicePattern>
+                            <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
+                            <i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
+                            <i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
+                        </configuration>
 						<goals>
 							<goal>resources</goal>
 							<goal>compile</goal>
@@ -164,13 +199,15 @@
 				<configuration>
 					<runTarget>IndicatorsWeb.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
+<!--                     <noServer>true</noServer> -->
 					<inplace>true</inplace>
-					<i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
-					<i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
-					<i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
+<!-- 					<i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle> -->
+<!-- 					<i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle> -->
+<!-- 					<i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle> -->
 					<compileSourcesArtifacts>
 						<artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
 						<artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
+                        <artifact>org.siemac.metamac:metamac-sso-client:jar</artifact>
 						<artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
 					</compileSourcesArtifacts>
 				</configuration>
@@ -193,16 +230,7 @@
 					<webappDirectory>${webappDirectory}</webappDirectory>
 				</configuration>
 			</plugin>-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<generatedSourcesDirectory>${project.build.directory}/generated-sources/gwt</generatedSourcesDirectory>
-				</configuration>
-			</plugin>
+			
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.4.1</version>
