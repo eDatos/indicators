@@ -60,6 +60,23 @@ public class ClientSecurityUtils {
         return false;
     }
 
+    // STRUCTURE
+
+    public static boolean canEditStructure(String operationCode) {
+        // Edit an structure includes: create and delete dimensions and instances
+        if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean canEditDimension(String operationCode) {
+        if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
+            return true;
+        }
+        return false;
+    }
+
     // INDICATORS
 
     public static boolean canCreateIndicator() {
@@ -68,7 +85,7 @@ public class ClientSecurityUtils {
         }
         return false;
     }
-    
+
     public static boolean canEditIndicator() {
         if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
             return true;

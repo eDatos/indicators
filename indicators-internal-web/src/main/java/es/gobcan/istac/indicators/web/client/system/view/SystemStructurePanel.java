@@ -83,6 +83,7 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorInstanceDS;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNode;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -153,6 +154,7 @@ public class SystemStructurePanel extends HLayout {
     public void setIndicatorsSystem(IndicatorsSystemDtoWeb indSys) {
         this.system = indSys;
         treePanelEdit.setIndicatorsSystem(indSys);
+        dimensionPanel.setIndicatorsSystem(indSys);
         hidePanels();
     }
 
@@ -292,6 +294,8 @@ public class SystemStructurePanel extends HLayout {
 
     private class TreePanel extends VLayout {
 
+        protected IndicatorsSystemDtoWeb                     indicatorsSystemDtoWeb;
+
         protected final Long                                 FALSE_ROOT_NODE_ID = 0L;
         protected final Long                                 ROOT_NODE_ID       = 1L;
 
@@ -351,6 +355,7 @@ public class SystemStructurePanel extends HLayout {
         }
 
         public void setIndicatorsSystem(IndicatorsSystemDtoWeb indSys) {
+            this.indicatorsSystemDtoWeb = indSys;
             falseRoot.setAttribute("Name", getLocalisedString(indSys.getTitle()));
             falseRoot.setAttribute("Source", indSys);
             treeGrid.redraw();
@@ -423,11 +428,13 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onFolderContextClick(FolderContextClickEvent event) {
-                    IndSystemContentNode node = (IndSystemContentNode) event.getFolder();
-                    Menu menu = buildContextMenuNode(node);
-                    menu.setAutoDraw(true);
-                    menu.showContextMenu();
-                    menu.setShowCellContextMenus(true);
+                    if (ClientSecurityUtils.canEditStructure(EditableTreePanel.this.indicatorsSystemDtoWeb.getCode())) {
+                        IndSystemContentNode node = (IndSystemContentNode) event.getFolder();
+                        Menu menu = buildContextMenuNode(node);
+                        menu.setAutoDraw(true);
+                        menu.showContextMenu();
+                        menu.setShowCellContextMenus(true);
+                    }
                 }
             });
 
@@ -435,9 +442,11 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onLeafContextClick(LeafContextClickEvent event) {
-                    IndSystemContentNode node = (IndSystemContentNode) event.getLeaf();
-                    Menu menu = buildContextMenuLeaf(node);
-                    menu.showContextMenu();
+                    if (ClientSecurityUtils.canEditStructure(EditableTreePanel.this.indicatorsSystemDtoWeb.getCode())) {
+                        IndSystemContentNode node = (IndSystemContentNode) event.getLeaf();
+                        Menu menu = buildContextMenuLeaf(node);
+                        menu.showContextMenu();
+                    }
                 }
             });
 
@@ -650,6 +659,13 @@ public class SystemStructurePanel extends HLayout {
             createMode = false;
             bindEvents();
         }
+        
+        public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+            // Show/hide edit button depending on the selected indicators system
+            mainFormLayout.getEditToolStripButton().setVisibility(Visibility.HIDDEN);
+            mainFormLayout.setCanEdit(ClientSecurityUtils.canEditDimension(indicatorsSystemDtoWeb.getCode()));
+            mainFormLayout.setViewMode();
+        }
 
         public void onDimensionSaved(DimensionDto dimensionDto) {
             mainFormLayout.setViewMode();
@@ -771,7 +787,8 @@ public class SystemStructurePanel extends HLayout {
         private List<IndicatorDto>               indicatorDtos;
 
         public IndicatorInstancePanel() {
-            mainFormLayout = new InternationalMainFormLayout();
+            mainFormLayout = new InternationalMainFormLayout(false); // Indicator instances can never be modified. If not: new
+                                                                     // InternationalMainFormLayout(ClientSecurityUtils.canEditIndicatorInstace());
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
             mainFormLayout.setMargin(0);
 
