@@ -53,29 +53,27 @@ public class SharedSecurityUtils {
     }
 
     public static Boolean isAnyIndicatorsRole(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.ADMINISTRADOR) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_SISTEMA_INDICADORES)
-                || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_PRODUCCION) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_PRODUCCION)
-                || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_DIFUSION) || isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_DIFUSION);
+        return isAdministrator(metamacPrincipal) || isTecnicoSistemaIndicadores(metamacPrincipal) || isTecnicoProduccion(metamacPrincipal) || isTecnicoApoyoProduccion(metamacPrincipal)
+                || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal);
     }
 
-    public static Boolean isTsi(MetamacPrincipal metamacPrincipal) {
+    public static Boolean isTecnicoSistemaIndicadores(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_SISTEMA_INDICADORES);
     }
 
-    public static Boolean isTap(MetamacPrincipal metamacPrincipal) {
+    public static Boolean isTecnicoApoyoProduccion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static Boolean isTp(MetamacPrincipal metamacPrincipal) {
+    public static Boolean isTecnicoProduccion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_PRODUCCION);
     }
 
-    public static Boolean isTad(MetamacPrincipal metamacPrincipal) {
+    public static Boolean isTecnicoApoyoDifusion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
-    public static Boolean isTd(MetamacPrincipal metamacPrincipal) {
+    public static Boolean isTecnicoDifusion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, RoleEnum.TECNICO_DIFUSION);
     }
-
 }
