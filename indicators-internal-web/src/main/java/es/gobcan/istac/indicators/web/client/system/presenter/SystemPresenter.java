@@ -57,8 +57,8 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndic
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
@@ -577,15 +577,15 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid) {
-        dispatcher.execute(new GetGeographicalValuesWithGranularityInIndicatorAction(indicatorUuid, indicatorVersion, geographicalGranularityUuid),
-                new WaitingAsyncCallback<GetGeographicalValuesWithGranularityInIndicatorResult>() {
+        dispatcher.execute(new GetGeographicalValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, geographicalGranularityUuid),
+                new WaitingAsyncCallback<GetGeographicalValuesByGranularityInIndicatorResult>() {
 
                     @Override
                     public void onWaitFailure(Throwable caught) {
                         ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorGeographicalValues()), MessageTypeEnum.ERROR);
                     }
                     @Override
-                    public void onWaitSuccess(GetGeographicalValuesWithGranularityInIndicatorResult result) {
+                    public void onWaitSuccess(GetGeographicalValuesByGranularityInIndicatorResult result) {
                         getView().setGeographicalValuesForIndicator(result.getGeographicalValueDtos());
                     }
                 });

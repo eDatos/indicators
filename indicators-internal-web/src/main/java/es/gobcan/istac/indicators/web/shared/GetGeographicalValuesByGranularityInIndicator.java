@@ -9,7 +9,7 @@ import com.gwtplatform.dispatch.annotation.Out;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 @GenDispatch(isSecure = false)
-public class GetGeographicalValuesWithGranularityInIndicator {
+public class GetGeographicalValuesByGranularityInIndicator {
 
     @In(1)
     String                     indicatorUuid;

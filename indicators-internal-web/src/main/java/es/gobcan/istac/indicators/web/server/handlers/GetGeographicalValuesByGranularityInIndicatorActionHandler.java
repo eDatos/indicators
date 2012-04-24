@@ -15,34 +15,34 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesWithGranularityInIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorResult;
 
 @Component
-public class GetGeographicalValuesWithGranularityInIndicatorActionHandler
+public class GetGeographicalValuesByGranularityInIndicatorActionHandler
         extends
-            AbstractActionHandler<GetGeographicalValuesWithGranularityInIndicatorAction, GetGeographicalValuesWithGranularityInIndicatorResult> {
+            AbstractActionHandler<GetGeographicalValuesByGranularityInIndicatorAction, GetGeographicalValuesByGranularityInIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
 
-    public GetGeographicalValuesWithGranularityInIndicatorActionHandler() {
-        super(GetGeographicalValuesWithGranularityInIndicatorAction.class);
+    public GetGeographicalValuesByGranularityInIndicatorActionHandler() {
+        super(GetGeographicalValuesByGranularityInIndicatorAction.class);
     }
 
     @Override
-    public GetGeographicalValuesWithGranularityInIndicatorResult execute(GetGeographicalValuesWithGranularityInIndicatorAction action, ExecutionContext context) throws ActionException {
+    public GetGeographicalValuesByGranularityInIndicatorResult execute(GetGeographicalValuesByGranularityInIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalValueDto> geographicalValueDtos = indicatorsServiceFacade.retrieveGeographicalValuesWithGranularityInIndicator(ServiceContextHelper.getServiceContext(),
+            List<GeographicalValueDto> geographicalValueDtos = indicatorsServiceFacade.retrieveGeographicalValuesByGranularityInIndicator(ServiceContextHelper.getServiceContext(),
                     action.getIndicatorUuid(), action.getIndicatorVersion(), action.getGeographicalGranularityUuid());
-            return new GetGeographicalValuesWithGranularityInIndicatorResult(geographicalValueDtos);
+            return new GetGeographicalValuesByGranularityInIndicatorResult(geographicalValueDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
         }
     }
 
     @Override
-    public void undo(GetGeographicalValuesWithGranularityInIndicatorAction action, GetGeographicalValuesWithGranularityInIndicatorResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetGeographicalValuesByGranularityInIndicatorAction action, GetGeographicalValuesByGranularityInIndicatorResult result, ExecutionContext context) throws ActionException {
 
     }
 
