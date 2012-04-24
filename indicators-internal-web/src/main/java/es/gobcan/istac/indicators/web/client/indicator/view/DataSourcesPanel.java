@@ -54,6 +54,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
@@ -114,6 +115,7 @@ public class DataSourcesPanel extends VLayout {
                 selectDataSource(dataSourceDto);
             }
         });
+        toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
         toolStrip.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
 
@@ -144,7 +146,7 @@ public class DataSourcesPanel extends VLayout {
                     deselectDatasource();
                     if (dataSourcesListGrid.getSelectedRecords().length > 1) {
                         // Delete more than one dimension with one click
-                        toolStrip.getDeleteButton().show();
+                        showToolStripDeleteButton();
                     }
                 }
             }
@@ -152,7 +154,7 @@ public class DataSourcesPanel extends VLayout {
 
         // MainFormLayout
 
-        mainFormLayout = new DataSourceMainFormLayout();
+        mainFormLayout = new DataSourceMainFormLayout(ClientSecurityUtils.canEditDataSource());
         mainFormLayout.setTitleLabelContents(getConstants().dataSource());
         mainFormLayout.setVisibility(Visibility.HIDDEN);
 
@@ -257,7 +259,7 @@ public class DataSourcesPanel extends VLayout {
 
     private void selectDataSource(DataSourceDto dataSourceDto) {
         if (dataSourceDto.getUuid() != null) {
-            toolStrip.getDeleteButton().show();
+            showToolStripDeleteButton();
             mainFormLayout.setViewMode();
         } else {
             toolStrip.getDeleteButton().hide();
@@ -717,6 +719,12 @@ public class DataSourcesPanel extends VLayout {
         interperiodPercentageRateEditionForm.markForRedraw();
         annualPuntualRateEditionForm.markForRedraw();
         annualPercentageRateEditionForm.markForRedraw();
+    }
+
+    private void showToolStripDeleteButton() {
+        if (ClientSecurityUtils.canDeleteDataSource()) {
+            toolStrip.getDeleteButton().show();
+        }
     }
 
 }

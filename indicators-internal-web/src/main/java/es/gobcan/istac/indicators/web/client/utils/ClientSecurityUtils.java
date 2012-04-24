@@ -62,6 +62,27 @@ public class ClientSecurityUtils {
 
     // INDICATORS
 
+    public static boolean canCreateIndicator() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean canEditIndicator() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean canDeleteIndicator() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean canSendIndicatorToProductionValidation() {
         if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
             return true;
@@ -105,6 +126,29 @@ public class ClientSecurityUtils {
     }
 
     public static boolean canVersioningIndicator() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+
+    // DATA SOURCES
+
+    public static boolean canCreateDataSource() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean canDeleteDataSource() {
+        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean canEditDataSource() {
         if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION)) {
             return true;
         }

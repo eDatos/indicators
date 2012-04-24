@@ -32,6 +32,7 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.QuantityForm;
@@ -72,7 +73,7 @@ public class IndicatorGeneralPanel extends VLayout {
     public IndicatorGeneralPanel() {
         super();
 
-        mainFormLayout = new IndicatorMainFormLayout();
+        mainFormLayout = new IndicatorMainFormLayout(ClientSecurityUtils.canEditIndicator());
 
         createViewForm();
         createEditionForm();

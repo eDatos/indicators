@@ -35,6 +35,7 @@ import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListUi
 import es.gobcan.istac.indicators.web.client.indicator.widgets.NewIndicatorWindow;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
@@ -81,6 +82,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
                 });
             }
         });
+        newIndicatorActor.setVisibility(ClientSecurityUtils.canCreateIndicator() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
         deleteIndicatorActor = new ToolStripButton(getConstants().indicDelete(), RESOURCE.deleteListGrid().getURL());
         deleteIndicatorActor.setVisibility(Visibility.HIDDEN);
@@ -104,10 +106,12 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (indicatorList.getSelectedRecords().length > 0) {
-                    deleteIndicatorActor.show();
-                } else {
-                    deleteIndicatorActor.hide();
+                if (ClientSecurityUtils.canDeleteIndicator()) {
+                    if (indicatorList.getSelectedRecords().length > 0) {
+                        deleteIndicatorActor.show();
+                    } else {
+                        deleteIndicatorActor.hide();
+                    }
                 }
 
                 ListGridRecord[] records = event.getSelection();
