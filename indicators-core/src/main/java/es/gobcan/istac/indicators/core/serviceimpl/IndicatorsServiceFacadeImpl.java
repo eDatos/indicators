@@ -1139,8 +1139,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
 
-        // Security TODO poner all
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
         DataSource dataSource = getIndicatorsService().retrieveDataSource(ctx, uuid);
@@ -1163,8 +1163,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public List<DataSourceDto> retrieveDataSourcesByIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
 
-        // Security TODO poner all
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve dataSources
         List<DataSource> dataSources = getIndicatorsService().retrieveDataSourcesByIndicator(ctx, indicatorUuid, indicatorVersion);
