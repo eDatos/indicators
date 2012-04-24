@@ -21,6 +21,7 @@ Application Indicators {
     		> @IndicatorRepository
     		> @GeographicalValueRepository
     		> @GeographicalGranularityRepository
+    		> @TranslationRepository
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -68,6 +69,12 @@ Application Indicators {
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	@GeographicalGranularity retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularities() throws MetamacException;
+	    	
+			// Time values
+	    	TimeValue retrieveTimeValue(String timeValue) throws MetamacException;
+
+	    	// Time granularities
+	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -311,8 +318,9 @@ Application Indicators {
 	    	"Retrieves geographic granularities in the indicator instance"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
-	    	
 	    	// TIME GRANULARITIES
+	    	"Retrieves time granularity"
+	    	@TimeGranularityDto retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	"Retrieves time granularities in the indicator"
 	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time granularities in the published indicator"
@@ -321,6 +329,8 @@ Application Indicators {
 	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	// TIME VALUES
+	    	"Retrieves time value"
+	    	@TimeValueDto retrieveTimeValue(String timeValue) throws MetamacException;
 	    	"Retrieves time values granularities in the indicator"
 	    	List<String> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
@@ -988,7 +998,7 @@ Application Indicators {
 			}
         }
         
-        "Table view for Data basic information"
+        "Table for Data basic information"
 	    Entity Configuration {
         	databaseTable = "TB_CONFIGURATION"
         	hint="idSequence=CONFIGURATION"
@@ -1003,6 +1013,27 @@ Application Indicators {
 				@Configuration save(@Configuration entity);
 			}
         }
+        
+        "Translations by code"
+		Entity Translation {
+			databaseTable="TB_TRANSLATIONS"
+			hint="idSequence=TRANSLATIONS"
+			!auditable
+			!optimisticLocking
+			
+			"Id"
+			Long id not nullable key;
+			"Code"
+			String code not nullable;
+       		"Title"
+       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
+			
+			Repository TranslationRepository {
+            	protected List<@Translation> findByQuery;
+            	protected List<@Translation> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@Translation findTranslationByCode(String code);
+			}
+		} 
 	}
 	
 	// ----------------------------------------------------------------
@@ -1315,6 +1346,24 @@ Application Indicators {
 	   		String uuid;
 	   		"Code"
 			String code;
+       		"Title"
+       		- @InternationalStringDto title;
+    	}
+    	
+    	"Dto for time values"
+    	DataTransferObject TimeValueDto {
+	   		"Time value"
+			String timeValue;
+       		"Title"
+       		- @InternationalStringDto title;
+       		"Granularity"
+			- @TimeGranularityEnum granularity;
+    	}
+
+    	"Dto for time granularities"
+    	DataTransferObject TimeGranularityDto {
+	   		"Granularity"
+			- @TimeGranularityEnum granularity;
        		"Title"
        		- @InternationalStringDto title;
     	}

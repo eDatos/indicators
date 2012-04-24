@@ -109,6 +109,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("TB_LIS_QUANTITIES_UNITS");
         tables.add("TB_LIS_GEOGR_VALUES");
         tables.add("TB_LIS_GEOGR_GRANULARITIES");
+        tables.add("TB_TRANSLATIONS");
         tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TV_AREAS_TEMATICAS");
         return tables;
@@ -133,6 +134,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_QUANTITIES_UNITS");
         sequences.add("SEQ_GEOGR_VALUES");
         sequences.add("SEQ_GEOGR_GRANULARITIES");
+        sequences.add("SEQ_TRANSLATIONS");
 
         return sequences;
     }

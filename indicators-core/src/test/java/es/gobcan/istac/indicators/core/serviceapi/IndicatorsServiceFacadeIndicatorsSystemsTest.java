@@ -38,6 +38,8 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -486,7 +488,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorsSystemErrorOperationNotAllowed() throws Exception {
 
         ServiceContext serviceContext = getServiceContextTecnicoProduccion();
-        
+
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
         indicatorsSystemDto.setCode(IndicatorsMocks.mockString(10));
 
@@ -981,7 +983,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
-    
+
     @Test
     public void testRejectIndicatorsSystemProductionValidationErrorNotExists() throws Exception {
 
@@ -995,7 +997,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testRejectIndicatorsSystemProductionValidationErrorWrongProcStatus() throws Exception {
 
@@ -1047,7 +1049,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemDto.getProcStatus());
         }
     }
-    
+
     @Test
     public void testRejectIndicatorsSystemDiffusionValidationErrorNotExists() throws Exception {
 
@@ -3548,7 +3550,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(2), indicatorInstanceDto.getOrderInLevel());
 
         // Update location
-        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextAdministrador(), uuid, indicatorInstanceDto.getParentUuid(), Long.valueOf(1));
+        IndicatorInstanceDto indicatorInstanceDtoChanged = indicatorsServiceFacade.updateIndicatorInstanceLocation(getServiceContextAdministrador(), uuid, indicatorInstanceDto.getParentUuid(),
+                Long.valueOf(1));
 
         // Validate indicatorInstance
         assertEquals(parentUuid, indicatorInstanceDtoChanged.getParentUuid());
@@ -3873,7 +3876,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testRetrieveGeographicalValueByCode() throws Exception {
 
@@ -4047,7 +4050,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testRetrieveGeographicalGranularityByCode() throws Exception {
 
@@ -4101,6 +4104,158 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularities.get(1).getUuid());
         assertEquals("MUNICIPALITIES", geographicalGranularities.get(1).getCode());
+    }
+
+    @Test
+    public void testRetrieveTimeGranularity() throws Exception {
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.YEARLY);
+            assertEquals(TimeGranularityEnum.YEARLY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Yearly", "es", "Anual");
+        }
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.BIYEARLY);
+            assertEquals(TimeGranularityEnum.BIYEARLY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Biyearly", "es", "Semestral");
+        }
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.QUARTERLY);
+            assertEquals(TimeGranularityEnum.QUARTERLY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Quarterly", "es", "Cuatrimestral");
+        }
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.WEEKLY);
+            assertEquals(TimeGranularityEnum.WEEKLY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Weekly", "es", "Semanal");
+        }
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.MONTHLY);
+            assertEquals(TimeGranularityEnum.MONTHLY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Monthly", "es", "Mensual");
+        }
+        {
+            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.DAILY);
+            assertEquals(TimeGranularityEnum.DAILY, timeGranularityDto.getGranularity());
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Daily", "es", "Diario");
+        }
+    }
+
+    @Test
+    public void testRetrieveTimeValue() throws Exception {
+        // Yearly
+        {
+            String year = "2011";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), year);
+            assertEquals(TimeGranularityEnum.YEARLY, timeValueDto.getGranularity());
+            assertEquals(year, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", year, "es", year);
+        }
+        {
+            String year = "1999";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), year);
+            assertEquals(TimeGranularityEnum.YEARLY, timeValueDto.getGranularity());
+            assertEquals(year, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", year, "es", year);
+        }
+        // Biyearly
+        {
+            String biyearly = "2011H1";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
+            assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
+            assertEquals(biyearly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 First semester", "es", "2011 Primer semestre");
+        }
+        {
+            String biyearly = "2012H2";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
+            assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
+            assertEquals(biyearly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
+        }
+        // Quaterly
+        {
+            String quaterly = "1999Q1";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), quaterly);
+            assertEquals(TimeGranularityEnum.QUARTERLY, timeValueDto.getGranularity());
+            assertEquals(quaterly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "1999 First quarter", "es", "1999 Primer cuatrimestre");
+        }
+        {
+            String quaterly = "2011Q2";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), quaterly);
+            assertEquals(TimeGranularityEnum.QUARTERLY, timeValueDto.getGranularity());
+            assertEquals(quaterly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 Second quarter", "es", "2011 Segundo cuatrimestre");
+        }
+        {
+            String quaterly = "2011Q3";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), quaterly);
+            assertEquals(TimeGranularityEnum.QUARTERLY, timeValueDto.getGranularity());
+            assertEquals(quaterly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 Third quarter", "es", "2011 Tercer cuatrimestre");
+        }
+        {
+            String quaterly = "2012Q4";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), quaterly);
+            assertEquals(TimeGranularityEnum.QUARTERLY, timeValueDto.getGranularity());
+            assertEquals(quaterly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Fourth quarter", "es", "2012 Cuarto cuatrimestre");
+        }
+        
+        // Monthly
+        {
+            String month = "2012M01";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), month);
+            assertEquals(TimeGranularityEnum.MONTHLY, timeValueDto.getGranularity());
+            assertEquals(month, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 January", "es", "2012 Enero");
+        }
+        {
+            String month = "2012M02";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), month);
+            assertEquals(TimeGranularityEnum.MONTHLY, timeValueDto.getGranularity());
+            assertEquals(month, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 February", "es", "2012 Febrero");
+        }
+        {
+            String month = "2012M03";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), month);
+            assertEquals(TimeGranularityEnum.MONTHLY, timeValueDto.getGranularity());
+            assertEquals(month, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 March", "es", "2012 Marzo");
+        }
+        {
+            String month = "1999M12";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), month);
+            assertEquals(TimeGranularityEnum.MONTHLY, timeValueDto.getGranularity());
+            assertEquals(month, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "1999 December", "es", "1999 Diciembre");
+        }
+        
+        // Week
+        {
+            String week = "2012W01";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), week);
+            assertEquals(TimeGranularityEnum.WEEKLY, timeValueDto.getGranularity());
+            assertEquals(week, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Week 01", "es", "2012 Semana 01");
+        }
+        {
+            String week = "2011W52";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), week);
+            assertEquals(TimeGranularityEnum.WEEKLY, timeValueDto.getGranularity());
+            assertEquals(week, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 Week 52", "es", "2011 Semana 52");
+        }
+        
+        // Daily
+        {
+            String day = "20120101";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), day);
+            assertEquals(TimeGranularityEnum.DAILY, timeValueDto.getGranularity());
+            assertEquals(day, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "01/01/2012", "es", "01/01/2012");
+        }
     }
 
     @Override

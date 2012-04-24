@@ -13,6 +13,8 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
@@ -29,13 +31,18 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 
 /**
  * Implementation of IndicatorsSystemService.
@@ -275,7 +282,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         return indicatorsSystemInProduction;
     }
-    
+
     @Override
     public IndicatorsSystemVersion rejectIndicatorsSystemProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -523,7 +530,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return dimensions;
     }
-    
+
     @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemByDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -621,7 +628,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return indicatorsInstances;
     }
-    
+
     @Override
     public IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -647,7 +654,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return geographicalValue;
     }
-    
+
     @Override
     public GeographicalValue retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
 
@@ -686,7 +693,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return geographicalGranularity;
     }
-    
+
     @Override
     public GeographicalGranularity retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
 
@@ -710,6 +717,90 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Find
         List<GeographicalGranularity> geographicalGranularitys = getGeographicalGranularityRepository().findAll();
         return geographicalGranularitys;
+    }
+
+    @Override
+    public TimeValue retrieveTimeValue(ServiceContext ctx, String timeValue) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveTimeValue(timeValue, null);
+
+        // Translate
+        TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeValue);
+        String translationCode = null;
+        switch (timeValueDo.getGranularity()) {
+            case YEARLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_YEARLY;
+                break;
+            case DAILY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_DAILY;
+                break;
+            case WEEKLY:
+                translationCode = IndicatorsConstants.TRANSLATION_TIME_VALUE_WEEKLY;
+                break;
+            case BIYEARLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_BIYEARLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case QUARTERLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_QUARTERLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+            case MONTHLY:
+                translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
+                break;
+        }
+
+        Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+        if (translation == null || translation.getTitle() == null) {
+            throw new MetamacException(ServiceExceptionType.TRANSLATION_NOT_FOUND, translationCode);
+        }
+
+        timeValueDo.setTitle(new InternationalString());
+        for (LocalisedString localisedStringTranslation : translation.getTitle().getTexts()) {
+            String label = localisedStringTranslation.getLabel();
+            if (timeValueDo.getYear() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValueDo.getYear());
+            }
+            if (timeValueDo.getMonth() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValueDo.getMonth());
+            }
+            if (timeValueDo.getWeek() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValueDo.getWeek());
+            }
+            if (timeValueDo.getDay() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValueDo.getDay());
+            }
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(label);
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            timeValueDo.getTitle().addText(localisedString);
+        }
+
+        return timeValueDo;
+    }
+
+    @Override
+    public TimeGranularity retrieveTimeGranularity(ServiceContext ctx, TimeGranularityEnum timeGranularity) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveTimeGranularity(timeGranularity, null);
+
+        // Translate
+        String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
+        Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+        if (translation == null || translation.getTitle() == null) {
+            throw new MetamacException(ServiceExceptionType.TRANSLATION_NOT_FOUND, translationCode);
+        }
+        
+        TimeGranularity timeGranularityDo = new TimeGranularity();
+        timeGranularityDo.setGranularity(timeGranularity);
+        timeGranularityDo.setTitle(new InternationalString());
+        for (LocalisedString localisedStringTranslation : translation.getTitle().getTexts()) {
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(localisedStringTranslation.getLabel());
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            timeGranularityDo.getTitle().addText(localisedString);
+        }
+        return timeGranularityDo;
     }
 
     /**
@@ -1119,10 +1210,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Checks orders
         if (!orders.isEmpty()) {
             if (elementToAdd.isDimension()) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);    
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);
             } else {
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL);
-            }            
+            }
         }
     }
 
@@ -1144,7 +1235,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Checks orders
         if (orderAfterUpdate > elementsAtLevel.size()) {
             if (elementToChangeOrder.isDimension()) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);    
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL);
             } else {
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL);
             }

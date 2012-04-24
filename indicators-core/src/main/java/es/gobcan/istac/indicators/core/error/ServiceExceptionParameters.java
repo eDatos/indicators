@@ -161,8 +161,8 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_NUMERATOR_INDICATOR_UUID     = "data_source.interperiod_percentage_rate.quantity.numerator_indicator_uuid";
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_DENOMINATOR_INDICATOR_UUID   = "data_source.interperiod_percentage_rate.quantity.denominator_indicator_uuid";
 
-    // Granularities
+    // Granularities and values
     public static final String GEOGRAPHICAL_GRANULARITY_UUID                                                 = "geographical_granularity.uuid";
+    public static final String TIME_VALUE                                                                    = "time_value";
     public static final String TIME_GRANULARITY                                                              = "time_granularity";
-
 }

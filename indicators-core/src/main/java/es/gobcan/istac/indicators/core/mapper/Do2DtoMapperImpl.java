@@ -31,6 +31,8 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -47,6 +49,8 @@ import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
@@ -280,6 +284,23 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
 
+        return target;
+    }
+    
+    @Override
+    public TimeGranularityDto timeGranularityDoToTimeGranularityDto(TimeGranularity source) {
+        TimeGranularityDto target = new TimeGranularityDto();
+        target.setGranularity(source.getGranularity());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        return target;
+    }
+
+    @Override
+    public TimeValueDto timeValueDoToTimeValueDto(TimeValue source) {
+        TimeValueDto target = new TimeValueDto();
+        target.setTimeValue(source.getTimeValue());
+        target.setGranularity(source.getGranularity());
+        target.setTitle(internationalStringToDto(source.getTitle()));
         return target;
     }
     

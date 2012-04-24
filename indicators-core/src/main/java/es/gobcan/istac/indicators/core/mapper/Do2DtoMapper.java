@@ -15,6 +15,8 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -28,19 +30,21 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 public interface Do2DtoMapper {
-    
-    // Indicators systems
-	public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
 
-	// Dimensions
+    // Indicators systems
+    public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source);
+
+    // Dimensions
     public DimensionDto dimensionDoToDto(Dimension source);
 
     // Indicators instances
     public IndicatorInstanceDto indicatorInstanceDoToDto(IndicatorInstance source);
-    
+
     // Indicators
     public IndicatorDto indicatorDoToDto(IndicatorVersion source);
 
@@ -49,7 +53,7 @@ public interface Do2DtoMapper {
 
     // Elements levels
     public List<ElementLevelDto> elementsLevelsDoToDto(List<ElementLevel> sources);
-    
+
     // Quantity unit
     public QuantityUnitDto quantityUnitDoToDto(QuantityUnit source);
 
@@ -59,16 +63,22 @@ public interface Do2DtoMapper {
     // Geographical granularity
     public GeographicalGranularityDto geographicalGranularityDoToDto(GeographicalGranularity source);
 
+    // Time value
+    public TimeGranularityDto timeGranularityDoToTimeGranularityDto(TimeGranularity source);
+
+    // Time granularity
+    public TimeValueDto timeValueDoToTimeValueDto(TimeValue source);
+
     // Subject
     public SubjectDto subjectDoToDto(Subject source);
     public SubjectDto subjectDoToDto(SubjectIndicatorResult source);
-    
+
     // DataDefinition
     public DataDefinitionDto dataDefinitionDoToDto(DataDefinition source);
-    
+
     // DataStructure
     public DataStructureDto dataStructureDoToDto(DataStructure source);
-    
-    //Data 
+
+    // Data
     public DataDto dataDoToDto(Data source);
 }

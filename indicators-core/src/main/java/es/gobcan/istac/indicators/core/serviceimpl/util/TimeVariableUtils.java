@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -30,7 +31,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 public class TimeVariableUtils {
 
     // TODO: Extender del proyecto metamac-core-common de la clase TimeUtils.
-    
+
     private static Pattern patternTimeValue     = Pattern.compile(START + TIME_VALUE_PATTERN + END);
 
     private static Pattern patternYearlyValue   = Pattern.compile(START + YEARLY_PATTERN + END);
@@ -83,6 +84,71 @@ public class TimeVariableUtils {
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
 
+    public static TimeValue parseTimeValue(String timeValue) throws MetamacException {
+
+        TimeValue timeValueFields = new TimeValue();
+        timeValueFields.setTimeValue(timeValue);
+        
+        TimeGranularityEnum timeGranularity = guessTimeGranularity(timeValue);
+        timeValueFields.setGranularity(timeGranularity);
+
+        switch (timeGranularity) {
+            case YEARLY: {
+                Matcher matcher = patternYearlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                }
+                break;
+            }
+            case BIYEARLY: {
+                Matcher matcher = patternBiyearlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                    timeValueFields.setSubperiod(BIYEARLY_CHARACTER, matcher.group(2));
+                }
+                break;
+            }
+            case QUARTERLY: {
+                Matcher matcher = patternQuaterlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                    timeValueFields.setSubperiod(QUARTERLY_CHARACTER, matcher.group(2));
+                }
+                break;
+            }
+            case MONTHLY: {
+                Matcher matcher = patternMonthlyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                    timeValueFields.setSubperiod(MONTHLY_CHARACTER, matcher.group(2));
+                }
+                break;
+            }
+            case WEEKLY: {
+                Matcher matcher = patternWeeklyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                    timeValueFields.setWeek(matcher.group(2));
+                    timeValueFields.setSubperiod(WEEKLY_CHARACTER, matcher.group(2));
+                }
+                break;
+            }
+            case DAILY: {
+                Matcher matcher = patternDailyValue.matcher(timeValue);
+                if (matcher.matches()) {
+                    timeValueFields.setYear(matcher.group(1));
+                    timeValueFields.setMonth(matcher.group(2));
+                    timeValueFields.setDay(matcher.group(3));
+                }
+                break;
+            }
+            default:
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
+        }
+
+        return timeValueFields;
+    }
+
     /**
      * Retrieves previous time value in same granularity
      */
@@ -119,7 +185,9 @@ public class TimeVariableUtils {
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value);
     }
-    private static String calculatePreviousTimeValueWithSubperiod(Pattern pattern, String timeValue, String subperiodCharacter, String maximumSubperiodAtYear, int subperiodStringSize) throws MetamacException {
+
+    private static String calculatePreviousTimeValueWithSubperiod(Pattern pattern, String timeValue, String subperiodCharacter, String maximumSubperiodAtYear, int subperiodStringSize)
+            throws MetamacException {
         Matcher matcher = pattern.matcher(timeValue);
         if (matcher.matches()) {
             int year = Integer.valueOf(matcher.group(1));
@@ -132,6 +200,7 @@ public class TimeVariableUtils {
         }
         throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, timeValue);
     }
+
     /**
      * Retrieves previous time value in yearly granularity
      */
@@ -139,16 +208,16 @@ public class TimeVariableUtils {
         if (value == null || !isTimeValue(value)) {
             return null;
         }
-        
-        //Year is in first 4 letters
+
+        // Year is in first 4 letters
         String yearStr = value.substring(0, 4);
-        Integer year = Integer.parseInt(yearStr); 
-        
+        Integer year = Integer.parseInt(yearStr);
+
         String feb29 = "0229";
         if (feb29.equals(value.substring(4))) {
             return null;
         }
-        year = year-1;
+        year = year - 1;
         return value.replaceFirst(yearStr, year.toString());
     }
 }

@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.dto;
 
-import es.gobcan.istac.indicators.core.domain.DataSource;
 
 
 /**
