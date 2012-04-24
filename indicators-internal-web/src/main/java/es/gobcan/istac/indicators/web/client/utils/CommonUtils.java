@@ -44,7 +44,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getTimeGranularityValueMap(List<TimeGranularityEnum> timeGranularityEnums) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (TimeGranularityEnum type : timeGranularityEnums) {
@@ -52,7 +52,7 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getTimeValueValueMap(List<String> timeValues) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (String timeValue : timeValues) {
@@ -204,7 +204,7 @@ public class CommonUtils {
         }
         return procStatus;
     }
-    
+
     public static String getIndicatorSystemProcStatus(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
         String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemDtoWeb.getProcStatus().getName());
         if (!StringUtils.isBlank(indicatorsSystemDtoWeb.getPublishedVersion())) {
@@ -212,5 +212,5 @@ public class CommonUtils {
         }
         return procStatus;
     }
-    
+
 }

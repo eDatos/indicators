@@ -36,11 +36,11 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 public class SystemListPresenter extends PaginationPresenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 
     public static final int DEFAULT_MAX_RESULTS = 30;
-    
+
     public interface SystemListView extends View, HasUiHandlers<SystemListPresenter> {
 
         void setIndSystemList(List<IndicatorsSystemDtoWeb> indSysList);
-        
+
         StatusBar getStatusBar();
         void refreshStatusBar();
         void setNumberOfElements(int numberOfElements);
@@ -73,9 +73,9 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(SystemListPresenter.this, getConstants().indicatorSystems());
-        
+
         initializePaginationSettings();
-        
+
         retrieveResultSet();
     }
 
@@ -136,5 +136,5 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
             }
         });
     }
-    
+
 }

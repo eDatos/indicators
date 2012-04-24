@@ -55,7 +55,7 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
 
     @Source("images/resultsetprevious_Disabled.png")
     ImageResource resultSetPreviousDisabled();
-    
+
     @Source("images/db_populate.png")
     ImageResource populateData();
 

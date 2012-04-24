@@ -35,9 +35,9 @@ public interface SystemUiHandler extends UiHandlers {
     void archive(IndicatorsSystemDtoWeb indicatorsSystemDto);
 
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);
-    
+
     void populateIndicatorData(String uuid, String version);
-    
+
     // Geographical and temporal values and variables for indicators (in instance creation)
     void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
     void retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersion);

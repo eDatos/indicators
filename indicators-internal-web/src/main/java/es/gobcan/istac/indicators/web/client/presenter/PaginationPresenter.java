@@ -9,14 +9,14 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 
 public abstract class PaginationPresenter<V extends View, Proxy_ extends Proxy<?>> extends Presenter<V, Proxy_> {
 
-    protected int               maxResults;
-    protected int               firstResult;
-    protected int               pageNumber;
-    protected int               numberOfElements;
+    protected int     maxResults;
+    protected int     firstResult;
+    protected int     pageNumber;
+    protected int     numberOfElements;
 
-    protected Integer           totalResults;
+    protected Integer totalResults;
 
-    private int                 defultMaxResults;
+    private int       defultMaxResults;
 
     @Inject
     public PaginationPresenter(EventBus eventBus, V view, Proxy_ proxy, DispatchAsync dispatcher, int defaultMaxResults) {
@@ -117,5 +117,5 @@ public abstract class PaginationPresenter<V extends View, Proxy_ extends Proxy<?
         pageNumber = 1;
         numberOfElements = maxResults;
     }
-    
+
 }

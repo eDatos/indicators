@@ -39,7 +39,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
     @Inject
     public SystemListViewImpl(StatusBar statusBar) {
         super(statusBar);
-        
+
         indSystemListGrid = new BaseCustomListGrid();
         indSystemListGrid.setHeight(680);
         IndicatorsSystemsDS datasource = new IndicatorsSystemsDS();
@@ -62,7 +62,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
         panel.addMember(statusBar);
 
         bindEvents();
-        
+
         initStatusBar();
     }
 
@@ -96,7 +96,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
     public void setUiHandlers(SystemListPresenter uiHandlers) {
         this.uiHandlers = uiHandlers;
     }
-    
+
     public void refreshStatusBar() {
         // update Selected label e.g "0 of 50 selected"
         String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));

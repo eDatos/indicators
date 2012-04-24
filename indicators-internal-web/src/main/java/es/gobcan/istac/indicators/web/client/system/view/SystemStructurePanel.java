@@ -861,8 +861,8 @@ public class SystemStructurePanel extends HLayout {
             editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
             editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(new LinkedHashMap<String, String>());
             editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
-            ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoGranularitySelectItem().setValueMap(new LinkedHashMap<String, String>());
-            ((GeographicalSelectItem)editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoValueSelectItem().setValueMap(new LinkedHashMap<String, String>());
+            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoGranularitySelectItem().setValueMap(new LinkedHashMap<String, String>());
+            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoValueSelectItem().setValueMap(new LinkedHashMap<String, String>());
         }
 
         private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
@@ -1103,10 +1103,10 @@ public class SystemStructurePanel extends HLayout {
                     if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
                         String geographicalGranularityUuid = event.getValue().toString();
                         if (editionForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(editionForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
-                           IndicatorDto indicatorDto = getIndicatorDtoByUuid(editionForm.getValue(IndicatorInstanceDS.IND_UUID).toString());
-                           if (indicatorDto != null) {
-                               uiHandlers.retrieveGeographicalValuesWithGranularityInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber(), geographicalGranularityUuid);
-                           }
+                            IndicatorDto indicatorDto = getIndicatorDtoByUuid(editionForm.getValue(IndicatorInstanceDS.IND_UUID).toString());
+                            if (indicatorDto != null) {
+                                uiHandlers.retrieveGeographicalValuesWithGranularityInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber(), geographicalGranularityUuid);
+                            }
                         }
                     }
                 }
