@@ -7,7 +7,6 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public class SharedSecurityUtils {
-
     /**
      * Checks if user has requested role
      */

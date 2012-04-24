@@ -9,7 +9,7 @@ import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
 
-public class SecurityUtils {
+public class SecurityUtils extends SharedSecurityUtils {
 
     /**
      * Checks user can execute any operation, if has any role of requested roles
@@ -19,14 +19,14 @@ public class SecurityUtils {
         MetamacPrincipal metamacPrincipal = getMetamacPrincipal(ctx);
 
         // Administration has total control
-        if (SharedSecurityUtils.isAdministrator(metamacPrincipal)) {
+        if (isAdministrator(metamacPrincipal)) {
             return;
         }
         // Checks user has any role of requested
         if (roles != null) {
             for (int i = 0; i < roles.length; i++) {
                 RoleEnum role = roles[i];
-                if (SharedSecurityUtils.isUserInRol(metamacPrincipal, role)) {
+                if (isUserInRol(metamacPrincipal, role)) {
                     return;
                 }
             }
@@ -42,14 +42,14 @@ public class SecurityUtils {
         MetamacPrincipal metamacPrincipal = getMetamacPrincipal(ctx);
 
         // Administration has total control in all indicators systems
-        if (SharedSecurityUtils.isAdministrator(metamacPrincipal)) {
+        if (isAdministrator(metamacPrincipal)) {
             return;
         }
         // Checks indicators system is in any role
         if (roles != null) {
             for (int i = 0; i < roles.length; i++) {
                 RoleEnum role = roles[i];
-                if (SharedSecurityUtils.haveAccessToOperationInRol(metamacPrincipal, role, operationCode)) {
+                if (haveAccessToOperationInRol(metamacPrincipal, role, operationCode)) {
                     return;
                 }
             }
