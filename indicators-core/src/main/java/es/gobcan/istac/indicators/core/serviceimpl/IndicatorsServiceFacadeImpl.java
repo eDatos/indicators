@@ -536,6 +536,20 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public GeographicalValueDto retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, code);
+
+        // Transform
+        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
+        return geographicalValueDto;
+    }
+
+    @Override
     public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
 
         // Security
@@ -645,6 +659,20 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         // Retrieve
         GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularity(ctx, uuid);
+
+        // Transform
+        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
+        return geographicalGranularityDto;
+    }
+
+    @Override
+    public GeographicalGranularityDto retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularityByCode(ctx, code);
 
         // Transform
         GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
@@ -1079,7 +1107,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public DataSourceDto retrieveDataSource(ServiceContext ctx, String uuid) throws MetamacException {
 
-        // Security
+        // Security TODO poner all
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
 
         // Retrieve
@@ -1103,7 +1131,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     @Override
     public List<DataSourceDto> retrieveDataSourcesByIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersion) throws MetamacException {
 
-        // Security
+        // Security TODO poner all
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION, RoleEnum.TECNICO_APOYO_PRODUCCION);
 
         // Retrieve dataSources

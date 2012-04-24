@@ -3873,6 +3873,53 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testRetrieveGeographicalValueByCode() throws Exception {
+
+        String code = "ES";
+        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValueByCode(getServiceContextAdministrador(), code);
+
+        assertNotNull(geographicalValueDto);
+        assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValueDto.getUuid());
+        assertEquals(code, geographicalValueDto.getCode());
+        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularityUuid());
+        assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
+        assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
+        assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
+        assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
+        IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
+    }
+
+    @Test
+    public void testRetrieveGeographicalValueByCodeErrorParameterRequired() throws Exception {
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicalValueByCode(getServiceContextAdministrador(), null);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicalValueByCodeErrorNotExists() throws Exception {
+
+        String code = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicalValueByCode(getServiceContextAdministrador(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
 
     @Test
     public void testFindGeographicalValues() throws Exception {
@@ -3998,6 +4045,48 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    public void testRetrieveGeographicalGranularityByCode() throws Exception {
+
+        String code = "MUNICIPALITIES";
+        GeographicalGranularityDto geographicalGranularityDto = indicatorsServiceFacade.retrieveGeographicalGranularityByCode(getServiceContextAdministrador(), code);
+
+        assertNotNull(geographicalGranularityDto);
+        assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularityDto.getUuid());
+        assertEquals("MUNICIPALITIES", geographicalGranularityDto.getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(geographicalGranularityDto.getTitle(), "es", "Municipios", "en", "Municipalities");
+    }
+
+    @Test
+    public void testRetrieveGeographicalGranularityByCodeErrorParameterRequired() throws Exception {
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicalGranularityByCode(getServiceContextAdministrador(), null);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicalGranularityByCodeErrorNotExists() throws Exception {
+
+        String code = NOT_EXISTS;
+
+        try {
+            indicatorsServiceFacade.retrieveGeographicalGranularityByCode(getServiceContextAdministrador(), code);
+            fail("No exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_NOT_FOUND_WITH_CODE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(code, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

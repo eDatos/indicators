@@ -647,6 +647,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return geographicalValue;
     }
+    
+    @Override
+    public GeographicalValue retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveGeographicalValueByCode(code, null);
+
+        // Retrieve
+        GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(code);
+        if (geographicalValue == null) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE, code);
+        }
+        return geographicalValue;
+    }
 
     @Override
     public PagedResult<GeographicalValue> findGeographicalValues(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
@@ -669,6 +683,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().retrieveGeographicalGranularity(uuid);
         if (geographicalGranularity == null) {
             throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_NOT_FOUND, uuid);
+        }
+        return geographicalGranularity;
+    }
+    
+    @Override
+    public GeographicalGranularity retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveGeographicalGranularityByCode(code, null);
+
+        // Retrieve
+        GeographicalGranularity geographicalGranularity = getGeographicalGranularityRepository().findGeographicalGranularityByCode(code);
+        if (geographicalGranularity == null) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_NOT_FOUND_WITH_CODE, code);
         }
         return geographicalGranularity;
     }

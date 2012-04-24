@@ -61,10 +61,12 @@ Application Indicators {
 	    		    	
 	    	// Geographical values
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
+	    	@GeographicalValue retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
+	    	@GeographicalGranularity retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularities() throws MetamacException;
     	}
     	
@@ -280,6 +282,8 @@ Application Indicators {
 	    	// GEOGRAPHICAL VALUES
 	    	"Retrieves geographical value"
 	    	@GeographicalValueDto retrieveGeographicalValue(String uuid) throws MetamacException;
+	    	"Retrieves geographical value by code"
+	    	@GeographicalValueDto retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	"Find geographical values by criteria"
 	    	MetamacCriteriaResult<@GeographicalValueDto> findGeographicalValues(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the indicator"
@@ -293,10 +297,11 @@ Application Indicators {
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
-
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
+	    	"Retrieves geographical granularity by code"
+	    	@GeographicalGranularityDto retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	"Retrieves all geographical granularities"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
@@ -315,7 +320,7 @@ Application Indicators {
 	    	"Retrieves time granularities in the indicator instance"
 	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
-	    	//TIME VALUES
+	    	// TIME VALUES
 	    	"Retrieves time values granularities in the indicator"
 	    	List<String> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
@@ -327,7 +332,6 @@ Application Indicators {
 	    	"Retrieves time values in the indicator instance"
 	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
-	    	
 	    	// MEASURE VALUES
 	    	"Retrieves measure values in indicator instance"
 	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
@@ -336,7 +340,6 @@ Application Indicators {
 	    	"Retrieves measure values in indicator instance"
 	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
-	    	
 	    	// INDICATORS
 	    	"Creates an indicator"
 	    	@IndicatorDto createIndicator(@IndicatorDto indicatorDto) throws MetamacException;
@@ -909,6 +912,7 @@ Application Indicators {
        			findAll;
             	protected List<@GeographicalGranularity> findByQuery;
             	protected List<@GeographicalGranularity> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@GeographicalGranularity findGeographicalGranularityByCode(String code);
             	@GeographicalGranularity retrieveGeographicalGranularity(String uuid);
 			}
         }

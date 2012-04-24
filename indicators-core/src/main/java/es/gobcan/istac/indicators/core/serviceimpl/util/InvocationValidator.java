@@ -686,6 +686,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveGeographicalValueByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.CODE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkFindGeographicalValues(List<MetamacExceptionItem> exceptions, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         if (exceptions == null) {
@@ -704,6 +715,17 @@ public class InvocationValidator {
         }
 
         ValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.UUID, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveGeographicalGranularityByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.CODE, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
