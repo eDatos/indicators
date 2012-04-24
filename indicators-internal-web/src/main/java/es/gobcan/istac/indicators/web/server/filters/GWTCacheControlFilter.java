@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.server.filters;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,13 +29,16 @@ public class GWTCacheControlFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
 
         if (requestURI.contains(".nocache.")) {
-            Date now = new Date();
+            // Date now = new Date();
+            // HttpServletResponse httpResponse = (HttpServletResponse) response;
+            // httpResponse.setDateHeader("Date", now.getTime());
+            // // one day old
+            // httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
+            // httpResponse.setHeader("Pragma", "no-cache");
+            // httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setDateHeader("Date", now.getTime());
-            // one day old
-            httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
-            httpResponse.setHeader("Pragma", "no-cache");
-            httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+            httpResponse.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         }
 
         filterChain.doFilter(request, response);
