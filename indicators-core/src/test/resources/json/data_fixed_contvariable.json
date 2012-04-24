@@ -47,7 +47,7 @@
    ],
    "data":[
       {
-         "Valor":"3.585",
+         "Valor":"3585",
          "dimCodes":[
             "T",
             "NumSoc"
@@ -61,7 +61,7 @@
          ]
       },
       {
-         "Valor":"3.200",
+         "Valor":"3200",
          "dimCodes":[
             "L",
             "NumSoc"

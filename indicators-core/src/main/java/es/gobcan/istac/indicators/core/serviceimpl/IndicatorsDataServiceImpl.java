@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -1041,9 +1043,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             Double currentValue = null;
             Double previousValue = null;
             try {
-                // Data format is: 5.300,05 it should be => 5300.05
-                String currentValStr = currentObs.getPrimaryMeasure().replace(".", "").replace(",", ".");
-                String previousValStr = previousObs.getPrimaryMeasure().replace(".", "").replace(",", ".");
+                String currentValStr = currentObs.getPrimaryMeasure();
+                String previousValStr = previousObs.getPrimaryMeasure();
                 currentValue = Double.parseDouble(currentValStr);
                 previousValue = Double.parseDouble(previousValStr);
             } catch (NumberFormatException e) {
@@ -1075,7 +1076,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private String formatCalculatedValue(Double value, DataOperation dataOperation) {
-        DecimalFormat formatter = new DecimalFormat();
+        DecimalFormat formatter = (DecimalFormat)(DecimalFormat.getInstance(Locale.ENGLISH));
+        formatter.setGroupingUsed(false); //DO NOT use thousands separator
         if (dataOperation.shouldBeRounded()) {
             if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
                 formatter.setRoundingMode(RoundingMode.HALF_UP);

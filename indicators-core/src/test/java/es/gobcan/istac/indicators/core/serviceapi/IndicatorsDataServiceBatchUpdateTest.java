@@ -270,13 +270,13 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static List<String> getTestDataForIndicator(String indicatorUuid) {
         if (INDICATOR1_UUID.equals(indicatorUuid) || INDICATOR4_UUID.equals(indicatorUuid) || INDICATOR5_UUID.equals(indicatorUuid) || INDICATOR6_UUID.equals(indicatorUuid)
                 || INDICATOR7_UUID.equals(indicatorUuid)) {
-            return Arrays.asList("3.585", "34.413", "2.471", "2.507", "2.036", "2.156");
+            return Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
         } else if (INDICATOR2_UUID.equals(indicatorUuid)) {
-            List<String> absolute = Arrays.asList("34.413", "4.546", "2.471", "329", "2.507", "347", "2.036", "297", "33.413", "3.546", "1.471", "229", "1.507", "247", "1.036", "197");
-            List<String> annualPercentageRate = Arrays.asList("2,992", "28,200", "67,980", "43,668", "66,357", "40,485", "96,525", "50,761", null, null, null, null, null, null, null, null);
-            List<String> interperiodPercentageRate = Arrays.asList("2,99", "28,20", "-1,43", "-5,18", "23,13", "16,83", null, null, null, null, "-2,38", "-7,28", "45,46", "25,38", null, null);
-            List<String> annualPuntualRate = Arrays.asList("1.000", "1.000", "1.000", "100", "1.000", "100", "1.000", "100", null, null, null, null, null, null, null, null);
-            List<String> interperiodPuntualRate = Arrays.asList("1.000", "1.000", "-36", "-18", "471", "50", null, null, null, null, "-36", "-18", "471", "50", null, null);
+            List<String> absolute = Arrays.asList("34413", "4546", "2471", "329", "2507", "347", "2036", "297", "33413", "3546", "1471", "229", "1507", "247", "1036", "197");
+            List<String> annualPercentageRate = Arrays.asList("2.992", "28.200", "67.980", "43.668", "66.357", "40.485", "96.525", "50.761", null, null, null, null, null, null, null, null);
+            List<String> interperiodPercentageRate = Arrays.asList("2.99", "28.20", "-1.43", "-5.18", "23.13", "16.83", null, null, null, null, "-2.38", "-7.28", "45.46", "25.38", null, null);
+            List<String> annualPuntualRate = Arrays.asList("1000", "1000", "1000", "100", "1000", "100", "1000", "100", null, null, null, null, null, null, null, null);
+            List<String> interperiodPuntualRate = Arrays.asList("1000", "1000", "-36", "-18", "471", "50", null, null, null, null, "-36", "-18", "471", "50", null, null);
 
             List<String> data = new ArrayList<String>();
             data.addAll(absolute);
