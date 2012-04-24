@@ -14,6 +14,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.GeographicalValueRepository;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 
@@ -146,16 +147,16 @@ public class DataSourceCompatibilityChecker {
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
         
         if (dataSource.getAnnualPercentageRate() != null) {
-            items.addAll(checkRateMethodConstraints(dataSource, "ANNUAL_PERCENTAGE_RATE", dataSource.getAnnualPercentageRate(), data));
+            items.addAll(checkRateMethodConstraints(dataSource, ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, dataSource.getAnnualPercentageRate(), data));
         }
         if (dataSource.getAnnualPuntualRate() != null) {
-            items.addAll(checkRateMethodConstraints(dataSource, "ANNUAL_PUNTUAL_RATE", dataSource.getAnnualPuntualRate(), data));
+            items.addAll(checkRateMethodConstraints(dataSource, ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, dataSource.getAnnualPuntualRate(), data));
         }
         if (dataSource.getInterperiodPercentageRate() != null) {
-            items.addAll(checkRateMethodConstraints(dataSource, "INTERPERIOD_PERCENTAGE_RATE", dataSource.getInterperiodPercentageRate(), data));
+            items.addAll(checkRateMethodConstraints(dataSource, ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, dataSource.getInterperiodPercentageRate(), data));
         }
         if (dataSource.getInterperiodPuntualRate() != null) {
-            items.addAll(checkRateMethodConstraints(dataSource, "INTERPERIOD_PUNTUAL_RATE", dataSource.getInterperiodPuntualRate(), data));
+            items.addAll(checkRateMethodConstraints(dataSource, ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, dataSource.getInterperiodPuntualRate(), data));
         }
         return items;
     }

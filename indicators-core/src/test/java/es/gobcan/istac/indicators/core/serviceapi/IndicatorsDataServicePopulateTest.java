@@ -7,23 +7,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.dbunit.DataSourceDatabaseTester;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.ReplacementDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.ext.oracle.OracleDataTypeFactory;
-import org.dbunit.operation.DatabaseOperation;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +20,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -883,13 +870,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(5, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals(INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals(INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
         }
     }
 
@@ -908,13 +895,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(5, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_ABSMETHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE, e.getExceptionItems().get(1).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PUNTUAL_RATE, e.getExceptionItems().get(2).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals(INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE, e.getExceptionItems().get(3).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_RATE_METHOD_NO_CONTVARIABLE_ILLEGAL.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals(INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE, e.getExceptionItems().get(4).getMessageParameters()[1]);
         }
     }
 

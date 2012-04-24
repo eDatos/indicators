@@ -53,11 +53,6 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
-    protected static final String ANNUAL_PERCENTAGE_RATE      = "ANNUAL_PERCENTAGE_RATE";
-    protected static final String ANNUAL_PUNTUAL_RATE         = "ANNUAL_PUNTUAL_RATE";
-    protected static final String INTERPERIOD_PERCENTAGE_RATE = "INTERPERIOD_PERCENTAGE_RATE";
-    protected static final String INTERPERIOD_PUNTUAL_RATE    = "INTERPERIOD_PUNTUAL_RATE";
-
     protected abstract IndicatorsService getIndicatorsService();
     protected abstract DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade();
 
