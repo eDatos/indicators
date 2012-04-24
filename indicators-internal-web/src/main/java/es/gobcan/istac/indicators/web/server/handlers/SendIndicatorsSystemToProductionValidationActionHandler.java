@@ -42,7 +42,7 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
                 indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid());
                 return new SendIndicatorsSystemToProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
             } catch (MetamacException e1) {
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e1.getExceptionItems()));
             }
         }
         // If exists, send to production validation
