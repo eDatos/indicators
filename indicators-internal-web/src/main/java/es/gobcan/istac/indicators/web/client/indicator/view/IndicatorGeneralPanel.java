@@ -270,7 +270,6 @@ public class IndicatorGeneralPanel extends VLayout {
         MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         title.setRequired(true);
         MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
-        acronym.setRequired(true);
         identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym);
 
         // Status Form
@@ -281,7 +280,6 @@ public class IndicatorGeneralPanel extends VLayout {
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
         MultiLanguageTextItem conceptDescription = new MultiLanguageTextItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
-        conceptDescription.setRequired(true);
         contentDescriptorsEditionForm.setFields(conceptDescription);
 
         // Production Descriptors Form
