@@ -8,20 +8,11 @@ public class IndicatorsSystemDtoWeb extends IndicatorsSystemDto {
 
     private static final long      serialVersionUID = 1L;
 
-    private String                 statisticalOperationUri;
     private InternationalStringDto title;
     private InternationalStringDto acronym;
     private InternationalStringDto description;
     private InternationalStringDto objective;
     private boolean                operationExternallyPublished;
-
-    public String getStatisticalOperationUri() {
-        return statisticalOperationUri;
-    }
-
-    public void setStatisticalOperationUri(String statisticalOperationUri) {
-        this.statisticalOperationUri = statisticalOperationUri;
-    }
 
     public InternationalStringDto getTitle() {
         return title;

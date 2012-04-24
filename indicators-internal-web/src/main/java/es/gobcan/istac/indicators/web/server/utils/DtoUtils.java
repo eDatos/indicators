@@ -56,7 +56,6 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
         }
         if (operationBase != null) {
-            indicatorsSystemDtoWeb.setStatisticalOperationUri(operationBase.getUri());
             indicatorsSystemDtoWeb.setCode(operationBase.getCode());
             indicatorsSystemDtoWeb.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
             indicatorsSystemDtoWeb.setAcronym(getInternationalStringDtoFromInternationalString(operationBase.getAcronym()));

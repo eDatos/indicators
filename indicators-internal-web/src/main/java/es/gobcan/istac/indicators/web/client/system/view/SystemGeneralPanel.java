@@ -117,11 +117,10 @@ public class SystemGeneralPanel extends VLayout {
         identifiersForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
         ViewTextItem versionField = new ViewTextItem(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
         ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
-        ViewTextItem uri = new ViewTextItem(IndicatorsSystemsDS.URI, getConstants().systemDetailUri());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
         ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
-        identifiersForm.setFields(codeField, versionField, uri, title, acronym, procStatus);
+        identifiersForm.setFields(codeField, versionField, title, acronym, procStatus);
 
         // Production Descriptors
         productionForm = new GroupDynamicForm(getConstants().systemDetailProductionDescriptors());
@@ -167,7 +166,6 @@ public class SystemGeneralPanel extends VLayout {
         // Identifiers
         identifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         identifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
-        identifiersForm.setValue(IndicatorsSystemsDS.URI, indicatorSystemDto.getStatisticalOperationUri());
         identifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
         identifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
         identifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));

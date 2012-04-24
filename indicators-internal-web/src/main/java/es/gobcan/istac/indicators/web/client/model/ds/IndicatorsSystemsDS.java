@@ -12,7 +12,6 @@ public class IndicatorsSystemsDS extends DataSource {
     public static String UUID            = "indsys-uuid";
     public static String VERSION         = "indsys-version";
     public static String CODE            = "indsys-code";
-    public static String URI             = "indsys-uri";
     public static String TITLE           = "indsys-title";
     public static String ACRONYM         = "indsys-acron";
     public static String PROC_STATUS     = "indsys-status";
