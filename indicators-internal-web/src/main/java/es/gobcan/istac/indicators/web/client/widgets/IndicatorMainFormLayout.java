@@ -8,6 +8,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
 public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
@@ -49,22 +50,22 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         hideAllPublishButtons();
         // Show buttons depending on the status
         if (IndicatorProcStatusEnum.DRAFT.equals(status)) {
-            productionValidation.show();
+            showProductionValidationButton();
         } else if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-            diffusionValidation.show();
-            rejectValidation.show();
+            showDiffusionValidationButton();
+            showRejectValidationButton();
         } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            publish.show();
-            rejectValidation.show();
+            showPublishButton();
+            showRejectValidationButton();
         } else if (IndicatorProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-            productionValidation.show();
+            showProductionValidationButton();
         } else if (IndicatorProcStatusEnum.PUBLICATION_FAILED.equals(status)) {
-            publish.show();
+            showPublishButton();
         } else if (IndicatorProcStatusEnum.PUBLISHED.equals(status)) {
-            archive.show();
-            versioning.show();
+            showArchiveButton();
+            showVersioningButton();
         } else if (IndicatorProcStatusEnum.ARCHIVED.equals(status)) {
-            versioning.show();
+            showVersioningButton();
         }
     }
 
@@ -111,6 +112,48 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         publish.hide();
         archive.hide();
         versioning.hide();
+    }
+
+    private void showProductionValidationButton() {
+        if (ClientSecurityUtils.canSendIndicatorToProductionValidation()) {
+            productionValidation.show();
+        }
+    }
+
+    private void showDiffusionValidationButton() {
+        if (ClientSecurityUtils.canSendIndicatorToDiffusionValidation()) {
+            diffusionValidation.show();
+        }
+    }
+
+    private void showRejectValidationButton() {
+        if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+            if (ClientSecurityUtils.canRejectIndicatorProductionValidation()) {
+                rejectValidation.show();
+            }
+        } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+            if (ClientSecurityUtils.canRejectIndicatorDiffusionValidation()) {
+                rejectValidation.show();
+            }
+        }
+    }
+
+    private void showPublishButton() {
+        if (ClientSecurityUtils.canPublishIndicator()) {
+            publish.show();
+        }
+    }
+
+    private void showArchiveButton() {
+        if (ClientSecurityUtils.canArchiveIndicator()) {
+            archive.show();
+        }
+    }
+
+    private void showVersioningButton() {
+        if (ClientSecurityUtils.canVersioningIndicator()) {
+            versioning.show();
+        }
     }
 
 }
