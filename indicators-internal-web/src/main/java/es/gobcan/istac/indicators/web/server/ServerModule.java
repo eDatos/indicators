@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListAction
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesInIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetUserPrincipalActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
@@ -86,6 +87,7 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetUserPrincipalAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
@@ -168,7 +170,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);
         bindHandler(GetSubjectsListAction.class, GetSubjectsListActionHandler.class);
-        
+
         bindHandler(PopulateIndicatorDataAction.class, PopulateIndicatorDataActionHandler.class);
 
         // Indicators geographical and temporal variables and values
@@ -176,11 +178,13 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetGeographicalValuesWithGranularityInIndicatorAction.class, GetGeographicalValuesWithGranularityInIndicatorActionHandler.class);
         bindHandler(GetTimeGranularitiesInIndicatorAction.class, GetTimeGranularitiesInIndicatorActionHandler.class);
         bindHandler(GetTimeValuesInIndicatorAction.class, GetTimeValuesInIndicatorActionHandler.class);
-        
+
         // Data Sources
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
         bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
+
+        bindHandler(GetUserPrincipalAction.class, GetUserPrincipalActionHandler.class);
 
     }
 

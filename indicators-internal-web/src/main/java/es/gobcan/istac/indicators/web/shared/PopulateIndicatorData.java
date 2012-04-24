@@ -10,11 +10,11 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 public class PopulateIndicatorData {
 
     @In(1)
-    String indicatorUuid;
+    String       indicatorUuid;
 
     @In(2)
-    String version;
-    
+    String       version;
+
     @Out(1)
     IndicatorDto indicatorDto;
 

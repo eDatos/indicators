@@ -12,10 +12,10 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 public class GetGeographicalGranularitiesInIndicator {
 
     @In(1)
-    String                        indicatorUuid;
+    String                           indicatorUuid;
 
     @In(2)
-    String                        indicatorVersion;
+    String                           indicatorVersion;
 
     @Out(1)
     List<GeographicalGranularityDto> geographicalGranularities;

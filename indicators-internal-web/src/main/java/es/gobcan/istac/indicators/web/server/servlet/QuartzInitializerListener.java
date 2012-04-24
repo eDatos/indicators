@@ -71,6 +71,7 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
  * 
  * 
  * 
+ * 
  * StdSchedulerFactory factory = (StdSchedulerFactory) ctx.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
  * </pre>
  * <p>
@@ -88,16 +89,16 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
  */
 public class QuartzInitializerListener implements ServletContextListener {
 
-    public static final String   QUARTZ_FACTORY_KEY   = "org.quartz.impl.StdSchedulerFactory.KEY";
-    private static final String QUARTZ_CRON_EXPRESSION_PROP = "indicators.update.quartz.expression";
+    public static final String   QUARTZ_FACTORY_KEY          = "org.quartz.impl.StdSchedulerFactory.KEY";
+    private static final String  QUARTZ_CRON_EXPRESSION_PROP = "indicators.update.quartz.expression";
 
-    private boolean              performShutdown      = true;
-    private boolean              waitOnShutdown       = false;
+    private boolean              performShutdown             = true;
+    private boolean              waitOnShutdown              = false;
 
-    private Scheduler            scheduler            = null;
-    private ConfigurationService configurationService = null;
+    private Scheduler            scheduler                   = null;
+    private ConfigurationService configurationService        = null;
 
-    private final Logger         log                  = LoggerFactory.getLogger(getClass());
+    private final Logger         log                         = LoggerFactory.getLogger(getClass());
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,14 +188,14 @@ public class QuartzInitializerListener implements ServletContextListener {
                 log.info("Storing the ServletContext in the scheduler context at key: " + servletCtxtKey);
                 scheduler.getContext().put(servletCtxtKey, servletContext);
             }
-            
+
             try {
                 // Scheduling quartz
                 scheduleRegularJob();
             } catch (SchedulerException e) {
                 log.error("Error Scheduling INDICATORS QUARTZ");
             }
-            
+
         } catch (Exception e) {
             log.error("Quartz Scheduler failed to initialize: " + e.toString());
             e.printStackTrace();
@@ -202,19 +203,16 @@ public class QuartzInitializerListener implements ServletContextListener {
     }
 
     private void scheduleRegularJob() throws SchedulerException {
-        JobDetail job = JobBuilder.newJob(IndicatorsUpdateJob.class).withIdentity("update_indicators_job","cron_jobs").build();
-        
+        JobDetail job = JobBuilder.newJob(IndicatorsUpdateJob.class).withIdentity("update_indicators_job", "cron_jobs").build();
+
         String cronExpr = configurationService.getConfig().getString(QUARTZ_CRON_EXPRESSION_PROP);
-        
-        CronTrigger trigger = newTrigger().withIdentity("triger_update_indicators", "cron_jobs")
-            .withSchedule(CronScheduleBuilder.cronSchedule(cronExpr))
-            .build();
-        
+
+        CronTrigger trigger = newTrigger().withIdentity("triger_update_indicators", "cron_jobs").withSchedule(CronScheduleBuilder.cronSchedule(cronExpr)).build();
+
         scheduler.scheduleJob(job, trigger);
-        
+
         log.info("Job has been planned using cron expression: " + trigger.getCronExpression());
     }
-    
 
     public void contextDestroyed(ServletContextEvent sce) {
 

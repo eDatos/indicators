@@ -14,14 +14,14 @@ public class ServiceContextHelper {
 
     public static ServiceContext getServiceContext() {
         if (serviceContext == null) {
-            
+
             serviceContext = new ServiceContext("user", "12345", IndicatorsConstants.SECURITY_APPLICATION_ID);
-            
+
             MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
             metamacPrincipal.setUserId(serviceContext.getUserId());
             metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
             serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
-            
+
         }
         return serviceContext;
     }

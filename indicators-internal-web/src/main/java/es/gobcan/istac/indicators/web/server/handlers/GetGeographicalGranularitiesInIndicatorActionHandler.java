@@ -31,7 +31,8 @@ public class GetGeographicalGranularitiesInIndicatorActionHandler extends Abstra
     @Override
     public GetGeographicalGranularitiesInIndicatorResult execute(GetGeographicalGranularitiesInIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularitiesInIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getIndicatorVersion());
+            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularitiesInIndicator(ServiceContextHelper.getServiceContext(),
+                    action.getIndicatorUuid(), action.getIndicatorVersion());
             return new GetGeographicalGranularitiesInIndicatorResult(geographicalGranularityDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
