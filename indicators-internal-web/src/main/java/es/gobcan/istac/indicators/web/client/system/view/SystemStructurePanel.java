@@ -537,10 +537,14 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private boolean isDroppable(TreeNode dropFolder) {
-            if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) { // Replacing false root is not allowed
+            if (!ClientSecurityUtils.canDropNode(system.getCode())) {
                 return false;
+            } else {
+                if (treeGrid.getDropFolder().getAttribute(IndSystemContentNode.ATTR_NAME).equals("/")) { // Replacing false root is not allowed
+                    return false;
+                }
+                return true;
             }
-            return true;
         }
 
         private Menu buildContextMenuNode(IndSystemContentNode node) {
@@ -659,7 +663,7 @@ public class SystemStructurePanel extends HLayout {
             createMode = false;
             bindEvents();
         }
-        
+
         public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
             // Show/hide edit button depending on the selected indicators system
             mainFormLayout.getEditToolStripButton().setVisibility(Visibility.HIDDEN);
