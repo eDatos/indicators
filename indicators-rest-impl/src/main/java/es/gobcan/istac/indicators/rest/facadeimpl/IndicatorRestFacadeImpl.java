@@ -28,7 +28,7 @@ import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
 import es.gobcan.istac.indicators.rest.util.DataTypeUtil;
 
-@Service("indicatorRestFacadeImpl")
+@Service("indicatorRestFacade")
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
     protected Logger          logger                      = LoggerFactory.getLogger(getClass());

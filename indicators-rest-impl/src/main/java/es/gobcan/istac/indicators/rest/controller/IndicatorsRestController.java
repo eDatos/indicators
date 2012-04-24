@@ -1,10 +1,5 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-import java.net.URI;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriTemplate;
 
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
@@ -27,32 +20,19 @@ import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
-import es.gobcan.istac.indicators.rest.util.RESTURIUtil;
 
-@Controller("resourcesRestController")
-@RequestMapping("/api/indicators/v1.0/resources/*")
-public class ResourcesRestController extends AbstractRestController {
+@Controller("indicatorsRestController")
+@RequestMapping("/api/indicators/v1.0/indicators/*")
+public class IndicatorsRestController extends AbstractRestController {
 
     @Autowired
     private IndicatorRestFacade indicatorRestFacade = null;
-    
-    // API
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public final void adminRoot(final HttpServletRequest request, final HttpServletResponse response) {
-        final String rootUri = request.getRequestURL().toString();
 
-        final URI uriIndicators = new UriTemplate("{rootUri}{resource}/{indicators}").expand(rootUri, RestConstants.API_INDICATORS_RESOURCES, RestConstants.API_INDICATORS_INDICATORS);
-        final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
-
-        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicators));
-    }
-    
     /**
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/indicators", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorBaseType>> findIndicators(final UriComponentsBuilder uriComponentsBuilder,
                                                                              @RequestParam(required=false, value="limit") final Integer limit,
@@ -72,7 +52,7 @@ public class ResourcesRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/indicators/{indicatorCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{indicatorCode}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<IndicatorBaseType> retrieveIndicator(final UriComponentsBuilder uriComponentsBuilder,
                                                                @PathVariable("indicatorCode") final String indicatorCode) throws Exception {
@@ -88,7 +68,7 @@ public class ResourcesRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/indicators/{indicatorCode}/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/{indicatorCode}/data", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("indicatorCode") final String indicatorCode) throws Exception {

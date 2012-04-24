@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.rest.mapper;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -24,6 +26,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -44,6 +47,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.QuantityType;
+import es.gobcan.istac.indicators.rest.types.ThemeType;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -157,6 +161,59 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
+    }
+    
+    @Override
+    public MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity) {
+        MetadataGranularityType metadataGranularityType = new MetadataGranularityType();
+        metadataGranularityType.setCode(geographicalGranularity.getCode());
+        metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
+        return metadataGranularityType;
+    }
+    
+    @Override
+    public List<MetadataGranularityType> geographicalGranularityDoToType(List<GeographicalGranularity> geographicalGranularities) {
+        if (CollectionUtils.isEmpty(geographicalGranularities)) {
+            return null;
+        }
+        List<MetadataGranularityType> geographicalGranularityTypes = new ArrayList<MetadataGranularityType>(geographicalGranularities.size());
+        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
+            MetadataGranularityType metadataGranularityType = geographicalGranularityDoToType(geographicalGranularity);
+            geographicalGranularityTypes.add(metadataGranularityType);
+        }
+        return geographicalGranularityTypes;
+    }
+    
+    @Override
+    public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularityEnum> timeGranularities) {
+        if (CollectionUtils.isEmpty(timeGranularities)) {
+            return null;
+        }
+        List<MetadataGranularityType> timeGranularityTypes = new ArrayList<MetadataGranularityType>(timeGranularities.size());
+        for (TimeGranularityEnum timeGranularity : timeGranularities) {
+            MetadataGranularityType timeGranularityType = new MetadataGranularityType();
+            timeGranularityType.setCode(timeGranularity.name());
+            // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle())); // TODO PUT TITLE
+            timeGranularityTypes.add(timeGranularityType);
+        }
+        return timeGranularityTypes;
+    }
+    
+    @Override
+    public List<ThemeType> subjectDoToType(final List<Subject> subjects) {
+        if (CollectionUtils.isEmpty(subjects)) {
+            return null;
+        }
+        List<ThemeType> themeTypes = new ArrayList<ThemeType>(subjects.size());
+        for (Subject subject : subjects) {
+            ThemeType themeType = new ThemeType();
+            themeType.setCode(subject.getId());
+            Map<String, String> title = new LinkedHashMap<String, String>();
+            title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle());  // title only in spanish
+            themeType.setTitle(title);
+            themeTypes.add(themeType);
+        }
+        return themeTypes;
     }
     
     private QuantityType quantityDoToBaseType(final Quantity source, final String baseURL) {
@@ -323,7 +380,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         // geographicaDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
-        geographicaDimension.setGranularity(_geographicalGranulrityDoToType(geographicalGranularities));
+        geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
         geographicaDimension.setRepresentation(_geographicalValueDoToType(geographicalValues));
         return geographicaDimension;
     }
@@ -331,38 +388,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private MetadataDimensionType _createTimeDimension(List<TimeGranularityEnum> timeGranularities, List<String> timeValues) {
         MetadataDimensionType timeDimension = new MetadataDimensionType();
         timeDimension.setCode(IndicatorDataDimensionTypeEnum.TIME.name());
-        timeDimension.setGranularity(_timeGranularitiesDoToType(timeGranularities));
+        timeDimension.setGranularity(timeGranularityDoToType(timeGranularities));
         // timeDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
         timeDimension.setRepresentation(_timeValueDoToType(timeValues));
         return timeDimension;
-    }
-    
-    private List<MetadataGranularityType> _geographicalGranulrityDoToType(List<GeographicalGranularity> geographicalGranularities) {
-        if (CollectionUtils.isEmpty(geographicalGranularities)) {
-            return null;
-        }
-        List<MetadataGranularityType> geographicalGranularityTypes = new ArrayList<MetadataGranularityType>(geographicalGranularities.size());
-        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
-            MetadataGranularityType metadataGranularityType = new MetadataGranularityType();
-            metadataGranularityType.setCode(geographicalGranularity.getCode());
-            metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
-            geographicalGranularityTypes.add(metadataGranularityType);
-        }
-        return geographicalGranularityTypes;
-    }
-    
-    private List<MetadataGranularityType> _timeGranularitiesDoToType(List<TimeGranularityEnum> timeGranularities) {
-        if (CollectionUtils.isEmpty(timeGranularities)) {
-            return null;
-        }
-        List<MetadataGranularityType> timeGranularityTypes = new ArrayList<MetadataGranularityType>(timeGranularities.size());
-        for (TimeGranularityEnum timeGranularity : timeGranularities) {
-            MetadataGranularityType timeGranularityType = new MetadataGranularityType();
-            timeGranularityType.setCode(timeGranularity.name());
-            // timeGranularityType.setTitle(MapperUtil.getLocalisedLabel(timeGranularity.getTitle())); // TODO PUT TITLE
-            timeGranularityTypes.add(timeGranularityType);
-        }
-        return timeGranularityTypes;
     }
     
     private List<MetadataRepresentationType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
@@ -598,8 +627,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     
     private void _createUrlIndicators(UriComponentsBuilder uriComponentsBuilder) {
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_RESOURCES);
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS);
     }

@@ -26,11 +26,16 @@ public class IndicatorsDiscoveryRestController extends AbstractRestController {
         final String rootUri = request.getRequestURL().toString();
 
         final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
-        final URI uriResources = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_RESOURCES);
+        final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS);
+        final URI uriGeographicGranularities= new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
+        final URI uriThemes= new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_THEMES);
+        
         final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
-        final String linkToIndicators = RESTURIUtil.createLinkHeader(uriResources.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToGeographicGranularities = RESTURIUtil.createLinkHeader(uriGeographicGranularities.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToThemes = RESTURIUtil.createLinkHeader(uriThemes.toASCIIString(), RESTURIUtil.REL_COLLECTION);
 
-        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems, linkToIndicators));
+        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems, linkToIndicators, linkToGeographicGranularities, linkToThemes));
     }
 
 }

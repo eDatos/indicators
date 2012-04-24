@@ -20,10 +20,12 @@ public class RestConstants {
 
     public static String         API_SLASH                                = "/";
     public static String         API_INDICATORS_BASE                      = "/api/indicators/v1.0";
-    public static String         API_INDICATORS_RESOURCES                 = "resources";
     public static String         API_INDICATORS_INDICATORS                = "indicators";
-    public static String         API_INDICATORS_INDICATORS_DATA           = "data";
+    public static String         API_INDICATORS_GEOGRAPHIC_GRANULARITIES  = "geographicGranularities";
+    public static String         API_INDICATORS_THEMES                    = "themes";
     public static String         API_INDICATORS_INDICATORS_SYSTEMS        = "indicatorsSystems";
+    
+    public static String         API_INDICATORS_INDICATORS_DATA           = "data";    
     public static String         API_INDICATORS_INDICATORS_INSTANCES      = "indicatorsInstances";
     public static String         API_INDICATORS_INDICATORS_INSTANCES_DATA = "data";
 
