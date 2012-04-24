@@ -6,6 +6,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Provider;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
@@ -19,6 +20,7 @@ public interface IndicatorsWebGinjector extends Ginjector {
 
     PlaceManager getPlaceManager();
     EventBus getEventBus();
+    DispatchAsync getDispatchAsync();
 
     Provider<MainPagePresenter> getMainPagePresenter();
     AsyncProvider<SystemListPresenter> getSystemListPresenter();

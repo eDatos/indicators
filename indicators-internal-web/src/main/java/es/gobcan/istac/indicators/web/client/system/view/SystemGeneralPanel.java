@@ -161,6 +161,7 @@ public class SystemGeneralPanel extends VLayout {
 
     public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
         this.indicatorsSystemDto = indicatorSystemDto;
+        mainFormLayout.setIndicatorsSytemCode(indicatorSystemDto.getCode());
         mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
 
         // Identifiers

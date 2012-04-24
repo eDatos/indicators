@@ -8,6 +8,7 @@ import com.smartgwt.client.widgets.events.HasClickHandlers;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
 public class SystemMainFormLayout extends InternationalViewMainFormLayout {
 
@@ -19,6 +20,8 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
     private PublishToolStripButton         versioning;
 
     private IndicatorsSystemProcStatusEnum status;
+
+    private String                         indicatorsSystemCode;
 
     public SystemMainFormLayout() {
         productionValidation = new PublishToolStripButton(getConstants().indicatorSendToProductionValidation(), IndicatorsResources.RESOURCE.validateProduction().getURL());
@@ -45,20 +48,20 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         hideAllPublishButtons();
         // Show buttons depending on the status
         if (IndicatorsSystemProcStatusEnum.DRAFT.equals(status)) {
-            productionValidation.show();
+            showProductionValidationButton();
         } else if (IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
-            diffusionValidation.show();
-            rejectValidation.show();
+            showDiffusionValidationButton();
+            showRejectValidationButton();
         } else if (IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            publish.show();
-            rejectValidation.show();
+            showPublishButton();
+            showRejectValidationButton();
         } else if (IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-            productionValidation.show();
+            showProductionValidationButton();
         } else if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(status)) {
-            archive.show();
-            versioning.show();
+            showArchiveButton();
+            showVersioningButton();
         } else if (IndicatorsSystemProcStatusEnum.ARCHIVED.equals(status)) {
-            versioning.show();
+            showVersioningButton();
         }
     }
 
@@ -66,6 +69,10 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
     public void setViewMode() {
         super.setViewMode();
         updateVisibility();
+    }
+
+    public void setIndicatorsSytemCode(String code) {
+        this.indicatorsSystemCode = code;
     }
 
     public HasClickHandlers getProductionValidation() {
@@ -99,6 +106,48 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         publish.hide();
         archive.hide();
         versioning.hide();
+    }
+
+    private void showProductionValidationButton() {
+        if (ClientSecurityUtils.canSendIndicatorsSystemToProductionValidation(indicatorsSystemCode)) {
+            productionValidation.show();
+        }
+    }
+
+    private void showDiffusionValidationButton() {
+        if (ClientSecurityUtils.canSendIndicatorsSystemToDiffusionValidation(indicatorsSystemCode)) {
+            diffusionValidation.show();
+        }
+    }
+
+    private void showRejectValidationButton() {
+        if (IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+            if (ClientSecurityUtils.canRejectIndicatorsSystemProductionValidation(indicatorsSystemCode)) {
+                rejectValidation.show();
+            }
+        } else if (IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
+            if (ClientSecurityUtils.canRejectIndicatorsSystemDiffusionValidation(indicatorsSystemCode)) {
+                rejectValidation.show();
+            }
+        }
+    }
+
+    private void showPublishButton() {
+        if (ClientSecurityUtils.canPublishIndicatorsSystem(indicatorsSystemCode)) {
+            publish.show();
+        }
+    }
+
+    private void showArchiveButton() {
+        if (ClientSecurityUtils.canArchiveIndicatorsSystem(indicatorsSystemCode)) {
+            archive.show();
+        }
+    }
+
+    private void showVersioningButton() {
+        if (ClientSecurityUtils.canVersioningIndicatorsSystem(indicatorsSystemCode)) {
+            versioning.show();
+        }
     }
 
 }
