@@ -509,6 +509,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
                 getView().setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
+                retrieveSystemStructureNoCache(); // Force to load structure
             }
         });
     }
