@@ -15,6 +15,11 @@
             <ref bean="configurationService" />
         </property>
     </bean>
+    
+    <!-- Configure Externalized Logging configuration file -->
+	<bean id="loggingSetup" class="es.gobcan.istac.indicators.web.logging.LoggingSetup">
+		<property name="logConfigurationFile" value="file:/${environment.indicators.data}/conf/dynamic/logback-indicators-web.xml"/>
+	</bean>
 
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
