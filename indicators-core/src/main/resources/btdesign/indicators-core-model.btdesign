@@ -1020,6 +1020,7 @@ Application Indicators {
 			hint="idSequence=TRANSLATIONS"
 			!auditable
 			!optimisticLocking
+			gap
 			
 			"Id"
 			Long id not nullable key;
