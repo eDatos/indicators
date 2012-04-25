@@ -18,6 +18,9 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 
@@ -271,7 +274,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
 
-        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
+        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
         String[] expectedGranularities = new String[]{TimeGranularityEnum.MONTHLY.name(), TimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
@@ -283,7 +286,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
 
-        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
         String[] expectedGranularities = new String[]{TimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
@@ -295,7 +298,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
 
-        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
+        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
         String[] expectedGranularities = new String[]{TimeGranularityEnum.MONTHLY.name(), TimeGranularityEnum.YEARLY.name()};
         checkElementsInCollection(expectedGranularities, granularitiesCodes);
@@ -307,7 +310,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
         
-        List<TimeGranularityEnum> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
+        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
         String[] expectedCodes = new String[] {"MONTHLY"};
         checkElementsInCollection(expectedCodes, granularitiesCodes);    
@@ -321,16 +324,19 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
 
-        List<String> yearValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.YEARLY);
+        List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
-        List<String> monthValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.MONTHLY);
+        List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsInCollection(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<String> dayValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.DAILY);
+        List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
     }
@@ -341,17 +347,20 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
 
-        List<String> yearValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.YEARLY);
+        List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
         // NOT EXIST
-        List<String> monthValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.MONTHLY);
+        List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{};
         checkElementsInCollection(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<String> dayValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.DAILY);
+        List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
     }
@@ -362,16 +371,19 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
 
-        List<String> yearValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.YEARLY);
+        List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
-        List<String> monthValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.MONTHLY);
+        List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsInCollection(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<String> dayValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.DAILY);
+        List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
     }
@@ -385,9 +397,10 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
 
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
+        List<String> timeCodes = getTimeValuesCodes(timeValues);
         String[] expectedValues = new String[]{"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedValues, timeValues);
+        checkElementsInCollection(expectedValues, timeCodes);
     }
 
     @Test
@@ -396,9 +409,10 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
 
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<String> timeCodes = getTimeValuesCodes(timeValues);
         String[] expectedValues = new String[]{"2010"};
-        checkElementsInCollection(expectedValues, timeValues);
+        checkElementsInCollection(expectedValues, timeCodes);
     }
 
     @Test
@@ -407,9 +421,10 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
 
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
+        List<String> timeCodes = getTimeValuesCodes(timeValues);
         String[] expectedValues = new String[]{"2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedValues, timeValues);
+        checkElementsInCollection(expectedValues, timeCodes);
     }
 
     @Test
@@ -418,9 +433,10 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
         
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
+        List<String> timeCodes = getTimeValuesCodes(timeValues);
         String[] expectedCodes = new String[] {"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedCodes, timeValues);    
+        checkElementsInCollection(expectedCodes, timeCodes);    
     }
 
     /* MEASURE VALUES */
@@ -431,7 +447,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
 
-        List<MeasureDimensionTypeEnum> measures = indicatorsDataService.retrieveMeasureValuesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
+        List<MeasureValue> measures = indicatorsDataService.retrieveMeasureValuesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION);
         List<String> measuresNames = getMeasureNames(measures);
         String[] expectedMeasures = new String[]{MeasureDimensionTypeEnum.ABSOLUTE.name()};
         checkElementsInCollection(expectedMeasures, measuresNames);
@@ -443,7 +459,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
 
-        List<MeasureDimensionTypeEnum> measures = indicatorsDataService.retrieveMeasureValuesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        List<MeasureValue> measures = indicatorsDataService.retrieveMeasureValuesInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
         List<String> measuresNames = getMeasureNames(measures);
         String[] expectedMeasures = new String[]{MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name()};
         checkElementsInCollection(expectedMeasures, measuresNames);
@@ -455,7 +471,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
 
-        List<MeasureDimensionTypeEnum> measures = indicatorsDataService.retrieveMeasureValuesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
+        List<MeasureValue> measures = indicatorsDataService.retrieveMeasureValuesInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID);
         List<String> measuresNames = getMeasureNames(measures);
         String[] expectedMeasures = new String[]{MeasureDimensionTypeEnum.ABSOLUTE.name()};
         checkElementsInCollection(expectedMeasures, measuresNames);
@@ -467,7 +483,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
         
-        List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> measuresNames = getMeasureNames(measureValues);
         String[] expectedMeasures = new String[]{MeasureDimensionTypeEnum.ABSOLUTE.name()};
         checkElementsInCollection(expectedMeasures, measuresNames);   

@@ -50,7 +50,10 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
@@ -367,7 +370,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /* Time granularities and values */
     
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicator(indicatorUuid, indicatorVersionNumber, null);
         
@@ -376,7 +379,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorPublished(indicatorUuid, null);
         
@@ -384,17 +387,22 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return calculateTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
     }
 
-    private List<TimeGranularityEnum> calculateTimeGranularitiesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeGranularity> calculateTimeGranularitiesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                Set<TimeGranularityEnum> timeGranularitiesInIndicator = new HashSet<TimeGranularityEnum>();
+                Set<TimeGranularityEnum> timeGranularitiesEnumInIndicator = new HashSet<TimeGranularityEnum>();
                 List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
                 for (String timeCode : timeCodesInIndicator) {
                     TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(timeCode);
-                    timeGranularitiesInIndicator.add(guessedGranularity);
+                    timeGranularitiesEnumInIndicator.add(guessedGranularity);
                 }
-                return new ArrayList<TimeGranularityEnum>(timeGranularitiesInIndicator);
+                List<TimeGranularity> timeGranularitiesInIndicator = new ArrayList<TimeGranularity>();
+                for (TimeGranularityEnum timeGranularityEnum : timeGranularitiesEnumInIndicator) {
+                    TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, timeGranularityEnum);
+                    timeGranularitiesInIndicator.add(timeGranularity);
+                }
+                return new ArrayList<TimeGranularity>(timeGranularitiesInIndicator);
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
             }
@@ -404,49 +412,53 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
         
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         
         if (indInstance.getTimeValue() != null) {
-            return Arrays.asList(TimeVariableUtils.guessTimeGranularity(indInstance.getTimeValue()));
+            TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(indInstance.getTimeValue());
+            TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, guessedGranularity);
+            return Arrays.asList(timeGranularity);
         } else if (indInstance.getTimeGranularity() != null) {
-            return Arrays.asList(indInstance.getTimeGranularity());
+            TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, indInstance.getTimeGranularity());
+            return Arrays.asList(timeGranularity);
         } else {
             return retrieveTimeGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
     }
     
     @Override
-    public List<String> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
         
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid,indicatorVersionNumber);
-        return calculateTimeValuesByGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
     }
     
     @Override
-    public List<String> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorPublished(indicatorUuid, granularity, null);
         
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return calculateTimeValuesByGranularityInIndicatorVersion(granularity, indicatorVersion);
+        return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
     }
 
-    private List<String> calculateTimeValuesByGranularityInIndicatorVersion(TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> calculateTimeValuesByGranularityInIndicatorVersion(ServiceContext ctx, TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<String> timeValuesInIndicator = new ArrayList<String>();
+                List<TimeValue> timeValuesInIndicator = new ArrayList<TimeValue>();
                 List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
                 for (String timeCode : timeCodesInIndicator) {
                     TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(timeCode);
                     if (granularity.equals(guessedGranularity)) {
-                        timeValuesInIndicator.add(timeCode);
+                        TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, timeCode);
+                        timeValuesInIndicator.add(timeValue);
                     }
                 }
                 return timeValuesInIndicator;
@@ -459,34 +471,36 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     @Override
-    public List<String> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
         
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return calculateTimeValuesInIndicatorVersion(indicatorVersion);
+        return calculateTimeValuesInIndicatorVersion(ctx, indicatorVersion);
     }   
     
     @Override
-    public List<String> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicatorPublished(indicatorUuid, null);
         
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return calculateTimeValuesInIndicatorVersion(indicatorVersion);
+        return calculateTimeValuesInIndicatorVersion(ctx, indicatorVersion);
     }
 
-    private List<String> calculateTimeValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<TimeValue> calculateTimeValuesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<String> timeValuesInIndicator = new ArrayList<String>();
+                List<TimeValue> timeValuesInIndicator = new ArrayList<TimeValue>();
                 List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
                 for (String timeCode : timeCodesInIndicator) {
                     if (TimeVariableUtils.isTimeValue(timeCode)) {
-                        timeValuesInIndicator.add(timeCode);
+                        TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, timeCode);
+                        timeValuesInIndicator.add(timeValue);
                     }
                 }
+                
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
@@ -497,13 +511,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public List<String> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<TimeValue> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicatorInstance(indicatorInstanceUuid, null);
         
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         if (indInstance.getTimeValue() != null) {
-            return Arrays.asList(indInstance.getTimeValue());
+            TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, indInstance.getTimeValue());
+            return Arrays.asList(timeValue);
         } else if (indInstance.getTimeGranularity() != null) {
             return retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getTimeGranularity());
         } else {
@@ -512,41 +527,42 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<MeasureValue> retrieveMeasureValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
         
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        return calculateMeasureValuesInIndicatorVersion(indicatorVersion);
+        return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
     
     
     @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<MeasureValue> retrieveMeasureValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         //Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicatorPublished(indicatorUuid, null);
         
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
-        return calculateMeasureValuesInIndicatorVersion(indicatorVersion);
+        return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
     
     @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         //  Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicatorInstance(indicatorInstanceUuid, null);
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
-        return calculateMeasureValuesInIndicatorVersion(indicatorVersion);
+        return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
     
-    private List<MeasureDimensionTypeEnum> calculateMeasureValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
+    private List<MeasureValue> calculateMeasureValuesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<MeasureDimensionTypeEnum> measureValuesInIndicator = new ArrayList<MeasureDimensionTypeEnum>();
+                List<MeasureValue> measureValuesInIndicator = new ArrayList<MeasureValue>();
                 List<String> measureCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.MEASURE);
                 for (String measureCode : measureCodesInIndicator) {
-                    MeasureDimensionTypeEnum measureValue = MeasureDimensionTypeEnum.valueOf(measureCode);
+                    MeasureDimensionTypeEnum measureDimValue = MeasureDimensionTypeEnum.valueOf(measureCode);
+                    MeasureValue measureValue = getIndicatorsSystemsService().retrieveMeasureValue(ctx, measureDimValue);
                     measureValuesInIndicator.add(measureValue);
                 }
                 return measureValuesInIndicator;
@@ -588,7 +604,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-        List<String> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        List<TimeValue> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
 
         List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
@@ -605,7 +621,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-        List<String> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        List<TimeValue> timeValues = retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
 
         List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
@@ -621,7 +637,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
-    private List<ConditionDimensionDto> filterConditionsByValues(List<ConditionDimensionDto> conditions, List<GeographicalValue> geoValues, List<String> timeValues) {
+    private List<ConditionDimensionDto> filterConditionsByValues(List<ConditionDimensionDto> conditions, List<GeographicalValue> geoValues, List<TimeValue> timeValues) {
         List<ConditionDimensionDto> rawConditions = new ArrayList<ConditionDimensionDto>(); 
         if (conditions != null) {
             rawConditions = conditions;
@@ -641,9 +657,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 newCondition.setCodesDimension(newCodeDims);
             } else if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(condition.getDimensionId())) {
                 List<String> newCodeDims = new ArrayList<String>();
-                for (String timeVal : timeValues) {
-                    if (condition.getCodesDimension().contains(timeVal)) {
-                        newCodeDims.add(timeVal);
+                for (TimeValue timeVal : timeValues) {
+                    if (condition.getCodesDimension().contains(timeVal.getTimeValue())) {
+                        newCodeDims.add(timeVal.getTimeValue());
                     }
                 }
                 newCondition.setCodesDimension(newCodeDims);

@@ -75,6 +75,9 @@ Application Indicators {
 
 	    	// Time granularities
 	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
+	    	
+	    	// Measure value
+	    	MeasureValue retrieveMeasureValue(@MeasureDimensionTypeEnum measureValue) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -127,6 +130,7 @@ Application Indicators {
     	Service IndicatorsDataService {
     		> @IndicatorsDataProviderService
     		> @IndicatorsConfigurationService
+    		> @IndicatorsSystemsService
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
     		> @DataGpeRepository
@@ -165,29 +169,29 @@ Application Indicators {
 	    	
 	    	//Time Values and granularities related to Indicator data
 	    	"Retrieves time granularities in the indicator"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time granularities in the published indicator"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<TimeGranularity> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time granularities in the indicator instance"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	"Retrieves time values granularities in the indicator"
-	    	List<String> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
-	    	List<String> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values in the indicator"
-	    	List<String> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time values in the publidhed indicator"
-	    	List<String> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time values in the indicator instance"
-	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<TimeValue> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	//Measure values
 	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<MeasureValue> retrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<MeasureValue> retrieveMeasureValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	//Data finders
 	    	"Find Published Indicator's Observations by dimensions"
@@ -322,33 +326,25 @@ Application Indicators {
 	    	"Retrieves time granularity"
 	    	@TimeGranularityDto retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	"Retrieves time granularities in the indicator"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<@TimeGranularityDto> retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time granularities in the published indicator"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<@TimeGranularityDto> retrieveTimeGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time granularities in the indicator instance"
-	    	List<@TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<@TimeGranularityDto> retrieveTimeGranularitiesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 	    	
 	    	// TIME VALUES
 	    	"Retrieves time value"
 	    	@TimeValueDto retrieveTimeValue(String timeValue) throws MetamacException;
 	    	"Retrieves time values granularities in the indicator"
-	    	List<String> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
-	    	List<String> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values in the indicator"
-	    	List<String> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time values in the publidhed indicator"
-	    	List<String> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves time values in the indicator instance"
-	    	List<String> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
-	    	
-	    	// MEASURE VALUES
-	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
-	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
-	    	"Retrieves measure values in indicator instance"
-	    	List<@MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	List<@TimeValueDto> retrieveTimeValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
 
 	    	// INDICATORS
 	    	"Creates an indicator"

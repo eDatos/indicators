@@ -19,4 +19,6 @@ public class IndicatorsConstants {
     public static final String TRANSLATION_MONTH_IN_LABEL       = "{MM}";
     public static final String TRANSLATION_WEEK_IN_LABEL        = "{ww}";
     public static final String TRANSLATION_DAY_IN_LABEL         = "{dd}";
+    //Measure translations
+    public static final String TRANSLATION_MEASURE_DIMENSION    = "MEASURE_DIMENSION";
 }

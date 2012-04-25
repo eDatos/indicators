@@ -46,7 +46,6 @@ import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -783,120 +782,146 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<TimeGranularityEnum> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-        return timeGranularities;
+        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        
+        //Transform
+        List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
+        for (TimeGranularity granularity : timeGranularities) {
+            TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(granularity);
+            timeGranularitiesDtos.add(timeGranularityDto);
+        }
+        return timeGranularitiesDtos;
     }
 
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        List<TimeGranularityEnum> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorUuid);
-        return timeGranularities;
+        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorUuid);
+        
+        //Transform
+        List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
+        for (TimeGranularity granularity : timeGranularities) {
+            TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(granularity);
+            timeGranularitiesDtos.add(timeGranularityDto);
+        }
+        return timeGranularitiesDtos;
     }
     
     @Override
-    public List<TimeGranularityEnum> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
         
         // Retrieve
-        List<TimeGranularityEnum> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorInstanceUuid);
-        return timeGranularities;
-    }
-
-    @Override
-    public List<String> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
-        return timeValues;
-    }
-
-    @Override
-    public List<String> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
-        return timeValues;
-    }
-
-    @Override
-    public List<String> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-        return timeValues;
-    }
-
-    @Override
-    public List<String> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorPublished(ctx, indicatorUuid);
-        return timeValues;
-    }
-
-    @Override
-    public List<String> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<String> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-        return timeValues;
-    }
-    
-    @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorInstanceUuid);
         
-        // Retrieve
-        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
-        return measureValues;
+        //Transform
+        List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
+        for (TimeGranularity granularity : timeGranularities) {
+            TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(granularity);
+            timeGranularitiesDtos.add(timeGranularityDto);
+        }
+        return timeGranularitiesDtos;
     }
-    
+
     @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+    public List<TimeValueDto> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
+
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-        
+
         // Retrieve
-        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicatorPublished(ctx, indicatorUuid);
-        return measureValues;
+        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicator(ctx, indicatorUuid, indicatorVersionNumber, granularity);
+        
+        //Transform
+        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
+        for (TimeValue timeValue: timeValues) {
+            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
+            timeValuesDtos.add(timeValueDto);
+        }
+        return timeValuesDtos;
     }
-    
+
     @Override
-    public List<MeasureDimensionTypeEnum> retrieveMeasureValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+    public List<TimeValueDto> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
+
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-        
+
         // Retrieve
-        List<MeasureDimensionTypeEnum> measureValues = getIndicatorsDataService().retrieveMeasureValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-        return measureValues;
+        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesByGranularityInIndicatorPublished(ctx, indicatorUuid, granularity);
+
+        //Transform
+        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
+        for (TimeValue timeValue: timeValues) {
+            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
+            timeValuesDtos.add(timeValueDto);
+        }
+        return timeValuesDtos;
+    }
+
+    @Override
+    public List<TimeValueDto> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicator(ctx, indicatorUuid, indicatorVersionNumber);
+        
+        //Transform
+        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
+        for (TimeValue timeValue: timeValues) {
+            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
+            timeValuesDtos.add(timeValueDto);
+        }
+        return timeValuesDtos;
+    }
+
+    @Override
+    public List<TimeValueDto> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorPublished(ctx, indicatorUuid);
+        
+        //Transform
+        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
+        for (TimeValue timeValue: timeValues) {
+            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
+            timeValuesDtos.add(timeValueDto);
+        }
+        return timeValuesDtos;
+    }
+
+    @Override
+    public List<TimeValueDto> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
+        
+        //Transform
+        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
+        for (TimeValue timeValue: timeValues) {
+            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
+            timeValuesDtos.add(timeValueDto);
+        }
+        return timeValuesDtos;
     }
 
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {

@@ -21,6 +21,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -694,6 +695,17 @@ public class InvocationValidator {
         }
 
         ValidationUtils.checkParameterRequired(timeGranularity, ServiceExceptionParameters.TIME_GRANULARITY, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+    
+    public static void checkRetrieveMeasureValue(MeasureDimensionTypeEnum measureValue, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(measureValue, ServiceExceptionParameters.MEASURE_VALUE, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

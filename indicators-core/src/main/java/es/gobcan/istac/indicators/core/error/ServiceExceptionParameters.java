@@ -165,4 +165,5 @@ public class ServiceExceptionParameters {
     public static final String GEOGRAPHICAL_GRANULARITY_UUID                                                 = "geographical_granularity.uuid";
     public static final String TIME_VALUE                                                                    = "time_value";
     public static final String TIME_GRANULARITY                                                              = "time_granularity";
+    public static final String MEASURE_VALUE                                                                 = "measure_value";
 }

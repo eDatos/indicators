@@ -46,9 +46,11 @@ import com.arte.statistic.dataset.repository.util.DtoUtils;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
@@ -217,24 +219,35 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return codes;
     }
     
-    protected List<String> getTimeGranularitiesNames(List<TimeGranularityEnum> granularities) {
+    protected List<String> getTimeGranularitiesNames(List<TimeGranularity> granularities) {
         if (granularities == null) {
             return null;
         }
         List<String> codes = new ArrayList<String>();
-        for (TimeGranularityEnum granularity : granularities) {
-            codes.add(granularity.getName());
+        for (TimeGranularity granularity : granularities) {
+            codes.add(granularity.getGranularity().name());
         }
         return codes;
     }
     
-    protected List<String> getMeasureNames(List<MeasureDimensionTypeEnum> measures) {
+    protected List<String> getTimeValuesCodes(List<TimeValue> timeValues) {
+        if (timeValues == null) {
+            return null;
+        }
+        List<String> codes = new ArrayList<String>();
+        for (TimeValue timeValue : timeValues) {
+            codes.add(timeValue.getTimeValue());
+        }
+        return codes;
+    }
+    
+    protected List<String> getMeasureNames(List<MeasureValue> measures) {
         if (measures == null) {
             return null;
         }
         List<String> codes = new ArrayList<String>();
-        for (MeasureDimensionTypeEnum measure : measures) {
-            codes.add(measure.getName());
+        for (MeasureValue measure : measures) {
+            codes.add(measure.getMeasureValue().name());
         }
         return codes;
     }

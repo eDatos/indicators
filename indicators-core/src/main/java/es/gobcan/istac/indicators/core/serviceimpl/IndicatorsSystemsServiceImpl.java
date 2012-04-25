@@ -31,10 +31,12 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionProperties;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.Translation;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
@@ -795,6 +797,42 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return timeGranularityDo;
     }
+    
+    @Override
+    public MeasureValue retrieveMeasureValue(ServiceContext ctx, MeasureDimensionTypeEnum measureValue) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkRetrieveMeasureValue(measureValue, null);
+        
+        MeasureValue measureValueDo = new MeasureValue();
+        measureValueDo.setMeasureValue(measureValue);
+        
+        // Translate
+        String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureValue.name()).toString();
+        Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+        if (translation == null || translation.getTitle() == null) {
+            InternationalString title = new InternationalString();
+            String measureValueCode = measureValue.getName();
+            LocalisedString localisedStringEs = new LocalisedString();
+            localisedStringEs.setLabel(measureValueCode);
+            localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            title.addText(localisedStringEs);
+            LocalisedString localisedStringEn = new LocalisedString();
+            localisedStringEn.setLabel(measureValueCode);
+            localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
+            title.addText(localisedStringEn);
+            measureValueDo.setTitle(title);            
+            measureValueDo.setTitleSummary(measureValueDo.getTitle());
+        } else {
+            measureValueDo.setTitle(translateTimeGranularity(translation.getTitle()));
+            if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
+                measureValueDo.setTitleSummary(translateMeasureValue(translation.getTitleSummary()));
+            } else {
+                measureValueDo.setTitleSummary(measureValueDo.getTitle());
+            }
+        }
+        return measureValueDo;
+    }
 
     /**
      * Checks not exists another indicators system with same code
@@ -1306,6 +1344,17 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
     
     private InternationalString translateTimeGranularity(InternationalString sourceTranslation) {
+        InternationalString target = new InternationalString();
+        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(localisedStringTranslation.getLabel());
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            target.addText(localisedString);
+        }
+        return target;
+    }
+    
+    private InternationalString translateMeasureValue(InternationalString sourceTranslation) {
         InternationalString target = new InternationalString();
         for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
             LocalisedString localisedString = new LocalisedString();
