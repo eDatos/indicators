@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -51,5 +53,21 @@ public class ServiceUtils {
             return null;
         }
         return Arrays.asList(org.apache.commons.lang.StringUtils.split(source, SEPARATOR_LIST_DTO_TO_STRING_DO));
+    }
+    
+    public static InternationalString generateInternationalStringInDefaultLocales(String label) {
+        InternationalString target = new InternationalString();
+        
+        LocalisedString localisedStringEs = new LocalisedString();
+        localisedStringEs.setLabel(label);
+        localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+        target.addText(localisedStringEs);
+        
+        LocalisedString localisedStringEn = new LocalisedString();
+        localisedStringEn.setLabel(label);
+        localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
+        target.addText(localisedStringEn);
+        
+        return target;
     }
 }

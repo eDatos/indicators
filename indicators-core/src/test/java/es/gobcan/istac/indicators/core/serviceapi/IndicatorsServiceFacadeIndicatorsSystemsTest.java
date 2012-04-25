@@ -2420,25 +2420,25 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     @Test
     public void testUpdateDimensionErrorOptimisticLocking() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
-        
+
         DimensionDto dimensionDtoSession1 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dimensionDtoSession1.getVersionOptimisticLocking());
         dimensionDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
-        
+
         DimensionDto dimensionDtoSession2 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dimensionDtoSession2.getVersionOptimisticLocking());
         dimensionDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
-        
+
         // Update by session 1
         DimensionDto dimensionDtoSession1AfterUpdate = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1);
         assertTrue(dimensionDtoSession1AfterUpdate.getVersionOptimisticLocking() > dimensionDtoSession1.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsDimension(dimensionDtoSession1, dimensionDtoSession1AfterUpdate);
-        
+
         // Fails when is updated by session 2
         try {
             indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession2);
@@ -2447,8 +2447,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
             assertNull(e.getExceptionItems().get(0).getMessageParameters());
-        }   
-        
+        }
+
         // Session 1 can modify because has last version
         dimensionDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
         DimensionDto dimensionDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1AfterUpdate);
@@ -3420,20 +3420,20 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testUpdateIndicatorInstanceErrorOptimisticLocking() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
-        
+
         IndicatorInstanceDto indicatorInstanceDtoSession1 = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), indicatorInstanceDtoSession1.getVersionOptimisticLocking());
         indicatorInstanceDtoSession1.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_2);
-        
+
         IndicatorInstanceDto indicatorInstanceDtoSession2 = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), indicatorInstanceDtoSession2.getVersionOptimisticLocking());
         indicatorInstanceDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
-        
+
         // Update by session 1
         IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1);
         assertTrue(indicatorInstanceDtoSession1AfterUpdate.getVersionOptimisticLocking() > indicatorInstanceDtoSession1.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDtoSession1, indicatorInstanceDtoSession1AfterUpdate);
-        
+
         // Fails when is updated by session 2
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession2);
@@ -3442,15 +3442,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
             assertNull(e.getExceptionItems().get(0).getMessageParameters());
-        }   
-        
+        }
+
         // Session 1 can modify because has last version
         indicatorInstanceDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
         IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1AfterUpdate);
         assertTrue(indicatorInstanceDtoSession1AfterUpdate2.getVersionOptimisticLocking() > indicatorInstanceDtoSession1AfterUpdate.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDtoSession1AfterUpdate, indicatorInstanceDtoSession1AfterUpdate2);
     }
-    
+
     @Test
     public void testUpdateIndicatorInstanceLocation() throws Exception {
         // In other test testUpdateIndicatorInstanceLocation*
@@ -4208,11 +4208,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Monthly", "es", "Mensual");
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Monthly", "es", "Mensual");
         }
-        {
-            TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.DAILY);
-            assertEquals(TimeGranularityEnum.DAILY, timeGranularityDto.getGranularity());
-            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Daily", "es", "Diario");
-        }
+    }
+
+    @Test
+    public void testRetrieveTimeGranularityWithoutTranslation() throws Exception {
+        TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.DAILY);
+        assertEquals(TimeGranularityEnum.DAILY, timeGranularityDto.getGranularity());
+        IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "DAILY", "es", "DAILY");
     }
 
     @Test
@@ -4243,14 +4245,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 First semester", "es", "2011 Primer semestre");
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2011 1S", "es", "2011 1Sem");
         }
-        {
-            String biyearly = "2012H2";
-            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
-            assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
-            assertEquals(biyearly, timeValueDto.getTimeValue());
-            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
-            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
-        }
+        // Test without translation
+        // {
+        // String biyearly = "2012H2";
+        // TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
+        // assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
+        // assertEquals(biyearly, timeValueDto.getTimeValue());
+        // IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
+        // IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
+        // }
         // Quaterly
         {
             String quaterly = "1999Q1";
@@ -4281,7 +4284,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(quaterly, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Fourth quarter", "es", "2012 Cuarto cuatrimestre");
         }
-        
+
         // Monthly
         {
             String month = "2012M01";
@@ -4312,7 +4315,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(month, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "1999 December", "es", "1999 Diciembre");
         }
-        
+
         // Week
         {
             String week = "2012W01";
@@ -4329,7 +4332,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(week, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 Week 52", "es", "2011 Semana 52");
         }
-        
+
         // Daily
         {
             String day = "20120101";
@@ -4339,6 +4342,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "01/01/2012", "es", "01/01/2012");
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "01/01/2012", "es", "01/01/2012");
         }
+    }
+
+    @Test
+    public void testRetrieveTimeValueWithoutTranslation() throws Exception {
+        String biyearly = "2012H2";
+        TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
+        assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
+        assertEquals(biyearly, timeValueDto.getTimeValue());
+        IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012H2", "es", "2012H2");
+        IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012H2", "es", "2012H2");
     }
 
     @Override
