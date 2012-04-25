@@ -1240,6 +1240,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(uuidLinked, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
     }
+
     @Test
     public void testUpdateIndicator() throws Exception {
 
@@ -1478,6 +1479,42 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.INDICATOR_QUANTITY_NUMERATOR_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+
+    @Test
+    public void testUpdateIndicatorErrorOptimisticLocking() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDtoSession1 = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(Long.valueOf(1), indicatorDtoSession1.getVersionOptimisticLocking());
+        indicatorDtoSession1.setCommentsUrl("newUrl");
+
+        IndicatorDto indicatorDtoSession2 = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(Long.valueOf(1), indicatorDtoSession2.getVersionOptimisticLocking());
+        indicatorDtoSession2.setCommentsUrl("newUrl2");
+
+        // Update by session 1
+        IndicatorDto indicatorDtoSession1AfterUpdate = indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDtoSession1);
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDtoSession1, indicatorDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(2), indicatorDtoSession1AfterUpdate.getVersionOptimisticLocking());
+
+        // Fails when is updated by session 2
+        try {
+            indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDtoSession2);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }
+
+        // Session 1 can modify because has last version
+        indicatorDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        IndicatorDto indicatorDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(3), indicatorDtoSession1AfterUpdate2.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDtoSession1AfterUpdate, indicatorDtoSession1AfterUpdate2);
     }
 
     @Test
@@ -3651,6 +3688,41 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+
+    @Test
+    public void testUpdateDataSourceErrorOptimisticLocking() throws Exception {
+
+        String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
+
+        DataSourceDto dataSourceDtoSession1 = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), dataSourceDtoSession1.getVersionOptimisticLocking());
+        dataSourceDtoSession1.setPxUri("newPx");
+
+        DataSourceDto dataSourceDtoSession2 = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), dataSourceDtoSession2.getVersionOptimisticLocking());
+        dataSourceDtoSession2.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalString());
+
+        // Update by session 2
+        DataSourceDto dataSourceDtoSession2AfterUpdate = indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDtoSession2);
+        assertEquals(Long.valueOf(2), dataSourceDtoSession2AfterUpdate.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDtoSession2, dataSourceDtoSession2AfterUpdate);
+
+        // Fails when is updated by session 1
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDtoSession1);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }
+
+        // Session 2 can modify because has last version
+        dataSourceDtoSession2AfterUpdate.setDataGpeUuid("dataGpeNewUuid");
+        DataSourceDto dataSourceDtoSession2AfterUpdate2 = indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDtoSession2AfterUpdate);
+        assertEquals(Long.valueOf(3), dataSourceDtoSession2AfterUpdate2.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDtoSession2AfterUpdate, dataSourceDtoSession2AfterUpdate2);
     }
 
     @Test

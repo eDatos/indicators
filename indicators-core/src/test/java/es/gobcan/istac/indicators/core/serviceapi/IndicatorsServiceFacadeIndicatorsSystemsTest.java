@@ -2420,6 +2420,41 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+    @Test
+    public void testUpdateDimensionErrorOptimisticLocking() throws Exception {
+
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        
+        DimensionDto dimensionDtoSession1 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), dimensionDtoSession1.getVersionOptimisticLocking());
+        dimensionDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        DimensionDto dimensionDtoSession2 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), dimensionDtoSession2.getVersionOptimisticLocking());
+        dimensionDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        // Update by session 1
+        DimensionDto dimensionDtoSession1AfterUpdate = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1);
+        assertTrue(dimensionDtoSession1AfterUpdate.getVersionOptimisticLocking() > dimensionDtoSession1.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsDimension(dimensionDtoSession1, dimensionDtoSession1AfterUpdate);
+        
+        // Fails when is updated by session 2
+        try {
+            indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession2);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }   
+        
+        // Session 1 can modify because has last version
+        dimensionDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        DimensionDto dimensionDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1AfterUpdate);
+        assertTrue(dimensionDtoSession1AfterUpdate2.getVersionOptimisticLocking() > dimensionDtoSession1AfterUpdate.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsDimension(dimensionDtoSession1AfterUpdate, dimensionDtoSession1AfterUpdate2);
+    }
 
     @Test
     public void testUpdateDimensionLocation() throws Exception {
@@ -3381,6 +3416,41 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
     }
 
+    @Test
+    public void testUpdateIndicatorInstanceErrorOptimisticLocking() throws Exception {
+
+        String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
+        
+        IndicatorInstanceDto indicatorInstanceDtoSession1 = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), indicatorInstanceDtoSession1.getVersionOptimisticLocking());
+        indicatorInstanceDtoSession1.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_2);
+        
+        IndicatorInstanceDto indicatorInstanceDtoSession2 = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), indicatorInstanceDtoSession2.getVersionOptimisticLocking());
+        indicatorInstanceDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
+        
+        // Update by session 1
+        IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1);
+        assertTrue(indicatorInstanceDtoSession1AfterUpdate.getVersionOptimisticLocking() > indicatorInstanceDtoSession1.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDtoSession1, indicatorInstanceDtoSession1AfterUpdate);
+        
+        // Fails when is updated by session 2
+        try {
+            indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession2);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }   
+        
+        // Session 1 can modify because has last version
+        indicatorInstanceDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1AfterUpdate);
+        assertTrue(indicatorInstanceDtoSession1AfterUpdate2.getVersionOptimisticLocking() > indicatorInstanceDtoSession1AfterUpdate.getVersionOptimisticLocking());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDtoSession1AfterUpdate, indicatorInstanceDtoSession1AfterUpdate2);
+    }
+    
     @Test
     public void testUpdateIndicatorInstanceLocation() throws Exception {
         // In other test testUpdateIndicatorInstanceLocation*

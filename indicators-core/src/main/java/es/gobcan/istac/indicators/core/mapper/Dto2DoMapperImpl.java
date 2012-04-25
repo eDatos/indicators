@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -56,7 +57,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
     @Autowired
     private IndicatorsService             indicatorsService;
-    
+
     @Autowired
     private InternationalStringRepository internationalStringRepository;
 
@@ -65,7 +66,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
     @Override
     public IndicatorsSystemVersion indicatorsSystemDtoToDo(ServiceContext ctx, IndicatorsSystemDto source) throws MetamacException {
-        
+
         if (source == null) {
             return null;
         }
@@ -75,10 +76,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source.getUuid() != null) {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Indicators system can be updated");
         }
-        
+
         target = new IndicatorsSystemVersion();
         target.setIndicatorsSystem(new IndicatorsSystem());
-        target.getIndicatorsSystem().setCode(source.getCode());        // non modifiable after creation
+        target.getIndicatorsSystem().setCode(source.getCode()); // non modifiable after creation
 
         return target;
     }
@@ -99,6 +100,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setDimension(target);
         } else {
             target = indicatorsSystemsService.retrieveDimension(ctx, source.getUuid());
+            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
@@ -107,6 +109,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
+
+        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.DIMENSION_TITLE));
@@ -137,6 +142,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setDimension(null);
         } else {
             target = indicatorsSystemsService.retrieveIndicatorInstance(ctx, source.getUuid());
+            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable (these metadatas are modified in specific operation)
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
@@ -146,6 +152,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
+
+        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE));
@@ -192,16 +201,21 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getIndicator().setCode(source.getCode());
         } else {
             target = indicatorsService.retrieveIndicator(ctx, source.getUuid(), source.getVersionNumber());
+            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
             // These attributes are modified by service, not by user
             ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryId(), source.getDataRepositoryId(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_ID, exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_TABLE_NAME, exceptions);
-            
+            ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_TABLE_NAME,
+                    exceptions);
+
             ExceptionUtils.throwIfException(exceptions);
         }
+
+        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        target.setUpdateDate(new DateTime());
 
         // Attributes modifiables
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
@@ -215,7 +229,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
             Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
-            if (source.getSubjectTitle() != null && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getTitle().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
+            if (source.getSubjectTitle() != null
+                    && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getTitle().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
                 throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE);
             }
             target.setSubjectCode(source.getSubjectCode());
@@ -243,11 +258,11 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target = new DataSource();
         } else {
             target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
-
-            // Metadata unmodifiable
-            List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-            ExceptionUtils.throwIfException(exceptions);
+            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
         }
+
+        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
         target.setDataGpeUuid(source.getDataGpeUuid());
@@ -266,7 +281,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setSourceSurveyAcronym(internationalStringToDo(ctx, source.getSourceSurveyAcronym(), target.getSourceSurveyAcronym(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_ACRONYM));
         target.setSourceSurveyUrl(source.getSourceSurveyUrl());
         target.setPublishers(ServiceUtils.dtoList2DtoString(source.getPublishers()));
-        
+
         // Related entities
         target.setAnnualPuntualRate(rateDerivationDtoToDo(ctx, source.getAnnualPuntualRate(), target.getAnnualPuntualRate()));
         target.setAnnualPercentageRate(rateDerivationDtoToDo(ctx, source.getAnnualPercentageRate(), target.getAnnualPercentageRate()));
@@ -279,7 +294,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         return target;
     }
-    
+
     @Override
     public Data dataDtoToDo(ServiceContext ctx, DataDto source) {
         Data target = new Data();
@@ -453,5 +468,12 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         return target;
+    }
+
+    private void checkOptimisticLocking(Long versionDo, Long versionDto) throws MetamacException {
+        if (!versionDo.equals(versionDto)) { // TODO
+            // if (versionDto < versionDo) { // TODO
+            throw new MetamacException(ServiceExceptionType.OPTIMISTIC_LOCKING);
+        }
     }
 }

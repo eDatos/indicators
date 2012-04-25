@@ -106,6 +106,8 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setVersionOptimisticLocking(source.getVersion());
+
         return target;
     }
 
@@ -127,6 +129,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setVersionOptimisticLocking(source.getVersion());
         return target;
     }
 
@@ -163,7 +166,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setInconsistentData(source.getInconsistentData());
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
-        
+
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());
         target.setDiffusionValidationDate(dateDoToDto(source.getDiffusionValidationDate()));
@@ -180,6 +183,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setVersionOptimisticLocking(source.getVersion());
         return target;
     }
 
@@ -211,6 +215,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        target.setVersionOptimisticLocking(source.getVersion());
         return target;
     }
 
@@ -251,7 +256,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-    
+
     @Override
     public SubjectDto subjectDoToDto(SubjectIndicatorResult source) {
 
@@ -286,7 +291,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-    
+
     @Override
     public TimeGranularityDto timeGranularityDoToTimeGranularityDto(TimeGranularity source) {
         TimeGranularityDto target = new TimeGranularityDto();
@@ -305,7 +310,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTitleSummary(internationalStringToDto(source.getTitleSummary()));
         return target;
     }
-    
+
     @Override
     public DataDefinitionDto dataDefinitionDoToDto(DataDefinition source) {
         DataDefinitionDto target = new DataDefinitionDto();
@@ -314,7 +319,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setPxUri(source.getPxUri());
         return target;
     }
-    
+
     @Override
     public DataStructureDto dataStructureDoToDto(DataStructure source) {
         DataStructureDto target = new DataStructureDto();
@@ -326,7 +331,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setPublishers(source.getPublishers());
         target.setTemporalVariable(source.getTemporalVariable());
         target.setSpatialVariable(source.getSpatialVariable());
-        
+
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
             target.setValueCodes(source.getValueCodes());
@@ -339,7 +344,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
         return target;
     }
-    
+
     @Override
     public DataDto dataDoToDto(Data source) {
         DataDto target = new DataDto();

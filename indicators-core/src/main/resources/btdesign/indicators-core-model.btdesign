@@ -489,7 +489,7 @@ Application Indicators {
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
 			String archiveUser nullable;
-					
+
 			// Relations
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEM_FK" <-> versions;
@@ -547,6 +547,8 @@ Application Indicators {
         	
             "Title"
             - @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
+			"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
 
 			// Relations
             "Element level"
@@ -571,6 +573,8 @@ Application Indicators {
         	- @TimeGranularityEnum timeGranularity nullable;
         	"Time value"
         	String timeValue nullable;
+			"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
 			
 			// Relations
             "Element level"
@@ -690,6 +694,9 @@ Application Indicators {
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
 			String archiveUser nullable;
+					
+			"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
 					
 			// Relations
 			"Indicator"
@@ -817,6 +824,9 @@ Application Indicators {
 			String sourceSurveyUrl nullable length="4000";
 			"Publishers (with ## as separator)"
 			String publishers not nullable length="4000";
+						
+			"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
 						
 			// Relations
             "Indicator version"
@@ -1079,7 +1089,7 @@ Application Indicators {
 			"Date when the indicators system was archived"
 			JAVADATE archiveDate;
 			"User who archived"
-			String archiveUser;
+			String archiveUser;			
 	    }
 	    
 	    "Dto for indicator"
@@ -1149,7 +1159,9 @@ Application Indicators {
 			"Date when the indicators system was archived"
 			JAVADATE archiveDate;
 			"User who archived"
-			String archiveUser;       		    
+			String archiveUser; 
+			"Version to optimistic locking"
+			Long versionOptimisticLocking;					    
 	    }
 
 	    "Dto for dimension"
@@ -1163,6 +1175,8 @@ Application Indicators {
 			Long orderInLevel;
 			"Parent dimension"
 			String parentUuid;			
+			"Version to optimistic locking"
+			Long versionOptimisticLocking;			
 	    }
 	    
 	    "Dto for data source"
@@ -1204,7 +1218,9 @@ Application Indicators {
 			"Source survey url"
 			String sourceSurveyUrl;
 			"Publishers"
-			List<String> publishers;			
+			List<String> publishers;	
+			"Version to optimistic locking"
+			Long versionOptimisticLocking;		
 	    }
 	    
 	    "Dto for variables and categories"
@@ -1236,6 +1252,9 @@ Application Indicators {
 			Long orderInLevel;
 			"Parent dimension"
 			String parentUuid;
+			
+			"Version to optimistic locking"
+			Long versionOptimisticLocking;					    
 	    }
 	    
 	    "AuditDto"
