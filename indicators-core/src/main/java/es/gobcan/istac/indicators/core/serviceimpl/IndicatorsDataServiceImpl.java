@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -85,16 +84,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public static final String               DOT_UNAVAILABLE    = "..";
     public static final Double               ZERO_RANGE         = 1E-6;
 
-    private static final Map<String, String> DOT_NOTATION_MAPPING;
+    private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
     static {
-        DOT_NOTATION_MAPPING = new HashMap<String, String>();
-        DOT_NOTATION_MAPPING.put(".", "No procede");
-        DOT_NOTATION_MAPPING.put("..", "Dato no disponible");
-        DOT_NOTATION_MAPPING.put("...", "Dato oculto por impreciso o baja calidad");
-        DOT_NOTATION_MAPPING.put("....", "Dato oculto por secreto estadístico");
-        DOT_NOTATION_MAPPING.put(".....", "Dato incluido en otra categoría");
-        DOT_NOTATION_MAPPING.put("......", "Dato no disponible por vacaciones o festivos");
+        SPECIAL_STRING_MAPPING = new HashMap<String, String>();
+        SPECIAL_STRING_MAPPING.put("-", "");
+        SPECIAL_STRING_MAPPING.put(".", "No procede");
+        SPECIAL_STRING_MAPPING.put("..", "Dato no disponible");
+        SPECIAL_STRING_MAPPING.put("...", "Dato oculto por impreciso o baja calidad");
+        SPECIAL_STRING_MAPPING.put("....", "Dato oculto por secreto estadístico");
+        SPECIAL_STRING_MAPPING.put(".....", "Dato incluido en otra categoría");
+        SPECIAL_STRING_MAPPING.put("......", "Dato no disponible por vacaciones o festivos");
     }
 
     @Autowired
@@ -950,8 +950,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
 
         // Check for dotted notation
-        if (isDottedString(value)) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(value)));
+        if (isSpecialString(value)) {
+            String text = getSpecialStringMeaning(value);
+            //Some Special Strings may not need to create an attribute 
+            if (!StringUtils.isEmpty(text)) {
+                observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(value)));
+            }
             observation.setPrimaryMeasure(null);
         } else {
             observation.setPrimaryMeasure(value);
@@ -1008,7 +1012,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         if (previousTimeValue == null) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(DOT_NOT_APPLICABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
             observation.setPrimaryMeasure(null);
             return observation;
         }
@@ -1030,7 +1034,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         /* Some observations were not found */
         if (currentObs == null || previousObs == null) {
             observation.setPrimaryMeasure(null);
-            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(DOT_UNAVAILABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_UNAVAILABLE)));
             return observation;
         }
 
@@ -1054,7 +1058,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (dataOperation.isPercentageMethod()) {
                 if (Math.abs(previousValue) < ZERO_RANGE) {
                     observation.setPrimaryMeasure(null);
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getDotNotationMeaning(DOT_UNAVAILABLE)));
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_UNAVAILABLE)));
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
@@ -1143,12 +1147,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Gets dot convention descriptions
      */
-    public static String getDotNotationMeaning(String dottedStr) {
-        return DOT_NOTATION_MAPPING.get(dottedStr);
+    public static String getSpecialStringMeaning(String dottedStr) {
+        return SPECIAL_STRING_MAPPING.get(dottedStr);
     }
 
-    private boolean isDottedString(String str) {
-        return getDotNotationMeaning(str) != null;
+    private boolean isSpecialString(String str) {
+        return SPECIAL_STRING_MAPPING.containsKey(str);
     }
 
     /*
@@ -1170,16 +1174,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Helper for merge Two OBS_CONF attributes into one
      */
     private AttributeBasicDto mergeObsConfAttribute(ObservationExtendedDto obs1, ObservationExtendedDto obs2) {
-        if (obs1.getPrimaryMeasure() == null && obs2.getPrimaryMeasure() == null) {
-            String desc1 = getAttribute(OBS_CONF_ATTR, obs1).getValue().getLocalisedLabel(OBS_CONF_LOC);
-            String desc2 = getAttribute(OBS_CONF_ATTR, obs2).getValue().getLocalisedLabel(OBS_CONF_LOC);
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc1 + ", " + desc2);
-        } else if (obs1.getPrimaryMeasure() == null) {
-            String desc1 = getAttribute(OBS_CONF_ATTR, obs1).getValue().getLocalisedLabel(OBS_CONF_LOC);
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc1);
-        } else if (obs2.getPrimaryMeasure() == null) {
-            String desc2 = getAttribute(OBS_CONF_ATTR, obs2).getValue().getLocalisedLabel(OBS_CONF_LOC);
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, desc2);
+        AttributeBasicDto attribute1 = null;
+        AttributeBasicDto attribute2 = null;
+        
+        if (obs1.getPrimaryMeasure() == null) {
+            attribute1 = getAttribute(OBS_CONF_ATTR, obs1);
+        }
+        if (obs2.getPrimaryMeasure() == null) {
+            attribute2 = getAttribute(OBS_CONF_ATTR, obs2);
+        }
+        
+        if (attribute1 != null && attribute2 != null) {
+            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC)+ ", " + attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
+        }
+        if (attribute1 != null) {
+            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC));
+        }
+        if (attribute2 != null) {
+            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
         }
         return null;
     }

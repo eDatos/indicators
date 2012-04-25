@@ -414,7 +414,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION);
-        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46",
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", null, null, null, null, null, null, null, "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20", "46",
                 "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR6_UUID, INDICATOR6_VERSION, data);
 
@@ -553,12 +553,12 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR13_UUID, INDICATOR13_VERSION);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
-        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name()));
         /* ABSOLUTE */
-        List<String> absolute = Arrays.asList("34413", null/* ... */, null/* . */, "2036", "30413", "1952", null /* .. */);
-        List<String> interperiodPercentageRate = Arrays.asList("13.15", null, null, null, null, null, null);
+        List<String> absolute = Arrays.asList("34413", null/* ... */, null/* . */, "2036", "30413", "1952", null /* .. */, null /* - */);
+        List<String> interperiodPercentageRate = Arrays.asList("13.15", null, null, null, null, null, null, null);
 
         List<String> data = new ArrayList<String>();
         data.addAll(absolute);
@@ -598,11 +598,15 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
+            String key = generateObservationUniqueKey("ES", "2009M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
+        }
+        {
             String key = generateObservationUniqueKey("ES", "2009M11", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         {
-            String key = generateObservationUniqueKey("ES", "2009M12", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
+            String key = generateObservationUniqueKey("ES", "2009M10", MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name());
             mapAttributes.put(key, createAttribute(IndicatorDataAttributeTypeEnum.OBS_CONF.name(), IndicatorsDataServiceImpl.OBS_CONF_LOC, "Dato no disponible"));
         }
         checkDataAttributes(dimensionCodes, INDICATOR13_UUID, INDICATOR13_VERSION, IndicatorDataAttributeTypeEnum.OBS_CONF.name(), mapAttributes);

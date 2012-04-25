@@ -130,7 +130,7 @@ public class IndicatorsAsserts {
             return;
         }
         if (expected == null) {
-            fail("Expected is null, actual isn't");
+            fail("Expected is null, actual isn't:"+actual.getValue());
         } else if (actual == null) {
             fail("Expected is not null, actual is");
         }
