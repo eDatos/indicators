@@ -102,8 +102,4 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_FIND_OBSERVATIONS_EXTENDED_ERROR                    = create("exception.indicators.data.find_observations_extended_error");
     public static final CommonServiceExceptionType DATA_INSTANCES_FIND_OBSERVATIONS_ERROR                   = create("exception.indicators.data.instances.find_observations_error");
     public static final CommonServiceExceptionType DATA_INSTANCES_FIND_OBSERVATIONS_EXTENDED_ERROR          = create("exception.indicators.data.instances.find_observations_extended_error");
-
-    // Translation
-    public static final CommonServiceExceptionType TRANSLATION_NOT_FOUND                                    = create("exception.indicators.translation.not_found");
-
 }

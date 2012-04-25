@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
@@ -750,15 +751,26 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
 
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translation == null || translation.getTitle() == null) {
-            throw new MetamacException(ServiceExceptionType.TRANSLATION_NOT_FOUND, translationCode);
-        }
-
-        timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
-        if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
-            timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
-        } else {
+        if (translation == null) {
+            // Put code as title
+            InternationalString title = new InternationalString();
+            LocalisedString localisedStringEs = new LocalisedString();
+            localisedStringEs.setLabel(timeValueDo.getTimeValue());
+            localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            title.addText(localisedStringEs);
+            LocalisedString localisedStringEn = new LocalisedString();
+            localisedStringEn.setLabel(timeValueDo.getTimeValue());
+            localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
+            title.addText(localisedStringEn);
+            timeValueDo.setTitle(title);            
             timeValueDo.setTitleSummary(timeValueDo.getTitle());
+        } else {
+            timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
+            if (translation.getTitleSummary() != null && !CollectionUtils.isEmpty(translation.getTitleSummary().getTexts())) {
+                timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
+            } else {
+                timeValueDo.setTitleSummary(timeValueDo.getTitle());
+            }
         }
 
         return timeValueDo;
@@ -770,20 +782,33 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Validation of parameters
         InvocationValidator.checkRetrieveTimeGranularity(timeGranularity, null);
 
+        TimeGranularity timeGranularityDo = new TimeGranularity();
+        timeGranularityDo.setGranularity(timeGranularity);
+
         // Translate
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_GRANULARITY).append(".").append(timeGranularity.name()).toString();
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translation == null || translation.getTitle() == null) {
-            throw new MetamacException(ServiceExceptionType.TRANSLATION_NOT_FOUND, translationCode);
-        }
-        
-        TimeGranularity timeGranularityDo = new TimeGranularity();
-        timeGranularityDo.setGranularity(timeGranularity);
-        timeGranularityDo.setTitle(translateTimeGranularity(translation.getTitle()));
-        if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
-            timeGranularityDo.setTitleSummary(translateTimeGranularity(translation.getTitleSummary()));
-        } else {
+        if (translation == null) {
+            // Put code as title
+            InternationalString title = new InternationalString();
+            String timeGranularityCode = timeGranularity.getName();
+            LocalisedString localisedStringEs = new LocalisedString();
+            localisedStringEs.setLabel(timeGranularityCode);
+            localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            title.addText(localisedStringEs);
+            LocalisedString localisedStringEn = new LocalisedString();
+            localisedStringEn.setLabel(timeGranularityCode);
+            localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
+            title.addText(localisedStringEn);
+            timeGranularityDo.setTitle(title);            
             timeGranularityDo.setTitleSummary(timeGranularityDo.getTitle());
+        } else {
+            timeGranularityDo.setTitle(translateTimeGranularity(translation.getTitle()));
+            if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
+                timeGranularityDo.setTitleSummary(translateTimeGranularity(translation.getTitleSummary()));
+            } else {
+                timeGranularityDo.setTitleSummary(timeGranularityDo.getTitle());
+            }
         }
         return timeGranularityDo;
     }
