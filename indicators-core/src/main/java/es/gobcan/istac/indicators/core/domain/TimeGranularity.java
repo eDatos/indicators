@@ -11,6 +11,7 @@ public class TimeGranularity {
 
     private TimeGranularityEnum granularity;
     private InternationalString title;
+    private InternationalString titleSummary;
 
    public TimeGranularityEnum getGranularity() {
         return granularity;
@@ -26,5 +27,14 @@ public class TimeGranularity {
 
     public void setTitle(InternationalString title) {
         this.title = title;
+    }
+    
+
+    public InternationalString getTitleSummary() {
+        return titleSummary;
+    }
+    
+    public void setTitleSummary(InternationalString titleSummary) {
+        this.titleSummary = titleSummary;
     }
 }

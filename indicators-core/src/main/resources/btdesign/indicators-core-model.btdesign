@@ -1027,6 +1027,8 @@ Application Indicators {
 			String code not nullable;
        		"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
+       		"Summary title"
+       		- @InternationalString titleSummary cascade="all" nullable databaseColumn="TITLE_SUMMARY_FK";
 			
 			Repository TranslationRepository {
             	protected List<@Translation> findByQuery;
@@ -1356,6 +1358,8 @@ Application Indicators {
 			String timeValue;
        		"Title"
        		- @InternationalStringDto title;
+       		"Summary title"
+       		- @InternationalStringDto titleSummary;
        		"Granularity"
 			- @TimeGranularityEnum granularity;
     	}
@@ -1366,6 +1370,8 @@ Application Indicators {
 			- @TimeGranularityEnum granularity;
        		"Title"
        		- @InternationalStringDto title;
+       		"Summary title"
+       		- @InternationalStringDto titleSummary;
     	}
     	
     	"Dto for subjects"

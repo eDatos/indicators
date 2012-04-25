@@ -17,6 +17,7 @@ public class TimeValue {
     private String              week;
     private String              day;
     private InternationalString title;
+    private InternationalString titleSummary;
 
     public String getTimeValue() {
         return timeValue;
@@ -80,5 +81,13 @@ public class TimeValue {
 
     public void setTitle(InternationalString title) {
         this.title = title;
+    }
+    
+    public InternationalString getTitleSummary() {
+        return titleSummary;
+    }
+    
+    public void setTitleSummary(InternationalString titleSummary) {
+        this.titleSummary = titleSummary;
     }
 }

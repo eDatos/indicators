@@ -292,6 +292,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         TimeGranularityDto target = new TimeGranularityDto();
         target.setGranularity(source.getGranularity());
         target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setTitleSummary(internationalStringToDto(source.getTitleSummary()));
         return target;
     }
 
@@ -301,6 +302,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTimeValue(source.getTimeValue());
         target.setGranularity(source.getGranularity());
         target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setTitleSummary(internationalStringToDto(source.getTitleSummary()));
         return target;
     }
     

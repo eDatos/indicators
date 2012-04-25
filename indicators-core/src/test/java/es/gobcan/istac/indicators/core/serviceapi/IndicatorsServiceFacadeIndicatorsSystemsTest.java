@@ -4112,26 +4112,31 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.YEARLY);
             assertEquals(TimeGranularityEnum.YEARLY, timeGranularityDto.getGranularity());
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Yearly", "es", "Anual");
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Y", "es", "A");
         }
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.BIYEARLY);
             assertEquals(TimeGranularityEnum.BIYEARLY, timeGranularityDto.getGranularity());
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Biyearly", "es", "Semestral");
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Biyearly", "es", "Semestral");
         }
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.QUARTERLY);
             assertEquals(TimeGranularityEnum.QUARTERLY, timeGranularityDto.getGranularity());
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Quarterly", "es", "Cuatrimestral");
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Quarterly", "es", "Cuatrimestral");
         }
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.WEEKLY);
             assertEquals(TimeGranularityEnum.WEEKLY, timeGranularityDto.getGranularity());
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Weekly", "es", "Semanal");
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Weekly", "es", "Semanal");
         }
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.MONTHLY);
             assertEquals(TimeGranularityEnum.MONTHLY, timeGranularityDto.getGranularity());
             IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitle(), "en", "Monthly", "es", "Mensual");
+            IndicatorsAsserts.assertEqualsInternationalString(timeGranularityDto.getTitleSummary(), "en", "Monthly", "es", "Mensual");
         }
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.DAILY);
@@ -4149,6 +4154,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.YEARLY, timeValueDto.getGranularity());
             assertEquals(year, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", year, "es", year);
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", year, "es", year);
         }
         {
             String year = "1999";
@@ -4156,6 +4162,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.YEARLY, timeValueDto.getGranularity());
             assertEquals(year, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", year, "es", year);
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", year, "es", year);
         }
         // Biyearly
         {
@@ -4164,6 +4171,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
             assertEquals(biyearly, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2011 First semester", "es", "2011 Primer semestre");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2011 1S", "es", "2011 1Sem");
         }
         {
             String biyearly = "2012H2";
@@ -4171,6 +4179,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
             assertEquals(biyearly, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
         }
         // Quaterly
         {
@@ -4179,6 +4188,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.QUARTERLY, timeValueDto.getGranularity());
             assertEquals(quaterly, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "1999 First quarter", "es", "1999 Primer cuatrimestre");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "1999 First quarter", "es", "1999 Primer cuatrimestre");
         }
         {
             String quaterly = "2011Q2";
@@ -4209,6 +4219,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.MONTHLY, timeValueDto.getGranularity());
             assertEquals(month, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 January", "es", "2012 Enero");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 January", "es", "2012 Enero");
         }
         {
             String month = "2012M02";
@@ -4239,6 +4250,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.WEEKLY, timeValueDto.getGranularity());
             assertEquals(week, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Week 01", "es", "2012 Semana 01");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 Week 01", "es", "2012 Semana 01");
         }
         {
             String week = "2011W52";
@@ -4255,6 +4267,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(TimeGranularityEnum.DAILY, timeValueDto.getGranularity());
             assertEquals(day, timeValueDto.getTimeValue());
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "01/01/2012", "es", "01/01/2012");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "01/01/2012", "es", "01/01/2012");
         }
     }
 

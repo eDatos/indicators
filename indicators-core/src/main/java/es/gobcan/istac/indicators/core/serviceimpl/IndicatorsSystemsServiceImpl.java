@@ -754,25 +754,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             throw new MetamacException(ServiceExceptionType.TRANSLATION_NOT_FOUND, translationCode);
         }
 
-        timeValueDo.setTitle(new InternationalString());
-        for (LocalisedString localisedStringTranslation : translation.getTitle().getTexts()) {
-            String label = localisedStringTranslation.getLabel();
-            if (timeValueDo.getYear() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValueDo.getYear());
-            }
-            if (timeValueDo.getMonth() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValueDo.getMonth());
-            }
-            if (timeValueDo.getWeek() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValueDo.getWeek());
-            }
-            if (timeValueDo.getDay() != null) {
-                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValueDo.getDay());
-            }
-            LocalisedString localisedString = new LocalisedString();
-            localisedString.setLabel(label);
-            localisedString.setLocale(localisedStringTranslation.getLocale());
-            timeValueDo.getTitle().addText(localisedString);
+        timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
+        if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
+            timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
+        } else {
+            timeValueDo.setTitleSummary(timeValueDo.getTitle());
         }
 
         return timeValueDo;
@@ -793,12 +779,11 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         
         TimeGranularity timeGranularityDo = new TimeGranularity();
         timeGranularityDo.setGranularity(timeGranularity);
-        timeGranularityDo.setTitle(new InternationalString());
-        for (LocalisedString localisedStringTranslation : translation.getTitle().getTexts()) {
-            LocalisedString localisedString = new LocalisedString();
-            localisedString.setLabel(localisedStringTranslation.getLabel());
-            localisedString.setLocale(localisedStringTranslation.getLocale());
-            timeGranularityDo.getTitle().addText(localisedString);
+        timeGranularityDo.setTitle(translateTimeGranularity(translation.getTitle()));
+        if (translation.getTitleSummary() != null && translation.getTitleSummary().getTexts() != null && translation.getTitleSummary().getTexts().size() != 0) {
+            timeGranularityDo.setTitleSummary(translateTimeGranularity(translation.getTitleSummary()));
+        } else {
+            timeGranularityDo.setTitleSummary(timeGranularityDo.getTitle());
         }
         return timeGranularityDo;
     }
@@ -1286,5 +1271,40 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
         return getElementLevelRepository().save(elementLevel);
+    }
+    
+    private InternationalString translateTimeValue(TimeValue timeValueDo, InternationalString sourceTranslation) {
+        InternationalString target = new InternationalString();
+        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
+            String label = localisedStringTranslation.getLabel();
+            if (timeValueDo.getYear() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_YEAR_IN_LABEL, timeValueDo.getYear());
+            }
+            if (timeValueDo.getMonth() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_MONTH_IN_LABEL, timeValueDo.getMonth());
+            }
+            if (timeValueDo.getWeek() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_WEEK_IN_LABEL, timeValueDo.getWeek());
+            }
+            if (timeValueDo.getDay() != null) {
+                label = label.replace(IndicatorsConstants.TRANSLATION_DAY_IN_LABEL, timeValueDo.getDay());
+            }
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(label);
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            target.addText(localisedString);
+        }
+        return target;
+    }
+    
+    private InternationalString translateTimeGranularity(InternationalString sourceTranslation) {
+        InternationalString target = new InternationalString();
+        for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
+            LocalisedString localisedString = new LocalisedString();
+            localisedString.setLabel(localisedStringTranslation.getLabel());
+            localisedString.setLocale(localisedStringTranslation.getLocale());
+            target.addText(localisedString);
+        }
+        return target;
     }
 }
