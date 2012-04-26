@@ -15,6 +15,8 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
@@ -45,18 +47,18 @@ public class CommonUtils {
         return valueMap;
     }
 
-    public static LinkedHashMap<String, String> getTimeGranularityValueMap(List<TimeGranularityEnum> timeGranularityEnums) {
+    public static LinkedHashMap<String, String> getTimeGranularityValueMap(List<TimeGranularityDto> timeGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (TimeGranularityEnum type : timeGranularityEnums) {
-            valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
+        for (TimeGranularityDto type : timeGranularityDtos) {
+            valueMap.put(type.getGranularity().toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getGranularity().getName()));
         }
         return valueMap;
     }
 
-    public static LinkedHashMap<String, String> getTimeValueValueMap(List<String> timeValues) {
+    public static LinkedHashMap<String, String> getTimeValueValueMap(List<TimeValueDto> timeValues) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (String timeValue : timeValues) {
-            valueMap.put(timeValue, timeValue);
+        for (TimeValueDto timeValue : timeValues) {
+            valueMap.put(timeValue.getTimeValue(), InternationalStringUtils.getLocalisedString(timeValue.getTitle()));
         }
         return valueMap;
     }

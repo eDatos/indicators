@@ -6,18 +6,18 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 
 @GenDispatch(isSecure = false)
 public class GetTimeGranularitiesInIndicator {
 
     @In(1)
-    String                    indicatorUuid;
+    String                   indicatorUuid;
 
     @In(2)
-    String                    indicatorVersion;
+    String                   indicatorVersion;
 
     @Out(1)
-    List<TimeGranularityEnum> timeGranularityEnums;
+    List<TimeGranularityDto> timeGranularityDtos;
 
 }

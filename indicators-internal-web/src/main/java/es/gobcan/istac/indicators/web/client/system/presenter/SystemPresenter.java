@@ -35,8 +35,9 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
@@ -124,8 +125,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void onIndicatorDataPopulated(IndicatorDto indicatorDto);
 
         // Instance
-        void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums);
-        void setTemporalValuesFormIndicator(List<String> timeValues);
+        void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums);
+        void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues);
         void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos);
         void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
@@ -540,7 +541,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(GetTimeGranularitiesInIndicatorResult result) {
-                getView().setTemporalGranularitiesForIndicator(result.getTimeGranularityEnums());
+                getView().setTemporalGranularitiesForIndicator(result.getTimeGranularityDtos());
             }
         });
 
@@ -556,7 +557,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(GetTimeValuesInIndicatorResult result) {
-                getView().setTemporalValuesFormIndicator(result.getTimeValues());
+                getView().setTemporalValuesFormIndicator(result.getTimeValueDtos());
             }
         });
     }

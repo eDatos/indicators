@@ -74,6 +74,8 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
@@ -284,11 +286,11 @@ public class SystemStructurePanel extends HLayout {
         indicatorInstPanel.onIndicatorDataPopulated(indicatorDto);
     }
 
-    public void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums) {
+    public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
         indicatorInstPanel.setTemporalGranularitiesForIndicator(timeGranularityEnums);
     }
 
-    public void setTemporalValuesFormIndicator(List<String> timeValues) {
+    public void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues) {
         indicatorInstPanel.setTemporalValuesFormIndicator(timeValues);
     }
 
@@ -1260,11 +1262,11 @@ public class SystemStructurePanel extends HLayout {
             uiHandlers.retrieveGeographicalGranularitiesInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
         }
 
-        public void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums) {
+        public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
             editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(CommonUtils.getTimeGranularityValueMap(timeGranularityEnums));
         }
 
-        public void setTemporalValuesFormIndicator(List<String> timeValues) {
+        public void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues) {
             editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(CommonUtils.getTimeValueValueMap(timeValues));
         }
 

@@ -6,16 +6,18 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+
 @GenDispatch(isSecure = false)
 public class GetTimeValuesInIndicator {
 
     @In(1)
-    String       indicatorUuid;
+    String             indicatorUuid;
 
     @In(2)
-    String       indicatorVersion;
+    String             indicatorVersion;
 
     @Out(1)
-    List<String> timeValues;
+    List<TimeValueDto> timeValueDtos;
 
 }

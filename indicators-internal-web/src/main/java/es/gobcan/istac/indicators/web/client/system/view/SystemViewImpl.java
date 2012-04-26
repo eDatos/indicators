@@ -23,7 +23,8 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
+import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -155,12 +156,12 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void setTemporalGranularitiesForIndicator(List<TimeGranularityEnum> timeGranularityEnums) {
+    public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
         structurePanel.setTemporalGranularitiesForIndicator(timeGranularityEnums);
     }
 
     @Override
-    public void setTemporalValuesFormIndicator(List<String> timeValues) {
+    public void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues) {
         structurePanel.setTemporalValuesFormIndicator(timeValues);
     }
 
