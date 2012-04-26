@@ -6,9 +6,8 @@
  * Macro to translate a message code with arguments into a message.
  --]
 [#macro messageEscape code, escape=false]
-	[#assign args = [] /]
-	${springMacroRequestContext.getMessage(code, args, '', escape)}
-[/#macro]
+[#assign args = [] /]
+${springMacroRequestContext.getMessage(code, args, '', escape)}[/#macro]
 
 [#--
  * returns current locale
