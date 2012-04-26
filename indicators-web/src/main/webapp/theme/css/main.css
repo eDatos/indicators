@@ -147,14 +147,22 @@ ul.subcaps li {
   border: 1px solid #ddd;
   border-left-width: 0;
 }
+
 .pagination a:hover,
 .pagination .active a {
   background-color: #f5f5f5;
 }
+
+.pagination .active a, .pagination .active a:hover {
+    background: none;
+    cursor: default;
+}
+
 .pagination .active a {
   color: #cccccc;
   cursor: default;
 }
+
 .pagination .disabled span,
 .pagination .disabled a,
 .pagination .disabled a:hover {
@@ -176,4 +184,44 @@ ul.subcaps li {
 }
 .pagination-right {
   text-align: right;
+}
+
+#widget-creator h2 {
+    background: #C4D0DC;
+    color: black;
+    font-size: 1em;
+    line-height : 24px;
+    margin: 10px 0;
+    padding: 3px 0px 0 7px;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+}
+
+.pagination > ul li {
+    background: none;
+}
+
+.pagination ul li.pagination-page {
+    color: #000;
+    background: none;
+    cursor: default;
+}
+
+.selected {
+    background-color: #3478B0;
+    color: #fff;
+    margin-bottom: 1px;
+}
+
+a.selectable-item {
+    display: block;
+}
+
+.selectable-item {
+    padding: 5px;
+    line-height: 25px;
+}
+
+a.selected {
+   color : #fff !important;
 }

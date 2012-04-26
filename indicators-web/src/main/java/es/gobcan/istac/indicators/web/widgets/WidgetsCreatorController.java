@@ -42,7 +42,7 @@ public class WidgetsCreatorController extends BaseController {
             System system = new System("System " + i);
             paginateResult.results.add(system);
         }
-        paginateResult.total = 100;
+        paginateResult.total = 80;
         ResponseEntity<PaginateResult> responseEntity = new ResponseEntity<PaginateResult>(paginateResult, HttpStatus.OK);
         return responseEntity;
     }
