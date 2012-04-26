@@ -68,7 +68,7 @@
 		%>
 			<li>
 				[@apph.messageEscape 'entity.indicator-instance.geographical-granularities'/]:
-		<%	for (i in dimension.GEOGRAPHICAL.granularity) {
+		<%	for (var i = 0; i < dimension.GEOGRAPHICAL.granularity.length; i++) {
 				var granularity = dimension.GEOGRAPHICAL.granularity[i];
 		%>
 				<%= getIndicatorInstanceSubelementDimension(granularity) %><% if (i != dimension.GEOGRAPHICAL.granularity.length - 1) { %>,<% } %>
@@ -80,7 +80,7 @@
 		%>
 			<li>
 				[@apph.messageEscape 'entity.indicator-instance.geographical-values'/]:
-		<%	for (i in dimension.GEOGRAPHICAL.representation) {
+		<%	for (var i = 0; i < dimension.GEOGRAPHICAL.representation.length; i++) {
 				var representation = dimension.GEOGRAPHICAL.representation[i];
 		%>
 				<%= getIndicatorInstanceSubelementDimension(representation) %><% if (i != dimension.GEOGRAPHICAL.representation.length - 1) { %>,<% } %>
@@ -92,7 +92,7 @@
 		%>
 			<li>
 				[@apph.messageEscape 'entity.indicator-instance.time-granularities'/]:
-		<%	for (i in dimension.TIME.granularity) {
+		<%	for (var i = 0; i < dimension.TIME.granularity.length; i++) {
 				var granularity = dimension.TIME.granularity[i];
 		%>
 				<%= getIndicatorInstanceSubelementDimension(granularity) %><% if (i != dimension.TIME.granularity.length - 1) { %>,<% } %>
@@ -104,7 +104,7 @@
 		%>
 			<li>
 				[@apph.messageEscape 'entity.indicator-instance.time-values'/]:
-		<%	for (i in dimension.TIME.representation) {
+		<%	for (var i = 0; i < dimension.TIME.representation.length; i++) {
 				var representation = dimension.TIME.representation[i];
 		%>
 				<%= getIndicatorInstanceSubelementDimension(representation) %><% if (i != dimension.TIME.representation.length - 1) { %>,<% } %>
