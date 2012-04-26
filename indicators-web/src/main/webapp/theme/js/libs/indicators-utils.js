@@ -36,3 +36,15 @@ function getLabelLocale(internationalString, locale) {
 function containsLowerCase(a, b) {
 	return a.toLowerCase().indexOf(b.toLowerCase()) != -1;
 };
+
+function getIndicatorInstanceSubelementDimension(subelementDimension) {
+	
+	if (subelementDimension == null) {
+		return '';
+	}
+	if (subelementDimension.title != null) {
+		return getLabel(subelementDimension.title);
+	} else {
+		return subelementDimension.code;
+	}
+};

@@ -26,11 +26,11 @@
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
 
 	<!-- Indicator instance -->
-	<entry key="entity.indicator-instance.geographic-granularity">Granularidad geográfica</entry>
-	<entry key="entity.indicator-instance.geographic-values">Valores geográficos</entry>
-	<entry key="entity.indicator-instance.time-granularity">Granularidad temporal</entry>
+	<entry key="entity.indicator-instance.geographical-granularities">Granularidades geográficas</entry>
+	<entry key="entity.indicator-instance.geographical-values">Valores geográficos</entry>
+	<entry key="entity.indicator-instance.time-granularities">Granularidades temporales</entry>
 	<entry key="entity.indicator-instance.time-values">Valores temporales</entry>	    
-	<entry key="entity.indicator-instance.self-link">API</entry>
+	<entry key="entity.indicator-instance.self-link">Más información</entry>
 	
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicadores</entry>

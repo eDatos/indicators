@@ -61,34 +61,59 @@
 </script>
 
 <script type="text/html" id="indicatorInstanceTemplate">
-	<div style="padding-top: 2px;">
-		<p><a href="<%= selfLink %>" target="_blank"><%= selfLink %></a></p>
-		<% if (geographicalValues != null) { %>
-			<p>
-				[@apph.messageEscape 'entity.indicator-instance.geographic-values'/]:
-		<%		
-			 for (i in geographicalValues) {
-				var geographicalValue = geographicalValues[i];
+	
+	<div>
+		<ul>
+		<% if (dimension.GEOGRAPHICAL.granularity != null) { 
 		%>
-				<%= geographicalValue.code %> 
-		<%		
-			 } 
+			<li>
+				[@apph.messageEscape 'entity.indicator-instance.geographical-granularities'/]:
+		<%	for (i in dimension.GEOGRAPHICAL.granularity) {
+				var granularity = dimension.GEOGRAPHICAL.granularity[i];
 		%>
-			</p>
+				<%= getIndicatorInstanceSubelementDimension(granularity) %>
+		<%	} 
+		%>
+			</li>
 		<% } %>
-		<% if (timeValues != null) { %>
-			<p>
+		<% if (dimension.GEOGRAPHICAL.representation != null) { 
+		%>
+			<li>
+				[@apph.messageEscape 'entity.indicator-instance.geographical-values'/]:
+		<%	for (i in dimension.GEOGRAPHICAL.representation) {
+				var representation = dimension.GEOGRAPHICAL.representation[i];
+		%>
+				<%= getIndicatorInstanceSubelementDimension(representation) %>
+		<%	} 
+		%>
+			</li>
+		<% } %>
+				<% if (dimension.TIME.granularity != null) { 
+		%>
+			<li>
+				[@apph.messageEscape 'entity.indicator-instance.time-granularities'/]:
+		<%	for (i in dimension.TIME.granularity) {
+				var granularity = dimension.TIME.granularity[i];
+		%>
+				<%= getIndicatorInstanceSubelementDimension(granularity) %>
+		<%	} 
+		%>
+			</li>
+		<% } %>
+		<% if (dimension.TIME.representation != null) { 
+		%>
+			<li>
 				[@apph.messageEscape 'entity.indicator-instance.time-values'/]:
-		<%		
-			 for (i in timeValues) {
-				var timeValue = timeValues[i];
+		<%	for (i in dimension.TIME.representation) {
+				var representation = dimension.TIME.representation[i];
 		%>
-				<%= timeValue.code %> 
-		<%		
-			 } 
+				<%= getIndicatorInstanceSubelementDimension(representation) %>
+		<%	} 
 		%>
-			</p>
-		<% } %>
+			</li>
+		<% } %>	
+			<li><a href="<%= selfLink %>" target="_blank">[@apph.messageEscape 'entity.indicator-instance.self-link'/]</a></li>	
+		</ul>
 	</div>
 </script>
 

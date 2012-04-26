@@ -27,11 +27,11 @@
     <entry key="entity.indicators-system">Indicators system</entry>
     
 	<!-- Indicator instance -->
-	<entry key="entity.indicator-instance.geographic-granularity">Geographical granularity</entry>
-	<entry key="entity.indicator-instance.geographic-values">Geographical values</entry>
-	<entry key="entity.indicator-instance.time-granularity">Temporal granularity</entry>
+	<entry key="entity.indicator-instance.geographical-granularities">Geographical granularities</entry>
+	<entry key="entity.indicator-instance.geographical-values">Geographical values</entry>
+	<entry key="entity.indicator-instance.time-granularities">Temporal granularities</entry>
 	<entry key="entity.indicator-instance.time-values">Temporal values</entry>	    
-	<entry key="entity.indicator-instance.self-link">API</entry>
+	<entry key="entity.indicator-instance.self-link">More info</entry>
     
     <!-- Indicators -->
     <entry key="page.indicators-list.title">Indicators</entry>
