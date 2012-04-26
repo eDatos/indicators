@@ -71,7 +71,7 @@
 		<%	for (i in dimension.GEOGRAPHICAL.granularity) {
 				var granularity = dimension.GEOGRAPHICAL.granularity[i];
 		%>
-				<%= getIndicatorInstanceSubelementDimension(granularity) %>
+				<%= getIndicatorInstanceSubelementDimension(granularity) %><% if (i != dimension.GEOGRAPHICAL.granularity.length - 1) { %>,<% } %>
 		<%	} 
 		%>
 			</li>
@@ -83,7 +83,7 @@
 		<%	for (i in dimension.GEOGRAPHICAL.representation) {
 				var representation = dimension.GEOGRAPHICAL.representation[i];
 		%>
-				<%= getIndicatorInstanceSubelementDimension(representation) %>
+				<%= getIndicatorInstanceSubelementDimension(representation) %><% if (i != dimension.GEOGRAPHICAL.representation.length - 1) { %>,<% } %>
 		<%	} 
 		%>
 			</li>
@@ -95,7 +95,7 @@
 		<%	for (i in dimension.TIME.granularity) {
 				var granularity = dimension.TIME.granularity[i];
 		%>
-				<%= getIndicatorInstanceSubelementDimension(granularity) %>
+				<%= getIndicatorInstanceSubelementDimension(granularity) %><% if (i != dimension.TIME.granularity.length - 1) { %>,<% } %>
 		<%	} 
 		%>
 			</li>
@@ -107,7 +107,7 @@
 		<%	for (i in dimension.TIME.representation) {
 				var representation = dimension.TIME.representation[i];
 		%>
-				<%= getIndicatorInstanceSubelementDimension(representation) %>
+				<%= getIndicatorInstanceSubelementDimension(representation) %><% if (i != dimension.TIME.representation.length - 1) { %>,<% } %>
 		<%	} 
 		%>
 			</li>
