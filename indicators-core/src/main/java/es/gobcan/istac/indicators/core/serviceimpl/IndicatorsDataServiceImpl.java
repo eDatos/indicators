@@ -153,6 +153,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
             List<DataSource> dataSources = indicatorVersion.getDataSources();
+            
+            if (dataSources.size() == 0) {
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR, indicatorUuid, indicatorVersionNumber);
+            }
 
             // Data will be stored in a map (cache), because the same json can be requested many times
             Map<String, Data> dataCache = retrieveDatasFromProvider(ctx, dataSources);

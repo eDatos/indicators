@@ -206,6 +206,10 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR22_DS_GPE_UUID                  = "Indicator-22-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
     private static final String              INDICATOR22_GPE_JSON_DATA                = readFile("json/data_fixed_contvariable.json");
     private static final String              INDICATOR22_VERSION                      = "1.000";
+    
+    /* Error indicator has no data sources */
+    private static final String              INDICATOR23_UUID                         = "Indicator-23";
+    private static final String              INDICATOR23_VERSION                      = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -245,6 +249,20 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297",
                 "20", "46", "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataNoDatasources() throws Exception {
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID, INDICATOR23_VERSION);
+            fail("Should throw an exception for not having data sources");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATOR23_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATOR23_VERSION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
     }
 
     @Test
