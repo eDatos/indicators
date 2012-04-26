@@ -18,7 +18,6 @@ public class OperationBaseMock {
         }
         
         operationBase = new OperationBase();
-        operationBase.setUri("urn:uuid:"+UUID.randomUUID().toString());
         operationBase.setCode("CODIGO_0001");
         operationBase.setTitle(MockUtil.createInternationalString());
         operationBase.setAcronym(MockUtil.createInternationalString());
@@ -35,7 +34,6 @@ public class OperationBaseMock {
         }
         
         operationBase = new OperationBase();
-        operationBase.setUri("urn:uuid:"+UUID.randomUUID().toString());
         operationBase.setCode("COD_00002");
         operationBase.setTitle(MockUtil.createInternationalString());
         operationBase.setAcronym(MockUtil.createInternationalString());
