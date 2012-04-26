@@ -35,6 +35,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DoCopyUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
@@ -368,7 +369,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public IndicatorVersion publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    public PublishIndicatorResult publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkPublishIndicator(uuid, null);
@@ -387,7 +388,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
-            return indicatorInProduction;
+            
+            PublishIndicatorResult publishIndicatorResult = new PublishIndicatorResult();
+            publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
+            publishIndicatorResult.setPublicationFailedReason(e);
+            return publishIndicatorResult;
         }
 
         // Update proc status
@@ -412,7 +417,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         getIndicatorRepository().save(indicator);
 
-        return indicatorInProduction;
+        PublishIndicatorResult publishIndicatorResult = new PublishIndicatorResult();
+        publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
+        return publishIndicatorResult;
     }
 
     @Override

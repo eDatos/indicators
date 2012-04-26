@@ -42,6 +42,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
+import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
@@ -55,6 +56,7 @@ import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMa
 import es.gobcan.istac.indicators.core.mapper.SculptorCriteria2MetamacCriteriaMapper;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.security.SecurityUtils;
+import es.gobcan.istac.indicators.core.serviceimpl.util.PublishIndicatorResult;
 
 /**
  * Implementation of IndicatorServiceFacade.
@@ -1071,16 +1073,19 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public IndicatorDto publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
+    public PublishIndicatorResultDto publishIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_DIFUSION, RoleEnum.TECNICO_APOYO_DIFUSION);
 
-        IndicatorVersion indicatorVersion = getIndicatorsService().publishIndicator(ctx, uuid);
+        PublishIndicatorResult publishIndicatorResult = getIndicatorsService().publishIndicator(ctx, uuid);
 
         // Transform to Dto
-        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(indicatorVersion);
-        return indicatorDto;
+        IndicatorDto indicatorDto = do2DtoMapper.indicatorDoToDto(publishIndicatorResult.getIndicatorVersion());
+        PublishIndicatorResultDto publishIndicatorResultDto = new PublishIndicatorResultDto();
+        publishIndicatorResultDto.setIndicator(indicatorDto);
+        publishIndicatorResultDto.setPublicationFailedReason(publishIndicatorResult.getPublicationFailedReason());
+        return publishIndicatorResultDto;
     }
 
     @Override

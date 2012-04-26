@@ -105,7 +105,7 @@ Application Indicators {
 			@IndicatorVersion rejectIndicatorProductionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion sendIndicatorToDiffusionValidation(String uuid) throws MetamacException;
 	    	@IndicatorVersion rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
-	    	@IndicatorVersion publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	PublishIndicatorResult publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	@IndicatorVersion versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
 	    	
@@ -370,7 +370,7 @@ Application Indicators {
 	    	"Rejects diffusion validation of indicator"
 	    	@IndicatorDto rejectIndicatorDiffusionValidation(String uuid) throws MetamacException;
 	    	"Publishes indicator"
-	    	@IndicatorDto publishIndicator(String uuid) throws MetamacException;	    		    	
+	    	@PublishIndicatorResultDto publishIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Archives indicator"
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
@@ -1440,6 +1440,14 @@ Application Indicators {
     	DataTransferObject DataDto {
 	   		"Uuid"
 	   		String uuid;
+    	}
+    	
+    	"Dto for publish indicator result"
+    	DataTransferObject PublishIndicatorResultDto {
+	   		"Indicator"
+	   		- @IndicatorDto indicator;
+	   		"If publication fails, reason of error"
+	   		MetamacException publicationFailedReason;
     	}
 	}
 	

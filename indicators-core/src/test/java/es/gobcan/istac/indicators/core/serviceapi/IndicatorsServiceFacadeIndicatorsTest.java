@@ -2007,7 +2007,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Publish
-        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.publishIndicator(getServiceContextAdministrador(), uuid);
+        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.publishIndicator(getServiceContextAdministrador(), uuid).getIndicator();
 
         // Validation
         {
