@@ -5,14 +5,10 @@
 [#include "/layout/language-selector.ftl"]
 
 <div id="indicators"></div>
-<script type="text/html" id="indicatorsTmpl">
+
+<script type="text/html" id="indicatorTmpl">
 	<div>
-		<h3><%= getLabel(subject.title) %></h3>
-		<% for (i in indicators) {
-			var indicator = indicators[i]; 
-		%>
-			<p><%= getLabel(indicator.title) %></p>			
-		<% } %>
+		<p><%= getLabel(title) %></p>		
 	</div>
 </script>
 
@@ -41,11 +37,15 @@
       			});
       		}
       		return this;
-    	}	
+    	},
+    	
+    	comparator : function(item) {
+			return item.get("subjectCode");
+		}
 	});
 	
 	var IndicatorView = Backbone.View.extend({
-		template : _.template($('#indicatorsTmpl').html()),
+		template : _.template($('#indicatorTmpl').html()),
 		
 		render : function(){
 			return this.template(this.model.toJSON());
@@ -65,9 +65,16 @@
 			if (filtered.length > 0){
 				var self = this;
 				var viewHtml = '';
+				var subjectCodeLastIndicator = '';
 				filtered.forEach(function(model){
 					var indicatorsView = new IndicatorView({ model : model});
 					var subViewHtml = indicatorsView.render();
+					
+					var subjectCodeIndicator = model.get("subjectCode");
+					if (subjectCodeLastIndicator != subjectCodeIndicator) {
+						viewHtml += '<h3>' + getLabel(model.get("subjectTitle")) + '</h3>';
+						subjectCodeLastIndicator = subjectCodeIndicator;
+					}
 					viewHtml += subViewHtml; 
 				});
 				$(self.el).html(viewHtml);
@@ -89,7 +96,10 @@
 	});
 	
 	$(function(){
-		var indicatorsCollection = new IndicatorsCollection(${indicatorsBySubject});
+		var indicatorsItems = ${indicators}.items;
+		console.log(indicatorsItems);
+		var indicatorsCollection = new IndicatorsCollection(indicatorsItems);
+		
 		var indicatorsView = new IndicatorsView({el : $("#indicators"), collection : indicatorsCollection});
 		indicatorsView.render();
 		new SearchView({el : $("#indicators-search"), collection : indicatorsCollection});

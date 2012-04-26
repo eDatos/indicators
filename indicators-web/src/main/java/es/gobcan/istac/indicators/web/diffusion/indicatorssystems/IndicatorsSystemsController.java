@@ -1,10 +1,5 @@
 package es.gobcan.istac.indicators.web.diffusion.indicatorssystems;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +13,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
+import es.gobcan.istac.indicators.web.diffusion.utils.IndicatorsWebUtils;
 
 @Controller
 public class IndicatorsSystemsController extends BaseController {
 
     @Autowired
-    private ConfigurationService                          configurationService;
+    private ConfigurationService configurationService;
 
     // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
         // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/?limit=1000").build().toUriString(); 
-        String json = getJson(uriComponentsBuilder, urlPath);
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/?limit=1000").build().toUriString();
+        String json = IndicatorsWebUtils.getJson(uriComponentsBuilder, urlPath);
 
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
@@ -44,9 +40,9 @@ public class IndicatorsSystemsController extends BaseController {
     public ModelAndView indicatorsSystem(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
 
         // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().toUriString(); 
-        String json = getJson(uriComponentsBuilder, urlPath);
-        
+        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().toUriString();
+        String json = IndicatorsWebUtils.getJson(uriComponentsBuilder, urlPath);
+
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
         modelAndView.addObject("indicatorsSystem", json);
@@ -59,25 +55,5 @@ public class IndicatorsSystemsController extends BaseController {
 
         return modelAndView;
     }
-    
-    // TODO hacer petición REST desde página?
-    private String getJson(UriComponentsBuilder uriComponentsBuilder, String urlPath) throws Exception {
-        URL url = new URL(urlPath);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "application/json");
 
-        if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-        }
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-        StringBuffer json = new StringBuffer();
-        String output = null;
-        while ((output = br.readLine()) != null) {
-            json.append(output);
-        }
-        conn.disconnect();
-        return json.toString();
-    }
 }
