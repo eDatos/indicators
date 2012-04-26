@@ -14,7 +14,8 @@ import com.arte.statistic.dataset.repository.dto.ObservationDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
@@ -70,8 +71,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         IndicatorVersion indicatorsVersion = indicatorsService.retrieveIndicatorPublishedByCode(RestConstants.SERVICE_CONTEXT, indicatorCode);
         
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
-        List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
         Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), null);
         
         return DataTypeUtil.createDataType(geographicalValues, timeValues, measureValues, observationMap);

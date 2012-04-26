@@ -8,15 +8,16 @@ import java.util.Map;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.rest.types.DataDimensionType;
 import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
 import es.gobcan.istac.indicators.rest.types.DataType;
 
 public class DataTypeUtil {
 
-    public static DataType createDataType(List<GeographicalValue> geographicalValues, List<String> timeValues, List<MeasureDimensionTypeEnum> measureValues, Map<String, ObservationDto> observationMap) {
+    public static DataType createDataType(List<GeographicalValue> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues, Map<String, ObservationDto> observationMap) {
         List<String> observations = new ArrayList<String>();
         List<String> format = new ArrayList<String>();
         Map<String, DataDimensionType> dimension = new LinkedHashMap<String, DataDimensionType>();
@@ -51,12 +52,12 @@ public class DataTypeUtil {
             dataRepresentationTypeGeographical.getIndex().put(geographicalValue.getCode(), i);
 
             for (int j = 0; j < timeValues.size(); j++) {
-                String timeValue = timeValues.get(j);
-                dataRepresentationTypeTime.getIndex().put(timeValue, j);
+                TimeValue timeValue = timeValues.get(j);
+                dataRepresentationTypeTime.getIndex().put(timeValue.getTimeValue(), j);
 
                 for (int k = 0; k < measureValues.size(); k++) {
-                    MeasureDimensionTypeEnum measureValue = measureValues.get(k);
-                    dataRepresentationTypeMeasure.getIndex().put(measureValue.name(), k);
+                    MeasureValue measureValue = measureValues.get(k);
+                    dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
 
                     // Observation ID: Be careful!!! don't change order of ids
                     String id = new StringBuilder().append(geographicalValue.getCode()).append("#").append(timeValue).append("#").append(measureValue).toString();

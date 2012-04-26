@@ -1,11 +1,9 @@
 package es.gobcan.istac.indicators.web.logging;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.Log4jConfigurer;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;

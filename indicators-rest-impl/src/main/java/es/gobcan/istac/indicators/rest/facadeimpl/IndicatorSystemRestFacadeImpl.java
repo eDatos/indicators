@@ -18,7 +18,8 @@ import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
@@ -98,8 +99,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         retrieveIndicatorInstance(idIndicatorSystem, uuidIndicatorInstance); // Check Published
         
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
-        List<String> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
-        List<MeasureDimensionTypeEnum> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
         
         Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance, null);
         

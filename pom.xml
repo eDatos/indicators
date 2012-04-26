@@ -18,8 +18,8 @@
         <module>indicators-parent</module>
         <module>indicators-core</module>
         <module>indicators-rest-impl</module>
-        <module>indicators-web</module>
-        <module>indicators-internal-web</module>
+<!--         <module>indicators-web</module> -->
+<!--         <module>indicators-internal-web</module> -->
     </modules>
 
     <build>

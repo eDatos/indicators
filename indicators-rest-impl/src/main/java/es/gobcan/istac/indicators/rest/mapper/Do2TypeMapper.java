@@ -7,7 +7,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
@@ -35,7 +35,7 @@ public interface Do2TypeMapper {
     // Granularities
     public MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity);
     public List<MetadataGranularityType> geographicalGranularityDoToType(List<GeographicalGranularity> geographicalGranularities);
-    public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularityEnum> timeGranularities);
+    public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
     
     // Subjects
     public List<ThemeType> subjectDoToType(List<Subject> subjects);
