@@ -37,27 +37,25 @@
         <div class="widget-options-data">
             <h3>Opciones de datos</h3>
 
-            <div>
-                <h2>Selecciona el sistema de indicadores</h2>
-
-                <div id="widget-options-data-systems"></div>
+            <div class="block">
+                <h2>Sistema de indicadores</h2>
+                <div id="widget-options-data-systems" class="block-content"></div>
             </div>
 
-            <div>
-                <h2>Selecciona los indicadores</h2>
+            <div class="block">
+                <h2>Indicadores</h2>
 
-                <div id="widget-options-data-indicators"></div>
+                <div id="widget-options-data-indicators" class="block-content"></div>
             </div>
 
-            <div>
+            <div class="block">
                 <h2>Measures</h2>
-                <div id="widget-options-measures"></div>
+                <div id="widget-options-measures" class="block-content"></div>
             </div>
 
-            <div>
-                <h2>Valor espacial</h2>
-
-                <div id="widget-options-data-geographical-value"></div>
+            <div class="block">
+                <h2>Valores espaciales</h2>
+                <div id="widget-options-data-geographical-value" class="block-content"></div>
             </div>
 
         </div>
@@ -99,9 +97,7 @@
     </script>
 
     <script id="systemsItem" type="text/html">
-        <div>
-            <a href="#" class="selectable-item item <%= selectedClass %>"><%= getLabel(item.title) %></a>
-        </div>
+        <a href="#" class="selectable-item item <%= selectedClass %>"><%= getLabel(item.title) %></a>
     </script>
 
     <!-- Template manager -->
@@ -111,7 +107,8 @@
         templateManager.loadTemplatesInPage();
 
         //API CONTEXT TODO change to local API
-        var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
+        var apiContext = context + "/api/indicators/v1.0";
+        //var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
     </script>
 
     <!-- Modelos -->

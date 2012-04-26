@@ -125,18 +125,19 @@ ul.subcaps li {
 .pagination {
   height: 30px;
   margin: 15px 0;
+  text-align: center;
 }
 
 .pagination ul {
-  display: block;
-  margin-left: 0;
-  margin-bottom: 0;
+  display: inline-block;
+  margin: 0;
   border-radius: 3px;
   box-shadow : 0 1px 2px rgba(0,0,0,.05);
 }
 
 .pagination li {
     display: inline;
+
 }
 
 .pagination a {
@@ -188,17 +189,20 @@ ul.subcaps li {
 
 #widget-creator h2 {
     background: #C4D0DC;
-    color: black;
+    color: #101010;
     font-size: 1em;
-    line-height : 24px;
-    margin: 10px 0;
-    padding: 3px 0px 0 7px;
-    width: 100%;
+    line-height : 25px;
+
+    margin: 0px 0;
+    padding: 5px 0px 5px 7px;
+
+    width: auto;
     border-radius: 5px 5px 0 0;
 }
 
 .pagination > ul li {
     background: none;
+    padding: 0;
 }
 
 .pagination ul li.pagination-page {
@@ -208,9 +212,12 @@ ul.subcaps li {
 }
 
 .selected {
-    background-color: #3478B0;
-    color: #fff;
+    background-color: #F5F5F5;
+    color: #333;
     margin-bottom: 1px;
+    border-radius : 3px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 4px;
 }
 
 a.selectable-item {
@@ -223,5 +230,38 @@ a.selectable-item {
 }
 
 a.selected {
-   color : #fff !important;
+   color : #000 !important;
+   padding: 4px;
+}
+
+a.selected:hover:after {
+    color : #3a3a3a;
+    content : 'x';
+    position: relative;
+    right: 5px;
+    float: right;
+}
+
+.selectionable-items {
+    color : #525252;
+    margin-top: 5px;
+    border-top: 1px solid #e9e9e9;
+    line-height: 25px;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.block-content {
+    border: 1px solid #C4D0DC;
+    padding: 5px;
+}
+
+.block {
+    margin: 5px 0;
+}
+
+.selectedItems {
+    line-height: 25px;
 }

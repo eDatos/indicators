@@ -3,7 +3,7 @@
  */
 (function(undefined){
 
-    var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
+    apiContext || (apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0");
 
     var _getKeys = function(hash){
         var keys = [];

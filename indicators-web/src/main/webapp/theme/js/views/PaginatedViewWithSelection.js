@@ -14,7 +14,7 @@ var PaginatedViewWithSelection = PaginatedView.extend({
             this.trigger("selectionChange", this._selection.selection);
         }, this);
 
-        this.$elSelected = $("<div></div>");
+        this.$elSelected = $("<div class='selectedItems'></div>");
         this.$el.append(this.$elSelected);
     },
 
@@ -27,12 +27,16 @@ var PaginatedViewWithSelection = PaginatedView.extend({
     },
 
     renderSelectedItems : function(){
-        var selected = this._selection.selection;
-        var selectedIds = _.map(selected, function(item){
-            return item.id
-        });
+        var selecteds = this._selection.selection;
 
-        this.$elSelected.text(JSON.stringify(selectedIds));
+        var selectedLabel = '';
+        if(selecteds.length > 0){
+            selectedLabel = getLabel(selecteds[0].get('title'));
+        }
+
+        var html = "<strong>Seleccionado : </strong> " + selectedLabel;
+
+        this.$elSelected.html(html);
     },
 
     selectItem : function(selectedItem){

@@ -38,6 +38,12 @@ SelectionView = Backbone.View.extend({
             html += '<div><a href="#" class="selectable-item ' + selectedClass + '" data-value="' + item.id +'">' + label + '</a></div>'
         });
 
+        if(this._selection.max > 0){
+            var s = this._selection.max > 1 ? 's' : '';
+            var selectionableItemsHtml = '<div class="selectionable-items">Puede seleccionar como máximo ' + this._selection.max + ' elemento'+s+'</div>'
+            html += selectionableItemsHtml;
+        }
+
         this.$el.html(html);
         return this;
     },
