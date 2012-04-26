@@ -274,7 +274,6 @@
         },
 
         setSystemId : function(systemId){
-            console.log('set system id' + systemId);
             this.systemId = systemId;
             this.render();
         },
@@ -310,7 +309,6 @@
         },
 
         parse : function(dataset){
-            console.log('parse', dataset);
             var self = this;
             var measureValue = this.measures[0];
             var timeValues = dataset.getTimeValues();
@@ -487,9 +485,6 @@
 
         renderTable : function(datasets){
             if (datasets) {
-                console.log('renderTable', datasets);
-
-
                 var head = '<thead>';
                 head += '<tr><th></th>';
 

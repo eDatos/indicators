@@ -42,7 +42,6 @@ var WidgetPreviewView = Backbone.View.extend({
         }, this);
 
         this.model.on('change:systemId', function(model, systemId){
-            console.log('change system ID!' + systemId);
             this.widget.setSystemId(systemId);
         }, this);
 

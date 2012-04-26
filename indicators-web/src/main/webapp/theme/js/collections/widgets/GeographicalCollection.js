@@ -19,8 +19,6 @@ var GeographicalCollection = Backbone.Collection.extend({
 
     reloadData : function(){
         var geographicalValues = this.indicators.getGeographicalValues();
-        console.log('geographicalValues', geographicalValues);
-
         this.reset(geographicalValues);
     }
 });

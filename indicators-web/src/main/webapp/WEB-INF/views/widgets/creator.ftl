@@ -98,21 +98,9 @@
         </div>
     </script>
 
-    <script id="indicatorsItem" type="text/html">
-        <div>
-            <a href="#" class="item"><%= getLabel(title) %></a>
-        </div>
-    </script>
-
-    <script id="geographicalItem" type="text/html">
-        <div>
-            <a href="#" class="item"><%= name %></a>
-        </div>
-    </script>
-
     <script id="systemsItem" type="text/html">
         <div>
-            <a href="#" class="item"><%= getLabel(title) %></a>
+            <a href="#" class="selectable-item item <%= selectedClass %>"><%= getLabel(item.title) %></a>
         </div>
     </script>
 
@@ -125,9 +113,6 @@
         //API CONTEXT TODO change to local API
         var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
     </script>
-
-    <!-- Mock Data -->
-    <script src="[@spring.url "/theme/js/widgets/MockDatasetData.js"/]"></script>
 
     <!-- Modelos -->
     <script src="[@spring.url "/theme/js/models/widgets/IndicatorInstanceModel.js"/]"></script>

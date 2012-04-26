@@ -19,7 +19,9 @@ var PaginatedViewWithSelection = PaginatedView.extend({
     },
 
     renderContentItem : function(item){
-        var view = new PaginatedItemViewWithSelection({template : this.contentItemTemplate, model : item});
+        var selected = this._selection.isSelected(item);
+        var view = new PaginatedItemViewWithSelection({template : this.contentItemTemplate, model : item, selected : selected});
+
         view.on('selectItem', this.selectItem, this);
         return view.render().el;
     },
@@ -29,10 +31,6 @@ var PaginatedViewWithSelection = PaginatedView.extend({
         var selectedIds = _.map(selected, function(item){
             return item.id
         });
-
-
-
-
 
         this.$elSelected.text(JSON.stringify(selectedIds));
     },

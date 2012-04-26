@@ -68,7 +68,6 @@ var WidgetOptionsView = Backbone.View.extend({
         var geographicalView = new GeographicalView({collection : geographicalCollection, el : '#widget-options-data-geographical-value', discriminator : 'code'});
 
         geographicalView.on('selectionChange', function(selection){
-            console.log(selection);
             var geographicalValues = _.map(selection, function(item){
                 return item.get('code');
             });
@@ -78,7 +77,6 @@ var WidgetOptionsView = Backbone.View.extend({
 
         var prepareSelectionLimits = function(){
             var type = self.model.get('type');
-            console.log(type);
             if(type === "temporal"){
                 measuresView.setMaxSelectionSize(1);
                 indicatorsView.setMaxSelectionSize(1);
