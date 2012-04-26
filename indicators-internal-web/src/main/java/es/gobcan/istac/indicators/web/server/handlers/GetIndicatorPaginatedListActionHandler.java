@@ -15,7 +15,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListResult;
 
@@ -38,7 +38,7 @@ public class GetIndicatorPaginatedListActionHandler extends AbstractActionHandle
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHelper.getServiceContext(), criteria);
+            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetIndicatorPaginatedListResult(result.getResults(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

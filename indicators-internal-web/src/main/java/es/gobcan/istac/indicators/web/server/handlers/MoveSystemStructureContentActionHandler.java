@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 
@@ -32,9 +32,10 @@ public class MoveSystemStructureContentActionHandler extends AbstractActionHandl
             ElementLevelDto level = action.getLevel();
             Long order = action.getTargetOrderInLevel();
             if (level.isElementTypeDimension()) {
-                indicatorsServiceFacade.updateDimensionLocation(ServiceContextHelper.getServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
+                indicatorsServiceFacade.updateDimensionLocation(ServiceContextHolder.getCurrentServiceContext(), level.getDimension().getUuid(), action.getTargetDimensionUuid(), order++);
             } else if (level.isElementTypeIndicatorInstance()) {
-                indicatorsServiceFacade.updateIndicatorInstanceLocation(ServiceContextHelper.getServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(), order++);
+                indicatorsServiceFacade.updateIndicatorInstanceLocation(ServiceContextHolder.getCurrentServiceContext(), level.getIndicatorInstance().getUuid(), action.getTargetDimensionUuid(),
+                        order++);
             }
             return new MoveSystemStructureContentResult();
         } catch (MetamacException e) {

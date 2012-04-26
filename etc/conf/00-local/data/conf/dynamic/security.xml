@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Security Configuration</comment>
+    
+    <entry key="indicators.security.casServerUrlPrefix">http://localhost:8080/cas</entry>
+    <entry key="indicators.security.casServiceLoginUrl">http://localhost:8080/cas/login</entry>
+    <entry key="indicators.security.casServiceLogoutUrl">http://localhost:8080/cas/logout</entry>
+    <entry key="indicators.security.tolerance">3000</entry> <!-- ms -->
+    
+</properties>

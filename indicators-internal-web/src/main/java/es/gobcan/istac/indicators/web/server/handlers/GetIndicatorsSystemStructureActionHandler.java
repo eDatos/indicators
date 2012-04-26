@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 
@@ -30,8 +30,8 @@ public class GetIndicatorsSystemStructureActionHandler extends AbstractActionHan
         // Check if operation (indicators system) exists in the DB
         try {
             // If exists, retrieve indicators system structure
-            IndicatorsSystemDto system = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getCode(), null);
-            IndicatorsSystemStructureDto structure = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(ServiceContextHelper.getServiceContext(), system.getUuid(), null);
+            IndicatorsSystemDto system = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(), null);
+            IndicatorsSystemStructureDto structure = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(ServiceContextHolder.getCurrentServiceContext(), system.getUuid(), null);
             return new GetIndicatorsSystemStructureResult(structure);
         } catch (MetamacException e) {
             // If does not exist, return an empty structure

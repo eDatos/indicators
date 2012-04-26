@@ -22,7 +22,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 
@@ -48,7 +48,7 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
                 criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid(),
                         OperationType.EQ));
             }
-            MetamacCriteriaResult<GeographicalValueDto> result = indicatorsServiceFacade.findGeographicalValues(ServiceContextHelper.getServiceContext(), criteria);
+            MetamacCriteriaResult<GeographicalValueDto> result = indicatorsServiceFacade.findGeographicalValues(ServiceContextHolder.getCurrentServiceContext(), criteria);
             if (result.getResults().size() != result.getPaginatorResult().getTotalResults().intValue()) {
                 MetamacWebExceptionItem metamacWebExceptionItem = new MetamacWebExceptionItem("exception.web.geographical.value.result.limit",
                         "Error retrieving geographical values. Please contact system administrator.");

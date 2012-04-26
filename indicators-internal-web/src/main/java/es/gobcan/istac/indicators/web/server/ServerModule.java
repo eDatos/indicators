@@ -32,11 +32,11 @@ import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPaginatedListA
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetLoginPageUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesInIndicatorActionHandler;
-import es.gobcan.istac.indicators.web.server.handlers.GetUserPrincipalActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
@@ -53,6 +53,7 @@ import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToProd
 import es.gobcan.istac.indicators.web.server.handlers.UpdateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.UpdateIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.ValidateTicketActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
@@ -83,11 +84,11 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
+import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetUserPrincipalAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
@@ -104,6 +105,7 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionVal
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.ValidateTicketAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 
@@ -183,9 +185,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
         bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
-
-        bindHandler(GetUserPrincipalAction.class, GetUserPrincipalActionHandler.class);
-
+        
+        bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
+        bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
     }
 
 }

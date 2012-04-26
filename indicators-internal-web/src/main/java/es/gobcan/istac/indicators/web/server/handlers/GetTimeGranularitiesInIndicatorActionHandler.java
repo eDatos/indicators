@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorResult;
 
@@ -31,7 +31,7 @@ public class GetTimeGranularitiesInIndicatorActionHandler extends AbstractAction
     @Override
     public GetTimeGranularitiesInIndicatorResult execute(GetTimeGranularitiesInIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            List<TimeGranularityDto> timeGranularityDtos = indicatorsServiceFacade.retrieveTimeGranularitiesInIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(),
+            List<TimeGranularityDto> timeGranularityDtos = indicatorsServiceFacade.retrieveTimeGranularitiesInIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(),
                     action.getIndicatorVersion());
             return new GetTimeGranularitiesInIndicatorResult(timeGranularityDtos);
         } catch (MetamacException e) {

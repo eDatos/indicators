@@ -20,7 +20,7 @@ public interface IndicatorsWebGinjector extends Ginjector {
 
     PlaceManager getPlaceManager();
     EventBus getEventBus();
-    DispatchAsync getDispatchAsync();
+    DispatchAsync getDispatcher();
 
     Provider<MainPagePresenter> getMainPagePresenter();
     AsyncProvider<SystemListPresenter> getSystemListPresenter();

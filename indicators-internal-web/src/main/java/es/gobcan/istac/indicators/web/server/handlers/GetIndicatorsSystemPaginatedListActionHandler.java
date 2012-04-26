@@ -16,7 +16,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
@@ -48,7 +48,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActio
                 // Check if operation (indicators system) exists in the DB
                 try {
                     // If exists, updates indicators system
-                    IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), operationBase.getCode(), null);
+                    IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), operationBase.getCode(), null);
                     indicatorsSystemDtos.add(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operationBase));
                 } catch (MetamacException e) {
                     indicatorsSystemDtos.add(DtoUtils.createIndicatorsSystemDtoWeb(operationBase));

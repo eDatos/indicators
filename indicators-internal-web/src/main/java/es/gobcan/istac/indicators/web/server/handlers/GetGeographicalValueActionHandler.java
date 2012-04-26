@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 
@@ -29,7 +29,7 @@ public class GetGeographicalValueActionHandler extends AbstractActionHandler<Get
     @Override
     public GetGeographicalValueResult execute(GetGeographicalValueAction action, ExecutionContext context) throws ActionException {
         try {
-            GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(ServiceContextHelper.getServiceContext(), action.getGeographicalValueUuid());
+            GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(ServiceContextHolder.getCurrentServiceContext(), action.getGeographicalValueUuid());
             return new GetGeographicalValueResult(geographicalValueDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 
@@ -31,7 +31,7 @@ public class GetGeographicalGranularitiesActionHandler extends AbstractActionHan
     @Override
     public GetGeographicalGranularitiesResult execute(GetGeographicalGranularitiesAction action, ExecutionContext context) throws ActionException {
         try {
-            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularities(ServiceContextHelper.getServiceContext());
+            List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularities(ServiceContextHolder.getCurrentServiceContext());
             return new GetGeographicalGranularitiesResult(geographicalGranularityDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

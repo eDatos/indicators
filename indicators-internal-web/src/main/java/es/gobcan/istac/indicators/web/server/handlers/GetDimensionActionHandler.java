@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetDimensionResult;
 
@@ -29,7 +29,7 @@ public class GetDimensionActionHandler extends AbstractActionHandler<GetDimensio
     @Override
     public GetDimensionResult execute(GetDimensionAction action, ExecutionContext context) throws ActionException {
         try {
-            DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(ServiceContextHelper.getServiceContext(), action.getUuid());
+            DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new GetDimensionResult(dimensionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

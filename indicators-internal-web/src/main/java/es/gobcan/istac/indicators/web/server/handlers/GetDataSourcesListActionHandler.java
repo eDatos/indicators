@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 
@@ -31,7 +31,7 @@ public class GetDataSourcesListActionHandler extends AbstractActionHandler<GetDa
     @Override
     public GetDataSourcesListResult execute(GetDataSourcesListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<DataSourceDto> dataSourceDtos = indicatorsServiceFacade.retrieveDataSourcesByIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(),
+            List<DataSourceDto> dataSourceDtos = indicatorsServiceFacade.retrieveDataSourcesByIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(),
                     action.getIndicatorVersion());
             return new GetDataSourcesListResult(dataSourceDtos);
         } catch (MetamacException e) {

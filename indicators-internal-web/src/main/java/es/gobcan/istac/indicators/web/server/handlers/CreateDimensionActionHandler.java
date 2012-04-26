@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -39,7 +39,7 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
         // Check if operation (indicators system) exists in the DB
         try {
             // If exists, create dimension
-            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHelper.getServiceContext(), action.getIndicatorsSystem().getCode(), null);
+            indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorsSystem().getCode(), null);
         } catch (MetamacException e) {
             // If does not exist, create a new indicators system and set operation values
             try {
@@ -48,14 +48,14 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
                 // Set values to indicators system
                 indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operationBase);
                 // Create indicators system
-                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHelper.getServiceContext(), indicatorsSystemDto);
+                indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e1) {
                 throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e1.getExceptionItems()));
             }
         }
         // Create Dimension
         try {
-            DimensionDto dimensionDto = indicatorsServiceFacade.createDimension(ServiceContextHelper.getServiceContext(), indicatorsSystemDto.getUuid(), action.getDimension());
+            DimensionDto dimensionDto = indicatorsServiceFacade.createDimension(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid(), action.getDimension());
             return new CreateDimensionResult(dimensionDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

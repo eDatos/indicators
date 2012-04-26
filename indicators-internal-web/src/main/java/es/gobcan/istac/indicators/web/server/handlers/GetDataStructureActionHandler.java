@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 
@@ -29,7 +29,7 @@ public class GetDataStructureActionHandler extends AbstractActionHandler<GetData
     @Override
     public GetDataStructureResult execute(GetDataStructureAction action, ExecutionContext context) throws ActionException {
         try {
-            DataStructureDto dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHelper.getServiceContext(), action.getUuid());
+            DataStructureDto dataStructureDto = indicatorsServiceFacade.retrieveDataStructure(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new GetDataStructureResult(dataStructureDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

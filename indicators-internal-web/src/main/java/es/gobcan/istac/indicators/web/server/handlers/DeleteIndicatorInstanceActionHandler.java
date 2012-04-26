@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
 
@@ -28,7 +28,7 @@ public class DeleteIndicatorInstanceActionHandler extends AbstractActionHandler<
     @Override
     public DeleteIndicatorInstanceResult execute(DeleteIndicatorInstanceAction action, ExecutionContext context) throws ActionException {
         try {
-            indicatorsServiceFacade.deleteIndicatorInstance(ServiceContextHelper.getServiceContext(), action.getIndicatorInstanceUuid());
+            indicatorsServiceFacade.deleteIndicatorInstance(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorInstanceUuid());
             return new DeleteIndicatorInstanceResult();
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
 
@@ -29,7 +29,7 @@ public class PublishIndicatorActionHandler extends AbstractActionHandler<Publish
     @Override
     public PublishIndicatorResult execute(PublishIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.publishIndicator(ServiceContextHelper.getServiceContext(), action.getUuid());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.publishIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new PublishIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorResult;
 
@@ -31,7 +31,8 @@ public class GetTimeValuesInIndicatorActionHandler extends AbstractActionHandler
     @Override
     public GetTimeValuesInIndicatorResult execute(GetTimeValuesInIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            List<TimeValueDto> timeValues = indicatorsServiceFacade.retrieveTimeValuesInIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getIndicatorVersion());
+            List<TimeValueDto> timeValues = indicatorsServiceFacade.retrieveTimeValuesInIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(),
+                    action.getIndicatorVersion());
             return new GetTimeValuesInIndicatorResult(timeValues);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

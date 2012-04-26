@@ -14,6 +14,11 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+ 
+     <!-- Enable Spring Request Context Holder -->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
 	
 	<servlet>
 		<servlet-name>dispatch</servlet-name>

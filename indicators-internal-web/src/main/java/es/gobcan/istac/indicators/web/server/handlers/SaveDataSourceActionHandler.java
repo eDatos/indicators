@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceResult;
 
@@ -31,9 +31,9 @@ public class SaveDataSourceActionHandler extends AbstractActionHandler<SaveDataS
         try {
             DataSourceDto dataSourceDto = null;
             if (action.getDataSourceDtoToSave().getUuid() == null) {
-                dataSourceDto = indicatorsServiceFacade.createDataSource(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getDataSourceDtoToSave());
+                dataSourceDto = indicatorsServiceFacade.createDataSource(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getDataSourceDtoToSave());
             } else {
-                dataSourceDto = indicatorsServiceFacade.updateDataSource(ServiceContextHelper.getServiceContext(), action.getDataSourceDtoToSave());
+                dataSourceDto = indicatorsServiceFacade.updateDataSource(ServiceContextHolder.getCurrentServiceContext(), action.getDataSourceDtoToSave());
             }
             return new SaveDataSourceResult(dataSourceDto);
         } catch (MetamacException e) {

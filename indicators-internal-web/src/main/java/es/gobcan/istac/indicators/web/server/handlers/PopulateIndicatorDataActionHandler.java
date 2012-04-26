@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 
@@ -29,8 +29,8 @@ public class PopulateIndicatorDataActionHandler extends AbstractActionHandler<Po
     @Override
     public PopulateIndicatorDataResult execute(PopulateIndicatorDataAction action, ExecutionContext context) throws ActionException {
         try {
-            indicatorsServiceFacade.populateIndicatorData(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getVersion());
-            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHelper.getServiceContext(), action.getIndicatorUuid(), action.getVersion());
+            indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getVersion());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getVersion());
             return new PopulateIndicatorDataResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

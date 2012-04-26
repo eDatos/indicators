@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
@@ -31,7 +31,7 @@ public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<Get
     @Override
     public GetQuantityUnitsListResult execute(GetQuantityUnitsListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.retrieveQuantityUnits(ServiceContextHelper.getServiceContext());
+            List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.retrieveQuantityUnits(ServiceContextHolder.getCurrentServiceContext());
             return new GetQuantityUnitsListResult(quantityUnitDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

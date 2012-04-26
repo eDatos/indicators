@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationResult;
 
@@ -29,7 +29,7 @@ public class SendIndicatorToDiffusionValidationActionHandler extends AbstractAct
     @Override
     public SendIndicatorToDiffusionValidationResult execute(SendIndicatorToDiffusionValidationAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.sendIndicatorToDiffusionValidation(ServiceContextHelper.getServiceContext(), action.getUuid());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.sendIndicatorToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new SendIndicatorToDiffusionValidationResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

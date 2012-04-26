@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationResult;
@@ -32,7 +32,8 @@ public class RejectIndicatorsSystemProductionValidationActionHandler extends Abs
     public RejectIndicatorsSystemProductionValidationResult execute(RejectIndicatorsSystemProductionValidationAction action, ExecutionContext context) throws ActionException {
         try {
             IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getIndicatorsSystemToReject();
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(ServiceContextHolder.getCurrentServiceContext(),
+                    indicatorsSystemDtoWeb.getUuid());
             return new RejectIndicatorsSystemProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

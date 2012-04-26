@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 
@@ -29,7 +29,7 @@ public class ArchiveIndicatorActionHandler extends AbstractActionHandler<Archive
     @Override
     public ArchiveIndicatorResult execute(ArchiveIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.archiveIndicator(ServiceContextHelper.getServiceContext(), action.getUuid());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.archiveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new ArchiveIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

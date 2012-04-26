@@ -8,6 +8,7 @@
     <system />
     
     <!-- STATIC configurations -->
+    <properties fileName="${environment.indicators.data}/conf/dynamic/security.xml" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/resources.xml" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/quartz.properties" config-optional="false" />
 

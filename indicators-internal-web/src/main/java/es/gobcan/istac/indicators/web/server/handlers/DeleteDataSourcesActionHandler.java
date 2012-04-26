@@ -11,7 +11,7 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
 
@@ -29,7 +29,7 @@ public class DeleteDataSourcesActionHandler extends AbstractActionHandler<Delete
     public DeleteDataSourcesResult execute(DeleteDataSourcesAction action, ExecutionContext context) throws ActionException {
         for (String uuid : action.getUuids()) {
             try {
-                indicatorsServiceFacade.deleteDataSource(ServiceContextHelper.getServiceContext(), uuid);
+                indicatorsServiceFacade.deleteDataSource(ServiceContextHolder.getCurrentServiceContext(), uuid);
             } catch (MetamacException e) {
                 throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
             }

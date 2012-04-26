@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 
@@ -29,7 +29,7 @@ public class VersioningIndicatorActionHandler extends AbstractActionHandler<Vers
     @Override
     public VersioningIndicatorResult execute(VersioningIndicatorAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.versioningIndicator(ServiceContextHelper.getServiceContext(), action.getUuid(), action.getVersionType());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.versioningIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getUuid(), action.getVersionType());
             return new VersioningIndicatorResult(indicatorDto);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

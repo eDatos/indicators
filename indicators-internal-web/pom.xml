@@ -68,6 +68,10 @@
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                    <artifactId>htmlunit</artifactId>
+                </exclusion>
 			</exclusions>
 		</dependency>
 		<!-- GIN -->
@@ -134,6 +138,32 @@
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso-client.version}</version>
+        </dependency>
+        
+        <!-- CAS -->
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xml-security</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
         </dependency>
 	</dependencies>
 

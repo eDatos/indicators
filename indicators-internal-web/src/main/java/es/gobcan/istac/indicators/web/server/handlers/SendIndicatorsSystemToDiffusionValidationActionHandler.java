@@ -12,7 +12,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
@@ -32,7 +32,8 @@ public class SendIndicatorsSystemToDiffusionValidationActionHandler extends Abst
     public SendIndicatorsSystemToDiffusionValidationResult execute(SendIndicatorsSystemToDiffusionValidationAction action, ExecutionContext context) throws ActionException {
         try {
             IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = action.getSystemToSend();
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(ServiceContextHelper.getServiceContext(), indicatorsSystemDtoWeb.getUuid());
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(),
+                    indicatorsSystemDtoWeb.getUuid());
             return new SendIndicatorsSystemToDiffusionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));

@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHelper;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
@@ -31,7 +31,7 @@ public class GetSubjectsListActionHandler extends AbstractActionHandler<GetSubje
     @Override
     public GetSubjectsListResult execute(GetSubjectsListAction action, ExecutionContext context) throws ActionException {
         try {
-            List<SubjectDto> subjectDtos = indicatorsServiceFacade.retrieveSubjects(ServiceContextHelper.getServiceContext());
+            List<SubjectDto> subjectDtos = indicatorsServiceFacade.retrieveSubjects(ServiceContextHolder.getCurrentServiceContext());
             return new GetSubjectsListResult(subjectDtos);
         } catch (MetamacException e) {
             throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
