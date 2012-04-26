@@ -3,7 +3,9 @@
  */
 (function(undefined){
 
-    apiContext || (apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0");
+    if(typeof(apiContext) == 'undefined'){
+        apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
+    }
 
     var _getKeys = function(hash){
         var keys = [];
@@ -82,6 +84,8 @@
 
     var Dataset = Class.extend({
 
+        _cache : [],
+
         init : function(){
             this.data = {}
             this.structure = {};
@@ -105,22 +109,12 @@
             if(systemid == undefined || indicatorid == undefined){
                 resolveFetch();
             }else{
-                //TODO esto van a tener que ser peticiones JSONP?
-                var indicatorUrl = apiContext + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
-                var indicatorDataUrl = indicatorUrl + "/data";
-                var requestStructure = $.get(indicatorUrl);
-                var requestData = $.get(indicatorDataUrl);
-
-                requestStructure.success(function(response){
-                    self.structure = response;
-                });
-
-                requestData.success(function(response){
-                    self.data = response;
-                });
-
-                var deferred = $.Deferred();
-                $.when(requestStructure, requestData).then(resolveFetch);
+                //Uso de cache interna, en producción se podría utilizar la cache de la petición?
+                if(this._getDatasetFromCache(systemid, indicatorid)){
+                    resolveFetch();
+                }else{
+                    this._getDatasetFromApi(systemid, indicatorid, resolveFetch);
+                }
             }
 
             return deferred.promise();
@@ -194,7 +188,58 @@
             }else{
                 return null;
             }
+        },
+
+        _getCacheKey : function(systemid, indicatorid){
+            if(systemid != undefined && indicatorid != undefined){
+                return systemid + '#' + indicatorid;
+            }
+         },
+
+        _getDatasetFromCache : function(systemid, indicatorid){
+            var key = this._getCacheKey(systemid, indicatorid);
+            if(key){
+                var dataset = this._cache[key];
+                if(dataset){
+                    this.data = dataset.data;
+                    this.structure = dataset.structure;
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        _saveCache : function(systemid, indicatorid){
+            var self = this;
+            var key = self._getCacheKey(systemid, indicatorid);
+            self._cache[key] = {
+                data : self.data,
+                structure : self.structure
+            };
+        },
+
+        _getDatasetFromApi : function(systemid, indicatorid, callback){
+            var self = this;
+            //TODO esto van a tener que ser peticiones JSONP?
+            var indicatorUrl = apiContext + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
+            var indicatorDataUrl = indicatorUrl + "/data";
+            var requestStructure = $.get(indicatorUrl);
+            var requestData = $.get(indicatorDataUrl);
+
+            requestStructure.success(function(response){
+                self.structure = response;
+            });
+
+            requestData.success(function(response){
+                self.data = response;
+            });
+
+            $.when(requestStructure, requestData).then(function(){
+                self._saveCache(systemid, indicatorid);
+                callback();
+            });
         }
+
 
     });
 
