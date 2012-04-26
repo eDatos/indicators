@@ -9,6 +9,7 @@ var PaginatedViewWithSelection = PaginatedView.extend({
 
         this._selection = new ToggleSelection({discriminator : 'id'});
         this._selection.on('change', this.renderSelectedItems, this);
+        this._selection.on('change', this.render, this);
 
         this._selection.on('change', function(){
             this.trigger("selectionChange", this._selection.selection);

@@ -53,10 +53,10 @@ var WidgetOptionsView = Backbone.View.extend({
         measuresView.render();
         measuresCollection.reset([
             {id : 'ABSOLUTE', name : 'ABSOLUTE'},
-            {id : 'ANNUAL_PERCENTAGE_RATE', name : 'ANNUAL_PERCENTAGE_RATE'},
-            {id : 'ANNUAL_PUNTUAL_RATE', name : 'ANNUAL_PUNTUAL_RATE'},
-            {id : 'INTERPERIOD_PERCENTAGE_RATE', name : 'INTERPERIOD_PERCENTAGE_RATE'},
-            {id : 'INTERPERIOD_PUNTUAL_RATE', name : 'INTERPERIOD_PUNTUAL_RATE'}
+            {id : 'ANNUAL_PERCENTAGE_RATE', name : 'ANNUAL PERCENTAGE RATE'},
+            {id : 'ANNUAL_PUNTUAL_RATE', name : 'ANNUAL PUNTUAL RATE'},
+            {id : 'INTERPERIOD_PERCENTAGE_RATE', name : 'INTERPERIOD PERCENTAGE RATE'},
+            {id : 'INTERPERIOD_PUNTUAL_RATE', name : 'INTERPERIOD PUNTUAL RATE'}
         ]);
 
         measuresView.on('selectionChange', function(selection){

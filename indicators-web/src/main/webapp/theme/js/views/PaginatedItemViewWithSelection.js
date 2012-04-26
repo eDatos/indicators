@@ -29,13 +29,6 @@ var PaginatedItemViewWithSelection = Backbone.View.extend({
     },
 
     selectItem : function(e){
-        var $target = $(e.target);
-        var $parentContainer = $target.parent().parent();
-
-        $('.selected', $parentContainer).removeClass('selected');
-
-        $target.toggleClass('selected');
-
         e.preventDefault();
         this.trigger("selectItem", this.model);
     }
