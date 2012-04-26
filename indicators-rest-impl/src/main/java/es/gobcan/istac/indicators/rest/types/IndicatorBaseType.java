@@ -15,6 +15,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "title",
     "acronym",
     "subjectCode",
+    "subjectTitle",
     "systemSurveyLinks",
     "quantity",
     "conceptDescription",
@@ -36,6 +37,7 @@ public class IndicatorBaseType implements Serializable {
     private Map<String, String> acronym            = null;
 
     private String              subjectCode        = null;
+    private Map<String, String> subjectTitle       = null;
     private List<LinkType>      systemSurveyLinks  = null;
 
     private QuantityType        quantity           = null;
@@ -104,6 +106,14 @@ public class IndicatorBaseType implements Serializable {
 
     public void setSubjectCode(String subjectCode) {
         this.subjectCode = subjectCode;
+    }
+
+    public Map<String, String> getSubjectTitle() {
+        return subjectTitle;
+    }
+
+    public void setSubjectTitle(Map<String, String> subjectTitle) {
+        this.subjectTitle = subjectTitle;
     }
 
     public List<LinkType> getSystemSurveyLinks() {

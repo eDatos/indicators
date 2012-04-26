@@ -262,6 +262,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
+        target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle()));
         
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsSystemsService.retrieveIndicatorsSystemPublishedForIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
