@@ -190,6 +190,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(UpdateIndicatorResult result) {
                 getView().setIndicator(result.getIndicatorDto());
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSaved()), MessageTypeEnum.SUCCESS);
             }
         });
     }
