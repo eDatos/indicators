@@ -30,6 +30,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
@@ -2007,8 +2008,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Publish
-        IndicatorDto indicatorDtoV1Updated = indicatorsServiceFacade.publishIndicator(getServiceContextAdministrador(), uuid).getIndicator();
-
+        PublishIndicatorResultDto publishIndicatorResultDto = indicatorsServiceFacade.publishIndicator(getServiceContextAdministrador(), uuid);
+        IndicatorDto indicatorDtoV1Updated = publishIndicatorResultDto.getIndicator();
+        assertNull(publishIndicatorResultDto.getPublicationFailedReason());
+        
         // Validation
         {
             assertEquals(null, indicatorDtoV1Updated.getProductionVersion());
