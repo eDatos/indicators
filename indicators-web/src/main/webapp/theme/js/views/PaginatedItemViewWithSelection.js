@@ -25,6 +25,7 @@ var PaginatedItemViewWithSelection = Backbone.View.extend({
 
         var html = this.template(renderData);
         this.$el.html(html);
+
         return this;
     },
 

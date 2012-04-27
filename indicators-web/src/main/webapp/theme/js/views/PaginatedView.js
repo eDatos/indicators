@@ -27,6 +27,8 @@ var PaginatedView = Backbone.View.extend({
     render : function(){
         this.renderContent();
         this.renderPagination();
+
+        this.delegateEvents();
     },
 
     renderPagination : function(){

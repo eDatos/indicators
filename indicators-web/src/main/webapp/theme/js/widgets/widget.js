@@ -4,7 +4,7 @@
 (function(undefined){
 
     if(typeof(apiContext) == 'undefined'){
-        apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
+        apiContext = "http://aherfer:8080/indicators-web/api/indicators/v1.0";
     }
 
     var _getKeys = function(hash){
@@ -472,6 +472,15 @@
         }
     });
 
+
+    var measuresLabels = {
+        'ABSOLUTE' : 'Absoluto',
+        'ANNUAL_PERCENTAGE_RATE' : 'Variación porcentual interanual',
+        'ANNUAL_PUNTUAL_RATE' :  'Variación puntual interanual',
+        'INTERPERIOD_PERCENTAGE_RATE' : 'Variación porcentual interperiódica',
+        'INTERPERIOD_PUNTUAL_RATE' : 'Variación puntual interperiódica'
+    }
+
     var LastData = Base.extend({
         containerClass : "istac-widget-lastData",
 
@@ -535,7 +544,7 @@
 
                 for (var i = 0; i < this.measures.length; i++) {
                     var measure = this.measures[i];
-                    head += '<th>' + measure.replace(/_/g, ' ') + '</th>';
+                    head += '<th>' + measuresLabels[measure] + '</th>';
                 }
 
                 head += '</thead>';

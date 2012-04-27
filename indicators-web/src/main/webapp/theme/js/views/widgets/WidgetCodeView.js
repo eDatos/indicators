@@ -3,9 +3,12 @@
  */
 
 var WidgetCodeView = Backbone.View.extend({
+
+
+
     initialize : function(){
+        this.template = templateManager.get('codeTmpl');
         this.model.on('change', this.render, this);
-        this.render();
     },
 
     render : function(){
@@ -28,6 +31,9 @@ var WidgetCodeView = Backbone.View.extend({
         code.push('     measures : ' + JSON.stringify(model.measures) + ' ');
         code.push('});');
         code.push('</script>');
-        $(this.el).text(code.join('\n'));
+
+        var htmlCode = code.join('\n');
+        this.$el.html(this.template({code : htmlCode}));
+        return this;
     }
 });

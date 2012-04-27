@@ -3,78 +3,97 @@
 [@template.base]
 
 <div id="widget-creator">
-    <div id="widget-options">
-        <div class="widget-options-type">
-            <h3>Selección del tipo de widget</h3>
-
-            <div>
-                <label>
-                    Tipo de widget:
-                    <select id="widget-options-data-type">
-                        <option value="lastData" selected>Últimos datos</option>
-                        <option value="temporal">Serie temporal</option>
-                    </select>
-                </label>
-            </div>
-        </div>
-
-        <div class="widget-options-style">
-            <h3>Opciones de estilo</h3>
-
-            <div><label>Color del texto: <input type="text" id="widget-options-style-text-color"/></label></div>
-            <div><label>Color del marco del widget: <input type="text" id="widget-options-style-border-color"></label>
-            </div>
-            <div><label>Ancho del widget
-                <small>(px)</small>
-                : <input type="text" id="widget-options-style-width"/></label></div>
-            <div id="widget-options-style-width-slider"></div>
-
-            <div><label>Título del widget: <input type="text" id="widget-options-style-title"/></label></div>
-        </div>
 
 
+    <div id="widget-preview-content" class="widget"></div>
 
-        <div class="widget-options-data">
-            <h3>Opciones de datos</h3>
+    <div class="tabbable" id="widget-options-tabs">
+        <ul class="nav-tabs">
+            <li class="active" ><a href="#type" >Tipo</a></li>
+            <li><a href="#data">Datos</a></li>
+            <li><a href="#style">Estilos</a></li>
+            <li><a href="#export">Exportar</a></li>
+        </ul>
 
-            <div class="block">
-                <h2>Sistema de indicadores</h2>
-                <div id="widget-options-data-systems" class="block-content"></div>
-            </div>
-
-            <div class="block">
-                <h2>Indicadores</h2>
-
-                <div id="widget-options-data-indicators" class="block-content"></div>
-            </div>
-
-            <div class="block">
-                <h2>Measures</h2>
-                <div id="widget-options-measures" class="block-content"></div>
-            </div>
-
-            <div class="block">
-                <h2>Valores espaciales</h2>
-                <div id="widget-options-data-geographical-value" class="block-content"></div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="widget-preview">
-        <h3>Vista previa</h3>
-
-        <div id="widget-preview-content" class="widget"></div>
-        <h3>Exportar</h3>
-
-        <div class="widget-export">
-            <textarea id="code-container" readonly="readonly"></textarea>
-
-            <p>Copia este código HTML en tu página</p>
-        </div>
+        <div class="clearfix"></div>
+        <div class="tab-content"></div>
+        <div class="clearfix"></div>
     </div>
 
     <!-- Templates -->
+
+    <script id="typeOptionsTmpl" type="text/html">
+        <div class="widget-type-container">
+
+            <div class="col2 widget-type <% if(type === 'lastData'){ %>widget-type-active<% }%>">
+                <a href="#" data-type="lastData">
+                    <div class="widget-type-title">Últimos datos</div>
+                    <p>Tabla que muestra los últimos datos disponibles</p>
+                </a>
+            </div>
+
+
+            <div class="col2 widget-type <% if(type === 'temporal'){ %>widget-type-active<% }%>">
+                <a href="#" data-type="temporal">
+                    <div class="widget-type-title">Serie temporal</div>
+                    <p>Gráfica que muestra la evolución temporal de un indicador para diferentes valores geográficos</p>
+                </a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </script>
+
+    <script id="dataOptionsTmpl" type="text/html">
+        <div class="col3">
+            <div>
+                <div class="widget-data-title">Sistema de indicadores</div>
+                <div class="systems"></div>
+            </div>
+        </div>
+
+        <div class="col3">
+            <div>
+                <div class="widget-data-title">Indicadores</div>
+                <div class="indicators"></div>
+            </div>
+        </div>
+
+        <div class="col3">
+            <div>
+                <div class="widget-data-title">Medidas</div>
+                <div class="measures"></div>
+            </div>
+
+            <div>
+                <div class="widget-data-title">Valores espaciales</div>
+                <div class="geographicalValues"></div>
+            </div>
+        </div>
+     </script>
+
+    <script id="styleOptionsTmpl" type="text/html">
+        <div>
+            <div><label>Color del texto: <input type="text" name="text-color" id="text-color"/></label></div>
+            <div><label>Color del marco del widget: <input type="text" name="border-color" id="border-color"></label>
+            </div>
+            <div>
+                <label>
+                    Ancho del widget<small>(px)</small>:
+                    <input type="text" name="width" id="widget-width"/>
+                </label>
+            </div>
+            <div class="width-slider"></div>
+            <div><label>Título del widget: <input type="text" name="title"/></label></div>
+        </div>
+    </script>
+
+    <script id="codeTmpl" type="text/html">
+        <div class="widget-export">
+            <p>Copia este código HTML en tu página</p>
+            <textarea id="code-container" readonly="readonly"><%= code %></textarea>
+        </div>
+    </script>
+
     <script id="pagination" type="text/html">
         <div class="pagination">
             <ul>
@@ -108,7 +127,7 @@
 
         //API CONTEXT TODO change to local API
         var apiContext = context + "/api/indicators/v1.0";
-        //var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
+        //var apiContext = "http://rcorrod:8090/indicators-web/api/indicators/v1.0";
     </script>
 
     <!-- Modelos -->
@@ -133,10 +152,12 @@
     <script src="[@spring.url "/theme/js/views/widgets/IndicatorsView.js"/]"></script>
     <script src="[@spring.url "/theme/js/views/widgets/SystemsView.js"/]"></script>
     <script src="[@spring.url "/theme/js/views/widgets/WidgetCodeView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetOptionsView.js"/]"></script>
     <script src="[@spring.url "/theme/js/views/widgets/WidgetPreviewView.js"/]"></script>
     <script src="[@spring.url "/theme/js/views/widgets/WidgetView.js"/]"></script>
-
+    <script src="[@spring.url "/theme/js/views/TabView.js"/]"></script>
+    <script src="[@spring.url "/theme/js/views/widgets/WidgetStyleOptionsView.js"/]"></script>
+    <script src="[@spring.url "/theme/js/views/widgets/WidgetDataOptionsView.js"/]"></script>
+    <script src="[@spring.url "/theme/js/views/widgets/WidgetTypeOptionsView.js"/]"></script>
 
     <!-- Widget -->
     <script src="[@spring.url "/theme/js/widgets/widget.js"/]"></script>

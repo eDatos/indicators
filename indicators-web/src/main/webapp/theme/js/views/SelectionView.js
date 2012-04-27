@@ -44,6 +44,8 @@ SelectionView = Backbone.View.extend({
             html += selectionableItemsHtml;
         }
 
+        this.delegateEvents();
+
         this.$el.html(html);
         return this;
     },
