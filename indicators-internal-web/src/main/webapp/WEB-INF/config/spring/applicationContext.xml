@@ -21,7 +21,7 @@
 
 	<!-- Configure Externalized Logging configuration file -->
 	<bean id="loggingSetup" class="es.gobcan.istac.indicators.web.server.logging.LoggingSetup">
-		<property name="logConfigurationFile" value="file:/${environment.indicators.data}/conf/dynamic/logback-indicators-internal-web.xml"/>
+		<property name="logConfigurationFile" value="${environment.indicators.data}/conf/dynamic/logback-indicators-internal-web.xml"/>
 	</bean>
 
 	<!-- SpringBeanProvider GWTP -->
