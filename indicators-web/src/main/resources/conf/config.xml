@@ -5,6 +5,6 @@
 		<system />
 
 		<!-- STATIC configurations -->
-		<properties fileName="${environment.indicators.data}/conf/static/resources.xml" config-optional="false" />
+		<properties fileName="${environment.indicators.data}/conf/static/resources.xml" basePath="" config-optional="false" />
 	</override>
 </configuration>
