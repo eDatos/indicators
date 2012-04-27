@@ -86,6 +86,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public static final String               DOT_NOT_APPLICABLE = ".";
     public static final String               DOT_UNAVAILABLE    = "..";
     public static final Double               ZERO_RANGE         = 1E-6;
+    public static final int                  MAX_MEASURE_LENGTH = 50;
 
     private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
@@ -153,7 +154,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
             List<DataSource> dataSources = indicatorVersion.getDataSources();
-            
+
             if (dataSources.size() == 0) {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR, indicatorUuid, indicatorVersionNumber);
             }
@@ -176,8 +177,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
-            
-            //No more inconsistent data, no more needs update
+
+            // No more inconsistent data, no more needs update
             markIndicatorVersionAsDataUpdated(indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
@@ -189,15 +190,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-
-
     @Override
     public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
         LOG.info("Starting Indicators data update process");
-        
+
         // Validation
         InvocationValidator.checkUpdateIndicatorsData(null);
-        
+
         Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
 
         markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
@@ -206,7 +205,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         for (IndicatorVersion indicatorVersion : pendingIndicators) {
             Indicator indicator = indicatorVersion.getIndicator();
             String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
-            
+
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
@@ -220,12 +219,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /* Geographical granularities and values */
-    
+
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicator(indicatorUuid, indicatorVersionNumber, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
     }
@@ -234,7 +233,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicatorPublished(indicatorUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateGeographicalGranularitiesInIndicatorVersion(indicatorVersion);
     }
@@ -254,23 +253,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-    
+
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         if (indInstance.getGeographicalValue() != null) {
             return Arrays.asList(indInstance.getGeographicalValue().getGranularity());
         } else if (indInstance.getGeographicalGranularity() != null) {
-            return Arrays.asList(indInstance.getGeographicalGranularity()); 
+            return Arrays.asList(indInstance.getGeographicalGranularity());
         } else {
             return retrieveGeographicalGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
@@ -281,7 +280,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularityUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateGeographicalValuesByGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
     }
@@ -289,8 +288,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, String granularityUuid) throws MetamacException {
         // Validation
-        InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicatorPublished(indicatorUuid,granularityUuid, null);
-        
+        InvocationValidator.checkRetrieveGeographicalValuesByGranularityInIndicatorPublished(indicatorUuid, granularityUuid, null);
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateGeographicalValuesByGranularityInIndicatorVersion(granularityUuid, indicatorVersion);
     }
@@ -310,31 +309,31 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-    
+
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
-        InvocationValidator.checkRetrieveGeographicalValuesInIndicator(indicatorUuid,indicatorVersionNumber, null);
-        
+        InvocationValidator.checkRetrieveGeographicalValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateGeographicalValuesInIndicatorVersion(indicatorVersion);
     }
-    
+
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesInIndicatorPublished(indicatorUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateGeographicalValuesInIndicatorVersion(indicatorVersion);
     }
-    
+
     private List<GeographicalValue> calculateGeographicalValuesInIndicatorVersion(IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
@@ -349,7 +348,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -360,24 +359,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        if (indInstance.getGeographicalValue() != null) { //Fixed value
+        if (indInstance.getGeographicalValue() != null) { // Fixed value
             return Arrays.asList(indInstance.getGeographicalValue());
-        } else if (indInstance.getGeographicalGranularity() != null) { //fixed granularity
+        } else if (indInstance.getGeographicalGranularity() != null) { // fixed granularity
             return retrieveGeographicalValuesByGranularityInIndicatorPublished(ctx, indInstance.getIndicator().getUuid(), indInstance.getGeographicalGranularity().getUuid());
-        } else { //nothing is fixed
+        } else { // nothing is fixed
             return retrieveGeographicalValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
     }
 
     /* Time granularities and values */
-    
+
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicator(indicatorUuid, indicatorVersionNumber, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
     }
@@ -386,7 +385,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorPublished(indicatorUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateTimeGranularitiesInIndicatorVersion(ctx, indicatorVersion);
     }
@@ -408,20 +407,20 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<TimeGranularity>(timeGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-    
+
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        
+
         if (indInstance.getTimeValue() != null) {
             TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(indInstance.getTimeValue());
             TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, guessedGranularity);
@@ -433,21 +432,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return retrieveTimeGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
     }
-    
+
     @Override
     public List<TimeValue> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicator(indicatorUuid, indicatorVersionNumber, granularity, null);
-        
-        IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid,indicatorVersionNumber);
+
+        IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
     }
-    
+
     @Override
     public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(ServiceContext ctx, String indicatorUuid, TimeGranularityEnum granularity) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorPublished(indicatorUuid, granularity, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
     }
@@ -467,27 +466,27 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-    
+
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateTimeValuesInIndicatorVersion(ctx, indicatorVersion);
-    }   
-    
+    }
+
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicatorPublished(indicatorUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateTimeValuesInIndicatorVersion(ctx, indicatorVersion);
     }
@@ -504,10 +503,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         timeValuesInIndicator.add(timeValue);
                     }
                 }
-                
+
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -516,9 +515,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         if (indInstance.getTimeValue() != null) {
             TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, indInstance.getTimeValue());
@@ -529,35 +528,34 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return retrieveTimeValuesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         }
     }
-    
+
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicator(indicatorUuid, indicatorVersionNumber, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
-    
-    
+
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicatorPublished(ServiceContext ctx, String indicatorUuid) throws MetamacException {
-        //Validation
+        // Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicatorPublished(indicatorUuid, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
-    
+
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-        //  Validation
+        // Validation
         InvocationValidator.checkRetrieveMeasureValuesInIndicatorInstance(indicatorInstanceUuid, null);
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
         return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
-    
+
     private List<MeasureValue> calculateMeasureValuesInIndicatorVersion(ServiceContext ctx, IndicatorVersion indicatorVersion) throws MetamacException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
@@ -571,7 +569,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return measureValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR,indicatorVersion.getIndicator().getUuid(),IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -579,7 +577,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     /* Data finders */
-    
+
     @Override
     public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
@@ -589,7 +587,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_ERROR, indicatorUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions)
             throws MetamacException {
@@ -600,7 +598,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_EXTENDED_ERROR, indicatorUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
             throws MetamacException {
@@ -617,7 +615,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorInstanceUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
             throws MetamacException {
@@ -635,18 +633,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-
     /*
      * Given some conditions this method ensures that:
      * - In geographical conditions only the given values are specified
      * - In time conditions only the given values are specified
      */
     private List<ConditionDimensionDto> filterConditionsByValues(List<ConditionDimensionDto> conditions, List<GeographicalValue> geoValues, List<TimeValue> timeValues) {
-        List<ConditionDimensionDto> rawConditions = new ArrayList<ConditionDimensionDto>(); 
+        List<ConditionDimensionDto> rawConditions = new ArrayList<ConditionDimensionDto>();
         if (conditions != null) {
             rawConditions = conditions;
         }
-        
+
         List<ConditionDimensionDto> newConditions = new ArrayList<ConditionDimensionDto>();
         for (ConditionDimensionDto condition : rawConditions) {
             ConditionDimensionDto newCondition = new ConditionDimensionDto();
@@ -692,7 +689,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return codes;
     }
 
-    private Map<String, ObservationDto> findObservationsByDimensions(ServiceContext ctx, IndicatorVersion indicatorVersion, List<ConditionDimensionDto> conditions) throws MetamacException, ApplicationException {
+    private Map<String, ObservationDto> findObservationsByDimensions(ServiceContext ctx, IndicatorVersion indicatorVersion, List<ConditionDimensionDto> conditions) throws MetamacException,
+            ApplicationException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             return datasetRepositoriesServiceFacade.findObservationsByDimensions(datasetId, conditions);
@@ -763,8 +761,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         markIndicatorsNeedsUpdateTransactional(ctx, pendingIndicators);
         getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
     }
-    
-    //No more inconsistent data, no more needs update
+
+    // No more inconsistent data, no more needs update
     private void markIndicatorVersionAsDataUpdated(IndicatorVersion indicatorVersion) {
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setInconsistentData(Boolean.FALSE);
@@ -830,6 +828,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 } else {
                     throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
                 }
+                
+                //check observation length
+                if (observation.getPrimaryMeasure() != null && observation.getPrimaryMeasure().length() > MAX_MEASURE_LENGTH) {
+                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH,dataOperation.getDataSourceUuid(), observation.getPrimaryMeasure(),MAX_MEASURE_LENGTH);
+                }
                 observations.add(observation);
             }
         }
@@ -892,8 +895,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
             }
             if (unknownCodes.size() > 0) {
-                String codes = StringUtils.join(unknownCodes,",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE,dataOperation.getDataSourceUuid(),dataOperation.getDataSource().getDataGpeUuid(),codes);
+                String codes = StringUtils.join(unknownCodes, ",");
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
             }
         } else {
             geoValues = new ArrayList<String>();
@@ -912,8 +915,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Check whether time variable is fixed or not
         if (dataOperation.hasTimeVariable()) {
             timeValues = data.getValueCodes().get(dataOperation.getTimeVariable());
-            
-            
+
             timeValues = new ArrayList<String>();
             List<String> timeCodesProvided = data.getValueCodes().get(dataOperation.getTimeVariable());
             List<String> unknownCodes = new ArrayList<String>();
@@ -925,10 +927,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
             }
             if (unknownCodes.size() > 0) {
-                String codes = StringUtils.join(unknownCodes,",");
-                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE,dataOperation.getDataSourceUuid(),dataOperation.getDataSource().getDataGpeUuid(),codes);
+                String codes = StringUtils.join(unknownCodes, ",");
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_TIME_VALUE, dataOperation.getDataSourceUuid(), dataOperation.getDataSource().getDataGpeUuid(), codes);
             }
-            
+
         } else {
             timeValues = new ArrayList<String>();
             timeValues.add(dataOperation.getTimeValue());
@@ -980,9 +982,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         } else {
             observation.setPrimaryMeasure(value);
         }
+        
         return observation;
     }
-
     /*
      * Get value has to take a look to method type and methd
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
@@ -1100,8 +1102,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     private String formatCalculatedValue(Double value, DataOperation dataOperation) {
-        DecimalFormat formatter = (DecimalFormat)(DecimalFormat.getInstance(Locale.ENGLISH));
-        formatter.setGroupingUsed(false); //DO NOT use thousands separator
+        DecimalFormat formatter = (DecimalFormat) (DecimalFormat.getInstance(Locale.ENGLISH));
+        formatter.setGroupingUsed(false); // DO NOT use thousands separator
         if (dataOperation.shouldBeRounded()) {
             if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
                 formatter.setRoundingMode(RoundingMode.HALF_UP);
@@ -1196,16 +1198,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private AttributeBasicDto mergeObsConfAttribute(ObservationExtendedDto obs1, ObservationExtendedDto obs2) {
         AttributeBasicDto attribute1 = null;
         AttributeBasicDto attribute2 = null;
-        
+
         if (obs1.getPrimaryMeasure() == null) {
             attribute1 = getAttribute(OBS_CONF_ATTR, obs1);
         }
         if (obs2.getPrimaryMeasure() == null) {
             attribute2 = getAttribute(OBS_CONF_ATTR, obs2);
         }
-        
+
         if (attribute1 != null && attribute2 != null) {
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC)+ ", " + attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
+            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC) + ", " + attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
         }
         if (attribute1 != null) {
             return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC));

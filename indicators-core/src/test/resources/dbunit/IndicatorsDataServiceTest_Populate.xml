@@ -4613,7 +4613,293 @@
 					LAST_UPDATED_TZ="Europe/London"
 				/>
 			
+	<!-- **************************************************************************************	-->
+	<!--    INDICATOR 24											                      			-->
+	<!--		- Version 1: draft															    -->
+	<!--		- One datasource, one quantity has too many decimal places to overflowed the maximun allowed	-->
+	<!-- *************************************************************************************	-->
+	<TB_INDICATORS
+		ID="24"
+		UUID="Indicator-24"
+		CODE="CODE-24"
+		PRODUCTION_ID="241"
+		PRODUCTION_VERSION_NUMBER="1.000"
+		DIFFUSION_ID="[null]"
+		DIFFUSION_VERSION_NUMBER="[null]"
+		IS_PUBLISHED="0"
+				
+		VERSION="1"
+		CREATED_BY="user1"
+		CREATED_DATE="2011-01-01 01:02:03"
+		CREATED_DATE_TZ="Europe/London"
+		LAST_UPDATED_BY="user2"
+		LAST_UPDATED="2011-01-22 01:02:03"
+		LAST_UPDATED_TZ="Europe/London"
+	 />
 			
+			<TB_INDICATORS_VERSIONS
+				ID="241"
+				UUID="Indicator-24-v1"
+				VERSION_NUMBER="1.000"
+				TITLE_FK="3"
+	  			COMMENTS_URL="http://indicators/comments/24"
+	  			INDICATOR_FK="24"
+	  			PROC_STATUS="DRAFT"
+				NOTES_URL="http://indicators/24"
+				SUBJECT_CODE="3"
+				SUBJECT_TITLE_FK="2"
+				QUANTITY_FK="2411"
+				IS_LAST_VERSION="1"
+				INCONSISTENT_DATA="0"
+				NEEDS_UPDATE="0"
+
+				PRODUCTION_VALIDATION_DATE="[null]"
+				PRODUCTION_VALIDATION_DATE_TZ="[null]"
+				PRODUCTION_VALIDATION_USER="[null]"
+				DIFFUSION_VALIDATION_DATE="[null]"
+				DIFFUSION_VALIDATION_DATE_TZ="[null]"
+				DIFFUSION_VALIDATION_USER="[null]"
+				PUBLICATION_DATE="[null]"
+				PUBLICATION_DATE_TZ="[null]"
+				PUBLICATION_USER="[null]"
+				PUBLICATION_FAILED_DATE="[null]"
+				PUBLICATION_FAILED_DATE_TZ="[null]"
+				PUBLICATION_FAILED_USER="[null]"
+				ARCHIVE_DATE="[null]"
+				ARCHIVE_DATE_TZ="[null]"
+				ARCHIVE_USER="[null]"
+				
+				VERSION="1"
+				CREATED_BY="user1"
+				CREATED_DATE="2011-03-03 01:02:04"
+				CREATED_DATE_TZ="Europe/London"
+				LAST_UPDATED_BY="user2"
+				LAST_UPDATED="2011-03-3 01:02:04"
+				LAST_UPDATED_TZ="Europe/London"
+			/>
+			
+				<TB_QUANTITIES
+				  	ID="2411"
+  					UUID="Quantity-2411"
+					QUANTITY_TYPE="QUANTITY"
+  					UNIT_MULTIPLIER="10"
+  					SIGNIFICANT_DIGITS="[null]"
+					UNIT_FK="1"
+
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-01-01 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-01-22 01:02:04"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+			
+
+				<TB_DATA_SOURCES
+					ID="2411"
+					UUID="Indicator-24-v1-DataSource-1"
+					DATA_GPE_UUID="Indicator-24-v1-DataSource-1-GPE-TIME"
+					PX_URI="Indicator-24-v1-DataSource-1-PX"
+					TIME_VARIABLE="Periodos"
+					TIME_VALUE="[null]"
+					SOURCE_SURVEY_CODE="code"
+ 					SOURCE_SURVEY_URL="http"
+ 					PUBLISHERS="ISTAC##INE"
+ 					SOURCE_SURVEY_TITLE_FK="8"
+ 					SOURCE_SURVEY_ACRONYM_FK="[null]"
+					
+					GEOGRAPHICAL_VALUE_FK="1"
+					GEOGRAPHICAL_VARIABLE="[null]"
+					INDICATOR_VERSION_FK="241"
+					INTERPERIOD_PUNTUAL_RATE_FK="241114" 
+					INTERPERIOD_PERCENTAGE_RATE_FK="241112"
+					ANNUAL_PUNTUAL_RATE_FK="241113"
+					ANNUAL_PERCENTAGE_RATE_FK="241111"
+					ABSOLUTE_METHOD="##OBS_VALUE##"
+					
+					VERSION="1"
+					CREATED_BY="user1"
+					CREATED_DATE="2011-03-03 01:02:04"
+					CREATED_DATE_TZ="Europe/London"
+					LAST_UPDATED_BY="user2"
+					LAST_UPDATED="2011-03-04 05:06:07"
+					LAST_UPDATED_TZ="Europe/London"
+				/>
+					<!-- ANNUAL PERCENTAGE RATE -->
+					<TB_RATES_DERIVATIONS
+						ID="241111"
+						UUID="RateDerivation-241111"
+						METHOD_TYPE="CALCULATE"
+						METHOD="method"
+						ROUNDING="DOWN"
+						QUANTITY_FK="2411111"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="2411111"
+		  					UUID="Quantity-2411111"
+							QUANTITY_TYPE="CHANGE_RATE"
+		  					UNIT_MULTIPLIER="100"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="3"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+					<!-- INTERPERIOD PERCENTAGE RATE -->
+					<TB_RATES_DERIVATIONS
+						ID="241112"
+						UUID="RateDerivation-241112"
+						METHOD_TYPE="CALCULATE"
+						METHOD="method"
+						ROUNDING="DOWN"
+						QUANTITY_FK="2411112"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="2411112"
+		  					UUID="Quantity-2411112"
+							QUANTITY_TYPE="CHANGE_RATE"
+		  					UNIT_MULTIPLIER="100"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="49" 
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+					<!-- ANNUAL PUNTUAL RATE -->
+					<TB_RATES_DERIVATIONS
+						ID="241113"
+						UUID="RateDerivation-241113"
+						METHOD_TYPE="CALCULATE"
+						METHOD="method"
+						ROUNDING="DOWN"
+						QUANTITY_FK="2411113"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="2411113"
+		  					UUID="Quantity-2411113"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="100"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="0"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+					<!-- INTERPERIOD PUNTUAL RATE -->
+					<TB_RATES_DERIVATIONS
+						ID="241114"
+						UUID="RateDerivation-241114"
+						METHOD_TYPE="CALCULATE"
+						METHOD="method"
+						ROUNDING="DOWN"
+						QUANTITY_FK="2411114"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-3 01:02:04"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+						<TB_QUANTITIES
+						  	ID="2411114"
+		  					UUID="Quantity-2411114"
+							QUANTITY_TYPE="AMOUNT"
+		  					UNIT_MULTIPLIER="100"
+		  					SIGNIFICANT_DIGITS="2"
+		  					DECIMAL_PLACES="0"
+							UNIT_FK="1"
+		
+							VERSION="1"
+							CREATED_BY="user1"
+							CREATED_DATE="2011-01-01 01:02:04"
+							CREATED_DATE_TZ="Europe/London"
+							LAST_UPDATED_BY="user2"
+							LAST_UPDATED="2011-01-22 01:02:04"
+							LAST_UPDATED_TZ="Europe/London"
+						/>
+						
+					<TB_DATA_SOURCES_VARIABLES
+						ID="24111"
+						UUID="Indicator-24-v1-DataSource-1-Var-1"
+						VARIABLE="Indicadores"
+						CATEGORY="NumSoc"
+						DATA_SOURCE_FK="2411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					<TB_DATA_SOURCES_VARIABLES
+						ID="24112"
+						UUID="Indicator-24-v1-DataSource-1-Var-2"
+						VARIABLE="Naturaleza jurídica"
+						CATEGORY="T"
+						DATA_SOURCE_FK="2411"
+						
+						VERSION="1"
+						CREATED_BY="user1"
+						CREATED_DATE="2011-03-03 01:02:04"
+						CREATED_DATE_TZ="Europe/London"
+						LAST_UPDATED_BY="user2"
+						LAST_UPDATED="2011-03-04 05:06:07"
+						LAST_UPDATED_TZ="Europe/London"
+					/>
+					
+					
 				
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->

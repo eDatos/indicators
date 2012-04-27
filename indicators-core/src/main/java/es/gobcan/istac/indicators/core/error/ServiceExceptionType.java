@@ -73,6 +73,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_POPULATE_OBSERVATION_CALCULATE_ERROR                = create("exception.indicators.data.populate.calculate.observation.parse.error");
     public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_ERROR                        = create("exception.indicators.data.populate.retrieve.data.error");
     public static final CommonServiceExceptionType DATA_POPULATE_RETRIEVE_DATA_EMPTY                        = create("exception.indicators.data.populate.retrieve.data.empty");
+    public static final CommonServiceExceptionType DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH             = create("exception.indicators.data.populate.wrong.observation_value_length.error");
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE                   = create("exception.indicators.data.populate.unknown_geographic_value");
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_TIME_VALUE                         = create("exception.indicators.data.populate.unknown_time_value");
 

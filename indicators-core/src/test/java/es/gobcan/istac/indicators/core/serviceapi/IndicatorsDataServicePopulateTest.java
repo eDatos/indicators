@@ -210,6 +210,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     /* Error indicator has no data sources */
     private static final String              INDICATOR23_UUID                         = "Indicator-23";
     private static final String              INDICATOR23_VERSION                      = "1.000";
+    
+    
+    /* too many digits in one observation */
+    private static final String              INDICATOR24_UUID                          = "Indicator-24";
+    private static final String              INDICATOR24_DS_GPE_UUID                   = "Indicator-24-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR24_GPE_JSON_DATA                 = readFile("json/data_temporals_calculate.json");
+    private static final String              INDICATOR24_VERSION                       = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -948,6 +955,23 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals("Naturaleza jurídica", e.getExceptionItems().get(3).getMessageParameters()[1]);
             assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES.getCode(), e.getExceptionItems().get(4).getCode());
             assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(4).getMessageParameters()[1]);
+        }
+    }
+    
+    /*
+     * Indicator has observations with too many digits
+     */
+    @Test
+    public void testPopulateIndicatorDataWrongObservationLength() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR24_DS_GPE_UUID))).thenReturn(INDICATOR24_GPE_JSON_DATA);
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR24_UUID, INDICATOR24_VERSION);
+            fail("errors should throw an exception");
+        } catch (MetamacException e) {
+            assertIndicatorEmptyData(INDICATOR24_UUID, INDICATOR24_VERSION);
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
     
