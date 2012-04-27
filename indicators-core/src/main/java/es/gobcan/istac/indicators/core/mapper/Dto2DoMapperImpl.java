@@ -471,9 +471,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
 
     private void checkOptimisticLocking(Long versionDo, Long versionDto) throws MetamacException {
-        if (!versionDo.equals(versionDto)) { // TODO
-            // if (versionDto < versionDo) { // TODO
-            throw new MetamacException(ServiceExceptionType.OPTIMISTIC_LOCKING);
-        }
+//        if (!versionDo.equals(versionDto)) { // TODO ACTIVAR CUANDO EN LA WEB SE RECARGUE SIEMPRE EL DTO
+//            throw new MetamacException(ServiceExceptionType.OPTIMISTIC_LOCKING);
+//        }
     }
 }
