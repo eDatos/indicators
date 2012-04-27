@@ -60,7 +60,7 @@ public class DataTypeUtil {
                     dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
 
                     // Observation ID: Be careful!!! don't change order of ids
-                    String id = new StringBuilder().append(geographicalValue.getCode()).append("#").append(timeValue).append("#").append(measureValue).toString();
+                    String id = new StringBuilder().append(geographicalValue.getCode()).append("#").append(timeValue.getTimeValue()).append("#").append(measureValue.getMeasureValue()).toString();
                     ObservationDto observationDto = observationMap.get(id);
                     String value = null;
                     if (observationDto != null) {
