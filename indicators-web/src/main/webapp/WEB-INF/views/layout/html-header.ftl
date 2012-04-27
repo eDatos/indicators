@@ -39,4 +39,5 @@
 	var context = "[@spring.url '' /]";
 	var currentLocale = "[@apph.locale /]";
 	var defaultLocale = "es";
+	var contextApi = context  + '/api/indicators/v1.0';
 </script>

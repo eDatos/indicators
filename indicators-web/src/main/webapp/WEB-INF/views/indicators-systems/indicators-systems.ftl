@@ -25,8 +25,15 @@
 <script>
 	var IndicatorsSystemsCollection = Backbone.Collection.extend({
 		
+		url: contextApi + '/indicatorsSystems/?limit=1000',
+				
 		initialize : function(){
+			this.fetch();
 			_.bindAll(this);
+		},
+		
+		parse : function(response) {
+			return response.items;
 		},
 		
 		search : function(query){
@@ -60,6 +67,7 @@
 		
 		initialize : function(){
 			this.collection.bind("filterChange", this.render, this);
+			this.collection.bind("reset", this.render, this);
 		},
 		
 		render : function(){
@@ -91,9 +99,7 @@
 	});
 	
 	$(function(){
-		var indicatorsSystems = ${indicatorsSystems};
-		
-		var indicatorsSystemsCollection = new IndicatorsSystemsCollection(indicatorsSystems.items);
+		var indicatorsSystemsCollection = new IndicatorsSystemsCollection();
 		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystemsCollection});
 		indicatorsSystemsView.render();
 		new SearchView({el : $("#indicatorsSystems-search"), collection : indicatorsSystemsCollection});

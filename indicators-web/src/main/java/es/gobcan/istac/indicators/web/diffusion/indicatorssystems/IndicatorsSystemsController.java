@@ -25,14 +25,8 @@ public class IndicatorsSystemsController extends BaseController {
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 
-        // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/?limit=1000").build().toUriString();
-        String json = IndicatorsWebUtils.getJson(uriComponentsBuilder, urlPath);
-
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEMS_LIST);
-        modelAndView.addObject("indicatorsSystems", json);
-
         return modelAndView;
     }
 
