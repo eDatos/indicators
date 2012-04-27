@@ -317,6 +317,11 @@ strong {
     line-height: 14px;
 }
 
+#widget-creator label {
+    width: 160px;
+    display: inline-block;
+}
+
 .clearfix:after {
     content: ".";
     display: block;

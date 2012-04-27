@@ -73,17 +73,23 @@
 
     <script id="styleOptionsTmpl" type="text/html">
         <div>
-            <div><label>Color del texto: <input type="text" name="text-color" id="text-color"/></label></div>
-            <div><label>Color del marco del widget: <input type="text" name="border-color" id="border-color"></label>
+            <div>
+                <label>Color del texto:</label>
+                <input type="text" name="text-color" id="text-color"/>
             </div>
             <div>
-                <label>
-                    Ancho del widget<small>(px)</small>:
-                    <input type="text" name="width" id="widget-width"/>
-                </label>
+                <label>Color del marco del widget:</label>
+                <input type="text" name="border-color" id="border-color">
+            </div>
+            <div>
+                <label>Ancho del widget<small>(px)</small>:</label>
+                <input type="text" name="width" id="widget-width"/>
             </div>
             <div class="width-slider"></div>
-            <div><label>Título del widget: <input type="text" name="title"/></label></div>
+            <div>
+                <label>Título del widget:</label>
+                <input type="text" name="title"/>
+            </div>
         </div>
     </script>
 
