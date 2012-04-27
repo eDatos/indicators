@@ -20,7 +20,7 @@
 		</div>
 	</div>
 	[#include "/layout/language-selector.ftl"]
-	<% if (description != null) { %>
+	<% if (description) { %>
 		<div>
 			<p><%= getLabel(description) %></p>
 		</div>
@@ -128,6 +128,9 @@
 		template : _.template($('#indicatorsSystemTemplate').html()),
 		
 		render : function(){
+			if (!this.model.description) {
+				this.model.description = null;
+			}
 			$(this.el).html(this.template(this.model));
 			return this;
 		}
