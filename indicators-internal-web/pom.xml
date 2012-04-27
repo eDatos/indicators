@@ -189,7 +189,6 @@
 		<plugins>
 
             <!-- Maven Compiler Plugin -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -206,13 +205,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.3.0-1</version>
+				<version>${gwt-maven-plugin.version}</version>
 				<executions>
 					<execution>
                         <configuration>
                             <servicePattern>**/client/service/**/*Service.java</servicePattern>
-                            <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>
                             <i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle>
+                            <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle>                            
                             <i18nConstantsWithLookupBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebCoreMessages</i18nConstantsWithLookupBundle>
                         </configuration>
 						<goals>
