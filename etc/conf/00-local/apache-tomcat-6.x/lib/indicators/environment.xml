@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-  <comment>Indicators environment definition</comment>
-  <entry key="environment.indicators.data">C:/data/istac/indicators</entry>
-</properties>
