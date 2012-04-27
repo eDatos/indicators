@@ -475,10 +475,10 @@
 
     var measuresLabels = {
         'ABSOLUTE' : 'Absoluto',
-        'ANNUAL_PERCENTAGE_RATE' : 'Variación porcentual interanual',
-        'ANNUAL_PUNTUAL_RATE' :  'Variación puntual interanual',
-        'INTERPERIOD_PERCENTAGE_RATE' : 'Variación porcentual interperiódica',
-        'INTERPERIOD_PUNTUAL_RATE' : 'Variación puntual interperiódica'
+        'ANNUAL_PERCENTAGE_RATE' : 'Tasa porcentual interanual',
+        'ANNUAL_PUNTUAL_RATE' :  'Tasa puntual interanual',
+        'INTERPERIOD_PERCENTAGE_RATE' : 'Tasa porcentual interperiódica',
+        'INTERPERIOD_PUNTUAL_RATE' : 'Tasa puntual interperiódica'
     }
 
     var LastData = Base.extend({
