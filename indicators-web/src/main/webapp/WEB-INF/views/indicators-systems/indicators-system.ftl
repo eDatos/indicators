@@ -10,6 +10,7 @@
 		</ul>
 	</div>
 </div>
+<div id="indicators-system-not-found-view"></div>
 
 <script type="text/html" id="indicatorsSystemTemplate">
 	<div class="h2roundbox">
@@ -115,6 +116,10 @@
 			<li><a href="<%= selfLink %>" target="_blank">[@apph.messageEscape 'entity.indicator-instance.self-link'/]</a></li>	
 		</ul>
 	</div>
+</script>
+
+<script type="text/html" id="indicatorsSystemNotFoundTemplate">
+	<div>[@apph.messageEscape 'page.indicators-system.error.not-found'/]</div>
 </script>
 
 <script>
@@ -224,17 +229,33 @@
 		}
 	});
 	
+	var IndicatorsSystemNotFoundView = Backbone.View.extend({
+		template : _.template($('#indicatorsSystemNotFoundTemplate').html()),
+		
+		render : function(){
+			$(this.el).html(this.template(this.model));
+			return this;
+		}
+	});
+	
+	
 	$(function(){
 
 		var indicatorsSystem = ${indicatorsSystem};
-		var indicatorsSystemCode = indicatorsSystem.code;
-		
-		var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystem});
-		indicatorsSystemView.render();
-		
-		var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
-		var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
-		elementsCollectionView.render();
+		if (indicatorsSystem.id) {
+			var indicatorsSystemCode = indicatorsSystem.code;
+			
+			var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystem});
+			indicatorsSystemView.render();
+			
+			var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
+			var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
+			elementsCollectionView.render();
+		} else {
+			// Indicators system not found
+			var indicatorsSystemNotFoundView = new IndicatorsSystemNotFoundView({el: '#indicators-system-not-found-view'});
+			indicatorsSystemNotFoundView.render();
+		} 
 	});
 	
 </script>

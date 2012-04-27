@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.utils;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,11 +17,16 @@ public class IndicatorsWebUtils {
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
-        if (conn.getResponseCode() != 200) {
+        InputStream response = null;
+        if (conn.getResponseCode() == 200) {
+            response = conn.getInputStream();
+        } else if (conn.getResponseCode() == 404) {
+            response = conn.getErrorStream();
+        } else {
             throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(response, "UTF-8"));
         StringBuffer json = new StringBuffer();
         String output = null;
         while ((output = br.readLine()) != null) {

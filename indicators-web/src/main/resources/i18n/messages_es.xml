@@ -23,6 +23,7 @@
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
+    <entry key="page.indicators-system.error.not-found">El sistema de indicadores no existe</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
 
 	<!-- Indicator instance -->

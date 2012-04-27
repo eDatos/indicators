@@ -23,7 +23,7 @@
     
     <!-- Indicators systems -->
     <entry key="page.indicators-system-list.title">Indicators systems</entry>
-    <entry key="page.indicators-system.indicator-instance.detail">More information</entry>
+    <entry key="page.indicators-system.error.not-found">Indicators system not found</entry>
     <entry key="entity.indicators-system">Indicators system</entry>
     
 	<!-- Indicator instance -->
