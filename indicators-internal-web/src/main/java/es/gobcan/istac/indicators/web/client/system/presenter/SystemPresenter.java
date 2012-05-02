@@ -107,7 +107,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     private DispatchAsync                             dispatcher;
 
     /* Models */
-    private IndicatorsSystemDtoWeb                    indSystem;
+    private IndicatorsSystemDtoWeb                    indSystem; //To be able to cache structure
     private String                                    codeLastStructure;
 
     public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
@@ -117,7 +117,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
         void setIndicators(List<IndicatorDto> indicators);
         void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
-        void onIndicatorsSystemStatusChanged(IndicatorsSystemDtoWeb indicatorSystem);
         void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
         void onDimensionSaved(DimensionDto dimension);
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
@@ -178,6 +177,11 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         }
         return null;
     }
+    
+    private void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystem) {
+        this.indSystem = indicatorsSystem;
+        getView().setIndicatorsSystem(indicatorsSystem);
+    }
 
     @Override
     public void retrieveIndSystem(final String indSystemCode) {
@@ -190,8 +194,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
-                SystemPresenter.this.indSystem = result.getIndicatorsSystem();
-                getView().setIndicatorsSystem(result.getIndicatorsSystem());
+                setIndicatorsSystem(result.getIndicatorsSystem());
             }
         });
     }
@@ -405,7 +408,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(SendIndicatorsSystemToProductionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToProductionValidation()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
@@ -422,7 +425,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(SendIndicatorsSystemToDiffusionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
@@ -440,7 +443,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(RejectIndicatorsSystemProductionValidationResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
-                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                    setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
         } else if (IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemDto.getProcStatus())) {
@@ -454,7 +457,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(RejectIndicatorsSystemDiffusionValidationResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
-                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                    setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
         }
@@ -473,7 +476,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(PublishIndicatorsSystemResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
-                    getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDto());
+                    setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
         } else {
@@ -493,7 +496,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(ArchiveIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemArchived()), MessageTypeEnum.SUCCESS);
-                getView().onIndicatorsSystemStatusChanged(result.getIndicatorsSystemDtoWeb());
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
@@ -509,8 +512,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
-                getView().setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
-                retrieveSystemStructureNoCache(); // Force to load structure
+                setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
+                retrieveSystemStructureNoCache(); //Force load tree
             }
         });
     }

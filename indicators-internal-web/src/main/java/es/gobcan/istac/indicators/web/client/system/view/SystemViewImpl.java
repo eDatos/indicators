@@ -145,12 +145,6 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void onIndicatorsSystemStatusChanged(IndicatorsSystemDtoWeb indicatorSystem) {
-        generalPanel.setIndicatorsSystem(indicatorSystem);
-        structurePanel.setIndicatorsSystem(indicatorSystem);
-    }
-
-    @Override
     public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
         structurePanel.onIndicatorDataPopulated(indicatorDto);
     }
