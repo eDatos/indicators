@@ -264,12 +264,16 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         String method = new String();
         if (getItem(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED).isVisible()) {
             method = getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED);
+            rateDerivationDto.setMethod(method);
         } else if (getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible()) {
             method = getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD);
+            rateDerivationDto.setMethod(method);
         } else if (getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()) {
             method = DataSourceDto.OBS_VALUE;
+            rateDerivationDto.setMethod(method);
+        } else {
+            //keep old method
         }
-        rateDerivationDto.setMethod(method);
 
         rateDerivationDto.setRounding(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING).isEmpty()
                 ? RateDerivationRoundingEnum.valueOf(getValueAsString(DataSourceDS.RATE_DERIVATION_ROUNDING))
