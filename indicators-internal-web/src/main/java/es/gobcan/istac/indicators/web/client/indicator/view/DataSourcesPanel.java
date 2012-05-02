@@ -170,9 +170,16 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (generalEditionForm.validate(false) && interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
-                        && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
-                    uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
+                if (generalEditionForm.isVisible()) {
+                    if (generalEditionForm.validate(false) && interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
+                            && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
+                        uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
+                    }
+                } else {
+                    if (interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
+                            && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
+                        uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
+                    }
                 }
             }
         });
@@ -562,31 +569,44 @@ public class DataSourcesPanel extends VLayout {
     }
 
     public DataSourceDto getDataSourceDto() {
-        dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
+        //If query form has been touched
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
+        }
         dataSourceDto.setPxUri(dataStructureDto.getPxUri());
 
         dataSourceDto.setSourceSurveyCode(dataStructureDto.getSurveyCode());
         dataSourceDto.setSourceSurveyTitle(InternationalStringUtils.updateInternationalString(LocaleMock.SPANISH, new InternationalStringDto(), dataStructureDto.getSurveyTitle()));
-        dataSourceDto.setSourceSurveyAcronym((InternationalStringDto) generalEditionForm.getValue(DataSourceDS.SOURCE_SURVEY_ACRONYM));
-        dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.setSourceSurveyAcronym((InternationalStringDto) generalEditionForm.getValue(DataSourceDS.SOURCE_SURVEY_ACRONYM));
+            dataSourceDto.setSourceSurveyUrl(generalEditionForm.getValueAsString(DataSourceDS.SOURCE_SURVEY_URL));
+        }
 
         dataSourceDto.setPublishers(dataStructureDto.getPublishers());
 
-        dataSourceDto.setAbsoluteMethod(generalEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.setAbsoluteMethod(generalEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
+        }
 
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
-        dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
-        dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm
-                .getItem(DataSourceDS.GEO_VALUE)).getSelectedGeoValue()) : null);
+        
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
+            dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm
+                    .getItem(DataSourceDS.GEO_VALUE)).getSelectedGeoValue()) : null);
+        }
 
         dataSourceDto.setInterperiodPuntualRate(interperiodPuntualRateEditionForm.getValue());
         dataSourceDto.setInterperiodPercentageRate(interperiodPercentageRateEditionForm.getValue());
         dataSourceDto.setAnnualPuntualRate(annualPuntualRateEditionForm.getValue());
         dataSourceDto.setAnnualPercentageRate(annualPercentageRateEditionForm.getValue());
 
-        dataSourceDto.getOtherVariables().clear();
-        dataSourceDto.getOtherVariables().addAll(((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());
+        
+        if (generalEditionForm.isVisible()) {
+            dataSourceDto.getOtherVariables().clear();
+            dataSourceDto.getOtherVariables().addAll(((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());
+        }
 
         return dataSourceDto;
     }
