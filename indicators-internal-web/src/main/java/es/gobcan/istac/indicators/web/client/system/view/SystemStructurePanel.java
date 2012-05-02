@@ -557,7 +557,7 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onClick(MenuItemClickEvent event) {
-                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         // If system is PUBLISH or ARCHIVED, dimension cannot be created
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
@@ -577,7 +577,7 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onClick(MenuItemClickEvent event) {
-                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         // If system is PUBLISH or ARCHIVED, dimension cannot be created
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
@@ -599,7 +599,7 @@ public class SystemStructurePanel extends HLayout {
 
                     @Override
                     public void onClick(MenuItemClickEvent event) {
-                        if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                        if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                             // If system is PUBLISH or ARCHIVED, cannot be deleted
                             final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                             window.show();
@@ -626,7 +626,7 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onClick(MenuItemClickEvent event) {
-                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus())) {
+                    if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(system.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(system.getProcStatus())) {
                         // If system is PUBLISH or ARCHIVED, cannot be deleted
                         final InformationWindow window = new InformationWindow(getMessages().systemEditionInfo(), getMessages().systemEditionInfoDetailedMessage());
                         window.show();
