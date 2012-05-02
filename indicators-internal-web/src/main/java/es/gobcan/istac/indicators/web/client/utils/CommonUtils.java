@@ -26,6 +26,7 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.enums.GeographicalSelectionTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.QuantityIndexBaseTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.TimeSelectionTypeEnum;
+import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class CommonUtils {
@@ -158,6 +159,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getRateDerivationMethodTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
+        valueMap.put(RateDerivationForm.NOT_APPLICABLE, getCoreMessages().rateDerivationMethodTypeEnumNOT_APPLICABLE());
         for (RateDerivationMethodTypeEnum type : RateDerivationMethodTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + type.getName()));
         }

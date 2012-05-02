@@ -40,6 +40,8 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class RateDerivationForm extends BaseRateDerivationForm {
 
+
+    
     private QuantityTypeEnum  quantityType;
 
     private RateDerivationDto rateDerivationDto;
@@ -88,7 +90,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                return viewMode;
+                return viewMode && showItemIfApplicable(item, value, form);
             }
         });
 
@@ -149,6 +151,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         SelectItem rounding = new SelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
+        rounding.setShowIfCondition(getFormItemShowIfApplicable());
         rounding.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
 
             @Override
@@ -166,13 +169,17 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem typeText = new ViewTextItem(IndicatorDS.QUANTITY_TYPE_TEXT, getConstants().indicQuantityType());
 
         RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        unitUuid.setShowIfCondition(getFormItemShowIfApplicable());
 
         IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
         unitMultiplier.setRequired(true);
+        unitMultiplier.setShowIfCondition(getFormItemShowIfApplicable());
 
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
+        sigDigits.setShowIfCondition(getFormItemShowIfApplicable());
 
         IntegerItem decPlaces = new IntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
+        decPlaces.setShowIfCondition(getFormItemShowIfApplicable());
         decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
 
             @Override
@@ -216,13 +223,25 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         this.rateDerivationDto = rateDerivationDto;
 
         clearValues();
-
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, rateDerivationDto.getMethod());
+        
+        String method = rateDerivationDto.getMethod();
+        if (DataSourceDto.isObsValue(rateDerivationDto.getMethod())) {
+            method = getConstants().dataSourceObsValue();
+        }
+        
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_VIEW, method);
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED, rateDerivationDto.getMethod());
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD, rateDerivationDto.getMethod());
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW,
-                rateDerivationDto.getMethodType() != null ? getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + rateDerivationDto.getMethodType().toString()) : new String());
-        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, rateDerivationDto.getMethodType() != null ? rateDerivationDto.getMethodType().toString() : new String());
+        
+        String methodType = null;
+        if (rateDerivationDto.getMethodType() != null) {
+            methodType = rateDerivationDto.getMethodType().name();
+        } else {
+            methodType = NOT_APPLICABLE;
+        }
+        
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW, getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + methodType));
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, methodType);
         setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : new String());
 
         if (rateDerivationDto.getQuantity() == null) {
@@ -255,6 +274,19 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
 
     }
+    
+    public void prepareNewRate() {
+        clearValues();
+        
+        this.rateDerivationDto = new RateDerivationDto();
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW, getCoreMessages().rateDerivationMethodTypeEnumNOT_APPLICABLE());
+        setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, NOT_APPLICABLE);
+        
+        setValue(IndicatorDS.QUANTITY_TYPE, quantityType.toString());
+        setValue(IndicatorDS.QUANTITY_TYPE_TEXT, getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()));
+    }
+    
+    
 
     public RateDerivationDto getValue() {
         rateDerivationDto.setMethodType(getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE) != null && !getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE).isEmpty()
@@ -315,7 +347,8 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
     }
-
+    
+    
     private CustomValidator getIndicatorSelectedValidator() {
         CustomValidator validator = new CustomValidator() {
 

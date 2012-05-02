@@ -83,18 +83,22 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
     protected FormItemIfFunction getMinIfFunction() {
         return new FormItemIfFunction() {
-
+            
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isMagnitudeOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showMinFunction(item, value, form);
             }
         };
+    }
+    
+    protected boolean showMinFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isMagnitudeOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected FormItemIfFunction getMaxIfFunction() {
@@ -102,15 +106,19 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isMagnitudeOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showMaxFunction(item, value, form);
             }
         };
+    }
+    
+    protected boolean showMaxFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isMagnitudeOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected FormItemIfFunction getDenominatorIfFunction() {
@@ -118,15 +126,19 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isFractionOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showDenominatorFunction(item, value, form);
             }
         };
+    }
+    
+    protected boolean showDenominatorFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isFractionOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected FormItemIfFunction getNumeratorIfFunction() {
@@ -134,31 +146,40 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isFractionOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showNumeratorFunction(item, value, form);
             }
         };
     }
+    
+    protected boolean showNumeratorFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isFractionOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     protected FormItemIfFunction getIsPercentageIfFunction() {
         return new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isRatioOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showIsPercentageFunction(item, value, form);
             }
         };
+    }
+    
+    protected boolean showIsPercentageFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isRatioOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected FormItemIfFunction getPercentageOfIfFunction() {
@@ -166,15 +187,19 @@ public class BaseQuantityForm extends GroupDynamicForm {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
-                    QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
-                    if (IndicatorUtils.isRatioOrExtension(type)) {
-                        return true;
-                    }
-                }
-                return false;
+                return showPercentageOfFunction(item, value, form);
             }
         };
+    }
+    
+    protected boolean showPercentageOfFunction(FormItem item, Object value, DynamicForm form) {
+        if (form.getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !form.getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) {
+            QuantityTypeEnum type = QuantityTypeEnum.valueOf(form.getValueAsString(IndicatorDS.QUANTITY_TYPE));
+            if (IndicatorUtils.isRatioOrExtension(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected FormItemIfFunction getIndexBaseTypeIfFunction() {
