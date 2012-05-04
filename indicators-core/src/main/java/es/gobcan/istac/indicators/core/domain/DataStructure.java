@@ -14,6 +14,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataStructure {
 
+    @JsonProperty
     private String uuid;
 
     @JsonProperty

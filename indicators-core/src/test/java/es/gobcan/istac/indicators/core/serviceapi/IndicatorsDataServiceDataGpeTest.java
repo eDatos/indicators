@@ -148,6 +148,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals("Sociedades mercantiles que amplían capital Gran PX.", dataStruc.getTitle());
         assertEquals("urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e", dataStruc.getPxUri());
+        assertEquals(CONSULTA1_UUID,dataStruc.getUuid());
 
         String[] stubs = new String[]{"Periodos", "Provincias por CC.AA."};
         checkElementsInCollection(stubs, dataStruc.getStub());
