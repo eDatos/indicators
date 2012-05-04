@@ -54,8 +54,9 @@
 				<div class="itemTabla">
 					<%= numeration %>
 					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?uuidInstanciaIndicador=<%= id %>&codigoSistemaIndicadores=<%= indicatorsSystemCode %>&accion=html"><%= getLabel(title) %></a>
-					<div class="indicatorInstanceDetail"></div>
 				</div>
+				<div class="clearfix"></div>
+				<div class="indicatorInstanceDetail"></div>
 			</div>								
 		</li>
 	<% } %>		
