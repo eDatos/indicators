@@ -265,8 +265,7 @@
 	
 	var ElementsModel = Backbone.Model.extend({
 		
-		"url": function() {
-		
+		"url": function() {		
 		    return apiContext + '/indicatorsSystems/' + this.get("code");
 		},
 				
@@ -278,8 +277,7 @@
 			
 		},
 		
-		fetchSuccess : function() {		
-		
+		fetchSuccess : function() {				
 			var elementsCollection = new ElementsCollection(this.get('elements'));
 			var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : this.get('code')});
 			elementsCollectionView.render();
@@ -298,8 +296,6 @@
 		});
 		
 		var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
-
-	
 	});
 	
 </script>
