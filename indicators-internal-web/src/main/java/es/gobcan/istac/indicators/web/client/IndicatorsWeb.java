@@ -1,6 +1,10 @@
 package es.gobcan.istac.indicators.web.client;
 
+import java.util.Date;
+
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.sso.client.SsoClientConstants;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -8,7 +12,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
+import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlResult;
 import es.gobcan.istac.indicators.web.shared.ValidateTicketAction;
@@ -25,7 +31,7 @@ public class IndicatorsWeb implements EntryPoint {
     private static IndicatorsWebConstants    constants;
     private IndicatorsWebGinjector           ginjector = GWT.create(IndicatorsWebGinjector.class);
 
-    public void onModuleLoad() {
+   /* public void onModuleLoad() {
         String ticket = Window.Location.getParameter("ticket");
         if (ticket != null) {
             String url = Window.Location.createUrlBuilder().removeParameter("ticket").setHash(";ticket=" + ticket).buildString();
@@ -58,6 +64,27 @@ public class IndicatorsWeb implements EntryPoint {
                 }
             });
         }
+    }*/
+    
+    public void onModuleLoad() {
+        //TODO: CHANGE WHEN ISTAC HAS A LDAP USER IN CIBER 
+        
+        ginjector.getDispatcher().execute(new ValidateTicketAction(null, null), new AsyncCallback<ValidateTicketResult>() {
+
+            @Override
+            public void onFailure(Throwable arg0) {
+                // TODO log
+            }
+            @Override
+            public void onSuccess(ValidateTicketResult result) {
+                IndicatorsWeb.principal = result.getMetamacPrincipal();
+
+                // This is required for GWT-Platform proxy's generator.
+                DelayedBindRegistry.bind(ginjector);
+                ginjector.getPlaceManager().revealCurrentPlace();
+
+            }
+        });
     }
 
     public void displayLoginView() {

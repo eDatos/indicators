@@ -188,7 +188,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                 return QuantityTypeEnum.CHANGE_RATE.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE))
                         && RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
             }
-        }));
+        }), getDecimalPlacesValidator());
 
         IntegerItem min = new IntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
@@ -358,6 +358,21 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             }
         };
         validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        return validator;
+    }
+    
+    private CustomValidator getDecimalPlacesValidator() {
+        CustomValidator validator = new CustomValidator() {
+            
+            @Override
+            protected boolean condition(Object value) {
+                if (value != null && value instanceof Integer) {
+                    return ((Integer)value) <= 10;
+                }
+                return true;
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorDecimalPlaces(String.valueOf(10)));
         return validator;
     }
 
