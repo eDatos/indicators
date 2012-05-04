@@ -72,12 +72,14 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             INDICATOR_8                  = "Indicator-8";
     private static String             INDICATOR_9                  = "Indicator-9";
     private static String             INDICATOR_10                 = "Indicator-10";
+    private static String             INDICATOR_11                 = "Indicator-11";
 
     // Data sources
     private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
     private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
     private static String             DATA_SOURCE_2_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-2";
     private static String             DATA_SOURCE_1_INDICATOR_3    = "Indicator-3-v1-DataSource-1";
+    private static String             DATA_SOURCE_1_INDICATOR_11   = "Indicator-11-v1-DataSource-1";
 
     // Quantity units
     private static String             QUANTITY_UNIT_1              = "1";
@@ -1330,6 +1332,28 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateIndicatorInPublicationFailed() throws Exception {
+
+        String uuid = INDICATOR_11;
+        String versionNumber = "1.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorDto.getProcStatus());
+
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+
+        // Update
+        indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
+
+        // Validation
+        IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorDtoUpdated.getProcStatus());
+        IndicatorsAsserts.assertEqualsIndicator(indicatorDto, indicatorDtoUpdated);
+    }
+
+    @Test
     public void testUpdateIndicatorReusingLocalisedStrings() throws Exception {
 
         String uuid = INDICATOR_1;
@@ -1386,6 +1410,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -1409,6 +1434,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -2011,7 +2037,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         PublishIndicatorResultDto publishIndicatorResultDto = indicatorsServiceFacade.publishIndicator(getServiceContextAdministrador(), uuid);
         IndicatorDto indicatorDtoV1Updated = publishIndicatorResultDto.getIndicator();
         assertNull(publishIndicatorResultDto.getPublicationFailedReason());
-        
+
         // Validation
         {
             assertEquals(null, indicatorDtoV1Updated.getProductionVersion());
@@ -3284,7 +3310,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
-        
+
         dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
         dataSourceDto.getInterperiodPuntualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
         dataSourceDto.getInterperiodPuntualRate().setMethod("Method1");
@@ -3299,11 +3325,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), uuidIndicator, dataSourceDto);
         } catch (MetamacException e) {
             assertEquals(2, e.getExceptionItems().size());
-            
+
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_DECIMAL_PLACES, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            
+
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(1).getMessageParameters()[0]);
@@ -3581,6 +3607,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -3671,6 +3698,22 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateDataSourceInPublicationFailed() throws Exception {
+
+        String uuid = DATA_SOURCE_1_INDICATOR_11;
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
+        dataSourceDto.setPxUri("newPx");
+        dataSourceDto.setDataGpeUuid("newData");
+        dataSourceDto.setTimeVariable("newTime");
+
+        // Update
+        DataSourceDto dataSourceDtoUpdated = indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDto);
+
+        // Validation
+        IndicatorsAsserts.assertEqualsDataSource(dataSourceDto, dataSourceDtoUpdated);
+    }
+
+    @Test
     public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
 
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V1);
@@ -3687,6 +3730,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
             assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 

@@ -388,7 +388,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             indicatorInProduction.setPublicationFailedDate(new DateTime());
             indicatorInProduction.setPublicationUser(ctx.getUserId());
             indicatorInProduction = getIndicatorVersionRepository().save(indicatorInProduction);
-            
+
             PublishIndicatorResult publishIndicatorResult = new PublishIndicatorResult();
             publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
             publishIndicatorResult.setPublicationFailedReason(e);
@@ -876,10 +876,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     private void checkIndicatorVersionInProduction(IndicatorVersion indicatorVersion) throws MetamacException {
         IndicatorProcStatusEnum procStatus = indicatorVersion.getProcStatus();
         boolean inProduction = IndicatorProcStatusEnum.DRAFT.equals(procStatus) || IndicatorProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)
-                || IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus);
+                || IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)
+                || IndicatorProcStatusEnum.PUBLICATION_FAILED.equals(procStatus);
         if (!inProduction) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersion.getIndicator().getUuid(), new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DRAFT,
-                    IndicatorProcStatusEnum.VALIDATION_REJECTED, IndicatorProcStatusEnum.PRODUCTION_VALIDATION, IndicatorProcStatusEnum.DIFFUSION_VALIDATION});
+                    IndicatorProcStatusEnum.VALIDATION_REJECTED, IndicatorProcStatusEnum.PRODUCTION_VALIDATION, IndicatorProcStatusEnum.DIFFUSION_VALIDATION,
+                    IndicatorProcStatusEnum.PUBLICATION_FAILED});
         }
     }
 
