@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
-import es.gobcan.istac.indicators.web.diffusion.utils.IndicatorsWebUtils;
 
 @Controller
 public class IndicatorsSystemsController extends BaseController {
@@ -33,14 +32,11 @@ public class IndicatorsSystemsController extends BaseController {
     @RequestMapping(value = "/indicatorsSystems/{code}", method = RequestMethod.GET)
     public ModelAndView indicatorsSystem(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, Model model) throws Exception {
 
-        // Get json from API
-        String urlPath = uriComponentsBuilder.path("/api/indicators/v1.0/indicatorsSystems/").path(code).build().toUriString();
-        String json = IndicatorsWebUtils.getJson(uriComponentsBuilder, urlPath);
-
         // View
         ModelAndView modelAndView = new ModelAndView(WebConstants.VIEW_NAME_INDICATORS_SYSTEM_VIEW);
-        modelAndView.addObject("indicatorsSystem", json);
-        // TODO propiedad de configuración en páginas ftl. Podría mejorarse accediendo al contexto de Spring desde la página, en lugar de añadir la propiedad en el modelo de vista
+        modelAndView.addObject("indicatorsSystemCode", code);
+        
+        // Jaxi URL
         String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
         if (jaxiUrlBase.endsWith("/")) {
             jaxiUrlBase = StringUtils.removeEnd(jaxiUrlBase, "/");

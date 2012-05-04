@@ -20,7 +20,7 @@
 		</div>
 	</div>
 	[#include "/layout/language-selector.ftl"]
-	<% if (description) { %>
+	<% if (description != null) { %>
 		<div>
 			<p><%= getLabel(description) %></p>
 		</div>
@@ -123,15 +123,32 @@
 </script>
 
 <script>
+
+	var IndicatorsSystemModel = Backbone.Model.extend({
+		
+		"url": function() {
+		    return apiContext + '/indicatorsSystems/' + this.get("code");
+		},
+				
+		initialize : function(){
+			this.fetch();
+		}
+	});
 	
 	var IndicatorsSystemView = Backbone.View.extend({
 		template : _.template($('#indicatorsSystemTemplate').html()),
 		
+		initialize : function(){
+			this.model.bind("change", this.render, this);
+		},
+		
 		render : function(){
+			// render is called by fetch method of IndicatorsSystemModel
+			var json = this.model.toJSON();
 			if (!this.model.description) {
-				this.model.description = null;
+				json.description = null;
 			}
-			$(this.el).html(this.template(this.model));
+			$(this.el).html(this.template(json));
 			return this;
 		}
 	});
@@ -213,6 +230,10 @@
 	
 	var ElementsCollectionView = Backbone.View.extend({	
 		
+		initialize : function(){
+			this.collection.bind("reset", this.render, this);
+		},
+		
 		render : function(){
 			var self = this;
 			var numeration = self.options.numeration;
@@ -241,24 +262,43 @@
 		}
 	});
 	
+	var ElementsModel = Backbone.Model.extend({
+		
+		"url": function() {
+		
+		    return apiContext + '/indicatorsSystems/' + this.get("code");
+		},
+				
+		initialize : function(){
+			// the following line forces 'this' to refer to the Package instance in the function `fetch_success`
+			_.bindAll(this, 'fetchSuccess');
+			this.bind('change', this.fetchSuccess);
+			this.fetch();
+			
+		},
+		
+		fetchSuccess : function() {		
+		
+			var elementsCollection = new ElementsCollection(this.get('elements'));
+			var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : this.get('code')});
+			elementsCollectionView.render();
+		}
+	});
+	
 	
 	$(function(){
+		var indicatorsSystemCode = '${indicatorsSystemCode}';
+		var indicatorsSystemModel = new IndicatorsSystemModel({code : indicatorsSystemCode});
+		new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystemModel});
+		
+		var elementsCollection = new ElementsCollection();
+		indicatorsSystemModel.on("change", function(){
+			elementsCollection.reset(indicatorsSystemModel.get('elements'));
+		});
+		
+		var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
 
-		var indicatorsSystem = ${indicatorsSystem};
-		if (indicatorsSystem.id) {
-			var indicatorsSystemCode = indicatorsSystem.code;
-			
-			var indicatorsSystemView = new IndicatorsSystemView({el: '#indicators-system-view', model: indicatorsSystem});
-			indicatorsSystemView.render();
-			
-			var elementsCollection = new ElementsCollection(indicatorsSystem.elements);
-			var elementsCollectionView = new ElementsCollectionView({el : '#elements-view', collection : elementsCollection, level : 1, numerationBase : '', numeration : 1, indicatorsSystemCode : indicatorsSystemCode});
-			elementsCollectionView.render();
-		} else {
-			// Indicators system not found
-			var indicatorsSystemNotFoundView = new IndicatorsSystemNotFoundView({el: '#indicators-system-not-found-view'});
-			indicatorsSystemNotFoundView.render();
-		} 
+	
 	});
 	
 </script>
