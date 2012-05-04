@@ -1095,6 +1095,9 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(quantity.getBaseTime()) && !TimeVariableUtils.isTimeValue(quantity.getBaseTime())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_BASE_TIME));
         }
+        if (!ValidationUtils.isEmpty(quantity.getDecimalPlaces()) && quantity.getDecimalPlaces().intValue() > 10) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES));
+        }
 
         // checks required
         if (checksRequired) {

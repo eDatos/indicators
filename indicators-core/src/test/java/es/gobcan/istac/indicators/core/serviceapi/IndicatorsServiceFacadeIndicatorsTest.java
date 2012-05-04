@@ -3264,9 +3264,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testCreateDataSourceErrorTimeValueIncorrect() throws Exception {
+    public void testCreateDataSourceErrorParametersIncorrect() throws Exception {
 
-        // Create dataSource
+        // Create dataSource: timeValue and decimalPlaces incorrect
         DataSourceDto dataSourceDto = new DataSourceDto();
         dataSourceDto.setAbsoluteMethod("absoluteMethod");
         dataSourceDto.setDataGpeUuid("queryGpe1");
@@ -3284,15 +3284,29 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
         dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
         dataSourceDto.getPublishers().add("ISTAC");
+        
+        dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
+        dataSourceDto.getInterperiodPuntualRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
+        dataSourceDto.getInterperiodPuntualRate().setMethod("Method1");
+        dataSourceDto.getInterperiodPuntualRate().setRounding(RateDerivationRoundingEnum.DOWN);
+        dataSourceDto.getInterperiodPuntualRate().setQuantity(new QuantityDto());
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setDecimalPlaces(Integer.valueOf(11));
 
         String uuidIndicator = INDICATOR_1;
         try {
             indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), uuidIndicator, dataSourceDto);
         } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(2, e.getExceptionItems().size());
+            
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY_DECIMAL_PLACES, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(1).getMessageParameters()[0]);
         }
     }
 
