@@ -180,20 +180,21 @@
 		},
 		
 		render : function(){
-			
-			this.model.set({level: this.options.level});
-			this.model.set({indicatorsSystemCode: this.options.indicatorsSystemCode});
-			
+					
 			// Numeration
 			var numerationBase = '';
 			if (this.options.numerationBase != '') {
 				numerationBase = this.options.numerationBase + '.';
 			}
 			numerationBase += _.string.lpad(this.options.numeration, 2, '0');
-			this.model.set({numeration: numerationBase});
 			
 			// Element
-			var html = this.template(this.model.toJSON());			
+			var json = this.model.toJSON();
+			json.level = this.options.level;
+			json.indicatorsSystemCode = this.options.indicatorsSystemCode;
+			json.numeration = numerationBase;
+			
+			var html = this.template(json);			
 			this.$el.html(html);
 
 			var self = this;
