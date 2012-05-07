@@ -16,6 +16,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -100,7 +101,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setDimension(target);
         } else {
             target = indicatorsSystemsService.retrieveDimension(ctx, source.getUuid());
-            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
@@ -110,7 +111,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ExceptionUtils.throwIfException(exceptions);
         }
 
-        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
@@ -142,7 +143,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getElementLevel().setDimension(null);
         } else {
             target = indicatorsSystemsService.retrieveIndicatorInstance(ctx, source.getUuid());
-            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable (these metadatas are modified in specific operation)
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
@@ -153,7 +154,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ExceptionUtils.throwIfException(exceptions);
         }
 
-        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
@@ -201,7 +202,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.getIndicator().setCode(source.getCode());
         } else {
             target = indicatorsService.retrieveIndicator(ctx, source.getUuid(), source.getVersionNumber());
-            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
 
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
@@ -214,7 +215,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             ExceptionUtils.throwIfException(exceptions);
         }
 
-        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
         target.setUpdateDate(new DateTime());
 
         // Attributes modifiables
@@ -258,10 +259,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target = new DataSource();
         } else {
             target = indicatorsService.retrieveDataSource(ctx, source.getUuid());
-            checkOptimisticLocking(target.getVersion(), source.getVersionOptimisticLocking());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
         }
 
-        // Optimistic locking: Update "update date" attribute to force update to Datasource entity, to increase attribute "version"
+        // Optimistic locking: Update "update date" attribute to force update to root entity, to increase attribute "version"
         target.setUpdateDate(new DateTime());
 
         // Metadata modifiable
@@ -468,11 +469,5 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         return target;
-    }
-
-    private void checkOptimisticLocking(Long versionDo, Long versionDto) throws MetamacException {
-        if (!versionDo.equals(versionDto)) {
-            throw new MetamacException(ServiceExceptionType.OPTIMISTIC_LOCKING);
-        }
     }
 }
