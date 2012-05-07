@@ -7,14 +7,14 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 
 public class BaseRateDerivationForm extends BaseQuantityForm {
-    
+
     public static final String NOT_APPLICABLE = "NOT_APPLICABLE";
 
     public BaseRateDerivationForm(String groupTitle) {
         super(groupTitle);
 
     }
-    
+
     public boolean isRateNotApplicable() {
         String methodType = getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE));
         return NOT_APPLICABLE.equals(methodType);
@@ -22,23 +22,23 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
 
     protected FormItemIfFunction getFormItemShowIfApplicable() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-               return showItemIfApplicable(item, value, form);
+                return showItemIfApplicable(item, value, form);
             }
-        }; 
+        };
         return function;
     }
-    
+
     protected boolean showItemIfApplicable(FormItem item, Object value, DynamicForm form) {
         String methodType = getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE));
         return !NOT_APPLICABLE.equals(methodType);
     }
-    
+
     protected FormItemIfFunction getMinIfFunction() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -46,14 +46,14 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
-    
+
     @Override
     protected FormItemIfFunction getMaxIfFunction() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -61,14 +61,14 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
-    
+
     @Override
     protected FormItemIfFunction getDenominatorIfFunction() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -76,14 +76,14 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
-    
+
     @Override
     protected FormItemIfFunction getNumeratorIfFunction() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -91,14 +91,14 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
-    
+
     @Override
     protected FormItemIfFunction getIsPercentageIfFunction() {
         FormItemIfFunction function = new FormItemIfFunction() {
-            
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -106,14 +106,14 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
-    
+
     @Override
     protected FormItemIfFunction getPercentageOfIfFunction() {
-       FormItemIfFunction function = new FormItemIfFunction() {
-            
+        FormItemIfFunction function = new FormItemIfFunction() {
+
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
                 if (showItemIfApplicable(item, value, form)) {
@@ -121,7 +121,7 @@ public class BaseRateDerivationForm extends BaseQuantityForm {
                 }
                 return false;
             }
-        }; 
+        };
         return function;
     }
 

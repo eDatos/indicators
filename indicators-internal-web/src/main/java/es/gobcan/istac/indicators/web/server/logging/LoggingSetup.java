@@ -12,8 +12,8 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-
 public class LoggingSetup {
+
     private String logConfigurationFile = null;
 
     public void setLogConfigurationFile(String logConfigurationFile) {
@@ -27,16 +27,16 @@ public class LoggingSetup {
             if (logConfigurationFile == null) {
                 throw new RuntimeException("Logging configuration file has not been set \"logConfigurationFile\"");
             }
-            LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
             try {
                 JoranConfigurator configurator = new JoranConfigurator();
                 configurator.setContext(loggerContext);
                 loggerContext.reset();
-                
+
                 URL url = ConfigurationUtils.locate(StringUtils.EMPTY, logConfigurationFile);
                 configurator.doConfigure(url);
             } catch (JoranException e) {
-                throw new RuntimeException("Error configuring logging system",e);
+                throw new RuntimeException("Error configuring logging system", e);
             }
         } catch (Throwable e) {
             throw new Exception(e);

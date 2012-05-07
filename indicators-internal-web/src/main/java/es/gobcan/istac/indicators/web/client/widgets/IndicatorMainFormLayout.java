@@ -25,12 +25,12 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         super();
         common();
     }
-    
+
     public IndicatorMainFormLayout(boolean canEdit) {
         super(canEdit);
         common();
     }
-    
+
     private void common() {
         // Remove handler from edit button
         editHandlerRegistration.removeHandler();

@@ -23,12 +23,12 @@ public class DataSourceMainFormLayout extends InternationalMainFormLayout {
         super();
         common();
     }
-    
+
     public DataSourceMainFormLayout(boolean canEdit) {
         super(canEdit);
         common();
     }
-    
+
     private void common() {
         editQueryButton = new ToolStripButton(getConstants().editQuery(), IndicatorsResources.RESOURCE.reset().getURL());
         editQueryButton.setVisibility(Visibility.HIDDEN);

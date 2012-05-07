@@ -72,6 +72,7 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
  * 
  * 
  * 
+ * 
  * StdSchedulerFactory factory = (StdSchedulerFactory) ctx.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
  * </pre>
  * <p>

@@ -10,12 +10,12 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class ValidateTicket {
 
     @In(1)
-    String ticket;
-   
+    String           ticket;
+
     @In(2)
-    String serviceUrl;
-    
+    String           serviceUrl;
+
     @Out(2)
     MetamacPrincipal metamacPrincipal;
-    
+
 }

@@ -176,8 +176,8 @@ public class DataSourcesPanel extends VLayout {
                         uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                     }
                 } else {
-                    if (interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
-                            && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
+                    if (interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false) && interperiodPercentageRateEditionForm.validate(false)
+                            && annualPercentageRateEditionForm.validate(false)) {
                         uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                     }
                 }
@@ -312,19 +312,19 @@ public class DataSourcesPanel extends VLayout {
 
     private void setDataSourceViewMode(DataSourceDto dataSourceDto) {
         generalForm.setValue(dataSourceDto);
-        
+
         if (dataSourceDto.getInterperiodPuntualRate() != null) {
             interperiodPuntualRateForm.setValue(dataSourceDto.getInterperiodPuntualRate());
         } else {
             interperiodPuntualRateForm.prepareNewRate(QuantityTypeEnum.AMOUNT);
         }
-        
+
         if (dataSourceDto.getInterperiodPercentageRate() != null) {
             interperiodPercentageRateForm.setValue(dataSourceDto.getInterperiodPercentageRate());
         } else {
             interperiodPercentageRateForm.prepareNewRate(QuantityTypeEnum.CHANGE_RATE);
         }
-        
+
         if (dataSourceDto.getAnnualPuntualRate() != null) {
             annualPuntualRateForm.setValue(dataSourceDto.getAnnualPuntualRate());
         } else {
@@ -344,21 +344,21 @@ public class DataSourcesPanel extends VLayout {
 
         // Edition values are not set. When edit query button is clicked, values will be cleared.
         // generalEditionForm.setValue();
-        
-        //Some rates can not exist
+
+        // Some rates can not exist
 
         if (dataSourceDto.getInterperiodPuntualRate() != null) {
             interperiodPuntualRateEditionForm.setValue(dataSourceDto.getInterperiodPuntualRate());
         } else {
             interperiodPuntualRateEditionForm.prepareNewRate();
         }
-        
+
         if (dataSourceDto.getInterperiodPercentageRate() != null) {
             interperiodPercentageRateEditionForm.setValue(dataSourceDto.getInterperiodPercentageRate());
         } else {
             interperiodPercentageRateEditionForm.prepareNewRate();
         }
-        
+
         if (dataSourceDto.getAnnualPuntualRate() != null) {
             annualPuntualRateEditionForm.setValue(dataSourceDto.getAnnualPuntualRate());
         } else {
@@ -603,7 +603,7 @@ public class DataSourcesPanel extends VLayout {
     }
 
     public DataSourceDto getDataSourceDto() {
-        //If query form has been touched
+        // If query form has been touched
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
         }
@@ -624,7 +624,7 @@ public class DataSourcesPanel extends VLayout {
 
         dataSourceDto.setTimeVariable(dataStructureDto.getTemporalVariable());
         dataSourceDto.setGeographicalVariable(dataStructureDto.getSpatialVariable());
-        
+
         if (generalEditionForm.isVisible()) {
             dataSourceDto.setTimeValue(generalEditionForm.getItem(DataSourceDS.TIME_VALUE).isVisible() ? generalEditionForm.getValueAsString(DataSourceDS.TIME_VALUE) : null);
             dataSourceDto.setGeographicalValueUuid(generalEditionForm.getItem(DataSourceDS.GEO_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) generalEditionForm
@@ -636,26 +636,25 @@ public class DataSourcesPanel extends VLayout {
         } else {
             dataSourceDto.setInterperiodPuntualRate(interperiodPuntualRateEditionForm.getValue());
         }
-        
+
         if (interperiodPercentageRateEditionForm.isRateNotApplicable()) {
             dataSourceDto.setInterperiodPercentageRate(null);
-        } else  {
+        } else {
             dataSourceDto.setInterperiodPercentageRate(interperiodPercentageRateEditionForm.getValue());
         }
-        
+
         if (annualPuntualRateEditionForm.isRateNotApplicable()) {
             dataSourceDto.setAnnualPuntualRate(null);
         } else {
             dataSourceDto.setAnnualPuntualRate(annualPuntualRateEditionForm.getValue());
         }
-        
+
         if (annualPercentageRateEditionForm.isRateNotApplicable()) {
             dataSourceDto.setAnnualPercentageRate(null);
         } else {
             dataSourceDto.setAnnualPercentageRate(annualPercentageRateEditionForm.getValue());
         }
 
-        
         if (generalEditionForm.isVisible()) {
             dataSourceDto.getOtherVariables().clear();
             dataSourceDto.getOtherVariables().addAll(((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).getValue());

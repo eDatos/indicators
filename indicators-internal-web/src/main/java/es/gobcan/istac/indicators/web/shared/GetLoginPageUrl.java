@@ -9,7 +9,7 @@ public class GetLoginPageUrl {
 
     @In(1)
     String serviceUrl;
-    
+
     @Out(1)
     String loginPageUrl;
 

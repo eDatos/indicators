@@ -107,7 +107,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     private DispatchAsync                             dispatcher;
 
     /* Models */
-    private IndicatorsSystemDtoWeb                    indSystem; //To be able to cache structure
+    private IndicatorsSystemDtoWeb                    indSystem;                                                         // To be able to cache structure
     private String                                    codeLastStructure;
 
     public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
@@ -177,7 +177,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         }
         return null;
     }
-    
+
     private void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystem) {
         this.indSystem = indicatorsSystem;
         getView().setIndicatorsSystem(indicatorsSystem);
@@ -513,7 +513,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
-                retrieveSystemStructureNoCache(); //Force load tree
+                retrieveSystemStructureNoCache(); // Force load tree
             }
         });
     }

@@ -185,7 +185,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
         bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
-        
+
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
     }

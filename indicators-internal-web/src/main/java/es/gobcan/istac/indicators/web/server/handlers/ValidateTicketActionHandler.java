@@ -51,38 +51,37 @@ public class ValidateTicketActionHandler extends AbstractActionHandler<ValidateT
         validateTicket.setTolerance(Long.valueOf(tolerance));
     }
 
-    //TODO: THIS IS A MOCK FOR LDAP
+    // TODO: THIS IS A MOCK FOR LDAP
     @Override
     public ValidateTicketResult execute(ValidateTicketAction action, ExecutionContext context) throws ActionException {
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId("DUMMY");
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.ADMINISTRADOR.name(), IndicatorsConstants.SECURITY_APPLICATION_ID, "DUMMY"));
-        
+
         ServiceContext serviceContext = new ServiceContext(metamacPrincipal.getUserId(), UUID.randomUUID().toString(), IndicatorsConstants.SECURITY_APPLICATION_ID);
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         ServiceContextHolder.putCurrentServiceContext(serviceContext);
         return new ValidateTicketResult(metamacPrincipal);
 
     }
-    
-  /*  @Override
-    public ValidateTicketResult execute(ValidateTicketAction action, ExecutionContext context) throws ActionException {
 
-        String ticket = action.getTicket();
-        String service = action.getServiceUrl();
+    /*
+     * @Override
+     * public ValidateTicketResult execute(ValidateTicketAction action, ExecutionContext context) throws ActionException {
+     * String ticket = action.getTicket();
+     * String service = action.getServiceUrl();
+     * try {
+     * MetamacPrincipal metamacPrincipal = validateTicket.validateTicket(ticket, service);
+     * ServiceContext serviceContext = new ServiceContext(metamacPrincipal.getUserId(), ticket, IndicatorsConstants.SECURITY_APPLICATION_ID);
+     * serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+     * ServiceContextHolder.putCurrentServiceContext(serviceContext);
+     * return new ValidateTicketResult(metamacPrincipal);
+     * } catch (final org.siemac.metamac.sso.exception.TicketValidationException e) {
+     * throw new ActionException(e);
+     * }
+     * }
+     */
 
-        try {
-            MetamacPrincipal metamacPrincipal = validateTicket.validateTicket(ticket, service);
-            ServiceContext serviceContext = new ServiceContext(metamacPrincipal.getUserId(), ticket, IndicatorsConstants.SECURITY_APPLICATION_ID);
-            serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
-            ServiceContextHolder.putCurrentServiceContext(serviceContext);
-            return new ValidateTicketResult(metamacPrincipal);
-        } catch (final org.siemac.metamac.sso.exception.TicketValidationException e) {
-            throw new ActionException(e);
-        }
-
-    }*/
-    
     @Override
     public void undo(ValidateTicketAction arg0, ValidateTicketResult arg1, ExecutionContext arg2) throws ActionException {
 
