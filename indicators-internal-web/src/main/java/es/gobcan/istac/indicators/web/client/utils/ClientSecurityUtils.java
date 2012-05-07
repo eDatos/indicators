@@ -60,6 +60,15 @@ public class ClientSecurityUtils {
         return false;
     }
 
+    public static boolean canDeleteIndicatorsSystem() {
+        // It is necessary to check if user can delete an specific indicators system, but users can delete many systems simultaneously, so we skip this validation (an exception will be thrown in the
+        // service facade
+        if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
+            return true;
+        }
+        return false;
+    }
+
     // STRUCTURE
 
     public static boolean canEditStructure(String operationCode) {

@@ -13,6 +13,7 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteDataSourcesActionHan
 import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
@@ -65,6 +66,7 @@ import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
@@ -122,7 +124,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetIndicatorsSystemPaginatedListAction.class, GetIndicatorsSystemPaginatedListActionHandler.class);
         bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
         bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
-
+        bindHandler(DeleteIndicatorsSystemsAction.class, DeleteIndicatorsSystemsActionHandler.class);
+        
         // Indicators System Structure
         bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
         bindHandler(CreateDimensionAction.class, CreateDimensionActionHandler.class);
