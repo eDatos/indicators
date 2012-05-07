@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.error;
 
+
 public class ServiceExceptionParameters {
 
     public static final String UUID                                                                          = "uuid";
@@ -11,6 +12,12 @@ public class ServiceExceptionParameters {
     public static final String INDICATORS_SYSTEM_VERSION_NUMBER                                              = "indicators_system.version_number";
     public static final String INDICATORS_SYSTEM_VERSION_TYPE                                                = "indicators_system.version_type";
     public static final String INDICATORS_SYSTEM_CODE                                                        = "indicators_system.code";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_DRAFT                                           = "indicator_system.draft";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION                           = "indicator_system.production_validation";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION                            = "indicator_system.diffusion_validation";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED                             = "indicator_system.validation_rejected";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED                                       = "indicator_system.published";
+    public static final String INDICATORS_SYSTEM_PROC_STATUS_ARCHIVED                                        = "indicator_system.archived";
 
     // Dimensions
     public static final String DIMENSION                                                                     = "dimension";
@@ -45,6 +52,13 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_NOTES                                                               = "indicator.notes";
     public static final String INDICATOR_DATA_REPOSITORY_ID                                                  = "indicator.data_repository_id";
     public static final String INDICATOR_DATA_REPOSITORY_TABLE_NAME                                          = "indicator.data_repository_table_name";
+    public static final String INDICATOR_PROC_STATUS_DRAFT                                                   = "indicator.draft";
+    public static final String INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION                                   = "indicator.production_validation";
+    public static final String INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION                                    = "indicator.diffusion_validation";
+    public static final String INDICATOR_PROC_STATUS_VALIDATION_REJECTED                                     = "indicator.validation_rejected";
+    public static final String INDICATOR_PROC_STATUS_PUBLICATION_FAILED                                      = "indicator.publication_failed";
+    public static final String INDICATOR_PROC_STATUS_PUBLISHED                                               = "indicator.published";
+    public static final String INDICATOR_PROC_STATUS_ARCHIVED                                                = "indicator.archived";
 
     // Indicator quantities
     public static final String INDICATOR_QUANTITY                                                            = "indicator.quantity";
@@ -62,6 +76,11 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_QUANTITY_MAXIMUM                                                    = "indicator.quantity.maximum";
     public static final String INDICATOR_QUANTITY_NUMERATOR_INDICATOR_UUID                                   = "indicator.quantity.numerator_indicator_uuid";
     public static final String INDICATOR_QUANTITY_DENOMINATOR_INDICATOR_UUID                                 = "indicator.quantity.denominator_indicator_uuid";
+
+    // Indicator Data
+    public static final String INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL                                    = "indicator.data_dimension_type.geographical";
+    public static final String INDICATOR_DATA_DIMENSION_TYPE_TIME                                            = "indicator.data_dimension_type.time";
+    public static final String INDICATOR_DATA_DIMENSION_TYPE_MEASURE                                         = "indicator.data_dimension_type.measure";
 
     // Datasources
     public static final String DATA_SOURCE                                                                   = "data_source";

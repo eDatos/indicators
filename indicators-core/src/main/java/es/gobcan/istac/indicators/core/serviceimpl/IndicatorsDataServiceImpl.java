@@ -61,6 +61,7 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
@@ -253,7 +254,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -309,7 +310,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -348,7 +349,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -407,7 +408,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<TimeGranularity>(timeGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -466,7 +467,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -506,7 +507,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -569,7 +570,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return measureValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), IndicatorDataDimensionTypeEnum.TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());

@@ -120,7 +120,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve published version
         IndicatorVersion publishedIndicatorVersion = retrieveIndicatorProcStatusInDiffusion(ctx, uuid, false);
         if (publishedIndicatorVersion == null || !IndicatorProcStatusEnum.PUBLISHED.equals(publishedIndicatorVersion.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PUBLISHED});
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED});
         }
 
         return publishedIndicatorVersion;
@@ -175,7 +175,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             IndicatorVersion indicatorVersionLastVersion = retrieveIndicatorByCode(ctx, code, null);
             if (indicatorVersionLastVersion != null) {
                 throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersionLastVersion.getIndicator().getUuid(),
-                        new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PUBLISHED});
+                        new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED});
             }
         }
 
@@ -456,7 +456,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getProductionVersion() != null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PUBLISHED, IndicatorProcStatusEnum.ARCHIVED});
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED});
         }
 
         // Initialize new version, copying values of version in diffusion
@@ -695,8 +695,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Check proc status
         if (indicatorVersion == null
                 || (!IndicatorProcStatusEnum.DRAFT.equals(indicatorVersion.getProcStatus()) && !IndicatorProcStatusEnum.VALIDATION_REJECTED.equals(indicatorVersion.getProcStatus()))) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DRAFT,
-                    IndicatorProcStatusEnum.VALIDATION_REJECTED}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED}));
         } else {
             // Check other conditions
             checkConditionsToSendToProductionValidation(indicatorVersion, exceptions);
@@ -715,7 +715,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check proc status
         if (indicatorVersion == null || !IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorVersion.getProcStatus())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PRODUCTION_VALIDATION}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION}));
         } else {
             // nothing more to check
         }
@@ -733,7 +733,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check proc status
         if (indicatorVersion == null || !IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorVersion.getProcStatus())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PRODUCTION_VALIDATION}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION}));
         } else {
             // Check other conditions
             checkConditionsToSendToProductionValidation(indicatorVersion, exceptions);
@@ -752,7 +752,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check proc status
         if (indicatorVersion == null || !IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorVersion.getProcStatus())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DIFFUSION_VALIDATION}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION}));
         } else {
             // nothing more to check
         }
@@ -772,8 +772,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Check proc status
         if (indicatorVersion == null
                 || (!IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorVersion.getProcStatus()) && !IndicatorProcStatusEnum.PUBLICATION_FAILED.equals(indicatorVersion.getProcStatus()))) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DIFFUSION_VALIDATION,
-                    IndicatorProcStatusEnum.PUBLICATION_FAILED}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED}));
         } else {
             // Check other conditions
             checkConditionsToPublish(ctx, indicatorVersion, exceptions);
@@ -792,7 +792,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Check proc status
         if (indicatorVersion == null || !IndicatorProcStatusEnum.PUBLISHED.equals(indicatorVersion.getProcStatus())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.PUBLISHED}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED}));
         } else {
             // nothing more to check
         }
@@ -879,9 +879,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 || IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)
                 || IndicatorProcStatusEnum.PUBLICATION_FAILED.equals(procStatus);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersion.getIndicator().getUuid(), new IndicatorProcStatusEnum[]{IndicatorProcStatusEnum.DRAFT,
-                    IndicatorProcStatusEnum.VALIDATION_REJECTED, IndicatorProcStatusEnum.PRODUCTION_VALIDATION, IndicatorProcStatusEnum.DIFFUSION_VALIDATION,
-                    IndicatorProcStatusEnum.PUBLICATION_FAILED});
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersion.getIndicator().getUuid(), new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED});
         }
     }
 

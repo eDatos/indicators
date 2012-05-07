@@ -269,7 +269,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -397,7 +397,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1406,11 +1406,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DRAFT, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -1430,11 +1430,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DRAFT, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -1659,8 +1659,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DRAFT, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
 
         }
     }
@@ -1811,7 +1811,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1836,7 +1836,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1924,7 +1924,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1990,7 +1990,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -2015,7 +2015,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -2193,8 +2193,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -2219,8 +2219,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -2454,7 +2454,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -2479,7 +2479,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -2646,8 +2646,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.ARCHIVED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -2656,7 +2656,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Retrieve last versions...
         MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextTecnicoProduccion(), null);
-        assertEquals(10, result.getResults().size());
+        assertEquals(11, result.getResults().size());
         List<IndicatorDto> indicatorsDto = result.getResults();
 
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
@@ -2688,6 +2688,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertEquals(INDICATOR_10, indicatorsDto.get(9).getUuid());
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(9).getProcStatus());
+
+        assertEquals(INDICATOR_11, indicatorsDto.get(10).getUuid());
+        assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(10).getProcStatus());
     }
 
     @Test
@@ -2701,7 +2704,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             criteria.setRestriction(conjuction);
 
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-            assertEquals(8, result.getResults().size());
+            assertEquals(9, result.getResults().size());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
@@ -2727,6 +2730,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(INDICATOR_10, indicatorsDto.get(7).getUuid());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(7).getProcStatus());
+
+            assertEquals(INDICATOR_11, indicatorsDto.get(8).getUuid());
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(8).getProcStatus());
         }
         {
             // Retrieve with subject x and code = y or z
@@ -2775,7 +2781,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
@@ -2793,7 +2799,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(Integer.valueOf(9), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
@@ -2810,13 +2816,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             paginator.setFirstResult(Integer.valueOf(7));
 
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-            assertEquals(1, result.getResults().size());
-            assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
+            assertEquals(2, result.getResults().size());
+            assertEquals(Integer.valueOf(9), result.getPaginatorResult().getTotalResults());
             assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_10, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
+
+            assertEquals(INDICATOR_11, indicatorsDto.get(1).getUuid());
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(1).getProcStatus());
         }
     }
 
@@ -3603,11 +3612,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DRAFT, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 
@@ -3726,11 +3735,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATOR_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorProcStatusEnum.DRAFT, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, ((IndicatorProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[4]);
         }
     }
 

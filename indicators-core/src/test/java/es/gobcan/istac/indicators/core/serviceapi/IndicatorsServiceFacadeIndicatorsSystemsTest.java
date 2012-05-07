@@ -251,7 +251,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -379,7 +379,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -820,8 +820,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
 
         }
     }
@@ -905,7 +905,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
@@ -931,7 +931,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
@@ -1019,7 +1019,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1085,7 +1085,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1110,7 +1110,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1286,7 +1286,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1311,7 +1311,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1477,7 +1477,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
 
         }
     }
@@ -1503,7 +1503,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
         }
     }
 
@@ -1646,8 +1646,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.ARCHIVED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_ARCHIVED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
         }
     }
 
@@ -2261,10 +2261,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -2396,10 +2396,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_1, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -3249,10 +3249,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 
@@ -3391,10 +3391,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(INDICATORS_SYSTEM_3, e.getExceptionItems().get(0).getMessageParameters()[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
-            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, ((IndicatorsSystemProcStatusEnum[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 

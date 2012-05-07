@@ -116,7 +116,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Retrieve published version
         IndicatorsSystemVersion publishedIndicatorsSystemVersion = retrieveIndicatorsSystemProcStatusInDiffusion(ctx, uuid, false);
         if (publishedIndicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(publishedIndicatorsSystemVersion.getProcStatus())) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED});
         }
 
         return publishedIndicatorsSystemVersion;
@@ -171,7 +171,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             IndicatorsSystemVersion indicatorsSystemVersionLastVersion = retrieveIndicatorsSystemByCode(ctx, code, null);
             if (indicatorsSystemVersionLastVersion != null) {
                 throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersionLastVersion.getIndicatorsSystem().getUuid(),
-                        new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED});
+                        new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED});
             }
         }
 
@@ -421,8 +421,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         IndicatorsSystem indicatorsSystem = retrieveIndicatorsSystem(ctx, uuid);
         if (indicatorsSystem.getProductionVersion() != null) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED,
-                    IndicatorsSystemProcStatusEnum.ARCHIVED});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED,
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_ARCHIVED});
         }
 
         // Initialize new version, copying values of version in diffusion
@@ -755,7 +755,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         if (translation == null) {
             // Put code as title
             InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
-            timeValueDo.setTitle(title);            
+            timeValueDo.setTitle(title);
             timeValueDo.setTitleSummary(title);
         } else {
             timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
@@ -785,7 +785,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             // Put code as title
             String timeGranularityCode = timeGranularity.getName();
             InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeGranularityCode);
-            timeGranularityDo.setTitle(title);            
+            timeGranularityDo.setTitle(title);
             timeGranularityDo.setTitleSummary(title);
         } else {
             timeGranularityDo.setTitle(translateTimeGranularity(translation.getTitle()));
@@ -797,16 +797,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return timeGranularityDo;
     }
-    
+
     @Override
     public MeasureValue retrieveMeasureValue(ServiceContext ctx, MeasureDimensionTypeEnum measureValue) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkRetrieveMeasureValue(measureValue, null);
-        
+
         MeasureValue measureValueDo = new MeasureValue();
         measureValueDo.setMeasureValue(measureValue);
-        
+
         // Translate
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureValue.name()).toString();
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
@@ -821,7 +821,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             localisedStringEn.setLabel(measureValueCode);
             localisedStringEn.setLocale(IndicatorsConstants.LOCALE_ENGLISH);
             title.addText(localisedStringEn);
-            measureValueDo.setTitle(title);            
+            measureValueDo.setTitle(title);
             measureValueDo.setTitleSummary(measureValueDo.getTitle());
         } else {
             measureValueDo.setTitle(translateTimeGranularity(translation.getTitle()));
@@ -860,9 +860,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         boolean inProduction = IndicatorsSystemProcStatusEnum.DRAFT.equals(procStatus) || IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)
                 || IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new IndicatorsSystemProcStatusEnum[]{
-                    IndicatorsSystemProcStatusEnum.DRAFT, IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION,
-                    IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION});
+            throw new MetamacException(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), new String[]{
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED,
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION});
         }
     }
 
@@ -908,8 +908,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         if (indicatorsSystemVersion == null
                 || (!IndicatorsSystemProcStatusEnum.DRAFT.equals(indicatorsSystemVersion.getProcStatus()) && !IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED.equals(indicatorsSystemVersion
                         .getProcStatus()))) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DRAFT,
-                    IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT,
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED}));
         } else {
             // Check other conditions
             checkConditionsToSendToProductionValidation(indicatorsSystemVersion, exceptions);
@@ -929,7 +929,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Check proc status
         if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
-                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION}));
+                    new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION}));
         } else {
             // Nothing more to check
         }
@@ -948,7 +948,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Check proc status
         if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
-                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION}));
+                    new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION}));
         } else {
             // Check other conditions
             checkConditionsToSendToProductionValidation(indicatorsSystemVersion, exceptions);
@@ -968,7 +968,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Check proc status
         if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
-                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
+                    new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
         } else {
             // Nothing more to check
         }
@@ -987,7 +987,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Check proc status
         if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid,
-                    new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION}));
+                    new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
         } else {
             // Check other conditions
             checkConditionsToPublish(ctx, indicatorsSystemVersion, exceptions);
@@ -1006,7 +1006,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Check proc status
         if (indicatorsSystemVersion == null || !IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorsSystemVersion.getProcStatus())) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new IndicatorsSystemProcStatusEnum[]{IndicatorsSystemProcStatusEnum.PUBLISHED}));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PUBLISHED}));
         } else {
             // nothing more to check
         }
@@ -1318,7 +1318,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
         return getElementLevelRepository().save(elementLevel);
     }
-    
+
     private InternationalString translateTimeValue(TimeValue timeValueDo, InternationalString sourceTranslation) {
         InternationalString target = new InternationalString();
         for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
@@ -1342,7 +1342,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return target;
     }
-    
+
     private InternationalString translateTimeGranularity(InternationalString sourceTranslation) {
         InternationalString target = new InternationalString();
         for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {
@@ -1353,7 +1353,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return target;
     }
-    
+
     private InternationalString translateMeasureValue(InternationalString sourceTranslation) {
         InternationalString target = new InternationalString();
         for (LocalisedString localisedStringTranslation : sourceTranslation.getTexts()) {

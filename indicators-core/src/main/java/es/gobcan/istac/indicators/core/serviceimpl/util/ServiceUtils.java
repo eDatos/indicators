@@ -36,7 +36,7 @@ public class ServiceUtils {
         } else if (VersionTypeEnum.MINOR.equals(versionType)) {
             versionNumberMinor++;
         } else {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_UNEXPECTED, versionType, VersionTypeEnum.class);
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Unsupported value for " + VersionTypeEnum.class.getCanonicalName() + ": " + versionType);
         }
         return (new StringBuilder()).append(formatterMajor.format(versionNumberMajor)).append(".").append(formatterMinor.format(versionNumberMinor)).toString();
     }
