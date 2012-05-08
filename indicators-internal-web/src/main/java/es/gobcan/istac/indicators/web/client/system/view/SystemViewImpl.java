@@ -14,8 +14,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
-import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
-import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -31,7 +29,6 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemView {
 
-    private SystemUiHandler      uiHandlers;
     private VLayout              panel;
     private Label                indSysLabel;
     private TabSet               tabSet;
@@ -66,8 +63,6 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 
         panel.addMember(indSysLabel);
         panel.addMember(tabSet);
-
-        bindEvents();
     }
 
     @Override
@@ -78,16 +73,6 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     @Override
     public Widget asWidget() {
         return panel;
-    }
-
-    private void bindEvents() {
-        structureTab.addTabSelectedHandler(new TabSelectedHandler() {
-
-            @Override
-            public void onTabSelected(TabSelectedEvent event) {
-                uiHandlers.retrieveSystemStructure();
-            }
-        });
     }
 
     @Override
@@ -114,7 +99,6 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
 
     @Override
     public void setUiHandlers(SystemUiHandler uiHandlers) {
-        this.uiHandlers = uiHandlers;
         this.structurePanel.setUiHandlers(uiHandlers);
         this.generalPanel.setUiHandlers(uiHandlers);
     }

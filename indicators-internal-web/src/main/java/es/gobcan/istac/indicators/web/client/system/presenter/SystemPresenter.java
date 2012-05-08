@@ -108,7 +108,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     /* Models */
     private IndicatorsSystemDtoWeb                    indSystem;                                                         // To be able to cache structure
-    private String                                    codeLastStructure;
 
     public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
 
@@ -195,27 +194,26 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
                 setIndicatorsSystem(result.getIndicatorsSystem());
+                // Load system structure
+                retrieveSystemStructure();
             }
         });
     }
 
     @Override
     public void retrieveSystemStructure() {
-        if (indSystem != null && !indSystem.getCode().equals(codeLastStructure)) {
-            codeLastStructure = indSystem.getCode();
-            dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new WaitingAsyncCallback<GetIndicatorsSystemStructureResult>() {
+        dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new WaitingAsyncCallback<GetIndicatorsSystemStructureResult>() {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error loading system structure of indicator system  with code = " + indSystem.getCode());
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
-                }
-                @Override
-                public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
-                    getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
-                }
-            });
-        }
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error loading system structure of indicator system  with code = " + indSystem.getCode());
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
+                getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
+            }
+        });
     }
 
     @Override
@@ -259,7 +257,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(CreateDimensionResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimCreated()), MessageTypeEnum.SUCCESS);
                 getView().onDimensionSaved(result.getCreatedDimension());
             }
@@ -276,7 +274,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(UpdateDimensionResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimSaved()), MessageTypeEnum.SUCCESS);
                 getView().onDimensionSaved(result.getDimension());
             }
@@ -293,7 +291,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(DeleteDimensionResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimDeleted()), MessageTypeEnum.SUCCESS);
             }
         });
@@ -309,7 +307,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(CreateIndicatorInstanceResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceCreated()), MessageTypeEnum.SUCCESS);
                 getView().onIndicatorInstanceSaved(result.getCreatedIndicatorInstance());
             }
@@ -327,7 +325,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(UpdateIndicatorInstanceResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceSaved()), MessageTypeEnum.SUCCESS);
                 getView().onIndicatorInstanceSaved(result.getIndicatorInstance());
             }
@@ -340,12 +338,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucNodesErrorMove()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onWaitSuccess(MoveSystemStructureContentResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure();
             }
         });
     }
@@ -360,23 +358,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(DeleteIndicatorInstanceResult result) {
-                retrieveSystemStructureNoCache();
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceDeleted()), MessageTypeEnum.SUCCESS);
-            }
-        });
-    }
-
-    private void retrieveSystemStructureNoCache() {
-        codeLastStructure = indSystem.getCode();
-        dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new WaitingAsyncCallback<GetIndicatorsSystemStructureResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
-                getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
             }
         });
     }
@@ -511,9 +494,9 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
+                retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
-                retrieveSystemStructureNoCache(); // Force load tree
             }
         });
     }

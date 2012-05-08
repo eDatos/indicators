@@ -29,6 +29,8 @@ import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -40,6 +42,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
     public interface SystemListView extends View, HasUiHandlers<SystemListPresenter> {
 
         void setIndSystemList(List<IndicatorsSystemDtoWeb> indSysList);
+        void onIndicatorsSystemsDeleted();
 
         StatusBar getStatusBar();
         void refreshStatusBar();
@@ -133,6 +136,22 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
                 // pass the result set to the View
                 getView().setIndSystemList(result.getIndicatorsSystemList());
+            }
+        });
+    }
+
+    @Override
+    public void deleteIndicatorsSystems(List<String> uuids) {
+        dispatcher.execute(new DeleteIndicatorsSystemsAction(uuids), new WaitingAsyncCallback<DeleteIndicatorsSystemsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorDelete()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
+                ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemDeleted()), MessageTypeEnum.SUCCESS);
+                getView().onIndicatorsSystemsDeleted();
             }
         });
     }

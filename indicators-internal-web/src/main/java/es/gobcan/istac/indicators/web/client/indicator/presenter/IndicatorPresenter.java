@@ -467,6 +467,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitSuccess(SaveDataSourceResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourceSaved()), MessageTypeEnum.SUCCESS);
                 getView().onDataSourceSaved(result.getDataSourceDto());
+
+                // Update indicator every time data sources are modified
+                retrieveUpdatedIndicador();
             }
         });
     }
@@ -484,6 +487,25 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitSuccess(DeleteDataSourcesResult result) {
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourcesDeleted()), MessageTypeEnum.SUCCESS);
+
+                // Update indicator every time data sources are modified
+                retrieveUpdatedIndicador();
+            }
+        });
+    }
+
+    private void retrieveUpdatedIndicador() {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
+            }
+
+            @Override
+            public void onWaitSuccess(GetIndicatorByCodeResult result) {
+                indicatorDto = result.getIndicator();
+                getView().setIndicator(indicatorDto);
             }
         });
     }
