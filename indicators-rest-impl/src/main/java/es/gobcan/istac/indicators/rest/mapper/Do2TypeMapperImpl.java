@@ -75,7 +75,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
             return target;
         } catch (MetamacExceptionFault e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
     
@@ -90,7 +90,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperationBase, baseURL);
             return target;
         } catch (MetamacExceptionFault e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -109,7 +109,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
             return targets;
         } catch (MetamacExceptionFault e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -144,7 +144,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             _indicatorDoToType(source, target, baseURL);
             return target;
         } catch (Exception e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
     
@@ -160,7 +160,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
             return  targets;
         } catch (Exception e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
     

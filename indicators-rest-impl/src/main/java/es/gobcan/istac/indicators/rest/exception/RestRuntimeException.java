@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.rest.exception;
 
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
@@ -41,6 +42,11 @@ public final class RestRuntimeException extends RuntimeException {
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
+    }
+    
+    @Override
+    public String toString() {
+        return new ToStringCreator(this).append("httpStatus", httpStatus).append("message", getMessage()).toString();
     }
 
 }
