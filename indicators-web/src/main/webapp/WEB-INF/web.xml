@@ -38,12 +38,22 @@
         </init-param>
     </filter>
 
+    <filter>
+        <filter-name>JsonpCallbackFilter</filter-name>
+        <filter-class>es.gobcan.istac.indicators.rest.spring.web.servlet.filter.JsonpCallbackFilter</filter-class>
+    </filter>
+
     <!-- FILTERS - MAPPING -->
     <filter-mapping>
         <filter-name>CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>JsonpCallbackFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+    
     <!-- SERVLET -->
     <!-- Handles all requests into the application -->
     <servlet>
