@@ -32,7 +32,7 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
             return webservicesLocator.getMetamacStatisticalOperationsInternalInterface().retrieveOperation(operationCode);
         } catch (MetamacExceptionFault e) {
             List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e.getFaultInfo().getExceptionItems());
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
+            throw new MetamacWebException(e.getCause(), WebExceptionUtils.getMetamacWebExceptionItems(metamacExceptionItems));
         }
     }
 
@@ -59,7 +59,8 @@ public class StatisticalOperationsInternalWebServiceFacadeImpl implements Statis
             return findOperationsResult;
         } catch (MetamacExceptionFault e) {
             List<MetamacExceptionItem> metamacExceptionItems = WSExceptionUtils.getMetamacExceptionItems(e.getFaultInfo().getExceptionItems());
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(metamacExceptionItems));
+            throw new MetamacWebException(e.getCause(), WebExceptionUtils.getMetamacWebExceptionItems(metamacExceptionItems));
         }
     }
+
 }
