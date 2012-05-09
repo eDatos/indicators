@@ -41,7 +41,7 @@
         <aop:after-throwing pointcut-ref="serviceFacadePointCut" throwing="ex" method="afterThrowing"/>
     </aop:aspect> 
     <aop:aspect id="flushing" ref="flushingHandlingAdvice">
-        <aop:after pointcut-ref="updateServicePointCut" method="forceFlushToOptimisticLocking"/>
+        <aop:after-returning pointcut-ref="updateServicePointCut" method="forceFlushToOptimisticLocking"/>
     </aop:aspect> 
   </aop:config> 
 </beans>
