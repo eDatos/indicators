@@ -957,7 +957,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         try {
             datasetRepoDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepoDto);
         } catch (ApplicationException e) {
-            throw new MetamacException(ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
+            throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_DATASETREPO_CREATE_ERROR, indicatorUuid, indicatorVersion);
         }
         return datasetRepoDto;
     }
