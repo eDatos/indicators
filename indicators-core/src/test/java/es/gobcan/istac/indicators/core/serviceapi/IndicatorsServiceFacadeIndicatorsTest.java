@@ -1375,6 +1375,27 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateIndicatorErrorParameterRequired() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        indicatorDto.setTitle(null);
+
+        try {
+            indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
+            fail("parameters required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATOR_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testUpdateIndicatorErrorNotExists() throws Exception {
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, "2.000");

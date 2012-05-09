@@ -14,6 +14,7 @@
   <!-- Logging interceptor -->
   <bean id="loggingHandlingAdvice" class="org.siemac.metamac.core.common.aop.LoggingInterceptor" />
   <bean id="flushingHandlingAdvice" class="es.gobcan.istac.indicators.aop.FlushingInterceptor" />
+  <bean id="disableFlushHandlingAdvice" class="es.gobcan.istac.indicators.aop.DisableFlushInterceptor" />
     
   <tx:advice id="txAdvice" transaction-manager="txManager"> 
     <tx:attributes> 
@@ -27,6 +28,7 @@
   <aop:config> 
 	<aop:pointcut id="updateServicePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*Service.*update*(..))" />
     <aop:pointcut id="serviceFacadePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
+    <aop:pointcut id="doMapperPointCut" expression="execution(public * es.gobcan.istac.indicators.core.mapper.*2DoMapper.*(..))" />
     <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->  
     <aop:pointcut id="updatingServiceFacadePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..)) and not (execution(public * es.gobcan.istac.indicators..serviceapi.*.retrieve*(..)) or execution(public * es.gobcan.istac.indicators..serviceapi.*.find*(..)))"/>
       
@@ -40,8 +42,16 @@
     <aop:aspect id="afterThrowing" ref="loggingHandlingAdvice">
         <aop:after-throwing pointcut-ref="serviceFacadePointCut" throwing="ex" method="afterThrowing"/>
     </aop:aspect> 
+    
+    <!-- Flushing interceptor -->
     <aop:aspect id="flushing" ref="flushingHandlingAdvice">
         <aop:after-returning pointcut-ref="updateServicePointCut" method="forceFlushToOptimisticLocking"/>
-    </aop:aspect> 
+    </aop:aspect>
+    
+    <!-- Flush mode interceptor -->
+    <aop:aspect id="flushingMode" ref="disableFlushHandlingAdvice">
+    	<aop:around method="manageFlushMode" pointcut-ref="doMapperPointCut"/>
+    </aop:aspect>
+     
   </aop:config> 
 </beans>
