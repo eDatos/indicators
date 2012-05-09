@@ -54,12 +54,11 @@ public abstract class PaginationPresenter<V extends View, Proxy_ extends Proxy<?
 
     protected void resultSetLastButtonClicked() {
         int numPages = totalResults / defultMaxResults;
-        firstResult = (numPages * defultMaxResults);
         if ((numPages * defultMaxResults) < totalResults) {
             numPages++;
         }
+        firstResult = (numPages * defultMaxResults) - defultMaxResults;
         pageNumber = numPages;
-
         retrieveResultSet();
     }
 
