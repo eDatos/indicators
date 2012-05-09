@@ -158,8 +158,10 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
             @Override
             public void onWaitSuccess(CreateIndicatorResult result) {
                 logger.log(Level.INFO, "Indicator created successfully");
-                retrieveResultSet();
                 ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicCreated()), MessageTypeEnum.SUCCESS);
+                // Go to the last page to view the indicator created
+                totalResults++;
+                resultSetLastButtonClicked();
             }
         });
     }
