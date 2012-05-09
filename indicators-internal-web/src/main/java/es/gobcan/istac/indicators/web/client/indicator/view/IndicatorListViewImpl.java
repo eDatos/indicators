@@ -139,7 +139,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
         ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
-        updated.setWidth(75);
+        updated.setWidth(140);
         updated.setType(ListGridFieldType.IMAGE);
         updated.setAlign(Alignment.CENTER);
         indicatorList.setFields(fieldCode, fieldName, status, updated);
