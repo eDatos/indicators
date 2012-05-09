@@ -251,7 +251,9 @@
                 <configuration>
                     <runTarget>IndicatorsWeb.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <!-- <noServer>true</noServer> -->
+                    <noServer>true</noServer>
+                    <runTarget>http://localhost:8080/indicators-internal-web/IndicatorsWeb.html</runTarget>
+                    <debugPort>9997</debugPort>
                     <inplace>true</inplace>
                     <!-- <i18nMessagesBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebMessages</i18nMessagesBundle> -->
                     <!-- <i18nConstantsBundle>es.gobcan.istac.indicators.web.client.IndicatorsWebConstants</i18nConstantsBundle> -->
