@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,14 +41,14 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
                 indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid());
                 return new SendIndicatorsSystemToProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
             } catch (MetamacException e1) {
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e1.getExceptionItems()));
+                throw WebExceptionUtils.createMetamacWebException(e);
             }
         }
         // If exists, send to production validation
         try {
             indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid());
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
         return new SendIndicatorsSystemToProductionValidationResult(DtoUtils.updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, indicatorsSystemDto));
     }

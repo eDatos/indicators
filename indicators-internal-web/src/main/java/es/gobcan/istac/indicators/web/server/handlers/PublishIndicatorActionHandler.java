@@ -33,10 +33,10 @@ public class PublishIndicatorActionHandler extends AbstractActionHandler<Publish
             if (publishResult.getPublicationFailedReason() == null) {
                 return new PublishIndicatorResult(publishResult.getIndicator());
             } else {
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(publishResult.getPublicationFailedReason().getExceptionItems()));
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItems(publishResult.getPublicationFailedReason().getExceptionItems()));
             }
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 

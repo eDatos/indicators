@@ -59,7 +59,7 @@ public class GetGeographicalValuesActionHandler extends AbstractActionHandler<Ge
                 return new GetGeographicalValuesResult(result.getResults());
             }
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,7 @@ public class GetQuantityUnitsListActionHandler extends AbstractActionHandler<Get
             List<QuantityUnitDto> quantityUnitDtos = indicatorsServiceFacade.retrieveQuantityUnits(ServiceContextHolder.getCurrentServiceContext());
             return new GetQuantityUnitsListResult(quantityUnitDtos);
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 

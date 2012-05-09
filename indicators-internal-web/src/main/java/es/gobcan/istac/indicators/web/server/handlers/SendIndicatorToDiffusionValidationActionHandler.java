@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class SendIndicatorToDiffusionValidationActionHandler extends AbstractAct
             IndicatorDto indicatorDto = indicatorsServiceFacade.sendIndicatorToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             return new SendIndicatorToDiffusionValidationResult(indicatorDto);
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 

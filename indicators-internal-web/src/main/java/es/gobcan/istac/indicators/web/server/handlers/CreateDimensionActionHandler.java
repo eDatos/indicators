@@ -3,7 +3,6 @@ package es.gobcan.istac.indicators.web.server.handlers;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +49,7 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
                 // Create indicators system
                 indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e1) {
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e1.getExceptionItems()));
+                throw WebExceptionUtils.createMetamacWebException(e);
             }
         }
         // Create Dimension
@@ -58,7 +57,7 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
             DimensionDto dimensionDto = indicatorsServiceFacade.createDimension(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto.getUuid(), action.getDimension());
             return new CreateDimensionResult(dimensionDto);
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 

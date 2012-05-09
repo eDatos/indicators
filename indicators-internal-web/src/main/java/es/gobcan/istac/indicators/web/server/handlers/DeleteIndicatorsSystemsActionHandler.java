@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,7 @@ public class DeleteIndicatorsSystemsActionHandler extends AbstractActionHandler<
             }
             return new DeleteIndicatorsSystemsResult();
         } catch (MetamacException e) {
-            throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItem(e.getExceptionItems()));
+            throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 
