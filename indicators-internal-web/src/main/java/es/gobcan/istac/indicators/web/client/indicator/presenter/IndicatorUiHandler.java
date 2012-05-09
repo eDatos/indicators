@@ -24,6 +24,8 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void versioningIndicator(String uuid, VersionTypeEnum versionType);
 
+    void populateData(String uuid, String version);
+    
     // DataSource
 
     void retrieveDataDefinitions();

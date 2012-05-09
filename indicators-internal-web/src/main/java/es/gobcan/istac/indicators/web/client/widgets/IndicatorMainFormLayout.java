@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
@@ -18,6 +19,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private PublishToolStripButton  publish;
     private PublishToolStripButton  archive;
     private PublishToolStripButton  versioning;
+    private ToolStripButton         populateData;
 
     private IndicatorProcStatusEnum status;
 
@@ -42,12 +44,15 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
         versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
 
+        populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
+        
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
         toolStrip.addButton(archive);
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(versioning);
+        toolStrip.addButton(populateData);
     }
 
     public void updatePublishSection(IndicatorProcStatusEnum status) {
@@ -112,6 +117,10 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
     public HasClickHandlers getVersioning() {
         return versioning;
+    }
+    
+    public HasClickHandlers getPopulateData() {
+        return populateData;
     }
 
     private void hideAllPublishButtons() {

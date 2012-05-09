@@ -66,6 +66,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
+import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
+import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorDiffusionValidationAction;
@@ -506,6 +508,21 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
                 indicatorDto = result.getIndicator();
                 getView().setIndicator(indicatorDto);
+            }
+        });
+    }
+
+    @Override
+    public void populateData(String uuid, String version) {
+        dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(PopulateIndicatorDataResult result) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
             }
         });
     }
