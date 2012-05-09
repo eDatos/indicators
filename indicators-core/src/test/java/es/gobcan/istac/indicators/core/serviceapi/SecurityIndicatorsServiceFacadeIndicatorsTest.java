@@ -28,7 +28,6 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 
 /**
  * Security tester.
- * 
  * Don't test operations to "Data", because is for Any Role
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,7 +36,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
-    
+
     private static String             NOT_EXISTS                   = "not-exists";
 
     // Indicators
@@ -55,7 +54,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     // Subjects
     private static String             SUBJECT_1                    = "1";
-    
+
     @Test
     public void testErrorPrincipalNotFound() throws Exception {
 
@@ -139,8 +138,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), INDICATOR_1, "2.000");
 
         // With access
-        indicatorsServiceFacade.updateIndicator(getServiceContextTecnicoProduccion(), indicatorDto);
-        indicatorsServiceFacade.updateIndicator(getServiceContextTecnicoApoyoProduccion(), indicatorDto);
+        indicatorDto = indicatorsServiceFacade.updateIndicator(getServiceContextTecnicoProduccion(), indicatorDto);
+        indicatorDto = indicatorsServiceFacade.updateIndicator(getServiceContextTecnicoApoyoProduccion(), indicatorDto);
 
         // Without access
         try {
@@ -570,8 +569,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V2);
 
         // With access
-        indicatorsServiceFacade.updateDataSource(getServiceContextTecnicoProduccion(), dataSourceDto);
-        indicatorsServiceFacade.updateDataSource(getServiceContextTecnicoApoyoProduccion(), dataSourceDto);
+        dataSourceDto = indicatorsServiceFacade.updateDataSource(getServiceContextTecnicoProduccion(), dataSourceDto);
+        dataSourceDto = indicatorsServiceFacade.updateDataSource(getServiceContextTecnicoApoyoProduccion(), dataSourceDto);
 
         // Without access
         try {
@@ -603,44 +602,24 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         // With access
         indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoProduccion(), DATA_SOURCE_1_INDICATOR_1_V2);
         indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoApoyoProduccion(), DATA_SOURCE_1_INDICATOR_1_V2);
-
-        // Without access
-        try {
-            indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoSistemaIndicadores(), DATA_SOURCE_1_INDICATOR_1_V2);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoDifusion(), DATA_SOURCE_1_INDICATOR_1_V2);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoApoyoDifusion(), DATA_SOURCE_1_INDICATOR_1_V2);
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoSistemaIndicadores(), DATA_SOURCE_1_INDICATOR_1_V2);
+        indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoDifusion(), DATA_SOURCE_1_INDICATOR_1_V2);
+        indicatorsServiceFacade.retrieveDataSource(getServiceContextTecnicoApoyoDifusion(), DATA_SOURCE_1_INDICATOR_1_V2);
     }
 
     @Test
     public void testDeleteDataSource() throws Exception {
         indicatorsServiceFacade.deleteDataSource(getServiceContextTecnicoProduccion(), DATA_SOURCE_1_INDICATOR_1_V2);
     }
-    
+
     @Test
     public void testDeleteDataSourceTecnicoApoyoProduccion() throws Exception {
         indicatorsServiceFacade.deleteDataSource(getServiceContextTecnicoApoyoProduccion(), DATA_SOURCE_1_INDICATOR_1_V2);
     }
-    
+
     @Test
     public void testDeleteDataSourceErrorWithoutAccess() throws Exception {
-        
+
         try {
             indicatorsServiceFacade.deleteDataSource(getServiceContextTecnicoSistemaIndicadores(), DATA_SOURCE_1_INDICATOR_1_V2);
             fail("without access");
@@ -669,28 +648,9 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextAdministrador(), INDICATOR_1, "1.000");
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoProduccion(), INDICATOR_1, "1.000");
         indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoProduccion(), INDICATOR_1, "1.000");
-
-        try {
-            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, "1.000");
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, "1.000");
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
-        try {
-            indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, "1.000");
-            fail("without access");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
-        }
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoSistemaIndicadores(), INDICATOR_1, "1.000");
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoDifusion(), INDICATOR_1, "1.000");
+        indicatorsServiceFacade.retrieveDataSourcesByIndicator(getServiceContextTecnicoApoyoDifusion(), INDICATOR_1, "1.000");
     }
 
     @Test
@@ -747,5 +707,5 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
-    }    
+    }
 }

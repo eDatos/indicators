@@ -735,8 +735,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
 
         // With access
-        indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDto);
-        indicatorsServiceFacade.updateDimension(getServiceContextTecnicoSistemaIndicadores(), dimensionDto);
+        dimensionDto = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDto);
+        dimensionDto = indicatorsServiceFacade.updateDimension(getServiceContextTecnicoSistemaIndicadores(), dimensionDto);
 
         // Without access
         try {
@@ -992,8 +992,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2);
 
         // With access
-        indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
-        indicatorsServiceFacade.updateIndicatorInstance(getServiceContextTecnicoSistemaIndicadores(), indicatorInstanceDto);
+        indicatorInstanceDto = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
+        indicatorInstanceDto = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextTecnicoSistemaIndicadores(), indicatorInstanceDto);
 
         // Without access
         try {
