@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,7 @@ import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
@@ -229,6 +231,9 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
+    
+    @Autowired
+    private IndicatorVersionRepository indicatorVersionRepository;
 
     @Before
     public void initMock() throws MetamacException {
@@ -989,6 +994,51 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         
         indicatorVersion = indicatorsService.retrieveIndicator(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
         assertFalse(indicatorVersion.getInconsistentData());
+    }
+    
+    @Test
+    public void testDeleteIndicatorData() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+
+        checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297",
+                "20", "46", "26", "2156", "321", "41", "29", "19");
+        checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
+        
+        
+        IndicatorVersion version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
+        //delete
+        assertNotNull(version.getDataRepositoryId());
+        assertNotNull(version.getDataRepositoryTableName());
+        indicatorsDataService.deleteIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        
+        version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertNull(version.getDataRepositoryId());
+        assertNull(version.getDataRepositoryTableName());
+    }
+    
+    @Test
+    public void testDeleteIndicatorDataNotExists() throws Exception {
+        IndicatorVersion version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
+        //delete
+        assertNull(version.getDataRepositoryId());
+        assertNull(version.getDataRepositoryTableName());
+        try {
+            indicatorsDataService.deleteIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+            fail("Should throw an exception for empty data");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NO_DATA.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(INDICATOR1_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATOR1_VERSION, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
     }
 
     @Override

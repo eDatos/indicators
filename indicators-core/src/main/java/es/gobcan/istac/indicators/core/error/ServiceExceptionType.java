@@ -38,6 +38,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                      = create("exception.indicators.indicator.not_found");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NOT_FOUND                              = create("exception.indicators.indicator.version_not_found");
+    public static final CommonServiceExceptionType INDICATOR_VERSION_NO_DATA                                = create("exception.indicators.indicator.version_no_data");
     public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_CODE_DUPLICATED                  = create("exception.indicators.indicator.already_exists.code_duplicated");
     public static final CommonServiceExceptionType INDICATOR_IN_PRODUCTION_NOT_FOUND                        = create("exception.indicators.indicator.production_not_found");
     public static final CommonServiceExceptionType INDICATOR_IN_DIFFUSION_NOT_FOUND                         = create("exception.indicators.indicator.diffusion_not_found");
@@ -78,6 +79,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_TIME_VALUE                         = create("exception.indicators.data.populate.unknown_time_value");
 
     public static final CommonServiceExceptionType DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR                   = create("exception.indicators.data.update.indicators.gpe.check.error");
+
+    public static final CommonServiceExceptionType DATA_DELETE_ERROR                                        = create("exception.indicators.data.delete.error");
 
     public static final CommonServiceExceptionType CONFIGURATION_NOT_FOUND                                  = create("exception.indicators.configuration.not_found");
 

@@ -218,6 +218,31 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         LOG.info("Finished Indicators data update process");
     }
+    
+    @Override
+    public void deleteIndicatorData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Validation
+        InvocationValidator.checkDeleteIndicatorData(indicatorUuid, indicatorVersionNumber, null);
+        
+        try {
+            IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+            
+            if (indicatorVersion.getDataRepositoryId() != null) {
+                datasetRepositoriesServiceFacade.deleteDatasetRepository(indicatorVersion.getDataRepositoryId());
+                indicatorVersion.setDataRepositoryId(null);
+                indicatorVersion.setDataRepositoryTableName(null);
+                getIndicatorVersionRepository().save(indicatorVersion);
+            } else {
+                throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NO_DATA, indicatorUuid, indicatorVersionNumber);
+            }
+        } catch (Exception e) {
+            if (e instanceof MetamacException) {
+                throw (MetamacException) e;
+            } else {
+                throw new MetamacException(e, ServiceExceptionType.DATA_DELETE_ERROR, indicatorUuid, indicatorVersionNumber);
+            }
+        }
+    }
 
     /* Geographical granularities and values */
 

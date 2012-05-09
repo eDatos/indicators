@@ -13,6 +13,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -53,6 +54,9 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
+    
+    @Autowired
+    protected IndicatorsDataService indicatorsDataService;
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
@@ -2078,7 +2082,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         String uuid = INDICATOR_6;
         String diffusionVersionBefore = "1.000"; // will be deleted when publish current version in diffusion validation
         String productionVersionBefore = "2.000"; // will be published
-
+        
         {
             IndicatorDto indicatorDtoV1 = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, diffusionVersionBefore);
             IndicatorDto indicatorDtoV2 = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, productionVersionBefore);
@@ -2112,6 +2116,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals("2.000", indicatorDto.getPublishedVersion());
             assertEquals(null, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
+            
+            // Old diffusion dataset must have been deleted
+            Mockito.verify(indicatorsDataService).deleteIndicatorData(getServiceContextAdministrador(), uuid, diffusionVersionBefore);
         }
     }
 

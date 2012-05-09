@@ -15,6 +15,8 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -43,6 +45,8 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
+
+    private final Logger LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     public IndicatorsServiceImpl() {
     }
@@ -407,9 +411,15 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Remove possible last version in diffusion
         if (indicator.getDiffusionVersion() != null) {
             IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+            try {
+                getIndicatorsDataService().deleteIndicatorData(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+            } catch (MetamacException e) {
+                LOG.warn("Dataset datasetId:"+indicatorDiffusionVersion.getDataRepositoryId()+" for indicator version with uuid:"+uuid+" and version:"+indicator.getDiffusionVersion().getVersionNumber()+" could not be deleted",e);
+            }
             indicator.getVersions().remove(indicatorDiffusionVersion);
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
+            
         }
         indicator.setIsPublished(Boolean.TRUE);
         indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
@@ -421,7 +431,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
         return publishIndicatorResult;
     }
-
     @Override
     public IndicatorVersion archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -456,7 +465,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Retrieve
         Indicator indicator = retrieveIndicator(ctx, uuid);
         if (indicator.getProductionVersion() != null) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED});
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_ARCHIVED});
         }
 
         // Initialize new version, copying values of version in diffusion
@@ -879,8 +889,9 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                 || IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)
                 || IndicatorProcStatusEnum.PUBLICATION_FAILED.equals(procStatus);
         if (!inProduction) {
-            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersion.getIndicator().getUuid(), new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT,
-                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED, ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION,
+            throw new MetamacException(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, indicatorVersion.getIndicator().getUuid(), new String[]{
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_DRAFT, ServiceExceptionParameters.INDICATOR_PROC_STATUS_VALIDATION_REJECTED,
+                    ServiceExceptionParameters.INDICATOR_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATOR_PROC_STATUS_DIFFUSION_VALIDATION,
                     ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLICATION_FAILED});
         }
     }
