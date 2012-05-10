@@ -86,6 +86,13 @@ public class ClientSecurityUtils {
         return false;
     }
 
+    public static boolean canEditIndicatorInstance(String operationCode) {
+        if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
+            return true;
+        }
+        return false;
+    }
+    
     public static boolean canDropNode(String operationCode) {
         // Make changes in structure (dimension and instance nodes)
         if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
