@@ -217,11 +217,14 @@
                         <goals>
                             <goal>process</goal>
                         </goals>
-                        <phase>process-sources</phase>
+                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
                 <configuration>
                     <defaultOutputDirectory>${project.build.directory}/generated-sources/gwt</defaultOutputDirectory>
+                    <processors>
+                        <processor>com.gwtplatform.dispatch.annotation.processor.GenDispatchProcessor</processor>
+                    </processors>
                 </configuration>
             </plugin>
 
