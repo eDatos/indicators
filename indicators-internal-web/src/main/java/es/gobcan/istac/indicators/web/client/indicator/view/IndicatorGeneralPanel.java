@@ -186,10 +186,10 @@ public class IndicatorGeneralPanel extends VLayout {
                 });
             }
         });
-        
+
         // Populate data
         mainFormLayout.getPopulateData().addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 uiHandlers.populateData(indicator.getUuid(), indicator.getVersionNumber());

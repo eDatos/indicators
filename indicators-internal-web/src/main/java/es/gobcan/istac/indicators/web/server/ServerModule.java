@@ -125,7 +125,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetIndicatorsSystemByCodeAction.class, GetIndicatorsSystemByCodeActionHandler.class);
         bindHandler(GetIndicatorsSystemStructureAction.class, GetIndicatorsSystemStructureActionHandler.class);
         bindHandler(DeleteIndicatorsSystemsAction.class, DeleteIndicatorsSystemsActionHandler.class);
-        
+
         // Indicators System Structure
         bindHandler(GetDimensionAction.class, GetDimensionActionHandler.class);
         bindHandler(CreateDimensionAction.class, CreateDimensionActionHandler.class);

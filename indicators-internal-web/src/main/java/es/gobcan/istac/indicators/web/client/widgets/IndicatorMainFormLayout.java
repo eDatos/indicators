@@ -45,7 +45,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         versioning = new PublishToolStripButton(getConstants().indicatorVersioning(), IndicatorsResources.RESOURCE.version().getURL());
 
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
-        
+
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
@@ -118,7 +118,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     public HasClickHandlers getVersioning() {
         return versioning;
     }
-    
+
     public HasClickHandlers getPopulateData() {
         return populateData;
     }
