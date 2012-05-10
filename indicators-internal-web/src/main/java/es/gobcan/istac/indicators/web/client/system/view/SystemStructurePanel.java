@@ -157,6 +157,7 @@ public class SystemStructurePanel extends HLayout {
         this.system = indSys;
         treePanelEdit.setIndicatorsSystem(indSys);
         dimensionPanel.setIndicatorsSystem(indSys);
+        indicatorInstPanel.setIndicatorsSystem(indSys);
         hidePanels();
     }
 
@@ -215,12 +216,16 @@ public class SystemStructurePanel extends HLayout {
         hidePanels();
         // reload indicators
         uiHandlers.retrieveIndicators();
+
         selectedDimension = null;
         selectedIndInstance = null;
         indicatorInstPanel.clearForms();
         indicatorInstPanel.setEditionMode();
         indicatorInstPanel.resetTitle();
         indicatorInstPanel.show();
+
+        indicatorInstPanel.getCreationForm().show();
+        indicatorInstPanel.getEditionForm().hide();
     }
 
     private void saveDimension(DimensionDto dim) {
@@ -784,8 +789,9 @@ public class SystemStructurePanel extends HLayout {
     private class IndicatorInstancePanel extends VLayout {
 
         private InternationalMainFormLayout      mainFormLayout;
-        private GroupDynamicForm                 form;
-        private GroupDynamicForm                 editionForm;
+        private GroupDynamicForm                 form;                       // View mode
+        private GroupDynamicForm                 creationForm;               // Edition mode
+        private GroupDynamicForm                 editionForm;                // Edition mode
         private boolean                          createMode;
 
         private List<GeographicalGranularityDto> geographicalGranularityDtos;
@@ -793,18 +799,25 @@ public class SystemStructurePanel extends HLayout {
         private List<IndicatorDto>               indicatorDtos;
 
         public IndicatorInstancePanel() {
-            mainFormLayout = new InternationalMainFormLayout(false); // Indicator instances can never be modified. If not: new
-                                                                     // InternationalMainFormLayout(ClientSecurityUtils.canEditIndicatorInstace());
+            mainFormLayout = new InternationalMainFormLayout();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
             mainFormLayout.setMargin(0);
 
             createViewForm();
-            createEditForm();
+            createCreationForm();
+            createEditionForm();
 
             this.addMember(mainFormLayout);
 
             createMode = false;
             bindEvents();
+        }
+
+        public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+            // Show/hide edit button depending on the selected indicators system
+            mainFormLayout.getEditToolStripButton().setVisibility(Visibility.HIDDEN);
+            mainFormLayout.setCanEdit(ClientSecurityUtils.canEditIndicatorInstance(indicatorsSystemDtoWeb.getCode()));
+            mainFormLayout.setViewMode();
         }
 
         public void onIndicatorInstanceSaved(IndicatorInstanceDto indicatorInstance) {
@@ -824,6 +837,9 @@ public class SystemStructurePanel extends HLayout {
                         window.show();
                     } else {
                         setEditionMode();
+
+                        creationForm.hide();
+                        editionForm.show();
                     }
                 }
             });
@@ -832,14 +848,18 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (editionForm.validate(false)) {
-                        IndicatorInstanceDto indicatorInstanceDto = null;
-                        if (selectedIndInstance != null) {
-                            indicatorInstanceDto = fillIndicatorInstance(selectedIndInstance);
-                        } else {
-                            indicatorInstanceDto = fillIndicatorInstance(new IndicatorInstanceDto());
+                    // Edition
+                    if (selectedIndInstance != null) {
+                        if (editionForm.validate(false)) {
+                            IndicatorInstanceDto indicatorInstanceDto = fillIndicatorInstance(selectedIndInstance);
+                            SystemStructurePanel.this.saveIndicatorInstance(indicatorInstanceDto);
                         }
-                        SystemStructurePanel.this.saveIndicatorInstance(indicatorInstanceDto);
+                        // Creation
+                    } else {
+                        if (creationForm.validate(false)) {
+                            IndicatorInstanceDto indicatorInstanceDto = fillIndicatorInstance(new IndicatorInstanceDto());
+                            SystemStructurePanel.this.saveIndicatorInstance(indicatorInstanceDto);
+                        }
                     }
                 }
             });
@@ -850,6 +870,7 @@ public class SystemStructurePanel extends HLayout {
                 public void onClick(ClickEvent event) {
                     boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                     form.setTranslationsShowed(translationsShowed);
+                    creationForm.setTranslationsShowed(translationsShowed);
                     editionForm.setTranslationsShowed(translationsShowed);
                 }
             });
@@ -874,30 +895,40 @@ public class SystemStructurePanel extends HLayout {
 
         public void clearForms() {
             createMode = true;
+
+            // VIEW FORM
             form.clearValues();
-            editionForm.clearValues();
 
+            // CREATION FORM
+            creationForm.clearValues();
             // Clear icons
-            editionForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(Boolean.FALSE);
-
+            creationForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(Boolean.FALSE);
             // Clear temporal and geographical valueMaps
-            editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
-            editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(new LinkedHashMap<String, String>());
-            editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
-            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoGranularitySelectItem().setValueMap(new LinkedHashMap<String, String>());
-            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoValueSelectItem().setValueMap(new LinkedHashMap<String, String>());
+            creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
+            creationForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(new LinkedHashMap<String, String>());
+            creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).setValueMap(new LinkedHashMap<String, String>());
+            ((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoGranularitySelectItem().setValueMap(new LinkedHashMap<String, String>());
+            ((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getGeoValueSelectItem().setValueMap(new LinkedHashMap<String, String>());
+
+            // EDITION FORM
+            editionForm.clearValues();
         }
 
         private IndicatorInstanceDto fillIndicatorInstance(IndicatorInstanceDto indicatorInstanceDto) {
-            indicatorInstanceDto.setTitle((InternationalStringDto) (editionForm.getValue(IndicatorInstanceDS.TITLE)));
-            indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(editionForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
-            indicatorInstanceDto.setTimeGranularity(editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(editionForm
-                    .getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
-            indicatorInstanceDto.setTimeValue(editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? editionForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
-            indicatorInstanceDto.setGeographicalGranularityUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).isVisible() ? CommonUtils.getUuidString(editionForm
-                    .getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)) : null);
-            indicatorInstanceDto.setGeographicalValueUuid(editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) editionForm
-                    .getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue()) : null);
+            if (indicatorInstanceDto.getUuid() == null) {
+                indicatorInstanceDto.setTitle((InternationalStringDto) (creationForm.getValue(IndicatorInstanceDS.TITLE)));
+                indicatorInstanceDto.setIndicatorUuid(CommonUtils.getUuidString(creationForm.getValueAsString(IndicatorInstanceDS.IND_UUID)));
+                indicatorInstanceDto.setTimeGranularity(creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).isVisible() ? TimeGranularityEnum.valueOf(creationForm
+                        .getValueAsString(IndicatorInstanceDS.TIME_GRANULARITY)) : null);
+                indicatorInstanceDto.setTimeValue(creationForm.getItem(IndicatorInstanceDS.TIME_VALUE).isVisible() ? creationForm.getValueAsString(IndicatorInstanceDS.TIME_VALUE) : null);
+                indicatorInstanceDto.setGeographicalGranularityUuid(creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY).isVisible() ? CommonUtils.getUuidString(creationForm
+                        .getValueAsString(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)) : null);
+                indicatorInstanceDto.setGeographicalValueUuid(creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE).isVisible() ? CommonUtils
+                        .getUuidString(((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).getSelectedGeoValue()) : null);
+            } else {
+                // Only instance title can be edited
+                indicatorInstanceDto.setTitle((InternationalStringDto) (editionForm.getValue(IndicatorInstanceDS.TITLE)));
+            }
             return indicatorInstanceDto;
         }
 
@@ -907,24 +938,24 @@ public class SystemStructurePanel extends HLayout {
             // We need indicators in order to fill select item
             uiHandlers.retrieveIndicators();
             setIndicatorInstanceView(indInst);
-            // Indicator instance edition not allowed
+            setIndicatorInstanceEdit(indInst);
         }
 
         public void setIndicators(List<IndicatorDto> indicators) {
             this.indicatorDtos = indicators;
             LinkedHashMap<String, String> indicatorsMap = CommonUtils.getIndicatorsValueMap(indicators);
-            ((SelectItem) editionForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
+            ((SelectItem) creationForm.getItem(IndicatorInstanceDS.IND_UUID)).setValueMap(indicatorsMap);
         }
 
         public void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos) {
             this.geographicalGranularityDtos = geographicalGranularityDtos;
             LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
-            ((SelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)).setValueMap(CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos));
-            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularitiesValueMap(valueMap);
+            ((SelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)).setValueMap(CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos));
+            ((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularitiesValueMap(valueMap);
         }
 
         public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
-            ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
+            ((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValuesValueMap(CommonUtils.getGeographicalValuesValueMap(geographicalValueDtos));
         }
 
         public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
@@ -932,6 +963,8 @@ public class SystemStructurePanel extends HLayout {
             form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE,
                     geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) : new String());
             // Edition form (EDITION NOT ALLOWED)
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE,
+                    geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) : new String());
             // if (geographicalValueDto != null) {
             // ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
             // // Make sure value map is set properly
@@ -940,7 +973,10 @@ public class SystemStructurePanel extends HLayout {
         }
 
         private void setIndicator(IndicatorDto indicator) {
+            // View form
             form.setValue(IndicatorInstanceDS.IND_TITLE, indicator.getCode() + " - " + getLocalisedString(indicator.getTitle()));
+            // Edition form (EDITION NOT ALLOWED)
+            editionForm.setValue(IndicatorInstanceDS.IND_TITLE, indicator.getCode() + " - " + getLocalisedString(indicator.getTitle()));
         }
 
         private void setIndicatorInstanceView(IndicatorInstanceDto indInst) {
@@ -967,21 +1003,31 @@ public class SystemStructurePanel extends HLayout {
 
             form.markForRedraw();
         }
-        // NO EDITABLE: If edition were allowed, should be a two steps edition or something like that (similar to data sources edition)
-        // private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
-        // editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
-        // editionForm.setValue(IndicatorInstanceDS.IND_UUID, indInst.getIndicatorUuid());
-        //
-        // editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
-        // editionForm.setValue(IndicatorInstanceDS.TIME_GRANULARITY, indInst.getTimeGranularity() != null ? indInst.getTimeGranularity().toString() : "");
-        // editionForm.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
-        //
-        // editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
-        // editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, indInst.getGeographicalGranularityUuid());
-        // ((GeographicalSelectItem) editionForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoValue(indInst.getGeographicalValueUuid());
-        //
-        // markForRedraw();
-        // }
+
+        private void setIndicatorInstanceEdit(IndicatorInstanceDto indInst) {
+            editionForm.setValue(IndicatorInstanceDS.TITLE, RecordUtils.getInternationalStringRecord(indInst.getTitle()));
+
+            editionForm.setValue(IndicatorInstanceDS.IND_TITLE, new String()); // Indicator title set in setIndicator method
+            uiHandlers.retrieveIndicator(indInst.getIndicatorUuid());
+
+            editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE, getTimeSelectionTypeEnum(indInst) != null ? getTimeSelectionTypeEnum(indInst).toString() : "");
+            editionForm.setValue(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getTimeSelectionType(indInst));
+            editionForm.setValue(IndicatorInstanceDS.TIME_GRANULARITY,
+                    indInst.getTimeGranularity() != null ? (getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + indInst.getTimeGranularity().getName())) : "");
+            editionForm.setValue(IndicatorInstanceDS.TIME_VALUE, indInst.getTimeValue());
+
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getGeoSelectionType(indInst));
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
+
+            // Geographical value set in setGeographicalValue method
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
+            if (indInst.getGeographicalValueUuid() != null && !indInst.getGeographicalValueUuid().isEmpty()) {
+                uiHandlers.retrieveGeographicalValue(indInst.getGeographicalValueUuid());
+            }
+
+            markForRedraw();
+        }
 
         private void createViewForm() {
             form = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
@@ -1020,8 +1066,8 @@ public class SystemStructurePanel extends HLayout {
             mainFormLayout.addViewCanvas(form);
         }
 
-        private void createEditForm() {
-            editionForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
+        private void createCreationForm() {
+            creationForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
 
             // Name
 
@@ -1050,7 +1096,7 @@ public class SystemStructurePanel extends HLayout {
                             uiHandlers.retrieveGeographicalGranularitiesInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
                         }
                     }
-                    editionForm.markForRedraw();
+                    creationForm.markForRedraw();
 
                 }
             });
@@ -1087,7 +1133,7 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onChanged(ChangedEvent event) {
-                    editionForm.markForRedraw();
+                    creationForm.markForRedraw();
                 }
             });
 
@@ -1105,7 +1151,7 @@ public class SystemStructurePanel extends HLayout {
 
                 @Override
                 public void onChanged(ChangedEvent event) {
-                    editionForm.markForRedraw();
+                    creationForm.markForRedraw();
                 }
             });
 
@@ -1125,8 +1171,8 @@ public class SystemStructurePanel extends HLayout {
                     // Set values with selected granularity
                     if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
                         String geographicalGranularityUuid = event.getValue().toString();
-                        if (editionForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(editionForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
-                            IndicatorDto indicatorDto = getIndicatorDtoByUuid(editionForm.getValue(IndicatorInstanceDS.IND_UUID).toString());
+                        if (creationForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(creationForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
+                            IndicatorDto indicatorDto = getIndicatorDtoByUuid(creationForm.getValue(IndicatorInstanceDS.IND_UUID).toString());
                             if (indicatorDto != null) {
                                 uiHandlers.retrieveGeographicalValuesWithGranularityInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber(), geographicalGranularityUuid);
                             }
@@ -1135,9 +1181,51 @@ public class SystemStructurePanel extends HLayout {
                 }
             });
 
-            editionForm.setFields(name, indicatorsItem, timeSelectionType, timeGranularityItem, timeValue, geographicalSelectionType, geographicalGranularity, geographicalValue);
+            creationForm.setFields(name, indicatorsItem, timeSelectionType, timeGranularityItem, timeValue, geographicalSelectionType, geographicalGranularity, geographicalValue);
+            mainFormLayout.addEditionCanvas(creationForm);
+        }
+
+        private void createEditionForm() {
+            editionForm = new GroupDynamicForm(getConstants().systemStrucIndInstanceTitle());
+
+            // Name
+
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
+            name.setRequired(true);
+
+            ViewTextItem indicatorNameItem = new ViewTextItem(IndicatorInstanceDS.IND_TITLE, getConstants().systemStrucIndInstanceIndicator());
+
+            // Time
+
+            ViewTextItem timeSelection = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
+            timeSelection.setVisible(false);
+
+            ViewTextItem timeSelectionText = new ViewTextItem(IndicatorInstanceDS.TIME_SELECTION_TYPE + "-text", getConstants().instanceTimeSelection());
+
+            ViewTextItem timeGranularityItem = new ViewTextItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
+            timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction());
+
+            ViewTextItem timeValue = new ViewTextItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
+            timeValue.setShowIfCondition(getTimeValueIfFunction());
+
+            // Geographic
+
+            ViewTextItem geographicSelection = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
+            geographicSelection.setVisible(false);
+
+            ViewTextItem geographicSelectionText = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getConstants().instanceGeographicalSelection());
+
+            ViewTextItem geoGranularity = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
+            geoGranularity.setShowIfCondition(getGeoGranularityIfFunction());
+
+            ViewTextItem geoValue = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
+            geoValue.setShowIfCondition(getGeoValueIfFunction());
+
+            editionForm.setFields(name, indicatorNameItem, timeSelection, timeSelectionText, timeGranularityItem, timeValue, geographicSelection, geographicSelectionText, geoGranularity, geoValue);
+
             mainFormLayout.addEditionCanvas(editionForm);
         }
+
         // Time functions
 
         private FormItemIfFunction getTimeGranularityIfFunction() {
@@ -1242,8 +1330,8 @@ public class SystemStructurePanel extends HLayout {
 
         public void onIndicatorDataPopulated(IndicatorDto indicatorDto) {
             // Hide warning and populate data icon
-            editionForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(false);
-            editionForm.markForRedraw();
+            creationForm.getItem(IndicatorInstanceDS.IND_UUID).setShowIcons(false);
+            creationForm.markForRedraw();
 
             // Replace indicator in indicatorDtos
             int indexToRemove = -1;
@@ -1263,11 +1351,19 @@ public class SystemStructurePanel extends HLayout {
         }
 
         public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
-            editionForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(CommonUtils.getTimeGranularityValueMap(timeGranularityEnums));
+            creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(CommonUtils.getTimeGranularityValueMap(timeGranularityEnums));
         }
 
         public void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues) {
-            editionForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(CommonUtils.getTimeValueValueMap(timeValues));
+            creationForm.getItem(IndicatorInstanceDS.TIME_VALUE).setValueMap(CommonUtils.getTimeValueValueMap(timeValues));
+        }
+
+        public GroupDynamicForm getCreationForm() {
+            return creationForm;
+        }
+
+        public GroupDynamicForm getEditionForm() {
+            return editionForm;
         }
 
     }
