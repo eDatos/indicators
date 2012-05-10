@@ -109,6 +109,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     public IndicatorsDataServiceImpl() {
     }
+    
+    @Override
+    public List<String> retrieveDataDefinitionsOperationsCodes(ServiceContext ctx) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveDataDefinitionsOperationsCodes(null);
+
+        // Find db
+        List<String> operationsCodes = getDataGpeRepository().findCurrentDataDefinitionsOperationsCodes();
+        return operationsCodes;
+    }
 
     @Override
     public List<DataDefinition> retrieveDataDefinitions(ServiceContext ctx) throws MetamacException {
@@ -132,6 +142,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return dataDefinition;
     }
+    
+    @Override
+    public List<DataDefinition> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
+         // Validation
+        InvocationValidator.checkFindDataDefinitionsByOperationCode(operationCode, null);
+
+        // Find db
+        List<DataDefinition> result = getDataGpeRepository().findCurrentDataDefinitionsByOperationCode(operationCode);
+        return result;
+    }
+    
 
     @Override
     public DataStructure retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {

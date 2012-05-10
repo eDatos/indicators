@@ -21,6 +21,26 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public DataGpeRepositoryImpl() {
     }
     
+    @Override
+    public List<String> findCurrentDataDefinitionsOperationsCodes() {
+        Date now = Calendar.getInstance().getTime();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("now", now);
+        String queryHql = "select distinct df.idOperacion "+
+                           "from DataDefinition df "+
+                           "where df.availableEndDate is null "+
+                           "and df.availableStartDate = ("+
+                                                      " select max(df2.availableStartDate) " +
+                                                      " from DataDefinition df2 "+
+                                                      " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
+                                                      " and df2.availableEndDate is NULL "+ //It's not archived
+                                                      " and df.uuid = df2.uuid)";
+        Query query = getEntityManager().createQuery(queryHql);
+        query.setParameter("now", now);
+        List<String> result = query.getResultList();
+        return result;
+    }
+    
     public List<DataDefinition> findCurrentDataDefinitions() {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -36,6 +56,26 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         List<DataDefinition> result = findByQuery(query,parameters);
         return result;
     }
+    
+    @Override
+    public List<DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode) {
+        Date now = Calendar.getInstance().getTime();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("now", now);
+        parameters.put("idOperacion", operationCode);
+        String query = "from DataDefinition df "+
+                        "where df.idOperacion = :idOperacion "+
+                        "and df.availableEndDate is null "+
+                        "and df.availableStartDate = ("+
+                                                      " select max(df2.availableStartDate) " +
+                                                      " from DataDefinition df2 "+
+                                                      " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
+                                                      " and df2.availableEndDate is NULL "+ //It's not archived
+                                                      " and df.uuid = df2.uuid)";
+        List<DataDefinition> result = findByQuery(query,parameters);
+        return result;
+    }
+    
     
     public DataDefinition findCurrentDataDefinition(String uuid) {
         Date now = Calendar.getInstance().getTime();
@@ -61,9 +101,6 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     @Override
     public List<String> findDataDefinitionsWithDataUpdatedAfter(Date date) {
         Date now = Calendar.getInstance().getTime();
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("now", now);
-        parameters.put("lastUpdateDate", date);
         String queryHql = "select df.uuid " +
         		       "from DataDefinition df "+
                        "where df.availableEndDate is null "+

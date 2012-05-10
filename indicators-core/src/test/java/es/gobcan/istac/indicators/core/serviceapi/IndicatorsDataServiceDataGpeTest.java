@@ -36,24 +36,18 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 @Transactional
 public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
-    private static final String              CONSULTA1_UUID                           = "2d4887dc-52f0-4c17-abbb-ef1fdc62e868";
-    private static final String              CONSULTA2_UUID                           = "1-1-1-1-1";
+    private static final String              CONSULTA1_UUID                           = "1-1-1-1-1";
+    private static final String              CONSULTA1_OPERATION_CODE                 = "E10352A";
     private static final String              CONSULTA1_JSON_STRUC                     = readFile("json/structure_1.json");
-    private static final String              CONSULTA3_UUID                           = "2-2-2-2-2";
+    private static final String              CONSULTA2_UUID                           = "2-2-2-2-2";
+    private static final String              CONSULTA2_OPERATION_CODE                 = "E10352B";
+    private static final String              CONSULTA3_UUID                           = "3-3-3-3-3";
     private static final String              CONSULTA4_UUID                           = "4-4-4-4-4";
     private static final String              CONSULTA4_JSON_STRUC                     = readFile("json/structure_wrong_3.json");
+    private static final String              CONSULTA4_OPERATION_CODE                 = "E10352D";
+    private static final String              CONSULTA5_UUID                           = "5-5-5-5-5";
+    private static final String              CONSULTA5_OPERATION_CODE                 = "E10352E";
 
-    /* Has geographic and time variables */
-    private static final String              INDICATOR1_UUID                          = "Indicator-1";
-    private static final String              INDICATOR1_DS_GPE_UUID                   = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
-    private static final String              INDICATOR1_GPE_JSON_DATA                 = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_VERSION                       = "1.000";
-
-    /* Has no geographic and temporal variables */
-    private static final String              INDICATOR4_UUID                          = "Indicator-4";
-    private static final String              INDICATOR4_DS_GPE_UUID                   = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
-    private static final String              INDICATOR4_GPE_JSON_DATA                 = readFile("json/data_fixed.json");
-    private static final String              INDICATOR4_VERSION                       = "1.000";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -67,15 +61,36 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsService                indicatorsService;
 
-    @Before
-    public void initMock() throws MetamacException {
+    
+    @Test
+    public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
+        List<String> operationsCodes = indicatorsDataService.retrieveDataDefinitionsOperationsCodes(getServiceContextAdministrador());
+        assertEquals(3,operationsCodes.size());
+        assertTrue(operationsCodes.contains(CONSULTA1_OPERATION_CODE));
+        assertTrue(operationsCodes.contains(CONSULTA4_OPERATION_CODE));
+        assertTrue(operationsCodes.contains(CONSULTA5_OPERATION_CODE));
     }
 
     @Test
     public void testRetrieveDataDefinitions() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
-        assertEquals(1, dataDefs.size());
-        assertTrue(1 == dataDefs.get(0).getId());
+        assertEquals(3, dataDefs.size());
+        assertEquals(CONSULTA1_UUID,dataDefs.get(0).getUuid());
+        assertEquals(CONSULTA4_UUID,dataDefs.get(1).getUuid());
+        assertEquals(CONSULTA5_UUID,dataDefs.get(2).getUuid());
+    }
+    
+    @Test
+    public void testFindDataDefinitionsByOperationCode() throws Exception {
+        List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitionsByOperationCode(getServiceContextAdministrador(), CONSULTA1_OPERATION_CODE);
+        assertEquals(1,dataDefs.size());
+        assertEquals(CONSULTA1_UUID, dataDefs.get(0).getUuid());
+    }
+    
+    @Test
+    public void testFindDataDefinitionsByOperationCodeNotVisible() throws Exception {
+        List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitionsByOperationCode(getServiceContextAdministrador(), CONSULTA2_OPERATION_CODE);
+        assertEquals(0,dataDefs.size());
     }
 
     @Test
@@ -96,7 +111,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
 
         DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA1_UUID);
-        assertTrue(1 == dataDef.getId());
+        assertEquals(CONSULTA1_UUID, dataDef.getUuid());
+        assertEquals(CONSULTA1_OPERATION_CODE, dataDef.getIdOperacion());
     }
 
     @Test

@@ -137,9 +137,13 @@ Application Indicators {
     		> @GeographicalGranularityRepository
     		> @GeographicalValueRepository
     		> @IndicatorInstanceRepository
-    		
+
+			"Retrieves all Data definition's operations"
+	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
 			"Retrieves all Data containing basic info only"
 	    	List<@DataDefinition> retrieveDataDefinitions() throws MetamacException;
+	    	"Find data By operation code"
+	    	List<@DataDefinition> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 			"Retrieves Data containing basic info only"
 	    	@DataDefinition retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
@@ -409,8 +413,12 @@ Application Indicators {
 	    	List<@SubjectDto> retrieveSubjectsInPublishedIndicators() throws MetamacException;
 	    	
 	    	// DATA
+	    	"Retrieves all Data definition's operations"
+	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
 	    	"Retrieves all Data containing basic info only"
 	    	List<@DataDefinitionDto> retrieveDataDefinitions() throws MetamacException;
+	    	"Find data By operation code"
+	    	List<@DataDefinitionDto> findDataDefinitionsByOperationCode(String operationCode) throws MetamacException;
 	    	"Retrieves all Data basic info only"
 	    	@DataDefinitionDto retrieveDataDefinition(String uuid) throws MetamacException;
 	    	"Retrieves the Data's structure info"
@@ -1000,7 +1008,9 @@ Application Indicators {
        		Repository DataGpeRepository {
        			protected List<@DataDefinition> findByQuery;
             	protected List<@DataDefinition> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	List<String> findCurrentDataDefinitionsOperationsCodes;
             	List<@DataDefinition> findCurrentDataDefinitions;
+            	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
             	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
 			}
