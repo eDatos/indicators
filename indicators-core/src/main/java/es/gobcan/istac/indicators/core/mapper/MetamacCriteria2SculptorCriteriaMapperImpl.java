@@ -85,6 +85,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
                     return new SculptorPropertyCriteria(new LeafProperty<IndicatorVersion>("indicator", "code", false, IndicatorVersion.class), propertyRestriction.getStringValue());
                 case SUBJECT_CODE:
                     return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue());
+                case TITLE:
+                    return new SculptorPropertyCriteria(new LeafProperty<IndicatorVersion>("title.texts", "label", false, IndicatorVersion.class), propertyRestriction.getStringValue());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

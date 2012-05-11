@@ -1029,7 +1029,7 @@
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="PRODUCTION_VALIDATION"
 				NOTES_URL="http://indicators/4"
-				SUBJECT_CODE="3"
+				SUBJECT_CODE="4"
 				SUBJECT_TITLE_FK="37"
 				QUANTITY_FK="411"
 				IS_LAST_VERSION="1"
@@ -1217,7 +1217,7 @@
 	  			INDICATOR_FK="5"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
 				NOTES_URL="http://indicators/5"
-				SUBJECT_CODE="3"
+				SUBJECT_CODE="4"
 				SUBJECT_TITLE_FK="38"
 				QUANTITY_FK="511"
 				IS_LAST_VERSION="1"
@@ -2648,7 +2648,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="1"
-		LABEL="Título Indicator-1-v1"
+		LABEL="Título Indicator-1-v1 Educación"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="1"
@@ -2731,7 +2731,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="9"
-		LABEL="Título Indicator-1-v2"
+		LABEL="Título Indicator-1-v2 Educación"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="5"
@@ -2779,21 +2779,13 @@
 		INTERNATIONAL_STRING_FK="7"
 	/>
 	
-	<TB_LOCALISED_STRINGS
-		ID="14"
-		LABEL="Note Indicator-1-v2"
-		LOCALE="en"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="7"
-	/>
-	
 	<TB_INTERNATIONAL_STRINGS
 		ID="8"
 		VERSION="1"
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="15"
+		ID="14"
 		LABEL="Comentario Indicator-1-v2"
 		LOCALE="es"
 		VERSION="1"
@@ -2801,7 +2793,7 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="16"
+		ID="15"
 		LABEL="Comments Indicator-1-v2"
 		LOCALE="en"
 		VERSION="1"
@@ -2814,17 +2806,9 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="17"
+		ID="16"
 		LABEL="Title Indicator-2-v1"
 		LOCALE="es"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="9"
-	/>
-	
-	<TB_LOCALISED_STRINGS
-		ID="18"
-		LABEL="Title Indicator-2-v1"
-		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="9"
 	/>
@@ -2835,16 +2819,16 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="19"
-		LABEL="Título Indicator-3-v1"
+		ID="17"
+		LABEL="Título Indicator-3-v1 Educación"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="10"
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="20"
-		LABEL="Title Indicator-3-v1"
+		ID="18"
+		LABEL="Title Indicator-3-v1 Education"
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="10"
@@ -2856,16 +2840,16 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="21"
-		LABEL="Título Indicator-4-v1"
+		ID="19"
+		LABEL="Título Indicator-4-v1 Educación en España"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="11"
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="22"
-		LABEL="Title Indicator-4-v1"
+		ID="20"
+		LABEL="Title Indicator-4-v1 Spain education"
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="11"
@@ -2877,20 +2861,13 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="23"
+		ID="21"
 		LABEL="Título Indicator-5-v1"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="12"
 	/>
-	
-	<TB_LOCALISED_STRINGS
-		ID="24"
-		LABEL="Title Indicator-5-v1"
-		LOCALE="en"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="12"
-	/>			
+			
 	
 	<TB_INTERNATIONAL_STRINGS
 		ID="13"
@@ -2898,15 +2875,15 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="23"
-		LABEL="Título Indicator-6-v1"
+		ID="22"
+		LABEL="Título Indicator-6-v1 Educación en Inglaterra"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="13"
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="24"
+		ID="23"
 		LABEL="Title Indicator-6-v1"
 		LOCALE="en"
 		VERSION="1"
@@ -2919,20 +2896,12 @@
 	/>
 	
 	<TB_LOCALISED_STRINGS
-		ID="23"
+		ID="24"
 		LABEL="Título Indicator-6-v1"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="14"
-	/>
-	
-	<TB_LOCALISED_STRINGS
-		ID="24"
-		LABEL="Title Indicator-6-v1"
-		LOCALE="en"
-		VERSION="1"
-		INTERNATIONAL_STRING_FK="14"
-	/>		
+	/>	
 	
 	<TB_INTERNATIONAL_STRINGS
 		ID="15"
@@ -2941,7 +2910,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="25"
-		LABEL="Título Indicator-7-v1"
+		LABEL="Título Indicator-7-v1 Educación en Francia"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="15"
@@ -2949,7 +2918,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="26"
-		LABEL="Title Indicator-7-v1"
+		LABEL="Title Indicator-7-v1 France Education"
 		LOCALE="en"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="15"
@@ -3371,7 +3340,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="66"
-		LABEL="Área temática 3"
+		LABEL="Área temática 4"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="37"
@@ -3384,7 +3353,7 @@
 	
 	<TB_LOCALISED_STRINGS
 		ID="67"
-		LABEL="Área temática 3"
+		LABEL="Área temática 4"
 		LOCALE="es"
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="38"
