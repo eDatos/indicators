@@ -1,5 +1,10 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
+import java.util.Stack;
+
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
+
 import com.smartgwt.client.types.ImageStyle;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Canvas;
@@ -9,11 +14,6 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
-
-import java.util.Stack;
-
-import org.siemac.metamac.web.common.client.MetamacWebCommon;
-import org.siemac.metamac.web.common.client.resources.GlobalResources;
 
 public class WaitPopup {
 
