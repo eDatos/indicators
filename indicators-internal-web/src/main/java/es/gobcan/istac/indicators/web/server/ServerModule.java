@@ -14,8 +14,11 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.FindDataDefinitionsByOperationCodeActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.FindIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetDataDefinitionsOperationsCodesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataSourcesListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetDataStructureActionHandler;
@@ -67,8 +70,11 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
+import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourceAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
@@ -154,6 +160,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetIndicatorByCodeAction.class, GetIndicatorByCodeActionHandler.class);
         bindHandler(GetIndicatorAction.class, GetIndicatorActionHandler.class);
         bindHandler(DeleteIndicatorsAction.class, DeleteIndicatorsActionHandler.class);
+        bindHandler(FindIndicatorsAction.class, FindIndicatorsActionHandler.class);
 
         // Indicators life cycle
         bindHandler(ArchiveIndicatorAction.class, ArchiveIndicatorActionHandler.class);
@@ -187,6 +194,8 @@ public class ServerModule extends HandlerModule {
         // Data Sources
         bindHandler(GetDataDefinitionsAction.class, GetDataDefinitionsActionHandler.class);
         bindHandler(GetDataDefinitionAction.class, GetDataDefinitionActionHandler.class);
+        bindHandler(GetDataDefinitionsOperationsCodesAction.class, GetDataDefinitionsOperationsCodesActionHandler.class);
+        bindHandler(FindDataDefinitionsByOperationCodeAction.class, FindDataDefinitionsByOperationCodeActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
