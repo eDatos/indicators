@@ -381,13 +381,15 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
 
-    @Override
-    public void setIndicators(List<IndicatorDto> indicators) {
-        super.setIndicators(indicators);
-        LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-    }
+    // TODO This method is never called because QUANTITY_DENOMINATOR_INDICATOR_UUID and QUANTITY_NUMERATOR_INDICATOR_UUID fields are never shown (should be removed)
+    // @Override
+    // public void setIndicators(List<IndicatorDto> indicators) {
+    // super.setIndicators(indicators);
+    //
+    // LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
+    // ((SelectItem) getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
+    // ((SelectItem) getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
+    // }
 
     /**
      * In edition mode, shows query dependent fields in view mode
