@@ -13,8 +13,8 @@ import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 public class FindIndicators {
 
     @In(1)
-    IndicatorCriteria criteria;
-    
+    IndicatorCriteria  criteria;
+
     @Out(1)
     List<IndicatorDto> indicatorDtos;
 

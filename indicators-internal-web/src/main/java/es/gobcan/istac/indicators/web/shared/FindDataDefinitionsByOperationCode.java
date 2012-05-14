@@ -12,9 +12,9 @@ import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 public class FindDataDefinitionsByOperationCode {
 
     @In(1)
-    String operationCode;
-    
+    String                  operationCode;
+
     @Out(1)
     List<DataDefinitionDto> dataDefinitionDtos;
-    
+
 }
