@@ -49,7 +49,7 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
                 // Create indicators system
                 indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e2) {
-                throw WebExceptionUtils.createMetamacWebException(e);
+                throw WebExceptionUtils.createMetamacWebException(e2);
             }
         }
         // Create instance

@@ -49,7 +49,7 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
                 // Create indicators system
                 indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e1) {
-                throw WebExceptionUtils.createMetamacWebException(e);
+                throw WebExceptionUtils.createMetamacWebException(e1);
             }
         }
         // Create Dimension
