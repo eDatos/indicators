@@ -57,6 +57,8 @@
 	<extend-property name="locale" values="en" />
 	<set-property-fallback name="locale" value="es"/>
 
+    <set-property name="ClientBundle.enableInlining" value="false" />
+
 	<!-- Configure GIN -->
 	<define-configuration-property name="gin.ginjector"	is-multi-valued="false" />
 	<set-configuration-property name="gin.ginjector" value="es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector" />
