@@ -8,7 +8,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class DataSourceDS extends DataSource {
 
     public static String UUID                              = "ds-uuid";
-    public static String QUERY                             = "ds-query";
+    public static String QUERY_UUID                        = "ds-query-uuid";
+    public static String QUERY_TEXT                        = "ds-query-text";        // Not mapped in DTO
     public static String PX                                = "ds-px";
 
     public static String ABSOLUTE_METHOD                   = "ds-abs-met";

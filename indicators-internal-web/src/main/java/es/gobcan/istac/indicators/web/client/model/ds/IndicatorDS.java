@@ -33,13 +33,16 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_MINIMUM                      = "q-min";
     public static String QUANTITY_MAXIMUM                      = "q-max";
     public static String QUANTITY_DENOMINATOR_INDICATOR_UUID   = "q-den";
+    public static String QUANTITY_DENOMINATOR_INDICATOR_TEXT   = "q-den-dtext";      // Not mapped in DTO
     public static String QUANTITY_NUMERATOR_INDICATOR_UUID     = "q-num";
+    public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";      // Not mapped in DTO
     public static String QUANTITY_IS_PERCENTAGE                = "q-is-perc";
     public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";      // Not mapped in DTO
     public static String QUANTITY_BASE_VALUE                   = "q-value";
     public static String QUANTITY_BASE_TIME                    = "q-time";
     public static String QUANTITY_BASE_LOCATION                = "q-loc";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_UUID = "q-ind-uuid";
+    public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext"; // Not mapped in DTO
     public static String QUANTITY_TYPE                         = "q-type";
     public static String QUANTITY_TYPE_TEXT                    = "q-type-text";      // Not mapped in DTO
     public static String QUANTITY_PERCENTAGE_OF                = "q-perc-of";
@@ -60,6 +63,8 @@ public class IndicatorDS extends DataSource {
     public static String COMMENTS                              = "ind-comments";
 
     public static String NEEDS_UPDATE                          = "ind-needs-update";
+
+    public static String DTO                                   = "ind-dto";
 
     public IndicatorDS() {
         DataSourceIntegerField uuid = new DataSourceIntegerField(UUID, getConstants().indicDetailIdentifier());

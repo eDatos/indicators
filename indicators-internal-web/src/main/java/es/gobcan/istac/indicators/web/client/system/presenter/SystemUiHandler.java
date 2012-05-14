@@ -6,6 +6,7 @@ import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public interface SystemUiHandler extends UiHandlers {
@@ -17,13 +18,13 @@ public interface SystemUiHandler extends UiHandlers {
     void createIndicatorInstance(IndicatorsSystemDtoWeb system, IndicatorInstanceDto instance);
     void updateIndicatorInstance(IndicatorInstanceDto instance);
     void deleteIndicatorInstance(IndicatorInstanceDto instance);
+    void searchIndicator(IndicatorCriteria criteria);
 
     void moveSystemStructureNodes(String systemUuid, String targetUuid, ElementLevelDto level, Long newOrder);
 
     void retrieveIndSystem(String indSystemCode);
     void retrieveSystemStructure();
 
-    void retrieveIndicators();
     void retrieveIndicator(String uuid);
 
     void retrieveGeographicalValue(String geographicalValueUuid);
@@ -36,7 +37,7 @@ public interface SystemUiHandler extends UiHandlers {
 
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);
 
-    void populateIndicatorData(String uuid, String version);
+    // void populateIndicatorData(String uuid, String version);
 
     // Geographical and temporal values and variables for indicators (in instance creation)
     void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);

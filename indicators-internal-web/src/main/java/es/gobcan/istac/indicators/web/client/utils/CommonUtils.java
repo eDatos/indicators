@@ -9,6 +9,10 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.FormItemIfFunction;
+import com.smartgwt.client.widgets.form.fields.FormItem;
+
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
@@ -148,7 +152,7 @@ public class CommonUtils {
         return valueMap;
     }
 
-    public static LinkedHashMap<String, String> getDataBasicValueMap(List<DataDefinitionDto> dataDefinitionDtos) {
+    public static LinkedHashMap<String, String> getDataDefinitionValueMap(List<DataDefinitionDto> dataDefinitionDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (DataDefinitionDto dataBasic : dataDefinitionDtos) {
             valueMap.put(dataBasic.getUuid(), dataBasic.getName());
@@ -215,6 +219,20 @@ public class CommonUtils {
             procStatus += IndicatorsWeb.getMessages().indicatorPreviousVersion(indicatorsSystemDtoWeb.getPublishedVersion());
         }
         return procStatus;
+    }
+
+    public static FormItemIfFunction getFalseIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return false;
+            }
+        };
+    }
+
+    public static String getIndicatorText(String indicatorCode, InternationalStringDto indicatorTitle) {
+        return indicatorCode + " - " + InternationalStringUtils.getLocalisedString(indicatorTitle);
     }
 
 }

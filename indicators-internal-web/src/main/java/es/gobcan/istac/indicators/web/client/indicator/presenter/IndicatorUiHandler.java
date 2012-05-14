@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public interface IndicatorUiHandler extends UiHandlers {
 
@@ -28,12 +29,21 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     // DataSource
 
-    void retrieveDataDefinitions();
+    void retrieveDataDefinitionsOperationsCodes();
+    void retrieveDataDefinitionsByOperationCode(String operationCode);
     void retrieveDataDefinition(String uuid);
     void retrieveDataStructure(String uuid);
     void retrieveGeographicalValueDS(String uuid);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);
     void deleteDataSource(List<String> uuid);
+
+    void searchIndicatorsQuantityDenominator(IndicatorCriteria criteria);
+    void searchIndicatorsQuantityNumerator(IndicatorCriteria criteria);
+    void searchIndicatorsQuantityIndicatorBase(IndicatorCriteria criteria);
+
+    void retrieveQuantityDenominatorIndicator(String indicatorUuid);
+    void retrieveQuantityNumeratorIndicator(String indicatorUuid);
+    void retrieveQuantityIndicatorBase(String indicatorUuid);
 
 }

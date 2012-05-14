@@ -54,6 +54,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
@@ -61,8 +63,6 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
@@ -74,8 +74,6 @@ import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
-import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
@@ -92,6 +90,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorsSystemResult;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemPresenter extends Presenter<SystemPresenter.SystemView, SystemPresenter.SystemProxy> implements SystemUiHandler {
@@ -120,7 +119,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void onDimensionSaved(DimensionDto dimension);
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
 
-        void onIndicatorDataPopulated(IndicatorDto indicatorDto);
+        // void onIndicatorDataPopulated(IndicatorDto indicatorDto);
 
         // Instance
         void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums);
@@ -212,21 +211,6 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
                 getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
-            }
-        });
-    }
-
-    @Override
-    public void retrieveIndicators() {
-        dispatcher.execute(new GetIndicatorListAction(), new WaitingAsyncCallback<GetIndicatorListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicators()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(GetIndicatorListResult result) {
-                getView().setIndicators(result.getIndicatorList());
             }
         });
     }
@@ -501,21 +485,21 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         });
     }
 
-    @Override
-    public void populateIndicatorData(String uuid, String version) {
-        dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(PopulateIndicatorDataResult result) {
-                getView().onIndicatorDataPopulated(result.getIndicatorDto());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
-            }
-        });
-    }
+    // @Override
+    // public void populateIndicatorData(String uuid, String version) {
+    // dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
+    //
+    // @Override
+    // public void onWaitFailure(Throwable caught) {
+    // ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
+    // }
+    // @Override
+    // public void onWaitSuccess(PopulateIndicatorDataResult result) {
+    // getView().onIndicatorDataPopulated(result.getIndicatorDto());
+    // ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
+    // }
+    // });
+    // }
 
     @Override
     public void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion) {
@@ -577,6 +561,21 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                         getView().setGeographicalValuesForIndicator(result.getGeographicalValueDtos());
                     }
                 });
+    }
+
+    @Override
+    public void searchIndicator(IndicatorCriteria criteria) {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(FindIndicatorsResult result) {
+                getView().setIndicators(result.getIndicatorDtos());
+            }
+        });
     }
 
 }

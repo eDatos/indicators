@@ -11,12 +11,18 @@ import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
@@ -34,8 +40,12 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class QuantityForm extends BaseQuantityForm {
 
-    private QuantityDto  quantityDto;
-    private IndicatorDto indicatorDto;
+    private QuantityDto            quantityDto;
+    private IndicatorDto           indicatorDto;
+
+    private IndicatorsSearchWindow indicatorDenominatorSearchWindow;
+    private IndicatorsSearchWindow indicatorNumeratorSearchWindow;
+    private IndicatorsSearchWindow indicatorBaseSearchWindow;
 
     public QuantityForm(String groupTitle) {
         super(groupTitle);
@@ -67,13 +77,17 @@ public class QuantityForm extends BaseQuantityForm {
         IntegerItem max = new IntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
-        SelectItem denominatorUuid = new SelectItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
-        denominatorUuid.setShowIfCondition(getDenominatorIfFunction());
-        denominatorUuid.setValidators(getIndicatorSelectedValidator());
+        // Search denominator indicator
+        TextItem searchDenominatorUuid = new TextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        searchDenominatorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        searchDenominatorUuid.setValidators(getIndicatorSelectedValidator());
+        SearchViewTextItem searchDenominatorText = getSearchDenominatorTextItem();
 
-        SelectItem numeratorUuid = new SelectItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
-        numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
-        numeratorUuid.setValidators(getIndicatorSelectedValidator());
+        // Search numerator indicator
+        TextItem searchNumeratorUuid = new TextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        searchNumeratorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        searchNumeratorUuid.setValidators(getIndicatorSelectedValidator());
+        SearchViewTextItem searchNumeratorText = getSearchNumeratorTextItem();
 
         CustomCheckboxItem isPercentange = new CustomCheckboxItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(getIsPercentageIfFunction());
@@ -119,13 +133,15 @@ public class QuantityForm extends BaseQuantityForm {
             }
         });
 
-        SelectItem baseQuantityIndUuid = new SelectItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
-        baseQuantityIndUuid.setRequired(true);
-        baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
-        baseQuantityIndUuid.setValidators(getIndicatorSelectedValidator());
+        // Search indicator base
+        TextItem searchIndicatorBaseUuid = new TextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
+        searchIndicatorBaseUuid.setRequired(true);
+        searchIndicatorBaseUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        searchIndicatorBaseUuid.setValidators(getIndicatorSelectedValidator());
+        SearchViewTextItem searchIndicatorBaseText = getSearchIndicatorBaseTextItem();
 
-        setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, baseValue, baseTime, baseLocation,
-                baseQuantityIndUuid);
+        setFields(type, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, percentageOf,
+                indexBaseType, baseValue, baseTime, baseLocation, searchIndicatorBaseUuid, searchIndicatorBaseText);
     }
 
     public void setValue(QuantityDto quantityDto) {
@@ -147,8 +163,13 @@ public class QuantityForm extends BaseQuantityForm {
             if (quantityDto.getMaximum() != null) {
                 setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum());
             }
+
             setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, quantityDto.getDenominatorIndicatorUuid());
+            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, quantityDto.getDenominatorIndicatorUuid()); // Value set in setIndicatorQuantityDenominator method
+
             setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, quantityDto.getNumeratorIndicatorUuid());
+            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, quantityDto.getNumeratorIndicatorUuid()); // Value set in setIndicatorQuantityNumerator method
+
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null ? getIndexBaseTypeEnum(quantityDto).toString() : "");
             if (quantityDto.getBaseValue() != null) {
@@ -161,8 +182,22 @@ public class QuantityForm extends BaseQuantityForm {
             ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoValue(quantityDto.getBaseLocationUuid());
 
             setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
+            setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, quantityDto.getBaseQuantityIndicatorUuid()); // Value set in setIndicatorQuantityIndicatorBase method
+
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
+    }
+
+    public void setIndicatorQuantityDenominator(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
+    }
+
+    public void setIndicatorQuantityNumerator(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
+    }
+
+    public void setIndicatorQuantityIndicatorBase(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
     }
 
     public QuantityDto getValue() {
@@ -175,9 +210,9 @@ public class QuantityForm extends BaseQuantityForm {
         // Only set value if item is visible (these item are quantity type dependent)
         quantityDto.setMinimum(getItem(IndicatorDS.QUANTITY_MINIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MINIMUM) != null ? (Integer) getValue(IndicatorDS.QUANTITY_MINIMUM) : null) : null);
         quantityDto.setMaximum(getItem(IndicatorDS.QUANTITY_MAXIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MAXIMUM) != null ? (Integer) getValue(IndicatorDS.QUANTITY_MAXIMUM) : null) : null);
-        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).isVisible() ? CommonUtils
+        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)) : null);
-        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? CommonUtils
+        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)) : null);
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean
                 .valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false) : null);
@@ -188,18 +223,27 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setBaseTime(getItem(IndicatorDS.QUANTITY_BASE_TIME).isVisible() ? getValueAsString(IndicatorDS.QUANTITY_BASE_TIME) : null);
         quantityDto.setBaseLocationUuid(getItem(IndicatorDS.QUANTITY_BASE_LOCATION).isVisible() ? CommonUtils.getUuidString(((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION))
                 .getSelectedGeoValue()) : null);
-        quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID).isVisible() ? CommonUtils
+        quantityDto.setBaseQuantityIndicatorUuid(getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).isVisible() ? CommonUtils
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
         return quantityDto;
     }
 
-    @Override
-    public void setIndicators(List<IndicatorDto> indicators) {
-        super.setIndicators(indicators);
-        LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-        ((SelectItem) getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)).setValueMap(valueMap);
+    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+        if (indicatorDenominatorSearchWindow != null) {
+            indicatorDenominatorSearchWindow.setIndicatorList(indicators);
+        }
+    }
+
+    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+        if (indicatorNumeratorSearchWindow != null) {
+            indicatorNumeratorSearchWindow.setIndicatorList(indicators);
+        }
+    }
+
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+        if (indicatorBaseSearchWindow != null) {
+            indicatorBaseSearchWindow.setIndicatorList(indicators);
+        }
     }
 
     @Override
@@ -254,6 +298,145 @@ public class QuantityForm extends BaseQuantityForm {
                 return !IndicatorProcStatusEnum.DRAFT.equals(indicatorDto.getProcStatus());
             }
         });
+    }
+
+    // ITEMS
+
+    private SearchViewTextItem getSearchDenominatorTextItem() {
+        SearchViewTextItem searchDenominatorText = new SearchViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, getConstants().indicQuantityDenominatorIndicator());
+        searchDenominatorText.setShowIfCondition(getDenominatorIfFunction());
+        searchDenominatorText.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                indicatorDenominatorSearchWindow = new IndicatorsSearchWindow(getConstants().indicatorSelection());
+                indicatorDenominatorSearchWindow.getSearchButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (uiHandlers instanceof IndicatorUiHandler) {
+                            ((IndicatorUiHandler) uiHandlers).searchIndicatorsQuantityDenominator(indicatorDenominatorSearchWindow.getSearchCriteria());
+                        }
+                    }
+                });
+
+                indicatorDenominatorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        IndicatorDto indicatorDto = indicatorDenominatorSearchWindow.getSelectedIndicator();
+                        indicatorDenominatorSearchWindow.destroy();
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT,
+                                indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()) : new String());
+                        QuantityForm.this.getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).validate();
+                    }
+                });
+            }
+        });
+        CustomValidator validator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return QuantityForm.this.getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).validate();
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        searchDenominatorText.setValidators(validator);
+
+        return searchDenominatorText;
+    }
+
+    private SearchViewTextItem getSearchNumeratorTextItem() {
+        SearchViewTextItem searchNumeratorText = new SearchViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
+        searchNumeratorText.setShowIfCondition(getNumeratorIfFunction());
+        searchNumeratorText.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                indicatorNumeratorSearchWindow = new IndicatorsSearchWindow(getConstants().indicatorSelection());
+                indicatorNumeratorSearchWindow.getSearchButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (uiHandlers instanceof IndicatorUiHandler) {
+                            ((IndicatorUiHandler) uiHandlers).searchIndicatorsQuantityNumerator(indicatorNumeratorSearchWindow.getSearchCriteria());
+                        }
+                    }
+                });
+
+                indicatorNumeratorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        IndicatorDto indicatorDto = indicatorNumeratorSearchWindow.getSelectedIndicator();
+                        indicatorNumeratorSearchWindow.destroy();
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, indicatorDto != null
+                                ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle())
+                                : new String());
+                        QuantityForm.this.getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).validate();
+                    }
+                });
+            }
+        });
+        CustomValidator validator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return QuantityForm.this.getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).validate();
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        searchNumeratorText.setValidators(validator);
+
+        return searchNumeratorText;
+    }
+
+    private SearchViewTextItem getSearchIndicatorBaseTextItem() {
+        SearchViewTextItem searchIndicatorBaseText = new SearchViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
+        searchIndicatorBaseText.setRequired(true);
+        searchIndicatorBaseText.setShowIfCondition(getBaseQuantityIfFunction());
+        searchIndicatorBaseText.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                indicatorBaseSearchWindow = new IndicatorsSearchWindow(getConstants().indicatorSelection());
+                indicatorBaseSearchWindow.getSearchButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (uiHandlers instanceof IndicatorUiHandler) {
+                            ((IndicatorUiHandler) uiHandlers).searchIndicatorsQuantityIndicatorBase(indicatorBaseSearchWindow.getSearchCriteria());
+                        }
+                    }
+                });
+
+                indicatorBaseSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        IndicatorDto indicatorDto = indicatorBaseSearchWindow.getSelectedIndicator();
+                        indicatorBaseSearchWindow.destroy();
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT,
+                                indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()) : new String());
+                        QuantityForm.this.getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).validate();
+                    }
+                });
+            }
+        });
+        CustomValidator validator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return QuantityForm.this.getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID).validate();
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        searchIndicatorBaseText.setValidators(validator);
+
+        return searchIndicatorBaseText;
     }
 
 }

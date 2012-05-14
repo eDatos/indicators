@@ -5,7 +5,6 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessage
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -13,7 +12,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
-import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
@@ -23,16 +21,11 @@ import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 
 public class BaseQuantityForm extends GroupDynamicForm {
 
-    protected List<IndicatorDto>    indicatorDtos;
     protected List<QuantityUnitDto> quantityUnitDtos;
     protected UiHandlers            uiHandlers;
 
     public BaseQuantityForm(String groupTitle) {
         super(groupTitle);
-    }
-
-    public void setIndicators(List<IndicatorDto> indicatorDtos) {
-        this.indicatorDtos = indicatorDtos;
     }
 
     public void setQuantityUnits(List<QuantityUnitDto> units) {
@@ -292,17 +285,6 @@ public class BaseQuantityForm extends GroupDynamicForm {
             for (QuantityUnitDto unit : quantityUnitDtos) {
                 if (unitUuid.equals(unit.getUuid())) {
                     return unit.getSymbol();
-                }
-            }
-        }
-        return new String();
-    }
-
-    protected String getIndicatorText(String indicatorUuid) {
-        if (indicatorUuid != null) {
-            for (IndicatorDto ind : indicatorDtos) {
-                if (indicatorUuid.equals(ind.getUuid())) {
-                    return ind.getCode() + " - " + InternationalStringUtils.getLocalisedString(ind.getTitle());
                 }
             }
         }

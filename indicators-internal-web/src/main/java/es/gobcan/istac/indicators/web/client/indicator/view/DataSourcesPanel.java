@@ -18,8 +18,8 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -33,6 +33,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -57,6 +59,7 @@ import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
+import es.gobcan.istac.indicators.web.client.widgets.DataDefinitionsSearchWindow;
 import es.gobcan.istac.indicators.web.client.widgets.DataSourceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalSelectItem;
 import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
@@ -66,31 +69,34 @@ import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
 
 public class DataSourcesPanel extends VLayout {
 
-    private IndicatorDto              indicatorDto;
-    private IndicatorUiHandler        uiHandlers;
+    private IndicatorDto                indicatorDto;
+    private IndicatorUiHandler          uiHandlers;
 
-    private CustomListGrid            dataSourcesListGrid;
+    private CustomListGrid              dataSourcesListGrid;
 
-    private ListGridToolStrip         toolStrip;
-    private DataSourceMainFormLayout  mainFormLayout;
+    private ListGridToolStrip           toolStrip;
+    private DataSourceMainFormLayout    mainFormLayout;
 
     // View Form
-    private ViewDataSourceGeneralForm generalForm;
-    private ViewRateDerivationForm    interperiodPuntualRateForm;
-    private ViewRateDerivationForm    annualPuntualRateForm;
-    private ViewRateDerivationForm    interperiodPercentageRateForm;
-    private ViewRateDerivationForm    annualPercentageRateForm;
+    private ViewDataSourceGeneralForm   generalForm;
+    private ViewRateDerivationForm      interperiodPuntualRateForm;
+    private ViewRateDerivationForm      annualPuntualRateForm;
+    private ViewRateDerivationForm      interperiodPercentageRateForm;
+    private ViewRateDerivationForm      annualPercentageRateForm;
 
     // Edition Form
-    private GroupDynamicForm          generalEditionForm;
-    private ViewDataSourceGeneralForm generalStaticEditionForm;
-    private RateDerivationForm        interperiodPuntualRateEditionForm;
-    private RateDerivationForm        annualPuntualRateEditionForm;
-    private RateDerivationForm        interperiodPercentageRateEditionForm;
-    private RateDerivationForm        annualPercentageRateEditionForm;
+    private GroupDynamicForm            generalEditionForm;
+    private ViewDataSourceGeneralForm   generalStaticEditionForm;
+    private RateDerivationForm          interperiodPuntualRateEditionForm;
+    private RateDerivationForm          annualPuntualRateEditionForm;
+    private RateDerivationForm          interperiodPercentageRateEditionForm;
+    private RateDerivationForm          annualPercentageRateEditionForm;
 
-    private DataSourceDto             dataSourceDto;
-    private DataStructureDto          dataStructureDto;
+    private DataSourceDto               dataSourceDto;
+    private DataStructureDto            dataStructureDto;
+
+    private DataDefinitionsSearchWindow dataDefinitionsSearchWindow;
+    private List<String>                dataDefinitionsOperationCodes;
 
     public DataSourcesPanel() {
         super();
@@ -239,6 +245,9 @@ public class DataSourcesPanel extends VLayout {
     }
 
     public void setDataSources(List<DataSourceDto> dataSourceDtos) {
+        // Hide forms
+        mainFormLayout.hide();
+
         DataSourceRecord[] records = new DataSourceRecord[dataSourceDtos.size()];
         int index = 0;
         for (DataSourceDto ds : dataSourceDtos) {
@@ -246,8 +255,8 @@ public class DataSourcesPanel extends VLayout {
         }
         dataSourcesListGrid.setData(records);
 
-        // Load Data Definitions
-        uiHandlers.retrieveDataDefinitions();
+        // Load data definitions operation codes
+        uiHandlers.retrieveDataDefinitionsOperationsCodes();
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {
@@ -395,25 +404,10 @@ public class DataSourcesPanel extends VLayout {
 
         generalEditionForm = new GroupDynamicForm(getConstants().datasourceGeneral());
 
-        RequiredSelectItem query = new RequiredSelectItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
-        query.addChangedHandler(new ChangedHandler() {
-
-            @Override
-            public void onChanged(ChangedEvent event) {
-                if (event.getValue() != null && !event.getValue().toString().isEmpty()) {
-                    // Clear query dependent field values
-                    clearQueryDependentFields();
-
-                    // Retrieve data structure
-                    uiHandlers.retrieveDataStructure(event.getValue().toString());
-                } else {
-                    // Clear temporal variable
-                    generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, new String());
-                    // Clear spatial variable
-                    generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, new String());
-                }
-            }
-        });
+        // Search data definition (query)
+        RequiredTextItem queryUuid = new RequiredTextItem(DataSourceDS.QUERY_UUID, getConstants().dataSourceQuery());
+        queryUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        SearchViewTextItem query = getQueryItem();
 
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
@@ -514,7 +508,7 @@ public class DataSourcesPanel extends VLayout {
 
         VariableCanvasItem variables = new VariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalEditionForm.setFields(query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
+        generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
                 measureVariable, variables);
 
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT);
@@ -533,13 +527,17 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.addEditionCanvas(annualPercentageRateEditionForm);
     }
 
+    public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
+        this.dataDefinitionsOperationCodes = operationCodes;
+    }
+
     public void setDataDefinitions(List<DataDefinitionDto> dataDefinitionsDtos) {
-        ((SelectItem) generalEditionForm.getItem(DataSourceDS.QUERY)).setValueMap(CommonUtils.getDataBasicValueMap(dataDefinitionsDtos));
+        dataDefinitionsSearchWindow.setDataDefinitionList(dataDefinitionsDtos);
     }
 
     public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
-        generalForm.setValue(DataSourceDS.QUERY, dataDefinitionDto.getName());
-        generalStaticEditionForm.setValue(DataSourceDS.QUERY, dataDefinitionDto.getName());
+        generalForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
+        generalStaticEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
     }
 
     public void setDataStructure(DataStructureDto dataStructureDto) {
@@ -605,7 +603,7 @@ public class DataSourcesPanel extends VLayout {
     public DataSourceDto getDataSourceDto() {
         // If query form has been touched
         if (generalEditionForm.isVisible()) {
-            dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY));
+            dataSourceDto.setDataGpeUuid(generalEditionForm.getValueAsString(DataSourceDS.QUERY_UUID));
         }
         dataSourceDto.setPxUri(dataStructureDto.getPxUri());
 
@@ -684,17 +682,6 @@ public class DataSourcesPanel extends VLayout {
         annualPercentageRateEditionForm.setQuantityUnits(units);
     }
 
-    public void setIndicatorList(List<IndicatorDto> indicatorDtos) {
-        interperiodPuntualRateEditionForm.setIndicators(indicatorDtos);
-        interperiodPuntualRateForm.setIndicators(indicatorDtos);
-        interperiodPercentageRateEditionForm.setIndicators(indicatorDtos);
-        interperiodPercentageRateForm.setIndicators(indicatorDtos);
-        annualPuntualRateEditionForm.setIndicators(indicatorDtos);
-        annualPuntualRateForm.setIndicators(indicatorDtos);
-        annualPercentageRateEditionForm.setIndicators(indicatorDtos);
-        annualPercentageRateForm.setIndicators(indicatorDtos);
-    }
-
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
         ((GeographicalSelectItem) generalEditionForm.getItem(DataSourceDS.GEO_VALUE)).setGeoGranularitiesValueMap(valueMap);
@@ -746,7 +733,8 @@ public class DataSourcesPanel extends VLayout {
     }
 
     private void clearAllQueryValues() {
-        ((SelectItem) generalEditionForm.getItem(DataSourceDS.QUERY)).clearValue();
+        ((RequiredTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_UUID)).clearValue();
+        ((SearchViewTextItem) generalEditionForm.getItem(DataSourceDS.QUERY_TEXT)).clearValue();
         clearQueryDependentFields();
     }
 
@@ -796,6 +784,63 @@ public class DataSourcesPanel extends VLayout {
         if (ClientSecurityUtils.canDeleteDataSource()) {
             toolStrip.getDeleteButton().show();
         }
+    }
+
+    private SearchViewTextItem getQueryItem() {
+        SearchViewTextItem query = new SearchViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuery());
+        query.setRequired(true);
+        query.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                dataDefinitionsSearchWindow = new DataDefinitionsSearchWindow(getConstants().dataSourceQuerySelection());
+                dataDefinitionsSearchWindow.setDataDefinitionsOperationCodes(dataDefinitionsOperationCodes);
+                dataDefinitionsSearchWindow.getSearchButton().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        if (dataDefinitionsSearchWindow.validateForm()) {
+                            uiHandlers.retrieveDataDefinitionsByOperationCode(dataDefinitionsSearchWindow.getSelectedOperationCode());
+                        }
+                    }
+                });
+                dataDefinitionsSearchWindow.getAceptButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        DataDefinitionDto dataDefinitionDto = dataDefinitionsSearchWindow.getSelectedDataDefinitionDto();
+                        dataDefinitionsSearchWindow.destroy();
+                        generalEditionForm.setValue(DataSourceDS.QUERY_UUID, dataDefinitionDto != null ? dataDefinitionDto.getUuid() : new String());
+                        generalEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto != null ? dataDefinitionDto.getName() : new String());
+                        generalEditionForm.getItem(DataSourceDS.QUERY_TEXT).validate();
+
+                        if (!StringUtils.isBlank(dataDefinitionDto.getUuid())) {
+                            // Clear query dependent field values
+                            clearQueryDependentFields();
+
+                            // Retrieve data structure
+                            uiHandlers.retrieveDataStructure(dataDefinitionDto.getUuid());
+                        } else {
+                            // Clear query dependent field values
+                            clearQueryDependentFields();
+
+                            // Clear temporal variable
+                            generalEditionForm.setValue(DataSourceDS.TIME_VARIABLE, new String());
+                            // Clear spatial variable
+                            generalEditionForm.setValue(DataSourceDS.GEO_VARIABLE, new String());
+                        }
+                    }
+                });
+            }
+        });
+        query.setValidators(new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return generalEditionForm.getItem(DataSourceDS.QUERY_UUID).validate();
+            }
+        });
+        return query;
     }
 
 }

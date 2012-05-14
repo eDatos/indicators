@@ -3,15 +3,18 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class ViewQuantityForm extends BaseQuantityForm {
 
@@ -37,10 +40,10 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem max = new ViewTextItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
-        ViewTextItem denominatorUuid = new ViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        ViewTextItem denominatorUuid = new ViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, getConstants().indicQuantityDenominatorIndicator());
         denominatorUuid.setShowIfCondition(getDenominatorIfFunction());
 
-        ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
         numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
 
         ViewTextItem isPercentange = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
@@ -63,7 +66,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseLocation = new ViewTextItem(IndicatorDS.QUANTITY_BASE_LOCATION, getConstants().indicQuantityBaseLocation());
         baseLocation.setShowIfCondition(getBaseLocationIfFunction());
 
-        ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getConstants().indicQuantityBaseQuantityIndicator());
+        ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
 
         setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue,
@@ -81,8 +84,21 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum() != null ? quantityDto.getMinimum().toString() : "");
             setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum() != null ? quantityDto.getMaximum().toString() : "");
-            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getDenominatorIndicatorUuid()));
-            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getNumeratorIndicatorUuid()));
+
+            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, ""); // Value set in setIndicatorQuantityDenominator method
+            if (!StringUtils.isBlank(quantityDto.getDenominatorIndicatorUuid())) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveQuantityDenominatorIndicator(quantityDto.getDenominatorIndicatorUuid());
+                }
+            }
+
+            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, ""); // Value set in setIndicatorQuantityNumerator method
+            if (!StringUtils.isBlank(quantityDto.getNumeratorIndicatorUuid())) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveQuantityNumeratorIndicator(quantityDto.getNumeratorIndicatorUuid());
+                }
+            }
+
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
                     .getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null ? getIndexBaseTypeEnum(quantityDto).toString() : "");
@@ -90,15 +106,20 @@ public class ViewQuantityForm extends BaseQuantityForm {
             setValue(IndicatorDS.QUANTITY_BASE_VALUE, quantityDto.getBaseValue() != null ? quantityDto.getBaseValue().toString() : "");
             setValue(IndicatorDS.QUANTITY_BASE_TIME, quantityDto.getBaseTime());
 
-            // Base location set in setGeographicalValue method
-            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, new String());
-            if (quantityDto.getBaseLocationUuid() != null && !quantityDto.getBaseLocationUuid().isEmpty()) {
+            setValue(IndicatorDS.QUANTITY_BASE_LOCATION, ""); // Base location set in setGeographicalValue method
+            if (!StringUtils.isBlank(quantityDto.getBaseLocationUuid())) {
                 if (uiHandlers instanceof IndicatorUiHandler) {
                     ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValue(quantityDto.getBaseLocationUuid());
                 }
             }
 
-            setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, getIndicatorText(quantityDto.getBaseQuantityIndicatorUuid()));
+            setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, ""); // Value set in setIndicatorQuantityIndicatorBase method
+            if (!StringUtils.isBlank(quantityDto.getBaseQuantityIndicatorUuid())) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveQuantityIndicatorBase(quantityDto.getBaseQuantityIndicatorUuid());
+                }
+            }
+
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
         }
     }
@@ -106,6 +127,18 @@ public class ViewQuantityForm extends BaseQuantityForm {
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         setValue(IndicatorDS.QUANTITY_BASE_LOCATION,
                 geographicalValueDto != null ? geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()) : new String());
+    }
+
+    public void setIndicatorQuantityDenominator(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
+    }
+
+    public void setIndicatorQuantityNumerator(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
+    }
+
+    public void setIndicatorQuantityIndicatorBase(IndicatorDto indicator) {
+        setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicator.getCode(), indicator.getTitle()));
     }
 
 }

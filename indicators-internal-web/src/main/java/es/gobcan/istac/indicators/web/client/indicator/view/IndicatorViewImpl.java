@@ -80,12 +80,6 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setIndicatorList(List<IndicatorDto> indicators) {
-        generalPanel.setIndicatorList(indicators);
-        dataSourcesPanel.setIndicatorList(indicators);
-    }
-
-    @Override
     public void setSubjectsList(List<SubjectDto> subjectDtos) {
         generalPanel.setSubjectsList(subjectDtos);
     }
@@ -140,6 +134,41 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void onDataSourceSaved(DataSourceDto dataSourceDto) {
         dataSourcesPanel.onDataSourceSaved(dataSourceDto);
+    }
+
+    @Override
+    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+        generalPanel.setIndicatorListQuantityDenominator(indicators);
+    }
+
+    @Override
+    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+        generalPanel.setIndicatorListQuantityNumerator(indicators);
+    }
+
+    @Override
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+        generalPanel.setIndicatorListQuantityIndicatorBase(indicators);
+    }
+
+    @Override
+    public void setIndicatorQuantityDenominator(IndicatorDto indicator) {
+        generalPanel.setIndicatorQuantityDenominator(indicator);
+    }
+
+    @Override
+    public void setIndicatorQuantityNumerator(IndicatorDto indicator) {
+        generalPanel.setIndicatorQuantityNumerator(indicator);
+    }
+
+    @Override
+    public void setIndicatorQuantityIndicatorBase(IndicatorDto indicator) {
+        generalPanel.setIndicatorQuantityIndicatorBase(indicator);
+    }
+
+    @Override
+    public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
+        dataSourcesPanel.setDataDefinitionsOperationCodes(operationCodes);
     }
 
 }

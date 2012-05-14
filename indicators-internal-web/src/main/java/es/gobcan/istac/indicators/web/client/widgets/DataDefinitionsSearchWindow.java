@@ -45,7 +45,7 @@ public class DataDefinitionsSearchWindow extends SearchWindow {
         ListGridField pxUri = new ListGridField(DataDefinitionDS.PX_URI, getConstants().dataSourcePx());
         listGrid.setFields(name, pxUri);
     }
-    
+
     public boolean validateForm() {
         return form.validate();
     }

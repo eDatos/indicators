@@ -23,7 +23,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
     public ViewDataSourceGeneralForm(String groupTitle) {
         super(groupTitle);
 
-        ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY, getConstants().dataSourceQuery());
+        ViewTextItem query = new ViewTextItem(DataSourceDS.QUERY_TEXT, getConstants().dataSourceQuery());
 
         ViewTextItem surveyCode = new ViewTextItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
 
@@ -89,7 +89,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
     }
 
     public void setValue(DataSourceDto dataSourceDto) {
-        setValue(DataSourceDS.QUERY, ""); // Set in method setDataDefinition
+        setValue(DataSourceDS.QUERY_TEXT, ""); // Set in method setDataDefinition
         if (!StringUtils.isBlank(dataSourceDto.getDataGpeUuid())) {
             uiHandlers.retrieveDataDefinition(dataSourceDto.getDataGpeUuid());
         }

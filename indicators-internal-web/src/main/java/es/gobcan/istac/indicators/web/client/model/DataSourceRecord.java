@@ -23,11 +23,11 @@ public class DataSourceRecord extends ListGridRecord {
     }
 
     public void setQuery(String value) {
-        setAttribute(DataSourceDS.QUERY, value);
+        setAttribute(DataSourceDS.QUERY_UUID, value);
     }
 
     public String getQuery() {
-        return getAttributeAsString(DataSourceDS.QUERY);
+        return getAttributeAsString(DataSourceDS.QUERY_UUID);
     }
 
     public void setPx(String value) {

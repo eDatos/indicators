@@ -48,10 +48,14 @@ import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesResult;
+import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
+import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeResult;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
+import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionAction;
 import es.gobcan.istac.indicators.web.shared.GetDataDefinitionResult;
-import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsAction;
-import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsResult;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesAction;
+import es.gobcan.istac.indicators.web.shared.GetDataDefinitionsOperationsCodesResult;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListAction;
 import es.gobcan.istac.indicators.web.shared.GetDataSourcesListResult;
 import es.gobcan.istac.indicators.web.shared.GetDataStructureAction;
@@ -60,10 +64,10 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
-import es.gobcan.istac.indicators.web.shared.GetIndicatorListResult;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
@@ -84,6 +88,7 @@ import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorView, IndicatorPresenter.IndicatorProxy>
         implements
@@ -109,7 +114,13 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setIndicator(IndicatorDto indicator);
         void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos);
 
-        void setIndicatorList(List<IndicatorDto> indicators);
+        void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators);
+        void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators);
+        void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators);
+
+        void setIndicatorQuantityDenominator(IndicatorDto indicator);
+        void setIndicatorQuantityNumerator(IndicatorDto indicator);
+        void setIndicatorQuantityIndicatorBase(IndicatorDto indicator);
 
         void setSubjectsList(List<SubjectDto> subjectDtos);
         void setQuantityUnits(List<QuantityUnitDto> units);
@@ -119,6 +130,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         // Data source
 
+        void setDataDefinitionsOperationCodes(List<String> operationCodes);
         void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
         void setDataDefinition(DataDefinitionDto dataDefinitionDto);
         void setDataStructure(DataStructureDto dataStructureDto);
@@ -165,18 +177,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
                 indicatorDto = result.getIndicator();
-                dispatcher.execute(new GetIndicatorListAction(), new WaitingAsyncCallback<GetIndicatorListResult>() {
-
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
-                    }
-                    @Override
-                    public void onWaitSuccess(GetIndicatorListResult result) {
-                        getView().setIndicatorList(result.getIndicatorList());
-                        getView().setIndicator(indicatorDto);
-                    }
-                });
+                getView().setIndicator(indicatorDto);
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
             }
         });
@@ -390,16 +391,16 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveDataDefinitions() {
-        dispatcher.execute(new GetDataDefinitionsAction(), new WaitingAsyncCallback<GetDataDefinitionsResult>() {
+    public void retrieveDataDefinitionsByOperationCode(final String operationCode) {
+        dispatcher.execute(new FindDataDefinitionsByOperationCodeAction(operationCode), new WaitingAsyncCallback<FindDataDefinitionsByOperationCodeResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error retrieving data definitions");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataDefinitions()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorFindingDataDefinitions(operationCode)), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetDataDefinitionsResult result) {
+            public void onWaitSuccess(FindDataDefinitionsByOperationCodeResult result) {
                 getView().setDataDefinitions(result.getDataDefinitionDtos());
             }
         });
@@ -523,6 +524,111 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(PopulateIndicatorDataResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
+            }
+        });
+    }
+
+    @Override
+    public void searchIndicatorsQuantityDenominator(IndicatorCriteria criteria) {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(FindIndicatorsResult result) {
+                getView().setIndicatorListQuantityDenominator(result.getIndicatorDtos());
+            }
+        });
+    }
+
+    @Override
+    public void searchIndicatorsQuantityNumerator(IndicatorCriteria criteria) {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(FindIndicatorsResult result) {
+                getView().setIndicatorListQuantityNumerator(result.getIndicatorDtos());
+            }
+        });
+    }
+
+    @Override
+    public void searchIndicatorsQuantityIndicatorBase(IndicatorCriteria criteria) {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(FindIndicatorsResult result) {
+                getView().setIndicatorListQuantityIndicatorBase(result.getIndicatorDtos());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveQuantityDenominatorIndicator(String indicatorUuid) {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorResult result) {
+                getView().setIndicatorQuantityDenominator(result.getIndicator());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveQuantityNumeratorIndicator(String indicatorUuid) {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorResult result) {
+                getView().setIndicatorQuantityNumerator(result.getIndicator());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveQuantityIndicatorBase(String indicatorUuid) {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorResult result) {
+                getView().setIndicatorQuantityIndicatorBase(result.getIndicator());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDataDefinitionsOperationsCodes() {
+        dispatcher.execute(new GetDataDefinitionsOperationsCodesAction(), new WaitingAsyncCallback<GetDataDefinitionsOperationsCodesResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataDefinitionsOperationCodes()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetDataDefinitionsOperationsCodesResult result) {
+                getView().setDataDefinitionsOperationCodes(result.getOperationCodes());
             }
         });
     }

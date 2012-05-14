@@ -469,9 +469,16 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setQuantityUnits(units);
     }
 
-    public void setIndicatorList(List<IndicatorDto> indicatorDtos) {
-        quantityForm.setIndicators(indicatorDtos);
-        quantityEditionForm.setIndicators(indicatorDtos);
+    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+        quantityEditionForm.setIndicatorListQuantityDenominator(indicators);
+    }
+
+    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+        quantityEditionForm.setIndicatorListQuantityNumerator(indicators);
+    }
+
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+        quantityEditionForm.setIndicatorListQuantityIndicatorBase(indicators);
     }
 
     public void setSubjectsList(List<SubjectDto> subjectDtos) {
@@ -496,6 +503,21 @@ public class IndicatorGeneralPanel extends VLayout {
     private void setEditionMode() {
         uiHandlers.retrieveSubjects();
         mainFormLayout.setEditionMode();
+    }
+
+    public void setIndicatorQuantityDenominator(IndicatorDto indicator) {
+        quantityForm.setIndicatorQuantityDenominator(indicator);
+        quantityEditionForm.setIndicatorQuantityDenominator(indicator);
+    }
+
+    public void setIndicatorQuantityNumerator(IndicatorDto indicator) {
+        quantityForm.setIndicatorQuantityNumerator(indicator);
+        quantityEditionForm.setIndicatorQuantityNumerator(indicator);
+    }
+
+    public void setIndicatorQuantityIndicatorBase(IndicatorDto indicator) {
+        quantityForm.setIndicatorQuantityIndicatorBase(indicator);
+        quantityEditionForm.setIndicatorQuantityIndicatorBase(indicator);
     }
 
 }
