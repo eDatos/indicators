@@ -103,8 +103,9 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum() != null ? quantityDto.getMinimum().toString() : "");
             setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum() != null ? quantityDto.getMaximum().toString() : "");
-            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getDenominatorIndicatorUuid()));
-            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getNumeratorIndicatorUuid()));
+            // TODO QUANTITY_DENOMINATOR_INDICATOR_UUID and QUANTITY_NUMERATOR_INDICATOR_UUID fields are never shown (should be removed)
+            // setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getDenominatorIndicatorUuid()));
+            // setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getNumeratorIndicatorUuid()));
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
                     .getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
