@@ -4,8 +4,6 @@
 
 var WidgetCodeView = Backbone.View.extend({
 
-
-
     initialize : function(){
         this.template = templateManager.get('codeTmpl');
         this.model.on('change', this.render, this);
@@ -15,10 +13,12 @@ var WidgetCodeView = Backbone.View.extend({
         var model = this.model.toJSON();
 
         var code = [];
+
         code.push('<div id="istac-widget"></div>');
-        code.push('<script src="http://istac.com....../widgets/widget.min.js"></script>');
+        code.push('<script>var istacUrl = "' + serverURL  + context + '";</script>');
+        code.push('<script src="' + serverURL + context + '/theme/js/widgets/widget.min.all.js"></script>');
         code.push('<script>');
-        code.push('new IstacWidgets({');
+        code.push('new IstacWidget({');
         code.push('     el : "#istac-widget",');
         code.push('     type : "' + model.type + '",');
         code.push('     title : "' + model.title + '",');

@@ -10,6 +10,10 @@
     background-color: #fff;
 }
 
+.istac-widget table {
+    font-size: 13px;
+}
+
 .istac-widget-title {
     font-size: 13px;
     line-height: 25px;

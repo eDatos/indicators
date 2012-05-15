@@ -131,9 +131,7 @@
         var templateManager = new TemplateManager();
         templateManager.loadTemplatesInPage();
 
-        //API CONTEXT TODO change to local API
-        var apiContext = context + "/api/indicators/v1.0";
-        //var apiContext = "http://rcorrod:8090/indicators-web/api/indicators/v1.0";
+        var istacUrl = "[@spring.url ""/]";
     </script>
 
     <!-- Modelos -->

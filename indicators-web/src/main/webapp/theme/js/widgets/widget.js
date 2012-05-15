@@ -1,10 +1,14 @@
 /**
  * Istac Widget
  */
+;
 (function(undefined){
 
+    if(typeof(istacUrl) == 'undefined'){
+        throw  "istacUrl not defined";
+    }
     if(typeof(apiContext) == 'undefined'){
-        apiContext = "http://aherfer:8080/indicators-web/api/indicators/v1.0";
+        apiContext = istacUrl + "/api/indicators/v1.0";
     }
 
     var _getKeys = function(hash){
@@ -223,8 +227,18 @@
             //TODO esto van a tener que ser peticiones JSONP?
             var indicatorUrl = apiContext + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
             var indicatorDataUrl = indicatorUrl + "/data";
-            var requestStructure = $.get(indicatorUrl);
-            var requestData = $.get(indicatorDataUrl);
+
+            var requestStructure = $.ajax({
+                url : indicatorUrl,
+                dataType : 'jsonp',
+                jsonp : "_callback"
+            });
+
+            var requestData = $.ajax({
+                url : indicatorDataUrl,
+                dataType : 'jsonp',
+                jsonp : "_callback"
+            });
 
             requestStructure.success(function(response){
                 self.structure = response;
@@ -336,10 +350,6 @@
         setGeographicalValues : function(geographicalValues){
             this.geographicalValues = geographicalValues;
             this.render();
-        },
-
-        render : function(){
-            console.log('base render');
         }
     });
 
@@ -492,11 +502,6 @@
             return '<td>' + content + '</td>'
         },
 
-        fetch : function(indicatorId){
-            var ds = DataSetData[indicatorId];
-            return new Dataset(ds);
-        },
-
         parse : function(dataset){
             var temporalValue = dataset.getLastTimeValue();
             var geographicalValue = this.geographicalValues[0];
@@ -608,18 +613,10 @@
         }
     }
 
-    //TODO change url to application urls
-    loadCSS('istac-widget-css', 'http://localhost:8080/indicators-web/theme/css/widgets.css');
-    loadJS(!window.jQuery, 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
-    loadJS(!window.Raphael, 'https://raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js');
-    loadJS(!(window.jQuery && window.jQuery.elycharts), 'http://elycharts.com/sites/elycharts.com/repo/dist/elycharts.min.js');
-
-    //Optional AMD module
-    if (typeof define === "function" && define.amd && define.amd.istacWidget) {
-        define("istacWidget", [], function(){
-            return Factory;
-        });
-    }
+    loadCSS('istac-widget-css', istacUrl + '/theme/css/widgets.css');
+    loadJS(!window.jQuery, istacUrl + '/theme/js/widgets/libs/jquery-1.7.1.js');
+    loadJS(!window.Raphael, istacUrl + '/theme/js/widgets/libs/raphael-min.js');
+    loadJS(!(window.jQuery && window.jQuery.elycharts), istacUrl + '/theme/js/widgets/libs/elycharts.min.js');
 
     //Export ClosureCompiler style
     window['IstacWidget'] = Factory;
