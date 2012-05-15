@@ -1,18 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.BIYEARLY_CHARACTER;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.BIYEARLY_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.DAILY_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.END;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.MONTHLY_CHARACTER;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.MONTHLY_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.QUARTERLY_CHARACTER;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.QUARTERLY_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.START;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.TIME_VALUE_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.WEEKLY_CHARACTER;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.WEEKLY_PATTERN;
-import static es.gobcan.istac.indicators.core.constants.TimeVariableConstants.YEARLY_PATTERN;
+import static org.siemac.metamac.core.common.util.shared.TimeConstants.BIYEARLY_CHARACTER;
+import static org.siemac.metamac.core.common.util.shared.TimeConstants.MONTHLY_CHARACTER;
+import static org.siemac.metamac.core.common.util.shared.TimeConstants.QUARTERLY_CHARACTER;
+import static org.siemac.metamac.core.common.util.shared.TimeConstants.WEEKLY_CHARACTER;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +11,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.TimeUtils;
 
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -28,27 +20,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 /**
  * Utilities to time variables
  */
-public class TimeVariableUtils {
-
-    // TODO: Extender del proyecto metamac-core-common de la clase TimeUtils.
-
-    private static Pattern patternTimeValue     = Pattern.compile(START + TIME_VALUE_PATTERN + END);
-
-    private static Pattern patternYearlyValue   = Pattern.compile(START + YEARLY_PATTERN + END);
-    private static Pattern patternBiyearlyValue = Pattern.compile(START + BIYEARLY_PATTERN + END);
-    private static Pattern patternQuaterlyValue = Pattern.compile(START + QUARTERLY_PATTERN + END);
-    private static Pattern patternMonthlyValue  = Pattern.compile(START + MONTHLY_PATTERN + END);
-    private static Pattern patternWeeklyValue   = Pattern.compile(START + WEEKLY_PATTERN + END);
-    private static Pattern patternDailyValue    = Pattern.compile(START + DAILY_PATTERN + END);
-
-    /**
-     * Checks if a time value is valid
-     */
-    public static Boolean isTimeValue(String value) {
-        Matcher matching = patternTimeValue.matcher(value);
-        Boolean isValid = matching.matches();
-        return isValid;
-    }
+public class TimeVariableUtils extends TimeUtils {
 
     /**
      * Compare two time values. These values must be refered to same granularity
