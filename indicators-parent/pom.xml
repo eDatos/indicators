@@ -7,6 +7,21 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
+    <distributionManagement>
+        <!-- Use the following if you're not using a snapshot version. -->
+        <repository>
+            <id>arte-repository</id>
+            <name>Arte Releases</name>
+            <url>http://repository.arte-consultores.com/content/repositories/releases</url>
+        </repository>
+        <!-- use the following if you ARE using a snapshot version. -->
+        <snapshotRepository>
+            <id>arte-repository</id>
+            <name>Arte Snapshots</name>
+            <url>http://repository.arte-consultores.com/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -580,8 +595,8 @@
                     <exclusion>
                         <groupId>aspectj</groupId>
                         <artifactId>aspectjrt</artifactId>
-                    </exclusion>                                        
-                </exclusions>                
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- WEB COMMON -->
@@ -702,46 +717,46 @@
                 <artifactId>indicators-rest-impl</artifactId>
                 <version>${indicators.version}</version>
             </dependency>
-            
+
             <!-- CAS -->
-             <dependency>
-                 <groupId>org.jasig.cas.client</groupId>
-                 <artifactId>cas-client-core</artifactId>
-                 <version>${cas-client.version}</version>
-                 <exclusions>
-                     <exclusion>
-                         <groupId>commons-logging</groupId>
-                         <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                 </exclusions>
-             </dependency>
-             <dependency>
-                 <groupId>org.opensaml</groupId>
-                 <artifactId>opensaml</artifactId>
-                 <version>${opensaml.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>xml-security</groupId>
-                 <artifactId>xmlsec</artifactId>
-                 <version>${xmlsec.version}</version>
-                 <scope>runtime</scope>
-             </dependency>
-             <dependency>
-                 <groupId>commons-codec</groupId>
-                 <artifactId>commons-codec</artifactId>
-                 <version>${commons-codec.version}</version>
-                 <type>jar</type>
-             </dependency>
-             <dependency>
-                 <groupId>xerces</groupId>
-                 <artifactId>xmlParserAPIs</artifactId>
-                 <version>${xerces.version}</version>
-             </dependency>
-             <dependency>
-                 <groupId>xerces</groupId>
-                 <artifactId>xercesImpl</artifactId>
-                 <version>${xerces.version}</version>
-             </dependency>
+            <dependency>
+                <groupId>org.jasig.cas.client</groupId>
+                <artifactId>cas-client-core</artifactId>
+                <version>${cas-client.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xml-security</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xmlParserAPIs</artifactId>
+                <version>${xerces.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xerces.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -808,22 +823,35 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <!-- TO avoid ERROR: Plugin execution not covered by lifecycle configuration: org.fornax.toolsupport:fornax-oaw-m2-plugin:3.2.3:run-workflow 
-                    (execution: default, phase: generate-sources) SEE: http://wiki.eclipse.org/M2E_plugin_execution_not_covered -->
+                <!-- TO avoid ERROR: Plugin execution not covered by lifecycle configuration: org.fornax.toolsupport:fornax-oaw-m2-plugin:3.2.3:run-workflow (execution: default, phase: generate-sources) SEE: http://wiki.eclipse.org/M2E_plugin_execution_not_covered -->
                 <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
+                    <groupId>
+                        org.eclipse.m2e
+                    </groupId>
+                    <artifactId>
+                        lifecycle-mapping
+                    </artifactId>
+                    <version>
+                        1.0.0
+                    </version>
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>org.fornax.toolsupport</groupId>
-                                        <artifactId>fornax-oaw-m2-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <groupId>
+                                            org.fornax.toolsupport
+                                        </groupId>
+                                        <artifactId>
+                                            fornax-oaw-m2-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.0,)
+                                        </versionRange>
                                         <goals>
-                                            <goal>run-workflow</goal>
+                                            <goal>
+                                                run-workflow
+                                            </goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -832,11 +860,19 @@
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>org.fornax.toolsupport</groupId>
-                                        <artifactId>fornax-checksum-m2-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <groupId>
+                                            org.fornax.toolsupport
+                                        </groupId>
+                                        <artifactId>
+                                            fornax-checksum-m2-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.0,)
+                                        </versionRange>
                                         <goals>
-                                            <goal>run</goal>
+                                            <goal>
+                                                run
+                                            </goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -845,11 +881,19 @@
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>org.fornax.toolsupport</groupId>
-                                        <artifactId>fornax-graphviz-m2-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <groupId>
+                                            org.fornax.toolsupport
+                                        </groupId>
+                                        <artifactId>
+                                            fornax-graphviz-m2-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.0,)
+                                        </versionRange>
                                         <goals>
-                                            <goal>run</goal>
+                                            <goal>
+                                                run
+                                            </goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -858,11 +902,19 @@
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-antrun-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-antrun-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.0,)
+                                        </versionRange>
                                         <goals>
-                                            <goal>run</goal>
+                                            <goal>
+                                                run
+                                            </goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
