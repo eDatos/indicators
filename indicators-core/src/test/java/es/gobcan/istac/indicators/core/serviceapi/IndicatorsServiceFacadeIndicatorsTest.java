@@ -2730,32 +2730,29 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             criteria.setRestriction(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
 
             MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-            assertEquals(8, result.getResults().size());
+            assertEquals(7, result.getResults().size());
             List<IndicatorDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
 
-            assertEquals(INDICATOR_5, indicatorsDto.get(1).getUuid());
+            assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
 
-            assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
+            assertEquals(INDICATOR_7, indicatorsDto.get(2).getUuid());
             assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
 
-            assertEquals(INDICATOR_7, indicatorsDto.get(3).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(3).getProcStatus());
+            assertEquals(INDICATOR_8, indicatorsDto.get(3).getUuid());
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getProcStatus());
 
-            assertEquals(INDICATOR_8, indicatorsDto.get(4).getUuid());
-            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(4).getProcStatus());
+            assertEquals(INDICATOR_9, indicatorsDto.get(4).getUuid());
+            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(4).getProcStatus());
 
-            assertEquals(INDICATOR_9, indicatorsDto.get(5).getUuid());
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(5).getProcStatus());
+            assertEquals(INDICATOR_10, indicatorsDto.get(5).getUuid());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(5).getProcStatus());
 
-            assertEquals(INDICATOR_10, indicatorsDto.get(6).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(6).getProcStatus());
-
-            assertEquals(INDICATOR_11, indicatorsDto.get(7).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(7).getProcStatus());
+            assertEquals(INDICATOR_11, indicatorsDto.get(6).getUuid());
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(6).getProcStatus());
         }
         {
             // Retrieve with subject x and code = y or z
