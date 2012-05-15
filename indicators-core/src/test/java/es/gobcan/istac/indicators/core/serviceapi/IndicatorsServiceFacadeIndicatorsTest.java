@@ -2879,55 +2879,46 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             MetamacCriteriaPaginator paginator = new MetamacCriteriaPaginator();
             paginator.setCountTotalResults(Boolean.TRUE);
-            paginator.setMaximumResultSize(Integer.valueOf(3));
+            paginator.setMaximumResultSize(Integer.valueOf(4));
             criteria.setPaginator(paginator);
             {
-                paginator.setFirstResult(Integer.valueOf(1)); // do not obtain first result
+                paginator.setFirstResult(Integer.valueOf(0));
 
                 MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-                assertEquals(3, result.getResults().size());
-                assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
-                assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
+                assertEquals(4, result.getResults().size());
+                assertEquals(Integer.valueOf(7), result.getPaginatorResult().getTotalResults());
+                assertEquals(Integer.valueOf(4), result.getPaginatorResult().getMaximumResultSize());
                 List<IndicatorDto> indicatorsDto = result.getResults();
 
-                assertEquals(INDICATOR_5, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(0).getProcStatus());
+                assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
+                assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
 
                 assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
                 assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
 
                 assertEquals(INDICATOR_7, indicatorsDto.get(2).getUuid());
                 assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+
+                assertEquals(INDICATOR_8, indicatorsDto.get(3).getUuid());
+                assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getProcStatus());
             }
             {
                 paginator.setFirstResult(Integer.valueOf(4));
 
                 MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
                 assertEquals(3, result.getResults().size());
-                assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
-                assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
+                assertEquals(Integer.valueOf(7), result.getPaginatorResult().getTotalResults());
+                assertEquals(Integer.valueOf(4), result.getPaginatorResult().getMaximumResultSize());
                 List<IndicatorDto> indicatorsDto = result.getResults();
 
-                assertEquals(INDICATOR_8, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(0).getProcStatus());
+                assertEquals(INDICATOR_9, indicatorsDto.get(0).getUuid());
+                assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(0).getProcStatus());
 
-                assertEquals(INDICATOR_9, indicatorsDto.get(1).getUuid());
-                assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(1).getProcStatus());
+                assertEquals(INDICATOR_10, indicatorsDto.get(1).getUuid());
+                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(1).getProcStatus());
                 
-                assertEquals(INDICATOR_10, indicatorsDto.get(2).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(2).getProcStatus());
-            }
-            {
-                paginator.setFirstResult(Integer.valueOf(7));
-
-                MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
-                assertEquals(1, result.getResults().size());
-                assertEquals(Integer.valueOf(8), result.getPaginatorResult().getTotalResults());
-                assertEquals(Integer.valueOf(3), result.getPaginatorResult().getMaximumResultSize());
-                List<IndicatorDto> indicatorsDto = result.getResults();
-
-                assertEquals(INDICATOR_11, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(0).getProcStatus());
+                assertEquals(INDICATOR_11, indicatorsDto.get(2).getUuid());
+                assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(2).getProcStatus());
             }
         }
         {
