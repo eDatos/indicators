@@ -13,30 +13,27 @@ import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 
-
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
 public class IndicatorsUpdateJob implements Job {
-    private static Logger               logger            = LoggerFactory.getLogger(IndicatorsUpdateJob.class);
+
+    private static Logger         logger = LoggerFactory.getLogger(IndicatorsUpdateJob.class);
 
     private IndicatorsDataService indicatorsDataService;
-    
-    
-    
+
     public IndicatorsUpdateJob() {
-        // TODO Auto-generated constructor stub
     }
-    
+
     public IndicatorsDataService getIndicatorsDataService() {
         if (indicatorsDataService == null) {
             indicatorsDataService = ApplicationContextProvider.getApplicationContext().getBean(IndicatorsDataService.class);
         }
         return indicatorsDataService;
     }
-    
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        
+
         ServiceContext serviceContext = new ServiceContext("updateJob", context.getFireInstanceId(), "metamac-core");
         try {
             getIndicatorsDataService().updateIndicatorsData(serviceContext);

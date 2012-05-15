@@ -1081,7 +1081,6 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, exceptions);
         if (ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_GRANULARITY,
                     ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUE));
         }
@@ -1207,7 +1206,6 @@ public class InvocationValidator {
 
         // Time
         if (ValidationUtils.isEmpty(dataSource.getTimeVariable()) && ValidationUtils.isEmpty(dataSource.getTimeValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATA_SOURCE_TIME_VARIABLE, ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE));
         }
         if (!ValidationUtils.isEmpty(dataSource.getTimeVariable())) {
@@ -1219,7 +1217,6 @@ public class InvocationValidator {
 
         // Geographical
         if (ValidationUtils.isEmpty(dataSource.getGeographicalVariable()) && ValidationUtils.isEmpty(dataSource.getGeographicalValue())) {
-            // TODO ¿cómo poner la excepción si es requerido sólo uno de x atributos?
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VARIABLE,
                     ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID));
         }
