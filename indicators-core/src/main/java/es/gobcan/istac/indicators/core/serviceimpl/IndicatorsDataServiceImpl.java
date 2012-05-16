@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -61,11 +63,13 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataOperation;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DataSourceCompatibilityChecker;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 
 /**
@@ -232,6 +236,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
                     populateIndicatorData(ctx, indicatorUuid, diffusionVersion);
+                    changeDiffusionVersion(indicator);
                 } catch (MetamacException e) {
                     LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
                 }
@@ -240,6 +245,31 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         LOG.info("Finished Indicators data update process");
     }
     
+    private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
+        IndicatorVersionInformation diffusionVersionInfo = indicator.getDiffusionVersion();
+        if (diffusionVersionInfo != null) {
+            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
+            //Check if new version number is the same as production version 
+            IndicatorVersionInformation productionVersionInfo = indicator.getProductionVersion();
+            if (productionVersionInfo != null && productionVersionInfo.getVersionNumber().equals(nextDiffusionVersionNumber)) {
+                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
+                IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionInfo.getVersionNumber());
+                productionVersion.setVersionNumber(nextProductionVersionNumber);
+                productionVersion = getIndicatorVersionRepository().save(productionVersion);
+                indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
+            }
+            
+            //update diffusion version
+            IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionInfo.getVersionNumber());
+            diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
+            diffusionVersion.setUpdateDate(new DateTime());
+            diffusionVersion = getIndicatorVersionRepository().save(diffusionVersion);
+            indicator.setDiffusionVersion(new IndicatorVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
+            indicator = getIndicatorRepository().save(indicator);
+        }
+        return indicator;
+    }
+
     @Override
     public void deleteIndicatorData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
