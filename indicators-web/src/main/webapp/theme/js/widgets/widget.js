@@ -172,8 +172,10 @@
         },
 
         getTimeValues : function(){
+            var timeValues;
             if(this.data.dimension){
-                return _getKeys(this.data.dimension.TIME.representation.index);
+                timeValues = _getKeys(this.data.dimension.TIME.representation.index);
+                return timeValues.sort();
             }
             return [];
         },
