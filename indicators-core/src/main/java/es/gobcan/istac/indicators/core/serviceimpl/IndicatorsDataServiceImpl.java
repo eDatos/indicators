@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -254,7 +256,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (productionVersionInfo != null && productionVersionInfo.getVersionNumber().equals(nextDiffusionVersionNumber)) {
                 String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionInfo.getVersionNumber());
-                productionVersion.setVersionNumber(nextProductionVersionNumber);
+                productionVersion.setVersionNumber(nextProductionVersionNumber); 
+                productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
                 indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
             }
@@ -384,6 +387,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         geographicalValuesInIndicator.add(geoValue);
                     }
                 }
+                Collections.sort(geographicalValuesInIndicator, new Comparator<GeographicalValue>() {
+                   @Override
+                    public int compare(GeographicalValue o1, GeographicalValue o2) {
+                       return o1.getOrderInGranularity().compareTo(o2.getOrderInGranularity());
+                   }
+                });
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
