@@ -103,7 +103,7 @@
         <json-path.version>0.5.5</json-path.version>
 
         <!-- STATISTIC DATASET REPOSITORY -->
-        <statistic-dataset-repository.version>1.0.0-SNAPSHOT</statistic-dataset-repository.version>
+        <statistic-dataset-repository.version>1.0.0</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.0.0</metamac-core-common.version>
