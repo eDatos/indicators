@@ -1,4 +1,4 @@
-<project name="widget" default="compile" basedir=".">
+<project name="widget" default="compile" basedir="../webapp/theme/js/widgets">
 
     <target name="compile" >
         <java classname="com.google.javascript.jscomp.CommandLineRunner">
@@ -10,7 +10,7 @@
             </classpath>
         </java>
 
-        <concat destfile="widget.min.all.js" force="no">
+        <concat destfile="${basedir}/widget.min.all.js" force="no">
             <filelist dir="${basedir}/libs" files="jquery-1.7.1.js,raphael-min.js,elycharts.min.js"/>
             <filelist dir="${basedir}" files="widget.min.js"/>
         </concat>

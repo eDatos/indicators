@@ -4,10 +4,20 @@
 ;
 (function(undefined){
 
-    if(typeof(istacUrl) == 'undefined'){
+    var istacHost;
+
+    if(typeof(istacUrl) === 'undefined'){
         throw  "istacUrl not defined";
+    }else{
+        var getLocation = function(href) {
+            var l = document.createElement("a");
+            l.href = href;
+            return l;
+        };
+        istacHost = getLocation(istacUrl).host;
     }
-    if(typeof(apiContext) == 'undefined'){
+
+    if(typeof(apiContext) === 'undefined'){
         apiContext = istacUrl + "/api/indicators/v1.0";
     }
 
@@ -291,6 +301,10 @@
             this.el.addClass("istac-widget");
             this.el.addClass(this.containerClass);
 
+            if(!this.isIstacDomain()){
+                this.includeLogo();
+            }
+
             //Initialize style
             this.setTextColor(options.textColor);
             this.setBorderColor(options.borderColor);
@@ -352,6 +366,14 @@
         setGeographicalValues : function(geographicalValues){
             this.geographicalValues = geographicalValues;
             this.render();
+        },
+
+        isIstacDomain : function(){
+            return window.location.host === istacHost;
+        },
+
+        includeLogo : function(){
+            this.el.append('<div class="istact-widget-footer"><a href="' + istacUrl + '">Widget facilitado por el ISTAC</a></div>');
         }
     });
 

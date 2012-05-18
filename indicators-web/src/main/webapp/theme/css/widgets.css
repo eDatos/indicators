@@ -44,4 +44,22 @@
 	font-weight:  bold;	
 }
 
-/* Temporal Widget */
+.istact-widget-footer{
+    background: url("../images/istacLogoMini.png") no-repeat right;
+    font-weight: bold;
+    font-size: 10px;
+    text-align: right;
+    line-height: 32px;
+    padding-right: 28px;
+    margin-right: 5px;
+}
+
+.istact-widget-footer a {
+    color: #3478B0;
+    text-decoration: none;
+}
+
+.istact-widget-footer a:hover, .istact-widget-footer a:active, .istact-widget-footer a:visited {
+    color: #3b84c3;
+    text-decoration: none;
+}
