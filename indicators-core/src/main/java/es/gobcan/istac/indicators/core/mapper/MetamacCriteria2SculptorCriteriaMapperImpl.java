@@ -69,9 +69,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
         public Property<GeographicalValue> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
             GeographicalValueCriteriaOrderEnum propertyNameCriteria = GeographicalValueCriteriaOrderEnum.fromValue(order.getPropertyName());
             switch (propertyNameCriteria) {
-                case GRANULARITY:
+                case GEOGRAPHICAL_GRANULARITY_UUID:
                     return GeographicalValueProperties.granularity();
-                case ORDER_IN_GRANULARITY:
+                case ORDER_IN_GEOGRAPHICAL_GRANULARITY:
                     return GeographicalValueProperties.orderInGranularity();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());

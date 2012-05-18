@@ -4089,7 +4089,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();
-            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GRANULARITY.name());
+            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
             metamacCriteriaOrder.setType(OrderTypeEnum.DESC);
             criteria.getOrdersBy().add(metamacCriteriaOrder);
 
@@ -4116,7 +4116,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();
-            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GRANULARITY.name());
+            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
             metamacCriteriaOrder.setType(OrderTypeEnum.ASC);
             criteria.getOrdersBy().add(metamacCriteriaOrder);
 

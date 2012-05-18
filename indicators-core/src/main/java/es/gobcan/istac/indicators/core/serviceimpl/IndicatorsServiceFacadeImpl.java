@@ -572,12 +572,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             // Default order
             // Granularity
             MetamacCriteriaOrder orderGranularity = new MetamacCriteriaOrder();
-            orderGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.GRANULARITY.name());
+            orderGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.GEOGRAPHICAL_GRANULARITY_UUID.name());
             orderGranularity.setType(OrderTypeEnum.ASC);
             metamacCriteria.getOrdersBy().add(orderGranularity);
             // Order in granularity
             MetamacCriteriaOrder orderOrderInGranularity = new MetamacCriteriaOrder();
-            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GRANULARITY.name());
+            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
             orderOrderInGranularity.setType(OrderTypeEnum.ASC);
             metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
         }
