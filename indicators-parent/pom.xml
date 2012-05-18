@@ -32,7 +32,6 @@
 
         <!-- SPRING -->
         <spring.version>3.1.1.RELEASE</spring.version>
-        <spring-test-mvc.version>1.0.0.BUILD-SNAPSHOT</spring-test-mvc.version>
         <aspectj.version>1.6.8</aspectj.version>
         <cglib-nodep.version>2.2</cglib-nodep.version>
 
@@ -395,12 +394,6 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test-mvc</artifactId>
-                <version>${spring-test-mvc.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
