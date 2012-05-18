@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataStructure;
@@ -561,6 +565,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Transform
+        if (metamacCriteria == null) {
+            metamacCriteria = new MetamacCriteria();
+        }
+        if (CollectionUtils.isEmpty(metamacCriteria.getOrdersBy())) {
+            // Default order
+            // Granularity
+            MetamacCriteriaOrder orderGranularity = new MetamacCriteriaOrder();
+            orderGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.GRANULARITY.name());
+            orderGranularity.setType(OrderTypeEnum.ASC);
+            metamacCriteria.getOrdersBy().add(orderGranularity);
+            // Order in granularity
+            MetamacCriteriaOrder orderOrderInGranularity = new MetamacCriteriaOrder();
+            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GRANULARITY.name());
+            orderOrderInGranularity.setType(OrderTypeEnum.ASC);
+            metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
+        }
         SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
 
         // Find

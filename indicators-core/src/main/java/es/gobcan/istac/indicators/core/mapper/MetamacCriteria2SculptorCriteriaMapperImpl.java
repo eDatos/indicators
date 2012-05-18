@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCr
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
@@ -28,7 +29,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
     private MetamacCriteria2SculptorCriteria<IndicatorsSystemVersion> indicatorsSystemVersionCriteriaMapper = null;
 
     public MetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        geographicalValueCriteriaMapper = new MetamacCriteria2SculptorCriteria<GeographicalValue>(GeographicalValue.class, null, GeographicalValueCriteriaPropertyEnum.class,
+        geographicalValueCriteriaMapper = new MetamacCriteria2SculptorCriteria<GeographicalValue>(GeographicalValue.class, GeographicalValueCriteriaOrderEnum.class, GeographicalValueCriteriaPropertyEnum.class,
                 new GeographicalValueCriteriaCallback());
         indicatorVersionCriteriaMapper = new MetamacCriteria2SculptorCriteria<IndicatorVersion>(IndicatorVersion.class, null, IndicatorCriteriaPropertyEnum.class,
                 new IndicatorVersionCriteriaCallback());
@@ -66,7 +67,15 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
 
         @Override
         public Property<GeographicalValue> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
-            return null; // put default order
+            GeographicalValueCriteriaOrderEnum propertyNameCriteria = GeographicalValueCriteriaOrderEnum.fromValue(order.getPropertyName());
+            switch (propertyNameCriteria) {
+                case GRANULARITY:
+                    return GeographicalValueProperties.granularity();
+                case ORDER_IN_GRANULARITY:
+                    return GeographicalValueProperties.orderInGranularity();
+                default:
+                    throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
+            }
         }
 
         @Override

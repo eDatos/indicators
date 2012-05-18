@@ -277,7 +277,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setGranularityUuid(source.getGranularity().getUuid());
         target.setLatitude(source.getLatitude());
         target.setLongitude(source.getLongitude());
-
+        target.setOrderInGranularity(source.getOrderInGranularity());
         return target;
     }
 
