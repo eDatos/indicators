@@ -155,7 +155,13 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             @Override
             public boolean execute(FormItem formItem, Object value) {
                 // Required when method type is CALCULATED
-                return RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
+                boolean required = RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
+                if (required
+                        && (RateDerivationForm.this.getValue(DataSourceDS.RATE_DERIVATION_ROUNDING) == null || StringUtils.isBlank(RateDerivationForm.this.getValue(
+                                DataSourceDS.RATE_DERIVATION_ROUNDING).toString()))) {
+                    RateDerivationForm.this.setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, RateDerivationRoundingEnum.UPWARD.toString());
+                }
+                return required;
             }
         }));
 
@@ -183,8 +189,15 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             @Override
             public boolean execute(FormItem formItem, Object value) {
                 // Required when quantity type is CHANGE_RATE and method type is CALCULATED
-                return QuantityTypeEnum.CHANGE_RATE.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE))
+                boolean required = QuantityTypeEnum.CHANGE_RATE.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE))
                         && RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
+                // If this field is required, set 2 decimal places by default
+                if (required
+                        && (RateDerivationForm.this.getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) == null || StringUtils.isBlank(RateDerivationForm.this.getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES)
+                                .toString()))) {
+                    RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, 2);
+                }
+                return required;
             }
         }), getDecimalPlacesValidator());
 
@@ -216,7 +229,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         markForRedraw();
     }
-
     public void setValue(RateDerivationDto rateDerivationDto) {
         this.rateDerivationDto = rateDerivationDto;
 
