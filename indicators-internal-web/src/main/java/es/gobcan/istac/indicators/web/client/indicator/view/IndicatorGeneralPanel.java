@@ -212,7 +212,8 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
-        identifiersForm.setFields(code, uuid, version, procStatus, title, acronym);
+        ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
+        identifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName);
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -279,7 +280,8 @@ public class IndicatorGeneralPanel extends VLayout {
         MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         title.setRequired(true);
         MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
-        identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym);
+        ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
+        identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName);
 
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -289,6 +291,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // Content Descriptors Form
         contentDescriptorsEditionForm = new GroupDynamicForm(getConstants().indicDetailContentDescriptors());
         MultiLanguageTextItem conceptDescription = new MultiLanguageTextItem(IndicatorDS.CONCEPT_DESCRIPTION, getConstants().indicDetailConceptDescription());
+
         contentDescriptorsEditionForm.setFields(conceptDescription);
 
         // Production Descriptors Form
@@ -356,6 +359,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
         identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
+        identifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
 
         // Content Classifiers
         contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
@@ -400,6 +404,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
         identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
+        identifiersEditionForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
 
         // Content Classifiers
         contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT, indicatorDto.getSubjectCode());

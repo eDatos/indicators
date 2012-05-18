@@ -21,6 +21,7 @@ public class IndicatorDS extends DataSource {
     public static String SUBJECT_TITLE                         = "ind-sub-title";
     // CONTENT DESCRIPTORS
     public static String CONCEPT_DESCRIPTION                   = "ind-concept";
+    public static String DATA_REPOSITORY_TABLE_NAME            = "ind-table-name";
     // PRODUCTION DESCRIPTORS
     public static String PRODUCTION_VERSION                    = "ind-prod-v-";
     public static String PRODUCTION_VALIDATION_DATE            = "ind-prod-date";
