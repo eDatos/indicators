@@ -33,7 +33,9 @@ public class TimeVariableUtils extends TimeUtils {
         if (!timeGranularityEnum1.equals(timeGranularityEnum2)) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value2);
         }
-        return value1.compareTo(value2);
+        int compareResult = value1.compareTo(value2);
+        //Inverse order
+        return compareResult * -1;
     }
 
     /**

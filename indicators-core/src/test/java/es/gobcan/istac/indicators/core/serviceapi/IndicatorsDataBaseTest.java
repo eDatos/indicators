@@ -79,6 +79,13 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         assertEquals(expected.length, collection.size());
     }
+    
+    protected void checkElementsOrder(String[] expected, List<String> collection) {
+        assertEquals(expected.length, collection.size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals("Element "+expected[i]+" not in collection",collection.get(i),expected[i]);
+        }
+    }
 
     protected void assertIndicatorEmptyData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersionNumber);

@@ -332,7 +332,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedMonthValues, monthValues);
+        checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
         List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.DAILY);
@@ -379,7 +379,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedMonthValues, monthValues);
+        checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
         List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, TimeGranularityEnum.DAILY);
@@ -436,7 +436,7 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> timeCodes = getTimeValuesCodes(timeValues);
         String[] expectedCodes = new String[] {"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsInCollection(expectedCodes, timeCodes);    
+        checkElementsOrder(expectedCodes, timeCodes);    
     }
 
     /* MEASURE VALUES */

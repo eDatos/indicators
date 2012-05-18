@@ -550,6 +550,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         timeValuesInIndicator.add(timeValue);
                     }
                 }
+                Collections.sort(timeValuesInIndicator, new Comparator<TimeValue>() {
+                   @Override
+                    public int compare(TimeValue o1, TimeValue o2) {
+                       try {
+                           return TimeVariableUtils.compareTo(o1.getTimeValue(), o2.getTimeValue());
+                       } catch (MetamacException e) {
+                           //This should never happen, all values have same granularity
+                           return -1;
+                       }
+                    } 
+                });
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
