@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>    
-  	<parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
         <groupId>es.gobcan.istac.indicators</groupId>
         <artifactId>indicators-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>indicators-parent/pom.xml</relativePath>
     </parent>
-  	
-  	<groupId>es.gobcan.istac.indicators</groupId>
-  	<artifactId>indicators</artifactId>
-  	<version>0.0.1-SNAPSHOT</version>
-  	<packaging>pom</packaging>
-  	<name>INDICATORS</name>
+
+    <groupId>es.gobcan.istac.indicators</groupId>
+    <artifactId>indicators</artifactId>
+    <packaging>pom</packaging>
+    <name>INDICATORS</name>
+
+    <scm>
+        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</connection>
+        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</developerConnection>
+        <url>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</url>
+    </scm>
 
     <modules>
         <module>indicators-parent</module>
@@ -30,4 +36,47 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>arte-prepare-release</id>
+
+            <activation>
+                <property>
+                    <name>artePrepareRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>attach-source</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Not configured yet, but should be configured here if needed -->
+        <profile>
+            <id>arte-perform-release</id>
+            <activation>
+                <property>
+                    <name>artePerformRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
+
 </project>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>es.gobcan.istac.indicators</groupId>
         <artifactId>indicators-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../indicators-parent/pom.xml</relativePath>
     </parent>
+
     <groupId>es.gobcan.istac.indicators</groupId>
     <artifactId>indicators-internal-web</artifactId>
     <name>INDICATORS :: WEB :: INTERNAL</name>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-
 
     <properties>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
@@ -200,13 +200,13 @@
             </plugin>
 
             <!--
-               |  WORKAROUND: 
-               |    El plugin de maven-compiler-plugin tiene un problema a la hora de crear clases usando anotaciones.
-               |    Por ello se pasa en el compilar el argumento "-proc:none" y se añade el plugin: maven-processor-plugin:
-               |    Véase:
-               |       http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-annotation-processor.html#d0e3740
-               |       http://jira.codehaus.org/browse/MCOMPILER-157
-               +-->
+                | WORKAROUND:
+                | El plugin de maven-compiler-plugin tiene un problema a la hora de crear clases usando anotaciones.
+                | Por ello se pasa en el compilar el argumento "-proc:none" y se añade el plugin: maven-processor-plugin:
+                | Véase:
+                | http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-annotation-processor.html#d0e3740
+                | http://jira.codehaus.org/browse/MCOMPILER-157
+                + -->
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
@@ -271,8 +271,8 @@
             </plugin>
 
             <!-- Copy static web files before executing gwt:run -->
-            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <version>2.1.1</version> <executions> <execution> 
-                <phase>compile</phase> <goals> <goal>exploded</goal> </goals> </execution> </executions> <configuration> <webappDirectory>${webappDirectory}</webappDirectory> 
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <version>2.1.1</version> <executions> <execution>
+                <phase>compile</phase> <goals> <goal>exploded</goal> </goals> </execution> </executions> <configuration> <webappDirectory>${webappDirectory}</webappDirectory>
                 </configuration> </plugin> -->
 
             <plugin>

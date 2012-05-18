@@ -1,251 +1,249 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>es.gobcan.istac.indicators</groupId>
-		<artifactId>indicators-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../indicators-parent/pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>es.gobcan.istac.indicators</groupId>
+        <artifactId>indicators-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../indicators-parent/pom.xml</relativePath>
+    </parent>
 
-	<groupId>es.gobcan.istac.indicators</groupId>
-	<artifactId>indicators-core</artifactId>
-	<packaging>jar</packaging>
-	<name>INDICATORS :: CORE</name>
-	<version>0.0.1-SNAPSHOT</version>
-	
-	<dependencies>
+    <groupId>es.gobcan.istac.indicators</groupId>
+    <artifactId>indicators-core</artifactId>
+    <packaging>jar</packaging>
+    <name>INDICATORS :: CORE</name>
 
-		<!-- SPRING -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-		</dependency>
+    <dependencies>
 
-		<!-- PERSISTENCE -->
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-	        <exclusions>
+        <!-- SPRING -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+        </dependency>
+
+        <!-- PERSISTENCE -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
                     <artifactId>xml-apis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>oracle</artifactId>
-		</dependency>
-
-		<!-- SCULPTOR -->
-		<dependency>
-			<groupId>org.fornax.cartridges</groupId>
-			<artifactId>fornax-cartridges-sculptor-generator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.fornax.cartridges</groupId>
-			<artifactId>fornax-cartridges-sculptor-framework</artifactId>
-			<classifier>without-ejb</classifier>
-		</dependency>
-
-		<!-- COMMONS -->
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-		</dependency>
-
-		<!-- LOGGING -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-		
-		<!-- Jersey, rest client -->
-		<dependency>
-    		<groupId>com.sun.jersey</groupId>
-    		<artifactId>jersey-client</artifactId>
-		</dependency>
-		
-		<!-- Jackson, json support -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-		</dependency>
         <dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-		</dependency>
-		
-		<!-- Quartz -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-oracle</artifactId>
-		</dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>oracle</artifactId>
+        </dependency>
 
-		<!-- MISCELLANEOUS -->
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>jsr250-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>aopalliance</groupId>
-			<artifactId>aopalliance</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time-hibernate</artifactId>
-		</dependency>
+        <!-- SCULPTOR -->
+        <dependency>
+            <groupId>org.fornax.cartridges</groupId>
+            <artifactId>fornax-cartridges-sculptor-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fornax.cartridges</groupId>
+            <artifactId>fornax-cartridges-sculptor-framework</artifactId>
+            <classifier>without-ejb</classifier>
+        </dependency>
 
-		<!-- TEST -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.fornax.cartridges</groupId>
-			<artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-		</dependency>
+        <!-- COMMONS -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+        </dependency>
 
-		<!-- Dataset repository -->
-		<dependency>
-			<groupId>com.arte.statistic</groupId>
-			<artifactId>statistic-dataset-repository</artifactId>
-			<classifier>client-oracle</classifier>
-    	</dependency>
+        <!-- LOGGING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
 
-		<!-- METAMAC -->
-		<dependency>
-			<groupId>org.siemac.metamac</groupId>
-			<artifactId>metamac-core-common</artifactId>
-			<classifier>client</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>com.flipthebird.gwt-hashcode-equals</groupId>
-					<artifactId>gwt-hashcode-equals</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.siemac.metamac</groupId>
-			<artifactId>metamac-sso-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.siemac.metamac</groupId>
-			<artifactId>metamac-common-test</artifactId>
-		</dependency>
-	</dependencies>
+        <!-- Jersey, rest client -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+        </dependency>
+
+        <!-- Jackson, json support -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+
+        <!-- Quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-oracle</artifactId>
+        </dependency>
+
+        <!-- MISCELLANEOUS -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time-hibernate</artifactId>
+        </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fornax.cartridges</groupId>
+            <artifactId>fornax-cartridges-sculptor-framework-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <!-- Dataset repository -->
+        <dependency>
+            <groupId>com.arte.statistic</groupId>
+            <artifactId>statistic-dataset-repository</artifactId>
+            <classifier>client-oracle</classifier>
+        </dependency>
+
+        <!-- METAMAC -->
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-core-common</artifactId>
+            <classifier>client</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.flipthebird.gwt-hashcode-equals</groupId>
+                    <artifactId>gwt-hashcode-equals</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-sso-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-common-test</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
@@ -263,9 +261,9 @@
             </resource>
         </resources>
         <plugins>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.4.1</version>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -295,175 +293,175 @@
                         </fileset>
                     </filesets>
                 </configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/generated/java</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-resource</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>src/generated/resources</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-test-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/test/generated/java</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-test-resource</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-test-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>src/test/generated/resources</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.fornax.toolsupport</groupId>
-				<artifactId>fornax-oaw-m2-plugin</artifactId>
-				<version>${fornax-oaw-m2.version}</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>run-workflow</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<workflowEngine>mwe2</workflowEngine>
-					<workflowDescriptor>file://${basedir}/src/main/resources/generator/Workflow.mwe2</workflowDescriptor>
-					<checkFilesets>
-						<checkFileset>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>src/main/resources/indicators-core-model.btdesign</include>
-							</includes>
-						</checkFileset>
-					</checkFilesets>
-<!-- 					ignored. model is specified in Workflow.mwe2 -->
-					<properties>
-					<modelFile>src/main/resources/indicators-core-model.btdesign</modelFile>
-					<appProject>${project.artifactId}</appProject>
-					</properties>
-					<jvmSettings>
-						<copySysProperties>true</copySysProperties>
-						<jvmArgs>
-							<jvmArg>-client</jvmArg>
-							<jvmArg>-Xms256m</jvmArg>
-							<jvmArg>-Xmx512m</jvmArg>
-							<jvmArg>-Dlogback.configurationFile=generator/logback-sculptor.xml</jvmArg>
-						</jvmArgs>
-					</jvmSettings>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<executions>
-					<execution>
-						<id>${project.artifactId}-client</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<classifier>client</classifier>
-							<includes>
-								<include>**/*.gwt.xml</include>
-								<include>**/*.class</include>
-								<include>**/i18n/*.properties</include>
-								<include>**/*.xml</include>
-							</includes>
-							<excludes>
-								<exclude>generator/*.*</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.fornax.toolsupport</groupId>
-				<artifactId>fornax-graphviz-m2-plugin</artifactId>
-				<version>1.0.0</version>
-				<executions>
-					<execution>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.6</version><!--$NO-MVN-MAN-VER$ -->
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<!-- Delete spring configuration files -->
-								<delete file="${basedir}/src/main/resources/spring.properties" />
-								<delete file="${basedir}/src/main/resources/more.xml" />
-								<delete file="${basedir}/src/generated/resources/applicationContext.xml" />
-								<delete file="${basedir}/src/generated/resources/pub-sub.xml" />
-								<delete file="${basedir}/src/generated/resources/EntityManagerFactory.xml" />
-								<delete file="${basedir}/src/generated/resources/Interceptor.xml" />
-								<delete file="${basedir}/src/generated/resources/beanRefContext.xml" />
-								<delete file="${basedir}/src/generated/resources/generated-spring.properties" />
-								<delete file="${basedir}/src/test/resources/more-test.xml" />
-								<delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
-								<delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
-								<delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
-								<delete file="${basedir}/src/test/resources/spring-test.properties" />
-							</target>
-						</configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/generated/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/generated/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/generated/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-resource</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/generated/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.fornax.toolsupport</groupId>
+                <artifactId>fornax-oaw-m2-plugin</artifactId>
+                <version>${fornax-oaw-m2.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run-workflow</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <workflowEngine>mwe2</workflowEngine>
+                    <workflowDescriptor>file://${basedir}/src/main/resources/generator/Workflow.mwe2</workflowDescriptor>
+                    <checkFilesets>
+                        <checkFileset>
+                            <directory>${basedir}</directory>
+                            <includes>
+                                <include>src/main/resources/indicators-core-model.btdesign</include>
+                            </includes>
+                        </checkFileset>
+                    </checkFilesets>
+                    <!-- ignored. model is specified in Workflow.mwe2 -->
+                    <properties>
+                        <modelFile>src/main/resources/indicators-core-model.btdesign</modelFile>
+                        <appProject>${project.artifactId}</appProject>
+                    </properties>
+                    <jvmSettings>
+                        <copySysProperties>true</copySysProperties>
+                        <jvmArgs>
+                            <jvmArg>-client</jvmArg>
+                            <jvmArg>-Xms256m</jvmArg>
+                            <jvmArg>-Xmx512m</jvmArg>
+                            <jvmArg>-Dlogback.configurationFile=generator/logback-sculptor.xml</jvmArg>
+                        </jvmArgs>
+                    </jvmSettings>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>${project.artifactId}-client</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <classifier>client</classifier>
+                            <includes>
+                                <include>**/*.gwt.xml</include>
+                                <include>**/*.class</include>
+                                <include>**/i18n/*.properties</include>
+                                <include>**/*.xml</include>
+                            </includes>
+                            <excludes>
+                                <exclude>generator/*.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.fornax.toolsupport</groupId>
+                <artifactId>fornax-graphviz-m2-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version><!--$NO-MVN-MAN-VER$ -->
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Delete spring configuration files -->
+                                <delete file="${basedir}/src/main/resources/spring.properties" />
+                                <delete file="${basedir}/src/main/resources/more.xml" />
+                                <delete file="${basedir}/src/generated/resources/applicationContext.xml" />
+                                <delete file="${basedir}/src/generated/resources/pub-sub.xml" />
+                                <delete file="${basedir}/src/generated/resources/EntityManagerFactory.xml" />
+                                <delete file="${basedir}/src/generated/resources/Interceptor.xml" />
+                                <delete file="${basedir}/src/generated/resources/beanRefContext.xml" />
+                                <delete file="${basedir}/src/generated/resources/generated-spring.properties" />
+                                <delete file="${basedir}/src/test/resources/more-test.xml" />
+                                <delete file="${basedir}/src/test/generated/resources/applicationContext-test.xml" />
+                                <delete file="${basedir}/src/test/generated/resources/EntityManagerFactory-test.xml" />
+                                <delete file="${basedir}/src/test/generated/resources/Interceptor-test.xml" />
+                                <delete file="${basedir}/src/test/resources/spring-test.properties" />
+                            </target>
+                        </configuration>
 
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
