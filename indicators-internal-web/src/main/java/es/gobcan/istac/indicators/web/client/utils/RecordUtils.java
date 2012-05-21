@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
-import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -15,13 +14,11 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 public class RecordUtils {
 
     public static IndicatorRecord getIndicatorRecord(IndicatorDto indicatorDto) {
-        IndicatorRecord record = new IndicatorRecord(indicatorDto.getUuid(), indicatorDto.getCode(), getLocalisedString(indicatorDto.getTitle()), CommonUtils.getIndicatorProcStatus(indicatorDto),
-                indicatorDto.getNeedsUpdate(), indicatorDto);
+        IndicatorRecord record = new IndicatorRecord(indicatorDto);
         return record;
     }
     public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
-        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDtoWeb.getUuid(), indicatorsSystemDtoWeb.getCode(), getLocalisedString(indicatorsSystemDtoWeb.getTitle()),
-                CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb));
+        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDtoWeb);
         return record;
     }
 

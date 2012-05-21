@@ -17,6 +17,7 @@ import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridFieldIfFunction;
@@ -75,6 +76,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
 
         indSystemListGrid = new BaseCustomListGrid();
         indSystemListGrid.setHeight(680);
+        indSystemListGrid.setHeaderHeight(40);
         indSystemListGrid.setDataSource(new IndicatorsSystemsDS());
         indSystemListGrid.setUseAllDataSourceFields(false);
         indSystemListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
@@ -122,8 +124,14 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
         ListGridField code = new ListGridField(IndicatorsSystemsDS.CODE, getConstants().systemListHeaderIdentifier());
         code.setAlign(Alignment.LEFT);
         ListGridField title = new ListGridField(IndicatorsSystemsDS.TITLE, getConstants().systemListHeaderTitle());
+        ListGridField version = new ListGridField(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
         ListGridField status = new ListGridField(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
-        indSystemListGrid.setFields(uuid, code, title, status);
+        ListGridField diffusionVersion = new ListGridField(IndicatorsSystemsDS.VERSION_DIFF, getConstants().systemDetailVersion());
+        ListGridField diffusionStatus = new ListGridField(IndicatorsSystemsDS.PROC_STATUS_DIFF, getConstants().systemDetailProcStatus());
+        indSystemListGrid.setFields(uuid, code, title, version, status, diffusionVersion, diffusionStatus);
+        indSystemListGrid.setHeaderSpans(new HeaderSpan(getConstants().indicatorSystems(), new String[]{IndicatorsSystemsDS.CODE, IndicatorsSystemsDS.TITLE}), new HeaderSpan(getConstants()
+                .systemProductionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION, IndicatorsSystemsDS.PROC_STATUS}), new HeaderSpan(getConstants().systemDiffusionEnvironment(), new String[]{
+                IndicatorsSystemsDS.VERSION_DIFF, IndicatorsSystemsDS.PROC_STATUS_DIFF}));
 
         IndicatorSystemRecord[] records = new IndicatorSystemRecord[0];
 

@@ -17,6 +17,7 @@ import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -99,6 +100,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         indicatorList = new BaseCustomListGrid();
         indicatorList.setHeight(680);
+        indicatorList.setHeaderHeight(40);
         indicatorList.setDataSource(new IndicatorDS());
         indicatorList.setUseAllDataSourceFields(false);
         indicatorList.setSelectionAppearance(SelectionAppearance.CHECKBOX);
@@ -137,12 +139,22 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
         ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
+        ListGridField version = new ListGridField(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-        ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
-        updated.setWidth(140);
-        updated.setType(ListGridFieldType.IMAGE);
-        updated.setAlign(Alignment.CENTER);
-        indicatorList.setFields(fieldCode, fieldName, status, updated);
+        ListGridField needsUpdate = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
+        needsUpdate.setWidth(140);
+        needsUpdate.setType(ListGridFieldType.IMAGE);
+        needsUpdate.setAlign(Alignment.CENTER);
+        ListGridField diffusionVersion = new ListGridField(IndicatorDS.VERSION_NUMBER_DIFF, getConstants().indicDetailVersion());
+        ListGridField diffusionStatus = new ListGridField(IndicatorDS.PROC_STATUS_DIFF, getConstants().indicDetailProcStatus());
+        ListGridField diffusionNeedsUpdate = new ListGridField(IndicatorDS.NEEDS_UPDATE_DIFF, getConstants().indicatorUpdateStatus());
+        diffusionNeedsUpdate.setWidth(140);
+        diffusionNeedsUpdate.setType(ListGridFieldType.IMAGE);
+        diffusionNeedsUpdate.setAlign(Alignment.CENTER);
+        indicatorList.setFields(fieldCode, fieldName, version, status, needsUpdate, diffusionVersion, diffusionStatus, diffusionNeedsUpdate);
+        indicatorList.setHeaderSpans(new HeaderSpan(getConstants().indicator(), new String[]{IndicatorDS.CODE, IndicatorDS.TITLE}), new HeaderSpan(getConstants().indicatorProductionEnvironment(),
+                new String[]{IndicatorDS.VERSION_NUMBER, IndicatorDS.PROC_STATUS, IndicatorDS.NEEDS_UPDATE}), new HeaderSpan(getConstants().indicatorDiffusionEnvironment(), new String[]{
+                IndicatorDS.VERSION_NUMBER_DIFF, IndicatorDS.PROC_STATUS_DIFF, IndicatorDS.NEEDS_UPDATE_DIFF}));
 
         panel = new VLayout();
         panel.addMember(toolStrip);

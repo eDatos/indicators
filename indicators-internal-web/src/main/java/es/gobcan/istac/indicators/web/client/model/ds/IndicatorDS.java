@@ -10,11 +10,18 @@ public class IndicatorDS extends DataSource {
 
     // IDENTIFIERS
     public static String UUID                                  = "ind-uuid";
-    public static String VERSION_NUMBER                        = "ind-version";
     public static String CODE                                  = "ind-code";
-    public static String PROC_STATUS                           = "ind-status";
     public static String TITLE                                 = "ind-title";
     public static String ACRONYM                               = "ind-acron";
+
+    public static String VERSION_NUMBER                        = "ind-version";
+    public static String NEEDS_UPDATE                          = "ind-needs-update";
+    public static String PROC_STATUS                           = "ind-status";
+
+    public static String VERSION_NUMBER_DIFF                   = "ind-version-diff";
+    public static String NEEDS_UPDATE_DIFF                     = "ind-needs-update-diff";
+    public static String PROC_STATUS_DIFF                      = "ind-status-diff";
+
     // CONTENT CLASSIFIERS
     public static String SUBJECT                               = "ind-sub";
     public static String SUBJECT_CODE                          = "ind-sub-code";
@@ -34,18 +41,18 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_MINIMUM                      = "q-min";
     public static String QUANTITY_MAXIMUM                      = "q-max";
     public static String QUANTITY_DENOMINATOR_INDICATOR_UUID   = "q-den";
-    public static String QUANTITY_DENOMINATOR_INDICATOR_TEXT   = "q-den-dtext";      // Not mapped in DTO
+    public static String QUANTITY_DENOMINATOR_INDICATOR_TEXT   = "q-den-dtext";          // Not mapped in DTO
     public static String QUANTITY_NUMERATOR_INDICATOR_UUID     = "q-num";
-    public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";      // Not mapped in DTO
+    public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";          // Not mapped in DTO
     public static String QUANTITY_IS_PERCENTAGE                = "q-is-perc";
-    public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";      // Not mapped in DTO
+    public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";          // Not mapped in DTO
     public static String QUANTITY_BASE_VALUE                   = "q-value";
     public static String QUANTITY_BASE_TIME                    = "q-time";
     public static String QUANTITY_BASE_LOCATION                = "q-loc";
     public static String QUANTITY_BASE_QUANTITY_INDICATOR_UUID = "q-ind-uuid";
-    public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext"; // Not mapped in DTO
+    public static String QUANTITY_BASE_QUANTITY_INDICATOR_TEXT = "q-ind-uuid-dtext";     // Not mapped in DTO
     public static String QUANTITY_TYPE                         = "q-type";
-    public static String QUANTITY_TYPE_TEXT                    = "q-type-text";      // Not mapped in DTO
+    public static String QUANTITY_TYPE_TEXT                    = "q-type-text";          // Not mapped in DTO
     public static String QUANTITY_PERCENTAGE_OF                = "q-perc-of";
     // DIFUSSION DESCRIPTORS
     public static String DIFFUSION_VALIDATION_DATE             = "ind-diff-date";
@@ -62,8 +69,6 @@ public class IndicatorDS extends DataSource {
     // ANNOTATIONS
     public static String NOTES                                 = "ind-notes";
     public static String COMMENTS                              = "ind-comments";
-
-    public static String NEEDS_UPDATE                          = "ind-needs-update";
 
     public static String DTO                                   = "ind-dto";
 
