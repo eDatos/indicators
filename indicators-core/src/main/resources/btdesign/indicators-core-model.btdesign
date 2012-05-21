@@ -259,10 +259,10 @@ Application Indicators {
 	    	@IndicatorsSystemDto archiveIndicatorsSystem(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicators system in diffusion. Returns new version created"
 	    	@IndicatorsSystemDto versioningIndicatorsSystem(String uuid, @VersionTypeEnum versionType) throws MetamacException;
-	    	"Finds indicators systems by criteria. Retrieves last versions"
-	    	MetamacCriteriaResult<@IndicatorsSystemDto> findIndicatorsSystems(MetamacCriteria criteria) throws MetamacException;
-	    	"Finds published indicators systems by criteria"
-	    	MetamacCriteriaResult<@IndicatorsSystemDto> findIndicatorsSystemsPublished(MetamacCriteria criteria) throws MetamacException;
+	    	"Finds indicators systems by criteria in any state, returning last versions"
+	    	MetamacCriteriaResult<@IndicatorsSystemSummaryDto> findIndicatorsSystems(MetamacCriteria criteria) throws MetamacException;
+	    	"Finds indicators systems by criteria, returning only has any version published"
+	    	MetamacCriteriaResult<@IndicatorsSystemSummaryDto> findIndicatorsSystemsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves indicators system structure: dimensions and indicators instances by levels. If versionNumber is not provided, retrieves last version"
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves all indicators system published where indicator is"
@@ -1102,6 +1102,26 @@ Application Indicators {
 			String archiveUser;			
 	    }
 	    
+		"Dto for indicators system. Summary information"
+	   	DataTransferObject IndicatorsSystemSummaryDto {
+			"Unique uuid"
+			String uuid;
+			"Code"
+			String code;
+       		"Production version: draft, in validation..."
+       		- @IndicatorsSystemVersionSummaryDto productionVersion;
+       		"Diffusion version: published, archived"
+       		- @IndicatorsSystemVersionSummaryDto diffusionVersion;
+	    }
+	    
+	    "Dto for version of indicators system. Summary information"
+	   	DataTransferObject IndicatorsSystemVersionSummaryDto {
+			"Version number of this indicators system version"	
+			String versionNumber;
+			"Processing status"
+			- @IndicatorsSystemProcStatusEnum procStatus;
+	    }
+	    
 	    "Dto for indicator"
 	   	DataTransferObject IndicatorDto extends @AuditDto {
 			gap
@@ -1174,7 +1194,7 @@ Application Indicators {
 			Long versionOptimisticLocking;					    
 	    }
 	    
-	    "Dto for indicator. Basic information"
+	    "Dto for indicator. Summary information"
 	   	DataTransferObject IndicatorSummaryDto {
 			"Unique uuid"
 			String uuid;
@@ -1186,7 +1206,7 @@ Application Indicators {
        		- @IndicatorVersionSummaryDto diffusionVersion;
 	    }
 	    
-	    "Dto for version of indicator. Basic information"
+	    "Dto for version of indicator. Summary information"
 	   	DataTransferObject IndicatorVersionSummaryDto {
 			"Version number of this indicator version"	
 			String versionNumber;

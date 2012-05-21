@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
@@ -48,6 +49,8 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
@@ -93,6 +96,23 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdatedBy(source.getLastUpdatedBy());
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
+        return target;
+    }
+    
+    @Override
+    public IndicatorsSystemSummaryDto indicatorsSystemDoToDtoSummary(IndicatorsSystemVersion source) {
+
+        IndicatorsSystemSummaryDto target = new IndicatorsSystemSummaryDto();
+        IndicatorsSystem indicatorsSystem = source.getIndicatorsSystem();
+        target.setUuid(indicatorsSystem.getUuid());
+        target.setCode(indicatorsSystem.getCode());
+        for (IndicatorsSystemVersion indicatorsSystemVersionInIndicatorsSystem : indicatorsSystem.getVersions()) {
+            if (indicatorsSystem.getProductionVersion() != null && indicatorsSystem.getProductionVersion().getVersionNumber().equals(indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+                target.setProductionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
+            } else if (indicatorsSystem.getDiffusionVersion() != null && indicatorsSystem.getDiffusionVersion().getVersionNumber().equals(indicatorsSystemVersionInIndicatorsSystem.getVersionNumber())) {
+                target.setDiffusionVersion(indicatorsSystemVersionDoToDtoSummary(indicatorsSystemVersionInIndicatorsSystem));
+            }
+        }
         return target;
     }
 
@@ -370,6 +390,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         DataDto target = new DataDto();
         return target;
     }
+    
+    private IndicatorsSystemVersionSummaryDto indicatorsSystemVersionDoToDtoSummary(IndicatorsSystemVersion source) {
+        IndicatorsSystemVersionSummaryDto target = new IndicatorsSystemVersionSummaryDto();
+        target.setVersionNumber(source.getVersionNumber());
+        target.setProcStatus(source.getProcStatus());
+        return target;
+    }
+
 
     private ElementLevelDto elementLevelDoToDto(ElementLevel source) {
         ElementLevelDto target = new ElementLevelDto();
