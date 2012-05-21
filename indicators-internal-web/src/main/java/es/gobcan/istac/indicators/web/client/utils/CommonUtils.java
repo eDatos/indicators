@@ -21,6 +21,8 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
@@ -207,17 +209,21 @@ public class CommonUtils {
 
     public static String getIndicatorProcStatus(IndicatorDto indicatorDto) {
         String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorDto.getProcStatus().getName());
-        if (!StringUtils.isBlank(indicatorDto.getPublishedVersion())) {
-            procStatus += IndicatorsWeb.getMessages().indicatorPreviousVersion(indicatorDto.getPublishedVersion());
-        }
+        return procStatus;
+    }
+
+    public static String getIndicatorProcStatus(IndicatorProcStatusEnum indicatorProcStatus) {
+        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorProcStatus.getName());
         return procStatus;
     }
 
     public static String getIndicatorSystemProcStatus(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
         String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemDtoWeb.getProcStatus().getName());
-        if (!StringUtils.isBlank(indicatorsSystemDtoWeb.getPublishedVersion())) {
-            procStatus += IndicatorsWeb.getMessages().indicatorPreviousVersion(indicatorsSystemDtoWeb.getPublishedVersion());
-        }
+        return procStatus;
+    }
+
+    public static String getIndicatorSystemProcStatus(IndicatorsSystemProcStatusEnum indicatorsSystemProcStatus) {
+        String procStatus = getCoreMessages().getString(getCoreMessages().indicatorProcStatusEnum() + indicatorsSystemProcStatus.getName());
         return procStatus;
     }
 

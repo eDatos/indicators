@@ -17,6 +17,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
@@ -44,7 +45,7 @@ public class SendIndicatorsSystemToProductionValidationActionHandler extends Abs
         MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), indicatorsSystemDtoWeb.getCode(), OperationType.EQ);
         criteria.setRestriction(restriction);
         try {
-            MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
             if (!CollectionUtils.isEmpty(result.getResults())) {
                 // If exists, send to production validation
                 IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), result.getResults()

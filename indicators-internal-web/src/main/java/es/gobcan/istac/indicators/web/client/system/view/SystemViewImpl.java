@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
@@ -93,7 +94,7 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
-    public void setIndicators(List<IndicatorDto> indicators) {
+    public void setIndicators(List<IndicatorSummaryDto> indicators) {
         structurePanel.setIndicators(indicators);
     }
 

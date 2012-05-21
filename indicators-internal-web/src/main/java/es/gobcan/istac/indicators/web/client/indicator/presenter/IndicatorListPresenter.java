@@ -25,6 +25,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
@@ -53,7 +54,7 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
 
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 
-        void setIndicatorList(List<IndicatorDto> indicatorList);
+        void setIndicatorList(List<IndicatorSummaryDto> indicatorList);
         void setSubjects(List<SubjectDto> subjectDtos);
 
         StatusBar getStatusBar();

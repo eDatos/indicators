@@ -20,6 +20,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
@@ -137,17 +138,17 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators) {
         generalPanel.setIndicatorListQuantityDenominator(indicators);
     }
 
     @Override
-    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators) {
         generalPanel.setIndicatorListQuantityNumerator(indicators);
     }
 
     @Override
-    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorSummaryDto> indicators) {
         generalPanel.setIndicatorListQuantityIndicatorBase(indicators);
     }
 

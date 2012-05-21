@@ -7,6 +7,7 @@ import com.smartgwt.client.data.Record;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class IndicatorSystemRecord extends Record {
 
@@ -15,9 +16,23 @@ public class IndicatorSystemRecord extends Record {
         setCode(indicatorsSystemDtoWeb.getCode());
         setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
         setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb));
-        // TODO setDiffusionProcStatus();
         setVersionNumber(indicatorsSystemDtoWeb.getVersionNumber());
-        // TODO setDiffusionVersionNumber();
+    }
+
+    public IndicatorSystemRecord(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb) {
+        setUuid(indicatorsSystemDtoWeb.getUuid());
+        setCode(indicatorsSystemDtoWeb.getCode());
+        setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
+        // Production version
+        if (indicatorsSystemDtoWeb.getProductionVersion() != null) {
+            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getProductionVersion().getProcStatus()));
+            setVersionNumber(indicatorsSystemDtoWeb.getProductionVersion().getVersionNumber());
+        }
+        // Diffusion version
+        if (indicatorsSystemDtoWeb.getDiffusionVersion() != null) {
+            setDiffusionProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
+            setDiffusionVersionNumber(indicatorsSystemDtoWeb.getDiffusionVersion().getVersionNumber());
+        }
     }
 
     public void setUuid(String uuid) {

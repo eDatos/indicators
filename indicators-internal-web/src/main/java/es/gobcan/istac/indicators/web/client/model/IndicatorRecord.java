@@ -7,6 +7,7 @@ import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import com.smartgwt.client.data.Record;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
@@ -17,12 +18,28 @@ public class IndicatorRecord extends Record {
         setName(getLocalisedString(indicatorDto.getTitle()));
         setCode(indicatorDto.getCode());
         setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorDto));
-        // TODO setDiffusionProcStatus();
         setNeedsUpdate(indicatorDto.getNeedsUpdate());
-        // TODO setDiffusionNeedsUpdate();
         setVersionNumber(indicatorDto.getVersionNumber());
-        // TODO setDifussionVersionNumber();
-        setIndicatorDto(indicatorDto);
+    }
+
+    public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
+        setUuid(indicatorSummaryDto.getUuid());
+        setCode(indicatorSummaryDto.getCode());
+        // Diffusion version
+        if (indicatorSummaryDto.getDiffusionVersion() != null) {
+            setName(getLocalisedString(indicatorSummaryDto.getDiffusionVersion().getTitle()));
+            setDiffusionProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
+            setDiffusionNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
+            setDiffusionVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+        }
+        // Production version
+        if (indicatorSummaryDto.getProductionVersion() != null) {
+            // Overwrite name if production version exists
+            setName(getLocalisedString(indicatorSummaryDto.getProductionVersion().getTitle()));
+            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getProductionVersion().getProcStatus()));
+            setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
+            setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
     }
 
     public void setUuid(String uuid) {
@@ -79,14 +96,6 @@ public class IndicatorRecord extends Record {
 
     public void setDiffusionVersionNumber(String value) {
         setAttribute(IndicatorDS.VERSION_NUMBER_DIFF, value);
-    }
-
-    public void setIndicatorDto(IndicatorDto indicatorDto) {
-        setAttribute(IndicatorDS.DTO, indicatorDto);
-    }
-
-    public IndicatorDto getIndicatorDto() {
-        return (IndicatorDto) getAttributeAsObject(IndicatorDS.DTO);
     }
 
 }

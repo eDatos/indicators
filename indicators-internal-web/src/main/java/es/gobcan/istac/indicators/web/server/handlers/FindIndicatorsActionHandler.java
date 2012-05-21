@@ -17,7 +17,7 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
@@ -54,7 +54,7 @@ public class FindIndicatorsActionHandler extends AbstractActionHandler<FindIndic
         criteria.setRestriction(conjuction);
 
         try {
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new FindIndicatorsResult(result.getResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

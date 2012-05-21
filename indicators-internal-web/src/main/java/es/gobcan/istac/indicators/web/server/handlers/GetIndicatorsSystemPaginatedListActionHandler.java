@@ -22,14 +22,14 @@ import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
-import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @Component
 public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActionHandler<GetIndicatorsSystemPaginatedListAction, GetIndicatorsSystemPaginatedListResult> {
@@ -46,7 +46,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActio
 
     @Override
     public GetIndicatorsSystemPaginatedListResult execute(GetIndicatorsSystemPaginatedListAction action, ExecutionContext context) throws ActionException {
-        List<IndicatorsSystemDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemDtoWeb>();
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
         FindOperationsResult findOperationsResult = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
         OperationBaseList operationBaseList = findOperationsResult.getOperations();
@@ -60,14 +60,14 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActio
                 MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), operationBase.getCode(), OperationType.EQ);
                 criteria.setRestriction(restriction);
                 try {
-                    MetamacCriteriaResult<IndicatorsSystemDto> result = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+                    MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
                     if (!CollectionUtils.isEmpty(result.getResults())) {
                         // If exists, updates indicators system
-                        IndicatorsSystemDto indicatorsSystemDto = result.getResults().get(0);
-                        indicatorsSystemDtos.add(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operationBase));
+                        IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = result.getResults().get(0);
+                        indicatorsSystemDtos.add(DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, operationBase));
                     } else {
                         // If not, create a new indicators system
-                        indicatorsSystemDtos.add(DtoUtils.createIndicatorsSystemDtoWeb(operationBase));
+                        indicatorsSystemDtos.add(DtoUtils.createIndicatorsSystemSummaryDtoWeb(operationBase));
                     }
                 } catch (MetamacException e) {
                     throw WebExceptionUtils.createMetamacWebException(e);

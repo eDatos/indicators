@@ -28,6 +28,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -479,15 +480,15 @@ public class IndicatorGeneralPanel extends VLayout {
         quantityEditionForm.setQuantityUnits(units);
     }
 
-    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators) {
         quantityEditionForm.setIndicatorListQuantityDenominator(indicators);
     }
 
-    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators) {
         quantityEditionForm.setIndicatorListQuantityNumerator(indicators);
     }
 
-    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorSummaryDto> indicators) {
         quantityEditionForm.setIndicatorListQuantityIndicatorBase(indicators);
     }
 

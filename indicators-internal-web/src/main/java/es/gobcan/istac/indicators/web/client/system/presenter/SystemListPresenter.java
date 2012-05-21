@@ -33,7 +33,7 @@ import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
-import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListPresenter extends PaginationPresenter<SystemListPresenter.SystemListView, SystemListPresenter.SystemListProxy> implements SystemListUiHandler {
 
@@ -41,7 +41,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
     public interface SystemListView extends View, HasUiHandlers<SystemListPresenter> {
 
-        void setIndSystemList(List<IndicatorsSystemDtoWeb> indSysList);
+        void setIndSystemList(List<IndicatorsSystemSummaryDtoWeb> indSysList);
         void onIndicatorsSystemsDeleted();
 
         StatusBar getStatusBar();

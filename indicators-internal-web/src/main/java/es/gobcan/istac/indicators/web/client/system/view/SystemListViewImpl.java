@@ -40,7 +40,7 @@ import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.client.view.PaginationViewImpl;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
-import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> implements SystemListView {
 
@@ -158,10 +158,10 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
     }
 
     @Override
-    public void setIndSystemList(List<IndicatorsSystemDtoWeb> indicatorsSystemList) {
+    public void setIndSystemList(List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemList) {
         IndicatorSystemRecord[] records = new IndicatorSystemRecord[indicatorsSystemList.size()];
         int index = 0;
-        for (IndicatorsSystemDtoWeb indSys : indicatorsSystemList) {
+        for (IndicatorsSystemSummaryDtoWeb indSys : indicatorsSystemList) {
             records[index++] = RecordUtils.getIndicatorsSystemRecord(indSys);
         }
         indSystemListGrid.setData(records);

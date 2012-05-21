@@ -28,7 +28,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
-import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
@@ -183,10 +183,10 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
     }
 
     @Override
-    public void setIndicatorList(List<IndicatorDto> indicators) {
+    public void setIndicatorList(List<IndicatorSummaryDto> indicators) {
         IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
         int index = 0;
-        for (IndicatorDto ind : indicators) {
+        for (IndicatorSummaryDto ind : indicators) {
             records[index++] = RecordUtils.getIndicatorRecord(ind);
         }
         indicatorList.setData(records);

@@ -9,8 +9,11 @@ import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.Operati
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class DtoUtils {
 
@@ -67,6 +70,29 @@ public class DtoUtils {
     }
 
     /**
+     * Fills an {@link IndicatorsSystemSummaryDtoWeb} from {@link IndicatorsSystemSummaryDto} and {@link OperationBase}
+     * 
+     * @param indicatorsSystemDtoWeb
+     * @param indicatorsSystemDto
+     * @param operationBase
+     * @return
+     */
+    public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWeb(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto,
+            OperationBase operationBase) {
+        if (indicatorsSystemDto != null) {
+            indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
+            indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
+            indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
+            indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
+        }
+        if (operationBase != null) {
+            indicatorsSystemDtoWeb.setCode(operationBase.getCode());
+            indicatorsSystemDtoWeb.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
+        }
+        return indicatorsSystemDtoWeb;
+    }
+
+    /**
      * Create an {@link IndicatorsSystemDtoWeb} from a {@link OperationBase}
      * 
      * @param operationBase
@@ -76,6 +102,20 @@ public class DtoUtils {
         IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
         indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
+    }
+
+    /**
+     * Create an {@link IndicatorsSystemSummaryDtoWeb} from a {@link OperationBase}
+     * 
+     * @param operationBase
+     * @return
+     */
+    public static IndicatorsSystemSummaryDtoWeb createIndicatorsSystemSummaryDtoWeb(OperationBase operationBase) {
+        IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemSummaryDtoWeb();
+        IndicatorsSystemVersionSummaryDto summaryDto = new IndicatorsSystemVersionSummaryDto();
+        summaryDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
+        indicatorsSystemDtoWeb.setProductionVersion(summaryDto);
+        return updateIndicatorsSystemSummaryDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
     }
 
     /**

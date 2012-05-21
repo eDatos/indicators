@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -114,9 +115,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setIndicator(IndicatorDto indicator);
         void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos);
 
-        void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators);
-        void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators);
-        void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators);
+        void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators);
+        void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators);
+        void setIndicatorListQuantityIndicatorBase(List<IndicatorSummaryDto> indicators);
 
         void setIndicatorQuantityDenominator(IndicatorDto indicator);
         void setIndicatorQuantityNumerator(IndicatorDto indicator);

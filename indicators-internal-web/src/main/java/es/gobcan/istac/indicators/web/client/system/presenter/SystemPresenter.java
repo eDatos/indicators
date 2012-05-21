@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
@@ -113,7 +114,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void init();
 
         void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
-        void setIndicators(List<IndicatorDto> indicators);
+        void setIndicators(List<IndicatorSummaryDto> indicators);
         void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
         void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
         void onDimensionSaved(DimensionDto dimension);

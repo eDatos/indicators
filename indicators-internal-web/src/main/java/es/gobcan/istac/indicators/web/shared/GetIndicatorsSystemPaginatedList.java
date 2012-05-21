@@ -6,19 +6,19 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
-import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @GenDispatch(isSecure = false)
 public class GetIndicatorsSystemPaginatedList {
 
     @In(1)
-    int                          maxResults;
+    int                                 maxResults;
     @In(2)
-    int                          firstResult;
+    int                                 firstResult;
 
     @Out(1)
-    List<IndicatorsSystemDtoWeb> indicatorsSystemList;
+    List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemList;
 
     @Out(2)
-    Integer                      totalResults;
+    Integer                             totalResults;
 }

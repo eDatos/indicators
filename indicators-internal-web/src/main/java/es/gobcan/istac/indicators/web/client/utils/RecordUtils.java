@@ -4,12 +4,14 @@ import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.DataDefinitionRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
+import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 public class RecordUtils {
 
@@ -17,7 +19,18 @@ public class RecordUtils {
         IndicatorRecord record = new IndicatorRecord(indicatorDto);
         return record;
     }
+
+    public static IndicatorRecord getIndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
+        IndicatorRecord record = new IndicatorRecord(indicatorSummaryDto);
+        return record;
+    }
+
     public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb) {
+        IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDtoWeb);
+        return record;
+    }
+
+    public static IndicatorSystemRecord getIndicatorsSystemRecord(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb) {
         IndicatorSystemRecord record = new IndicatorSystemRecord(indicatorsSystemDtoWeb);
         return record;
     }

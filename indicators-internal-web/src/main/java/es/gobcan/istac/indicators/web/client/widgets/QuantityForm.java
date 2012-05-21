@@ -30,6 +30,7 @@ import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -228,19 +229,19 @@ public class QuantityForm extends BaseQuantityForm {
         return quantityDto;
     }
 
-    public void setIndicatorListQuantityDenominator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators) {
         if (indicatorDenominatorSearchWindow != null) {
             indicatorDenominatorSearchWindow.setIndicatorList(indicators);
         }
     }
 
-    public void setIndicatorListQuantityNumerator(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators) {
         if (indicatorNumeratorSearchWindow != null) {
             indicatorNumeratorSearchWindow.setIndicatorList(indicators);
         }
     }
 
-    public void setIndicatorListQuantityIndicatorBase(List<IndicatorDto> indicators) {
+    public void setIndicatorListQuantityIndicatorBase(List<IndicatorSummaryDto> indicators) {
         if (indicatorBaseSearchWindow != null) {
             indicatorBaseSearchWindow.setIndicatorList(indicators);
         }
