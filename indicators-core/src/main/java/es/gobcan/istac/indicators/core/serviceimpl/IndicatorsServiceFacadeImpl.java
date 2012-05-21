@@ -9,9 +9,9 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
@@ -1136,7 +1137,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public MetamacCriteriaResult<IndicatorDto> findIndicators(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<IndicatorSummaryDto> findIndicators(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -1148,12 +1149,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicators(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result, sculptorCriteria.getPageSize());
+        MetamacCriteriaResult<IndicatorSummaryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
 
     @Override
-    public MetamacCriteriaResult<IndicatorDto> findIndicatorsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+    public MetamacCriteriaResult<IndicatorSummaryDto> findIndicatorsPublished(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -1165,7 +1166,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         PagedResult<IndicatorVersion> result = getIndicatorsService().findIndicatorsPublished(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<IndicatorDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicator(result, sculptorCriteria.getPageSize());
+        MetamacCriteriaResult<IndicatorSummaryDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultIndicatorSummary(result, sculptorCriteria.getPageSize());
         return metamacCriteriaResult;
     }
 

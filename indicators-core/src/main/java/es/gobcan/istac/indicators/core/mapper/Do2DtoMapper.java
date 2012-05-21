@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
@@ -47,6 +48,7 @@ public interface Do2DtoMapper {
 
     // Indicators
     public IndicatorDto indicatorDoToDto(IndicatorVersion source);
+    public IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source);
 
     // Data sources
     public DataSourceDto dataSourceDoToDto(DataSource source);

@@ -12,7 +12,7 @@ import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
-import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 
 @Component
@@ -35,13 +35,13 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
     }
     
     @Override
-    public MetamacCriteriaResult<IndicatorDto> pageResultToMetamacCriteriaResultIndicator(PagedResult<IndicatorVersion> source, Integer pageSize) {
-        MetamacCriteriaResult<IndicatorDto> target = new MetamacCriteriaResult<IndicatorDto>();
+    public MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(PagedResult<IndicatorVersion> source, Integer pageSize) {
+        MetamacCriteriaResult<IndicatorSummaryDto> target = new MetamacCriteriaResult<IndicatorSummaryDto>();
         target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
         if (source.getValues() != null) {
-            target.setResults(new ArrayList<IndicatorDto>());
+            target.setResults(new ArrayList<IndicatorSummaryDto>());
             for (IndicatorVersion indicatorVersion : source.getValues()) {
-                target.getResults().add(do2DtoMapper.indicatorDoToDto(indicatorVersion));
+                target.getResults().add(do2DtoMapper.indicatorDoToDtoSummary(indicatorVersion));
             }
         }
         return target;

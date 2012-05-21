@@ -381,10 +381,10 @@ Application Indicators {
 	    	@IndicatorDto archiveIndicator(String uuid) throws MetamacException;	    		    	
 	    	"Creates a version on draft of an indicator in diffusion. Returns new version created"
 	    	@IndicatorDto versioningIndicator(String uuid, @VersionTypeEnum versionType) throws MetamacException;
-	    	"Finds indicators by criteria. Retrieves last versions"
-	    	MetamacCriteriaResult<@IndicatorDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
-	    	"Finds published indicators by criteria"
-	    	MetamacCriteriaResult<@IndicatorDto> findIndicatorsPublished(MetamacCriteria criteria) throws MetamacException;
+	    	"Finds indicators by criteria in any state, returning last versions"
+	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicators(MetamacCriteria criteria) throws MetamacException;
+	    	"Finds indicators by criteria, returning only has any version published"
+	    	MetamacCriteriaResult<@IndicatorSummaryDto> findIndicatorsPublished(MetamacCriteria criteria) throws MetamacException;
 	    	
 	    	// DATASOURCES
 	    	"Creates a data source"
@@ -1172,6 +1172,30 @@ Application Indicators {
 			String archiveUser; 
 			"Version to optimistic locking"
 			Long versionOptimisticLocking;					    
+	    }
+	    
+	    "Dto for indicator. Basic information"
+	   	DataTransferObject IndicatorSummaryDto {
+			"Unique uuid"
+			String uuid;
+			"Code"
+			String code;
+       		"Production version: draft, in validation..."
+       		- @IndicatorVersionSummaryDto productionVersion;
+       		"Diffusion version: published, archived"
+       		- @IndicatorVersionSummaryDto diffusionVersion;
+	    }
+	    
+	    "Dto for version of indicator. Basic information"
+	   	DataTransferObject IndicatorVersionSummaryDto {
+			"Version number of this indicator version"	
+			String versionNumber;
+			"Processing status"
+			- @IndicatorProcStatusEnum procStatus;
+       		"Title"
+       		- @InternationalStringDto title;
+			"Indicates whether needs update its data or not"
+			Boolean needsUpdate;
 	    }
 
 	    "Dto for dimension"

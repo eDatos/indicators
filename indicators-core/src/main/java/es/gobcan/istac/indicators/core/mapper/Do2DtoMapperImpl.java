@@ -24,6 +24,7 @@ import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -44,6 +45,8 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
@@ -184,6 +187,23 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
         target.setVersionOptimisticLocking(source.getVersion());
+        return target;
+    }
+
+    @Override
+    public IndicatorSummaryDto indicatorDoToDtoSummary(IndicatorVersion source) {
+
+        IndicatorSummaryDto target = new IndicatorSummaryDto();
+        Indicator indicator = source.getIndicator();
+        target.setUuid(indicator.getUuid());
+        target.setCode(indicator.getCode());
+        for (IndicatorVersion indicatorVersionInIndicator : indicator.getVersions()) {
+            if (indicator.getProductionVersion() != null && indicator.getProductionVersion().getVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
+                target.setProductionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
+            } else if (indicator.getDiffusionVersion() != null && indicator.getDiffusionVersion().getVersionNumber().equals(indicatorVersionInIndicator.getVersionNumber())) {
+                target.setDiffusionVersion(indicatorVersionDoToDtoSummary(indicatorVersionInIndicator));
+            }
+        }
         return target;
     }
 
@@ -361,6 +381,15 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         for (ElementLevel child : source.getChildren()) {
             target.addSubelement(elementLevelDoToDto(child));
         }
+        return target;
+    }
+
+    private IndicatorVersionSummaryDto indicatorVersionDoToDtoSummary(IndicatorVersion source) {
+        IndicatorVersionSummaryDto target = new IndicatorVersionSummaryDto();
+        target.setVersionNumber(source.getVersionNumber());
+        target.setProcStatus(source.getProcStatus());
+        target.setTitle(internationalStringToDto(source.getTitle()));
+        target.setNeedsUpdate(source.getNeedsUpdate());
         return target;
     }
 

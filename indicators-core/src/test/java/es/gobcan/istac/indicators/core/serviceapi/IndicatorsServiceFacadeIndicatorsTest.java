@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
@@ -2683,42 +2684,128 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testFindIndicators() throws Exception {
 
         // Retrieve last versions...
-        MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextTecnicoProduccion(), null);
+        MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextTecnicoProduccion(), null);
         assertEquals(11, result.getResults().size());
-        List<IndicatorDto> indicatorsDto = result.getResults();
+        List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
-        assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(0);
+            assertEquals(INDICATOR_1, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-1", indicatorSummaryDto.getCode());
 
-        assertEquals(INDICATOR_2, indicatorsDto.get(1).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals(Boolean.TRUE, indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
+            IndicatorsAsserts.assertEqualsInternationalString(indicatorSummaryDto.getDiffusionVersion().getTitle(), "es", "Título Indicator-1-v1 Educación", "en", "Title Indicator-1-v1");
 
-        assertEquals(INDICATOR_3, indicatorsDto.get(2).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("2.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(Boolean.FALSE, indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
+            IndicatorsAsserts.assertEqualsInternationalString(indicatorSummaryDto.getProductionVersion().getTitle(), "es", "Título Indicator-1-v2 Educación", "en", "Title Indicator-1-v2");
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(1);
+            assertEquals(INDICATOR_2, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-2", indicatorSummaryDto.getCode());
 
-        assertEquals(INDICATOR_4, indicatorsDto.get(3).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(3).getProcStatus());
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
 
-        assertEquals(INDICATOR_5, indicatorsDto.get(4).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(4).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+            assertEquals(Boolean.FALSE, indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(2);
+            assertEquals(INDICATOR_3, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-3", indicatorSummaryDto.getCode());
 
-        assertEquals(INDICATOR_6, indicatorsDto.get(5).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(5).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("11.033", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
 
-        assertEquals(INDICATOR_7, indicatorsDto.get(6).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(6).getProcStatus());
+            assertNull(indicatorSummaryDto.getProductionVersion());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(3);
+            assertEquals(INDICATOR_4, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-4", indicatorSummaryDto.getCode());
 
-        assertEquals(INDICATOR_8, indicatorsDto.get(7).getUuid());
-        assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(7).getProcStatus());
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
 
-        assertEquals(INDICATOR_9, indicatorsDto.get(8).getUuid());
-        assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(8).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(4);
+            assertEquals(INDICATOR_5, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-5", indicatorSummaryDto.getCode());
 
-        assertEquals(INDICATOR_10, indicatorsDto.get(9).getUuid());
-        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(9).getProcStatus());
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
 
-        assertEquals(INDICATOR_11, indicatorsDto.get(10).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(10).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(5);
+            assertEquals(INDICATOR_6, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-6", indicatorSummaryDto.getCode());
+
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("2.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(6);
+            assertEquals(INDICATOR_7, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-7", indicatorSummaryDto.getCode());
+
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("2.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(7);
+            assertEquals(INDICATOR_8, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-8", indicatorSummaryDto.getCode());
+
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+
+            assertNull(indicatorSummaryDto.getProductionVersion());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(8);
+            assertEquals(INDICATOR_9, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-9", indicatorSummaryDto.getCode());
+
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
+
+            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(9);
+            assertEquals(INDICATOR_10, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-10", indicatorSummaryDto.getCode());
+
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
+
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(10);
+            assertEquals(INDICATOR_11, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-11", indicatorSummaryDto.getCode());
+
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
+
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
+        }
     }
 
     @Test
@@ -2729,30 +2816,37 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             MetamacCriteria criteria = new MetamacCriteria();
             criteria.setRestriction(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(7, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
+            assertNull(indicatorsDto.get(0).getProductionVersion());
 
             assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProductionVersion().getProcStatus());
 
             assertEquals(INDICATOR_7, indicatorsDto.get(2).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
 
             assertEquals(INDICATOR_8, indicatorsDto.get(3).getUuid());
-            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getDiffusionVersion().getProcStatus());
+            assertNull(indicatorsDto.get(3).getProductionVersion());
 
             assertEquals(INDICATOR_9, indicatorsDto.get(4).getUuid());
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(4).getProcStatus());
+            assertNull(indicatorsDto.get(4).getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(4).getProductionVersion().getProcStatus());
 
             assertEquals(INDICATOR_10, indicatorsDto.get(5).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(5).getProcStatus());
+            assertNull(indicatorsDto.get(5).getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(5).getProductionVersion().getProcStatus());
 
             assertEquals(INDICATOR_11, indicatorsDto.get(6).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(6).getProcStatus());
+            assertNull(indicatorsDto.get(6).getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(6).getProductionVersion().getProcStatus());
         }
         {
             // Retrieve with subject x and code = y or z
@@ -2768,18 +2862,21 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
+            assertNull(indicatorsDto.get(0).getProductionVersion());
 
             assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProductionVersion().getProcStatus());
 
             assertEquals(INDICATOR_9, indicatorsDto.get(2).getUuid());
-            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(2).getProcStatus());
+            assertNull(indicatorsDto.get(2).getDiffusionVersion());
+            assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(2).getProductionVersion().getProcStatus());
         }
         {
             // Retrieve by title
@@ -2789,16 +2886,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Educación", OperationType.LIKE));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProductionVersion().getProcStatus());
             assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
             assertEquals(INDICATOR_4, indicatorsDto.get(2).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
             // INDICATOR_6 and INDICATOR_7: version with title "Educación" is not last version
         }
         {
@@ -2809,16 +2906,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "EduCAción", OperationType.ILIKE));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProductionVersion().getProcStatus());
             assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
             assertEquals(INDICATOR_4, indicatorsDto.get(2).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
         }
         {
             // Retrieve by title
@@ -2828,12 +2925,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "SPAIN", OperationType.ILIKE));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(1, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_4, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(0).getProductionVersion().getProcStatus());
         }
         {
             // Retrieve by title ENGLISH
@@ -2843,12 +2940,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Education", OperationType.LIKE));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(1, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
         }
         {
             // Retrieve by title and code
@@ -2859,9 +2956,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_4, OperationType.EQ));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
             assertEquals(1, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_4, indicatorsDto.get(0).getUuid());
         }
@@ -2884,41 +2981,41 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             {
                 paginator.setFirstResult(Integer.valueOf(0));
 
-                MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+                MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
                 assertEquals(4, result.getResults().size());
                 assertEquals(Integer.valueOf(7), result.getPaginatorResult().getTotalResults());
                 assertEquals(Integer.valueOf(4), result.getPaginatorResult().getMaximumResultSize());
-                List<IndicatorDto> indicatorsDto = result.getResults();
+                List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
                 assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
 
                 assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(1).getProductionVersion().getProcStatus());
 
                 assertEquals(INDICATOR_7, indicatorsDto.get(2).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
 
                 assertEquals(INDICATOR_8, indicatorsDto.get(3).getUuid());
-                assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorsDto.get(3).getDiffusionVersion().getProcStatus());
             }
             {
                 paginator.setFirstResult(Integer.valueOf(4));
 
-                MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+                MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
                 assertEquals(3, result.getResults().size());
                 assertEquals(Integer.valueOf(7), result.getPaginatorResult().getTotalResults());
                 assertEquals(Integer.valueOf(4), result.getPaginatorResult().getMaximumResultSize());
-                List<IndicatorDto> indicatorsDto = result.getResults();
+                List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
                 assertEquals(INDICATOR_9, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(0).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorsDto.get(0).getProductionVersion().getProcStatus());
 
                 assertEquals(INDICATOR_10, indicatorsDto.get(1).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(1).getProcStatus());
-                
+                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(1).getProductionVersion().getProcStatus());
+
                 assertEquals(INDICATOR_11, indicatorsDto.get(2).getUuid());
-                assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(2).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(2).getProductionVersion().getProcStatus());
             }
         }
         {
@@ -2935,28 +3032,28 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             {
                 paginator.setFirstResult(Integer.valueOf(0));
 
-                MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+                MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
                 assertEquals(2, result.getResults().size());
                 assertEquals(Integer.valueOf(3), result.getPaginatorResult().getTotalResults());
                 assertEquals(Integer.valueOf(2), result.getPaginatorResult().getMaximumResultSize());
-                List<IndicatorDto> indicatorsDto = result.getResults();
+                List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
                 assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProductionVersion().getProcStatus());
                 assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-                assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
             }
             {
                 paginator.setFirstResult(Integer.valueOf(2));
 
-                MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
+                MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextAdministrador(), criteria);
                 assertEquals(1, result.getResults().size());
                 assertEquals(Integer.valueOf(3), result.getPaginatorResult().getTotalResults());
                 assertEquals(Integer.valueOf(2), result.getPaginatorResult().getMaximumResultSize());
-                List<IndicatorDto> indicatorsDto = result.getResults();
+                List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
                 assertEquals(INDICATOR_4, indicatorsDto.get(0).getUuid());
-                assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(0).getProcStatus());
+                assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorsDto.get(0).getProductionVersion().getProcStatus());
             }
         }
     }
@@ -2983,18 +3080,21 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     @Test
     public void testFindIndicatorsPublished() throws Exception {
 
-        MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), null);
+        MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), null);
         assertEquals(3, result.getResults().size());
-        List<IndicatorDto> indicatorsDto = result.getResults();
+        List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
         assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
+        assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorsDto.get(0).getProductionVersion().getProcStatus());
 
         assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
+        assertNull(indicatorsDto.get(1).getProductionVersion());
 
         assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
-        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getProcStatus());
+        assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
+        assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
     }
 
     @Test
@@ -3007,15 +3107,15 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjunction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.SUBJECT_CODE.name(), SUBJECT_3, OperationType.EQ));
             criteria.setRestriction(conjunction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
             assertEquals(2, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
             assertEquals(INDICATOR_3, indicatorsDto.get(0).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(0).getDiffusionVersion().getProcStatus());
 
             assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
-            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getProcStatus());
+            assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
         }
         {
             // Retrieve by title
@@ -3025,9 +3125,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             conjuction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(IndicatorCriteriaPropertyEnum.TITLE.name(), "Educación", OperationType.LIKE));
             criteria.setRestriction(conjuction);
 
-            MetamacCriteriaResult<IndicatorDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
+            MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicatorsPublished(getServiceContextAdministrador(), criteria);
             assertEquals(3, result.getResults().size());
-            List<IndicatorDto> indicatorsDto = result.getResults();
+            List<IndicatorSummaryDto> indicatorsDto = result.getResults();
             assertEquals(INDICATOR_1, indicatorsDto.get(0).getUuid());
             assertEquals(INDICATOR_3, indicatorsDto.get(1).getUuid());
             assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
