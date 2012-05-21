@@ -60,7 +60,7 @@ public class ErrorUtils extends CommonErrorUtils {
                 String code = transformMessageCode(String.valueOf(messageParameters[i]));
                 try {
                     // If parameter is translated, return the translation
-                    translatedParameters[i] = getCoreMessages().getString(code);
+                    translatedParameters[i] = getCoreMessages().getString(code) + " (" + String.valueOf(messageParameters[i]) + ")";
                 } catch (Exception e) {
                     translatedParameters[i] = String.valueOf(messageParameters[i]);
                 }
