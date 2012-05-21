@@ -3816,7 +3816,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     public void testCompareTimeGranularities() throws Exception {
 
-        // Equals
         assertTrue(TimeVariableUtils.compareTo("2012", "2012") == 0);
         assertTrue(TimeVariableUtils.compareTo("2012H2", "2012H2") == 0);
         assertTrue(TimeVariableUtils.compareTo("2012Q1", "2012Q1") == 0);
@@ -3824,23 +3823,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TimeVariableUtils.compareTo("20120102", "20120102") == 0);
         assertTrue(TimeVariableUtils.compareTo("2012W51", "2012W51") == 0);
 
-        // Less
-        assertTrue(TimeVariableUtils.compareTo("2011", "2012") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2012H1", "2012H2") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2011H2", "2012H2") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2012Q2", "2012Q3") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2011Q1", "2012Q1") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2012M01", "2012M02") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2011M01", "2012M02") < 0);
-        assertTrue(TimeVariableUtils.compareTo("20120102", "20120202") < 0);
-        assertTrue(TimeVariableUtils.compareTo("20120102", "20120103") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2012W01", "2012W51") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2011W51", "2012W51") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2011", "2012") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2012H1", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2011H2", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2012Q2", "2012Q3") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2011Q1", "2012Q1") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2012M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2011M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareTo("20120102", "20120202") > 0);
+        assertTrue(TimeVariableUtils.compareTo("20120102", "20120103") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2012W01", "2012W51") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2011W51", "2012W51") > 0);
 
-        // Greater
-        assertTrue(TimeVariableUtils.compareTo("2013", "2012") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2013H1", "2012H2") > 0);
-        assertTrue(TimeVariableUtils.compareTo("20130102", "20120103") > 0);
+        assertTrue(TimeVariableUtils.compareTo("2013", "2012") < 0);
+        assertTrue(TimeVariableUtils.compareTo("2013H1", "2012H2") < 0);
+        assertTrue(TimeVariableUtils.compareTo("20130102", "20120103") < 0);
     }
 
     @Test
