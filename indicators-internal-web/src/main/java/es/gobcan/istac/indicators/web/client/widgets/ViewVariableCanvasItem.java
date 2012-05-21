@@ -55,6 +55,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
     }
 
     public void setValue(List<DataSourceVariableDto> dataSourceVariableDtos) {
+        form.clearValues();
         if (dataSourceVariableDtos != null) {
             FormItem[] formItems = new FormItem[dataSourceVariableDtos.size()];
             for (int i = 0; i < dataSourceVariableDtos.size(); i++) {
