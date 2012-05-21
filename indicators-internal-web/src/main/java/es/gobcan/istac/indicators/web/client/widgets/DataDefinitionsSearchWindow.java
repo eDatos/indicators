@@ -32,13 +32,15 @@ public class DataDefinitionsSearchWindow extends SearchWindow {
 
         RequiredSelectItem operationCode = new RequiredSelectItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
         searchButton = new ButtonItem("search-ind", MetamacWebCommon.getConstants().search());
-        searchButton.setWidth(180);
+        searchButton.setWidth(80);
         searchButton.setAlign(Alignment.RIGHT);
 
         form.setNumCols(4);
         form.setFields(operationCode, searchButton);
 
         // ListGrid
+        
+        listGrid.setLeaveScrollbarGap(false);
 
         ListGridField name = new ListGridField(DataDefinitionDS.NAME, getConstants().dataSourceSurveyTitle());
         name.setAlign(Alignment.LEFT);

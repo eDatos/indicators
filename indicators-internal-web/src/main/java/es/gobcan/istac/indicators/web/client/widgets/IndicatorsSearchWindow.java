@@ -16,6 +16,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
@@ -36,10 +37,13 @@ public class IndicatorsSearchWindow extends SearchWindow {
         title.setWidth(180);
         searchButton = new ButtonItem("search-ind", MetamacWebCommon.getConstants().search());
         searchButton.setAlign(Alignment.RIGHT);
+        searchButton.setWidth(80);
         form.setFields(code, title, searchButton);
 
         // ListGrid
-
+        
+        listGrid.setLeaveScrollbarGap(false);
+        
         ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
@@ -62,10 +66,10 @@ public class IndicatorsSearchWindow extends SearchWindow {
         return criteria;
     }
 
-    public void setIndicatorList(List<IndicatorDto> indicators) {
+    public void setIndicatorList(List<IndicatorSummaryDto> indicators) {
         IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
         int index = 0;
-        for (IndicatorDto ind : indicators) {
+        for (IndicatorSummaryDto ind : indicators) {
             records[index++] = RecordUtils.getIndicatorRecord(ind);
         }
         listGrid.setData(records);
