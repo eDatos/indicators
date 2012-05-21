@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
@@ -20,6 +21,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -213,7 +215,8 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
-        identifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName);
+        ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
+        identifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -281,7 +284,8 @@ public class IndicatorGeneralPanel extends VLayout {
         title.setRequired(true);
         MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
-        identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName);
+        ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
+        identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
 
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -360,6 +364,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
         identifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
+        identifiersForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
 
         // Content Classifiers
         contentClassifiersForm.setValue(IndicatorDS.SUBJECT_CODE, indicatorDto.getSubjectCode());
@@ -393,7 +398,6 @@ public class IndicatorGeneralPanel extends VLayout {
         // Annotations
         ((ViewMultiLanguageTextAndUrlItem) annotationsForm.getItem(IndicatorDS.NOTES)).setValue(indicatorDto.getNotes(), indicatorDto.getNotesUrl());
         ((ViewMultiLanguageTextAndUrlItem) annotationsForm.getItem(IndicatorDS.COMMENTS)).setValue(indicatorDto.getComments(), indicatorDto.getCommentsUrl());
-
     }
 
     private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
@@ -405,6 +409,7 @@ public class IndicatorGeneralPanel extends VLayout {
         identifiersEditionForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
         identifiersEditionForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
         identifiersEditionForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
+        identifiersEditionForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
 
         // Content Classifiers
         contentClassifiersEditionForm.setValue(IndicatorDS.SUBJECT, indicatorDto.getSubjectCode());
@@ -523,6 +528,12 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setIndicatorQuantityIndicatorBase(IndicatorDto indicator) {
         quantityForm.setIndicatorQuantityIndicatorBase(indicator);
         quantityEditionForm.setIndicatorQuantityIndicatorBase(indicator);
+    }
+
+    private FormItemIcon getNeedsUpdateIcon(Boolean needsUpdate) {
+        FormItemIcon icon = new FormItemIcon();
+        icon.setSrc(needsUpdate ? GlobalResources.RESOURCE.errorSmart().getURL() : GlobalResources.RESOURCE.success().getURL());
+        return icon;
     }
 
 }
