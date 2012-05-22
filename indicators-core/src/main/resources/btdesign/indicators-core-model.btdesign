@@ -1124,7 +1124,6 @@ Application Indicators {
 	    
 	    "Dto for indicator"
 	   	DataTransferObject IndicatorDto extends @AuditDto {
-			gap
 			"Unique uuid"
 			String uuid;
 			"Version number of this indicator version"	
@@ -1165,6 +1164,8 @@ Application Indicators {
 			Boolean needsUpdate;
 			"Indicates whether data is inconsistent with the indicator definition"
 			Boolean inconsistentData;
+       		"Needs be populated"
+			Boolean needsBePopulated;
        		"Identifier in repository of observations"
        		String dataRepositoryId;       		
        		"Table name in repository of observations"
@@ -1216,6 +1217,8 @@ Application Indicators {
        		- @InternationalStringDto title;
 			"Indicates whether needs update its data or not"
 			Boolean needsUpdate;
+			"Needs be populated"
+			Boolean needsBePopulated;
 	    }
 
 	    "Dto for dimension"

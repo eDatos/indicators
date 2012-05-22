@@ -59,6 +59,7 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 
 @Component
 public class Do2DtoMapperImpl implements Do2DtoMapper {
@@ -186,6 +187,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         }
 
         target.setNeedsUpdate(source.getNeedsUpdate());
+        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
         target.setInconsistentData(source.getInconsistentData());
         target.setDataRepositoryId(source.getDataRepositoryId());
         target.setDataRepositoryTableName(source.getDataRepositoryTableName());
@@ -418,6 +420,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setProcStatus(source.getProcStatus());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setNeedsUpdate(source.getNeedsUpdate());
+        target.setNeedsBePopulated(IndicatorUtils.isIndicatorNeedsBePopulated(source.getDataRepositoryId(), source.getNeedsUpdate(), source.getInconsistentData()));
         return target;
     }
 

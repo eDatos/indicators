@@ -13,7 +13,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
  * Index: extends Rate
  * Change Rate: extends Rate
  */
-public class IndicatorUtils  {
+public class IndicatorUtils {
 
     public static Boolean isQuantityOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.QUANTITY.equals(type);
@@ -22,11 +22,11 @@ public class IndicatorUtils  {
     public static Boolean isAmountOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.AMOUNT.equals(type);
     }
-    
+
     public static Boolean isMagnitudeOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.MAGNITUDE.equals(type) || isFractionOrExtension(type);
     }
-    
+
     public static Boolean isFractionOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.FRACTION.equals(type) || isRatioOrExtension(type);
     }
@@ -45,5 +45,12 @@ public class IndicatorUtils  {
 
     public static Boolean isChangeRateOrExtension(QuantityTypeEnum type) {
         return QuantityTypeEnum.CHANGE_RATE.equals(type);
+    }
+
+    public static Boolean isIndicatorNeedsBePopulated(String dataRepositoryId, Boolean needsUpdate, Boolean inconsistentData) {
+        boolean recentlyCreated = dataRepositoryId == null;
+        boolean updateHasFailed = needsUpdate;
+        boolean modifiedAfterPopulate = inconsistentData;
+        return recentlyCreated || updateHasFailed || modifiedAfterPopulate;
     }
 }
