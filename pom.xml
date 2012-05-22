@@ -15,9 +15,9 @@
     <name>INDICATORS</name>
 
     <scm>
-        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</connection>
-        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</developerConnection>
-        <url>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/indicators/trunk/</url>
+        <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</connection>
+        <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/indicators/trunk/</developerConnection>
+        <url>http://svn.arte-consultores.com/viewvc/arte/istac/indicators/trunk/</url>
     </scm>
 
     <modules>
