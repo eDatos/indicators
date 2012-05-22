@@ -66,6 +66,7 @@ import es.gobcan.istac.indicators.web.client.widgets.RateDerivationForm;
 import es.gobcan.istac.indicators.web.client.widgets.VariableCanvasItem;
 import es.gobcan.istac.indicators.web.client.widgets.ViewDataSourceGeneralForm;
 import es.gobcan.istac.indicators.web.client.widgets.ViewRateDerivationForm;
+import es.gobcan.istac.indicators.web.client.widgets.ViewVariableCanvasItem;
 
 public class DataSourcesPanel extends VLayout {
 
@@ -587,7 +588,9 @@ public class DataSourcesPanel extends VLayout {
         // Variables and categories
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(dataStructureDto);
-
+        ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
+        ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(dataSourceDto.getOtherVariables(), dataStructureDto);
+        
         redrawForms();
     }
 

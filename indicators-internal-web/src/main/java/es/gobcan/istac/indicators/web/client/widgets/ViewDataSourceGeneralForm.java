@@ -115,7 +115,8 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         }
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
-        ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
+        // Other variables set in setVariablesAndCategories method in ViewVariableCanvasItem
+        // ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
     }
 
     public void setUiHandlers(IndicatorUiHandler uiHandlers) {

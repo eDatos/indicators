@@ -10,6 +10,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
+import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 
 public class ViewVariableCanvasItem extends CustomCanvasItem {
 
@@ -54,13 +55,20 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         return true;
     }
 
-    public void setValue(List<DataSourceVariableDto> dataSourceVariableDtos) {
+    public void setVariablesAndCategories(List<DataSourceVariableDto> dataSourceVariableDtos, DataStructureDto dataStructureDto) {
         form.clearValues();
         if (dataSourceVariableDtos != null) {
             FormItem[] formItems = new FormItem[dataSourceVariableDtos.size()];
             for (int i = 0; i < dataSourceVariableDtos.size(); i++) {
                 ViewTextItem item = new ViewTextItem("variable" + i, dataSourceVariableDtos.get(i).getVariable());
-                item.setValue(dataSourceVariableDtos.get(i).getCategory());
+                List<String> codes = dataStructureDto.getValueCodes().get(dataSourceVariableDtos.get(i).getVariable());
+                List<String> labels = dataStructureDto.getValueLabels().get(dataSourceVariableDtos.get(i).getVariable());
+                for (int j = 0; j < codes.size(); j++) {
+                    if (codes.get(j).equals(dataSourceVariableDtos.get(i).getCategory())) {
+                        item.setValue(dataSourceVariableDtos.get(i).getCategory() + " - " + labels.get(j));
+                        break;
+                    }
+                }
                 formItems[i] = item;
             }
             form.setFields(formItems);
