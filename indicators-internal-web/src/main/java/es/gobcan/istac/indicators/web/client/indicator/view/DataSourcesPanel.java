@@ -15,6 +15,7 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.LocaleMock;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
@@ -50,6 +51,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
@@ -110,16 +112,25 @@ public class DataSourcesPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                // Clear all query dependent fields
-                clearAllQueryValues();
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())
+                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())) {
+                    // Create a new version of the indicator
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
+                    window.show();
+                } else {
+                    // Default behavior
 
-                dataSourceDto = new DataSourceDto();
-                dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
-                dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
-                dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
-                dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+                    // Clear all query dependent fields
+                    clearAllQueryValues();
 
-                selectDataSource(dataSourceDto);
+                    dataSourceDto = new DataSourceDto();
+                    dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
+                    dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
+                    dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
+                    dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+
+                    selectDataSource(dataSourceDto);
+                }
             }
         });
         toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource() ? Visibility.VISIBLE : Visibility.HIDDEN);
@@ -164,6 +175,23 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout = new DataSourceMainFormLayout(ClientSecurityUtils.canEditDataSource());
         mainFormLayout.setTitleLabelContents(getConstants().dataSource());
         mainFormLayout.setVisibility(Visibility.HIDDEN);
+
+        // Edit: Add a custom handler to check indicator status before start editing
+        mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())
+                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())) {
+                    // Create a new version of the indicator
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
+                    window.show();
+                } else {
+                    // Default behavior
+                    mainFormLayout.setEditionMode();
+                }
+            }
+        });
 
         mainFormLayout.getEditToolStripButton().addClickHandler(new ClickHandler() {
 
