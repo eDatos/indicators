@@ -100,11 +100,12 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         setValue(DataSourceDS.SOURCE_SURVEY_URL, dataSourceDto.getSourceSurveyUrl());
         setValue(DataSourceDS.PUBLISHERS, CommonWebUtils.getStringListToString(dataSourceDto.getPublishers()));
 
-        if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
-            setValue(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceObsValue());
-        } else {
-            setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
-        }
+        // ABSOLUTE_METHOD set in setDataStructure method in DataSourcesPanel
+        // if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
+        // setValue(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceObsValue());
+        // } else {
+        // setValue(DataSourceDS.ABSOLUTE_METHOD, dataSourceDto.getAbsoluteMethod());
+        // }
 
         setValue(DataSourceDS.TIME_VARIABLE, dataSourceDto.getTimeVariable());
         setValue(DataSourceDS.TIME_VALUE, dataSourceDto.getTimeValue());
@@ -115,7 +116,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
         }
         setValue(DataSourceDS.MEASURE_VARIABLE, ""); // Set in setMeasureVariable method
 
-        // Other variables set in setVariablesAndCategories method in ViewVariableCanvasItem
+        // OTHER_VARIABLES set in setVariablesAndCategories method in ViewVariableCanvasItem
         // ((ViewVariableCanvasItem) getItem(DataSourceDS.OTHER_VARIABLES)).setValue(dataSourceDto.getOtherVariables());
     }
 

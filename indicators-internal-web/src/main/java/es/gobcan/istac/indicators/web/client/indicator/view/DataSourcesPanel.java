@@ -544,6 +544,20 @@ public class DataSourcesPanel extends VLayout {
     public void setDataStructure(DataStructureDto dataStructureDto) {
         this.dataStructureDto = dataStructureDto;
 
+        // Absolute method
+        if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
+            generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(getConstants().dataSourceObsValue());
+        } else {
+            List<String> codes = dataStructureDto.getValueCodes().get(dataStructureDto.getContVariable());
+            List<String> labels = dataStructureDto.getValueLabels().get(dataStructureDto.getContVariable());
+            for (int i = 0; i < codes.size(); i++) {
+                if (codes.get(i).equals(dataSourceDto.getAbsoluteMethod())) {
+                    generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
+                    break;
+                }
+            }
+        }
+
         // Source survey code
         generalEditionForm.setValue(DataSourceDS.SOURCE_SURVEY_CODE, dataStructureDto.getSurveyCode());
 
@@ -590,7 +604,7 @@ public class DataSourcesPanel extends VLayout {
         ((VariableCanvasItem) generalEditionForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(dataStructureDto);
         ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).clearValue();
         ((ViewVariableCanvasItem) generalForm.getItem(DataSourceDS.OTHER_VARIABLES)).setVariablesAndCategories(dataSourceDto.getOtherVariables(), dataStructureDto);
-        
+
         redrawForms();
     }
 
