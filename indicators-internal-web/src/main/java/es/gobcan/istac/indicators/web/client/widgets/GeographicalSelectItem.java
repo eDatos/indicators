@@ -30,8 +30,8 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
     public void setRequired(boolean required) {
         setTitleStyle("requiredFormLabel");
-        geoGranularitItem.setRequired(true);
-        geoValueItem.setRequired(true);
+        geoGranularitItem.setRequired(required);
+        geoValueItem.setRequired(required);
     }
 
     public void setGeoGranularitiesValueMap(LinkedHashMap<String, String> map) {
@@ -75,7 +75,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
     @Override
     public Boolean validate() {
-        return super.validate();
+        return validateItem();
     }
 
 }
