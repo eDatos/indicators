@@ -19,6 +19,7 @@ import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
 import es.gobcan.istac.indicators.web.client.widgets.LinksHead;
+import es.gobcan.istac.indicators.web.client.widgets.VersionFooter;
 
 public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainView {
 
@@ -61,6 +62,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         footerLayout = new HLayout();
         footerLayout.addMember(successMessagePanel);
         footerLayout.addMember(errorMessagePanel);
+        footerLayout.addMember(new VersionFooter());
 
         panel.addMember(northLayout);
         panel.addMember(southLayout);
