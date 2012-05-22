@@ -131,7 +131,8 @@
         var templateManager = new TemplateManager();
         templateManager.loadTemplatesInPage();
 
-        var istacUrl = "[@spring.url ""/]";
+        var apiBaseUrl = "[@spring.url ""/]";
+        var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
     </script>
 
     <!-- Modelos -->

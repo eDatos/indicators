@@ -14,6 +14,7 @@ var WidgetPreviewView = Backbone.View.extend({
         }
         var widgetOptions = this.model.toJSON();
         widgetOptions.el = this.el;
+        widgetOptions.url = apiBaseUrl;
         this.widget = new IstacWidget(widgetOptions);
     },
 
@@ -22,9 +23,10 @@ var WidgetPreviewView = Backbone.View.extend({
         this.model.on('change:title', function(model, title){
             this.widget.setTitle(title);
         }, this);
-        this.model.on('change:width', function(model, width){
+        this.model.on('change:width', _.debounce(function(model, width){
             this.widget.setWidth(width);
-        }, this);
+            this.widget.render();
+        }, 500), this);
         this.model.on('change:borderColor', function(model, borderColor){
             this.widget.setBorderColor(borderColor);
         }, this);

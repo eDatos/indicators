@@ -1,0 +1,9 @@
+load:
+  - ../lib/jasmine.js
+  - ../lib/JasmineAdapter.js
+
+  - ../../../main/webapp/theme/js/widgets/libs/jquery-1.7.1.js
+  - ../../../main/webapp/theme/js/widgets/libs/raphael-min.js
+  - ../../../main/webapp/theme/js/widgets/libs/elycharts.min.js
+  - ../../../main/webapp/theme/js/widgets/widget.js
+  - ../spec/WidgetSpec.js

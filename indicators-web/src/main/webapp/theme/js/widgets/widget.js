@@ -4,21 +4,11 @@
 ;
 (function(undefined){
 
-    var istacHost;
-
-    if(typeof(istacUrl) === 'undefined'){
-        throw  "istacUrl not defined";
-    }else{
-        var getLocation = function(href) {
-            var l = document.createElement("a");
-            l.href = href;
-            return l;
-        };
-        istacHost = getLocation(istacUrl).host;
-    }
-
-    if(typeof(apiContext) === 'undefined'){
-        apiContext = istacUrl + "/api/indicators/v1.0";
+    function getHost(url){
+        var l = document.createElement("a"),
+            host;
+        l.href = url;
+        return l.host;
     }
 
     var _getKeys = function(hash){
@@ -30,6 +20,26 @@
         }
         return keys;
     };
+
+    var _firstKey = function(hash){
+        var key;
+        for (var i in hash) {
+            if (hash.hasOwnProperty(i)) {
+                key = i;
+                break;
+            }
+        }
+        return key;
+    };
+
+    var _firstValue = function(hash){
+        var key = _firstKey(hash);
+        var result;
+        if(key){
+            result = hash[key];
+        }
+        return result;
+    }
 
     /* Simple JavaScript Inheritance
      * By John Resig http://ejohn.org/
@@ -100,9 +110,10 @@
 
         _cache : [],
 
-        init : function(){
+        init : function(apiUrl){
             this.data = {}
             this.structure = {};
+            this.apiUrl = apiUrl;
         },
 
         fetch : function(systemid, indicatorid, callback){
@@ -181,6 +192,21 @@
             return null;
         },
 
+        _getTitles : function(data, locale){
+            var result = {};
+            if(data){
+                for(var i = 0; i < data.length; i++){
+                    var valor = data[i];
+                    if(valor.title[locale]){
+                        result[valor.code] = valor.title[locale];
+                    }else{
+                        result[valor.code] = _firstValue(valor.title);
+                    }
+                }
+            }
+            return result;
+        },
+
         getTimeValues : function(){
             var timeValues;
             if(this.data.dimension){
@@ -190,11 +216,27 @@
             return [];
         },
 
+        getTimeValuesTitles : function(locale){
+            if(this.structure.dimension){
+                return this._getTitles(this.structure.dimension.TIME.representation, locale);
+            }else{
+                return [];
+            }
+        },
+
         getGeographicalValues : function(){
             if(this.data.dimension){
                 return _getKeys(this.data.dimension.GEOGRAPHICAL.representation.index);
             }
             return [];
+        },
+
+        getGeographicalValuesTitles : function(locale){
+            if(this.structure.dimension){
+                return this._getTitles(this.structure.dimension.GEOGRAPHICAL.representation, locale);
+            }else{
+                return [];
+            }
         },
 
         getLastTimeValue : function(){
@@ -236,8 +278,8 @@
 
         _getDatasetFromApi : function(systemid, indicatorid, callback){
             var self = this;
-            //TODO esto van a tener que ser peticiones JSONP?
-            var indicatorUrl = apiContext + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
+
+            var indicatorUrl = this.apiUrl + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
             var indicatorDataUrl = indicatorUrl + "/data";
 
             var requestStructure = $.ajax({
@@ -287,11 +329,17 @@
             options = options || defaultOptions;
             this.el = $(options.el);
 
-            //TODO indicator data from webservice
             this.systemId = options.systemId;
             this.indicators = options.indicators || [];
             this.measures = options.measures || this._defaultOptions.measures;
             this.geographicalValues = options.geographicalValues;
+
+            // urls
+            this.url = options.url || "";
+            this.apiUrl = this.url + "/api/indicators/v1.0";
+
+            // locale
+            this.locale = options.locale || "es";
 
             //Create containers
             //TODO empty the container
@@ -305,14 +353,13 @@
                 this.includeLogo();
             }
 
-            //Initialize style
+            // Initialize style
             this.setTextColor(options.textColor);
             this.setBorderColor(options.borderColor);
             this.setTitle(options.title);
             this.setWidth(options.width);
 
-            //Render the table content
-            this.render();
+
         },
 
         setTextColor : function(textColor){
@@ -369,11 +416,12 @@
         },
 
         isIstacDomain : function(){
-            return window.location.host === istacHost;
+            var result = window.location.host === getHost(this.url);
+            return result;
         },
 
         includeLogo : function(){
-            this.el.append('<div class="istact-widget-footer"><a href="' + istacUrl + '">Widget facilitado por el ISTAC</a></div>');
+            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '">Widget facilitado por el ISTAC</a></div>');
         }
     });
 
@@ -384,15 +432,20 @@
 
         setWidth : function(width){
             this._super(width);
-            this.render();
+            //this.render();
         },
 
         parse : function(dataset){
             var self = this;
+
+            var locale = this.locale;
+
             var measureValue = this.measures[0];
             var timeValues = dataset.getTimeValues();
-
+            var timeValuesTitles = dataset.getTimeValuesTitles(locale);
             var geographicalValues = this.geographicalValues;
+            var geographicalValuesTitles = dataset.getGeographicalValuesTitles(locale);
+
 
             var legend = {};
             var values = {};
@@ -400,38 +453,88 @@
             for (var i = 0; i < geographicalValues.length; i++) {
                 var serie = 'serie' + i;
                 var geoValue = geographicalValues[i];
-                legend[serie] = geoValue;
-                tooltips[serie] = timeValues;
+                var geoValueTitle = geographicalValuesTitles[geoValue];
 
                 var data = [];
+                var tooltip = [];
                 for (var j = 0; j < timeValues.length; j++) {
                     var timeValue = timeValues[j];
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     data.push(value);
+                    tooltip.push(geoValueTitle + " - " + timeValuesTitles[timeValue] + " - " + value);
                 }
-                values[serie] = data;
-            }
-            ;
 
-            self.renderChart({
-                labels : timeValues,
+                legend[serie] = geoValueTitle;
+                values[serie] = data;
+                tooltips[serie] = tooltip;
+            };
+
+            //limit the number of labels (eje x)
+            var totalLabels = 5;
+            var division = Math.floor(timeValues.length / totalLabels);
+            var labels = [];
+            for(var i = 0; i < timeValues.length; i++){
+                if(i % division === 0){
+                    var timeValue = timeValues[i];
+                    labels.push(timeValuesTitles[timeValue]);
+                }else{
+                    labels.push('');
+                }
+            }
+
+            var chartData = {
+                labels : labels,
                 values : values,
                 legend : legend,
                 tooltips : tooltips
-            });
+            };
+            return chartData;
         },
 
         render : function(){
             var self = this;
-            var dataset = new Dataset();
+            var dataset = new Dataset(this.apiUrl);
 
 
             var indicatorId = self.indicators[0];
             var systemId = self.systemId;
 
             dataset.fetch(systemId, indicatorId,function(){
-                self.parse(dataset);
+                var chartData = self.parse(dataset);
+                self.renderChart(chartData);
             });
+        },
+
+        chartColors : function(chartData){
+            var seriesLength = chartData.tooltips.length;
+
+            var result = {
+                serie0 : {
+                    color : "#4F81BD"
+                },
+                serie1 : {
+                    color : "#FFC000"
+                },
+                serie2 : {
+                    color : "#92D050"
+                },
+                serie3 : {
+                    color : "#F79646"
+                },
+                serie4 : {
+                    color : "#C00000"
+                },
+                serie5 : {
+                    color : "#8064A2"
+                },
+                serie6 : {
+                    color : "#808080"
+                },
+                serie7 :{
+                    color : "#00B0F0"
+                }
+            };
+            return result;
         },
 
         renderChart : function(chartData){
@@ -441,34 +544,39 @@
             this.contentContainer.html($chartContainer);
 
             var width = this.width;
-            var legendWith = 80;
+            var legendWith = 100;
             var legendMargin = 20;
 
             var renderData = chartData;
 
+            var colors = this.chartColors(chartData);
+
             $chartContainer.chart({
                 type : "line",
-                margins : [10, 10, 20, 50],
+                margins : [20, 20, 40, 50],
                 defaultSeries : {
                     plotProps : {
-                        "stroke-width" : 4
+                        "stroke-width" : 1
                     },
-                    dot : true,
+                    dot : false,
                     dotProps : {
                         stroke : "white",
                         "stroke-width" : 2
-                    }
-                },
-                series : {
-                    serie0 : {
-                        color : "#3478B0"
                     },
-                    serie1 : {
-                        color : "#EBCC5C"
+                    tooltip : {
+                        active : true,
+                        width: 200, height: 50,
+                        roundedCorners: 5,
+                        padding: [6, 6] /* y, x */,
+                        offset: [20, 0] /* y, x */,
+                        frameProps : { fill: "white", "stroke-width": 1 },
+                        contentStyle : { "font-family": "Arial", "font-size": "12px", "line-height": "16px", color: "black" }
                     }
                 },
+                series : colors,
                 defaultAxis : {
-                    labels : true
+                    labels : true,
+                    labelsDistance: 20
                 },
                 features : {
                     grid : {
@@ -480,7 +588,7 @@
                     legend : {
                         horizontal : false,
                         width : legendWith,
-                        height : 50,
+                        height : 100,
                         x : width - legendWith - legendMargin,
                         y : 220,
                         dotType : "circle",
@@ -505,7 +613,6 @@
             });
         }
     });
-
 
     var measuresLabels = {
         'ABSOLUTE' : 'Absoluto',
@@ -551,7 +658,7 @@
 
             var indicators = self.indicators;
             for(var i = 0; i < indicators.length; i++){
-                var dataset = new Dataset();
+                var dataset = new Dataset(this.apiUrl);
                 var request = dataset.fetch(systemId, indicators[i]);
                 datasets.push(dataset);
                 requests.push(request);
@@ -605,15 +712,6 @@
         }
     });
 
-    var Factory = function(options){
-        options = options || {};
-        if (options.type === 'temporal') {
-            return new Temporal(options);
-        } else {
-            return new LastData(options);
-        }
-    };
-
     var loadCSS = function(cssId, url){
         var doc = document;
         if (!doc.getElementById(cssId)) {
@@ -637,12 +735,36 @@
         }
     }
 
-    loadCSS('istac-widget-css', istacUrl + '/theme/css/widgets.css');
-    loadJS(!window.jQuery, istacUrl + '/theme/js/widgets/libs/jquery-1.7.1.js');
-    loadJS(!window.Raphael, istacUrl + '/theme/js/widgets/libs/raphael-min.js');
-    loadJS(!(window.jQuery && window.jQuery.elycharts), istacUrl + '/theme/js/widgets/libs/elycharts.min.js');
+    var loadResources = function(url){
+        loadCSS('istac-widget-css', url + '/theme/css/widgets.css');
+        loadJS(!window.jQuery, url + '/theme/js/widgets/libs/jquery-1.7.1.js');
+        loadJS(!window.Raphael, url + '/theme/js/widgets/libs/raphael-min.js');
+        loadJS(!(window.jQuery && window.jQuery.elycharts), url + '/theme/js/widgets/libs/elycharts.min.js');
+    }
+
+    var Factory = function(options){
+        options = options || {};
+
+        if(options.url){
+            loadResources(options.url);
+            var widget;
+            if (options.type === 'temporal') {
+                widget = new Temporal(options);
+
+            } else {
+                widget = new LastData(options);
+            }
+            widget.render();
+            return widget;
+        }else{
+            $(options.el).text("Error, no se ha especificado la url del servicio web");
+        }
+    };
+
 
     //Export ClosureCompiler style
+    window['IstacWidgetTemporal'] = Temporal;
+    window['IstacWidgetLastData'] = LastData;
     window['IstacWidget'] = Factory;
     window['IstacDataset'] = Dataset;
 })();
