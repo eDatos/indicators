@@ -98,4 +98,12 @@ public class IndicatorRecord extends Record {
         setAttribute(IndicatorDS.VERSION_NUMBER_DIFF, value);
     }
 
+    public void setIndicatorDto(Object indicatorDto) {
+        setAttribute(IndicatorDS.DTO, indicatorDto);
+    }
+
+    public Object getIndicatorDto() {
+        return getAttributeAsObject(IndicatorDS.DTO);
+    }
+    
 }

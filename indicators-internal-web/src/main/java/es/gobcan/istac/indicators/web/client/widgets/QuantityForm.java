@@ -325,11 +325,11 @@ public class QuantityForm extends BaseQuantityForm {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-                        IndicatorDto indicatorDto = indicatorDenominatorSearchWindow.getSelectedIndicator();
+                        IndicatorSummaryDto indicatorSummaryDto = indicatorDenominatorSearchWindow.getSelectedIndicator();
                         indicatorDenominatorSearchWindow.destroy();
-                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, indicatorSummaryDto != null ? indicatorSummaryDto.getUuid() : new String());
                         QuantityForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT,
-                                indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()) : new String());
+                                indicatorSummaryDto != null ? CommonUtils.getIndicatorText(indicatorSummaryDto.getCode(), CommonUtils.getIndicatorTitle(indicatorSummaryDto)) : new String());
                         QuantityForm.this.getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).validate();
                     }
                 });
@@ -370,12 +370,11 @@ public class QuantityForm extends BaseQuantityForm {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-                        IndicatorDto indicatorDto = indicatorNumeratorSearchWindow.getSelectedIndicator();
+                        IndicatorSummaryDto indicatorSummaryDto = indicatorNumeratorSearchWindow.getSelectedIndicator();
                         indicatorNumeratorSearchWindow.destroy();
-                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
-                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, indicatorDto != null
-                                ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle())
-                                : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, indicatorSummaryDto != null ? indicatorSummaryDto.getUuid() : new String());
+                        QuantityForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT,
+                                indicatorSummaryDto != null ? CommonUtils.getIndicatorText(indicatorSummaryDto.getCode(), CommonUtils.getIndicatorTitle(indicatorSummaryDto)) : new String());
                         QuantityForm.this.getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).validate();
                     }
                 });
@@ -417,11 +416,11 @@ public class QuantityForm extends BaseQuantityForm {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-                        IndicatorDto indicatorDto = indicatorBaseSearchWindow.getSelectedIndicator();
+                        IndicatorSummaryDto indicatorDto = indicatorBaseSearchWindow.getSelectedIndicator();
                         indicatorBaseSearchWindow.destroy();
                         QuantityForm.this.setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
                         QuantityForm.this.setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT,
-                                indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()) : new String());
+                                indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), CommonUtils.getIndicatorTitle(indicatorDto)) : new String());
                         QuantityForm.this.getItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT).validate();
                     }
                 });

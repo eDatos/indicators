@@ -258,3 +258,7 @@ a:HOVER {
   cursor: default;
 }
 
+.footerPanel {
+    background-color: #FFEDA8 !important;
+}
+

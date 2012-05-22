@@ -798,7 +798,7 @@ public class SystemStructurePanel extends HLayout {
 
         private List<GeographicalGranularityDto> geographicalGranularityDtos;
 
-        private IndicatorDto                     selectedIndicator;
+        private IndicatorSummaryDto              selectedIndicator;
 
         private IndicatorsSearchWindow           indicatorsSearchWindow;
 
@@ -1182,7 +1182,8 @@ public class SystemStructurePanel extends HLayout {
                         String geographicalGranularityUuid = event.getValue().toString();
                         if (creationForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(creationForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
                             if (selectedIndicator != null) {
-                                uiHandlers.retrieveGeographicalValuesWithGranularityInIndicator(selectedIndicator.getUuid(), selectedIndicator.getVersionNumber(), geographicalGranularityUuid);
+                                uiHandlers.retrieveGeographicalValuesWithGranularityInIndicator(selectedIndicator.getUuid(), CommonUtils.getIndicatorVersionNumber(selectedIndicator),
+                                        geographicalGranularityUuid);
                             }
                         }
                     }
@@ -1394,23 +1395,24 @@ public class SystemStructurePanel extends HLayout {
 
                         @Override
                         public void onClick(ClickEvent event) {
-                            IndicatorDto indicatorDto = indicatorsSearchWindow.getSelectedIndicator();
-                            IndicatorInstancePanel.this.selectedIndicator = indicatorDto;
+                            IndicatorSummaryDto indicatorSummaryDto = indicatorsSearchWindow.getSelectedIndicator();
+                            IndicatorInstancePanel.this.selectedIndicator = indicatorSummaryDto;
                             indicatorsSearchWindow.destroy();
-                            creationForm.setValue(IndicatorInstanceDS.IND_UUID, indicatorDto != null ? indicatorDto.getUuid() : new String());
-                            creationForm.setValue(IndicatorInstanceDS.IND_TEXT, indicatorDto != null ? CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()) : new String());
+                            creationForm.setValue(IndicatorInstanceDS.IND_UUID, indicatorSummaryDto != null ? indicatorSummaryDto.getUuid() : new String());
+                            creationForm.setValue(IndicatorInstanceDS.IND_TEXT,
+                                    indicatorSummaryDto != null ? CommonUtils.getIndicatorText(indicatorSummaryDto.getCode(), CommonUtils.getIndicatorTitle(indicatorSummaryDto)) : new String());
                             creationForm.getItem(IndicatorInstanceDS.IND_TEXT).validate();
 
                             // indicatorText.setShowIcons(Boolean.FALSE); // Hide warning population data icon
-                            if (!StringUtils.isBlank(indicatorDto.getUuid())) {
+                            if (!StringUtils.isBlank(indicatorSummaryDto.getUuid())) {
                                 // Check if it is necessary to populate indicators data
                                 // if (indicatorDto.needsBePopulated()) {
                                 // indicatorText.setShowIcons(Boolean.TRUE);
                                 // }
                                 // Load indicators temporal and geographical granularities and values
-                                uiHandlers.retrieveTimeGranularitiesInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-                                uiHandlers.retrieveTimeValuesInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-                                uiHandlers.retrieveGeographicalGranularitiesInIndicator(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+                                uiHandlers.retrieveTimeGranularitiesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
+                                uiHandlers.retrieveTimeValuesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
+                                uiHandlers.retrieveGeographicalGranularitiesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
                             }
                             creationForm.markForRedraw();
                         }

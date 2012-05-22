@@ -578,10 +578,12 @@ public class DataSourcesPanel extends VLayout {
         } else {
             List<String> codes = dataStructureDto.getValueCodes().get(dataStructureDto.getContVariable());
             List<String> labels = dataStructureDto.getValueLabels().get(dataStructureDto.getContVariable());
-            for (int i = 0; i < codes.size(); i++) {
-                if (codes.get(i).equals(dataSourceDto.getAbsoluteMethod())) {
-                    generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
-                    break;
+            if (codes != null) {
+                for (int i = 0; i < codes.size(); i++) {
+                    if (codes.get(i).equals(dataSourceDto.getAbsoluteMethod())) {
+                        generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
+                        break;
+                    }
                 }
             }
         }

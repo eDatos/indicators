@@ -18,6 +18,7 @@ import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
@@ -241,4 +242,20 @@ public class CommonUtils {
         return indicatorCode + " - " + InternationalStringUtils.getLocalisedString(indicatorTitle);
     }
 
+    public static InternationalStringDto getIndicatorTitle(IndicatorSummaryDto indicatorSummaryDto) {
+        if (indicatorSummaryDto.getDiffusionVersion() != null && indicatorSummaryDto.getProductionVersion() == null) {
+            return indicatorSummaryDto.getDiffusionVersion().getTitle();
+        } else {
+            return indicatorSummaryDto.getProductionVersion().getTitle();
+        }
+    }
+
+    public static String getIndicatorVersionNumber(IndicatorSummaryDto indicatorSummaryDto) {
+        if (indicatorSummaryDto.getDiffusionVersion() != null && indicatorSummaryDto.getProductionVersion() == null) {
+            return indicatorSummaryDto.getDiffusionVersion().getVersionNumber();
+        } else {
+            return indicatorSummaryDto.getProductionVersion().getVersionNumber();
+        }
+    }
+    
 }

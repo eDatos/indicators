@@ -15,7 +15,6 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
@@ -41,9 +40,9 @@ public class IndicatorsSearchWindow extends SearchWindow {
         form.setFields(code, title, searchButton);
 
         // ListGrid
-        
+
         listGrid.setLeaveScrollbarGap(false);
-        
+
         ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
         ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
@@ -75,13 +74,15 @@ public class IndicatorsSearchWindow extends SearchWindow {
         listGrid.setData(records);
     }
 
-    public IndicatorDto getSelectedIndicator() {
+    public IndicatorSummaryDto getSelectedIndicator() {
         ListGridRecord record = listGrid.getSelectedRecord();
         if (record != null && record.getAttributeAsObject(IndicatorDS.DTO) != null) {
-            IndicatorDto indicatorDto = (IndicatorDto) record.getAttributeAsObject(IndicatorDS.DTO);
-            return indicatorDto;
+            if (record.getAttributeAsObject(IndicatorDS.DTO) instanceof IndicatorSummaryDto) {
+                IndicatorSummaryDto indicatorSummaryDto = (IndicatorSummaryDto) record.getAttributeAsObject(IndicatorDS.DTO);
+                return indicatorSummaryDto;
+            }
         }
-        return new IndicatorDto();
+        return new IndicatorSummaryDto();
     }
 
 }
