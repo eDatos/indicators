@@ -23,15 +23,18 @@ public class IndicatorSystemRecord extends Record {
         setUuid(indicatorsSystemDtoWeb.getUuid());
         setCode(indicatorsSystemDtoWeb.getCode());
         setTitle(getLocalisedString(indicatorsSystemDtoWeb.getTitle()));
-        // Production version
-        if (indicatorsSystemDtoWeb.getProductionVersion() != null) {
-            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getProductionVersion().getProcStatus()));
-            setVersionNumber(indicatorsSystemDtoWeb.getProductionVersion().getVersionNumber());
-        }
         // Diffusion version
         if (indicatorsSystemDtoWeb.getDiffusionVersion() != null) {
             setDiffusionProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
             setDiffusionVersionNumber(indicatorsSystemDtoWeb.getDiffusionVersion().getVersionNumber());
+            // Force to show diffusion version as production version (if there is a production version, these values will be overwritten)
+            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getDiffusionVersion().getProcStatus()));
+            setVersionNumber(indicatorsSystemDtoWeb.getDiffusionVersion().getVersionNumber());
+        }
+        // Production version
+        if (indicatorsSystemDtoWeb.getProductionVersion() != null) {
+            setProcStatus(CommonUtils.getIndicatorSystemProcStatus(indicatorsSystemDtoWeb.getProductionVersion().getProcStatus()));
+            setVersionNumber(indicatorsSystemDtoWeb.getProductionVersion().getVersionNumber());
         }
     }
 
