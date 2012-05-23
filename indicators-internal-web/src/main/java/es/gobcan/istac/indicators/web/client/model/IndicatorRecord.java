@@ -20,6 +20,7 @@ public class IndicatorRecord extends Record {
         setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorDto));
         setNeedsUpdate(indicatorDto.getNeedsUpdate());
         setVersionNumber(indicatorDto.getVersionNumber());
+        setIndicatorDto(indicatorDto);
     }
 
     public IndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
@@ -40,6 +41,7 @@ public class IndicatorRecord extends Record {
             setNeedsUpdate(indicatorSummaryDto.getProductionVersion().getNeedsUpdate());
             setVersionNumber(indicatorSummaryDto.getProductionVersion().getVersionNumber());
         }
+        setIndicatorDto(indicatorSummaryDto);
     }
 
     public void setUuid(String uuid) {
@@ -105,5 +107,5 @@ public class IndicatorRecord extends Record {
     public Object getIndicatorDto() {
         return getAttributeAsObject(IndicatorDS.DTO);
     }
-    
+
 }

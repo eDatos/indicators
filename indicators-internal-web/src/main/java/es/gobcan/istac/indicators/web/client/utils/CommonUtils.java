@@ -257,5 +257,13 @@ public class CommonUtils {
             return indicatorSummaryDto.getProductionVersion().getVersionNumber();
         }
     }
-    
+
+    public static Boolean getIndicatorNeedsBePopulated(IndicatorSummaryDto indicatorSummaryDto) {
+        if (indicatorSummaryDto.getDiffusionVersion() != null && indicatorSummaryDto.getProductionVersion() == null) {
+            return indicatorSummaryDto.getDiffusionVersion().getNeedsBePopulated();
+        } else {
+            return indicatorSummaryDto.getProductionVersion().getNeedsBePopulated();
+        }
+    }
+
 }

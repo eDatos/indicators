@@ -1089,7 +1089,7 @@ public class SystemStructurePanel extends HLayout {
                 protected boolean condition(Object value) {
                     if (value != null && !StringUtils.isBlank(String.valueOf(value))) {
                         if (selectedIndicator != null && String.valueOf(value).equals(selectedIndicator.getUuid())) {
-                            return !selectedIndicator.getNeedsBePopulated();
+                            return !CommonUtils.getIndicatorNeedsBePopulated(selectedIndicator);
                         }
                     }
                     return false;
