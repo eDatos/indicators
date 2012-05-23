@@ -46,8 +46,6 @@ public class DoCopyUtils {
         target.setCommentsUrl(source.getCommentsUrl());
         target.setQuantity(copy(source.getQuantity()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
-        target.setNeedsUpdate(source.getNeedsUpdate());
-        target.setInconsistentData(source.getInconsistentData());
 
         return target;
     }
@@ -166,6 +164,7 @@ public class DoCopyUtils {
         target.setGeographicalVariable(source.getGeographicalVariable());
         target.getOtherVariables().addAll(copyDataSourceVariables(source.getOtherVariables()));
         target.setAbsoluteMethod(source.getAbsoluteMethod());
+        
         target.setSourceSurveyCode(source.getSourceSurveyCode());
         target.setSourceSurveyTitle(copy(source.getSourceSurveyTitle()));
         target.setSourceSurveyAcronym(copy(source.getSourceSurveyAcronym()));

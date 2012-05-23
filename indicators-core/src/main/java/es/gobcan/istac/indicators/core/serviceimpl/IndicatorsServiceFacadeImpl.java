@@ -1404,12 +1404,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid, String version) throws MetamacException {
+    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
-        getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid, version);
+        getIndicatorsDataService().populateIndicatorData(ctx, indicatorUuid);
     }
 
     @Override

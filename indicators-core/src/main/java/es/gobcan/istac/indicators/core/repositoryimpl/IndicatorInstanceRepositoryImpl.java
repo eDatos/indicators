@@ -47,4 +47,19 @@ public class IndicatorInstanceRepositoryImpl extends IndicatorInstanceRepository
         List<String> result = query.getResultList();
         return result;
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> findIndicatorsSystemsWithDiffusionVersionWithIndicator(String indicatorUuid) {
+        Query query = getEntityManager().createQuery("select distinct(ii.elementLevel.indicatorsSystemVersion.indicatorsSystem.uuid) "+
+                "from IndicatorInstance ii " +
+                "where ii.indicator.uuid = :uuid " +
+                "and ii.elementLevel.indicatorsSystemVersion.indicatorsSystem.diffusionVersion is not null " +
+                "and ii.elementLevel.indicatorsSystemVersion.versionNumber = ii.elementLevel.indicatorsSystemVersion.indicatorsSystem.diffusionVersion.versionNumber");
+        query.setParameter("uuid", indicatorUuid);
+        List<String> result = query.getResultList();
+        return result;
+    }
+    
+ 
 }

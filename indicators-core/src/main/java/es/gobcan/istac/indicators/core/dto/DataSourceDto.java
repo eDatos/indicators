@@ -29,7 +29,7 @@ public class DataSourceDto extends DataSourceDtoBase {
         return OBS_VALUE.equals(getAbsoluteMethod());
     }
     
-    public void setAbsoluteMethodObsValue() {
+    public void establishAbsoluteMethodAsObsValue() {
         setAbsoluteMethod(OBS_VALUE);
     }
     

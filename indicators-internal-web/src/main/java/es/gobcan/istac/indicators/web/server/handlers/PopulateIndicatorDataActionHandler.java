@@ -28,7 +28,7 @@ public class PopulateIndicatorDataActionHandler extends AbstractActionHandler<Po
     @Override
     public PopulateIndicatorDataResult execute(PopulateIndicatorDataAction action, ExecutionContext context) throws ActionException {
         try {
-            indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getVersion());
+            indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getVersion());
             return new PopulateIndicatorDataResult(indicatorDto);
         } catch (MetamacException e) {

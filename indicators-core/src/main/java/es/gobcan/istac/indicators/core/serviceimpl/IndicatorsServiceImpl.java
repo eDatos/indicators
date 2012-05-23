@@ -386,7 +386,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Populate data
         try {
-            getIndicatorsDataService().populateIndicatorData(ctx, uuid, indicatorInProduction.getVersionNumber());
+            getIndicatorsDataService().populateIndicatorData(ctx, uuid);
         } catch (MetamacException e) {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
@@ -475,6 +475,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
         indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
+        indicatorNewVersion.setNeedsUpdate(Boolean.FALSE);
+        indicatorNewVersion.setInconsistentData(Boolean.FALSE);
 
         // Update diffusion version
         indicatorVersionDiffusion.setIsLastVersion(Boolean.FALSE);

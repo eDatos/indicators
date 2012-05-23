@@ -20,7 +20,7 @@ public class DataSource extends DataSourceBase {
         return DataSourceDto.OBS_VALUE.equals(getAbsoluteMethod());
     }
     
-    public void setAbsoluteMethodObsValue() {
+    public void establishAbsoluteMethodAsObsValue() {
         setAbsoluteMethod(DataSourceDto.OBS_VALUE);
     }
 }

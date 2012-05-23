@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -54,6 +55,9 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -174,9 +178,127 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    public void populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         // Validation
-        InvocationValidator.checkPopulateIndicatorData(indicatorUuid, indicatorVersionNumber, null);
+        InvocationValidator.checkPopulateIndicatorData(indicatorUuid, null);
+
+        Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        if (indicator.getDiffusionVersion() != null) {
+            IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+            if (shouldIndicatorVersionBePopulated(indicatorVersion)){
+                try {
+                    populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+                    indicator = changeDiffusionVersion(indicator);
+                    //update system version
+                    List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
+                    changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+                } catch (MetamacException e) {
+                    exceptionItems.addAll(e.getExceptionItems());
+                }
+            }
+        }
+        if (indicator.getProductionVersion() != null) {
+            IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+            if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
+                try {
+                    populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+                } catch (MetamacException e) {
+                    exceptionItems.addAll(e.getExceptionItems());
+                }
+            }
+        }
+        
+        if (exceptionItems.size() > 0) {
+            throw new MetamacException(exceptionItems);
+        }
+    }
+    
+    private boolean shouldIndicatorVersionBePopulated(IndicatorVersion indicatorVersion) {
+        if (indicatorVersion.getDataRepositoryId() == null || indicatorVersion.getNeedsUpdate() || indicatorVersion.getInconsistentData() || indicatorVersion.getLastPopulateDate() == null) {
+            return true;
+        }
+        //All dataGpeUuids from indicator version
+        List<String> dataGpeUuids = getDataSourceRepository().findDatasourceDataGpeUuidLinkedToIndicatorVersion(indicatorVersion.getId());
+        List<String> dataDefinitionsUpdated = getDataGpeRepository().filterDataDefinitionsWithDataUpdatedAfter(dataGpeUuids, indicatorVersion.getLastPopulateDate().toDate());
+        return dataDefinitionsUpdated.size() > 0;
+    }
+
+    @Override
+    public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
+        LOG.info("Starting Indicators data update process");
+
+        // Validation
+        InvocationValidator.checkUpdateIndicatorsData(null);
+
+        Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
+
+        markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
+        Set<String> modifiedSystems = new HashSet<String>();
+        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
+        for (IndicatorVersion indicatorVersion : pendingIndicators) {
+            Indicator indicator = indicatorVersion.getIndicator();
+            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
+
+            String indicatorUuid = indicator.getUuid();
+            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
+                try {
+                    populateIndicatorVersionData(ctx, indicatorUuid, diffusionVersion);
+                    changeDiffusionVersion(indicator);
+                    modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
+                } catch (MetamacException e) {
+                    LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
+                }
+            }
+        }
+        changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+        LOG.info("Finished Indicators data update process");
+    }
+    
+    private void changeVersionForModifiedIndicatorsSystems(Collection<String> modifiedSystems) {
+        for (String systemUuid : modifiedSystems) {
+            try {
+                IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
+                IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getDiffusionVersion();
+                if (diffusionVersionInfo != null) {
+                    String newDiffusionVersion = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+                    IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
+                    
+                    //check version collision
+                    if (productionVersionInfo != null && newDiffusionVersion.equals(productionVersionInfo.getVersionNumber())) {
+                        IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
+                        String newProductionVersion = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+                        //new production version, new update date
+                        productionVersion.setVersionNumber(newProductionVersion);
+                        productionVersion.setLastUpdated(new DateTime());
+                        productionVersion = getIndicatorsSystemVersionRepository().save(productionVersion);
+                        
+                        //change system relationship
+                        indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
+                    }
+                    
+                    //update diffusion version
+                    IndicatorsSystemVersion diffusionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, diffusionVersionInfo.getVersionNumber());
+                    diffusionVersion.setVersionNumber(newDiffusionVersion);
+                    diffusionVersion.setLastUpdated(new DateTime());
+                    diffusionVersion = getIndicatorsSystemVersionRepository().save(diffusionVersion);
+                    
+                    //change system
+                    indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
+                    getIndicatorsSystemRepository().save(indicatorsSystem);
+                }
+            } catch (MetamacException e) {
+                LOG.warn("Error changing version for indicator system: " + systemUuid, e);
+            }
+        }
+        LOG.info("Indicators System \"version change\" proccess has finished");
+    }
+
+    private List<String> findAllIndicatorsSystemsDiffusionVersionWithIndicator(String indicatorUuid) {
+        return getIndicatorInstanceRepository().findIndicatorsSystemsWithDiffusionVersionWithIndicator(indicatorUuid);
+    }
+
+    private void populateIndicatorVersionData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
         try {
@@ -216,35 +338,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
             }
         }
-    }
-
-    @Override
-    public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
-        LOG.info("Starting Indicators data update process");
-
-        // Validation
-        InvocationValidator.checkUpdateIndicatorsData(null);
-
-        Date lastQueryDate = getIndicatorsConfigurationService().retrieveLastSuccessfulGpeQueryDate(ctx);
-
-        markIndicatorsVersionWhichNeedsUpdate(ctx, lastQueryDate);
-
-        List<IndicatorVersion> pendingIndicators = getIndicatorVersionRepository().findIndicatorsVersionNeedsUpdate();
-        for (IndicatorVersion indicatorVersion : pendingIndicators) {
-            Indicator indicator = indicatorVersion.getIndicator();
-            String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
-
-            String indicatorUuid = indicator.getUuid();
-            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
-                try {
-                    populateIndicatorData(ctx, indicatorUuid, diffusionVersion);
-                    changeDiffusionVersion(indicator);
-                } catch (MetamacException e) {
-                    LOG.warn("Error populating indicator indicatorUuid:" + indicatorUuid, e);
-                }
-            }
-        }
-        LOG.info("Finished Indicators data update process");
     }
     
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
@@ -859,10 +952,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         getIndicatorsConfigurationService().setLastSuccessfulGpeQueryDate(ctx, newQueryDate);
     }
 
-    // No more inconsistent data, no more needs update
+    // No more inconsistent data, no more needs update, update last populate date
     private void markIndicatorVersionAsDataUpdated(IndicatorVersion indicatorVersion) {
         indicatorVersion.setNeedsUpdate(Boolean.FALSE);
         indicatorVersion.setInconsistentData(Boolean.FALSE);
+        indicatorVersion.setLastPopulateDate(new DateTime());
         getIndicatorVersionRepository().save(indicatorVersion);
     }
 

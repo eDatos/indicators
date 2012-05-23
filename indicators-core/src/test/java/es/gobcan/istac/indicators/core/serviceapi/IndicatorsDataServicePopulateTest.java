@@ -10,11 +10,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,21 +31,25 @@ import org.springframework.transaction.annotation.Transactional;
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
+import es.gobcan.istac.indicators.core.domain.DataGpeRepository;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=false,transactionManager="txManager")
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@TransactionConfiguration(defaultRollback = false, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
@@ -202,23 +208,56 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR21_DS_GPE_UUID                  = "Indicator-21-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR21_GPE_JSON_DATA                = readFile("json/data_temporals_spatials_contvariable.json");
     private static final String              INDICATOR21_VERSION                      = "1.000";
-    
+
     /* Error wrong absoluteMethod with contvariable */
     private static final String              INDICATOR22_UUID                         = "Indicator-22";
     private static final String              INDICATOR22_DS_GPE_UUID                  = "Indicator-22-v1-DataSource-1-GPE-NOTIME-NOGEO-CONTVARIABLE";
     private static final String              INDICATOR22_GPE_JSON_DATA                = readFile("json/data_fixed_contvariable.json");
     private static final String              INDICATOR22_VERSION                      = "1.000";
-    
+
     /* Error indicator has no data sources */
     private static final String              INDICATOR23_UUID                         = "Indicator-23";
     private static final String              INDICATOR23_VERSION                      = "1.000";
-    
-    
+
     /* too many digits in one observation */
-    private static final String              INDICATOR24_UUID                          = "Indicator-24";
-    private static final String              INDICATOR24_DS_GPE_UUID                   = "Indicator-24-v1-DataSource-1-GPE-TIME";
-    private static final String              INDICATOR24_GPE_JSON_DATA                 = readFile("json/data_temporals_calculate.json");
-    private static final String              INDICATOR24_VERSION                       = "1.000";
+    private static final String              INDICATOR24_UUID                         = "Indicator-24";
+    private static final String              INDICATOR24_DS_GPE_UUID                  = "Indicator-24-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR24_GPE_JSON_DATA                = readFile("json/data_temporals_calculate.json");
+    private static final String              INDICATOR24_VERSION                      = "1.000";
+
+    /* DIFFUSION AND PRODUCTION VERSION (consecutive minor) */
+    private static final String              INDICATOR25_UUID                         = "Indicator-25";
+    private static final String              INDICATOR25_DS_UUID                      = "Indicator-25-v1-DataSource-1";
+    private static final String              INDICATOR25_DS_GPE_UUID_V1               = "Indicator-25-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR25_DS_GPE_UUID_V2               = "Indicator-25-v2-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR25_GPE_JSON_DATA                = readFile("json/data_temporals.json");
+    private static final String              INDICATOR25_DIFFUSION_VERSION            = "1.000";
+    private static final String              INDICATOR25_PRODUCTION_VERSION           = "1.001";
+
+    /* DIFFUSION AND PRODUCTION VERSION (major) */
+    private static final String              INDICATOR26_UUID                         = "Indicator-26";
+    private static final String              INDICATOR26_DS_UUID                      = "Indicator-26-v1-DataSource-1";
+    private static final String              INDICATOR26_DS_GPE_UUID_V1               = "Indicator-26-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR26_DS_GPE_UUID_V2               = "Indicator-26-v2-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR26_GPE_JSON_DATA                = readFile("json/data_temporals.json");
+    private static final String              INDICATOR26_DIFFUSION_VERSION            = "1.000";
+    private static final String              INDICATOR26_PRODUCTION_VERSION           = "2.000";
+
+    /* INDICATORS SYSTEM */
+
+    /* PRODUCTION & DIFFUSION VERSION (MAJOR DIFFERENCE) */
+    private static final String              INDICATORS_SYSTEM1_UUID                  = "IndSys-1";
+    private static final String              INDICATORS_SYSTEM1_DIFFUSION_VERSION     = "1.000";
+    private static final String              INDICATORS_SYSTEM1_PRODUCTION_VERSION    = "2.000";
+
+    /* PRODUCTION & DIFFUSION VERSION CONSECUTIVE */
+    private static final String              INDICATORS_SYSTEM2_UUID                  = "IndSys-2";
+    private static final String              INDICATORS_SYSTEM2_DIFFUSION_VERSION     = "1.000";
+    private static final String              INDICATORS_SYSTEM2_PRODUCTION_VERSION    = "1.001";
+
+    /* PRODUCTION VERSION ONLY */
+    private static final String              INDICATORS_SYSTEM3_UUID                  = "IndSys-3";
+    private static final String              INDICATORS_SYSTEM3_PRODUCTION_VERSION    = "1.001";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -227,21 +266,24 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private IndicatorsDataProviderService    indicatorsDataProviderService;
 
     @Autowired
+    private DataGpeRepository                dataGpeRepository;
+
+    @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
     private IndicatorsService                indicatorsService;
-    
+
     @Autowired
-    private IndicatorVersionRepository indicatorVersionRepository;
+    private IndicatorsSystemsService         indicatorsSystemsService;
+
+    @Autowired
+    private IndicatorVersionRepository       indicatorVersionRepository;
 
     @Before
     public void initMock() throws MetamacException {
     }
 
-   
-    
-    
     /*
      * Populate data using geographical and time variables provided by Jaxi
      * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testPopulateIndicatorData()
@@ -251,22 +293,30 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        Date beforePopulate = new Date();
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
-        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297",
-                "20", "46", "26", "2156", "321", "41", "29", "19");
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20",
+                "46", "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
     }
-    
+
     @Test
     public void testPopulateIndicatorDataNoDatasources() throws Exception {
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID, INDICATOR23_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR23_UUID);
             fail("Should throw an exception for not having data sources");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -280,7 +330,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Test
     public void testPopulateIndicatorDataUuuidNull() throws Exception {
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), null, "version");
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), null);
             fail("indicatorUuid should be required");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -295,7 +345,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR14_DS_GPE_UUID))).thenReturn(INDICATOR14_GPE_JSON_DATA);
 
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR14_UUID, INDICATOR14_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR14_UUID);
             fail("Should fail, because of data gpe not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -311,7 +361,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR15_DS_GPE_UUID))).thenReturn(INDICATOR15_GPE_JSON_DATA);
 
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR15_UUID, INDICATOR15_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR15_UUID);
             fail("Should fail, because of data gpe is bad formatted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -331,7 +381,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR11_DS_GPE_UUID))).thenReturn(INDICATOR11_GPE_JSON_DATA);
 
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR11_UUID, INDICATOR11_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR11_UUID);
             fail("Should NOT accept other absoluteMethd than OBS_VALUE");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -349,7 +399,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR12_DS_GPE_UUID))).thenReturn(INDICATOR12_GPE_JSON_DATA);
 
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR12_UUID, INDICATOR12_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR12_UUID);
             fail("Should NOT accept other absoluteMethd than a CONT_VARIABLE category");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -365,7 +415,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataSpatialVariableTemporalValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID, INDICATOR2_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
@@ -383,7 +433,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataSpatialValueTemporalVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID, INDICATOR3_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
@@ -401,7 +451,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataSpatialValueTemporalValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
@@ -419,7 +469,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID, INDICATOR5_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
@@ -437,7 +487,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataDots() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR6_UUID, INDICATOR6_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR6_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
@@ -484,7 +534,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataCodeAttribute() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID, INDICATOR3_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
@@ -515,7 +565,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataCalculate() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID, INDICATOR7_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11"));
@@ -547,7 +597,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataCalculateFebruary29() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA_29FEB);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID, INDICATOR7_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2012M02", "20120229", "20120228", "20120227", "2011M02", "20110228", "20110227"));
@@ -580,7 +630,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataCalculateDots() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR13_DS_GPE_UUID))).thenReturn(INDICATOR13_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR13_UUID, INDICATOR13_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR13_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
@@ -652,7 +702,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS1_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA1);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS2_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA2);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR8_UUID, INDICATOR8_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR8_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
@@ -687,7 +737,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS1_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DECIMALS_DATA1);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS2_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DECIMALS_DATA2);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR8_UUID, INDICATOR8_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR8_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2009", "2009M12", "2009M11"));
@@ -719,7 +769,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataAllRatesContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR9_DS_GPE_UUID))).thenReturn(INDICATOR9_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR9_UUID, INDICATOR9_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR9_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
@@ -755,7 +805,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS4_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA4);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR10_DS5_GPE_UUID))).thenReturn(INDICATOR10_GPE_JSON_DATA5);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR10_UUID, INDICATOR10_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR10_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
 
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2010", "2010M12", "2010M11", "2010M10", "2009", "2009M12", "2009M11", "2009M10"));
@@ -787,17 +837,31 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataPublishedVersion() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR16_DS_GPE_UUID))).thenReturn(INDICATOR16_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID, INDICATOR16_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
+
+        // After populate, version has changed
+        String newVersion = ServiceUtils.generateVersionNumber(INDICATOR16_VERSION, VersionTypeEnum.MINOR);
+
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
-        checkDataDimensions(dimensionCodes, INDICATOR16_UUID, INDICATOR16_VERSION);
+        checkDataDimensions(dimensionCodes, INDICATOR16_UUID, newVersion);
         List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
-        checkDataObservations(dimensionCodes, INDICATOR16_UUID, INDICATOR16_VERSION, data);
+        checkDataObservations(dimensionCodes, INDICATOR16_UUID, newVersion, data);
+
+        // old version does not longer exist
+        try {
+            getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR16_UUID, INDICATOR16_VERSION);
+            fail("Should have not found old version");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
     }
-    
+
     /*
      * Indicator has a nonexistent geographic variable
      */
@@ -805,7 +869,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataRemovedGeographicVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_GEO_NOT_EXIST);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID, INDICATOR17_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
@@ -822,7 +886,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIllegalGeographicVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_GEO_NOT_GEO);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID, INDICATOR17_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
@@ -841,7 +905,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataRemovedTimeVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_TEMP_NOT_EXIST);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID, INDICATOR17_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
@@ -858,7 +922,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIllegalTimeVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR17_DS_GPE_UUID))).thenReturn(INDICATOR17_GPE_JSON_DATA_TEMP_NOT_TEMP);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID, INDICATOR17_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR17_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR17_UUID, INDICATOR17_VERSION);
@@ -878,7 +942,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIllegalGeographicValueIllegalTimeValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR18_DS_GPE_UUID))).thenReturn(INDICATOR18_GPE_JSON_DATA);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR18_UUID, INDICATOR18_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR18_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR18_UUID, INDICATOR18_VERSION);
@@ -896,7 +960,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIllegalMethodsContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR19_DS_GPE_UUID))).thenReturn(INDICATOR19_GPE_JSON_DATA);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR19_UUID, INDICATOR19_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR19_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR19_UUID, INDICATOR19_VERSION);
@@ -921,7 +985,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIllegalMethodsNoContVariable() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR20_DS_GPE_UUID))).thenReturn(INDICATOR20_GPE_JSON_DATA);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR20_UUID, INDICATOR20_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR20_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR20_UUID, INDICATOR20_VERSION);
@@ -947,7 +1011,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataWrongOtherVariables() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR21_DS_GPE_UUID))).thenReturn(INDICATOR21_GPE_JSON_DATA);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR21_UUID, INDICATOR21_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR21_UUID);
             fail("Compatibility errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR21_UUID, INDICATOR21_VERSION);
@@ -962,7 +1026,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(4).getMessageParameters()[1]);
         }
     }
-    
+
     /*
      * Indicator has observations with too many digits
      */
@@ -970,7 +1034,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataWrongObservationLength() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR24_DS_GPE_UUID))).thenReturn(INDICATOR24_GPE_JSON_DATA);
         try {
-            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR24_UUID, INDICATOR24_VERSION);
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR24_UUID);
             fail("errors should throw an exception");
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR24_UUID, INDICATOR24_VERSION);
@@ -979,7 +1043,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
-    
+
     /*
      * Indicator has the inconsistent Data mark
      */
@@ -987,46 +1051,45 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataInconsistentMark() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR22_DS_GPE_UUID))).thenReturn(INDICATOR22_GPE_JSON_DATA);
         IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicator(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
-        
+
         assertTrue(indicatorVersion.getInconsistentData());
-        
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
-        
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR22_UUID);
+
         indicatorVersion = indicatorsService.retrieveIndicator(getServiceContextAdministrador(), INDICATOR22_UUID, INDICATOR22_VERSION);
         assertFalse(indicatorVersion.getInconsistentData());
     }
-    
+
     @Test
     public void testDeleteIndicatorData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
-        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
         Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES", "ES61", "ES611", "ES612", "ES613"));
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
 
         checkDataDimensions(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION);
-        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297",
-                "20", "46", "26", "2156", "321", "41", "29", "19");
+        List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20",
+                "46", "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
-        
-        
+
         IndicatorVersion version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
-        //delete
+        // delete
         assertNotNull(version.getDataRepositoryId());
         assertNotNull(version.getDataRepositoryTableName());
         indicatorsDataService.deleteIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
-        
+
         version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
         assertNull(version.getDataRepositoryId());
         assertNull(version.getDataRepositoryTableName());
     }
-    
+
     @Test
     public void testDeleteIndicatorDataNotExists() throws Exception {
         IndicatorVersion version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
-        //delete
+        // delete
         assertNull(version.getDataRepositoryId());
         assertNull(version.getDataRepositoryTableName());
         try {
@@ -1039,6 +1102,292 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(INDICATOR1_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(INDICATOR1_VERSION, e.getExceptionItems().get(0).getMessageParameters()[1]);
         }
+    }
+
+    /* Tests for system version change */
+    /*
+     * Populate data for diffusion and production version, next diffusion version collides with current production version
+     */
+    @Test
+    public void testPopulateIndicatorDataAllVersionsUpdate() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR25_DS_GPE_UUID_V1))).thenReturn(INDICATOR25_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR25_DS_GPE_UUID_V2))).thenReturn(INDICATOR25_GPE_JSON_DATA);
+
+        Date beforeUpdateDate = new Date();
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR25_UUID);
+
+        // After populate, diffusion and production version have to change
+        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+        String newProductionVersion = ServiceUtils.generateVersionNumber(INDICATOR25_PRODUCTION_VERSION, VersionTypeEnum.MINOR);
+
+        // old diffusion version does not longer exist
+        try {
+            getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR25_UUID, INDICATOR25_DIFFUSION_VERSION);
+            fail("Should have not found old version");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+
+        // Check new Versions
+        {
+            IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR25_UUID, newDiffusionVersion);
+            assertTrue(beforeUpdateDate.before(indicatorVersion.getLastUpdated().toDate())); // last update date, changed
+            checkDataDimensions(dimensionCodes, INDICATOR25_UUID, newDiffusionVersion);
+            List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
+            checkDataObservations(dimensionCodes, INDICATOR25_UUID, newDiffusionVersion, data);
+        }
+        {
+            IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR25_UUID, newProductionVersion);
+            assertTrue(beforeUpdateDate.before(indicatorVersion.getLastUpdated().toDate())); // last update date, changed
+            checkDataDimensions(dimensionCodes, INDICATOR25_UUID, newProductionVersion);
+            List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
+            checkDataObservations(dimensionCodes, INDICATOR25_UUID, newProductionVersion, data);
+        }
+    }
+
+    /*
+     * Populate data for a published version
+     */
+    @Test
+    public void testPopulateIndicatorDataOnlyDiffusionVersionUpdates() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR26_DS_GPE_UUID_V1))).thenReturn(INDICATOR26_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR26_DS_GPE_UUID_V2))).thenReturn(INDICATOR26_GPE_JSON_DATA);
+
+        Date beforeUpdateDate = new Date();
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR26_UUID);
+
+        // After populate, diffusion and production version have to change
+        String newDiffusionVersion = ServiceUtils.generateVersionNumber(INDICATOR26_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+
+        // old diffusion version does not longer exist
+        try {
+            getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR26_UUID, INDICATOR26_DIFFUSION_VERSION);
+            fail("Should have not found old version");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+
+        Map<String, List<String>> dimensionCodes = new HashMap<String, List<String>>();
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.TIME.name(), Arrays.asList("2011M01", "2010", "2010M12", "2010M11", "2010M10", "2010M09"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), Arrays.asList("ES"));
+        dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name()));
+
+        {
+            IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR26_UUID, newDiffusionVersion);
+            assertTrue(beforeUpdateDate.before(indicatorVersion.getLastUpdated().toDate())); // last update date, changed
+            checkDataDimensions(dimensionCodes, INDICATOR26_UUID, newDiffusionVersion);
+            List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
+            checkDataObservations(dimensionCodes, INDICATOR26_UUID, newDiffusionVersion, data);
+        }
+        { // Production version remains the same
+            checkDataDimensions(dimensionCodes, INDICATOR26_UUID, INDICATOR26_PRODUCTION_VERSION);
+            List<String> data = Arrays.asList("3585", "34413", "2471", "2507", "2036", "2156");
+            checkDataObservations(dimensionCodes, INDICATOR26_UUID, INDICATOR26_PRODUCTION_VERSION, data);
+        }
+    }
+
+    /*
+     * Populate published indicator then all published systems will be updated
+     */
+    @Test
+    public void testPopulateIndicatorDataOnlySystemDiffusionVersionUpdates() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR16_DS_GPE_UUID))).thenReturn(INDICATOR16_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
+
+        String newSystemVersion = ServiceUtils.generateVersionNumber(INDICATORS_SYSTEM1_DIFFUSION_VERSION, VersionTypeEnum.MINOR);
+
+        /* System's diffusion version no longer exists */
+        try {
+            indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, INDICATORS_SYSTEM1_DIFFUSION_VERSION);
+            fail("Should have not found old version");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_VERSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+
+        { // production version remains the same
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, INDICATORS_SYSTEM1_PRODUCTION_VERSION);
+            assertNotNull(systemVersion);
+        }
+
+        { // new diffusion version has been created
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM1_UUID, newSystemVersion);
+            assertNotNull(systemVersion);
+        }
+    }
+
+    /*
+     * Populate published indicator then all published systems will be updated
+     */
+    @Test
+    public void testPopulateIndicatorDataNotSystemVersionUpdates() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR16_DS_GPE_UUID))).thenReturn(INDICATOR16_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR16_UUID);
+
+        // Systems 2 and 3 only have indicator 16 in production versions, so none of their versions should be changed
+        {
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM2_UUID, INDICATORS_SYSTEM2_PRODUCTION_VERSION);
+            assertNotNull(systemVersion);
+        }
+
+        {
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM2_UUID, INDICATORS_SYSTEM2_DIFFUSION_VERSION);
+            assertNotNull(systemVersion);
+        }
+
+        {
+            IndicatorsSystemVersion systemVersion = indicatorsSystemsService.retrieveIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM3_UUID, INDICATORS_SYSTEM3_PRODUCTION_VERSION);
+            assertNotNull(systemVersion);
+        }
+    }
+
+    /* TESTS CHECKING POPULATE IS ONLY DONE WHEN IT'S NECESSARY */
+    
+    /*
+     * A second consecutive "populate" should not populate if no gpe data has changed
+     */
+    @Test
+    public void testPopulateIndicatorDataNotNecessaryAfterFirstPopulate() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        Date beforePopulate = new Date();
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+        String lastDataRepoId = indicatorVersion.getDataRepositoryId();
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+
+        // Second populate should do nothing
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertEquals(lastPopulateDate, indicatorVersion.getLastPopulateDate());
+        assertEquals(lastDataRepoId, indicatorVersion.getDataRepositoryId());
+    }
+    
+    /*
+     * A second consecutive "populate" should not populate if no gpe data has changed
+     */
+    @Test
+    public void testPopulateIndicatorDataNotNecessary() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        // Data gpe updated
+        when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(Arrays.asList(INDICATOR1_DS_GPE_UUID));
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        indicatorVersion.setLastPopulateDate(new DateTime());
+        indicatorVersionRepository.save(indicatorVersion);
+        
+        Date beforePopulate = new Date();
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+        String lastDataRepoId = indicatorVersion.getDataRepositoryId();
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+        
+        // Second populate should do nothing
+        // Data gpe NOT updated
+        when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(new ArrayList<String>());
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertEquals(lastPopulateDate, indicatorVersion.getLastPopulateDate());
+        assertEquals(lastDataRepoId, indicatorVersion.getDataRepositoryId());
+    }
+    
+    /*
+     * A second consecutive populate should populate if some changes have been made to data in gpe
+     */
+    @Test
+    public void testPopulateIndicatorDataDataGpeChanged() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        Date beforePopulate = new Date();
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+        String lastDataRepoId = indicatorVersion.getDataRepositoryId();
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+        
+        // Suddenly data in gpe has been updated, so third populate should change data
+        when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(Arrays.asList(INDICATOR1_DS_GPE_UUID));
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
+        assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
+        lastPopulateDate = indicatorVersion.getLastPopulateDate();
+        lastDataRepoId = indicatorVersion.getDataRepositoryId();
+    }
+    
+    /*
+     * A second consecutive populate should populate if indicatorVersion NEEDS_UPDATE
+     */
+    @Test
+    public void testPopulateIndicatorDataIndicatorNeedsUpdate() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        Date beforePopulate = new Date();
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+        String lastDataRepoId = indicatorVersion.getDataRepositoryId();
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+        
+        // Suppose last populate failed, so version has needs_update, should populate data
+        indicatorVersion.setNeedsUpdate(true);
+        indicatorVersionRepository.save(indicatorVersion);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
+        assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
+    }
+    
+    /*
+     * A second consecutive populate should populate if indicatorVersion could have inconsistent data
+     */
+    @Test
+    public void testPopulateIndicatorDataIndicatorInconsistentData() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        Date beforePopulate = new Date();
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        
+        IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        // Populate date must be updated
+        assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
+        String lastDataRepoId = indicatorVersion.getDataRepositoryId();
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+        
+        // Suppose last populate failed, so version has needs_update, should populate data
+        indicatorVersion.setInconsistentData(true);
+        indicatorVersionRepository.save(indicatorVersion);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
+        assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
     }
 
     @Override

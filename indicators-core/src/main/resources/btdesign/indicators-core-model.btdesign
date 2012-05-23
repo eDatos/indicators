@@ -124,7 +124,7 @@ Application Indicators {
 	    	@Subject retrieveSubject(String code) throws MetamacException;
 	    	List<@Subject> retrieveSubjects() throws MetamacException;
 	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
-    	}   	
+    	}
     	
     	"Provides access to indicators data"
     	Service IndicatorsDataService {
@@ -133,10 +133,14 @@ Application Indicators {
     		> @IndicatorsSystemsService
     		> @IndicatorRepository
     		> @IndicatorVersionRepository
+    		> @IndicatorInstanceRepository
+    		> @IndicatorsSystemRepository
+    		> @IndicatorsSystemVersionRepository
     		> @DataGpeRepository
     		> @GeographicalGranularityRepository
     		> @GeographicalValueRepository
     		> @IndicatorInstanceRepository
+    		> @DataSourceRepository
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -149,7 +153,7 @@ Application Indicators {
 	    	"Retrieves the Data's structure info"
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
-	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
@@ -424,7 +428,7 @@ Application Indicators {
 	    	"Retrieves the Data's structure info"
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
-	    	populateIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
 	    	//Data finders
 	    	"Find Published Indicator's Observations by dimensions"
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
@@ -599,6 +603,7 @@ Application Indicators {
             	@IndicatorInstance findIndicatorInstance(String uuid);
             	Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber);
             	List<String> findIndicatorsLinkedWithIndicatorsSystemVersion(Long indicatorsSystemVersionId);
+            	List<String> findIndicatorsSystemsWithDiffusionVersionWithIndicator(String indicatorUuid);
             }
         }         
 		
@@ -700,9 +705,10 @@ Application Indicators {
 			DateTimeTZ archiveDate nullable;
 			"User who archived"
 			String archiveUser nullable;
-					
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
+			"Date when the indicator was populated for the last time"
+			DateTimeTZ lastPopulateDate nullable;
 					
 			// Relations
 			"Indicator"
@@ -854,6 +860,7 @@ Application Indicators {
             	delete;
             	protected List<@DataSource> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@DataSource findDataSource(String uuid);
+            	List<String> findDatasourceDataGpeUuidLinkedToIndicatorVersion(Long indicatorVersionId);
 				List<String> findIndicatorsLinkedWithIndicatorVersion(Long indicatorVersionId);
             }
         }  	   
@@ -1015,6 +1022,7 @@ Application Indicators {
             	List<@DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode);
             	@DataDefinition findCurrentDataDefinition(String uuid);
             	List<String> findDataDefinitionsWithDataUpdatedAfter(DateTimestamp date);
+            	List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, DateTimestamp date);
 			}
         }
         

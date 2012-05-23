@@ -7,4 +7,8 @@
 		<constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService" />
 	</bean>
 	
+	<bean id="dataGpeRepository" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg value="es.gobcan.istac.indicators.core.domain.DataGpeRepository" />
+	</bean>
+
 </beans>

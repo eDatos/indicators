@@ -41,6 +41,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         return result;
     }
     
+    @Override
     public List<DataDefinition> findCurrentDataDefinitions() {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -77,6 +78,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     }
     
     
+    @Override
     public DataDefinition findCurrentDataDefinition(String uuid) {
         Date now = Calendar.getInstance().getTime();
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -98,6 +100,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
             return null;
         }
     }
+
     @Override
     public List<String> findDataDefinitionsWithDataUpdatedAfter(Date date) {
         Date now = Calendar.getInstance().getTime();
@@ -114,6 +117,29 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         Query query = getEntityManager().createQuery(queryHql);
         query.setParameter("now", now);
         query.setParameter("lastUpdateDate", date);
+        List<String> result = query.getResultList();
+        return result;
+    }
+    
+    //TODO: CAUTION! more than 1000 uuids
+    @Override
+    public List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, Date date) {
+        Date now = Calendar.getInstance().getTime();
+        String queryHql = "select df.uuid " +
+                       "from DataDefinition df "+
+                       "where df.uuid in (:uuids) " +
+                       "and df.availableEndDate is null "+
+                       "and df.dataUpdateDate > :lastUpdateDate "+
+                       "and df.availableStartDate = ("+
+                                                      " select max(df2.availableStartDate) " +
+                                                      " from DataDefinition df2 "+
+                                                      " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
+                                                      " and df2.availableEndDate is NULL "+ //It's not archived
+                                                      " and df.uuid = df2.uuid)";
+        Query query = getEntityManager().createQuery(queryHql);
+        query.setParameter("now", now);
+        query.setParameter("lastUpdateDate", date);
+        query.setParameter("uuids", dataDefinitionsUuids);
         List<String> result = query.getResultList();
         return result;
     }

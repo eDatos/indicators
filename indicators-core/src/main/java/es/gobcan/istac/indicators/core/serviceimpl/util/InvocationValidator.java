@@ -824,13 +824,12 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkPopulateIndicatorData(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkPopulateIndicatorData(String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
         ValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
-        ValidationUtils.checkParameterRequired(indicatorVersionNumber, ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

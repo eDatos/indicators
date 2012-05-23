@@ -30,6 +30,18 @@ public class DataSourceRepositoryImpl extends DataSourceRepositoryBase {
             return result.get(0);
         }
     }
+    
+    @Override
+    public List<String> findDatasourceDataGpeUuidLinkedToIndicatorVersion(Long indicatorVersionId) {
+        String querySql = "select distinct(ds.dataGpeUuid) " +
+        		          "from DataSource ds " +
+        		          "where ds.dataGpeUuid is not null " +
+        		          "and ds.indicatorVersion.id = :id";
+        Query query = getEntityManager().createQuery(querySql);
+        query.setParameter("id", indicatorVersionId);
+        List<String> results = query.getResultList();
+        return results;
+    }
 
     @Override
     public List<String> findIndicatorsLinkedWithIndicatorVersion(Long indicatorVersionId) {
