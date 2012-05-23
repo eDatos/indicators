@@ -131,8 +131,7 @@
         var templateManager = new TemplateManager();
         templateManager.loadTemplatesInPage();
 
-        //var apiBaseUrl = "[@spring.url ""/]";
-        var apiBaseUrl = "http://rcorrod:8070/indicators-web";
+        var apiBaseUrl = "[@spring.url ""/]";
         var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
     </script>
 
