@@ -16,7 +16,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
-import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
+import es.gobcan.istac.indicators.web.client.model.IndicatorSimpleRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
@@ -66,10 +66,10 @@ public class IndicatorsSearchWindow extends SearchWindow {
     }
 
     public void setIndicatorList(List<IndicatorSummaryDto> indicators) {
-        IndicatorRecord[] records = new IndicatorRecord[indicators.size()];
+        IndicatorSimpleRecord[] records = new IndicatorSimpleRecord[indicators.size()];
         int index = 0;
         for (IndicatorSummaryDto ind : indicators) {
-            records[index++] = RecordUtils.getIndicatorRecord(ind);
+            records[index++] = RecordUtils.getIndicatorSimpleRecord(ind);
         }
         listGrid.setData(records);
     }

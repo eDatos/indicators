@@ -9,6 +9,7 @@ import es.gobcan.istac.indicators.web.client.model.DataDefinitionRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.DataSourceVariableRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorRecord;
+import es.gobcan.istac.indicators.web.client.model.IndicatorSimpleRecord;
 import es.gobcan.istac.indicators.web.client.model.IndicatorSystemRecord;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
@@ -22,6 +23,11 @@ public class RecordUtils {
 
     public static IndicatorRecord getIndicatorRecord(IndicatorSummaryDto indicatorSummaryDto) {
         IndicatorRecord record = new IndicatorRecord(indicatorSummaryDto);
+        return record;
+    }
+
+    public static IndicatorSimpleRecord getIndicatorSimpleRecord(IndicatorSummaryDto indicatorSummaryDto) {
+        IndicatorSimpleRecord record = new IndicatorSimpleRecord(indicatorSummaryDto);
         return record;
     }
 
