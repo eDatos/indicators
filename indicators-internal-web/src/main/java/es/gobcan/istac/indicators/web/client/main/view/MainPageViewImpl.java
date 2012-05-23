@@ -28,7 +28,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private VLayout                    panel;
     private VLayout                    northLayout;
     private HLayout                    southLayout;
-    private HLayout                    footerLayout;
+    private VLayout                    footerLayout;
 
     private final IndicatorsMasterHead masterHead;
     private final LinksHead            linksHead;
@@ -59,7 +59,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         southLayout.setHeight100();
 
         // Footer
-        footerLayout = new HLayout();
+        footerLayout = new VLayout();
         footerLayout.addMember(successMessagePanel);
         footerLayout.addMember(errorMessagePanel);
         footerLayout.addMember(new VersionFooter());
