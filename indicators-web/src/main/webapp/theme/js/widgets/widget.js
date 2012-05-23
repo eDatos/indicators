@@ -689,12 +689,14 @@
 
                 for (var i = 0; i < datasets.length; i++) {
                     var dataset = datasets[i];
+                    var timeValuesTitles = dataset.getTimeValuesTitles('es');
 
                     var indicator = this.indicators[i];
                     var renderValues = this.parse(dataset);
 
+
                     //TODO LOCALIZE title!
-                    var row = '<tr><th>' + dataset.structure.title.es + ' (' + renderValues.temporalValue + ')</th>';
+                    var row = '<tr><th>' + dataset.structure.title.es + ' (' + timeValuesTitles[renderValues.temporalValue] + ')</th>';
 
                     var observations = renderValues.observations;
                     for (var j = 0; j < observations.length; j++) {

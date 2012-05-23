@@ -15,7 +15,6 @@ var WidgetCodeView = Backbone.View.extend({
         var code = [];
 
         code.push('<div id="istac-widget"></div>');
-        code.push('<script>var istacUrl = "' + serverURL  + context + '";</script>');
         code.push('<script src="' + serverURL + context + '/theme/js/widgets/widget.min.all.js"></script>');
         code.push('<script>');
         code.push('new IstacWidget({');
@@ -28,7 +27,8 @@ var WidgetCodeView = Backbone.View.extend({
         code.push('     systemId : "' + model.systemId + '",');
         code.push('     indicators : ' + JSON.stringify(model.indicators) + ',');
         code.push('     geographicalValues : ' + JSON.stringify(model.geographicalValues) + ',');
-        code.push('     measures : ' + JSON.stringify(model.measures) + ' ');
+        code.push('     measures : ' + JSON.stringify(model.measures) + ', ');
+        code.push('     url : "' + serverURL  + context + '" ');
         code.push('});');
         code.push('</script>');
 

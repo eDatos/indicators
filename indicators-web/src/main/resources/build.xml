@@ -3,8 +3,8 @@
     <target name="compile" >
         <java classname="com.google.javascript.jscomp.CommandLineRunner">
             <arg line="--compilation_level SIMPLE_OPTIMIZATIONS
-                       --js widget.js
-                       --js_output_file widget.min.js"/>
+                       --js ${basedir}/widget.js
+                       --js_output_file ${basedir}/widget.min.js"/>
             <classpath>
                 <pathelement location="K:/Proyectos/00-recursos/compiler-latest/compiler.jar"/>
             </classpath>
