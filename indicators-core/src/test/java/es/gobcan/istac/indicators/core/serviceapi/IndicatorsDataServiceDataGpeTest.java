@@ -66,9 +66,9 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
         List<String> operationsCodes = indicatorsDataService.retrieveDataDefinitionsOperationsCodes(getServiceContextAdministrador());
         assertEquals(3,operationsCodes.size());
-        assertTrue(operationsCodes.contains(CONSULTA1_OPERATION_CODE));
-        assertTrue(operationsCodes.contains(CONSULTA4_OPERATION_CODE));
-        assertTrue(operationsCodes.contains(CONSULTA5_OPERATION_CODE));
+        assertEquals(operationsCodes.get(0), CONSULTA1_OPERATION_CODE);
+        assertEquals(operationsCodes.get(1), CONSULTA4_OPERATION_CODE);
+        assertEquals(operationsCodes.get(2), CONSULTA5_OPERATION_CODE);
     }
 
     @Test

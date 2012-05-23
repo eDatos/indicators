@@ -34,7 +34,8 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
                                                       " from DataDefinition df2 "+
                                                       " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
                                                       " and df2.availableEndDate is NULL "+ //It's not archived
-                                                      " and df.uuid = df2.uuid)";
+                                                      " and df.uuid = df2.uuid) " +
+                          "order by df.idOperacion";
         Query query = getEntityManager().createQuery(queryHql);
         query.setParameter("now", now);
         List<String> result = query.getResultList();
