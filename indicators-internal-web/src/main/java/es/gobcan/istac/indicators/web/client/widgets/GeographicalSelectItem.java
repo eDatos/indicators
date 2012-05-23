@@ -70,7 +70,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
     }
 
     public boolean validateItem() {
-        return super.validate() && form.validate();
+        return super.validate() && (form.isVisible() ? form.validate(false) : true);
     }
 
     @Override
