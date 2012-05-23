@@ -32,6 +32,10 @@ public class IndicatorRecord extends Record {
             setDiffusionProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
             setDiffusionNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
             setDiffusionVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+            // Force to show diffusion version as production version (if there is a production version, these values will be overwritten)
+            setProcStatus(CommonUtils.getIndicatorProcStatus(indicatorSummaryDto.getDiffusionVersion().getProcStatus()));
+            setNeedsUpdate(indicatorSummaryDto.getDiffusionVersion().getNeedsUpdate());
+            setVersionNumber(indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
         }
         // Production version
         if (indicatorSummaryDto.getProductionVersion() != null) {
