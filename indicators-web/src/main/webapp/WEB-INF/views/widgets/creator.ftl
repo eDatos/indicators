@@ -44,29 +44,31 @@
     </script>
 
     <script id="dataOptionsTmpl" type="text/html">
-        <div class="col3">
-            <div>
-                <div class="widget-data-title">Sistema de indicadores</div>
-                <div class="systems"></div>
-            </div>
+        <div class="clearfix">
+            <div class="widget-data-title">Medidas</div>
+            <div class="measures"></div>
         </div>
 
-        <div class="col3">
-            <div>
-                <div class="widget-data-title">Indicadores</div>
-                <div class="indicators"></div>
-            </div>
-        </div>
-
-        <div class="col3">
-            <div>
-                <div class="widget-data-title">Medidas</div>
-                <div class="measures"></div>
+        <div class="clearfix">
+            <div class="col3">
+                <div>
+                    <div class="widget-data-title">Sistema de indicadores</div>
+                    <div class="systems"></div>
+                </div>
             </div>
 
-            <div>
-                <div class="widget-data-title">Valores espaciales</div>
-                <div class="geographicalValues"></div>
+            <div class="col3">
+                <div>
+                    <div class="widget-data-title">Indicadores</div>
+                    <div class="indicators"></div>
+                </div>
+            </div>
+
+            <div class="col3">
+                <div>
+                    <div class="widget-data-title">Valores espaciales</div>
+                    <div class="geographicalValues"></div>
+                </div>
             </div>
         </div>
      </script>
