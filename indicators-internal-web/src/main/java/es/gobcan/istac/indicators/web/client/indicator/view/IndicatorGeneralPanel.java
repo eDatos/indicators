@@ -311,9 +311,8 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
         ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
         ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
-        MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
-        title.setRequired(true);
-        MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
+        ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+        ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         diffusionIdentifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
