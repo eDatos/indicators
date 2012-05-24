@@ -11,6 +11,7 @@ import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public interface IndicatorUiHandler extends UiHandlers {
 
+    void retrieveDiffusionIndicator(String code, String versionNumber);
     void saveIndicator(IndicatorDto indicator);
 
     void retrieveSubjects();

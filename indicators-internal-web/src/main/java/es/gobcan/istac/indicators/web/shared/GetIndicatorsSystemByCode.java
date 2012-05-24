@@ -12,6 +12,9 @@ public class GetIndicatorsSystemByCode {
     @In(1)
     String                 code;
 
+    @In(2)
+    String                 versionNumber;
+
     @Out(1)
     IndicatorsSystemDtoWeb indicatorsSystem;
 

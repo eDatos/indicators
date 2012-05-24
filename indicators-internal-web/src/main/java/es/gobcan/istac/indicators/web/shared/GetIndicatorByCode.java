@@ -12,6 +12,9 @@ public class GetIndicatorByCode {
     @In(1)
     String       code;
 
+    @In(2)
+    String       versionNumber;
+
     @Out(1)
     IndicatorDto indicator;
 }

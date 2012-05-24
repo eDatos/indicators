@@ -82,6 +82,11 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
         generalPanel.setIndicatorsSystem(indSystem);
         structurePanel.setIndicatorsSystem(indSystem);
     }
+    
+    @Override
+    public void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem) {
+        generalPanel.setDiffusionIndicatorsSystem(indicatorSystem);
+    }
 
     @Override
     public void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatosSystem, IndicatorsSystemStructureDto structure) {

@@ -114,6 +114,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setIndicator(IndicatorDto indicator);
         void setIndicatorDataSources(List<DataSourceDto> dataSourceDtos);
+        void setDiffusionIndicator(IndicatorDto indicator);
 
         void setIndicatorListQuantityDenominator(List<IndicatorSummaryDto> indicators);
         void setIndicatorListQuantityNumerator(List<IndicatorSummaryDto> indicators);
@@ -169,7 +170,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveIndicatorByCode() {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -180,6 +181,21 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 indicatorDto = result.getIndicator();
                 getView().setIndicator(indicatorDto);
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
+            }
+        });
+    }
+    
+    @Override
+    public void retrieveDiffusionIndicator(String code, String versionNumber) {
+        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorByCodeResult result) {
+                getView().setDiffusionIndicator(indicatorDto);
             }
         });
     }
@@ -499,7 +515,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveUpdatedIndicador() {
-        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {

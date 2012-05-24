@@ -38,7 +38,8 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
         // Check if operation (indicators system) exists in the DB
         try {
             // If exists, updates indicators system
-            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(), null);
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystemByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(),
+                    action.getVersionNumber());
             return new GetIndicatorsSystemByCodeResult(DtoUtils.updateIndicatorsSystemDtoWeb(new IndicatorsSystemDtoWeb(), indicatorsSystemDto, operationBase));
         } catch (MetamacException e) {
             return new GetIndicatorsSystemByCodeResult(DtoUtils.createIndicatorsSystemDtoWeb(operationBase));

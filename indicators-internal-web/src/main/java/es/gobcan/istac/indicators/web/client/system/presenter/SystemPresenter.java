@@ -116,6 +116,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void setIndicatorFromIndicatorInstance(IndicatorDto indicator);
         void setIndicators(List<IndicatorSummaryDto> indicators);
         void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
+        void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystem);
         void setIndicatorsSystemStructure(IndicatorsSystemDtoWeb indicatorsSystem, IndicatorsSystemStructureDto structure);
         void onDimensionSaved(DimensionDto dimension);
         void onIndicatorInstanceSaved(IndicatorInstanceDto instance);
@@ -184,7 +185,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveIndSystem(final String indSystemCode) {
-        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode), new WaitingAsyncCallback<GetIndicatorsSystemByCodeResult>() {
+        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, null), new WaitingAsyncCallback<GetIndicatorsSystemByCodeResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -196,6 +197,22 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 setIndicatorsSystem(result.getIndicatorsSystem());
                 // Load system structure
                 retrieveSystemStructure();
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDiffusionIndSystem(final String indSystemCode, final String versionNumber) {
+        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, versionNumber), new WaitingAsyncCallback<GetIndicatorsSystemByCodeResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error loading indicator system with code = " + indSystemCode + " and version number = " + versionNumber);
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
+                getView().setDiffusionIndicatorsSystem(result.getIndicatorsSystem());
             }
         });
     }

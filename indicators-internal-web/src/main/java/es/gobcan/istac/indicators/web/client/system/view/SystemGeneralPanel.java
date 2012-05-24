@@ -5,13 +5,16 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
@@ -21,22 +24,31 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemGeneralPanel extends VLayout {
 
-    private SystemUiHandler        uiHandlers;
+    private SystemUiHandler                 uiHandlers;
 
-    private SystemMainFormLayout   mainFormLayout;
+    private SystemMainFormLayout            mainFormLayout;
+
+    private InternationalViewMainFormLayout diffusionMainFormLayout;
+    private GroupDynamicForm                diffusionIdentifiersForm;
 
     /* VIEW FORM */
-    private GroupDynamicForm       identifiersForm;
-    private GroupDynamicForm       productionForm;
-    private GroupDynamicForm       diffusionForm;
-    private GroupDynamicForm       contentForm;
-    private GroupDynamicForm       publicationForm;
+    private GroupDynamicForm                identifiersForm;
+    private GroupDynamicForm                productionForm;
+    private GroupDynamicForm                diffusionForm;
+    private GroupDynamicForm                contentForm;
+    private GroupDynamicForm                publicationForm;
 
-    private IndicatorsSystemDtoWeb indicatorsSystemDto;
+    private IndicatorsSystemDtoWeb          indicatorsSystemDto;
 
     public SystemGeneralPanel() {
         super();
+
+        // ........................
+        // PRODUCTION ENVIRONMENT
+        // ........................
+
         mainFormLayout = new SystemMainFormLayout();
+        mainFormLayout.setTitleLabelContents(getConstants().systemProductionEnvironment());
 
         // Show/Hide Translations
         mainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
@@ -104,6 +116,25 @@ public class SystemGeneralPanel extends VLayout {
 
         createViewForm();
         this.addMember(mainFormLayout);
+
+        // ......................
+        // DIFFUSION ENVIRONMENT
+        // ......................
+
+        diffusionMainFormLayout = new InternationalViewMainFormLayout();
+        diffusionMainFormLayout.setTitleLabelContents(getConstants().systemDiffusionEnvironment());
+        diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
+        diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
+                diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
+            }
+        });
+
+        createDiffusionViewForm();
+        this.addMember(diffusionMainFormLayout);
     }
 
     /**
@@ -160,6 +191,29 @@ public class SystemGeneralPanel extends VLayout {
 
     public void setIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
         this.indicatorsSystemDto = indicatorSystemDto;
+
+        // DIFFUSION ENVIRONMENT
+
+        // Load system in diffusion version (if exists)
+        diffusionMainFormLayout.hide();
+        String diffusionVersion = null;
+        if (indicatorSystemDto.getPublishedVersion() != null) {
+            diffusionVersion = indicatorSystemDto.getPublishedVersion();
+        } else if (indicatorSystemDto.getArchivedVersion() != null) {
+            diffusionVersion = indicatorSystemDto.getArchivedVersion();
+        }
+        if (diffusionVersion != null && !diffusionVersion.equals(indicatorSystemDto.getVersionNumber())) {
+            // There is a previous version published or archived
+            uiHandlers.retrieveDiffusionIndSystem(indicatorSystemDto.getCode(), diffusionVersion);
+        } else {
+            // If there is no previous version but procStatus is published or archived, force to show production and diffusion environment form with the same indicators system data
+            if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(indicatorSystemDto.getProcStatus()) || IndicatorsSystemProcStatusEnum.ARCHIVED.equals(indicatorSystemDto.getProcStatus())) {
+                setDiffusionIndicatorsSystem(indicatorSystemDto);
+            }
+        }
+
+        // PRODUCTION ENVIRONMENT
+
         mainFormLayout.setIndicatorsSytemCode(indicatorSystemDto.getCode());
         mainFormLayout.updatePublishSection(indicatorSystemDto.getProcStatus());
 
@@ -194,8 +248,32 @@ public class SystemGeneralPanel extends VLayout {
         mainFormLayout.setViewMode();
     }
 
+    public void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
+        // Identifiers
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getTitle()));
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorSystemDto.getAcronym()));
+        diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.PROC_STATUS, CommonUtils.getIndicatorSystemProcStatus(indicatorSystemDto));
+
+        diffusionMainFormLayout.show();
+    }
+
     public void setUiHandlers(SystemUiHandler uiHandlers) {
         this.uiHandlers = uiHandlers;
+    }
+
+    private void createDiffusionViewForm() {
+        // Identifiers Form
+        diffusionIdentifiersForm = new GroupDynamicForm(getConstants().systemDetailIdentifiers());
+        ViewTextItem versionField = new ViewTextItem(IndicatorsSystemsDS.VERSION, getConstants().systemDetailVersion());
+        ViewTextItem codeField = new ViewTextItem(IndicatorsSystemsDS.CODE, getConstants().systemDetailIdentifier());
+        ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.TITLE, getConstants().systemDetailTitle());
+        ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorsSystemsDS.ACRONYM, getConstants().systemDetailAcronym());
+        ViewTextItem procStatus = new ViewTextItem(IndicatorsSystemsDS.PROC_STATUS, getConstants().systemDetailProcStatus());
+        diffusionIdentifiersForm.setFields(codeField, versionField, title, acronym, procStatus);
+
+        diffusionMainFormLayout.addViewCanvas(diffusionIdentifiersForm);
     }
 
 }

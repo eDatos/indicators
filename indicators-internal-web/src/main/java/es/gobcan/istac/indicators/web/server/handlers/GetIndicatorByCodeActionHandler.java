@@ -28,7 +28,7 @@ public class GetIndicatorByCodeActionHandler extends AbstractActionHandler<GetIn
     @Override
     public GetIndicatorByCodeResult execute(GetIndicatorByCodeAction action, ExecutionContext context) throws ActionException {
         try {
-            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(), null);
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicatorByCode(ServiceContextHolder.getCurrentServiceContext(), action.getCode(), action.getVersionNumber());
             return new GetIndicatorByCodeResult(indicatorDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

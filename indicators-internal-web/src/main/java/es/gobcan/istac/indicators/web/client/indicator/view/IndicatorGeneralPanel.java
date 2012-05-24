@@ -12,6 +12,7 @@ import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
@@ -19,6 +20,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguag
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.smartgwt.client.types.Visibility;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -44,45 +46,73 @@ import es.gobcan.istac.indicators.web.client.widgets.ViewQuantityForm;
 public class IndicatorGeneralPanel extends VLayout {
 
     /* Data */
-    private IndicatorDto            indicator;
+    private IndicatorDto                    indicator;
 
     /* UiHandlers */
-    private IndicatorUiHandler      uiHandlers;
+    private IndicatorUiHandler              uiHandlers;
 
-    private IndicatorMainFormLayout mainFormLayout;
+    private IndicatorMainFormLayout         mainFormLayout;
+
+    private InternationalViewMainFormLayout diffusionMainFormLayout;
+    private GroupDynamicForm                diffusionIdentifiersForm;
 
     /* View Form */
-    private GroupDynamicForm        identifiersForm;
-    private GroupDynamicForm        contentClassifiersForm;
-    private GroupDynamicForm        contentDescriptorsForm;
-    private GroupDynamicForm        productionDescriptorsForm;
-    private ViewQuantityForm        quantityForm;
-    private GroupDynamicForm        diffusionDescriptorsForm;
-    private GroupDynamicForm        publicationDescriptorsForm;
-    private GroupDynamicForm        annotationsForm;
+    private GroupDynamicForm                identifiersForm;
+    private GroupDynamicForm                contentClassifiersForm;
+    private GroupDynamicForm                contentDescriptorsForm;
+    private GroupDynamicForm                productionDescriptorsForm;
+    private ViewQuantityForm                quantityForm;
+    private GroupDynamicForm                diffusionDescriptorsForm;
+    private GroupDynamicForm                publicationDescriptorsForm;
+    private GroupDynamicForm                annotationsForm;
 
     /* Edit Form */
-    private GroupDynamicForm        identifiersEditionForm;
-    private GroupDynamicForm        contentClassifiersEditionForm;
-    private GroupDynamicForm        contentDescriptorsEditionForm;
-    private GroupDynamicForm        productionDescriptorsEditionForm;
-    private QuantityForm            quantityEditionForm;
-    private GroupDynamicForm        diffusionDescriptorsEditionForm;
-    private GroupDynamicForm        publicationDescriptorsEditionForm;
-    private GroupDynamicForm        annotationsEditionForm;
+    private GroupDynamicForm                identifiersEditionForm;
+    private GroupDynamicForm                contentClassifiersEditionForm;
+    private GroupDynamicForm                contentDescriptorsEditionForm;
+    private GroupDynamicForm                productionDescriptorsEditionForm;
+    private QuantityForm                    quantityEditionForm;
+    private GroupDynamicForm                diffusionDescriptorsEditionForm;
+    private GroupDynamicForm                publicationDescriptorsEditionForm;
+    private GroupDynamicForm                annotationsEditionForm;
 
-    private List<SubjectDto>        subjectDtos;
+    private List<SubjectDto>                subjectDtos;
 
     public IndicatorGeneralPanel() {
         super();
 
+        // ........................
+        // PRODUCTION ENVIRONMENT
+        // ........................
+
         mainFormLayout = new IndicatorMainFormLayout(ClientSecurityUtils.canEditIndicator());
+        mainFormLayout.setTitleLabelContents(getConstants().indicatorProductionEnvironment());
 
         createViewForm();
         createEditionForm();
 
         this.addMember(mainFormLayout);
         bindEvents();
+
+        // ......................
+        // DIFFUSION ENVIRONMENT
+        // ......................
+
+        diffusionMainFormLayout = new InternationalViewMainFormLayout();
+        diffusionMainFormLayout.setTitleLabelContents(getConstants().indicatorDiffusionEnvironment());
+        diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
+        diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
+                diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
+            }
+        });
+
+        createDiffusionViewForm();
+        this.addMember(diffusionMainFormLayout);
+
     }
 
     private void bindEvents() {
@@ -274,6 +304,23 @@ public class IndicatorGeneralPanel extends VLayout {
         mainFormLayout.addViewCanvas(annotationsForm);
     }
 
+    private void createDiffusionViewForm() {
+        // Identifiers Form
+        diffusionIdentifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
+        ViewTextItem code = new ViewTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+        ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
+        ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
+        ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
+        MultiLanguageTextItem title = new MultiLanguageTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+        title.setRequired(true);
+        MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
+        ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
+        ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
+        diffusionIdentifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+
+        diffusionMainFormLayout.addViewCanvas(diffusionIdentifiersForm);
+    }
+
     private void createEditionForm() {
         // Identifiers Form
         identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
@@ -346,6 +393,28 @@ public class IndicatorGeneralPanel extends VLayout {
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicator = indicatorDto;
 
+        // DIFFUSION ENVIRONMENT
+
+        // Load indicator in diffusion version (if exists)
+        diffusionMainFormLayout.hide();
+        String diffusionVersion = null;
+        if (indicatorDto.getPublishedVersion() != null) {
+            diffusionVersion = indicatorDto.getPublishedVersion();
+        } else if (indicatorDto.getArchivedVersion() != null) {
+            diffusionVersion = indicatorDto.getArchivedVersion();
+        }
+        if (diffusionVersion != null && !diffusionVersion.equals(indicatorDto.getVersionNumber())) {
+            // There is a previous version published or archived
+            uiHandlers.retrieveDiffusionIndicator(indicatorDto.getCode(), diffusionVersion);
+        } else {
+            // If there is no previous version but procStatus is published or archived, force to show production and diffusion environment form with the same indicators data
+            if (IndicatorProcStatusEnum.PUBLISHED.equals(indicatorDto.getProcStatus()) || IndicatorProcStatusEnum.ARCHIVED.equals(indicatorDto.getProcStatus())) {
+                setDiffusionIndicator(indicatorDto);
+            }
+        }
+
+        // PRODUCTION ENVIRONMENT
+
         mainFormLayout.updatePublishSection(indicatorDto.getProcStatus());
         mainFormLayout.setViewMode();
 
@@ -354,6 +423,19 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Clear errors
         identifiersEditionForm.clearErrors(true);
+    }
+
+    public void setDiffusionIndicator(IndicatorDto indicatorDto) {
+        diffusionIdentifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
+        diffusionIdentifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
+        diffusionIdentifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
+        diffusionIdentifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
+        diffusionIdentifiersForm.setValue(IndicatorDS.TITLE, RecordUtils.getInternationalStringRecord(indicatorDto.getTitle()));
+        diffusionIdentifiersForm.setValue(IndicatorDS.ACRONYM, RecordUtils.getInternationalStringRecord(indicatorDto.getAcronym()));
+        diffusionIdentifiersForm.setValue(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, indicatorDto.getDataRepositoryTableName());
+        diffusionIdentifiersForm.getItem(IndicatorDS.NEEDS_UPDATE).setIcons(getNeedsUpdateIcon(indicatorDto.getNeedsUpdate()));
+
+        diffusionMainFormLayout.show();
     }
 
     private void setIndicatorViewMode(IndicatorDto indicatorDto) {

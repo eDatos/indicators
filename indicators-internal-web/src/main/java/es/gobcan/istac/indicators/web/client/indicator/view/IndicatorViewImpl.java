@@ -75,6 +75,11 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
+    public void setDiffusionIndicator(IndicatorDto indicator) {
+        generalPanel.setDiffusionIndicator(indicator);
+    }
+
+    @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         generalPanel.setQuantityUnits(units);
         dataSourcesPanel.setQuantityUnits(units);
