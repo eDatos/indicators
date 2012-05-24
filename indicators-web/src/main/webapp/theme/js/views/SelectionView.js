@@ -35,6 +35,9 @@ SelectionView = Backbone.View.extend({
             var s = this._selection.max > 1 ? 's' : '';
             var selectionableItemsHtml = '<div class="selectionable-items clearfix">Puede seleccionar como máximo ' + this._selection.max + ' elemento'+s+'</div>'
             html += selectionableItemsHtml;
+        }else {
+            var selectionableItemsHtml = '<div class="selectionable-items clearfix">Puede seleccionar varios elementos</div>'
+            html += selectionableItemsHtml;
         }
 
         html += '<div class="clearfix selectable-items-container">';

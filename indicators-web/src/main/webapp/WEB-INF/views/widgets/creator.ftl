@@ -53,6 +53,7 @@
             <div class="col3">
                 <div>
                     <div class="widget-data-title">Sistema de indicadores</div>
+                    <div class="selectionable-items clearfix">Puede seleccionar varios elementos</div>
                     <div class="systems"></div>
                 </div>
             </div>

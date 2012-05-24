@@ -8,7 +8,7 @@ var PaginatedCollection = Backbone.Collection.extend({
         options = options || {};
 
         this.firstPage = 1;
-        this.perPage = 1;
+        this.perPage = 50;
 
         this.page = options.page || this.firstPage;
 
