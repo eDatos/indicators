@@ -322,13 +322,16 @@
             borderColor : '#3478B0',
             textColor : '#000000',
             indicators : [],
-            measures : ["ABSOLUTE", "ANNUAL_PERCENTAGE_RATE", "ANNUAL_PUNTUAL_RATE", "INTERPERIOD_PERCENTAGE_RATE", "INTERPERIOD_PUNTUAL_RATE"]
+            measures : ["ABSOLUTE", "ANNUAL_PERCENTAGE_RATE", "ANNUAL_PUNTUAL_RATE", "INTERPERIOD_PERCENTAGE_RATE", "INTERPERIOD_PUNTUAL_RATE"],
+            showLabels : true,
+            showLegend : true
         },
 
         init : function(options){
             options = options || defaultOptions;
             this.el = $(options.el);
 
+            this.type = options.type;
             this.systemId = options.systemId;
             this.indicators = options.indicators || [];
             this.measures = options.measures || this._defaultOptions.measures;
@@ -358,8 +361,23 @@
             this.setBorderColor(options.borderColor);
             this.setTitle(options.title);
             this.setWidth(options.width);
+            this.setShowLabels(options.showLabels);
+            this.setShowLegend(options.showLegend);
 
+        },
 
+        setShowLabels : function(showLabels){
+            this.showLabels = showLabels;
+            if(this.type === "temporal"){
+                this.render();
+            }
+        },
+
+        setShowLegend : function(showLegend){
+            this.showLegend = showLegend;
+            if(this.type === "temporal"){
+                this.render();
+            }
         },
 
         setTextColor : function(textColor){
@@ -551,7 +569,7 @@
 
             var colors = this.chartColors(chartData);
 
-            $chartContainer.chart({
+            var chartOptions = {
                 type : "line",
                 margins : [20, 20, 40, 50],
                 defaultSeries : {
@@ -581,26 +599,9 @@
                 features : {
                     grid : {
                         draw : [true, false],
+                        forceBorder : true,
                         props : {
                             "stroke-dasharray" : "-"
-                        }
-                    },
-                    legend : {
-                        horizontal : false,
-                        width : legendWith,
-                        height : 100,
-                        x : width - legendWith - legendMargin,
-                        y : 220,
-                        dotType : "circle",
-                        dotProps : {
-                            stroke : "white",
-                            "stroke-width" : 2
-                        },
-                        borderProps : {
-                            opacity : 0.3,
-                            fill : "#c0c0c0",
-                            "stroke-width" : 0,
-                            "stroke-opacity" : 0
                         }
                     }
                 },
@@ -608,9 +609,40 @@
                 height : 400,
                 labels : renderData.labels,
                 values : renderData.values,
-                legend : renderData.legend,
                 tooltips : renderData.tooltips
-            });
+            };
+
+            if(this.showLegend){
+                chartOptions.features.legend = {
+                    horizontal : false,
+                    width : legendWith,
+                    height : 100,
+                    x : width - legendWith - legendMargin,
+                    y : 220,
+                    dotType : "circle",
+                    dotProps : {
+                        stroke : "white",
+                        "stroke-width" : 2
+                    },
+                    borderProps : {
+                        opacity : 0.3,
+                        fill : "#c0c0c0",
+                        "stroke-width" : 0,
+                        "stroke-opacity" : 0
+                    }
+                }
+                chartOptions.legend = renderData.legend;
+            }
+
+            if(!this.showLabels){
+                chartOptions.axis = {
+                    x : {
+                        labels : false
+                    }
+                }
+            }
+
+            $chartContainer.chart(chartOptions);
         }
     });
 

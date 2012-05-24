@@ -51,6 +51,13 @@ var WidgetPreviewView = Backbone.View.extend({
             this.initializeWiget();
         }, this);
 
+        this.model.on('change:showLabels', function(model, showLabels){
+            this.widget.setShowLabels(showLabels);
+        }, this);
+
+        this.model.on('change:showLegend', function(model, showLegend){
+            this.widget.setShowLegend(showLegend);
+        }, this);
 
     }
 });

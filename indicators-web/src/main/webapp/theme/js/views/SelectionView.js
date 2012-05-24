@@ -33,17 +33,19 @@ SelectionView = Backbone.View.extend({
 
         if(this._selection.max > 0){
             var s = this._selection.max > 1 ? 's' : '';
-            var selectionableItemsHtml = '<div class="selectionable-items">Puede seleccionar como máximo ' + this._selection.max + ' elemento'+s+'</div>'
+            var selectionableItemsHtml = '<div class="selectionable-items clearfix">Puede seleccionar como máximo ' + this._selection.max + ' elemento'+s+'</div>'
             html += selectionableItemsHtml;
         }
 
+        html += '<div class="clearfix selectable-items-container">';
         this.collection.each(function(item){
             var selected = self._selection.isSelected(item);
             var selectedClass = selected ? 'selected' : '';
 
             var label = self.getLabel(item);
-            html += '<div><a href="#" class="selectable-item ' + selectedClass + '" data-value="' + item.id +'">' + label + '</a></div>'
+            html += '<div class="selectable-item-container"><a href="#" class="selectable-item ' + selectedClass + '" data-value="' + item.id +'">' + label + '</a></div>'
         });
+        html += "</div>";
 
 
         this.delegateEvents();

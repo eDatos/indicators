@@ -7,7 +7,10 @@ WidgetStyleOptionsView = Backbone.View.extend({
     },
 
     render : function(){
-        this.$el.html(this.template());
+        var context = {
+            isTemporal : this.model.get("type") === "temporal"
+        };
+        this.$el.html(this.template(context));
 
         this.cacheInputSelectors();
         this.setInputsValFromModel();
@@ -61,6 +64,8 @@ WidgetStyleOptionsView = Backbone.View.extend({
         this.inputs.widthSlider = $(".width-slider", this.$el);
         this.inputs.borderColor = $("[name='border-color']", this.$el);
         this.inputs.textColor = $("[name='text-color']", this.$el);
+        this.inputs.showLabels = $("[name='showLabels']", this.$el);
+        this.inputs.showLegend = $("[name='showLegend']", this.$el);
     },
 
     setInputsValFromModel : function(){
@@ -68,11 +73,15 @@ WidgetStyleOptionsView = Backbone.View.extend({
         this.inputs.width.val(this.model.get('width'));
         this.inputs.borderColor.val(this.model.get('borderColor'));
         this.inputs.textColor.val(this.model.get('textColor'));
+        this.inputs.showLabels.attr('checked', this.model.get('showLabels'));
+        this.inputs.showLegend.attr('checked', this.model.get('showLegend'));
     },
 
     events : {
         'keyup [name="title"]' : 'setTitle',
-        'keyup [name="width"]' : 'setWidth'
+        'keyup [name="width"]' : 'setWidth',
+        'change [name="showLabels"]' : 'setShowLabels',
+        'change [name="showLegend"]' : 'setShowLegend'
     },
 
     setTitle : function(){
@@ -84,6 +93,16 @@ WidgetStyleOptionsView = Backbone.View.extend({
         var value = this.inputs.width.val();
         this.model.set('width', value);
         this.inputs.widthSlider.slider('value', value);
+    },
+
+    setShowLabels : function(){
+        var value = this.inputs.showLabels.attr('checked') !== undefined;
+        this.model.set('showLabels', value);
+    },
+
+    setShowLegend : function(){
+        var value = this.inputs.showLegend.attr('checked') !== undefined;
+        this.model.set('showLegend', value);
     }
 
 });

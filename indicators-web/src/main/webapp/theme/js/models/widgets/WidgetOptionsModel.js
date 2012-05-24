@@ -12,6 +12,8 @@ var WidgetOptionsModel = Backbone.Model.extend({
         systemId : '',
         indicators : [],
         measures : [],
-        geographicalValues : []
+        geographicalValues : [],
+        showLabels : false,
+        showLegend : false
     }
 });

@@ -92,6 +92,20 @@
                 <label>Título del widget:</label>
                 <input type="text" name="title"/>
             </div>
+            <% if(isTemporal) { %>
+                <div>
+                    <label>
+                        Mostrar etiquetas en el eje x
+                    </label>
+                    <input type="checkbox" name="showLabels">
+                </div>
+                <div>
+                    <label>
+                        Mostrar leyenda
+                    </label>
+                    <input type="checkbox" name="showLegend">
+                </div>
+            <% } %>
         </div>
     </script>
 
