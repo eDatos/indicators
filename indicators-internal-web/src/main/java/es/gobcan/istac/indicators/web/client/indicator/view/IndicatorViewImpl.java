@@ -118,8 +118,13 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     }
 
     @Override
-    public void setDataStructure(DataStructureDto dataStructureDto) {
-        dataSourcesPanel.setDataStructure(dataStructureDto);
+    public void setDataStructureView(DataStructureDto dataStructureDto) {
+        dataSourcesPanel.setDataStructureView(dataStructureDto);
+    }
+
+    @Override
+    public void setDataStructureEdition(DataStructureDto dataStructureDto) {
+        dataSourcesPanel.setDataStructureEdition(dataStructureDto);
     }
 
     @Override

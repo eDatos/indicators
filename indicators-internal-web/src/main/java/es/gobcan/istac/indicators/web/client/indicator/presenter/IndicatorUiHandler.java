@@ -33,7 +33,8 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveDataDefinitionsOperationsCodes();
     void retrieveDataDefinitionsByOperationCode(String operationCode);
     void retrieveDataDefinition(String uuid);
-    void retrieveDataStructure(String uuid);
+    void retrieveDataStructureView(String uuid);
+    void retrieveDataStructureEdition(String uuid);
     void retrieveGeographicalValueDS(String uuid);
 
     void saveDataSource(String indicatorUuid, DataSourceDto dataSourceDto);

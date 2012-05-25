@@ -135,7 +135,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setDataDefinitionsOperationCodes(List<String> operationCodes);
         void setDataDefinitions(List<DataDefinitionDto> dataDefinitionDtos);
         void setDataDefinition(DataDefinitionDto dataDefinitionDto);
-        void setDataStructure(DataStructureDto dataStructureDto);
+        void setDataStructureView(DataStructureDto dataStructureDto);
+        void setDataStructureEdition(DataStructureDto dataStructureDto);
 
         void setGeographicalValuesDS(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
@@ -184,7 +185,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
         });
     }
-    
+
     @Override
     public void retrieveDiffusionIndicator(String code, String versionNumber) {
         dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
@@ -424,7 +425,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void retrieveDataStructure(String uuid) {
+    public void retrieveDataStructureView(String uuid) {
         dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallback<GetDataStructureResult>() {
 
             @Override
@@ -435,11 +436,26 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
-                getView().setDataStructure(result.getDataStructureDto());
-
+                getView().setDataStructureView(result.getDataStructureDto());
             }
         });
+    }
 
+    @Override
+    public void retrieveDataStructureEdition(String uuid) {
+        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallback<GetDataStructureResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error retrieving data structure");
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataStructure()), MessageTypeEnum.ERROR);
+
+            }
+            @Override
+            public void onWaitSuccess(GetDataStructureResult result) {
+                getView().setDataStructureEdition(result.getDataStructureDto());
+            }
+        });
     }
 
     @Override
