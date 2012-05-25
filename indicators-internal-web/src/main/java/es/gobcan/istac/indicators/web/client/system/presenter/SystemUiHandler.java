@@ -24,7 +24,7 @@ public interface SystemUiHandler extends UiHandlers {
 
     void retrieveIndSystem(String indSystemCode);
     void retrieveSystemStructure();
-    
+
     void retrieveDiffusionIndSystem(String indSystemCode, String versionNumber);
 
     void retrieveIndicator(String uuid);

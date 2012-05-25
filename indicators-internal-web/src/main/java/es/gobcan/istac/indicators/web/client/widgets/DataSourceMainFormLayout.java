@@ -32,7 +32,7 @@ public class DataSourceMainFormLayout extends InternationalMainFormLayout {
     private void common() {
         // Remove handler from edit button
         editHandlerRegistration.removeHandler();
-        
+
         editQueryButton = new ToolStripButton(getConstants().editQuery(), IndicatorsResources.RESOURCE.reset().getURL());
         editQueryButton.setVisibility(Visibility.HIDDEN);
         editQueryButton.addClickHandler(new ClickHandler() {

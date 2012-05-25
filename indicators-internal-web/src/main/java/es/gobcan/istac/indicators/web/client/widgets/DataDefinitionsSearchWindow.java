@@ -39,7 +39,7 @@ public class DataDefinitionsSearchWindow extends SearchWindow {
         form.setFields(operationCode, searchButton);
 
         // ListGrid
-        
+
         listGrid.setLeaveScrollbarGap(false);
 
         ListGridField name = new ListGridField(DataDefinitionDS.NAME, getConstants().dataSourceSurveyTitle());
