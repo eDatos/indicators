@@ -35,16 +35,20 @@ var WidgetPreviewView = Backbone.View.extend({
         }, this);
         this.model.on('change:indicators', function(model, indicators){
             this.widget.setIndicators(indicators);
+            this.widget.render();
         }, this);
         this.model.on('change:measures', function(model, measures){
             this.widget.setMeasures(measures);
+            this.widget.render();
         }, this);
         this.model.on('change:geographicalValues', function(model, geographicalValues){
             this.widget.setGeographicalValues(geographicalValues);
+            this.widget.render();
         }, this);
 
         this.model.on('change:systemId', function(model, systemId){
             this.widget.setSystemId(systemId);
+            this.widget.render();
         }, this);
 
         this.model.on('change:type', function(model, type){
@@ -53,10 +57,12 @@ var WidgetPreviewView = Backbone.View.extend({
 
         this.model.on('change:showLabels', function(model, showLabels){
             this.widget.setShowLabels(showLabels);
+            this.widget.render();
         }, this);
 
         this.model.on('change:showLegend', function(model, showLegend){
             this.widget.setShowLegend(showLegend);
+            this.widget.render();
         }, this);
 
     }

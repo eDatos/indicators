@@ -368,16 +368,10 @@
 
         setShowLabels : function(showLabels){
             this.showLabels = showLabels;
-            if(this.type === "temporal"){
-                this.render();
-            }
         },
 
         setShowLegend : function(showLegend){
             this.showLegend = showLegend;
-            if(this.type === "temporal"){
-                this.render();
-            }
         },
 
         setTextColor : function(textColor){
@@ -415,22 +409,18 @@
 
         setSystemId : function(systemId){
             this.systemId = systemId;
-            this.render();
         },
 
         setIndicators : function(indicators){
             this.indicators = indicators;
-            this.render();
         },
 
         setMeasures : function(measures){
             this.measures = measures;
-            this.render();
         },
 
         setGeographicalValues : function(geographicalValues){
             this.geographicalValues = geographicalValues;
-            this.render();
         },
 
         isIstacDomain : function(){
@@ -561,17 +551,27 @@
             $chartContainer.css('height', this.height);
             this.contentContainer.html($chartContainer);
 
-            var width = this.width;
-            var legendWith = 100;
-            var legendMargin = 20;
-
             var renderData = chartData;
-
             var colors = this.chartColors(chartData);
+            var legendElements = _getKeys(chartData.legend);
+
+            var chartWidth = this.width;
+            var chartHeight = 200;
+
+            var legendWidth = this.width;
+            var legendHeight = legendElements.length * 20;
+
+            var chartTopMargin = 20;
+            var labelHeight = this.showLabels? 40 : 10;
+            var legendTop = chartTopMargin + chartHeight + labelHeight;
+
+            var chartBottomMargin = legendHeight + labelHeight;
+
+            var containerHeight = chartTopMargin + chartHeight + chartBottomMargin;
 
             var chartOptions = {
                 type : "line",
-                margins : [20, 20, 40, 50],
+                margins : [chartTopMargin, 20, chartBottomMargin, 50],
                 defaultSeries : {
                     plotProps : {
                         "stroke-width" : 1
@@ -605,8 +605,8 @@
                         }
                     }
                 },
-                width : this.width,
-                height : 400,
+                width : chartWidth,
+                height : containerHeight,
                 labels : renderData.labels,
                 values : renderData.values,
                 tooltips : renderData.tooltips
@@ -614,11 +614,10 @@
 
             if(this.showLegend){
                 chartOptions.features.legend = {
-                    horizontal : false,
-                    width : legendWith,
-                    height : 100,
-                    x : width - legendWith - legendMargin,
-                    y : 220,
+                    width : legendWidth,
+                    height : legendHeight,
+                    x : 0,
+                    y : legendTop,
                     dotType : "circle",
                     dotProps : {
                         stroke : "white",
@@ -643,6 +642,7 @@
             }
 
             $chartContainer.chart(chartOptions);
+
         }
     });
 
