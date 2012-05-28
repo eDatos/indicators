@@ -63,10 +63,12 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
                 ViewTextItem item = new ViewTextItem("variable" + i, dataSourceVariableDtos.get(i).getVariable());
                 List<String> codes = dataStructureDto.getValueCodes().get(dataSourceVariableDtos.get(i).getVariable());
                 List<String> labels = dataStructureDto.getValueLabels().get(dataSourceVariableDtos.get(i).getVariable());
-                for (int j = 0; j < codes.size(); j++) {
-                    if (codes.get(j).equals(dataSourceVariableDtos.get(i).getCategory())) {
-                        item.setValue(dataSourceVariableDtos.get(i).getCategory() + " - " + labels.get(j));
-                        break;
+                if (codes != null && labels != null) {
+                    for (int j = 0; j < codes.size(); j++) {
+                        if (codes.get(j).equals(dataSourceVariableDtos.get(i).getCategory())) {
+                            item.setValue(dataSourceVariableDtos.get(i).getCategory() + " - " + labels.get(j));
+                            break;
+                        }
                     }
                 }
                 formItems[i] = item;
