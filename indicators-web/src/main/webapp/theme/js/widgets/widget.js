@@ -176,8 +176,6 @@
 
         _observationToNumber : function(observation){
             if (observation) {
-                observation = observation.replace('\.', '');
-                observation = observation.replace(',', '.');
                 return parseFloat(observation);
             }
         },
@@ -187,6 +185,16 @@
                 var index = this.getObservationIndex(geo, time, measure);
                 var observation = this.data.observation[index];
                 var res = this._observationToNumber(observation);
+                return res;
+            }
+            return null;
+        },
+
+        getObservationStr : function(geo, time, measure){
+            if(this.data.observation){
+                var index = this.getObservationIndex(geo, time, measure);
+                var observation = this.data.observation[index];
+                var res = observation;
                 return res;
             }
             return null;
@@ -468,8 +476,9 @@
                 for (var j = 0; j < timeValues.length; j++) {
                     var timeValue = timeValues[j];
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
+                    var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
                     data.push(value);
-                    tooltip.push('<div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div><div>' + value + '</div>');
+                    tooltip.push('<div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div><div>' + valueStr + '</div>');
                 }
 
                 legend[serie] = geoValueTitle;
@@ -673,7 +682,7 @@
             var observations = [];
             for (var i = 0; i < this.measures.length; i++) {
                 var measure = this.measures[i];
-                var observation = dataset.getObservation(geographicalValue, temporalValue, measure);
+                var observation = dataset.getObservationStr(geographicalValue, temporalValue, measure);
                 observations.push(observation);
             }
 
