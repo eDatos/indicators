@@ -155,6 +155,8 @@ Application Indicators {
 	    	DataStructure retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Populates a given indicator version data"
+	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
 	    	deleteIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"

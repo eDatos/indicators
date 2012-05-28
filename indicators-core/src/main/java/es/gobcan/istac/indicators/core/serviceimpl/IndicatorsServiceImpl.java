@@ -386,7 +386,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Populate data
         try {
-            getIndicatorsDataService().populateIndicatorData(ctx, uuid);
+            getIndicatorsDataService().populateIndicatorVersionData(ctx, uuid, indicatorInProduction.getVersionNumber());
         } catch (MetamacException e) {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());

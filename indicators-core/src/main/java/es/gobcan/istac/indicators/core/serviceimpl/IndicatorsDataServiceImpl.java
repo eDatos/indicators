@@ -185,32 +185,47 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         if (indicator.getDiffusionVersion() != null) {
-            IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
-            if (shouldIndicatorVersionBePopulated(indicatorVersion)){
-                try {
-                    populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
-                    indicator = changeDiffusionVersion(indicator);
-                    //update system version
-                    List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
-                    changeVersionForModifiedIndicatorsSystems(modifiedSystems);
-                } catch (MetamacException e) {
-                    exceptionItems.addAll(e.getExceptionItems());
-                }
+            try {
+                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
+            } catch (MetamacException e) {
+                exceptionItems.addAll(e.getExceptionItems());
             }
         }
         if (indicator.getProductionVersion() != null) {
-            IndicatorVersion indicatorVersion = getIndicatorVersion(indicatorUuid, indicator.getProductionVersion().getVersionNumber());
-            if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
-                try {
-                    populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersion().getVersionNumber());
-                } catch (MetamacException e) {
-                    exceptionItems.addAll(e.getExceptionItems());
-                }
+            try {
+                indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getProductionVersion().getVersionNumber());
+            } catch (MetamacException e) {
+                exceptionItems.addAll(e.getExceptionItems());
             }
         }
         
         if (exceptionItems.size() > 0) {
             throw new MetamacException(exceptionItems);
+        }
+    }
+    
+    @Override
+    public Indicator populateIndicatorVersionData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+        // Validation
+        InvocationValidator.checkPopulateIndicatorVersionData(indicatorUuid, indicatorVersionNumber, null);
+        
+        IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+        
+        if (indicatorVersion != null && shouldIndicatorVersionBePopulated(indicatorVersion)) {
+            Indicator indicator = indicatorVersion.getIndicator();
+            String diffusionVersion = indicator.getDiffusionVersion() != null ? indicator.getDiffusionVersion().getVersionNumber() : null;
+            
+            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+            // After diffusion version's data is populated all related systems must update their versions
+            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
+                indicator = changeDiffusionVersion(indicator);
+                // update system version
+                List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
+                changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+            }
+            return indicator;
+        } else {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, indicatorUuid, indicatorVersionNumber);
         }
     }
     
@@ -243,7 +258,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String indicatorUuid = indicator.getUuid();
             if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
                 try {
-                    populateIndicatorVersionData(ctx, indicatorUuid, diffusionVersion);
+                    onlyPopulateIndicatorVersion(ctx, indicatorUuid, diffusionVersion);
                     changeDiffusionVersion(indicator);
                     modifiedSystems.addAll(findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid));
                 } catch (MetamacException e) {
@@ -298,7 +313,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return getIndicatorInstanceRepository().findIndicatorsSystemsWithDiffusionVersionWithIndicator(indicatorUuid);
     }
 
-    private void populateIndicatorVersionData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
+    private void onlyPopulateIndicatorVersion(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
 
         DatasetRepositoryDto datasetRepoDto = null;
         try {
@@ -1315,7 +1330,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      */
     private List<DataOperation> transformDataSourcesForProcessing(List<DataSource> dataSources) {
         LinkedList<DataOperation> dataOperations = new LinkedList<DataOperation>();
-        // Load operations are posisionated first
+        // Load operations are placed first
         for (DataSource dataSource : dataSources) {
             if (dataSource.getAbsoluteMethod() != null) {
                 DataOperation dataOp = new DataOperation(dataSource, MeasureDimensionTypeEnum.ABSOLUTE);
