@@ -193,7 +193,8 @@
         getObservationStr : function(geo, time, measure){
             if(this.data.observation){
                 var index = this.getObservationIndex(geo, time, measure);
-                var observation = this.data.observation[index];
+                var decimalPlaces = this.structure.decimalPlaces;
+                var observation = parseFloat(this.data.observation[index]).toFixed(decimalPlaces);
                 var res = observation;
                 return res;
             }
