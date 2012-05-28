@@ -318,7 +318,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         String parentLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, baseURL);
         String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source, baseURL);
 
-        target.setId(source.getUuid());
+        target.setId(source.getCode());
         target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
         target.setSelfLink(selfLinkURL);
         
