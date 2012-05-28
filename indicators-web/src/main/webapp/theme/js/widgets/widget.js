@@ -469,7 +469,7 @@
                     var timeValue = timeValues[j];
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     data.push(value);
-                    tooltip.push(geoValueTitle + " - " + timeValuesTitles[timeValue] + " - " + value);
+                    tooltip.push('<div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div><div>' + value + '</div>');
                 }
 
                 legend[serie] = geoValueTitle;
@@ -583,7 +583,8 @@
                     },
                     tooltip : {
                         active : true,
-                        width: 200, height: 50,
+                        width: 200,
+                        height: 60,
                         roundedCorners: 5,
                         padding: [6, 6] /* y, x */,
                         offset: [20, 0] /* y, x */,

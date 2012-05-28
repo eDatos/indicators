@@ -15,6 +15,10 @@ module.exports = function (grunt) {
                 src : ['widget.js'],
                 dest : min
             }
+        },
+        watch : {
+            files : 'widget.js',
+            tasks : 'default'
         }
     });
     grunt.registerTask('default', 'min concat');
