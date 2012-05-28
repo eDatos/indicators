@@ -149,8 +149,8 @@
         templateManager.loadTemplatesInPage();
 
         var apiBaseUrl = "[@spring.url ""/]";
-        //var apiBaseUrl = "http://rcorrod:8070/indicators-web";
         var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
+
     </script>
 
     <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"/]"></script>
