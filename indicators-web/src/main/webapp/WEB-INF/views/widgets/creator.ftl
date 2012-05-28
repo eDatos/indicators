@@ -153,6 +153,8 @@
         var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
     </script>
 
+    <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"/]"></script>
+    
     <!-- Modelos -->
     <script src="[@spring.url "/theme/js/models/widgets/IndicatorInstanceModel.js"/]"></script>
     <script src="[@spring.url "/theme/js/models/widgets/WidgetOptionsModel.js"/]"></script>
