@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
@@ -137,6 +138,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source.getUuid() == null) {
             target = new IndicatorInstance();
 
+            target.setCode(UUID.randomUUID().toString());
             target.setElementLevel(new ElementLevel());
             target.getElementLevel().setOrderInLevel(source.getOrderInLevel());
             target.getElementLevel().setIndicatorInstance(target);
@@ -148,6 +150,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             // Metadata unmodifiable (these metadatas are modified in specific operation)
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
+            ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getCode(), ServiceExceptionParameters.INDICATOR_INSTANCE_CODE, exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getIndicatorUuid(), target.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getParentUuid(), target.getElementLevel().getParentUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, exceptions);

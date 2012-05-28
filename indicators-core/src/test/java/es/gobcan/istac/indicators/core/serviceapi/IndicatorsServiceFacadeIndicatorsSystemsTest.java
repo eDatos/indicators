@@ -1562,6 +1562,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Children
             {
                 ElementLevelDto elementLevelChildDto = elementLevelDto.getSubelements().get(0);
+                assertEquals("IndSys-3-v1-IInstance-1A-CODE", elementLevelChildDto.getIndicatorInstance().getCode());
                 IndicatorsAsserts.assertEqualsInternationalString(elementLevelChildDto.getIndicatorInstance().getTitle(), "es", "Título IndSys-3-v1-IInstance-1A", "en",
                         "Title IndSys-3-v1-IInstance-1A");
                 assertEquals(Long.valueOf(1), elementLevelChildDto.getOrderInLevel());
@@ -1576,6 +1577,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
         {
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
+            assertEquals("IndSys-3-v1-IInstance-2-CODE", elementLevelDto.getIndicatorInstance().getCode());
             IndicatorsAsserts.assertEqualsInternationalString(elementLevelDto.getIndicatorInstance().getTitle(), "es", "Título IndSys-3-v1-IInstance-2", "en", "Title IndSys-3-v1-IInstance-2");
             assertEquals(Long.valueOf(2), elementLevelDto.getOrderInLevel());
             assertEquals(0, elementLevelDto.getSubelements().size());
@@ -2781,6 +2783,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertNotNull(indicatorInstanceDto);
         assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getUuid());
+        assertEquals("IndSys-1-v2-IInstance-3-code", indicatorInstanceDto.getCode());
         assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
@@ -2827,6 +2830,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+    public void testRetrieveIndicatorInstancePublishedByCode() throws Exception {
+
+        IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstancePublishedByCode(getServiceContextAdministrador(), "IndSys-1-IInstance-1-Code");
+
+        assertNotNull(indicatorInstanceDto);
+        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1, indicatorInstanceDto.getUuid());
+        assertEquals("IndSys-1-IInstance-1-Code", indicatorInstanceDto.getCode());
+    }
+
+    @Test
     public void testCreateIndicatorInstance() throws Exception {
 
         // Create indicator instance
@@ -2841,6 +2854,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
         assertNotNull(indicatorInstanceDtoCreated.getUuid());
+        assertNotNull(indicatorInstanceDtoCreated.getCode());
 
         // Retrieve indicator instance
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
@@ -3413,7 +3427,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
-    public void testUpdateIndicatorInstanceErrorChangeParentAndOrderAndIndicator() throws Exception {
+    public void testUpdateIndicatorInstanceErrorChangeMetadataUnmodifiable() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
@@ -3422,24 +3436,29 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         assertEquals(INDICATOR_2, indicatorInstanceDto.getIndicatorUuid());
         indicatorInstanceDto.setIndicatorUuid("newIndicator");
+        indicatorInstanceDto.setCode("new");
 
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
             fail("Unmodifiable attributes changed");
         } catch (MetamacException e) {
-            assertEquals(3, e.getExceptionItems().size());
+            assertEquals(4, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_PARENT_UUID, e.getExceptionItems().get(2).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(3).getCode());
+            assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(3).getMessageParameters()[0]);
         }
 
         // Put parent null

@@ -128,6 +128,7 @@ public class DoCopyUtils {
      */
     public static IndicatorInstance copy(IndicatorInstance source) {
         IndicatorInstance target = new IndicatorInstance();
+        target.setCode(source.getCode()); // must remains with same code (but with different uuid)
         target.setTitle(copy(source.getTitle()));
         target.setIndicator(source.getIndicator());
         target.setGeographicalGranularity(source.getGeographicalGranularity());

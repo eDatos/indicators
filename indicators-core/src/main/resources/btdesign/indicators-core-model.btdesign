@@ -56,6 +56,7 @@ Application Indicators {
 	    	@IndicatorInstance updateIndicatorInstance(@IndicatorInstance indicatorInstance) throws MetamacException;
 	    	@IndicatorInstance updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
+	    	@IndicatorInstance retrieveIndicatorInstancePublishedByCode(String code) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	List<@IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(String uuid) throws MetamacException;
@@ -295,6 +296,8 @@ Application Indicators {
 	    	@IndicatorInstanceDto updateIndicatorInstanceLocation(String uuid, String parentTargetUuid, Long orderInLevel) throws MetamacException;
 	    	"Retrieves indicator instance"
 	    	@IndicatorInstanceDto retrieveIndicatorInstance(String uuid) throws MetamacException;
+	    	"Retrieves indicator instance published by code"
+	    	@IndicatorInstanceDto retrieveIndicatorInstancePublishedByCode(String code) throws MetamacException;
 	    	"Deletes indicator instance"
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	"Retrieves all indicators instances of a indicators system regardless of the level"
@@ -576,7 +579,9 @@ Application Indicators {
         Entity IndicatorInstance {
         	databaseTable = "TB_INDICATORS_INSTANCES"
         	hint="idSequence=INDICATORS_INSTANCES"
-        	       		
+
+			"Code to indicator instance. Not unique (its duplicated when indicators system is versioned). Non modifiable"
+       		String code not nullable;
 			"Title"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
         	"Time granularity"
@@ -601,6 +606,7 @@ Application Indicators {
             	@IndicatorInstance save(@IndicatorInstance entity);
             	protected List<@IndicatorInstance> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorInstance findIndicatorInstance(String uuid);
+            	@IndicatorInstance findIndicatorInstancePublishedByCode(String code);
             	Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber);
             	List<String> findIndicatorsLinkedWithIndicatorsSystemVersion(Long indicatorsSystemVersionId);
             	List<String> findIndicatorsSystemsWithDiffusionVersionWithIndicator(String indicatorUuid);
@@ -1300,6 +1306,8 @@ Application Indicators {
 	   	DataTransferObject IndicatorInstanceDto extends @AuditDto {
 			"Unique uuid"
 			String uuid;
+			"Code"
+       		String code;
 			"Title"
 			- @InternationalStringDto title;
 			"Indicator"

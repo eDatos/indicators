@@ -29,6 +29,7 @@ public class ServiceExceptionParameters {
     // Indicators instances
     public static final String INDICATOR_INSTANCE                                                            = "indicator_instance";
     public static final String INDICATOR_INSTANCE_UUID                                                       = "indicator_instance.uuid";
+    public static final String INDICATOR_INSTANCE_CODE                                                       = "indicator_instance.code";
     public static final String INDICATOR_INSTANCE_ORDER_IN_LEVEL                                             = "indicator_instance.order_in_level";
     public static final String INDICATOR_INSTANCE_TITLE                                                      = "indicator_instance.title";
     public static final String INDICATOR_INSTANCE_INDICATOR_UUID                                             = "indicator_instance.indicator_uuid";

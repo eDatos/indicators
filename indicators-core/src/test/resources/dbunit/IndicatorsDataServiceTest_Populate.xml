@@ -5533,6 +5533,7 @@
 				<TB_INDICATORS_INSTANCES
 					ID="112"
 					UUID="IndSys-1-v1-IInstance-1"
+                    CODE="IndSys-1-v1-IInstance-1-CODE"
 					TIME_GRANULARITY="YEARLY"
 					TIME_VALUE="[null]"
 					GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5594,6 +5595,7 @@
 				<TB_INDICATORS_INSTANCES
 					ID="121"
 					UUID="IndSys-1-v2-IInstance-1"
+                    CODE="IndSys-1-v2-IInstance-1-CODE"
 					TIME_GRANULARITY="YEARLY"
 					TIME_VALUE="[null]"
 					GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5652,6 +5654,7 @@
 						<TB_INDICATORS_INSTANCES
 							ID="1221"
 							UUID="IndSys-1-v2-IInstance-3"
+                            CODE="IndSys-1-v2-IInstance-3-CODE"
 							TIME_GRANULARITY="YEARLY"
 							TIME_VALUE="[null]"
 							GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5764,6 +5767,7 @@
 				<TB_INDICATORS_INSTANCES
 					ID="212"
 					UUID="IndSys-2-v1-IInstance-1"
+                    CODE="IndSys-2-v1-IInstance-1-CODE"
 					TIME_GRANULARITY="YEARLY"
 					TIME_VALUE="[null]"
 					GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5825,6 +5829,7 @@
 				<TB_INDICATORS_INSTANCES
 					ID="221"
 					UUID="IndSys-2-v2-IInstance-1"
+                    CODE="IndSys-2-v2-IInstance-1-CODE"
 					TIME_GRANULARITY="YEARLY"
 					TIME_VALUE="[null]"
 					GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5883,6 +5888,7 @@
 						<TB_INDICATORS_INSTANCES
 							ID="2221"
 							UUID="IndSys-2-v2-IInstance-3"
+                            CODE="IndSys-2-v2-IInstance-3-code"
 							TIME_GRANULARITY="YEARLY"
 							TIME_VALUE="[null]"
 							GEOGRAPHICAL_GRANULARITY_FK="1"
@@ -5995,6 +6001,7 @@
 				<TB_INDICATORS_INSTANCES
 					ID="312"
 					UUID="IndSys-3-v1-IInstance-1"
+                    CODE="IndSys-3-v1-IInstance-1-CODE"
 					TIME_GRANULARITY="YEARLY"
 					TIME_VALUE="[null]"
 					GEOGRAPHICAL_GRANULARITY_FK="1"

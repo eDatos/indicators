@@ -573,6 +573,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public IndicatorInstance retrieveIndicatorInstancePublishedByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorInstancePublishedByCode(code, null);
+
+        // Retrieve
+        IndicatorInstance indicatorInstance = getIndicatorInstanceRepository().findIndicatorInstancePublishedByCode(code);
+        if (indicatorInstance == null) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND_WITH_CODE, code);
+        }
+        return indicatorInstance;
+    }
+
+    @Override
     public IndicatorInstance updateIndicatorInstance(ServiceContext ctx, IndicatorInstance indicatorInstance) throws MetamacException {
 
         // Validation of parameters

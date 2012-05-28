@@ -24,8 +24,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Indicator instances
     public static final CommonServiceExceptionType INDICATOR_INSTANCE_NOT_FOUND                             = create("exception.indicators.indicator_instance.not_found");
-    public static final CommonServiceExceptionType INDICATOR_NOT_FOUND_WITH_CODE                            = create("exception.indicators.indicator.not_found_code");
     public static final CommonServiceExceptionType INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL    = create("exception.indicators.indicator_instance.already_exists.indicator_in_same_level");
+    public static final CommonServiceExceptionType INDICATOR_INSTANCE_NOT_FOUND_WITH_CODE                   = create("exception.indicators.indicator_instance.not_found_code");
 
     // Geographical values
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_NOT_FOUND                             = create("exception.indicators.geographical_value.not_found");
@@ -37,6 +37,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                      = create("exception.indicators.indicator.not_found");
+    public static final CommonServiceExceptionType INDICATOR_NOT_FOUND_WITH_CODE                            = create("exception.indicators.indicator.not_found_code");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NOT_FOUND                              = create("exception.indicators.indicator.version_not_found");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NO_DATA                                = create("exception.indicators.indicator.version_no_data");
     public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_CODE_DUPLICATED                  = create("exception.indicators.indicator.already_exists.code_duplicated");

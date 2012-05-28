@@ -643,6 +643,7 @@
 					<TB_INDICATORS_INSTANCES
 						ID="11"
 						UUID="IndSys-1-v1-IInstance-11"
+                        CODE="IndSys-1-v1-IInstance-11-code"
 						TIME_GRANULARITY="YEARLY"
 						TIME_VALUE="[null]"
 						GEOGRAPHICAL_GRANULARITY_FK="3"
@@ -673,6 +674,7 @@
 					<TB_INDICATORS_INSTANCES
 						ID="12"
 						UUID="IndSys-1-v1-IInstance-12"
+                        CODE="IndSys-1-v1-IInstance-12-CODE"
 						TIME_GRANULARITY="MONTHLY"
 						TIME_VALUE="[null]"
 						GEOGRAPHICAL_GRANULARITY_FK="[null]"

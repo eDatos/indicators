@@ -468,6 +468,20 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
+    public IndicatorInstanceDto retrieveIndicatorInstancePublishedByCode(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        IndicatorInstance indicatorInstance = getIndicatorsSystemsService().retrieveIndicatorInstancePublishedByCode(ctx, uuid);
+
+        // Transform
+        IndicatorInstanceDto indicatorInstanceDto = do2DtoMapper.indicatorInstanceDoToDto(indicatorInstance);
+        return indicatorInstanceDto;
+    }
+
+    @Override
     public void deleteIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Security (role and access to this indicators system)

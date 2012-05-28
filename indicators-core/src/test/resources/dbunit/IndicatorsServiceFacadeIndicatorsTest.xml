@@ -2521,6 +2521,7 @@
 					<TB_INDICATORS_INSTANCES
 						ID="111"
 						UUID="IndSys-1-v1-IInstance-1"
+                        CODE="IndSys-1-v1-IInstance-1-CODE"
 						TIME_GRANULARITY="YEARLY"
 						TIME_VALUE="[null]"
 						GEOGRAPHICAL_GRANULARITY_FK="1"

@@ -569,6 +569,17 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveIndicatorInstancePublishedByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(code, ServiceExceptionParameters.CODE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkDeleteIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -598,7 +609,7 @@ public class InvocationValidator {
         }
 
         checkIndicatorInstance(indicatorInstance, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions); // uuid never is null: it is initialized when create object
+        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
         // unmodifiable metadatas are checked in Dto2DoMapper
 
         ExceptionUtils.throwIfException(exceptions);
@@ -1077,6 +1088,7 @@ public class InvocationValidator {
     private static void checkIndicatorInstance(IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorInstance, ServiceExceptionParameters.INDICATOR_INSTANCE, exceptions);
         ValidationUtils.checkParameterRequired(indicatorInstance.getElementLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE, exceptions);
+        ValidationUtils.checkParameterRequired(indicatorInstance.getCode(), ServiceExceptionParameters.INDICATOR_INSTANCE_CODE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getIndicator(), ServiceExceptionParameters.INDICATOR_INSTANCE_INDICATOR_UUID, exceptions);
         if (ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && ValidationUtils.isEmpty(indicatorInstance.getTimeValue())) {
