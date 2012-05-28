@@ -88,32 +88,32 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public IndicatorInstanceType retrieveIndicatorsInstance(final String baseURL, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception {
-        IndicatorInstance indicatorInstance = retrieveIndicatorInstance(idIndicatorSystem, uuidIndicatorInstance);
+    public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String baseURL, final String idIndicatorSystem, final String idIndicatorInstance) throws Exception {
+        IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         IndicatorInstanceType result = dto2TypeMapper.indicatorsInstanceDoToType(indicatorInstance, baseURL);
         return result;
     }
 
     @Override
-    public DataType retrieveIndicatorsInstanceData(String baseUrl, String idIndicatorSystem, String uuidIndicatorInstance) throws Exception {
-        retrieveIndicatorInstance(idIndicatorSystem, uuidIndicatorInstance); // Check Published
+    public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance) throws Exception {
+        IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance); // Check Published
         
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
+        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
         
-        Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance, null);
+        Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid(), null);
         
         return DataTypeUtil.createDataType(geographicalValues, timeValues, measureValues, observationMap);
     }
 
  
 
-    private IndicatorInstance retrieveIndicatorInstance(final String idIndicatorSystem, final String uuidIndicatorInstance) throws MetamacException {
-        IndicatorInstance indicatorInstance = indicatorsSystemsService.retrieveIndicatorInstance(RestConstants.SERVICE_CONTEXT, uuidIndicatorInstance);
+    private IndicatorInstance retrieveIndicatorInstanceByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
+        IndicatorInstance indicatorInstance = indicatorsSystemsService.retrieveIndicatorInstancePublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorInstance);
         IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorSystem);
         if (!indicatorInstance.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem().getCode().equals(indicatorsSystemVersion.getIndicatorsSystem().getCode())) {
-            String text = MessageFormat.format("IndicatorInstance: {0}, not in indicatorSystem: {1}", idIndicatorSystem, uuidIndicatorInstance);
+            String text = MessageFormat.format("IndicatorInstance: {0}, not in indicatorSystem: {1}", idIndicatorSystem, idIndicatorInstance);
             logger.warn(text);
             throw new RestRuntimeException(HttpStatus.NOT_FOUND, text);
         }

@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.rest.test.mocks;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
@@ -18,7 +17,7 @@ public class OperationBaseMock {
         }
         
         operationBase = new OperationBase();
-        operationBase.setCode("CODIGO_0001");
+        operationBase.setCode("CODIGO_0001"); 
         operationBase.setTitle(MockUtil.createInternationalString());
         operationBase.setAcronym(MockUtil.createInternationalString());
         operationBase.setDescription(MockUtil.createInternationalString());

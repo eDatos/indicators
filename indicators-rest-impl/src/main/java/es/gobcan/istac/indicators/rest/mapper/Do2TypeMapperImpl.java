@@ -63,7 +63,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private IndicatorsDataService                            indicatorsDataService    = null;
 
     @Autowired
-    private MetamacStatisticalOperationsInternalInterfaceV10 statisticalOperations    = null;
+    private MetamacStatisticalOperationsInternalInterfaceV10 statisticalOperations    = null; 
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -73,7 +73,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
             IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
-            return target;
+            return target; 
         } catch (MetamacExceptionFault e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
@@ -617,7 +617,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
         
         uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsInstance.getUuid());
+        uriComponentsBuilder.path(indicatorsInstance.getCode());
     }
     
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final UriComponentsBuilder uriComponentsBuilder) {

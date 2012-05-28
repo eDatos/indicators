@@ -36,7 +36,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET) 
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(final UriComponentsBuilder uriComponentsBuilder,
                                                                                            @RequestParam(required=false, value="limit") final Integer limit,
@@ -85,13 +85,13 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{uuidIndicatorInstance}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<IndicatorInstanceType> retrieveIndicatorsInstance(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                    @PathVariable("uuidIndicatorInstance") final String uuidIndicatorInstance) throws Exception {
+                                                                    @PathVariable("idIndicatorInstance") final String idIndicatorInstance) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
-        IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorsInstance(baseURL, idIndicatorSystem, uuidIndicatorInstance);
+        IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceByCode(baseURL, idIndicatorSystem, idIndicatorInstance);
         ResponseEntity<IndicatorInstanceType> response = new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
         return response;
     }
@@ -100,13 +100,13 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{uuidIndicatorInstance}/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                    @PathVariable("uuidIndicatorInstance") final String uuidIndicatorInstance) throws Exception {
+                                                                    @PathVariable("idIndicatorInstance") final String idIndicatorInstance) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
-        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorsInstanceData(baseURL, idIndicatorSystem, uuidIndicatorInstance);
+        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }

@@ -14,7 +14,7 @@ public interface IndicatorSystemRestFacade {
     public IndicatorsSystemType retrieveIndicatorsSystem(final String baseUrl, final String idIndicatorSystem) throws Exception;
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseUrl, final RestCriteriaPaginator paginator) throws Exception;
     public NoPagedResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem) throws Exception;
-    public IndicatorInstanceType retrieveIndicatorsInstance(final String baseUrl, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception;
-    public DataType retrieveIndicatorsInstanceData(final String baseUrl, final String idIndicatorSystem, final String uuidIndicatorInstance) throws Exception;
+    public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String baseUrl, final String idIndicatorSystem, final String idIndicatorInstance) throws Exception;
+    public DataType retrieveIndicatorInstanceDataByCode(final String baseUrl, final String idIndicatorSystem, final String idIndicatorInstance) throws Exception;
 
 }
