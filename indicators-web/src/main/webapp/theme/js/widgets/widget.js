@@ -568,7 +568,7 @@
             var chartHeight = 200;
 
             var legendWidth = this.width;
-            var legendHeight = legendElements.length * 20;
+            var legendHeight = this.showLegend? legendElements.length * 20 : 0;
 
             var chartTopMargin = 20;
             var labelHeight = this.showLabels? 40 : 10;
