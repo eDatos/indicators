@@ -184,7 +184,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        if (indicator.getDiffusionVersion() != null) {
+        if (indicator.getIsPublished()) { //avoid populating archived
             try {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
             } catch (MetamacException e) {
@@ -211,17 +211,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         
-        if (indicatorVersion != null && shouldIndicatorVersionBePopulated(indicatorVersion)) {
+        if (indicatorVersion != null) {
             Indicator indicator = indicatorVersion.getIndicator();
-            String diffusionVersion = indicator.getDiffusionVersion() != null ? indicator.getDiffusionVersion().getVersionNumber() : null;
-            
-            onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
-            // After diffusion version's data is populated all related systems must update their versions
-            if (indicatorVersion.getVersionNumber().equals(diffusionVersion)) {
-                indicator = changeDiffusionVersion(indicator);
-                // update system version
-                List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
-                changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+            if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
+                String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
+                
+                onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
+                // After diffusion version's data is populated all related systems must update their versions
+                if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
+                    indicator = changeDiffusionVersion(indicator);
+                    // update system version
+                    List<String> modifiedSystems = findAllIndicatorsSystemsDiffusionVersionWithIndicator(indicatorUuid);
+                    changeVersionForModifiedIndicatorsSystems(modifiedSystems);
+                }
+            } else {
+                LOG.info("Skipping unnecesary data populate for indicator uuid:"+indicatorUuid+" version "+indicatorVersionNumber);
             }
             return indicator;
         } else {
@@ -274,7 +278,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         for (String systemUuid : modifiedSystems) {
             try {
                 IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(systemUuid);
-                IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getDiffusionVersion();
+                IndicatorsSystemVersionInformation diffusionVersionInfo = indicatorsSystem.getIsPublished() ? indicatorsSystem.getDiffusionVersion() : null;
                 if (diffusionVersionInfo != null) {
                     String newDiffusionVersion = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
@@ -356,7 +360,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
     
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
-        IndicatorVersionInformation diffusionVersionInfo = indicator.getDiffusionVersion();
+        IndicatorVersionInformation diffusionVersionInfo = indicator.getIsPublished() ? indicator.getDiffusionVersion() : null;
         if (diffusionVersionInfo != null) {
             String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
             //Check if new version number is the same as production version 
