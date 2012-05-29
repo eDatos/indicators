@@ -49,6 +49,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
@@ -124,10 +125,26 @@ public class DataSourcesPanel extends VLayout {
                     clearAllQueryValues();
 
                     dataSourceDto = new DataSourceDto();
-                    dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
-                    dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
-                    dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
-                    dataSourceDto.setAnnualPercentageRate(new RateDerivationDto());
+
+                    RateDerivationDto interperiodPuntualRate = new RateDerivationDto();
+                    interperiodPuntualRate.setQuantity(new QuantityDto());
+                    interperiodPuntualRate.getQuantity().setIsPercentage(false);
+                    dataSourceDto.setInterperiodPuntualRate(interperiodPuntualRate);
+
+                    RateDerivationDto annualPuntualRate = new RateDerivationDto();
+                    annualPuntualRate.setQuantity(new QuantityDto());
+                    annualPuntualRate.getQuantity().setIsPercentage(false);
+                    dataSourceDto.setAnnualPuntualRate(annualPuntualRate);
+
+                    RateDerivationDto interperiodPercentageRate = new RateDerivationDto();
+                    interperiodPercentageRate.setQuantity(new QuantityDto());
+                    interperiodPercentageRate.getQuantity().setIsPercentage(true);
+                    dataSourceDto.setInterperiodPercentageRate(interperiodPercentageRate);
+
+                    RateDerivationDto annualPercentageRate = new RateDerivationDto();
+                    annualPercentageRate.setQuantity(new QuantityDto());
+                    annualPercentageRate.getQuantity().setIsPercentage(true);
+                    dataSourceDto.setAnnualPercentageRate(annualPercentageRate);
 
                     selectDataSource(dataSourceDto);
                 }
