@@ -152,6 +152,23 @@ public class DataSourcesPanel extends VLayout {
         });
         toolStrip.getNewButton().setVisibility(ClientSecurityUtils.canCreateDataSource() ? Visibility.VISIBLE : Visibility.HIDDEN);
 
+        toolStrip.getDeleteHandlerRegistration().removeHandler();
+        toolStrip.getDeleteButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (IndicatorProcStatusEnum.PUBLISHED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())
+                        || IndicatorProcStatusEnum.ARCHIVED.equals(DataSourcesPanel.this.indicatorDto.getProcStatus())) {
+                    // Create a new version of the indicator
+                    final InformationWindow window = new InformationWindow(getMessages().indicatorEditionInfo(), getMessages().indicatorEditionInfoDetailedMessage());
+                    window.show();
+                } else {
+                    // Default behavior
+                    toolStrip.getDeleteConfirmationWindow().show();
+                }
+            }
+        });
+
         toolStrip.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
 
             @Override
