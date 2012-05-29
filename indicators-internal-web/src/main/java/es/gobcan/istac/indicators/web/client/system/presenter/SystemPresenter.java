@@ -194,6 +194,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
+                indSystem = result.getIndicatorsSystem();
                 setIndicatorsSystem(result.getIndicatorsSystem());
                 // Load system structure
                 retrieveSystemStructure();
@@ -393,6 +394,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(SendIndicatorsSystemToProductionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
@@ -410,6 +412,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(SendIndicatorsSystemToDiffusionValidationResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
@@ -428,6 +431,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(RejectIndicatorsSystemProductionValidationResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                    indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
@@ -442,6 +446,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(RejectIndicatorsSystemDiffusionValidationResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                    indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
@@ -461,6 +466,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
                 @Override
                 public void onWaitSuccess(PublishIndicatorsSystemResult result) {
                     ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
+                    indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
@@ -481,6 +487,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(ArchiveIndicatorsSystemResult result) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemArchived()), MessageTypeEnum.SUCCESS);
+                indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
@@ -498,6 +505,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
                 retrieveSystemStructure(); // Reload system structure
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
+                indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
