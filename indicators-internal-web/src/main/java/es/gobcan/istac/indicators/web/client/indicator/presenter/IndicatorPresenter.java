@@ -188,7 +188,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDiffusionIndicator(String code, String versionNumber) {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, versionNumber), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -196,7 +196,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
-                getView().setDiffusionIndicator(indicatorDto);
+                getView().setDiffusionIndicator(result.getIndicator());
             }
         });
     }
@@ -210,7 +210,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             }
             @Override
             public void onWaitSuccess(UpdateIndicatorResult result) {
-                getView().setIndicator(result.getIndicatorDto());
+                indicatorDto = result.getIndicatorDto();
+                getView().setIndicator(indicatorDto);
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSaved()), MessageTypeEnum.SUCCESS);
             }
         });
@@ -287,7 +288,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(SendIndicatorToProductionValidationResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToProductionValidation()), MessageTypeEnum.SUCCESS);
-                getView().setIndicator(result.getIndicatorDto());
+                indicatorDto = result.getIndicatorDto();
+                getView().setIndicator(indicatorDto);
             }
         });
     }
@@ -304,7 +306,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(SendIndicatorToDiffusionValidationResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
-                getView().setIndicator(result.getIndicatorDto());
+                indicatorDto = result.getIndicatorDto();
+                getView().setIndicator(indicatorDto);
             }
         });
     }
@@ -322,6 +325,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 @Override
                 public void onWaitSuccess(RejectIndicatorProductionValidationResult result) {
                     ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                     getView().setIndicator(result.getIndicatorDto());
                 }
             });
@@ -336,6 +340,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 @Override
                 public void onWaitSuccess(RejectIndicatorDiffusionValidationResult result) {
                     ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                     getView().setIndicator(result.getIndicatorDto());
                 }
             });
@@ -355,6 +360,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorPublished()), MessageTypeEnum.SUCCESS);
+                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -372,6 +378,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(ArchiveIndicatorResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorArchived()), MessageTypeEnum.SUCCESS);
+                IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
         });
@@ -388,7 +395,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(VersioningIndicatorResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorVersioned()), MessageTypeEnum.SUCCESS);
-                getView().setIndicator(result.getIndicatorDto());
+                indicatorDto = result.getIndicatorDto();
+                getView().setIndicator(indicatorDto);
+                retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber()); // Reload data sources
             }
         });
     }
