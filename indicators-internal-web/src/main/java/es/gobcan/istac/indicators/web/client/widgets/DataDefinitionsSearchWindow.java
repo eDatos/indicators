@@ -62,6 +62,7 @@ public class DataDefinitionsSearchWindow extends SearchWindow {
 
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (String code : operationCodes) {
             valueMap.put(code, code);
         }
