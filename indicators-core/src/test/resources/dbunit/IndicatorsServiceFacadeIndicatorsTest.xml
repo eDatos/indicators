@@ -2461,7 +2461,7 @@
 		ID="1"
 		UUID="IndSys-1"
 		CODE="CODE-1"
-		PRODUCTION_ID="2"
+		PRODUCTION_ID="11"
 		PRODUCTION_VERSION_NUMBER="1.000"
 		DIFFUSION_ID="[null]"
 		DIFFUSION_VERSION_NUMBER="[null]"
@@ -2537,6 +2537,91 @@
 						LAST_UPDATED="2011-06-06 05:06:07"
 						LAST_UPDATED_TZ="Europe/London"
 					/>			  			
+
+    <!-- ************************************************************************************** -->
+    <!--    INDICATORS SYSTEM 2                                                                 -->
+    <!--        - Version 1: published                                                          -->
+    <!-- *************************************************************************************  -->
+    <TB_INDICATORS_SYSTEMS
+        ID="2"
+        UUID="IndSys-2"
+        CODE="CODE-2"
+        PRODUCTION_ID="[null]"
+        PRODUCTION_VERSION_NUMBER="[null]"
+        DIFFUSION_ID="12"
+        DIFFUSION_VERSION_NUMBER="1.000"
+        IS_PUBLISHED="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:03"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:03"
+        LAST_UPDATED_TZ="Europe/London"
+     />
+  
+            <TB_INDIC_SYSTEMS_VERSIONS
+                ID="12"
+                UUID="IndSys-2-v1"
+                VERSION_NUMBER="1.000"
+                INDICATORS_SYSTEM_FK="2"
+                PROC_STATUS="PUBLISHED"
+                IS_LAST_VERSION="1"
+                
+                PRODUCTION_VALIDATION_DATE="[null]"
+                PRODUCTION_VALIDATION_DATE_TZ="[null]"
+                PRODUCTION_VALIDATION_USER="[null]"
+                DIFFUSION_VALIDATION_DATE="[null]"
+                DIFFUSION_VALIDATION_DATE_TZ="[null]"
+                DIFFUSION_VALIDATION_USER="[null]"
+                PUBLICATION_DATE="[null]"
+                PUBLICATION_DATE_TZ="[null]"
+                PUBLICATION_USER="[null]"
+                ARCHIVE_DATE="[null]"
+                ARCHIVE_DATE_TZ="[null]"
+                ARCHIVE_USER="[null]"
+                
+                VERSION="1"
+                CREATED_BY="user1"
+                CREATED_DATE="2011-01-01 01:02:04"
+                CREATED_DATE_TZ="Europe/London"
+                LAST_UPDATED_BY="user2"
+                LAST_UPDATED="2011-01-22 01:02:04"
+                LAST_UPDATED_TZ="Europe/London"
+            />
+                    
+                    <TB_ELEMENTS_LEVELS
+                        ID="121"
+                        UUID="uuid-ignored-121"
+                        PARENT_FK="[null]"
+                        ORDER_IN_LEVEL="1"
+                        
+                        IND_SYSTEM_VERSION_ALL_FK="12"
+                        IND_SYSTEM_VERSION_FIRST_FK="12"
+                        DIMENSION_FK="[null]"
+                        INDICATOR_INSTANCE_FK="121"
+                        VERSION="1"
+                    />          
+                    <TB_INDICATORS_INSTANCES
+                        ID="121"
+                        UUID="IndSys-2-v1-IInstance-1"
+                        CODE="IndSys-2-v1-IInstance-1-CODE"
+                        TIME_GRANULARITY="YEARLY"
+                        TIME_VALUE="[null]"
+                        GEOGRAPHICAL_GRANULARITY_FK="1"
+                        GEOGRAPHICAL_VALUE_FK="[null]"
+                        TITLE_FK="65"
+                        INDICATOR_FK="6"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-05-05 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-06-06 05:06:07"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />                      
 			  
 	<!-- ************************************************************************************ -->
 	<!--                                 QUANTITIES UNITS		                              -->
@@ -3709,4 +3794,17 @@
 		VERSION="1"
 		INTERNATIONAL_STRING_FK="64"
 	/>		
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="65"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="95"
+        LABEL="Survey"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="65"
+    />      
 </dataset>

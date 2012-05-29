@@ -88,7 +88,9 @@ Application Indicators {
     		> @DataSourceRepository
     		> @QuantityUnitRepository
     		> @SubjectRepository
+    		> @IndicatorInstanceRepository
     		> @IndicatorsDataService
+    		> @IndicatorsSystemRepository
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;

@@ -79,6 +79,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             INDICATOR_10                 = "Indicator-10";
     private static String             INDICATOR_11                 = "Indicator-11";
 
+    // Indicators systems
+    private static String             INDICATORS_SYSTEM_2          = "IndSys-2";
+
     // Data sources
     private static String             DATA_SOURCE_1_INDICATOR_1_V1 = "Indicator-1-v1-DataSource-1";
     private static String             DATA_SOURCE_1_INDICATOR_1_V2 = "Indicator-1-v2-DataSource-1";
@@ -2361,9 +2364,22 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(3, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
-            assertEquals(uuidNotPublished2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(uuidNotPublished4, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
-            assertEquals(uuidNotPublished7, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            boolean uuid2 = false;
+            boolean uuid4 = false;
+            boolean uuid7 = false;
+            for (int i = 0; i < ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length; i++) {
+                String uuidNotPublished = ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[i];
+                if (uuidNotPublished.equals(uuidNotPublished2)) {
+                    uuid2 = true;
+                } else if (uuidNotPublished.equals(uuidNotPublished4)) {
+                    uuid4 = true;
+                } else if (uuidNotPublished.equals(uuidNotPublished7)) {
+                    uuid7 = true;
+                }
+            }
+            assertTrue(uuid2);
+            assertTrue(uuid4);
+            assertTrue(uuid7);
         }
     }
 
@@ -2509,6 +2525,25 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+        }
+    }
+
+    @Test
+    public void testArchiveIndicatorErrorInIndicatorsSystemPublished() throws Exception {
+
+        String uuid = INDICATOR_6;
+        try {
+            indicatorsServiceFacade.archiveIndicator(getServiceContextAdministrador(), uuid);
+            fail("Indicators system published");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[2]);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
 

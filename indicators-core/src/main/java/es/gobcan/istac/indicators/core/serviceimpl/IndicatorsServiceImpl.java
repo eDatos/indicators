@@ -26,6 +26,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
@@ -414,12 +415,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             try {
                 getIndicatorsDataService().deleteIndicatorData(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
             } catch (MetamacException e) {
-                LOG.warn("Dataset datasetId:"+indicatorDiffusionVersion.getDataRepositoryId()+" for indicator version with uuid:"+uuid+" and version:"+indicator.getDiffusionVersion().getVersionNumber()+" could not be deleted",e);
+                LOG.warn("Dataset datasetId:" + indicatorDiffusionVersion.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:"
+                        + indicator.getDiffusionVersion().getVersionNumber() + " could not be deleted", e);
             }
             indicator.getVersions().remove(indicatorDiffusionVersion);
             getIndicatorRepository().save(indicator);
             getIndicatorVersionRepository().delete(indicatorDiffusionVersion);
-            
+
         }
         indicator.setIsPublished(Boolean.TRUE);
         indicator.setDiffusionVersion(new IndicatorVersionInformation(indicatorInProduction.getId(), indicatorInProduction.getVersionNumber()));
@@ -796,7 +798,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
     /**
      * Makes validations to archive
-     * - Check actual processing status
+     * Check actual processing status
+     * If state is correct checks same conditions to archive
      */
     private void checkIndicatorToArchive(ServiceContext ctx, String uuid, IndicatorVersion indicatorVersion) throws MetamacException {
 
@@ -806,7 +809,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (indicatorVersion == null || !IndicatorProcStatusEnum.PUBLISHED.equals(indicatorVersion.getProcStatus())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_WRONG_PROC_STATUS, uuid, new String[]{ServiceExceptionParameters.INDICATOR_PROC_STATUS_PUBLISHED}));
         } else {
-            // nothing more to check
+            // Check other conditions
+            checkConditionsToArchive(ctx, uuid, exceptions);
         }
 
         ExceptionUtils.throwIfException(exceptions);
@@ -840,6 +844,22 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         checkQuantityIndicatorsPublished(ctx, indicatorVersion, exceptions);
     }
 
+    /**
+     * - Validations when archive
+     * - Check indicator is not in any published indicators system
+     */
+    private void checkConditionsToArchive(ServiceContext ctx, String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        List<String> indicatorsSystemsDiffusion = getIndicatorInstanceRepository().findIndicatorsSystemsWithDiffusionVersionWithIndicator(indicatorUuid);
+        for (String indicatorsSystemUuid : indicatorsSystemsDiffusion) {
+            IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(indicatorsSystemUuid);
+            if (indicatorsSystem.getIsPublished()) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemUuid, new String[]{
+                        ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED,
+                        ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
+            }
+        }
+    }
+    
     /**
      * Checks linked indicators are published:
      * a) Checks numerator and denominator are published (for indicator and all datasources)
