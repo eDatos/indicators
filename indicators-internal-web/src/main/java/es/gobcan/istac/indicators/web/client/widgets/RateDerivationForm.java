@@ -430,4 +430,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).setValueMap(valueMap);
     }
 
+    public void setIsPercentage(boolean isPercentage) {
+        setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, isPercentage ? true : false);
+        setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, isPercentage ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
+    }
+
 }

@@ -428,24 +428,28 @@ public class DataSourcesPanel extends VLayout {
         } else {
             interperiodPuntualRateEditionForm.prepareNewRate();
         }
+        interperiodPuntualRateEditionForm.setIsPercentage(false);
 
         if (dataSourceDto.getInterperiodPercentageRate() != null) {
             interperiodPercentageRateEditionForm.setValue(dataSourceDto.getInterperiodPercentageRate());
         } else {
             interperiodPercentageRateEditionForm.prepareNewRate();
         }
+        interperiodPercentageRateEditionForm.setIsPercentage(true);
 
         if (dataSourceDto.getAnnualPuntualRate() != null) {
             annualPuntualRateEditionForm.setValue(dataSourceDto.getAnnualPuntualRate());
         } else {
             annualPuntualRateEditionForm.prepareNewRate();
         }
+        annualPuntualRateEditionForm.setIsPercentage(false);
 
         if (dataSourceDto.getAnnualPercentageRate() != null) {
             annualPercentageRateEditionForm.setValue(dataSourceDto.getAnnualPercentageRate());
         } else {
             annualPercentageRateEditionForm.prepareNewRate();
         }
+        annualPercentageRateEditionForm.setIsPercentage(true);
     }
 
     private void createViewForm() {
