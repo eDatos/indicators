@@ -53,7 +53,7 @@
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
-					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?uuidInstanciaIndicador=<%= id %>&codigoSistemaIndicadores=<%= indicatorsSystemCode %>&accion=html"><%= getLabel(title) %></a>
+					<a class="nouline" href="<%= '${jaxiUrlBase}' %>/tabla.do?instanciaIndicador=<%= id %>&sistemaIndicadores=<%= indicatorsSystemCode %>&accion=html"><%= getLabel(title) %></a>
 				</div>
 				<div class="clearfix"></div>
 				<div class="indicatorInstanceDetail"></div>
