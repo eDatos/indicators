@@ -239,7 +239,10 @@ public class CommonUtils {
     }
 
     public static String getIndicatorText(String indicatorCode, InternationalStringDto indicatorTitle) {
-        return indicatorCode + " - " + InternationalStringUtils.getLocalisedString(indicatorTitle);
+        if (indicatorCode != null) {
+            return indicatorCode + " - " + InternationalStringUtils.getLocalisedString(indicatorTitle);
+        }
+        return new String();
     }
 
     public static InternationalStringDto getIndicatorTitle(IndicatorSummaryDto indicatorSummaryDto) {
