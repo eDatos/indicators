@@ -487,7 +487,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setKind(RestConstants.KIND_INDICATOR_DIMENSION);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getDimension().getTitle()));
         } else{
-            target.setId(source.getIndicatorInstance().getUuid());
+            target.setId(source.getIndicatorInstance().getCode());
             target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle()));
             
