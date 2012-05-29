@@ -152,6 +152,7 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
             public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
                 ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemDeleted()), MessageTypeEnum.SUCCESS);
                 getView().onIndicatorsSystemsDeleted();
+                retrieveResultSet();
             }
         });
     }
