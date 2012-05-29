@@ -110,7 +110,7 @@
         <!-- METAMAC -->
         <metamac-core-common.version>1.0.0</metamac-core-common.version>
         <metamac-common-test.version>1.0.0</metamac-common-test.version>
-        <metamac-web-common.version>1.0.0</metamac-web-common.version>
+        <metamac-web-common.version>1.1.0</metamac-web-common.version>
         <metamac-statistical-operations-ws-api.version>1.0.0</metamac-statistical-operations-ws-api.version>
         <metamac-sso-client.version>1.0.0</metamac-sso-client.version>
 
