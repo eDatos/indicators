@@ -129,7 +129,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
         ListGridField diffusionVersion = new ListGridField(IndicatorsSystemsDS.VERSION_DIFF, getConstants().systemDetailVersion());
         ListGridField diffusionStatus = new ListGridField(IndicatorsSystemsDS.PROC_STATUS_DIFF, getConstants().systemDetailProcStatus());
         indSystemListGrid.setFields(uuid, code, title, version, status, diffusionVersion, diffusionStatus);
-        indSystemListGrid.setHeaderSpans(new HeaderSpan(getConstants().indicatorSystems(), new String[]{IndicatorsSystemsDS.CODE, IndicatorsSystemsDS.TITLE}), new HeaderSpan(getConstants()
+        indSystemListGrid.setHeaderSpans(new HeaderSpan(getConstants().system(), new String[]{IndicatorsSystemsDS.CODE, IndicatorsSystemsDS.TITLE}), new HeaderSpan(getConstants()
                 .systemProductionEnvironment(), new String[]{IndicatorsSystemsDS.VERSION, IndicatorsSystemsDS.PROC_STATUS}), new HeaderSpan(getConstants().systemDiffusionEnvironment(), new String[]{
                 IndicatorsSystemsDS.VERSION_DIFF, IndicatorsSystemsDS.PROC_STATUS_DIFF}));
 

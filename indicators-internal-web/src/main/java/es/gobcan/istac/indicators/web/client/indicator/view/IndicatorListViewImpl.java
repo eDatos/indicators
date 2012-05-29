@@ -138,7 +138,7 @@ public class IndicatorListViewImpl extends PaginationViewImpl<IndicatorListPrese
 
         ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
+        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         ListGridField version = new ListGridField(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
         ListGridField needsUpdate = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
