@@ -49,6 +49,7 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
@@ -56,6 +57,8 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.DataSourceRecord;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
@@ -455,13 +458,13 @@ public class DataSourcesPanel extends VLayout {
     private void createViewForm() {
         generalForm = new ViewDataSourceGeneralForm(getConstants().datasourceGeneral());
 
-        interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate());
+        interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
-        interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPercentageRate());
+        interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
 
-        annualPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPuntualRate());
+        annualPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
 
-        annualPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPercentageRate());
+        annualPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
 
         mainFormLayout.addViewCanvas(generalForm);
         mainFormLayout.addViewCanvas(interperiodPuntualRateForm);
@@ -582,13 +585,14 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
                 measureVariable, variables);
 
-        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT);
+        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
-        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE);
+        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE,
+                RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
 
-        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), QuantityTypeEnum.AMOUNT);
+        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
 
-        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE);
+        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE, RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
         mainFormLayout.addEditionCanvas(generalStaticEditionForm);
@@ -938,6 +942,44 @@ public class DataSourcesPanel extends VLayout {
             }
         });
         return query;
+    }
+
+    public void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        // Only percentage rates have denominator and numerator indicators
+        if (RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE.equals(rateDerivationTypeEnum)) {
+            if (IndicatorCalculationTypeEnum.NUMERATOR.equals(indicatorCalculationTypeEnum)) {
+                interperiodPercentageRateForm.setNumeratorIndicator(indicatorDto);
+                interperiodPercentageRateEditionForm.setNumeratorIndicator(indicatorDto);
+            } else {
+                interperiodPercentageRateForm.setDenominatorIndicator(indicatorDto);
+                interperiodPercentageRateEditionForm.setDenominatorIndicator(indicatorDto);
+            }
+        } else if (RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE.equals(rateDerivationTypeEnum)) {
+            if (IndicatorCalculationTypeEnum.NUMERATOR.equals(indicatorCalculationTypeEnum)) {
+                annualPercentageRateForm.setNumeratorIndicator(indicatorDto);
+                annualPercentageRateEditionForm.setNumeratorIndicator(indicatorDto);
+            } else {
+                annualPercentageRateForm.setDenominatorIndicator(indicatorDto);
+                annualPercentageRateEditionForm.setDenominatorIndicator(indicatorDto);
+            }
+        }
+    }
+
+    public void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        // Only percentage rates have denominator and numerator indicators
+        if (RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE.equals(rateDerivationTypeEnum)) {
+            if (IndicatorCalculationTypeEnum.NUMERATOR.equals(indicatorCalculationTypeEnum)) {
+                interperiodPercentageRateEditionForm.setNumeratorIndicators(indicatorDtos);
+            } else {
+                interperiodPercentageRateEditionForm.setDenominatorIndicators(indicatorDtos);
+            }
+        } else if (RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE.equals(rateDerivationTypeEnum)) {
+            if (IndicatorCalculationTypeEnum.NUMERATOR.equals(indicatorCalculationTypeEnum)) {
+                annualPercentageRateEditionForm.setNumeratorIndicators(indicatorDtos);
+            } else {
+                annualPercentageRateEditionForm.setDenominatorIndicators(indicatorDtos);
+            }
+        }
     }
 
 }

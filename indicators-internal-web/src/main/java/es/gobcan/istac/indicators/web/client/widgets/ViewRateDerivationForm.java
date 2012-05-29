@@ -3,21 +3,31 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class ViewRateDerivationForm extends BaseRateDerivationForm {
 
-    public ViewRateDerivationForm(String groupTitle) {
+    private RateDerivationTypeEnum rateDerivationTypeEnum;
+
+    public ViewRateDerivationForm(String groupTitle, RateDerivationTypeEnum rateDerivationTypeEnum) {
         super(groupTitle);
+
+        this.rateDerivationTypeEnum = rateDerivationTypeEnum;
 
         ViewTextItem methodType = new ViewTextItem(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, getConstants().datasourceMethodType());
         methodType.setVisible(false);
@@ -54,10 +64,10 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         ViewTextItem max = new ViewTextItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
-        ViewTextItem denominatorUuid = new ViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        ViewTextItem denominatorUuid = new ViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, getConstants().indicQuantityDenominatorIndicator());
         denominatorUuid.setShowIfCondition(getDenominatorIfFunction());
 
-        ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
         numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
 
         ViewTextItem isPercentange = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
@@ -103,9 +113,21 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum() != null ? quantityDto.getMinimum().toString() : "");
             setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum() != null ? quantityDto.getMaximum().toString() : "");
-            // TODO QUANTITY_DENOMINATOR_INDICATOR_UUID and QUANTITY_NUMERATOR_INDICATOR_UUID fields are never shown (should be removed)
-            // setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getDenominatorIndicatorUuid()));
-            // setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getIndicatorText(quantityDto.getNumeratorIndicatorUuid()));
+
+            setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, ""); // Value set in setDenominatorIndicator method
+            if (!StringUtils.isBlank(quantityDto.getDenominatorIndicatorUuid())) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveRateIndicator(quantityDto.getDenominatorIndicatorUuid(), rateDerivationTypeEnum, IndicatorCalculationTypeEnum.DENOMINATOR);
+                }
+            }
+
+            setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, ""); // Value set in setNumeratorIndicator method
+            if (!StringUtils.isBlank(quantityDto.getNumeratorIndicatorUuid())) {
+                if (uiHandlers instanceof IndicatorUiHandler) {
+                    ((IndicatorUiHandler) uiHandlers).retrieveRateIndicator(quantityDto.getNumeratorIndicatorUuid(), rateDerivationTypeEnum, IndicatorCalculationTypeEnum.NUMERATOR);
+                }
+            }
+
             setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
                     .getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
@@ -116,6 +138,14 @@ public class ViewRateDerivationForm extends BaseRateDerivationForm {
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, NOT_APPLICABLE);
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE + "-text", getCoreMessages().rateDerivationMethodTypeEnumNOT_APPLICABLE());
         setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityType != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityType.toString()) : "");
+    }
+
+    public void setNumeratorIndicator(IndicatorDto indicatorDto) {
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()));
+    }
+
+    public void setDenominatorIndicator(IndicatorDto indicatorDto) {
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()));
     }
 
 }

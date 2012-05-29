@@ -38,6 +38,8 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent.UpdateGeographicalGranularitiesHandler;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
@@ -142,6 +144,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         void setGeographicalValueDS(GeographicalValueDto geographicalValueDto);
 
         void onDataSourceSaved(DataSourceDto dataSourceDto);
+
+        void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+        void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     }
 
     @Inject
@@ -671,6 +676,36 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(GetDataDefinitionsOperationsCodesResult result) {
                 getView().setDataDefinitionsOperationCodes(result.getOperationCodes());
+            }
+        });
+    }
+
+    @Override
+    public void searchRateIndicators(IndicatorCriteria criteria, final RateDerivationTypeEnum rateDerivationTypeEnum, final IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(FindIndicatorsResult result) {
+                getView().setRateIndicators(result.getIndicatorDtos(), rateDerivationTypeEnum, indicatorCalculationTypeEnum);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveRateIndicator(String indicatorUuid, final RateDerivationTypeEnum rateDerivationTypeEnum, final IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorResult result) {
+                getView().setRateIndicator(result.getIndicator(), rateDerivationTypeEnum, indicatorCalculationTypeEnum);
             }
         });
     }

@@ -23,6 +23,8 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
@@ -180,6 +182,16 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
         dataSourcesPanel.setDataDefinitionsOperationCodes(operationCodes);
+    }
+
+    @Override
+    public void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        dataSourcesPanel.setRateIndicators(indicatorDtos, rateDerivationTypeEnum, indicatorCalculationTypeEnum);
+    }
+
+    @Override
+    public void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
+        dataSourcesPanel.setRateIndicator(indicatorDto, rateDerivationTypeEnum, indicatorCalculationTypeEnum);
     }
 
 }

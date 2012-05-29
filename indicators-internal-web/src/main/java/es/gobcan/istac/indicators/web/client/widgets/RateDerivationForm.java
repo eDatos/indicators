@@ -13,6 +13,7 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -20,37 +21,51 @@ import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
 import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.model.ds.DataSourceDS;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class RateDerivationForm extends BaseRateDerivationForm {
 
-    private QuantityTypeEnum  quantityType;
+    private QuantityTypeEnum       quantityType;
+    private RateDerivationTypeEnum rateDerivationTypeEnum;
 
-    private RateDerivationDto rateDerivationDto;
-    private IndicatorDto      indicatorDto;
+    private RateDerivationDto      rateDerivationDto;
+    private IndicatorDto           indicatorDto;
 
-    private boolean           viewMode;         // If view mode is set, method and method type cannot be edited
+    private IndicatorsSearchWindow indicatorDenominatorSearchWindow;
+    private IndicatorsSearchWindow indicatorNumeratorSearchWindow;
 
-    public RateDerivationForm(String groupTitle, QuantityTypeEnum quantityType) {
+    private boolean                viewMode;                        // If view mode is set, method and method type cannot be edited
+
+    public RateDerivationForm(String groupTitle, QuantityTypeEnum quantityType, RateDerivationTypeEnum rateDerivationTypeEnum) {
         super(groupTitle);
 
         this.quantityType = quantityType;
+        this.rateDerivationTypeEnum = rateDerivationTypeEnum;
 
         // Method type
 
@@ -207,13 +222,17 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         IntegerItem max = new IntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
-        SelectItem denominatorUuid = new SelectItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
-        denominatorUuid.setShowIfCondition(getDenominatorIfFunction());
-        denominatorUuid.setValidators(getIndicatorSelectedValidator());
+        // Search denominator indicator
+        TextItem searchDenominatorUuid = new TextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        searchDenominatorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        searchDenominatorUuid.setValidators(getIndicatorSelectedValidator());
+        SearchViewTextItem searchDenominatorText = getSearchDenominatorTextItem();
 
-        SelectItem numeratorUuid = new SelectItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
-        numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
-        numeratorUuid.setValidators(getIndicatorSelectedValidator());
+        // Search numerator indicator
+        TextItem searchNumeratorUuid = new TextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        searchNumeratorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
+        searchNumeratorUuid.setValidators(getIndicatorSelectedValidator());
+        SearchViewTextItem searchNumeratorText = getSearchNumeratorTextItem();
 
         ViewTextItem isPercentange = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(CommonUtils.getFalseIfFunction());
@@ -228,7 +247,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         baseQuantityIndUuid.setVisible(false);
 
         setFields(staticMethodType, methodType, viewMethod, methodCalculated, viewMethodLoad, methodLoad, rounding, type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max,
-                denominatorUuid, numeratorUuid, isPercentange, isPercentangeText, percentageOf, baseQuantityIndUuid);
+                searchDenominatorUuid, searchDenominatorText, searchNumeratorUuid, searchNumeratorText, isPercentange, isPercentangeText, percentageOf, baseQuantityIndUuid);
 
         markForRedraw();
     }
@@ -280,8 +299,12 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         if (quantityDto.getMaximum() != null) {
             setValue(IndicatorDS.QUANTITY_MAXIMUM, quantityDto.getMaximum());
         }
+
         setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, quantityDto.getDenominatorIndicatorUuid());
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, quantityDto.getDenominatorIndicatorUuid()); // Value set in setDenominatorIndicator method
+
         setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, quantityDto.getNumeratorIndicatorUuid());
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, quantityDto.getNumeratorIndicatorUuid()); // Value set in setNumeratorIndicator method
 
         setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
         setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage().booleanValue()
@@ -290,7 +313,26 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
         setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
+    }
 
+    public void setNumeratorIndicator(IndicatorDto indicatorDto) {
+        setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()));
+    }
+
+    public void setDenominatorIndicator(IndicatorDto indicatorDto) {
+        setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()));
+    }
+
+    public void setNumeratorIndicators(List<IndicatorSummaryDto> indicators) {
+        if (indicatorNumeratorSearchWindow != null) {
+            indicatorNumeratorSearchWindow.setIndicatorList(indicators);
+        }
+    }
+
+    public void setDenominatorIndicators(List<IndicatorSummaryDto> indicators) {
+        if (indicatorDenominatorSearchWindow != null) {
+            indicatorDenominatorSearchWindow.setIndicatorList(indicators);
+        }
     }
 
     public void prepareNewRate() {
@@ -340,10 +382,12 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         // Only set value if item is visible (these item are quantity type dependent)
         quantityDto.setMinimum(getItem(IndicatorDS.QUANTITY_MINIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MINIMUM) != null ? (Integer) getValue(IndicatorDS.QUANTITY_MINIMUM) : null) : null);
         quantityDto.setMaximum(getItem(IndicatorDS.QUANTITY_MAXIMUM).isVisible() ? (getValue(IndicatorDS.QUANTITY_MAXIMUM) != null ? (Integer) getValue(IndicatorDS.QUANTITY_MAXIMUM) : null) : null);
-        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).isVisible() ? CommonUtils
+
+        quantityDto.setDenominatorIndicatorUuid(getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)) : null);
-        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).isVisible() ? CommonUtils
+        quantityDto.setNumeratorIndicatorUuid(getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).isVisible() ? CommonUtils
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)) : null);
+
         quantityDto.setIsPercentage(getItem(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT).isVisible() ? (getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE) != null ? Boolean
                 .valueOf((Boolean) getValue(IndicatorDS.QUANTITY_IS_PERCENTAGE)) : false) : null);
         quantityDto.setPercentageOf(getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF).isVisible() ? ((MultiLanguageTextItem) getItem(IndicatorDS.QUANTITY_PERCENTAGE_OF)).getValue() : null);
@@ -401,16 +445,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
 
-    // TODO This method is never called because QUANTITY_DENOMINATOR_INDICATOR_UUID and QUANTITY_NUMERATOR_INDICATOR_UUID fields are never shown (should be removed)
-    // @Override
-    // public void setIndicators(List<IndicatorDto> indicators) {
-    // super.setIndicators(indicators);
-    //
-    // LinkedHashMap<String, String> valueMap = CommonUtils.getIndicatorsValueMap(indicators);
-    // ((SelectItem) getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID)).setValueMap(valueMap);
-    // ((SelectItem) getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID)).setValueMap(valueMap);
-    // }
-
     /**
      * In edition mode, shows query dependent fields in view mode
      */
@@ -433,6 +467,100 @@ public class RateDerivationForm extends BaseRateDerivationForm {
     public void setIsPercentage(boolean isPercentage) {
         setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, isPercentage ? true : false);
         setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, isPercentage ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
+    }
+
+    // ITEMS
+
+    private SearchViewTextItem getSearchDenominatorTextItem() {
+        SearchViewTextItem searchDenominatorText = new SearchViewTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT, getConstants().indicQuantityDenominatorIndicator());
+        searchDenominatorText.setShowIfCondition(getDenominatorIfFunction());
+        searchDenominatorText.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                indicatorDenominatorSearchWindow = new IndicatorsSearchWindow(getConstants().indicatorSelection());
+                indicatorDenominatorSearchWindow.getSearchButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (uiHandlers instanceof IndicatorUiHandler) {
+                            ((IndicatorUiHandler) uiHandlers).searchRateIndicators(indicatorDenominatorSearchWindow.getSearchCriteria(), RateDerivationForm.this.rateDerivationTypeEnum,
+                                    IndicatorCalculationTypeEnum.DENOMINATOR);
+                        }
+                    }
+                });
+
+                indicatorDenominatorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        IndicatorSummaryDto indicatorSummaryDto = indicatorDenominatorSearchWindow.getSelectedIndicator();
+                        indicatorDenominatorSearchWindow.destroy();
+                        RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, indicatorSummaryDto != null ? indicatorSummaryDto.getUuid() : new String());
+                        RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT,
+                                indicatorSummaryDto != null ? CommonUtils.getIndicatorText(indicatorSummaryDto.getCode(), CommonUtils.getIndicatorTitle(indicatorSummaryDto)) : new String());
+                        RateDerivationForm.this.getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_TEXT).validate();
+                    }
+                });
+            }
+        });
+        CustomValidator validator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return RateDerivationForm.this.getItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID).validate();
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        searchDenominatorText.setValidators(validator);
+
+        return searchDenominatorText;
+    }
+    
+    private SearchViewTextItem getSearchNumeratorTextItem() {
+        SearchViewTextItem searchNumeratorText = new SearchViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
+        searchNumeratorText.setShowIfCondition(getNumeratorIfFunction());
+        searchNumeratorText.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                indicatorNumeratorSearchWindow = new IndicatorsSearchWindow(getConstants().indicatorSelection());
+                indicatorNumeratorSearchWindow.getSearchButton().addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (uiHandlers instanceof IndicatorUiHandler) {
+                            ((IndicatorUiHandler) uiHandlers).searchRateIndicators(indicatorNumeratorSearchWindow.getSearchCriteria(), RateDerivationForm.this.rateDerivationTypeEnum,
+                                    IndicatorCalculationTypeEnum.NUMERATOR);
+                        }
+                    }
+                });
+
+                indicatorNumeratorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+                        IndicatorSummaryDto indicatorSummaryDto = indicatorNumeratorSearchWindow.getSelectedIndicator();
+                        indicatorNumeratorSearchWindow.destroy();
+                        RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, indicatorSummaryDto != null ? indicatorSummaryDto.getUuid() : new String());
+                        RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT,
+                                indicatorSummaryDto != null ? CommonUtils.getIndicatorText(indicatorSummaryDto.getCode(), CommonUtils.getIndicatorTitle(indicatorSummaryDto)) : new String());
+                        RateDerivationForm.this.getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT).validate();
+                    }
+                });
+            }
+        });
+        CustomValidator validator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                return RateDerivationForm.this.getItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID).validate();
+            }
+        };
+        validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
+        searchNumeratorText.setValidators(validator);
+
+        return searchNumeratorText;
     }
 
 }

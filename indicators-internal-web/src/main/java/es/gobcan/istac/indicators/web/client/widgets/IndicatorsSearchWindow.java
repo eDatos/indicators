@@ -45,7 +45,7 @@ public class IndicatorsSearchWindow extends SearchWindow {
 
         ListGridField fieldCode = new ListGridField(IndicatorDS.CODE, getConstants().indicListHeaderIdentifier());
         fieldCode.setAlign(Alignment.LEFT);
-        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicListHeaderName());
+        ListGridField fieldName = new ListGridField(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         ListGridField status = new ListGridField(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
         ListGridField updated = new ListGridField(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
         updated.setWidth(140);
@@ -82,7 +82,7 @@ public class IndicatorsSearchWindow extends SearchWindow {
                 return indicatorSummaryDto;
             }
         }
-        return new IndicatorSummaryDto();
+        return null;
     }
 
 }

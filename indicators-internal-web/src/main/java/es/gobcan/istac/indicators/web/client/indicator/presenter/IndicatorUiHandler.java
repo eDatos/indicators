@@ -7,6 +7,8 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
+import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 public interface IndicatorUiHandler extends UiHandlers {
@@ -47,5 +49,8 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveQuantityDenominatorIndicator(String indicatorUuid);
     void retrieveQuantityNumeratorIndicator(String indicatorUuid);
     void retrieveQuantityIndicatorBase(String indicatorUuid);
-
+    
+    void searchRateIndicators(IndicatorCriteria criteria, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+    void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+    
 }
