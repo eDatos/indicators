@@ -49,6 +49,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getTimeGranularityValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (TimeGranularityEnum type : TimeGranularityEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getName()));
         }
@@ -57,6 +58,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getTimeGranularityValueMap(List<TimeGranularityDto> timeGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (TimeGranularityDto type : timeGranularityDtos) {
             valueMap.put(type.getGranularity().toString(), getCoreMessages().getString(getCoreMessages().timeGranularityEnum() + type.getGranularity().getName()));
         }
@@ -65,6 +67,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getTimeValueValueMap(List<TimeValueDto> timeValues) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (TimeValueDto timeValue : timeValues) {
             valueMap.put(timeValue.getTimeValue(), InternationalStringUtils.getLocalisedString(timeValue.getTitle()));
         }
@@ -73,6 +76,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getQuantityTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (QuantityTypeEnum type : QuantityTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + type.getName()));
         }
@@ -97,6 +101,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getTimeSelectionTypeMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (TimeSelectionTypeEnum type : TimeSelectionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().timeSelectionTypeEnum() + type.getName()));
         }
@@ -114,6 +119,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getGeographicalGranularituesValueMap(List<GeographicalGranularityDto> geographicalGranularityDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
             valueMap.put(geographicalGranularityDto.getUuid(), geographicalGranularityDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle()));
         }
@@ -122,6 +128,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getGeographicalValuesValueMap(List<GeographicalValueDto> geographicalValueDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
             valueMap.put(geographicalValueDto.getUuid(), geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
         }
@@ -130,6 +137,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (SubjectDto subjectDto : subjectDtos) {
             valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
         }
@@ -149,6 +157,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getVersionTypeValueMap() {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (VersionTypeEnum type : VersionTypeEnum.values()) {
             valueMap.put(type.toString(), getCoreMessages().getString(getCoreMessages().versionTypeEnum() + type.getName()));
         }
@@ -157,6 +166,7 @@ public class CommonUtils {
 
     public static LinkedHashMap<String, String> getDataDefinitionValueMap(List<DataDefinitionDto> dataDefinitionDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
         for (DataDefinitionDto dataBasic : dataDefinitionDtos) {
             valueMap.put(dataBasic.getUuid(), dataBasic.getName());
         }
