@@ -6,6 +6,7 @@ import com.gwtplatform.dispatch.server.spring.HandlerModule;
 
 import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ArchiveIndicatorsSystemActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.CloseSessionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.CreateIndicatorInstanceActionHandler;
@@ -62,6 +63,7 @@ import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorActionH
 import es.gobcan.istac.indicators.web.server.handlers.VersioningIndicatorsSystemActionHandler;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
+import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
@@ -200,6 +202,7 @@ public class ServerModule extends HandlerModule {
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
+        bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
     }
 
 }

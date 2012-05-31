@@ -203,7 +203,7 @@ public class ClientSecurityUtils {
      * @return
      */
     private static boolean isRoleAllowed(RoleEnum... roles) {
-        MetamacPrincipal userPrincipal = IndicatorsWeb.getUserPrincipal();
+        MetamacPrincipal userPrincipal = IndicatorsWeb.getCurrentUser();
         // Administration has total control
         if (SharedSecurityUtils.isAdministrator(userPrincipal)) {
             return true;
@@ -229,7 +229,7 @@ public class ClientSecurityUtils {
      * @throws MetamacException
      */
     private static boolean isIndicatorsSystemAllowed(String operationCode, RoleEnum... roles) {
-        MetamacPrincipal userPrincipal = IndicatorsWeb.getUserPrincipal();
+        MetamacPrincipal userPrincipal = IndicatorsWeb.getCurrentUser();
         // Administration has total control in all indicators systems
         if (SharedSecurityUtils.isAdministrator(userPrincipal)) {
             return true;

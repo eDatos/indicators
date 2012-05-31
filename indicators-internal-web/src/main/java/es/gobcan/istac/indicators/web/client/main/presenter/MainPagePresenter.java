@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client.main.presenter;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
@@ -14,6 +16,8 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageH
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -34,12 +38,16 @@ import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
+import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
+import es.gobcan.istac.indicators.web.shared.CloseSessionResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers, SetTitleHandler {
+
+    private static Logger                             logger       = Logger.getLogger(MainPagePresenter.class.getName());
 
     private final DispatchAsync                       dispatcher;
 
@@ -132,6 +140,21 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     @Override
     public void onSetTitle(SetTitleEvent event) {
         getView().setTitle(event.getTitle());
+    }
+
+    @Override
+    public void closeSession() {
+        dispatcher.execute(new CloseSessionAction(), new AsyncCallback<CloseSessionResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE, "Error closing session");
+            }
+            @Override
+            public void onSuccess(CloseSessionResult result) {
+                Window.Location.assign(result.getLogoutPageUrl());
+            }
+        });
     }
 
 }

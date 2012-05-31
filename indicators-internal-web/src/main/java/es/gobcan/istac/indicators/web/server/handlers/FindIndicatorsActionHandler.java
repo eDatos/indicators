@@ -19,7 +19,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;

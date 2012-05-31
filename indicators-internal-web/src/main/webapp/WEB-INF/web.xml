@@ -5,30 +5,30 @@
 
 <web-app>
 
-	<!-- ********************* SPRING INTEGRATION ******************** -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config/spring/applicationContext.xml</param-value>
-	</context-param>
+    <!-- ********************* SPRING INTEGRATION ******************** -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/config/spring/applicationContext.xml</param-value>
+    </context-param>
 
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
- 
-     <!-- Enable Spring Request Context Holder -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- Enable Spring Request Context Holder -->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-	
-	<servlet>
-		<servlet-name>dispatch</servlet-name>
-		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>dispatch</servlet-name>
-		<url-pattern>/dispatch/*</url-pattern>
-	</servlet-mapping>
+    <servlet>
+        <servlet-name>dispatch</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatch</servlet-name>
+        <url-pattern>/dispatch/*</url-pattern>
+    </servlet-mapping>
 
     <!-- Remote logging -->
     <servlet>
@@ -39,25 +39,15 @@
         <servlet-name>remoteLogging</servlet-name>
         <url-pattern>/IndicatorsWeb/remote_logging</url-pattern>
     </servlet-mapping>
-    
-	<listener>
-		<listener-class>es.gobcan.istac.indicators.web.server.servlet.QuartzInitializerListener</listener-class>
-	</listener>
 
+    <listener>
+        <listener-class>es.gobcan.istac.indicators.web.server.servlet.QuartzInitializerListener</listener-class>
+    </listener>
 
-<!-- 	<filter> -->
-<!-- 		<filter-name>guiceFilter</filter-name> -->
-<!-- 		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class> -->
-<!-- 	</filter> -->
-
-<!-- 	<filter-mapping> -->
-<!-- 		<filter-name>guiceFilter</filter-name> -->
-<!-- 		<url-pattern>/*</url-pattern> -->
-<!-- 	</filter-mapping> -->
-
-<!-- 	<listener> -->
-<!-- 		<listener-class>es.gobcan.istac.indicators.web.server.IndicatorsWebGuiceServletContextListener</listener-class> -->
-<!-- 	</listener> -->
+    <!-- SSO -->
+    <listener>
+        <listener-class>org.siemac.metamac.web.common.server.session.SingleSignOutHttpSessionListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>headersFilter</filter-name>
@@ -68,11 +58,19 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-	<!-- Servlets -->
+    <!-- Logout filter -->
+    <filter>
+        <filter-name>logoutFilter</filter-name>
+        <filter-class>org.siemac.metamac.web.common.server.session.SingleSignOutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>logoutFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-	<!-- Default page to serve -->
-	<welcome-file-list>
-		<welcome-file>IndicatorsWeb.html</welcome-file>
-	</welcome-file-list>
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>IndicatorsWeb.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>

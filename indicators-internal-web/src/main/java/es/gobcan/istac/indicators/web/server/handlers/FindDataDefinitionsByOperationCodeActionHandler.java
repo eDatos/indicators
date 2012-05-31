@@ -13,7 +13,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeResult;
 

@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,6 @@ import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import es.gobcan.istac.indicators.web.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 
