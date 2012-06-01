@@ -38,7 +38,7 @@ import es.gobcan.istac.indicators.rest.util.DataTypeUtil;
 @Service("indicatorRestFacade")
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
-    protected Logger          logger                      = LoggerFactory.getLogger(getClass());
+    protected Logger              logger                = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private Do2TypeMapper         dto2TypeMapper        = null;
@@ -112,7 +112,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                     }
                 }
                 
-                geographicalConditionDimensionDto.getCodesDimension().add(geographicalValue.getGranularity().getCode());
+                geographicalConditionDimensionDto.getCodesDimension().add(geographicalValue.getCode());
                 geographicalValuesNew.add(geographicalValue);
             }
             
@@ -147,7 +147,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                     }
                 }
                 
-                timeConditionDimensionDto.getCodesDimension().add(timeValue.getGranularity().getName());
+                timeConditionDimensionDto.getCodesDimension().add(timeValue.getTimeValue());
                 timeValuesNew.add(timeValue);
             }
             
