@@ -150,7 +150,7 @@
 
         var apiBaseUrl = "[@spring.url ""/]";
         var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
-
+        var jaxiUrl = "${jaxiUrlBase}";
     </script>
 
     <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"/]"></script>

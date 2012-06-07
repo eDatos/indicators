@@ -1,13 +1,17 @@
 /* Common widget */
 
 .istac-widget {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 1em;
+    font: 70% Arial, Helvetica, sans-serif;
     line-height: 18px;
     color: #333;
     border: 3px solid;
 	border-radius: 3px;
     background-color: #fff;
+}
+
+.istac-widget a:link, .istac-widget a:visited,  .istac-widget a:active, .istac-widget a:hover{
+    color: black;
+    text-decoration: none;
 }
 
 .istac-widget-title {
@@ -22,6 +26,7 @@
 	width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+    font-size: 1em;
 }
 
 .istac-widget-lastData tbody tr:nth-child(odd) td, .istac-widget-lastData tbody tr:nth-child(odd) th {

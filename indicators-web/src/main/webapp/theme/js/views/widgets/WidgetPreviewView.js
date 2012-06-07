@@ -15,6 +15,7 @@ var WidgetPreviewView = Backbone.View.extend({
         var widgetOptions = this.model.toJSON();
         widgetOptions.el = this.el;
         widgetOptions.url = apiBaseUrl;
+        widgetOptions.jaxiUrl = jaxiUrl;
         this.widget = new IstacWidget(widgetOptions);
     },
 

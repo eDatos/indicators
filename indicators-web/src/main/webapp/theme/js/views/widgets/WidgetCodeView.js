@@ -33,6 +33,7 @@ var WidgetCodeView = Backbone.View.extend({
         options.push('     geographicalValues : ' + JSON.stringify(model.geographicalValues));
         options.push('     measures : ' + JSON.stringify(model.measures));
         options.push('     url : "' + serverURL  + context + '"');
+        options.push('     jaxiUrl : "' + jaxiUrl + '"');
 
         if(model.type === "temporal"){
             var showLabels = model.showLabels === true;

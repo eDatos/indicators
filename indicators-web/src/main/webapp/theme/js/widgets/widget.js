@@ -118,6 +118,8 @@
 
         fetch : function(systemid, indicatorid, callback){
             var self = this;
+            this.systemid = systemid;
+            this.indicatorid = indicatorid;
             this.data = {};
             this.structure = {};
 
@@ -349,6 +351,7 @@
             // urls
             this.url = options.url || "";
             this.apiUrl = this.url + "/api/indicators/v1.0";
+            this.jaxiUrl = options.jaxiUrl || "";
 
             // locale
             this.locale = options.locale || "es";
@@ -741,7 +744,11 @@
 
 
                     //TODO LOCALIZE title!
-                    var row = '<tr><th>' + dataset.structure.title.es + ' (' + timeValuesTitles[renderValues.temporalValue] + ')</th>';
+                    var row = '<tr><th>' +
+                        '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
+                            dataset.structure.title.es + ' (' + timeValuesTitles[renderValues.temporalValue] + ')' +
+                        '</a>' +
+                    '</th>';
 
                     var observations = renderValues.observations;
                     for (var j = 0; j < observations.length; j++) {
