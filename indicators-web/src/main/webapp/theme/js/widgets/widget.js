@@ -744,7 +744,8 @@
 
 
                     //TODO LOCALIZE title!
-                    var row = '<tr><th>' +
+                    var row = '<tr>' +
+                    '<th>' +
                         '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
                             dataset.structure.title.es + ' (' + timeValuesTitles[renderValues.temporalValue] + ')' +
                         '</a>' +

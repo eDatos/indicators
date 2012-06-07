@@ -1,7 +1,7 @@
 /* Common widget */
 
 .istac-widget {
-    font: 70% Arial, Helvetica, sans-serif;
+    font: 11px Arial, Helvetica, sans-serif;
     line-height: 18px;
     color: #333;
     border: 3px solid;
@@ -26,7 +26,7 @@
 	width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    font-size: 1em;
+    font-size: 11px;
 }
 
 .istac-widget-lastData tbody tr:nth-child(odd) td, .istac-widget-lastData tbody tr:nth-child(odd) th {
@@ -44,6 +44,10 @@
 .istac-widget-lastData th {
 	font-weight:  bold;
     text-align: right;
+}
+
+.istac-widget-lastData tr th {
+    text-align: left;
 }
 
 .istact-widget-footer{
