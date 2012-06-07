@@ -4,6 +4,20 @@
 ;
 (function(undefined){
 
+
+    function addThousandSeparator(nStr){
+        nStr += '';
+        var x = nStr.split(',');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? ',' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + '.' + '$2');
+        }
+        return x1 + x2;
+    }
+
+
     function getHost(url){
         var l = document.createElement("a"),
             host;
@@ -196,8 +210,15 @@
             if(this.data.observation){
                 var index = this.getObservationIndex(geo, time, measure);
                 var decimalPlaces = this.structure.decimalPlaces;
-                var observation = parseFloat(this.data.observation[index]).toFixed(decimalPlaces);
-                var res = observation;
+                var observation = this.data.observation[index];
+                var res;
+                if (observation) {
+                    res = parseFloat(observation).toFixed(decimalPlaces);
+                    res = res.replace("\.", ",");
+                    res = addThousandSeparator(res);
+                } else {
+                    res = "-";
+                }
                 return res;
             }
             return null;
