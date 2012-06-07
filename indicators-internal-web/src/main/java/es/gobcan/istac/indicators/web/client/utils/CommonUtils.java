@@ -208,6 +208,18 @@ public class CommonUtils {
         return valueMap;
     }
 
+    public static LinkedHashMap<String, String> getUnitMultiplierValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put("1", "1");
+        valueMap.put("10", "10");
+        valueMap.put("100", "100");
+        valueMap.put("1000", "1000");
+        valueMap.put("10000", "10000");
+        valueMap.put("100000", "100000");
+        valueMap.put("1000000", "1000000");
+        return valueMap;
+    }
+
     /**
      * Returns null if UUID parameter is blank
      * 

@@ -190,8 +190,8 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         RequiredSelectItem unitUuid = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
         unitUuid.setShowIfCondition(getFormItemShowIfApplicable());
 
-        IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        unitMultiplier.setRequired(true);
+        RequiredSelectItem unitMultiplier = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
+        unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setShowIfCondition(getFormItemShowIfApplicable());
 
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
@@ -376,7 +376,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         quantityDto.setType(quantityType);
         quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
-        quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer) getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
+        quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? Integer.valueOf(getValueAsString(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer) getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
         quantityDto.setDecimalPlaces(getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) != null ? (Integer) getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) : null);
         // Only set value if item is visible (these item are quantity type dependent)

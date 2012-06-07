@@ -65,7 +65,8 @@ public class QuantityForm extends BaseQuantityForm {
         SelectItem unitUuid = new SelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
         unitUuid.setValidators(getQuantityRequiredIfValidator());
 
-        IntegerItem unitMultiplier = new IntegerItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
+        SelectItem unitMultiplier = new SelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
+        unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setValidators(getQuantityRequiredIfValidator());
 
         IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
@@ -205,7 +206,7 @@ public class QuantityForm extends BaseQuantityForm {
         quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum
                 .valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
         quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
-        quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? (Integer) getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) : null);
+        quantityDto.setUnitMultiplier(getValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER) != null ? Integer.valueOf(getValueAsString(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)) : null);
         quantityDto.setSignificantDigits(getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) != null ? (Integer) getValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS) : null);
         quantityDto.setDecimalPlaces(getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) != null ? (Integer) getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) : null);
         // Only set value if item is visible (these item are quantity type dependent)
