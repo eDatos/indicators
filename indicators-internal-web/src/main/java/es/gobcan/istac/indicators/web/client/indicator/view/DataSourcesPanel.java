@@ -107,6 +107,8 @@ public class DataSourcesPanel extends VLayout {
     private DataDefinitionsSearchWindow dataDefinitionsSearchWindow;
     private List<String>                dataDefinitionsOperationCodes;
 
+    private boolean                     queryEditionViewMode;                // When we are editing the form, but query dependent fields are in view mode
+
     public DataSourcesPanel() {
         super();
         setMargin(15);
@@ -463,6 +465,8 @@ public class DataSourcesPanel extends VLayout {
         interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
         dataForm = new GroupDynamicForm(getConstants().dataSourceData());
+        ViewTextItem absoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
+        dataForm.setFields(absoluteMethod);
 
         interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
 
@@ -497,33 +501,6 @@ public class DataSourcesPanel extends VLayout {
         TextItem surveyUrl = new TextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
 
         ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
-
-        // Showed when contVariable (measure variable) is set
-        // ValueMap set in setDataStructure
-        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
-        absoluteMethod.setValidateOnChange(true);
-        CustomValidator absoluteMethodValidator = new CustomValidator() {
-
-            // If absolute method is not set, at least one rate type must be LOAD
-            @Override
-            protected boolean condition(Object value) {
-                if (value == null || StringUtils.isBlank(value.toString())) {
-                    String load = RateDerivationMethodTypeEnum.LOAD.toString();
-                    String interperiodPuntualMethodType = interperiodPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
-                    String interperiodPercentageMethodType = interperiodPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
-                    String annualPuntualMethodType = annualPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
-                    String annualPercentageMethodType = annualPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
-
-                    if (!load.equals(interperiodPuntualMethodType) && !load.equals(interperiodPercentageMethodType) && !load.equals(annualPuntualMethodType)
-                            && !load.equals(annualPercentageMethodType)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        };
-        absoluteMethod.setValidators(absoluteMethodValidator);
-        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceData());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
@@ -587,10 +564,53 @@ public class DataSourcesPanel extends VLayout {
 
         VariableCanvasItem variables = new VariableCanvasItem(DataSourceDS.OTHER_VARIABLES, getConstants().dataSourceOtherVariables());
 
-        generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
+        generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, timeVariable, timeValue, geographicalVariable, geographicalValue,
                 measureVariable, variables);
 
         dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
+        ViewTextItem staticAbsoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD_VIEW, getConstants().dataSourceDataSelection());
+        staticAbsoluteMethod.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return queryEditionViewMode;
+            }
+        });
+
+        // Showed when contVariable (measure variable) is set
+        // ValueMap set in setDataStructure
+        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
+        absoluteMethod.setShowIfCondition(new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                return !queryEditionViewMode;
+            }
+        });
+        absoluteMethod.setValidateOnChange(true);
+        CustomValidator absoluteMethodValidator = new CustomValidator() {
+
+            // If absolute method is not set, at least one rate type must be LOAD
+            @Override
+            protected boolean condition(Object value) {
+                if (value == null || StringUtils.isBlank(value.toString())) {
+                    String load = RateDerivationMethodTypeEnum.LOAD.toString();
+                    String interperiodPuntualMethodType = interperiodPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String interperiodPercentageMethodType = interperiodPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String annualPuntualMethodType = annualPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+                    String annualPercentageMethodType = annualPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
+
+                    if (!load.equals(interperiodPuntualMethodType) && !load.equals(interperiodPercentageMethodType) && !load.equals(annualPuntualMethodType)
+                            && !load.equals(annualPercentageMethodType)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        absoluteMethod.setValidators(absoluteMethodValidator);
+        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceData());
+        dataEditionForm.setFields(staticAbsoluteMethod, absoluteMethod);
 
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
@@ -626,14 +646,14 @@ public class DataSourcesPanel extends VLayout {
     public void setDataStructureView(DataStructureDto dataStructureDto) {
         // Absolute method
         if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
-            generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(getConstants().dataSourceObsValue());
+            dataForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(getConstants().dataSourceObsValue());
         } else {
             List<String> codes = dataStructureDto.getValueCodes().get(dataStructureDto.getContVariable());
             List<String> labels = dataStructureDto.getValueLabels().get(dataStructureDto.getContVariable());
             if (codes != null) {
                 for (int i = 0; i < codes.size(); i++) {
                     if (codes.get(i).equals(dataSourceDto.getAbsoluteMethod())) {
-                        generalForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
+                        dataForm.getItem(DataSourceDS.ABSOLUTE_METHOD).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
                         break;
                     }
                 }
@@ -674,7 +694,7 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setValue(DataSourceDS.MEASURE_VARIABLE, dataStructureDto.getContVariable());
         if (!StringUtils.isBlank(dataStructureDto.getContVariable())) {
             // If there is a contVariable (measure variable), set variable values
-            ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
+            ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(),
                     dataStructureDto.getValueLabels()));
 
             interperiodPuntualRateEditionForm
@@ -685,12 +705,28 @@ public class DataSourcesPanel extends VLayout {
             annualPercentageRateEditionForm.setMeasureVariableValues(getMeasureVariableValues(dataStructureDto.getContVariable(), dataStructureDto.getValueCodes(), dataStructureDto.getValueLabels()));
         } else {
             // If not, set OBS_VALUE value map
-            ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(CommonUtils.getObsValueLValueMap());
+            ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).setValueMap(CommonUtils.getObsValueLValueMap());
 
             interperiodPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
             interperiodPercentageRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
             annualPuntualRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
             annualPercentageRateEditionForm.setValue(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW, getConstants().dataSourceObsValue());
+        }
+
+        // Static Absolute method
+        if (DataSourceDto.OBS_VALUE.equals(dataSourceDto.getAbsoluteMethod())) {
+            dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD_VIEW).setValue(getConstants().dataSourceObsValue());
+        } else {
+            List<String> codes = dataStructureDto.getValueCodes().get(dataStructureDto.getContVariable());
+            List<String> labels = dataStructureDto.getValueLabels().get(dataStructureDto.getContVariable());
+            if (codes != null) {
+                for (int i = 0; i < codes.size(); i++) {
+                    if (codes.get(i).equals(dataSourceDto.getAbsoluteMethod())) {
+                        dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD_VIEW).setValue(dataSourceDto.getAbsoluteMethod() + " - " + labels.get(i));
+                        break;
+                    }
+                }
+            }
         }
 
         // Variables and categories
@@ -726,7 +762,7 @@ public class DataSourcesPanel extends VLayout {
         dataSourceDto.setPublishers(dataStructureDtoEdition.getPublishers());
 
         if (generalEditionForm.isVisible()) {
-            dataSourceDto.setAbsoluteMethod(generalEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
+            dataSourceDto.setAbsoluteMethod(dataEditionForm.getValueAsString(DataSourceDS.ABSOLUTE_METHOD));
         }
 
         dataSourceDto.setTimeVariable(dataStructureDtoEdition.getTemporalVariable());
@@ -808,6 +844,8 @@ public class DataSourcesPanel extends VLayout {
      * In edition mode, shows query form in view mode
      */
     private void setViewQueryMode() {
+        this.queryEditionViewMode = true;
+
         generalEditionForm.hide();
         generalStaticEditionForm.show();
 
@@ -823,6 +861,8 @@ public class DataSourcesPanel extends VLayout {
      * In edition mode, shows query form in edition mode
      */
     private void setEditionQueryMode() {
+        this.queryEditionViewMode = false;
+
         generalEditionForm.show();
         generalStaticEditionForm.hide();
 
@@ -853,7 +893,7 @@ public class DataSourcesPanel extends VLayout {
         ((MultiLanguageTextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_ACRONYM)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.SOURCE_SURVEY_URL)).clearValue();
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.PUBLISHERS)).clearValue();
-        ((SelectItem) generalEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).clearValue();
+        ((SelectItem) dataEditionForm.getItem(DataSourceDS.ABSOLUTE_METHOD)).clearValue();
 
         ((ViewTextItem) generalEditionForm.getItem(DataSourceDS.TIME_VARIABLE)).clearValue();
         ((TextItem) generalEditionForm.getItem(DataSourceDS.TIME_VALUE)).clearValue();

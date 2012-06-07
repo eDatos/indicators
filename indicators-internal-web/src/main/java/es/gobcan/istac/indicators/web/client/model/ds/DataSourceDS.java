@@ -13,6 +13,7 @@ public class DataSourceDS extends DataSource {
     public static String PX                                = "ds-px";
 
     public static String ABSOLUTE_METHOD                   = "ds-abs-met";
+    public static String ABSOLUTE_METHOD_VIEW              = "ds-abs-met-view";
 
     public static String TIME_VARIABLE                     = "ds-time-var";
     public static String TIME_VALUE                        = "ds-time-value";
