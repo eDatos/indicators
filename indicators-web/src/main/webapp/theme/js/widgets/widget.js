@@ -443,7 +443,7 @@
         },
 
         includeLogo : function(){
-            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '">ISTAC</a></div>');
+            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '/widgets/creator">ISTAC</a></div>');
         }
     });
 
