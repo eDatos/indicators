@@ -438,7 +438,7 @@
         },
 
         includeLogo : function(){
-            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '">Widget facilitado por el ISTAC</a></div>');
+            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '">ISTAC</a></div>');
         }
     });
 
