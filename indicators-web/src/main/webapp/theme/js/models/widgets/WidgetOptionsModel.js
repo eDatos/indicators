@@ -4,7 +4,7 @@
 
 var WidgetOptionsModel = Backbone.Model.extend({
     defaults : {
-        title : 'Istac Widget',
+        title : 'Poner aquí el título del widget',
         type : 'lastData',
         width : 300,
         borderColor : '#3478B0',
