@@ -658,11 +658,11 @@
     });
 
     var measuresLabels = {
-        'ABSOLUTE' : 'Absoluto',
-        'ANNUAL_PERCENTAGE_RATE' : 'Tasa porcentual interanual',
-        'ANNUAL_PUNTUAL_RATE' :  'Tasa puntual interanual',
-        'INTERPERIOD_PERCENTAGE_RATE' : 'Tasa porcentual interperiódica',
-        'INTERPERIOD_PUNTUAL_RATE' : 'Tasa puntual interperiódica'
+        'ABSOLUTE' : 'Dato',
+        'ANNUAL_PERCENTAGE_RATE' : 'Tasa variación anual',
+        'ANNUAL_PUNTUAL_RATE' :  'Variación anual',
+        'INTERPERIOD_PERCENTAGE_RATE' : 'Tasa variación interperiódica',
+        'INTERPERIOD_PUNTUAL_RATE' : 'Variación interperiódica'
     }
 
     var LastData = Base.extend({
