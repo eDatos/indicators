@@ -33,8 +33,7 @@ public class LoggingSetup {
                 configurator.setContext(loggerContext);
                 loggerContext.reset();
 
-                URL url = ConfigurationUtils.locate(StringUtils.EMPTY, logConfigurationFile);
-                configurator.doConfigure(url);
+                configurator.doConfigure(logConfigurationFile);
             } catch (JoranException e) {
                 throw new RuntimeException("Error configuring logging system", e);
             }
