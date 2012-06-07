@@ -355,7 +355,8 @@
 
             //Create containers
             //TODO empty the container
-            this.titleContainer = $('<div class="istac-widget-title"></div>');
+            this.titleLink = $('<a href="#" target="_blank"></a>');
+            this.titleContainer = $('<div class="istac-widget-title"></div>').append(this.titleLink);
             this.contentContainer = $('<div class="istac-widget-content"></div>');
             this.el.html(this.titleContainer).append(this.contentContainer);
             this.el.addClass("istac-widget");
@@ -402,7 +403,7 @@
 
             this.titleContainer.css('background-color', borderColor);
             var contrastColor = this._getContrast50(borderColor);
-            this.titleContainer.css('color', contrastColor);
+            this.titleLink.css('color', contrastColor);
             this.el.css('border-color', borderColor);
         },
 
@@ -413,11 +414,12 @@
 
         setTitle : function(title){
             this.title = title;
-            this.titleContainer.text(title);
+            this.titleLink.text(title);
         },
 
         setSystemId : function(systemId){
             this.systemId = systemId;
+            this.titleLink.attr('href', this.url + "/indicatorsSystems/" + systemId);
         },
 
         setIndicators : function(indicators){
