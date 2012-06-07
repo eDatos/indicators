@@ -247,7 +247,7 @@ public class DataSourcesPanel extends VLayout {
             @Override
             public void onClick(ClickEvent event) {
                 if (generalEditionForm.isVisible()) {
-                    if (generalEditionForm.validate(false) && interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
+                    if (generalEditionForm.validate(false) && dataEditionForm.validate(false) && interperiodPuntualRateEditionForm.validate(false) && annualPuntualRateEditionForm.validate(false)
                             && interperiodPercentageRateEditionForm.validate(false) && annualPercentageRateEditionForm.validate(false)) {
                         uiHandlers.saveDataSource(indicatorDto.getUuid(), getDataSourceDto());
                     }
@@ -588,12 +588,12 @@ public class DataSourcesPanel extends VLayout {
             }
         });
         absoluteMethod.setValidateOnChange(true);
-        CustomValidator absoluteMethodValidator = new CustomValidator() {
+        CustomValidator emptyAbsoluteMethodValidator = new CustomValidator() {
 
-            // If absolute method is not set, at least one rate type must be LOAD
             @Override
             protected boolean condition(Object value) {
                 if (value == null || StringUtils.isBlank(value.toString())) {
+                    // If absolute method is not set, at least one rate type must be LOAD
                     String load = RateDerivationMethodTypeEnum.LOAD.toString();
                     String interperiodPuntualMethodType = interperiodPuntualRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
                     String interperiodPercentageMethodType = interperiodPercentageRateEditionForm.getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_TYPE);
@@ -608,18 +608,59 @@ public class DataSourcesPanel extends VLayout {
                 return true;
             }
         };
-        absoluteMethod.setValidators(absoluteMethodValidator);
-        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceData());
+        emptyAbsoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceEmptyData());
+        CustomValidator filledAbsoluteMethodValidator = new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                if (value != null && !StringUtils.isBlank(value.toString())) {
+                    // If absolute method is set, value selected cannot be the same as one of the rate methods
+                    String absoluteMethod = (String) value;
+
+                    String interperiodPuntualMethod = interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? interperiodPuntualRateEditionForm
+                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (interperiodPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
+                            ? DataSourceDto.OBS_VALUE
+                            : null);
+
+                    String interperiodPercentageMethod = interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? interperiodPercentageRateEditionForm
+                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (interperiodPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
+                            ? DataSourceDto.OBS_VALUE
+                            : null);
+
+                    String annualPuntualMethod = annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? annualPuntualRateEditionForm
+                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (annualPuntualRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
+                            ? DataSourceDto.OBS_VALUE
+                            : null);
+
+                    String annualPercentageMethod = annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).isVisible() ? annualPercentageRateEditionForm
+                            .getValueAsString(DataSourceDS.RATE_DERIVATION_METHOD_LOAD) : (annualPercentageRateEditionForm.getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).isVisible()
+                            ? DataSourceDto.OBS_VALUE
+                            : null);
+
+                    if (absoluteMethod.equals(interperiodPuntualMethod) || absoluteMethod.equals(interperiodPercentageMethod) || absoluteMethod.equals(annualPuntualMethod)
+                            || absoluteMethod.equals(annualPercentageMethod)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        filledAbsoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceFilledData());
+        absoluteMethod.setValidators(emptyAbsoluteMethodValidator, filledAbsoluteMethodValidator);
         dataEditionForm.setFields(staticAbsoluteMethod, absoluteMethod);
 
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
+        interperiodPuntualRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
         interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE,
                 RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
+        interperiodPercentageRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
         annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
+        annualPuntualRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
         annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE, RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
+        annualPercentageRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
         mainFormLayout.addEditionCanvas(generalStaticEditionForm);
@@ -629,7 +670,6 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.addEditionCanvas(annualPuntualRateEditionForm);
         mainFormLayout.addEditionCanvas(annualPercentageRateEditionForm);
     }
-
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
         this.dataDefinitionsOperationCodes = operationCodes;
     }
@@ -1028,6 +1068,16 @@ public class DataSourcesPanel extends VLayout {
                 annualPercentageRateEditionForm.setDenominatorIndicators(indicatorDtos);
             }
         }
+    }
+
+    private ChangedHandler getRateDerivationMethodChangeHandler() {
+        return new ChangedHandler() {
+
+            @Override
+            public void onChanged(ChangedEvent event) {
+                dataEditionForm.validate(); // Absolute method validation
+            }
+        };
     }
 
 }

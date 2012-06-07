@@ -252,6 +252,12 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         markForRedraw();
     }
 
+    public void setMethodChangedHandler(ChangedHandler changedHandler) {
+        getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).addChangedHandler(changedHandler);
+        getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).addChangedHandler(changedHandler);
+        getItem(DataSourceDS.RATE_DERIVATION_METHOD_CALCULATED).addChangedHandler(changedHandler);
+    }
+
     public void setValue(RateDerivationDto rateDerivationDto) {
         this.rateDerivationDto = rateDerivationDto;
 
@@ -516,7 +522,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         return searchDenominatorText;
     }
-    
+
     private SearchViewTextItem getSearchNumeratorTextItem() {
         SearchViewTextItem searchNumeratorText = new SearchViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
         searchNumeratorText.setShowIfCondition(getNumeratorIfFunction());
