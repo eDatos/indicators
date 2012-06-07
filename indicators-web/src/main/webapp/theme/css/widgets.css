@@ -30,7 +30,7 @@
 }
 
 .istac-widget-lastData tbody tr:nth-child(odd) td, .istac-widget-lastData tbody tr:nth-child(odd) th {
-	background-color: #F9F9F9;
+	background-color: #ebebeb;
 }
 
 .istac-widget-lastData th, .istac-widget-lastData table td {
