@@ -86,6 +86,7 @@ public class DataSourcesPanel extends VLayout {
 
     // View Form
     private ViewDataSourceGeneralForm   generalForm;
+    private GroupDynamicForm            dataForm;
     private ViewRateDerivationForm      interperiodPuntualRateForm;
     private ViewRateDerivationForm      annualPuntualRateForm;
     private ViewRateDerivationForm      interperiodPercentageRateForm;
@@ -94,6 +95,7 @@ public class DataSourcesPanel extends VLayout {
     // Edition Form
     private GroupDynamicForm            generalEditionForm;
     private ViewDataSourceGeneralForm   generalStaticEditionForm;
+    private GroupDynamicForm            dataEditionForm;
     private RateDerivationForm          interperiodPuntualRateEditionForm;
     private RateDerivationForm          annualPuntualRateEditionForm;
     private RateDerivationForm          interperiodPercentageRateEditionForm;
@@ -460,6 +462,8 @@ public class DataSourcesPanel extends VLayout {
 
         interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
+        dataForm = new GroupDynamicForm(getConstants().dataSourceData());
+
         interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
 
         annualPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
@@ -467,6 +471,7 @@ public class DataSourcesPanel extends VLayout {
         annualPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
 
         mainFormLayout.addViewCanvas(generalForm);
+        mainFormLayout.addViewCanvas(dataForm);
         mainFormLayout.addViewCanvas(interperiodPuntualRateForm);
         mainFormLayout.addViewCanvas(interperiodPercentageRateForm);
         mainFormLayout.addViewCanvas(annualPuntualRateForm);
@@ -495,7 +500,7 @@ public class DataSourcesPanel extends VLayout {
 
         // Showed when contVariable (measure variable) is set
         // ValueMap set in setDataStructure
-        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceAbsoluteMethod());
+        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
         absoluteMethod.setValidateOnChange(true);
         CustomValidator absoluteMethodValidator = new CustomValidator() {
 
@@ -518,7 +523,7 @@ public class DataSourcesPanel extends VLayout {
             }
         };
         absoluteMethod.setValidators(absoluteMethodValidator);
-        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceAbsoluteMethod());
+        absoluteMethodValidator.setErrorMessage(getMessages().infoDataSourceData());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
@@ -585,6 +590,8 @@ public class DataSourcesPanel extends VLayout {
         generalEditionForm.setFields(queryUuid, query, surveyCode, surveyTitle, surveyAcronym, surveyUrl, publishers, absoluteMethod, timeVariable, timeValue, geographicalVariable, geographicalValue,
                 measureVariable, variables);
 
+        dataEditionForm = new GroupDynamicForm(getConstants().dataSourceData());
+
         interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
         interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE,
@@ -596,6 +603,7 @@ public class DataSourcesPanel extends VLayout {
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
         mainFormLayout.addEditionCanvas(generalStaticEditionForm);
+        mainFormLayout.addEditionCanvas(dataEditionForm);
         mainFormLayout.addEditionCanvas(interperiodPuntualRateEditionForm);
         mainFormLayout.addEditionCanvas(interperiodPercentageRateEditionForm);
         mainFormLayout.addEditionCanvas(annualPuntualRateEditionForm);

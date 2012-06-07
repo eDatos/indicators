@@ -35,7 +35,7 @@ public class ViewDataSourceGeneralForm extends GroupDynamicForm {
 
         ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
 
-        ViewTextItem absolutMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceAbsoluteMethod());
+        ViewTextItem absolutMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
 
         ViewTextItem timeVariable = new ViewTextItem(DataSourceDS.TIME_VARIABLE, getConstants().dataSourceTimeVariable());
         timeVariable.setShowIfCondition(new FormItemIfFunction() {
