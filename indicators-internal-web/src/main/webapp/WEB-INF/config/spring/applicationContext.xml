@@ -51,6 +51,8 @@
 			</bean>
 		</constructor-arg>
 	</bean>
+    
+    <bean class="org.siemac.metamac.web.common.server.handlers.MockCASUserActionHandler" /> <!-- This method should be removed to use CAS authentication -->
 	
 	<import resource="classpath:/spring/indicators-applicationContext.xml" />
   

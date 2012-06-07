@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.server;
 
+import org.siemac.metamac.web.common.server.handlers.MockCASUserActionHandler;
+import org.siemac.metamac.web.common.shared.MockCASUserAction;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.spring.HandlerModule;
@@ -203,6 +205,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
+
+        // This action should be removed to use CAS authentication
+        bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);
     }
 
 }
