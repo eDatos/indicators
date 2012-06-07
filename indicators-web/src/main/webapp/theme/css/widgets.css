@@ -10,10 +10,6 @@
     background-color: #fff;
 }
 
-.istac-widget table {
-
-}
-
 .istac-widget-title {
     line-height: 25px;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
@@ -41,7 +37,8 @@
 }
 
 .istac-widget-lastData th {
-	font-weight:  bold;	
+	font-weight:  bold;
+    text-align: right;
 }
 
 .istact-widget-footer{
