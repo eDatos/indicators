@@ -56,10 +56,10 @@ var WidgetDataOptionsView = Backbone.View.extend({
         measuresView.render();
         measuresCollection.reset([
             {id : 'ABSOLUTE', name : 'Dato'},
-            {id : 'ANNUAL_PERCENTAGE_RATE', name : 'Tasa variación anual'},
             {id : 'ANNUAL_PUNTUAL_RATE', name : 'Variación anual'},
-            {id : 'INTERPERIOD_PERCENTAGE_RATE', name : 'Tasa variación interperiódica'},
-            {id : 'INTERPERIOD_PUNTUAL_RATE', name : 'Variación interperiódica'}
+            {id : 'INTERPERIOD_PUNTUAL_RATE', name : 'Variación interperiódica'},
+            {id : 'ANNUAL_PERCENTAGE_RATE', name : 'Tasa variación anual'},
+            {id : 'INTERPERIOD_PERCENTAGE_RATE', name : 'Tasa variación interperiódica'}
         ]);
 
         measuresView.on('selectionChange', function(selection){
