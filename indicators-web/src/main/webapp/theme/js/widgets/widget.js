@@ -4,6 +4,28 @@
 ;
 (function(undefined){
 
+    function tooltip($el, text){
+        var xOffset = 10;
+        var yOffset = 20;
+
+        var $tooltip = $('<p class="istact-widget-tooltip">'+ text +'</p>');
+        $el.hover(function(e){
+                $("body").append($tooltip);
+                $tooltip
+                    .css("top",(e.pageY - xOffset) + "px")
+                    .css("left",(e.pageX + yOffset) + "px")
+                    .fadeIn("fast");
+            },
+            function(){
+                $tooltip.remove();
+            });
+        $el.mousemove(function(e){
+            $tooltip
+                .css("top",(e.pageY - xOffset) + "px")
+                .css("left",(e.pageX + yOffset) + "px");
+        });
+    }
+
 
     function addThousandSeparator(nStr){
         nStr += '';
@@ -754,7 +776,7 @@
 
                 head += '</thead>';
 
-                var rows = '';
+                var $tbody = $('<tbody></tbody>');
 
                 for (var i = 0; i < datasets.length; i++) {
                     var dataset = datasets[i];
@@ -765,6 +787,7 @@
 
 
                     //TODO LOCALIZE title!
+
                     var row = '<tr>' +
                     '<th>' +
                         '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
@@ -781,9 +804,15 @@
                     }
 
                     row += '</tr>';
-                    rows += (row);
-                }
-                this.contentContainer.html('<table>' + head + '<tbody>' + rows + '</tbody></table>');
+
+                    var $row = $(row);
+                    tooltip($row, dataset.indicatorid);
+
+                    $tbody.append($row);
+                };
+
+                var $table = $('<table>' + head + '</table>').append($tbody);
+                this.contentContainer.html($table);
             }
         }
     });
