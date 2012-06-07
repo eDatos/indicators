@@ -1,11 +1,7 @@
 package es.gobcan.istac.indicators.web.server.logging;
 
-import java.net.URL;
-
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
