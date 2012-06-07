@@ -7,6 +7,7 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public class SharedSecurityUtils {
+
     /**
      * Checks if user has requested role
      */
@@ -33,6 +34,10 @@ public class SharedSecurityUtils {
         return Boolean.FALSE;
     }
 
+    public static Boolean isAdministrator(MetamacPrincipal metamacPrincipal) {
+        return isRoleInAccesses(metamacPrincipal, RoleEnum.ADMINISTRADOR);
+    }
+
     /**
      * Checks if user has access with role
      */
@@ -43,10 +48,6 @@ public class SharedSecurityUtils {
             }
         }
         return Boolean.FALSE;
-    }
-
-    public static Boolean isAdministrator(MetamacPrincipal metamacPrincipal) {
-        return isRoleInAccesses(metamacPrincipal, RoleEnum.ADMINISTRADOR);
     }
 
     public static Boolean isAnyIndicatorsRole(MetamacPrincipal metamacPrincipal) {
