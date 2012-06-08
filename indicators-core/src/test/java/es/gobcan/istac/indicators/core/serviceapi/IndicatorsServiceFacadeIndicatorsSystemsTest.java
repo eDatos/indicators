@@ -64,52 +64,52 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
 
-    private static String             NOT_EXISTS                                  = "not-exists";
+    private static String             NOT_EXISTS                                       = "not-exists";
 
     // Indicators systems
-    private static String             INDICATORS_SYSTEM_1                         = "IndSys-1";
-    private static String             INDICATORS_SYSTEM_2                         = "IndSys-2";
-    private static String             INDICATORS_SYSTEM_3                         = "IndSys-3";
-    private static String             INDICATORS_SYSTEM_3_VERSION                 = "11.033";
-    private static String             INDICATORS_SYSTEM_4                         = "IndSys-4";
-    private static String             INDICATORS_SYSTEM_5                         = "IndSys-5";
-    private static String             INDICATORS_SYSTEM_6                         = "IndSys-6";
-    private static String             INDICATORS_SYSTEM_7                         = "IndSys-7";
-    private static String             INDICATORS_SYSTEM_8                         = "IndSys-8";
-    private static String             INDICATORS_SYSTEM_9                         = "IndSys-9";
+    private static String             INDICATORS_SYSTEM_1                              = "IndSys-1";
+    private static String             INDICATORS_SYSTEM_2                              = "IndSys-2";
+    private static String             INDICATORS_SYSTEM_3                              = "IndSys-3";
+    private static String             INDICATORS_SYSTEM_3_VERSION                      = "11.033";
+    private static String             INDICATORS_SYSTEM_4                              = "IndSys-4";
+    private static String             INDICATORS_SYSTEM_5                              = "IndSys-5";
+    private static String             INDICATORS_SYSTEM_6                              = "IndSys-6";
+    private static String             INDICATORS_SYSTEM_7                              = "IndSys-7";
+    private static String             INDICATORS_SYSTEM_8                              = "IndSys-8";
+    private static String             INDICATORS_SYSTEM_9                              = "IndSys-9";
 
     // Dimensions
-    private static String             DIMENSION_NOT_EXISTS                        = "Dim-not-exists";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V1          = "IndSys-1-v1-Dimension-1";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-1";
-    private static String             DIMENSION_1A_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1A";
-    private static String             DIMENSION_1B_INDICATORS_SYSTEM_1_V2         = "IndSys-1-v2-Dimension-1B";
-    private static String             DIMENSION_1BA_INDICATORS_SYSTEM_1_V2        = "IndSys-1-v2-Dimension-1BA";
-    private static String             DIMENSION_2_INDICATORS_SYSTEM_1_V2          = "IndSys-1-v2-Dimension-2";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_3             = "IndSys-3-v1-Dimension-1";
+    private static String             DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V1               = "IndSys-1-v1-Dimension-1";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-1";
+    private static String             DIMENSION_1A_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1A";
+    private static String             DIMENSION_1B_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1B";
+    private static String             DIMENSION_1BA_INDICATORS_SYSTEM_1_V2             = "IndSys-1-v2-Dimension-1BA";
+    private static String             DIMENSION_2_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-2";
+    private static String             DIMENSION_1_INDICATORS_SYSTEM_3                  = "IndSys-3-v1-Dimension-1";
 
     // Indicator instances
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1 = "IndSys-1-v1-IInstance-1";
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
-    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
+    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1      = "IndSys-1-v1-IInstance-1";
+    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-1";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-2";
+    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-3";
     private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE = "IndSys-1-v2-IInstance-3-code";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-2";
 
     // Geographical values
-    private static String             GEOGRAPHICAL_VALUE_1                        = "1";
-    private static String             GEOGRAPHICAL_VALUE_2                        = "2";
-    private static String             GEOGRAPHICAL_VALUE_3                        = "3";
-    private static String             GEOGRAPHICAL_VALUE_4                        = "4";
+    private static String             GEOGRAPHICAL_VALUE_1                             = "1";
+    private static String             GEOGRAPHICAL_VALUE_2                             = "2";
+    private static String             GEOGRAPHICAL_VALUE_3                             = "3";
+    private static String             GEOGRAPHICAL_VALUE_4                             = "4";
 
     // Geographical granularities
-    private static String             GEOGRAPHICAL_GRANULARITY_1                  = "1";
-    private static String             GEOGRAPHICAL_GRANULARITY_2                  = "2";
+    private static String             GEOGRAPHICAL_GRANULARITY_1                       = "1";
+    private static String             GEOGRAPHICAL_GRANULARITY_2                       = "2";
 
     // Indicators
-    private static String             INDICATOR_1                                 = "Indicator-1";
-    private static String             INDICATOR_2                                 = "Indicator-2";
-    private static String             INDICATOR_3                                 = "Indicator-3";
+    private static String             INDICATOR_1                                      = "Indicator-1";
+    private static String             INDICATOR_2                                      = "Indicator-2";
+    private static String             INDICATOR_3                                      = "Indicator-3";
 
     @Test
     public void testRetrieveIndicatorsSystem() throws Exception {
@@ -1361,8 +1361,18 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
             assertEquals(2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length);
-            assertEquals(indicatorUuid2, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[0]);
-            assertEquals(indicatorUuid3, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[1]);
+            boolean indicator2 = false;
+            boolean indicator3 = false;
+            for (int i = 0; i < ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1]).length; i++) {
+                if (indicatorUuid2.equals(((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[i])) {
+                    indicator2 = true;
+                }
+                if (indicatorUuid3.equals(((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[i])) {
+                    indicator3 = true;
+                }
+            }
+            assertTrue(indicator2);
+            assertTrue(indicator3);
         }
     }
 
