@@ -140,7 +140,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
                     assertNotNull(observations);
                     assertEquals(1, observations.keySet().size());
                     List<ObservationDto> observationsList = new ArrayList<ObservationDto>(observations.values());
-                    assertEquals(plainData.get(index), observationsList.get(0).getPrimaryMeasure());
+                    assertEquals("Index: "+index,plainData.get(index), observationsList.get(0).getPrimaryMeasure());
                     index++;
                 }
             }

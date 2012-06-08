@@ -178,7 +178,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -327,7 +327,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -818,7 +818,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -969,7 +969,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1118,7 +1118,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1267,7 +1267,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-  					DECIMAL_PLACES="[null]"
+  					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1415,7 +1415,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-  					DECIMAL_PLACES="[null]"
+  					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1563,7 +1563,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1686,7 +1686,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1834,7 +1834,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1957,7 +1957,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
-					DECIMAL_PLACES="[null]"
+					DECIMAL_PLACES="0"
 					UNIT_FK="1"
 
 					VERSION="1"

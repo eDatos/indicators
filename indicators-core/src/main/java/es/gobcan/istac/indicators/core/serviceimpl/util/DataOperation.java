@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
@@ -41,11 +42,7 @@ public class DataOperation {
     }
     
     public boolean shouldBeRounded() {
-        if (MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.equals(measureDimension) || MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.equals(measureDimension)) {
-            return true;
-        } else {
-            return false;
-        }
+        return true;
     }
     
     public boolean isAnnualMethod() {
@@ -103,6 +100,8 @@ public class DataOperation {
     
     public RateDerivationRoundingEnum getRateRounding() {
         switch (measureDimension) {
+            case ABSOLUTE:
+                return RateDerivationRoundingEnum.UPWARD; //TODO: always up?
             case ANNUAL_PERCENTAGE_RATE:
                 return dataSource.getAnnualPercentageRate().getRounding();
             case ANNUAL_PUNTUAL_RATE:
@@ -117,6 +116,8 @@ public class DataOperation {
     
     public Quantity getQuantity() {
         switch (measureDimension) {
+            case ABSOLUTE:
+                return dataSource.getIndicatorVersion().getQuantity();
             case ANNUAL_PERCENTAGE_RATE:
                 return dataSource.getAnnualPercentageRate().getQuantity();
             case ANNUAL_PUNTUAL_RATE:

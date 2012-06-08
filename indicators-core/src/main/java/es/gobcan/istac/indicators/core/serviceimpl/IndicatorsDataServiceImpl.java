@@ -1196,7 +1196,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
             observation.setPrimaryMeasure(null);
         } else {
-            observation.setPrimaryMeasure(value);
+            Double numValue = null;
+            try {
+                numValue = Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+                throw new MetamacException(ServiceExceptionType.DATA_POPULATE_OBSERVATION_FORMAT_ERROR, value);
+            }
+            String formattedValue = formatValue(numValue, dataOperation);
+            observation.setPrimaryMeasure(formattedValue);
         }
         
         return observation;
@@ -1306,7 +1313,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             } else {
                 throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
             }
-            String formattedValue = formatCalculatedValue(calculatedValue, dataOperation);
+            String formattedValue = formatValue(calculatedValue, dataOperation);
             observation.setPrimaryMeasure(formattedValue);
         }
         return observation;
@@ -1317,21 +1324,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         return observationsMap.get(generatedKey);
     }
 
-    private String formatCalculatedValue(Double value, DataOperation dataOperation) {
+    private String formatValue(Double value, DataOperation dataOperation) {
         DecimalFormat formatter = (DecimalFormat) (DecimalFormat.getInstance(Locale.ENGLISH));
         formatter.setGroupingUsed(false); // DO NOT use thousands separator
-        if (dataOperation.shouldBeRounded()) {
-            if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
-                formatter.setRoundingMode(RoundingMode.HALF_UP);
-            } else if (RateDerivationRoundingEnum.DOWN.equals(dataOperation.getRateRounding())) {
-                formatter.setRoundingMode(RoundingMode.DOWN); // Truncate
-            }
-            formatter.setMaximumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
-            formatter.setMinimumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
-            return formatter.format(value);
-        } else {
-            return formatter.format(value);
+        
+        if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
+            formatter.setRoundingMode(RoundingMode.HALF_UP);
+        } else if (RateDerivationRoundingEnum.DOWN.equals(dataOperation.getRateRounding())) {
+            formatter.setRoundingMode(RoundingMode.DOWN); // Truncate
         }
+        formatter.setMaximumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
+        formatter.setMinimumFractionDigits(dataOperation.getQuantity().getDecimalPlaces());
+        return formatter.format(value);
     }
 
     /*

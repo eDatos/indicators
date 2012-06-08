@@ -710,11 +710,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
-        List<String> absolute = Arrays.asList("34413", "4546", "2471", "329", "2507", "347", "2036", "297", "33413", "3546", "1471", "229", "1507", "247", "1036", "197");
+        List<String> absolute = Arrays.asList("34413.00", "4546.00", "2471.00", "329.00", "2507.00", "347.00", "2036.00", "297.00", "33413.00", "3546.00", "1471.00", "229.00", "1507.00", "247.00", "1036.00", "197.00");
         List<String> annualPercentageRate = Arrays.asList("2.992", "28.200", "67.980", "43.668", "66.357", "40.485", "96.525", "50.761", null, null, null, null, null, null, null, null);
         List<String> interperiodPercentageRate = Arrays.asList("2.99", "28.20", "-1.43", "-5.18", "23.13", "16.83", null, null, null, null, "-2.38", "-7.28", "45.46", "25.38", null, null);
-        List<String> annualPuntualRate = Arrays.asList("1000", "1000", "1000", "100", "1000", "100", "1000", "100", null, null, null, null, null, null, null, null);
-        List<String> interperiodPuntualRate = Arrays.asList("1000", "1000", "-36", "-18", "471", "50", null, null, null, null, "-36", "-18", "471", "50", null, null);
+        List<String> annualPuntualRate = Arrays.asList("1000.0", "1000.0", "1000.0", "100.0", "1000.0", "100.0", "1000.0", "100.0", null, null, null, null, null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("1000.0", "1000.0", "-36.0", "-18.0", "471.0", "50.0", null, null, null, null, "-36.0", "-18.0", "471.0", "50.0", null, null);
 
         List<String> data = new ArrayList<String>();
         data.addAll(absolute);
@@ -745,11 +745,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
-        List<String> absolute = Arrays.asList("34413.25", "4546.358", "2471.256", "329.2", "2507.23", "347.58", "33413.85", "3546.35", "1471.25", "229.22", "1507.73", "247.12");
-        List<String> annualPercentageRate = Arrays.asList("2.990", "28.198", "67.969", "43.617", "66.291", "40.652", null, null, null, null, null, null);
+        List<String> absolute = Arrays.asList("34413.25", "4546.36", "2471.26", "329.20", "2507.23", "347.58", "33413.85", "3546.35", "1471.25", "229.22", "1507.73", "247.12");
+        List<String> annualPercentageRate = Arrays.asList("2.990", "28.198", "67.970", "43.617", "66.291", "40.652", null, null, null, null, null, null);
         List<String> interperiodPercentageRate = Arrays.asList("2.99", "28.19", "-1.43", "-5.28", null, null, null, null, "-2.41", "-7.24", null, null);
-        List<String> annualPuntualRate = Arrays.asList("999.4", "1000.008", "1000.006", "99.98", "999.5", "100.46", null, null, null, null, null, null);
-        List<String> interperiodPuntualRate = Arrays.asList("999.4", "1000.008", "-35.974", "-18.38", null, null, null, null, "-36.48", "-17.9", null, null);
+        List<String> annualPuntualRate = Arrays.asList("999.4", "1000.0", "1000.0", "99.9", "999.5", "100.4", null, null, null, null, null, null);
+        List<String> interperiodPuntualRate = Arrays.asList("999.4", "1000.0", "-35.9", "-18.3", null, null, null, null, "-36.4", "-17.9", null, null);
 
         List<String> data = new ArrayList<String>();
         data.addAll(absolute);
@@ -815,7 +815,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         // DATA
         List<String> absolute = Arrays.asList("34413", "4546", "2471", "329", "2507", "347", "2036", "297", "33413", "3546", "1471", "229", "1507", "247", "1036", "197");
         List<String> annualPercentageRate = Arrays.asList("2.993", "28.201", "67.981", "43.668", "66.357", "40.486", "96.525", "50.761", null, null, null, null, null, null, null, null);
-        List<String> interperiodPercentageRate = Arrays.asList("2.99", "28.20", "-1.44", "-5.19", "23.13", "16.84", null, null, null, null, "-2.39", "-7.29", "45.46", "25.38", null, null);
+        List<String> interperiodPercentageRate = Arrays.asList("2.990", "28.200", "-1.440", "-5.190", "23.130", "16.840", null, null, null, null, "-2.390", "-7.290", "45.460", "25.380", null, null);
         List<String> annualPuntualRate = Arrays.asList("1000", "1000", "1000", "100", "1000", "100", "1000", "100", null, null, null, null, null, null, null, null);
         List<String> interperiodPuntualRate = Arrays.asList("1000", "1000", "-36", "-18", "471", "50", null, null, null, null, "-36", "-18", "471", "50", null, null);
 
