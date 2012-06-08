@@ -266,7 +266,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
         }
 
-        setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces() : 2);
+        // Amount rates (PUNTUALS) have 0 decimal places by default. The others rates have 2 decimal places.
+        Integer defaultDecimalPlaces = (RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE.equals(this.rateDerivationTypeEnum) || RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE
+                .equals(this.rateDerivationTypeEnum)) ? 0 : 2;
+        setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces() : defaultDecimalPlaces);
 
         if (quantityDto.getMinimum() != null) {
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum());
