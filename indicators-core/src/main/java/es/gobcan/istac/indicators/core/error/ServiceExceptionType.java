@@ -60,6 +60,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Subjects
     public static final CommonServiceExceptionType SUBJECT_NOT_FOUND                                        = create("exception.indicators.subject.not_found");
 
+    // Units multipliers
+    public static final CommonServiceExceptionType UNIT_MULTIPLIER_NOT_FOUND                                = create("exception.indicators.unit_multiplier.not_found");
+
     // Data
     public static final CommonServiceExceptionType DATA_DEFINITION_RETRIEVE_ERROR                           = create("exception.indicators.data.definition.error");
     public static final CommonServiceExceptionType DATA_STRUCTURE_RETRIEVE_ERROR                            = create("exception.indicators.data.structure.error");

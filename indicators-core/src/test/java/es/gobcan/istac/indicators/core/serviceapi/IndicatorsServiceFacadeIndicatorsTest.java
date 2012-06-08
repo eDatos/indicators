@@ -428,7 +428,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         // Create
         IndicatorDto indicatorDtoCreated = indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -479,7 +479,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.MAGNITUDE);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         assertTrue(indicatorDto.getQuantity().isMagnituteOrExtension());
@@ -509,7 +509,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -541,7 +541,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.RATIO);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -575,7 +575,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -610,7 +610,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -736,7 +736,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -780,7 +780,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.AMOUNT);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMinimum(Integer.valueOf(1000));
         indicatorDto.getQuantity().setMaximum(Integer.valueOf(2000));
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
@@ -857,7 +857,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(NOT_EXISTS);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -882,7 +882,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -906,7 +906,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -930,7 +930,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -954,7 +954,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         try {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -984,7 +984,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         // Create
         try {
@@ -1011,7 +1011,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
         indicatorDto.getQuantity().setBaseTime("2011xx");
 
@@ -2633,7 +2633,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
                 assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
                 assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
-                assertEquals(Integer.valueOf(20), rateDerivationDto.getQuantity().getUnitMultiplier());
+                assertEquals(Integer.valueOf(1000000), rateDerivationDto.getQuantity().getUnitMultiplier());
             }
 
             assertNull(dataSources.get(0).getInterperiodPercentageRate());
@@ -3213,7 +3213,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
             assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnitUuid());
-            assertEquals(Integer.valueOf(13), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(10000), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
             assertEquals(Integer.valueOf(111), rateDerivationDto.getQuantity().getMinimum());
@@ -3234,7 +3234,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
             assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
-            assertEquals(Integer.valueOf(53), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(100), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(5), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
         }
@@ -3245,7 +3245,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(RateDerivationRoundingEnum.UPWARD, rateDerivationDto.getRounding());
             assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
             assertEquals(QUANTITY_UNIT_2, rateDerivationDto.getQuantity().getUnitUuid());
-            assertEquals(Integer.valueOf(63), rateDerivationDto.getQuantity().getUnitMultiplier());
+            assertEquals(Integer.valueOf(1000), rateDerivationDto.getQuantity().getUnitMultiplier());
             assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getSignificantDigits());
             assertEquals(Integer.valueOf(4), rateDerivationDto.getQuantity().getDecimalPlaces());
             assertEquals(Integer.valueOf(333), rateDerivationDto.getQuantity().getMinimum());

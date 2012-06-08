@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.error;
 
-
 public class ServiceExceptionParameters {
 
     public static final String UUID                                                                          = "uuid";
@@ -66,6 +65,7 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_QUANTITY_TYPE                                                       = "indicator.quantity.type";
     public static final String INDICATOR_QUANTITY_UNIT_UUID                                                  = "indicator.quantity.unit_uuid";
     public static final String INDICATOR_QUANTITY_UNIT_MULTIPLIER                                            = "indicator.quantity.unit_multiplier";
+    public static final String UNIT_MULTIPLIER                                                               = "unitMultiplier";
     public static final String INDICATOR_QUANTITY_DECIMAL_PLACES                                             = "indicator.quantity.decimal_places";
     public static final String INDICATOR_QUANTITY_IS_PERCENTAGE                                              = "indicator.quantity.is_percentage";
     public static final String INDICATOR_QUANTITY_PERCENTAGE_OF                                              = "indicator.quantity.percentage_of";

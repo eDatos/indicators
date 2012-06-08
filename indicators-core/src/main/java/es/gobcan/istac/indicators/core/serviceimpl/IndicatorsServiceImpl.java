@@ -652,6 +652,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
+    public UnitMultiplier retrieveUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveUnitMultiplier(unitMultiplierValue, null);
+
+        // Retrieve
+        UnitMultiplier unitMultiplier = getUnitMultiplierRepository().retrieveUnitMultiplier(unitMultiplierValue);
+        if (unitMultiplier == null) {
+            throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND, unitMultiplierValue);
+        }
+        return unitMultiplier;
+    }
+
+    @Override
     public List<UnitMultiplier> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
 
         // Validation of parameters
@@ -661,7 +675,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         List<UnitMultiplier> unitsMultipliers = getUnitMultiplierRepository().findAllOrdered();
         return unitsMultipliers;
     }
-
     
     /**
      * Checks not exists another indicator with same code

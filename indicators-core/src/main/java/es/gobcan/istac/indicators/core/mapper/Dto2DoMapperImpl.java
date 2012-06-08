@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.RateDerivationRepository;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -440,7 +441,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target.setUnit(null);
         }
-        target.setUnitMultiplier(source.getUnitMultiplier()); // TODO comprobar que está en la tabla de valores?
+        if (source.getUnitMultiplier() != null) {
+            UnitMultiplier unitMultiplier = indicatorsService.retrieveUnitMultiplier(ctx, source.getUnitMultiplier()); // only to check exists
+            target.setUnitMultiplier(unitMultiplier.getUnitMultiplier());
+        }
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());
         target.setMinimum(source.getMinimum());

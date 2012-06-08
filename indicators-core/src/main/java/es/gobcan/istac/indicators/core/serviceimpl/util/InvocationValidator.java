@@ -1079,6 +1079,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveUnitMultiplier(Integer unitMultiplier, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(unitMultiplier, ServiceExceptionParameters.UNIT_MULTIPLIER, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkRetrieveUnitsMultipliers(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {

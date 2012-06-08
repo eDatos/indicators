@@ -101,7 +101,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
-        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(123));
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(10));
 
         // With access
         indicatorsServiceFacade.createIndicator(getServiceContextTecnicoProduccion(), indicatorDto);

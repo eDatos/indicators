@@ -130,6 +130,7 @@ Application Indicators {
 	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
 	    	
 	    	// Units multipliers
+	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException;
 	    	List<@UnitMultiplier> retrieveUnitsMultipliers() throws MetamacException;
     	}
     	

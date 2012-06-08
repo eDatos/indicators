@@ -325,7 +325,7 @@
 				  	ID="211"
   					UUID="Quantity-211"
 					QUANTITY_TYPE="QUANTITY"
-  					UNIT_MULTIPLIER="2"
+  					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
 					DECIMAL_PLACES="[null]"
 					UNIT_FK="1"
