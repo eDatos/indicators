@@ -39,10 +39,12 @@ public class InvocationValidator {
         }
 
         checkIndicatorsSystem(indicatorsSystemVersion, exceptions);
-        // uuid never is null: it is initialized when create object
-        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
+        if (indicatorsSystemVersion != null) {
+            // uuid never is null: it is initialized when create object
+            ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+            ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+            ValidationUtils.checkMetadataEmpty(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -53,11 +55,13 @@ public class InvocationValidator {
         }
 
         checkIndicatorsSystem(indicatorsSystemVersion, exceptions);
-        // uuid never is null: it is initialized when create object
-        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        if (indicatorsSystemVersion != null) {
+            // uuid never is null: it is initialized when create object
+            ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+            ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getId(), ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+            ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getVersionNumber(), ServiceExceptionParameters.INDICATORS_SYSTEM_VERSION_NUMBER, exceptions);
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -235,7 +239,9 @@ public class InvocationValidator {
 
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         checkDimension(dimension, exceptions);
-        ValidationUtils.checkMetadataEmpty(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
+        if (dimension != null) {
+            ValidationUtils.checkMetadataEmpty(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -279,8 +285,10 @@ public class InvocationValidator {
         }
 
         checkDimension(dimension, exceptions);
-        ValidationUtils.checkMetadataRequired(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        if (dimension != null) {
+            ValidationUtils.checkMetadataRequired(dimension.getId(), ServiceExceptionParameters.DIMENSION_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -312,9 +320,11 @@ public class InvocationValidator {
         }
 
         checkIndicator(indicatorVersion, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorVersion.getIndicator().getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorVersion.getVersionNumber(), ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
+        if (indicatorVersion != null) {
+            ValidationUtils.checkMetadataEmpty(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+            ValidationUtils.checkMetadataEmpty(indicatorVersion.getIndicator().getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+            ValidationUtils.checkMetadataEmpty(indicatorVersion.getVersionNumber(), ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -324,8 +334,11 @@ public class InvocationValidator {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        ValidationUtils.checkMetadataRequired(indicator.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create object
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        ValidationUtils.checkMetadataRequired(indicator, ServiceExceptionParameters.INDICATOR, exceptions);
+        if (indicator != null) {
+            ValidationUtils.checkMetadataRequired(indicator.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -336,10 +349,12 @@ public class InvocationValidator {
         }
 
         checkIndicator(indicatorVersion, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create object
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorVersion.getVersionNumber(), ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        if (indicatorVersion != null) {
+            ValidationUtils.checkMetadataRequired(indicatorVersion.getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions); // uuid never is null: it is initialized when create object
+            ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getId(), ServiceExceptionParameters.INDICATOR_UUID, exceptions);
+            ValidationUtils.checkMetadataRequired(indicatorVersion.getVersionNumber(), ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -496,7 +511,9 @@ public class InvocationValidator {
 
         ValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
         checkDataSource(dataSource, exceptions);
-        ValidationUtils.checkMetadataEmpty(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions);
+        if (dataSource != null) {
+            ValidationUtils.checkMetadataEmpty(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions);
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -540,8 +557,10 @@ public class InvocationValidator {
         }
 
         checkDataSource(dataSource, exceptions);
-        ValidationUtils.checkMetadataRequired(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions); // uuid never is null: it is initialized when create object
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        if (dataSource != null) {
+            ValidationUtils.checkMetadataRequired(dataSource.getId(), ServiceExceptionParameters.DATA_SOURCE_UUID, exceptions); // uuid never is null: it is initialized when create object
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -553,7 +572,9 @@ public class InvocationValidator {
 
         ValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         checkIndicatorInstance(indicatorInstance, exceptions);
-        ValidationUtils.checkMetadataEmpty(indicatorInstance.getId(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions); // uuid never is null: it is initialized when create object
+        if (indicatorInstance != null) {
+            ValidationUtils.checkMetadataEmpty(indicatorInstance.getId(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions); // uuid never is null: it is initialized when create object
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -609,8 +630,10 @@ public class InvocationValidator {
         }
 
         checkIndicatorInstance(indicatorInstance, exceptions);
-        ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
-        // unmodifiable metadatas are checked in Dto2DoMapper
+        if (indicatorInstance != null) {
+            ValidationUtils.checkMetadataRequired(indicatorInstance.getUuid(), ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
+            // unmodifiable metadatas are checked in Dto2DoMapper
+        }
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -1103,12 +1126,18 @@ public class InvocationValidator {
 
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion, ServiceExceptionParameters.INDICATORS_SYSTEM, exceptions);
+        if (indicatorsSystemVersion == null) {
+            return;
+        }
         ValidationUtils.checkParameterRequired(indicatorsSystemVersion.getIndicatorsSystem(), ServiceExceptionParameters.INDICATORS_SYSTEM, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorsSystemVersion.getIndicatorsSystem().getCode(), ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
     }
 
     private static void checkDimension(Dimension dimension, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(dimension, ServiceExceptionParameters.DIMENSION, exceptions);
+        if (dimension == null) {
+            return;
+        }
         ValidationUtils.checkMetadataRequired(dimension.getElementLevel(), ServiceExceptionParameters.DIMENSION, exceptions);
         ValidationUtils.checkMetadataRequired(dimension.getTitle(), ServiceExceptionParameters.DIMENSION_TITLE, exceptions);
         ValidationUtils.checkMetadataRequired(dimension.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.DIMENSION_ORDER_IN_LEVEL, exceptions);
@@ -1119,6 +1148,9 @@ public class InvocationValidator {
 
     private static void checkIndicatorInstance(IndicatorInstance indicatorInstance, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorInstance, ServiceExceptionParameters.INDICATOR_INSTANCE, exceptions);
+        if (indicatorInstance == null) {
+            return;
+        }
         ValidationUtils.checkParameterRequired(indicatorInstance.getElementLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE, exceptions);
         ValidationUtils.checkParameterRequired(indicatorInstance.getCode(), ServiceExceptionParameters.INDICATOR_INSTANCE_CODE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorInstance.getTitle(), ServiceExceptionParameters.INDICATOR_INSTANCE_TITLE, exceptions);
@@ -1144,6 +1176,9 @@ public class InvocationValidator {
 
     private static void checkIndicator(IndicatorVersion indicatorVersion, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(indicatorVersion, ServiceExceptionParameters.INDICATOR, exceptions);
+        if (indicatorVersion == null) {
+            return;
+        }
         ValidationUtils.checkParameterRequired(indicatorVersion.getIndicator(), ServiceExceptionParameters.INDICATOR, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
@@ -1235,6 +1270,9 @@ public class InvocationValidator {
 
     private static void checkDataSource(DataSource dataSource, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(dataSource, ServiceExceptionParameters.DATA_SOURCE, exceptions);
+        if (dataSource == null) {
+            return;
+        }
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getPxUri(), ServiceExceptionParameters.DATA_SOURCE_PX_URI, exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getSourceSurveyCode(), ServiceExceptionParameters.DATA_SOURCE_SOURCE_SURVEY_CODE, exceptions);
