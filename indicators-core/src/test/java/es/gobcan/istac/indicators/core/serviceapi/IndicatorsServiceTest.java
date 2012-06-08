@@ -54,7 +54,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
-        indicatorVersion.getIndicator().setCode(IndicatorsMocks.mockString(10));
+        indicatorVersion.getIndicator().setCode("MYCODE");
         indicatorVersion.setTitle(new InternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorVersion.setSubjectTitle(new InternationalString());
