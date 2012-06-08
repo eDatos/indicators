@@ -164,7 +164,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         RequiredSelectItem rounding = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
         rounding.setShowIfCondition(getFormItemShowIfApplicable());
-        rounding.setValue(RateDerivationRoundingEnum.UPWARD.toString()); // Default value
 
         // QUANTITY
 
@@ -185,7 +184,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         CustomIntegerItem decPlaces = new CustomIntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
         decPlaces.setRequired(true);
         decPlaces.setShowIfCondition(getFormItemShowIfApplicable());
-        decPlaces.setValue(2);
         decPlaces.setValidators(getDecimalPlacesValidator());
 
         CustomIntegerItem min = new CustomIntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
@@ -252,9 +250,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW, getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + methodType));
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, methodType);
-        if (rateDerivationDto.getRounding() != null) { // Do not overwrite default value
-            setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding().toString());
-        }
+        setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : RateDerivationRoundingEnum.UPWARD.toString());
 
         if (rateDerivationDto.getQuantity() == null) {
             rateDerivationDto.setQuantity(new QuantityDto());
@@ -269,9 +265,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         if (quantityDto.getSignificantDigits() != null) {
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
         }
-        if (quantityDto.getDecimalPlaces() != null) { // Do not overwrite default value
-            setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces());
-        }
+
+        setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces() : 2);
+
         if (quantityDto.getMinimum() != null) {
             setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum());
         }
@@ -293,7 +289,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         setValue(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID, quantityDto.getBaseQuantityIndicatorUuid());
         setValue(IndicatorDS.QUANTITY_PERCENTAGE_OF, RecordUtils.getInternationalStringRecord(quantityDto.getPercentageOf()));
     }
-
     public void setNumeratorIndicator(IndicatorDto indicatorDto) {
         setValue(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, CommonUtils.getIndicatorText(indicatorDto.getCode(), indicatorDto.getTitle()));
     }

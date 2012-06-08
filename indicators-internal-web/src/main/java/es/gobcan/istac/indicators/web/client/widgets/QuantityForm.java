@@ -74,6 +74,7 @@ public class QuantityForm extends BaseQuantityForm {
         CustomIntegerItem sigDigits = new CustomIntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
 
         CustomIntegerItem decPlaces = new CustomIntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
+        decPlaces.setRequired(true);
 
         CustomIntegerItem min = new CustomIntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
@@ -158,9 +159,7 @@ public class QuantityForm extends BaseQuantityForm {
             if (quantityDto.getSignificantDigits() != null) {
                 setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
             }
-            if (quantityDto.getDecimalPlaces() != null) {
-                setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces());
-            }
+            setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces() : 2);
             if (quantityDto.getMinimum() != null) {
                 setValue(IndicatorDS.QUANTITY_MINIMUM, quantityDto.getMinimum());
             }
