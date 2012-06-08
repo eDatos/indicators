@@ -1373,6 +1373,8 @@ Application Indicators {
 			String unitUuid;
 			"Multiplier of percentage. Default must be 1"
 			Integer unitMultiplier;
+			"Unit multiplier label"
+			-@InternationalStringDto unitMultiplierLabel;
 			"Number of significant digits to use when displaying the values of a metric concept"
 			Integer significantDigits;
 			"Number of decimal places to use for displaying the values of a metric concept"

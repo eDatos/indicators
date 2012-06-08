@@ -133,6 +133,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(QuantityTypeEnum.CHANGE_RATE, indicatorDto.getQuantity().getType());
         assertEquals("1", indicatorDto.getQuantity().getUnitUuid());
         assertEquals(Integer.valueOf(10), indicatorDto.getQuantity().getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas", null, null);
         assertEquals(Integer.valueOf(2), indicatorDto.getQuantity().getSignificantDigits());
         assertEquals(Integer.valueOf(3), indicatorDto.getQuantity().getDecimalPlaces());
         assertEquals(Integer.valueOf(100), indicatorDto.getQuantity().getMinimum());
@@ -2599,6 +2600,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(QuantityTypeEnum.CHANGE_RATE, rateDerivationDto.getQuantity().getType());
                 assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
                 assertEquals(Integer.valueOf(10), rateDerivationDto.getQuantity().getUnitMultiplier());
+                IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas", null, null);
                 assertEquals(Integer.valueOf(2), rateDerivationDto.getQuantity().getSignificantDigits());
                 assertEquals(Integer.valueOf(3), rateDerivationDto.getQuantity().getDecimalPlaces());
                 assertEquals(Integer.valueOf(100), rateDerivationDto.getQuantity().getMinimum());
@@ -2620,7 +2622,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
                 assertEquals(RateDerivationRoundingEnum.DOWN, rateDerivationDto.getRounding());
                 assertEquals(QuantityTypeEnum.AMOUNT, rateDerivationDto.getQuantity().getType());
                 assertEquals(QUANTITY_UNIT_1, rateDerivationDto.getQuantity().getUnitUuid());
-                assertEquals(Integer.valueOf(50), rateDerivationDto.getQuantity().getUnitMultiplier());
+                assertEquals(Integer.valueOf(10000), rateDerivationDto.getQuantity().getUnitMultiplier());
+                IndicatorsAsserts.assertEqualsInternationalString(rateDerivationDto.getQuantity().getUnitMultiplierLabel(), "es", "Decenas de miles", null, null);
             }
             {
                 RateDerivationDto rateDerivationDto = dataSources.get(0).getAnnualPercentageRate();

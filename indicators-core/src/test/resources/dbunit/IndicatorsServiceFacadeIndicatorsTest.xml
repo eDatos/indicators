@@ -928,7 +928,7 @@
 						  	ID="31121"
 		  					UUID="Quantity-31121"
 							QUANTITY_TYPE="AMOUNT"
-		  					UNIT_MULTIPLIER="50"
+		  					UNIT_MULTIPLIER="10000"
 		  					SIGNIFICANT_DIGITS="2"
 		  					DECIMAL_PLACES="3"
 							UNIT_FK="1"
@@ -2727,6 +2727,59 @@
 		ID_AREA_TEMATICA="4"
 		DESCRIPCION="Área temática 4"
 	/>
+    
+    <!-- ************************************************************************************ -->
+    <!--                                 TRANSLATIONS                                         -->
+    <!-- ************************************************************************************ -->
+    <TB_TRANSLATIONS
+        ID="1"
+        CODE="UNIT_MULTIPLIER.1"
+        TITLE_FK="66"
+        TITLE_SUMMARY_FK="[null]"
+    />
+    
+    <TB_TRANSLATIONS
+        ID="2"
+        CODE="UNIT_MULTIPLIER.10"
+        TITLE_FK="67"
+        TITLE_SUMMARY_FK="[null]"
+    />
+
+    <TB_TRANSLATIONS
+        ID="3"
+        CODE="UNIT_MULTIPLIER.100"
+        TITLE_FK="68"
+        TITLE_SUMMARY_FK="[null]"
+    />
+
+    <TB_TRANSLATIONS
+        ID="4"
+        CODE="UNIT_MULTIPLIER.1000"
+        TITLE_FK="69"
+        TITLE_SUMMARY_FK="[null]"
+    />
+
+    <TB_TRANSLATIONS
+        ID="5"
+        CODE="UNIT_MULTIPLIER.10000"
+        TITLE_FK="70"
+        TITLE_SUMMARY_FK="[null]"
+    />
+
+    <TB_TRANSLATIONS
+        ID="6"
+        CODE="UNIT_MULTIPLIER.100000"
+        TITLE_FK="71"
+        TITLE_SUMMARY_FK="[null]"
+    />
+
+    <TB_TRANSLATIONS
+        ID="7"
+        CODE="UNIT_MULTIPLIER.1000000"
+        TITLE_FK="72"
+        TITLE_SUMMARY_FK="[null]"
+    />
+    
   		  		  
 	<!-- ************************************************************************************ -->
 	<!--                                 INTERNATIONAL STRINGS                                -->
@@ -3806,5 +3859,96 @@
         LOCALE="es"
         VERSION="1"
         INTERNATIONAL_STRING_FK="65"
-    />      
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="66"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="96"
+        LABEL="Unidades"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="66"
+    />  
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="67"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="97"
+        LABEL="Decenas"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="67"
+    />  
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="68"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="98"
+        LABEL="Cientos"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="68"
+    />  
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="69"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="99"
+        LABEL="Miles"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="69"
+    />  
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="70"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="100"
+        LABEL="Decenas de miles"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="70"
+    />  
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="71"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="101"
+        LABEL="Cientos de miles"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="71"
+    />  
+
+    <TB_INTERNATIONAL_STRINGS
+        ID="72"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="102"
+        LABEL="Millones"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="72"
+    />        
 </dataset>
