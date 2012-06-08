@@ -36,6 +36,7 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataStructureDto;
@@ -53,6 +54,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -1475,6 +1477,24 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorInstance(ctx, indicatorInstanceUuid, conditions);
 
         return observations;
+    }
+    
+    @Override
+    public List<UnitMultiplierDto> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        List<UnitMultiplier> unitsMultipliers = getIndicatorsService().retrieveUnitsMultipliers(ctx);
+
+        // Transform
+        List<UnitMultiplierDto> unitsMultipliersDto = new ArrayList<UnitMultiplierDto>();
+        for (UnitMultiplier unitMultiplier : unitsMultipliers) {
+            unitsMultipliersDto.add(do2DtoMapper.unitMultiplierDoToDto(unitMultiplier));
+        }
+
+        return unitsMultipliersDto;
     }
 
     /**

@@ -91,6 +91,7 @@ Application Indicators {
     		> @IndicatorInstanceRepository
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
+    		> @UnitMultiplierRepository
     		
     		// Indicator
     		@IndicatorVersion createIndicator(@IndicatorVersion indicatorVersion) throws MetamacException;
@@ -127,6 +128,9 @@ Application Indicators {
 	    	@Subject retrieveSubject(String code) throws MetamacException;
 	    	List<@Subject> retrieveSubjects() throws MetamacException;
 	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
+	    	
+	    	// Units multipliers
+	    	List<@UnitMultiplier> retrieveUnitsMultipliers() throws MetamacException;
     	}
     	
     	"Provides access to indicators data"
@@ -445,6 +449,11 @@ Application Indicators {
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	"Find Published Indicator Instance's Extended Observations by dimensions"
 	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	
+	    	// UNITS MULTIPLIERS
+	    	"Retrieves all units multipliers"
+	    	List<@UnitMultiplierDto> retrieveUnitsMultipliers() throws MetamacException;
+	    	
 	    }
 
 	    // ----------------------------------------------------------------
@@ -979,6 +988,7 @@ Application Indicators {
             	protected List<@UnitMultiplier> findByQuery;
             	protected List<@UnitMultiplier> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier);
+            	List<@UnitMultiplier> findAllOrdered;
 			}
         }
         
@@ -1553,6 +1563,14 @@ Application Indicators {
 	   		- @IndicatorDto indicator;
 	   		"If publication fails, reason of error"
 	   		MetamacException publicationFailedReason;
+    	}
+    	
+		"Dto for units multipliers"
+    	DataTransferObject UnitMultiplierDto {
+			"Multiplier of percentage"
+			Integer unitMultiplier;
+       		"Title"
+       		- @InternationalStringDto title;
     	}
 	}
 	

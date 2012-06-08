@@ -17,6 +17,7 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -34,6 +35,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
 public interface Do2DtoMapper {
@@ -85,4 +87,7 @@ public interface Do2DtoMapper {
 
     // Data
     public DataDto dataDoToDto(Data source);
+
+    // Unit multipliers
+    public UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source);
 }

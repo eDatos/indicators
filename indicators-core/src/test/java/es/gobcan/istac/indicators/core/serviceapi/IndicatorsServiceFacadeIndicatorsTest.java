@@ -37,6 +37,7 @@ import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
@@ -4214,6 +4215,34 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
         assertEquals(SUBJECT_3, subjects.get(1).getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(1).getTitle(), "es", "Área temática 3", null, null);
+    }
+
+    @Test
+    public void testRetrieveUnitsMultipliers() throws Exception {
+
+        List<UnitMultiplierDto> unitsMultipliers = indicatorsServiceFacade.retrieveUnitsMultipliers(getServiceContextAdministrador());
+        assertEquals(7, unitsMultipliers.size());
+
+        assertEquals(Integer.valueOf(1), unitsMultipliers.get(0).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(0).getTitle(), "es", "Unidades", null, null);
+
+        assertEquals(Integer.valueOf(10), unitsMultipliers.get(1).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(1).getTitle(), "es", "Decenas", null, null);
+
+        assertEquals(Integer.valueOf(100), unitsMultipliers.get(2).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(2).getTitle(), "es", "Cientos", null, null);
+
+        assertEquals(Integer.valueOf(1000), unitsMultipliers.get(3).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(3).getTitle(), "es", "Miles", null, null);
+
+        assertEquals(Integer.valueOf(10000), unitsMultipliers.get(4).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(4).getTitle(), "es", "Decenas de miles", null, null);
+
+        assertEquals(Integer.valueOf(100000), unitsMultipliers.get(5).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(5).getTitle(), "es", "Cientos de miles", null, null);
+
+        assertEquals(Integer.valueOf(1000000), unitsMultipliers.get(6).getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(6).getTitle(), "es", "Millones", null, null);
     }
 
     @Override

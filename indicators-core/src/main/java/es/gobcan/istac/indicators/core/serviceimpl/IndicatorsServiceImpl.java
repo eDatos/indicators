@@ -30,6 +30,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
@@ -650,6 +651,18 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return subjects;
     }
 
+    @Override
+    public List<UnitMultiplier> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveUnitsMultipliers(null);
+
+        // Find
+        List<UnitMultiplier> unitsMultipliers = getUnitMultiplierRepository().findAllOrdered();
+        return unitsMultipliers;
+    }
+
+    
     /**
      * Checks not exists another indicator with same code
      */

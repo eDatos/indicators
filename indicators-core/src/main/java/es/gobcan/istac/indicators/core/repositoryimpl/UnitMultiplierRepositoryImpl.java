@@ -27,4 +27,9 @@ public class UnitMultiplierRepositoryImpl extends UnitMultiplierRepositoryBase {
             return result.get(0);
         }
     }
+
+    @Override
+    public List<UnitMultiplier> findAllOrdered() {
+        return findByQuery("from UnitMultiplier order by unitMultiplier", null);
+    }
 }

@@ -60,6 +60,7 @@ import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 import es.gobcan.istac.indicators.core.util.IndicatorUtils;
@@ -397,6 +398,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     @Override
     public DataDto dataDoToDto(Data source) {
         DataDto target = new DataDto();
+        return target;
+    }
+    
+    @Override
+    public UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source) {
+        UnitMultiplierDto target = new UnitMultiplierDto();
+        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setTitle(internationalStringToDto(source.getTitle()));
         return target;
     }
     

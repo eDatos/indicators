@@ -440,7 +440,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target.setUnit(null);
         }
-        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setUnitMultiplier(source.getUnitMultiplier()); // TODO comprobar que está en la tabla de valores?
         target.setSignificantDigits(source.getSignificantDigits());
         target.setDecimalPlaces(source.getDecimalPlaces());
         target.setMinimum(source.getMinimum());
