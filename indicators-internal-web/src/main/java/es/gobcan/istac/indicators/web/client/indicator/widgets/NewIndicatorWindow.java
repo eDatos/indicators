@@ -35,8 +35,8 @@ public class NewIndicatorWindow extends CustomWindow {
 
     public NewIndicatorWindow(String title) {
         super(title);
-        setHeight(150);
-        setWidth(330);
+        setHeight(160);
+        setWidth(486);
 
         RequiredTextItem codeItem = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
         codeItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());

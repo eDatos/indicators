@@ -9,12 +9,14 @@ import java.util.List;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -51,7 +53,7 @@ public class QuantityForm extends BaseQuantityForm {
     public QuantityForm(String groupTitle) {
         super(groupTitle);
 
-        SelectItem type = new SelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
+        CustomSelectItem type = new CustomSelectItem(IndicatorDS.QUANTITY_TYPE, getConstants().indicQuantityType());
         type.setValueMap(CommonUtils.getQuantityTypeValueMap());
         type.addChangedHandler(new ChangedHandler() {
 
@@ -62,31 +64,31 @@ public class QuantityForm extends BaseQuantityForm {
         });
         type.setValidators(getQuantityRequiredIfValidator());
 
-        SelectItem unitUuid = new SelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
+        CustomSelectItem unitUuid = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_UUID, getConstants().indicQuantityUnit());
         unitUuid.setValidators(getQuantityRequiredIfValidator());
 
-        SelectItem unitMultiplier = new SelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
+        CustomSelectItem unitMultiplier = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
         unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setValidators(getQuantityRequiredIfValidator());
 
-        IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
+        CustomIntegerItem sigDigits = new CustomIntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
 
-        IntegerItem decPlaces = new IntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
+        CustomIntegerItem decPlaces = new CustomIntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
 
-        IntegerItem min = new IntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
+        CustomIntegerItem min = new CustomIntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
 
-        IntegerItem max = new IntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
+        CustomIntegerItem max = new CustomIntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
         // Search denominator indicator
-        TextItem searchDenominatorUuid = new TextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        CustomTextItem searchDenominatorUuid = new CustomTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
         searchDenominatorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
         searchDenominatorUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchDenominatorText = getSearchDenominatorTextItem();
 
         // Search numerator indicator
-        TextItem searchNumeratorUuid = new TextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        CustomTextItem searchNumeratorUuid = new CustomTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
         searchNumeratorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
         searchNumeratorUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchNumeratorText = getSearchNumeratorTextItem();
@@ -97,7 +99,7 @@ public class QuantityForm extends BaseQuantityForm {
         MultiLanguageTextItem percentageOf = new MultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
-        SelectItem indexBaseType = new SelectItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
+        CustomSelectItem indexBaseType = new CustomSelectItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
         indexBaseType.setValueMap(getQuantityIndexBaseTypeValueMap());
         indexBaseType.setShowIfCondition(getIndexBaseTypeIfFunction());
         indexBaseType.addChangedHandler(new ChangedHandler() {
@@ -108,7 +110,7 @@ public class QuantityForm extends BaseQuantityForm {
             }
         });
 
-        IntegerItem baseValue = new IntegerItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
+        CustomIntegerItem baseValue = new CustomIntegerItem(IndicatorDS.QUANTITY_BASE_VALUE, getConstants().indicQuantityBaseValue());
         baseValue.setRequired(true);
         baseValue.setShowIfCondition(getBaseValueIfFunction());
 

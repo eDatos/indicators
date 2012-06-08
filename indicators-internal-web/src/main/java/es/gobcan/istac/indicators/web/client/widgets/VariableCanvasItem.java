@@ -7,12 +7,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -21,11 +22,13 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableCanvasItem extends CustomCanvasItem {
 
-    private Logger            logger = Logger.getLogger(VariableCanvasItem.class.getName());
+    private final static Integer SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH - 64;
 
-    private CustomDynamicForm form;
+    private Logger               logger            = Logger.getLogger(VariableCanvasItem.class.getName());
 
-    protected boolean         required;
+    private CustomDynamicForm    form;
+
+    protected boolean            required;
 
     public VariableCanvasItem(String name, String title) {
         super(name, title);
@@ -73,7 +76,9 @@ public class VariableCanvasItem extends CustomCanvasItem {
                 String var = variables.get(i);
                 if (includeVariable(dataStructureDto, var)) {
                     if (categoryCodes.containsKey(var) && categoryLabels.containsKey(var)) {
-                        RequiredSelectItem selectItem = new RequiredSelectItem("variable-" + i, var);
+                        SelectItem selectItem = new SelectItem("variable-" + i, var);
+                        selectItem.setRequired(true);
+                        selectItem.setWidth(SELECT_ITEM_WIDTH);
                         selectItem.setValueMap(CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(var), categoryLabels.get(var)));
                         formItems.add(selectItem);
                     } else {

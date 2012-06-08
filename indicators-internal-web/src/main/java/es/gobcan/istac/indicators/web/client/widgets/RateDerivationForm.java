@@ -10,6 +10,9 @@ import java.util.List;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
@@ -19,9 +22,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
@@ -162,7 +163,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         // Rounding
 
-        SelectItem rounding = new SelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
+        CustomSelectItem rounding = new CustomSelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
         rounding.setShowIfCondition(getFormItemShowIfApplicable());
         rounding.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
@@ -194,10 +195,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setShowIfCondition(getFormItemShowIfApplicable());
 
-        IntegerItem sigDigits = new IntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
+        CustomIntegerItem sigDigits = new CustomIntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
         sigDigits.setShowIfCondition(getFormItemShowIfApplicable());
 
-        IntegerItem decPlaces = new IntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
+        CustomIntegerItem decPlaces = new CustomIntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
         decPlaces.setShowIfCondition(getFormItemShowIfApplicable());
         decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
 
@@ -216,20 +217,20 @@ public class RateDerivationForm extends BaseRateDerivationForm {
             }
         }), getDecimalPlacesValidator());
 
-        IntegerItem min = new IntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
+        CustomIntegerItem min = new CustomIntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
 
-        IntegerItem max = new IntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
+        CustomIntegerItem max = new CustomIntegerItem(IndicatorDS.QUANTITY_MAXIMUM, getConstants().indicQuantityMaximum());
         max.setShowIfCondition(getMaxIfFunction());
 
         // Search denominator indicator
-        TextItem searchDenominatorUuid = new TextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
+        CustomTextItem searchDenominatorUuid = new CustomTextItem(IndicatorDS.QUANTITY_DENOMINATOR_INDICATOR_UUID, getConstants().indicQuantityDenominatorIndicator());
         searchDenominatorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
         searchDenominatorUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchDenominatorText = getSearchDenominatorTextItem();
 
         // Search numerator indicator
-        TextItem searchNumeratorUuid = new TextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
+        CustomTextItem searchNumeratorUuid = new CustomTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_UUID, getConstants().indicQuantityNumeratorIndicator());
         searchNumeratorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
         searchNumeratorUuid.setValidators(getIndicatorSelectedValidator());
         SearchViewTextItem searchNumeratorText = getSearchNumeratorTextItem();

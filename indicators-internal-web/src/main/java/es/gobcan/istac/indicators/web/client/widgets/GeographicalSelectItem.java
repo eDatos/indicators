@@ -4,22 +4,23 @@ import java.util.LinkedHashMap;
 
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 
 public class GeographicalSelectItem extends CustomCanvasItem {
 
-    private SelectItem        geoGranularitItem;
-    private SelectItem        geoValueItem;
+    private CustomSelectItem        geoGranularitItem;
+    private CustomSelectItem        geoValueItem;
     private CustomDynamicForm form;
 
     public GeographicalSelectItem(String name, String title) {
         super(name, title);
         setTitleVAlign(VerticalAlignment.TOP);
-        geoGranularitItem = new SelectItem("geo-gran", "geo-gran");
+        geoGranularitItem = new CustomSelectItem("geo-gran", "geo-gran");
         geoGranularitItem.setShowTitle(false);
-        geoValueItem = new SelectItem("geo-val", "geo-val");
+        geoValueItem = new CustomSelectItem("geo-val", "geo-val");
         geoValueItem.setShowTitle(false);
         geoValueItem.setStartRow(true);
         form = new CustomDynamicForm();

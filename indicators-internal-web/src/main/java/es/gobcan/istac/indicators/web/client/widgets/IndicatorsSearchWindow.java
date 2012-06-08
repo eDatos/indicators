@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.SearchWindow;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -30,9 +30,9 @@ public class IndicatorsSearchWindow extends SearchWindow {
 
         // Form
 
-        TextItem code = new TextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+        CustomTextItem code = new CustomTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
         code.setWidth(180);
-        TextItem title = new TextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+        CustomTextItem title = new CustomTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         title.setWidth(180);
         searchButton = new ButtonItem("search-ind", MetamacWebCommon.getConstants().search());
         searchButton.setAlign(Alignment.RIGHT);

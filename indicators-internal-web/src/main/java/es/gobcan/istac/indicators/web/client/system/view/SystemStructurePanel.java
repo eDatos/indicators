@@ -20,6 +20,8 @@ import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
@@ -37,7 +39,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
@@ -115,6 +116,7 @@ public class SystemStructurePanel extends HLayout {
 
         treePanelEdit = new EditableTreePanel();
         treePanelEdit.setMargin(15);
+        treePanelEdit.setWidth("40%");
 
         dimensionPanel = new DimensionPanel();
         dimensionPanel.setVisibility(Visibility.HIDDEN);
@@ -1080,7 +1082,7 @@ public class SystemStructurePanel extends HLayout {
 
             // SEARCH INDICATOR
 
-            TextItem indicatorUuid = new TextItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
+            CustomTextItem indicatorUuid = new CustomTextItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
             indicatorUuid.setRequired(true);
             indicatorUuid.setShowIfCondition(CommonUtils.getFalseIfFunction());
             CustomValidator validator = new CustomValidator() {
@@ -1154,7 +1156,7 @@ public class SystemStructurePanel extends HLayout {
 
             // Geographical
 
-            SelectItem geographicalSelectionType = new SelectItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
+            CustomSelectItem geographicalSelectionType = new CustomSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
             geographicalSelectionType.setValueMap(CommonUtils.getGeographicalSelectionTypeValueMap());
             geographicalSelectionType.addChangedHandler(new ChangedHandler() {
 

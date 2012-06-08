@@ -18,6 +18,8 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
@@ -498,7 +500,7 @@ public class DataSourcesPanel extends VLayout {
 
         MultiLanguageTextItem surveyAcronym = new MultiLanguageTextItem(DataSourceDS.SOURCE_SURVEY_ACRONYM, getConstants().dataSourceSurveyAcronym());
 
-        TextItem surveyUrl = new TextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
+        CustomTextItem surveyUrl = new CustomTextItem(DataSourceDS.SOURCE_SURVEY_URL, getConstants().dataSourceSurveyUrl());
 
         ViewTextItem publishers = new ViewTextItem(DataSourceDS.PUBLISHERS, getConstants().dataSourcePublishers());
 
@@ -577,9 +579,8 @@ public class DataSourcesPanel extends VLayout {
             }
         });
 
-        // Showed when contVariable (measure variable) is set
         // ValueMap set in setDataStructure
-        SelectItem absoluteMethod = new SelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
+        CustomSelectItem absoluteMethod = new CustomSelectItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
         absoluteMethod.setShowIfCondition(new FormItemIfFunction() {
 
             @Override
