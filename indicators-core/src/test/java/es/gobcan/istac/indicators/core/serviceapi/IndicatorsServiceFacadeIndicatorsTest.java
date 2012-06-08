@@ -4013,6 +4013,24 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testUpdateDataSourceErrorMethodDuplicated() throws Exception {
+
+        String uuid = DATA_SOURCE_1_INDICATOR_1_V2;
+        DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
+        dataSourceDto.setAbsoluteMethod(dataSourceDto.getAnnualPercentageRate().getMethod());
+
+        try {
+            indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDto);
+            fail("Absolute method of dataset is equals to method of annual percentage rate");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ABSOLUTE_METHOD, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testUpdateDataSourceErrorIndicatorPublished() throws Exception {
 
         DataSourceDto dataSourceDto = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), DATA_SOURCE_1_INDICATOR_1_V1);

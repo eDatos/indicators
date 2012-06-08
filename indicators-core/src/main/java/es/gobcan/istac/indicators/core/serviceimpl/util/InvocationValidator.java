@@ -698,7 +698,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveTimeGranularity(TimeGranularityEnum timeGranularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -709,7 +709,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveMeasureValue(MeasureDimensionTypeEnum measureValue, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -720,7 +720,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -731,7 +731,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalValueByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -763,7 +763,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalGranularityByCode(String code, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -784,7 +784,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveDataDefinitionsOperationsCodes(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -814,14 +814,14 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkFindDataDefinitionsByOperationCode(String operationCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(operationCode, ServiceExceptionParameters.CODE, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -844,15 +844,15 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkPopulateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(indicatorUuid, ServiceExceptionParameters.INDICATOR_UUID, exceptions);
         ValidationUtils.checkParameterRequired(indicatorVersionNumber, ServiceExceptionParameters.INDICATOR_VERSION_NUMBER, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -865,7 +865,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkDeleteIndicatorData(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1079,7 +1079,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveUnitMultiplier(Integer unitMultiplier, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -1226,6 +1226,13 @@ public class InvocationValidator {
         return rateDerivation != null && RateDerivationMethodTypeEnum.LOAD.equals(rateDerivation.getMethodType());
     }
 
+    private static Boolean isDatasourceAbsoluteMethodEqualsRateDerivationMethod(DataSource dataSource, RateDerivation rateDerivation) {
+        if (rateDerivation == null) {
+            return Boolean.FALSE;
+        }
+        return dataSource.getAbsoluteMethod().equals(rateDerivation.getMethod());
+    }
+
     private static void checkDataSource(DataSource dataSource, List<MetamacExceptionItem> exceptions) {
         ValidationUtils.checkParameterRequired(dataSource, ServiceExceptionParameters.DATA_SOURCE, exceptions);
         ValidationUtils.checkMetadataRequired(dataSource.getDataGpeUuid(), ServiceExceptionParameters.DATA_SOURCE_DATA_GPE_UUID, exceptions);
@@ -1239,6 +1246,14 @@ public class InvocationValidator {
             if (!isRateDerivationMethodTypeLoad(dataSource.getAnnualPuntualRate()) && !isRateDerivationMethodTypeLoad(dataSource.getAnnualPercentageRate())
                     && !isRateDerivationMethodTypeLoad(dataSource.getInterperiodPuntualRate()) && !isRateDerivationMethodTypeLoad(dataSource.getInterperiodPercentageRate())) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATA_SOURCE_ABSOLUTE_METHOD));
+            }
+        } else {
+            // All method in rates must be differents
+            if (isDatasourceAbsoluteMethodEqualsRateDerivationMethod(dataSource, dataSource.getAnnualPuntualRate())
+                    || isDatasourceAbsoluteMethodEqualsRateDerivationMethod(dataSource, dataSource.getAnnualPercentageRate())
+                    || isDatasourceAbsoluteMethodEqualsRateDerivationMethod(dataSource, dataSource.getInterperiodPuntualRate())
+                    || isDatasourceAbsoluteMethodEqualsRateDerivationMethod(dataSource, dataSource.getInterperiodPercentageRate())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.DATA_SOURCE_ABSOLUTE_METHOD));
             }
         }
         // Rates
