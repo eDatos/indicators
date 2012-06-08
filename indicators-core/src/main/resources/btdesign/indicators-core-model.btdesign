@@ -962,6 +962,26 @@ Application Indicators {
 			}
         }
         
+		"Table values for units multipliers"
+	    Entity UnitMultiplier {
+        	databaseTable = "TB_LIS_UNITS_MULTIPLIERS"
+        	hint="idSequence=UNITS_MULTIPLIERS"
+			!auditable
+			!optimisticLocking
+			
+			"Multiplier of percentage"
+			Integer unitMultiplier nullable;
+       		"Title of unit multiplier"
+       		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		
+       		Repository UnitMultiplierRepository {
+       			findAll;
+            	protected List<@UnitMultiplier> findByQuery;
+            	protected List<@UnitMultiplier> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier);
+			}
+        }
+        
         "Table values for subjects. It is a table view of an already existing table"
 	    Entity Subject {
         	databaseTable = "TV_AREAS_TEMATICAS"

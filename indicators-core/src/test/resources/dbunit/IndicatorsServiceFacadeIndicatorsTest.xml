@@ -2729,55 +2729,55 @@
 	/>
     
     <!-- ************************************************************************************ -->
-    <!--                                 TRANSLATIONS                                         -->
+    <!--                                 UNITS MULTIPLIERS                                    -->
     <!-- ************************************************************************************ -->
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="1"
-        CODE="UNIT_MULTIPLIER.1"
+        UNIT_MULTIPLIER="1"
         TITLE_FK="66"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="1"
     />
     
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="2"
-        CODE="UNIT_MULTIPLIER.10"
+        UNIT_MULTIPLIER="10"
         TITLE_FK="67"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="2"
     />
 
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="3"
-        CODE="UNIT_MULTIPLIER.100"
+        UNIT_MULTIPLIER="100"
         TITLE_FK="68"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="3"
     />
 
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="4"
-        CODE="UNIT_MULTIPLIER.1000"
+        UNIT_MULTIPLIER="1000"
         TITLE_FK="69"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="4"
     />
 
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="5"
-        CODE="UNIT_MULTIPLIER.10000"
+        UNIT_MULTIPLIER="10000"
         TITLE_FK="70"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="5"
     />
 
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="6"
-        CODE="UNIT_MULTIPLIER.100000"
+        UNIT_MULTIPLIER="100000"
         TITLE_FK="71"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="6"
     />
 
-    <TB_TRANSLATIONS
+    <TB_LIS_UNITS_MULTIPLIERS
         ID="7"
-        CODE="UNIT_MULTIPLIER.1000000"
+        UNIT_MULTIPLIER="1000000"
         TITLE_FK="72"
-        TITLE_SUMMARY_FK="[null]"
+        UUID="7"
     />
     
   		  		  

@@ -36,8 +36,8 @@ import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.domain.Translation;
-import es.gobcan.istac.indicators.core.domain.TranslationRepository;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplierRepository;
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -68,7 +68,7 @@ import es.gobcan.istac.indicators.core.util.IndicatorUtils;
 public class Do2DtoMapperImpl implements Do2DtoMapper {
 
     @Autowired
-    private TranslationRepository translationRepository;
+    private UnitMultiplierRepository unitMultiplierRepository;
 
     @Override
     public IndicatorsSystemDto indicatorsSystemDoToDto(IndicatorsSystemVersion source) {
@@ -486,10 +486,9 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUnitUuid(source.getUnit() != null ? source.getUnit().getUuid() : null);
         target.setUnitMultiplier(source.getUnitMultiplier());
         if (source.getUnitMultiplier() != null) {
-            String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_UNIT_MULTIPLIER).append(".").append(source.getUnitMultiplier()).toString();;
-            Translation translation = translationRepository.findTranslationByCode(translationCode);
-            if (translation != null) {
-                target.setUnitMultiplierLabel(internationalStringToDto(translation.getTitle()));
+            UnitMultiplier unitMultiplier = unitMultiplierRepository.retrieveUnitMultiplier(source.getUnitMultiplier());
+            if (unitMultiplier != null) {
+                target.setUnitMultiplierLabel(internationalStringToDto(unitMultiplier.getTitle()));
             }
         }
         target.setSignificantDigits(source.getSignificantDigits());
