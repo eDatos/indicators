@@ -33,6 +33,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
@@ -577,6 +578,10 @@ public class IndicatorGeneralPanel extends VLayout {
         this.subjectDtos = subjectDtos;
         LinkedHashMap<String, String> valueMap = CommonUtils.getSubjectsValueMap(subjectDtos);
         ((SelectItem) contentClassifiersEditionForm.getItem(IndicatorDS.SUBJECT)).setValueMap(valueMap);
+    }
+
+    public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
+        quantityEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
 
     public void setGeographicalGranularities(List<GeographicalGranularityDto> geographicalGranularityDtos) {

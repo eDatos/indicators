@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
@@ -208,15 +209,12 @@ public class CommonUtils {
         return valueMap;
     }
 
-    public static LinkedHashMap<String, String> getUnitMultiplierValueMap() {
+    public static LinkedHashMap<String, String> getUnitMultiplierValueMap(List<UnitMultiplierDto> unitMultiplierDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        valueMap.put("1", "1");
-        valueMap.put("10", "10");
-        valueMap.put("100", "100");
-        valueMap.put("1000", "1000");
-        valueMap.put("10000", "10000");
-        valueMap.put("100000", "100000");
-        valueMap.put("1000000", "1000000");
+        valueMap.put(new String(), new String());
+        for (UnitMultiplierDto unitMultiplierDto : unitMultiplierDtos) {
+            valueMap.put(unitMultiplierDto.getUnitMultiplier().toString(), InternationalStringUtils.getLocalisedString(unitMultiplierDto.getTitle()));
+        }
         return valueMap;
     }
 

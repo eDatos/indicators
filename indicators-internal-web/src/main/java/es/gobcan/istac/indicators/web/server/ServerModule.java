@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetQuantityUnitsListAction
 import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesInIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
@@ -101,6 +102,7 @@ import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
@@ -201,6 +203,8 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataDefinitionsOperationsCodesAction.class, GetDataDefinitionsOperationsCodesActionHandler.class);
         bindHandler(FindDataDefinitionsByOperationCodeAction.class, FindDataDefinitionsByOperationCodeActionHandler.class);
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
+
+        bindHandler(GetUnitMultipliersAction.class, GetUnitMultipliersActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

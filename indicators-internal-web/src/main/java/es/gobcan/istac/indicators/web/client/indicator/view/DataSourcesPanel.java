@@ -55,6 +55,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
@@ -682,6 +683,13 @@ public class DataSourcesPanel extends VLayout {
     public void setDataDefinition(DataDefinitionDto dataDefinitionDto) {
         generalForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
         generalStaticEditionForm.setValue(DataSourceDS.QUERY_TEXT, dataDefinitionDto.getName());
+    }
+
+    public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
+        interperiodPuntualRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
+        interperiodPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
+        annualPuntualRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
+        annualPercentageRateEditionForm.setUnitMultipliers(unitMultiplierDtos);
     }
 
     public void setDataStructureView(DataStructureDto dataStructureDto) {

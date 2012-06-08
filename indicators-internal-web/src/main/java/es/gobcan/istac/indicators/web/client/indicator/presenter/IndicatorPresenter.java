@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.NameTokens;
@@ -73,6 +74,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
+import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
+import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersResult;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
@@ -99,11 +102,13 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             UpdateQuantityUnitsHandler,
             UpdateGeographicalGranularitiesHandler {
 
-    private Logger        logger = Logger.getLogger(IndicatorPresenter.class.getName());
+    private Logger                  logger = Logger.getLogger(IndicatorPresenter.class.getName());
 
-    private DispatchAsync dispatcher;
-    private String        indicatorCode;
-    private IndicatorDto  indicatorDto;
+    private DispatchAsync           dispatcher;
+    private String                  indicatorCode;
+    private IndicatorDto            indicatorDto;
+
+    private List<UnitMultiplierDto> unitMultiplierDtos;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.indicatorPage)
@@ -147,6 +152,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
         void setRateIndicators(List<IndicatorSummaryDto> indicatorDtos, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
         void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
+
+        void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos);
     }
 
     @Inject
@@ -708,6 +715,30 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
                 getView().setRateIndicator(result.getIndicator(), rateDerivationTypeEnum, indicatorCalculationTypeEnum);
             }
         });
+    }
+
+    @Override
+    public void retrieveUnitMultipliers() {
+        if (unitMultiplierDtos == null) {
+            dispatcher.execute(new GetUnitMultipliersAction(), new WaitingAsyncCallback<GetUnitMultipliersResult>() {
+
+                @Override
+                public void onWaitFailure(Throwable caught) {
+                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingUnitMultipliers()), MessageTypeEnum.ERROR);
+                }
+                @Override
+                public void onWaitSuccess(GetUnitMultipliersResult result) {
+                    IndicatorPresenter.this.unitMultiplierDtos = result.getUnitMultiplierDtos();
+                    setUnitMultipliers();
+                }
+            });
+        } else {
+            setUnitMultipliers();
+        }
+    }
+
+    private void setUnitMultipliers() {
+        getView().setUnitMultipliers(this.unitMultiplierDtos);
     }
 
 }

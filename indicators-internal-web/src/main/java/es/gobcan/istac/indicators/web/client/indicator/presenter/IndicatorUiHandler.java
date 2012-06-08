@@ -49,8 +49,10 @@ public interface IndicatorUiHandler extends UiHandlers {
     void retrieveQuantityDenominatorIndicator(String indicatorUuid);
     void retrieveQuantityNumeratorIndicator(String indicatorUuid);
     void retrieveQuantityIndicatorBase(String indicatorUuid);
-    
+
+    void retrieveUnitMultipliers();
+
     void searchRateIndicators(IndicatorCriteria criteria, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
     void retrieveRateIndicator(String indicatorUuid, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum);
-    
+
 }

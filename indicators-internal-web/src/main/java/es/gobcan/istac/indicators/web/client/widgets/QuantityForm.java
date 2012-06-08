@@ -35,6 +35,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
@@ -68,7 +69,6 @@ public class QuantityForm extends BaseQuantityForm {
         unitUuid.setValidators(getQuantityRequiredIfValidator());
 
         CustomSelectItem unitMultiplier = new CustomSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setValidators(getQuantityRequiredIfValidator());
 
         CustomIntegerItem sigDigits = new CustomIntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
@@ -274,6 +274,10 @@ public class QuantityForm extends BaseQuantityForm {
         };
         validator.setErrorMessage(getMessages().validatorErrorIndicatorSelected());
         return validator;
+    }
+
+    public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
+        ((CustomSelectItem) getItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)).setValueMap(CommonUtils.getUnitMultiplierValueMap(unitMultiplierDtos));
     }
 
     public void setGeographicalGranularities(List<GeographicalGranularityDto> granularityDtos) {

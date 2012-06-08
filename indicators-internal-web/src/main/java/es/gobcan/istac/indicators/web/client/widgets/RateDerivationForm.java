@@ -39,6 +39,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
@@ -192,7 +193,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         unitUuid.setShowIfCondition(getFormItemShowIfApplicable());
 
         RequiredSelectItem unitMultiplier = new RequiredSelectItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, getConstants().indicQuantityUnitMultiplier());
-        unitMultiplier.setValueMap(CommonUtils.getUnitMultiplierValueMap());
         unitMultiplier.setShowIfCondition(getFormItemShowIfApplicable());
 
         CustomIntegerItem sigDigits = new CustomIntegerItem(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, getConstants().indicQuantitySignificantDigits());
@@ -570,4 +570,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         return searchNumeratorText;
     }
 
+    public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
+        ((RequiredSelectItem) getItem(IndicatorDS.QUANTITY_UNIT_MULTIPLIER)).setValueMap(CommonUtils.getUnitMultiplierValueMap(unitMultiplierDtos));
+    }
 }

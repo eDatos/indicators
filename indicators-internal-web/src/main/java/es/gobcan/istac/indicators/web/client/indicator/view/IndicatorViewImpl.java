@@ -23,11 +23,15 @@ import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
 import es.gobcan.istac.indicators.web.client.enums.RateDerivationTypeEnum;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
+import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorUiHandler;
 
 public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.IndicatorView {
+
+    private IndicatorUiHandler    uiHandlers;
 
     private VLayout               panel;
     private TitleLabel            indicatorLabel;
@@ -65,12 +69,16 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
 
     @Override
     public void setUiHandlers(IndicatorPresenter uiHandlers) {
+        this.uiHandlers = uiHandlers;
         generalPanel.setUiHandlers(uiHandlers);
         dataSourcesPanel.setUiHandlers(uiHandlers);
     }
 
     @Override
     public void setIndicator(IndicatorDto indicator) {
+        // Retrieve unit multipliers
+        uiHandlers.retrieveUnitMultipliers();
+
         indicatorLabel.setContents(getLocalisedString(indicator.getTitle()));
         generalPanel.setIndicator(indicator);
         dataSourcesPanel.setIndicator(indicator);
@@ -192,6 +200,12 @@ public class IndicatorViewImpl extends ViewImpl implements IndicatorPresenter.In
     @Override
     public void setRateIndicator(IndicatorDto indicatorDto, RateDerivationTypeEnum rateDerivationTypeEnum, IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
         dataSourcesPanel.setRateIndicator(indicatorDto, rateDerivationTypeEnum, indicatorCalculationTypeEnum);
+    }
+
+    @Override
+    public void setUnitMultipliers(List<UnitMultiplierDto> unitMultiplierDtos) {
+        generalPanel.setUnitMultipliers(unitMultiplierDtos);
+        dataSourcesPanel.setUnitMultipliers(unitMultiplierDtos);
     }
 
 }
