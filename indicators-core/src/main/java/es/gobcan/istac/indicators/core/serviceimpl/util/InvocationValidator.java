@@ -1212,6 +1212,7 @@ public class InvocationValidator {
             ValidationUtils.checkMetadataRequired(quantity.getQuantityType(), parameterName + ServiceExceptionParametersInternal.QUANTITY_TYPE, exceptions);
             ValidationUtils.checkMetadataRequired(quantity.getUnit(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_UUID, exceptions);
             ValidationUtils.checkMetadataRequired(quantity.getUnitMultiplier(), parameterName + ServiceExceptionParametersInternal.QUANTITY_UNIT_MULTIPLIER, exceptions);
+            ValidationUtils.checkMetadataRequired(quantity.getDecimalPlaces(), parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES, exceptions);
             if (IndicatorUtils.isRatioOrExtension(quantity.getQuantityType())) {
                 ValidationUtils.checkMetadataRequired(quantity.getIsPercentage(), parameterName + ServiceExceptionParametersInternal.QUANTITY_IS_PERCENTAGE, exceptions);
             }
@@ -1338,9 +1339,7 @@ public class InvocationValidator {
         // checks required
         ValidationUtils.checkMetadataRequired(rateDerivation.getMethodType(), parameterName + ServiceExceptionParametersInternal.RATE_METHOD_TYPE, exceptions);
         ValidationUtils.checkMetadataRequired(rateDerivation.getMethod(), parameterName + ServiceExceptionParametersInternal.RATE_METHOD, exceptions);
-        if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType())) {
-            ValidationUtils.checkMetadataRequired(rateDerivation.getRounding(), parameterName + ServiceExceptionParametersInternal.RATE_ROUNDING, exceptions);
-        }
+        ValidationUtils.checkMetadataRequired(rateDerivation.getRounding(), parameterName + ServiceExceptionParametersInternal.RATE_ROUNDING, exceptions);
         ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity(), parameterName + ServiceExceptionParametersInternal.QUANTITY, exceptions);
         if (!ValidationUtils.isEmpty(rateDerivation.getQuantity())) {
             if (!ValidationUtils.isEmpty(rateDerivation.getQuantity().getQuantityType())) {
@@ -1353,9 +1352,6 @@ public class InvocationValidator {
                 }
             }
             checkQuantity(rateDerivation.getQuantity(), parameterName, true, exceptions);
-            if (RateDerivationMethodTypeEnum.CALCULATE.equals(rateDerivation.getMethodType()) && QuantityTypeEnum.CHANGE_RATE.equals(rateDerivation.getQuantity().getQuantityType())) {
-                ValidationUtils.checkMetadataRequired(rateDerivation.getQuantity().getDecimalPlaces(), parameterName + ServiceExceptionParametersInternal.QUANTITY_DECIMAL_PLACES, exceptions);
-            }
         }
     }
 }

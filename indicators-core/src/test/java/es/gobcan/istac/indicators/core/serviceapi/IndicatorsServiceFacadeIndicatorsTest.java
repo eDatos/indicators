@@ -3347,6 +3347,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getInterperiodPercentageRate().setQuantity(new QuantityDto());
         dataSourceDto.getInterperiodPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         dataSourceDto.getInterperiodPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getInterperiodPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
         dataSourceDto.getInterperiodPercentageRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         dataSourceDto.getInterperiodPercentageRate().getQuantity().setIsPercentage(Boolean.FALSE);
         dataSourceDto.getInterperiodPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
@@ -3358,6 +3359,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
         dataSourceDto.getAnnualPercentageRate().getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_2);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
         dataSourceDto.getAnnualPercentageRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
@@ -3369,6 +3371,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPuntualRate().setQuantity(new QuantityDto());
         dataSourceDto.getAnnualPuntualRate().getQuantity().setType(QuantityTypeEnum.AMOUNT);
         dataSourceDto.getAnnualPuntualRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setDecimalPlaces(Integer.valueOf(2));
 
         String uuidIndicator = INDICATOR_1;
         DataSourceDto dataSourceDtoCreated = indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), uuidIndicator, dataSourceDto);
@@ -3444,7 +3447,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), INDICATOR_1, dataSourceDto);
             fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(14, e.getExceptionItems().size());
+            assertEquals(16, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
@@ -3480,29 +3483,37 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(8).getCode());
             assertEquals(1, e.getExceptionItems().get(8).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD_TYPE, e.getExceptionItems().get(8).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_ANNUAL_PERCENTAGE_RATE_QUANTITY_DECIMAL_PLACES, e.getExceptionItems().get(8).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(9).getCode());
             assertEquals(1, e.getExceptionItems().get(9).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD, e.getExceptionItems().get(9).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD_TYPE, e.getExceptionItems().get(9).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(10).getCode());
             assertEquals(1, e.getExceptionItems().get(10).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY, e.getExceptionItems().get(10).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_METHOD, e.getExceptionItems().get(10).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(11).getCode());
-            assertEquals(2, e.getExceptionItems().get(11).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VARIABLE, e.getExceptionItems().get(11).getMessageParameters()[0]);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(11).getMessageParameters()[1]);
+            assertEquals(1, e.getExceptionItems().get(11).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_ROUNDING, e.getExceptionItems().get(11).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(12).getCode());
-            assertEquals(2, e.getExceptionItems().get(12).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VARIABLE, e.getExceptionItems().get(12).getMessageParameters()[0]);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, e.getExceptionItems().get(12).getMessageParameters()[1]);
+            assertEquals(1, e.getExceptionItems().get(12).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_INTERPERIOD_PUNTUAL_RATE_QUANTITY, e.getExceptionItems().get(12).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(13).getCode());
-            assertEquals(1, e.getExceptionItems().get(13).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DATA_SOURCE_OTHER_VARIABLE_VARIABLE, e.getExceptionItems().get(13).getMessageParameters()[0]);
+            assertEquals(2, e.getExceptionItems().get(13).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VARIABLE, e.getExceptionItems().get(13).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_TIME_VALUE, e.getExceptionItems().get(13).getMessageParameters()[1]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(14).getCode());
+            assertEquals(2, e.getExceptionItems().get(14).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VARIABLE, e.getExceptionItems().get(14).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, e.getExceptionItems().get(14).getMessageParameters()[1]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(15).getCode());
+            assertEquals(1, e.getExceptionItems().get(15).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DATA_SOURCE_OTHER_VARIABLE_VARIABLE, e.getExceptionItems().get(15).getMessageParameters()[0]);
         }
     }
 
@@ -3534,6 +3545,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setIsPercentage(Boolean.FALSE);
         dataSourceDto.getInterperiodPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
+        dataSourceDto.getInterperiodPuntualRate().getQuantity().setDecimalPlaces(Integer.valueOf(1));
 
         dataSourceDto.setInterperiodPercentageRate(new RateDerivationDto());
         dataSourceDto.getInterperiodPercentageRate().setMethodType(RateDerivationMethodTypeEnum.CALCULATE);
@@ -3551,6 +3563,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPercentageRate().setQuantity(new QuantityDto());
         dataSourceDto.getAnnualPercentageRate().getQuantity().setType(QuantityTypeEnum.AMOUNT); // should be change_rate
         dataSourceDto.getAnnualPercentageRate().getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(1));
 
         dataSourceDto.setAnnualPuntualRate(new RateDerivationDto());
         dataSourceDto.getAnnualPuntualRate().setMethodType(RateDerivationMethodTypeEnum.LOAD);
@@ -3562,6 +3575,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPuntualRate().getQuantity().setNumeratorIndicatorUuid(INDICATOR_3);
         dataSourceDto.getAnnualPuntualRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualPuntualRate().getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_1);
+        dataSourceDto.getAnnualPuntualRate().getQuantity().setDecimalPlaces(Integer.valueOf(1));
 
         String uuidIndicator = INDICATOR_1;
 
@@ -3764,6 +3778,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPercentageRate().getQuantity().setNumeratorIndicatorUuid(indicatorUuidLinked);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuidLinked);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(1));
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), indicatorUuid, dataSourceDto);
@@ -3809,6 +3824,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.getAnnualPercentageRate().getQuantity().setDenominatorIndicatorUuid(indicatorUuid);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setIsPercentage(Boolean.TRUE);
         dataSourceDto.getAnnualPercentageRate().getQuantity().setBaseQuantityIndicatorUuid(indicatorUuid);
+        dataSourceDto.getAnnualPercentageRate().getQuantity().setDecimalPlaces(Integer.valueOf(1));
 
         try {
             indicatorsServiceFacade.createDataSource(getServiceContextAdministrador(), indicatorUuid, dataSourceDto);

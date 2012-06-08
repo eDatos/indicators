@@ -254,6 +254,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -733,6 +734,7 @@
   					UUID="Quantity-211"
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
+                    DECIMAL_PLACES="3"
   					SIGNIFICANT_DIGITS="[null]"
 					UNIT_FK="1"
 
@@ -820,6 +822,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1069,6 +1072,7 @@
 					QUANTITY_TYPE="FRACTION"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
   					NUMERATOR_FK="2"
 					UNIT_FK="1"
 
@@ -1257,6 +1261,7 @@
 					QUANTITY_TYPE="FRACTION"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 					NUMERATOR_FK="1"
 
@@ -1547,6 +1552,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1611,6 +1617,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1800,6 +1807,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -1864,6 +1872,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -2052,6 +2061,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -2138,6 +2148,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -2325,6 +2336,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
@@ -2411,6 +2423,7 @@
 					QUANTITY_TYPE="QUANTITY"
   					UNIT_MULTIPLIER="10"
   					SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
 					UNIT_FK="1"
 
 					VERSION="1"
