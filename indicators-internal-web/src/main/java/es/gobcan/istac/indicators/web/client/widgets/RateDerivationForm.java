@@ -11,7 +11,6 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
@@ -30,8 +29,6 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
-import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
-import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
@@ -164,23 +161,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         // Rounding
 
-        CustomSelectItem rounding = new CustomSelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
+        RequiredSelectItem rounding = new RequiredSelectItem(DataSourceDS.RATE_DERIVATION_ROUNDING, getConstants().datasourceRounding());
         rounding.setValueMap(CommonUtils.getRateDerivationRoundingValueMap());
         rounding.setShowIfCondition(getFormItemShowIfApplicable());
-        rounding.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
-
-            @Override
-            public boolean execute(FormItem formItem, Object value) {
-                // Required when method type is CALCULATED
-                boolean required = RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
-                if (required
-                        && (RateDerivationForm.this.getValue(DataSourceDS.RATE_DERIVATION_ROUNDING) == null || StringUtils.isBlank(RateDerivationForm.this.getValue(
-                                DataSourceDS.RATE_DERIVATION_ROUNDING).toString()))) {
-                    RateDerivationForm.this.setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, RateDerivationRoundingEnum.UPWARD.toString());
-                }
-                return required;
-            }
-        }));
+        rounding.setValue(RateDerivationRoundingEnum.UPWARD.toString()); // Default value
 
         // QUANTITY
 
@@ -199,23 +183,10 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         sigDigits.setShowIfCondition(getFormItemShowIfApplicable());
 
         CustomIntegerItem decPlaces = new CustomIntegerItem(IndicatorDS.QUANTITY_DECIMAL_PLACES, getConstants().indicQuantityDecimalPlaces());
+        decPlaces.setRequired(true);
         decPlaces.setShowIfCondition(getFormItemShowIfApplicable());
-        decPlaces.setValidators(new RequiredIfValidator(new RequiredIfFunction() {
-
-            @Override
-            public boolean execute(FormItem formItem, Object value) {
-                // Required when quantity type is CHANGE_RATE and method type is CALCULATED
-                boolean required = QuantityTypeEnum.CHANGE_RATE.toString().equals(RateDerivationForm.this.getValueAsString(IndicatorDS.QUANTITY_TYPE))
-                        && RateDerivationMethodTypeEnum.CALCULATE.toString().equals(getValueAsString((DataSourceDS.RATE_DERIVATION_METHOD_TYPE)));
-                // If this field is required, set 2 decimal places by default
-                if (required
-                        && (RateDerivationForm.this.getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES) == null || StringUtils.isBlank(RateDerivationForm.this.getValue(IndicatorDS.QUANTITY_DECIMAL_PLACES)
-                                .toString()))) {
-                    RateDerivationForm.this.setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, 2);
-                }
-                return required;
-            }
-        }), getDecimalPlacesValidator());
+        decPlaces.setValue(2);
+        decPlaces.setValidators(getDecimalPlacesValidator());
 
         CustomIntegerItem min = new CustomIntegerItem(IndicatorDS.QUANTITY_MINIMUM, getConstants().indicQuantityMinimum());
         min.setShowIfCondition(getMinIfFunction());
@@ -252,7 +223,6 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         markForRedraw();
     }
-
     public void setMethodChangedHandler(ChangedHandler changedHandler) {
         getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD).addChangedHandler(changedHandler);
         getItem(DataSourceDS.RATE_DERIVATION_METHOD_LOAD_VIEW).addChangedHandler(changedHandler);
@@ -282,7 +252,9 @@ public class RateDerivationForm extends BaseRateDerivationForm {
 
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE_VIEW, getCoreMessages().getString(getCoreMessages().rateDerivationMethodTypeEnum() + methodType));
         setValue(DataSourceDS.RATE_DERIVATION_METHOD_TYPE, methodType);
-        setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding() != null ? rateDerivationDto.getRounding().toString() : new String());
+        if (rateDerivationDto.getRounding() != null) { // Do not overwrite default value
+            setValue(DataSourceDS.RATE_DERIVATION_ROUNDING, rateDerivationDto.getRounding().toString());
+        }
 
         if (rateDerivationDto.getQuantity() == null) {
             rateDerivationDto.setQuantity(new QuantityDto());
@@ -297,7 +269,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         if (quantityDto.getSignificantDigits() != null) {
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits());
         }
-        if (quantityDto.getDecimalPlaces() != null) {
+        if (quantityDto.getDecimalPlaces() != null) { // Do not overwrite default value
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces());
         }
         if (quantityDto.getMinimum() != null) {
