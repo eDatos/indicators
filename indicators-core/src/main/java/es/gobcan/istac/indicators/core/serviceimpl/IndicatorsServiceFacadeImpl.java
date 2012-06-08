@@ -595,7 +595,7 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             metamacCriteria.getOrdersBy().add(orderGranularity);
             // Order in granularity
             MetamacCriteriaOrder orderOrderInGranularity = new MetamacCriteriaOrder();
-            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
+            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
             orderOrderInGranularity.setType(OrderTypeEnum.ASC);
             metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
         }

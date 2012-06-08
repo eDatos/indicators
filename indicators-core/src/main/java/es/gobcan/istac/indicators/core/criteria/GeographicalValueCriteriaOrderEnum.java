@@ -3,7 +3,7 @@ package es.gobcan.istac.indicators.core.criteria;
 public enum GeographicalValueCriteriaOrderEnum {
 
     GEOGRAPHICAL_GRANULARITY_UUID,
-    ORDER_IN_GEOGRAPHICAL_GRANULARITY;
+    ORDER;
 
     public String value() {
         return name();

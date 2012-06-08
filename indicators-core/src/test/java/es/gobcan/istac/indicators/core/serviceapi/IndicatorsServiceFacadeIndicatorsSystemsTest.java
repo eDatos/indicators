@@ -93,6 +93,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-1";
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-2";
     private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2 = "IndSys-1-v2-IInstance-3";
+    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE = "IndSys-1-v2-IInstance-3-code";
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1 = "IndSys-3-v1-IInstance-2";
 
     // Geographical values
@@ -3465,6 +3466,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setCode(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE);
 
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
@@ -4008,7 +4010,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
         assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
-        assertEquals(Long.valueOf(1), geographicalValueDto.getOrderInGranularity());
+        assertEquals("ES", geographicalValueDto.getOrder());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
     }
 
@@ -4058,7 +4060,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
         assertEquals("368987.22", geographicalValueDto.getLongitude().toString());
-        assertEquals(Long.valueOf(1), geographicalValueDto.getOrderInGranularity());
+        assertEquals("ES", geographicalValueDto.getOrder());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalValueDto.getTitle(), "es", "España", "en", "Spain");
     }
 
@@ -4182,7 +4184,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();
-            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
+            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
             metamacCriteriaOrder.setType(OrderTypeEnum.DESC);
             criteria.getOrdersBy().add(metamacCriteriaOrder);
 
@@ -4195,10 +4197,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(0).getUuid());
             assertEquals("FR", geographicalValues.get(0).getCode());
-            assertEquals(Long.valueOf(2), geographicalValues.get(0).getOrderInGranularity());
+            assertEquals("FR", geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(1).getUuid());
             assertEquals("ES", geographicalValues.get(1).getCode());
-            assertEquals(Long.valueOf(1), geographicalValues.get(1).getOrderInGranularity());
+            assertEquals("ES", geographicalValues.get(1).getOrder());
         }
         // By granularity order by "order" asc
         {
@@ -4209,7 +4211,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             criteria.setRestriction(conjuction);
             criteria.setOrdersBy(new ArrayList<MetamacCriteriaOrder>());
             MetamacCriteriaOrder metamacCriteriaOrder = new MetamacCriteriaOrder();
-            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER_IN_GEOGRAPHICAL_GRANULARITY.name());
+            metamacCriteriaOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
             metamacCriteriaOrder.setType(OrderTypeEnum.ASC);
             criteria.getOrdersBy().add(metamacCriteriaOrder);
 
@@ -4222,10 +4224,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
-            assertEquals(Long.valueOf(1), geographicalValues.get(0).getOrderInGranularity());
+            assertEquals("ES", geographicalValues.get(0).getOrder());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
             assertEquals("FR", geographicalValues.get(1).getCode());
-            assertEquals(Long.valueOf(2), geographicalValues.get(1).getOrderInGranularity());
+            assertEquals("FR", geographicalValues.get(1).getOrder());
         }
     }
 

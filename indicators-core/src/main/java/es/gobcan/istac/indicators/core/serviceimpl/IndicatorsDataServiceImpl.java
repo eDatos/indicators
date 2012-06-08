@@ -502,7 +502,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 Collections.sort(geographicalValuesInIndicator, new Comparator<GeographicalValue>() {
                    @Override
                     public int compare(GeographicalValue o1, GeographicalValue o2) {
-                       return o1.getOrderInGranularity().compareTo(o2.getOrderInGranularity());
+                       return o1.getOrder().compareTo(o2.getOrder());
                    }
                 });
                 return geographicalValuesInIndicator;
@@ -544,6 +544,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                         geographicalValuesInIndicator.add(geoValue);
                     }
                 }
+                Collections.sort(geographicalValuesInIndicator, new Comparator<GeographicalValue>() {
+                    @Override
+                     public int compare(GeographicalValue o1, GeographicalValue o2) {
+                        return o1.getOrder().compareTo(o2.getOrder());
+                    }
+                 });
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);

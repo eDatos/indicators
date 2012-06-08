@@ -936,8 +936,8 @@ Application Indicators {
        		Double latitude nullable;
        		"Longitude"
        		Double longitude nullable;
-       		"Orden in granularity"
-       		Long orderInGranularity not nullable databaseColumn="ORDER_IN_GRANULARITY";
+       		"Order"
+       		String order not nullable databaseColumn="GLOBAL_ORDER";
        		
        		Repository GeographicalValueRepository {
        			findAll;
@@ -1470,8 +1470,8 @@ Application Indicators {
        		Double latitude;
        		"Longitude"
        		Double longitude;
-       		"Orden in granularity"
-       		Long orderInGranularity;
+       		"Order"
+       		String order;
     	}
 
     	"Dto for geographical granularities"

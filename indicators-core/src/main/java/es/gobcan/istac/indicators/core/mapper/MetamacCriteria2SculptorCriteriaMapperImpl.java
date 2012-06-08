@@ -71,8 +71,8 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             switch (propertyNameCriteria) {
                 case GEOGRAPHICAL_GRANULARITY_UUID:
                     return GeographicalValueProperties.granularity();
-                case ORDER_IN_GEOGRAPHICAL_GRANULARITY:
-                    return GeographicalValueProperties.orderInGranularity();
+                case ORDER:
+                    return GeographicalValueProperties.order();
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }

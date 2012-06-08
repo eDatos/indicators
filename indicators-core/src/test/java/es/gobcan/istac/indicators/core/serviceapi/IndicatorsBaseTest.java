@@ -87,8 +87,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
     @Override
     public void tearDownDatabaseTester() throws Exception {
-        removeCyclicDependences();
-        super.tearDownDatabaseTester();
+       //NOTHING
     }
 
     @Override
