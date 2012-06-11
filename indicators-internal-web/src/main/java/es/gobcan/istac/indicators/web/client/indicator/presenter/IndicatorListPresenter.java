@@ -12,24 +12,30 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
+import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
@@ -45,12 +51,14 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListResult;
 
 public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPresenter.IndicatorListView, IndicatorListPresenter.IndicatorListProxy> implements IndicatorListUiHandler {
 
-    public static final int DEFAULT_MAX_RESULTS = 30;
+    public static final int          DEFAULT_MAX_RESULTS = 30;
 
-    private Logger          logger              = Logger.getLogger(IndicatorListPresenter.class.getName());
+    private Logger                   logger              = Logger.getLogger(IndicatorListPresenter.class.getName());
 
-    private DispatchAsync   dispatcher;
-    private PlaceManager    placeManager;
+    private DispatchAsync            dispatcher;
+    private PlaceManager             placeManager;
+
+    private ToolStripPresenterWidget toolStripPresenterWidget;
 
     public interface IndicatorListView extends View, HasUiHandlers<IndicatorListPresenter> {
 
@@ -66,15 +74,21 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
 
     @ProxyCodeSplit
     @NameToken(NameTokens.indicatorListPage)
+    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface IndicatorListProxy extends Proxy<IndicatorListPresenter>, Place {
     }
 
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaContentToolBar = new Type<RevealContentHandler<?>>();
+
     @Inject
-    public IndicatorListPresenter(EventBus eventBus, IndicatorListView view, IndicatorListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+    public IndicatorListPresenter(EventBus eventBus, IndicatorListView view, IndicatorListProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager,
+            ToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy, dispatcher, DEFAULT_MAX_RESULTS);
         this.dispatcher = dispatcher;
-        getView().setUiHandlers(this);
         this.placeManager = placeManager;
+        getView().setUiHandlers(this);
+        this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
     @Override
@@ -86,10 +100,14 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(IndicatorListPresenter.this, getConstants().indicators());
-
         initializePaginationSettings();
-
         retrieveResultSet();
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+        setInSlot(TYPE_SetContextAreaContentToolBar, toolStripPresenterWidget);
     }
 
     @Override

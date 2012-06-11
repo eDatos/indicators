@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -40,9 +41,11 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
@@ -106,8 +109,9 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
 
-    /* Models */
     private IndicatorsSystemDtoWeb                    indSystem;                                                         // To be able to cache structure
+
+    private ToolStripPresenterWidget                  toolStripPresenterWidget;
 
     public interface SystemView extends View, HasUiHandlers<SystemUiHandler> {
 
@@ -134,15 +138,20 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @ProxyCodeSplit
     @NameToken(NameTokens.systemPage)
+    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface SystemProxy extends Proxy<SystemPresenter>, Place {
     }
 
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaContentToolBar = new Type<RevealContentHandler<?>>();
+
     @Inject
-    public SystemPresenter(EventBus eventBus, SystemView view, SystemProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
+    public SystemPresenter(EventBus eventBus, SystemView view, SystemProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager, ToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         this.placeManager = placeManager;
         view.setUiHandlers(this);
+        this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
     @Override
@@ -164,6 +173,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     protected void onReveal() {
         super.onReveal();
+        setInSlot(TYPE_SetContextAreaContentToolBar, toolStripPresenterWidget);
         String code = getIdFromRequest(placeManager.getCurrentPlaceHierarchy());
         retrieveIndSystem(code);
         getView().init();

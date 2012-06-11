@@ -21,4 +21,18 @@ public class IndicatorsPlaceManager extends PlaceManagerImpl {
     public void revealDefaultPlace() {
         revealPlace(defaultPlaceRequest);
     }
+
+    @Override
+    public void revealUnauthorizedPlace(String unauthorizedHistoryToken) {
+        PlaceRequest placeRequest = new PlaceRequest(NameTokens.unauthorizedAccessPage);
+        placeRequest = placeRequest.with("redirect", unauthorizedHistoryToken);
+        revealPlace(placeRequest);
+    }
+
+    @Override
+    public void revealErrorPlace(String invalidHistoryToken) {
+        PlaceRequest placeRequest = new PlaceRequest(NameTokens.errorPage);
+        revealPlace(placeRequest);
+    }
+
 }

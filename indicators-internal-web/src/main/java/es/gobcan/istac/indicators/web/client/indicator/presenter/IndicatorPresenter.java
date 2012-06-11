@@ -12,18 +12,22 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 import es.gobcan.istac.indicators.core.dto.DataDefinitionDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
@@ -37,6 +41,7 @@ import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.enums.IndicatorCalculationTypeEnum;
@@ -46,6 +51,7 @@ import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularit
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
+import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
 import es.gobcan.istac.indicators.web.client.widgets.WaitingAsyncCallback;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
@@ -102,18 +108,24 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             UpdateQuantityUnitsHandler,
             UpdateGeographicalGranularitiesHandler {
 
-    private Logger                  logger = Logger.getLogger(IndicatorPresenter.class.getName());
+    private Logger                   logger = Logger.getLogger(IndicatorPresenter.class.getName());
 
-    private DispatchAsync           dispatcher;
-    private String                  indicatorCode;
-    private IndicatorDto            indicatorDto;
+    private DispatchAsync            dispatcher;
+    private String                   indicatorCode;
+    private IndicatorDto             indicatorDto;
 
-    private List<UnitMultiplierDto> unitMultiplierDtos;
+    private List<UnitMultiplierDto>  unitMultiplierDtos;
+
+    private ToolStripPresenterWidget toolStripPresenterWidget;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.indicatorPage)
+    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface IndicatorProxy extends Proxy<IndicatorPresenter>, Place {
     }
+
+    @ContentSlot
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaContentToolBar = new Type<RevealContentHandler<?>>();
 
     public interface IndicatorView extends View, HasUiHandlers<IndicatorPresenter> {
 
@@ -157,10 +169,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Inject
-    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher) {
+    public IndicatorPresenter(EventBus eventBus, IndicatorView view, IndicatorProxy proxy, DispatchAsync dispatcher, ToolStripPresenterWidget toolStripPresenterWidget) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
         getView().setUiHandlers(this);
+        this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
     @Override
@@ -180,6 +193,12 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         super.onReset();
         SetTitleEvent.fire(IndicatorPresenter.this, getConstants().indicators());
         retrieveIndicatorByCode();
+    }
+
+    @Override
+    protected void onReveal() {
+        super.onReveal();
+        setInSlot(TYPE_SetContextAreaContentToolBar, toolStripPresenterWidget);
     }
 
     private void retrieveIndicatorByCode() {

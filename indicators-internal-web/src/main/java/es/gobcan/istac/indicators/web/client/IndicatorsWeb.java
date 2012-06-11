@@ -89,6 +89,8 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     // String url = Window.Location.createUrlBuilder().setHash("").buildString();
     // Window.Location.assign(url);
     //
+    // LoginAuthenticatedEvent.fire(ginjector.getEventBus(), IndicatorsWeb.principal);
+    //
     // // This is required for GWT-Platform proxy's generator.
     // DelayedBindRegistry.bind(ginjector);
     // ginjector.getPlaceManager().revealCurrentPlace();

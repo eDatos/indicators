@@ -22,7 +22,6 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsMasterHead;
-import es.gobcan.istac.indicators.web.client.widgets.LinksHead;
 import es.gobcan.istac.indicators.web.client.widgets.VersionFooter;
 
 public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainView {
@@ -37,14 +36,12 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private VLayout                    footerLayout;
 
     private final IndicatorsMasterHead masterHead;
-    private final LinksHead            linksHead;
     private final SuccessMessagePanel  successMessagePanel;
     private final ErrorMessagePanel    errorMessagePanel;
 
     @Inject
-    public MainPageViewImpl(IndicatorsMasterHead masterHead, LinksHead linksHead, SuccessMessagePanel successMessagePanel, ErrorMessagePanel errorMessagePanel) {
+    public MainPageViewImpl(IndicatorsMasterHead masterHead, SuccessMessagePanel successMessagePanel, ErrorMessagePanel errorMessagePanel) {
         this.masterHead = masterHead;
-        this.linksHead = linksHead;
         this.successMessagePanel = successMessagePanel;
         this.errorMessagePanel = errorMessagePanel;
 
@@ -57,7 +54,6 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         northLayout = new VLayout();
         northLayout.setHeight(NORTH_HEIGHT);
         northLayout.addMember(this.masterHead);
-        northLayout.addMember(this.linksHead);
         northLayout.setHeight(65);
 
         // Initialize the South layout container
