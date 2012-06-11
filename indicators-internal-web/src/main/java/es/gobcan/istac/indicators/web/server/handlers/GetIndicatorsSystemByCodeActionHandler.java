@@ -2,16 +2,16 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
@@ -19,7 +19,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 @Component
-public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandler<GetIndicatorsSystemByCodeAction, GetIndicatorsSystemByCodeResult> {
+public class GetIndicatorsSystemByCodeActionHandler extends SecurityActionHandler<GetIndicatorsSystemByCodeAction, GetIndicatorsSystemByCodeResult> {
 
     @Autowired
     private IndicatorsServiceFacade                       indicatorsServiceFacade;
@@ -32,7 +32,7 @@ public class GetIndicatorsSystemByCodeActionHandler extends AbstractActionHandle
     }
 
     @Override
-    public GetIndicatorsSystemByCodeResult execute(GetIndicatorsSystemByCodeAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorsSystemByCodeResult executeSecurityAction(GetIndicatorsSystemByCodeAction action) throws ActionException {
         // Retrieve operation from WS
         OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(action.getCode());
         // Check if operation (indicators system) exists in the DB

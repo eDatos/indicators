@@ -13,18 +13,18 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.FindOperationsResult;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
@@ -32,7 +32,7 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListRes
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 
 @Component
-public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActionHandler<GetIndicatorsSystemPaginatedListAction, GetIndicatorsSystemPaginatedListResult> {
+public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActionHandler<GetIndicatorsSystemPaginatedListAction, GetIndicatorsSystemPaginatedListResult> {
 
     @Autowired
     private IndicatorsServiceFacade                       indicatorsServiceFacade;
@@ -45,7 +45,7 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends AbstractActio
     }
 
     @Override
-    public GetIndicatorsSystemPaginatedListResult execute(GetIndicatorsSystemPaginatedListAction action, ExecutionContext context) throws ActionException {
+    public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
         FindOperationsResult findOperationsResult = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());

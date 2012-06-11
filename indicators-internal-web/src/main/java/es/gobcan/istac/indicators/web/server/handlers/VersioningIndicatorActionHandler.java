@@ -1,22 +1,22 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.VersioningIndicatorResult;
 
 @Component
-public class VersioningIndicatorActionHandler extends AbstractActionHandler<VersioningIndicatorAction, VersioningIndicatorResult> {
+public class VersioningIndicatorActionHandler extends SecurityActionHandler<VersioningIndicatorAction, VersioningIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
@@ -26,7 +26,7 @@ public class VersioningIndicatorActionHandler extends AbstractActionHandler<Vers
     }
 
     @Override
-    public VersioningIndicatorResult execute(VersioningIndicatorAction action, ExecutionContext context) throws ActionException {
+    public VersioningIndicatorResult executeSecurityAction(VersioningIndicatorAction action) throws ActionException {
         try {
             IndicatorDto indicatorDto = indicatorsServiceFacade.versioningIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getUuid(), action.getVersionType());
             return new VersioningIndicatorResult(indicatorDto);

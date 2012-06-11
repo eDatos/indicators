@@ -3,22 +3,22 @@ package es.gobcan.istac.indicators.web.server.handlers;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
 
 @Component
-public class GetGeographicalGranularitiesInIndicatorActionHandler extends AbstractActionHandler<GetGeographicalGranularitiesInIndicatorAction, GetGeographicalGranularitiesInIndicatorResult> {
+public class GetGeographicalGranularitiesInIndicatorActionHandler extends SecurityActionHandler<GetGeographicalGranularitiesInIndicatorAction, GetGeographicalGranularitiesInIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
@@ -28,7 +28,7 @@ public class GetGeographicalGranularitiesInIndicatorActionHandler extends Abstra
     }
 
     @Override
-    public GetGeographicalGranularitiesInIndicatorResult execute(GetGeographicalGranularitiesInIndicatorAction action, ExecutionContext context) throws ActionException {
+    public GetGeographicalGranularitiesInIndicatorResult executeSecurityAction(GetGeographicalGranularitiesInIndicatorAction action) throws ActionException {
         try {
             List<GeographicalGranularityDto> geographicalGranularityDtos = indicatorsServiceFacade.retrieveGeographicalGranularitiesInIndicator(ServiceContextHolder.getCurrentServiceContext(),
                     action.getIndicatorUuid(), action.getIndicatorVersion());

@@ -1,23 +1,23 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.PublishIndicatorResultDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorResult;
 
 @Component
-public class PublishIndicatorActionHandler extends AbstractActionHandler<PublishIndicatorAction, PublishIndicatorResult> {
+public class PublishIndicatorActionHandler extends SecurityActionHandler<PublishIndicatorAction, PublishIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
@@ -27,7 +27,7 @@ public class PublishIndicatorActionHandler extends AbstractActionHandler<Publish
     }
 
     @Override
-    public PublishIndicatorResult execute(PublishIndicatorAction action, ExecutionContext context) throws ActionException {
+    public PublishIndicatorResult executeSecurityAction(PublishIndicatorAction action) throws ActionException {
         try {
             PublishIndicatorResultDto publishResult = indicatorsServiceFacade.publishIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getUuid());
             if (publishResult.getPublicationFailedReason() == null) {

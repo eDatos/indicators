@@ -1,22 +1,22 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorResult;
 
 @Component
-public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIndicatorAction, UpdateIndicatorResult> {
+public class UpdateIndicatorActionHandler extends SecurityActionHandler<UpdateIndicatorAction, UpdateIndicatorResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
@@ -26,7 +26,7 @@ public class UpdateIndicatorActionHandler extends AbstractActionHandler<UpdateIn
     }
 
     @Override
-    public UpdateIndicatorResult execute(UpdateIndicatorAction action, ExecutionContext context) throws ActionException {
+    public UpdateIndicatorResult executeSecurityAction(UpdateIndicatorAction action) throws ActionException {
         try {
             IndicatorDto indicatorDto = indicatorsServiceFacade.updateIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorToUpdate());
             return new UpdateIndicatorResult(indicatorDto);

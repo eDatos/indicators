@@ -8,24 +8,24 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.criteria.IndicatorCriteria;
 
 @Component
-public class FindIndicatorsActionHandler extends AbstractActionHandler<FindIndicatorsAction, FindIndicatorsResult> {
+public class FindIndicatorsActionHandler extends SecurityActionHandler<FindIndicatorsAction, FindIndicatorsResult> {
 
     @Autowired
     private IndicatorsServiceFacade indicatorsServiceFacade;
@@ -35,7 +35,7 @@ public class FindIndicatorsActionHandler extends AbstractActionHandler<FindIndic
     }
 
     @Override
-    public FindIndicatorsResult execute(FindIndicatorsAction action, ExecutionContext context) throws ActionException {
+    public FindIndicatorsResult executeSecurityAction(FindIndicatorsAction action) throws ActionException {
         IndicatorCriteria indicatorCriteria = action.getCriteria();
 
         MetamacCriteria criteria = new MetamacCriteria();

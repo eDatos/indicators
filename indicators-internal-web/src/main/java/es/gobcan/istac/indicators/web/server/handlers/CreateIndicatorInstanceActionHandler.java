@@ -2,25 +2,25 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 
 @Component
-public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
+public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
 
     @Autowired
     private IndicatorsServiceFacade                       indicatorsServiceFacade;
@@ -33,7 +33,7 @@ public class CreateIndicatorInstanceActionHandler extends AbstractActionHandler<
     }
 
     @Override
-    public CreateIndicatorInstanceResult execute(CreateIndicatorInstanceAction action, ExecutionContext context) throws ActionException {
+    public CreateIndicatorInstanceResult executeSecurityAction(CreateIndicatorInstanceAction action) throws ActionException {
         IndicatorsSystemDto indicatorsSystemDto = null;
         // Check if operation (indicators system) exists in the DB
         try {

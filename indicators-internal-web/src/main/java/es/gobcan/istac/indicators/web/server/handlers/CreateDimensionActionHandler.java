@@ -2,25 +2,25 @@ package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.server.ExecutionContext;
-import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
-import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
 import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionResult;
 
 @Component
-public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDimensionAction, CreateDimensionResult> {
+public class CreateDimensionActionHandler extends SecurityActionHandler<CreateDimensionAction, CreateDimensionResult> {
 
     @Autowired
     private IndicatorsServiceFacade                       indicatorsServiceFacade;
@@ -33,7 +33,7 @@ public class CreateDimensionActionHandler extends AbstractActionHandler<CreateDi
     }
 
     @Override
-    public CreateDimensionResult execute(CreateDimensionAction action, ExecutionContext context) throws ActionException {
+    public CreateDimensionResult executeSecurityAction(CreateDimensionAction action) throws ActionException {
         IndicatorsSystemDto indicatorsSystemDto = null;
         // Check if operation (indicators system) exists in the DB
         try {
