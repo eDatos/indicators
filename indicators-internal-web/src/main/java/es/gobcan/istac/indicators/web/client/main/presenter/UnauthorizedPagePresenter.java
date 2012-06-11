@@ -11,7 +11,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
+import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.UnauthorizedPageUiHandlers;
@@ -47,7 +47,7 @@ public class UnauthorizedPagePresenter extends Presenter<UnauthorizedPagePresent
 
     @Override
     protected void revealInParent() {
-        RevealRootContentEvent.fire(this, this);
+        RevealContentEvent.fire(this, MainPagePresenter.CONTENT_SLOT, this);
     }
 
 }
