@@ -9,12 +9,12 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-    <bean id="metamacStatisticalOperationsInternalInterfaceV10" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
-        <property name="serviceInterface" value="org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10" />
-        <property name="wsdlDocumentUrl" value="classpath:META-INF/wsdl/metamac-statistical-operations-internal-v1.0.wsdl" />
-        <property name="namespaceUri" value="http://www.siemac.org/metamac/statistical/operations/internal/ws/v1.0" />
-        <property name="serviceName" value="MetamacStatisticalOperationsInternal_v1.0" />
-        <property name="endpointAddress" value="${indicators.ws.metamac.statistical.operations.internal.endpoint}" />
+    <bean id="metamacStatisticalOperationsExternalInterfaceV10" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10" />
+        <property name="wsdlDocumentUrl" value="classpath:META-INF/wsdl/metamac-statistical-operations-external-v1.0.wsdl" />
+        <property name="namespaceUri" value="http://www.siemac.org/metamac/statistical/operations/external/ws/v1.0" />
+        <property name="serviceName" value="MetamacStatisticalOperationsExternal_v1.0" />
+        <property name="endpointAddress" value="${indicators.ws.metamac.statistical.operations.external.endpoint}" />
     </bean>
 
 </beans>

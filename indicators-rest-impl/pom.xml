@@ -21,7 +21,7 @@
 
         <!-- METAMAC -->
         <dependency>
-            <groupId>org.siemac.metamac</groupId>
+            <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
             <artifactId>metamac-statistical-operations-ws-api</artifactId>
         </dependency>
         <dependency>

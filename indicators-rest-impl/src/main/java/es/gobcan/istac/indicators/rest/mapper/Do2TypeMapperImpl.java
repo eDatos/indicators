@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacExceptionFault;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacExceptionFault;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.domain.OperationBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -63,7 +63,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private IndicatorsDataService                            indicatorsDataService    = null;
 
     @Autowired
-    private MetamacStatisticalOperationsInternalInterfaceV10 statisticalOperations    = null; 
+    private MetamacStatisticalOperationsExternalInterfaceV10 statisticalOperations    = null; 
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {

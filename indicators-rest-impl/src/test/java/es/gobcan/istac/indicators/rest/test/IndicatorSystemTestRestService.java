@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.MetamacStatisticalOperationsInternalInterfaceV10;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,7 +53,7 @@ public class IndicatorSystemTestRestService {
         mockMvc = webApplicationContextSetup(wac).build();
         
         IndicatorsSystemsService indicatorsSystemsService = wac.getBean(IndicatorsSystemsService.class);
-        MetamacStatisticalOperationsInternalInterfaceV10 statisticalOperations = wac.getBean(MetamacStatisticalOperationsInternalInterfaceV10.class);
+        MetamacStatisticalOperationsExternalInterfaceV10 statisticalOperations = wac.getBean(MetamacStatisticalOperationsExternalInterfaceV10.class);
         
         // MOCKS
         when(indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(any(ServiceContext.class), eq("CODIGO_0001"))).thenReturn(IndicatorsSystemVersionMock.mockIndicatorsSystemVersion1());
@@ -67,8 +67,8 @@ public class IndicatorSystemTestRestService {
 //        PagedResult<IndicatorsSystemVersion> pagedResult = new PagedResult<IndicatorsSystemVersion>(indicatorsSystemVersions, 0, 2, 5);
 //        when(indicatorsSystemsService.findIndicatorsSystemsPublished(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenReturn(pagedResult);
 //        
-//        when(metamacStatisticalOperationsInternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase1().getCode())).thenReturn(OperationBaseMock.mockOperationBase1());
-//        when(metamacStatisticalOperationsInternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase2().getCode())).thenReturn(OperationBaseMock.mockOperationBase2());
+//        when(metamacStatisticalOperationsExternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase1().getCode())).thenReturn(OperationBaseMock.mockOperationBase1());
+//        when(metamacStatisticalOperationsExternalInterfaceV10.retrieveOperation(OperationBaseMock.mockOperationBase2().getCode())).thenReturn(OperationBaseMock.mockOperationBase2());
         
         //when(indicatorsSystemsService.retrieveIndicatorInstance(any(ServiceContext.class), "UUID_INDICATOR_INSTANCE_1")).thenReturn(value)
     }

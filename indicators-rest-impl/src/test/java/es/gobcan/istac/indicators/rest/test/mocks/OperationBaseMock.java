@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.rest.test.mocks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.statistical.operations.external.ws.v1_0.domain.ProcStatusType;
 
 public class OperationBaseMock {
 

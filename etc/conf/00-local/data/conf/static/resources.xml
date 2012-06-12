@@ -5,4 +5,5 @@
 	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
 	<entry key="indicators.update.quartz.expression">0 0 12 ? * *</entry>
 	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/metamac/statistical/operations/internal/v1.0/metamacStatisticalOperationsInternalInterface</entry>
+    <entry key="indicators.ws.metamac.statistical.operations.external.endpoint">http://localhost:8080/metamac-statistical-operations-external-web/ws/metamac/statistical/operations/external/v1.0/metamacStatisticalOperationsExternalInterface</entry>
 </properties>
