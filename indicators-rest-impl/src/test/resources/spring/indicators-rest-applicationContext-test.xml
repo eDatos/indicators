@@ -16,7 +16,11 @@
     <bean id="indicatorsService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsService" />
     </bean>
-    
+
+    <bean id="indicatorsDataService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService" />
+    </bean>
+        
     <bean id="metamacStatisticalOperationsExternalInterfaceV10" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10" />
     </bean>

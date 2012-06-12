@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({
@@ -40,6 +41,8 @@ public class IndicatorBaseType implements Serializable {
     private Map<String, String> subjectTitle       = null;
     private List<LinkType>      systemSurveyLinks  = null;
 
+    // TODO Ver si queremos volver a ponerlo dado que se devuelven este dato como atributo de cada observación
+    @JsonIgnore
     private QuantityType        quantity           = null;
     private Map<String, String> conceptDescription = null;
     private Map<String, String> notes              = null;

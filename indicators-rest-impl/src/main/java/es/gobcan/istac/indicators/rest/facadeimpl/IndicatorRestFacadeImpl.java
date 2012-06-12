@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -26,6 +26,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
@@ -33,7 +34,6 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
-import es.gobcan.istac.indicators.rest.util.DataTypeUtil;
 
 @Service("indicatorRestFacade")
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
@@ -78,14 +78,58 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     
     @Override
     public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations,  Map<String, List<String>> selectedGranularities) throws Exception {
-        IndicatorVersion indicatorsVersion = indicatorsService.retrieveIndicatorPublishedByCode(RestConstants.SERVICE_CONTEXT, indicatorCode);
+        IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublishedByCode(RestConstants.SERVICE_CONTEXT, indicatorCode);
         
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), indicatorsVersion.getVersionNumber());
-        
+        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+                   
         List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
+        filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
+        filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
+        Map<String, ObservationExtendedDto> observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
+        
+        DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, geographicalValues, timeValues, measureValues, observationMap);
+        return dto2TypeMapper.createDataType(dataTypeRequest);
+    }
 
+    private void filterTimeValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<TimeValue> timeValues, List<ConditionDimensionDto> conditionDimensionDtos) {
+        List<String> timeSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
+        List<String> timeSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
+        
+        if ((timeSelectedValues != null && timeSelectedValues.size() != 0) ||
+            (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0)) {
+            List<TimeValue> timeValuesNew = new ArrayList<TimeValue>();
+            ConditionDimensionDto timeConditionDimensionDto = new ConditionDimensionDto();
+            timeConditionDimensionDto.setDimensionId(IndicatorDataDimensionTypeEnum.TIME.name());
+            
+            for (TimeValue timeValue : timeValues) {
+                // Granularity
+                if (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0) {
+                    if (!timeSelectedGranularities.contains(timeValue.getGranularity().getName())) {
+                        continue;
+                    }
+                }
+                
+                // Value
+                if (timeSelectedValues != null && timeSelectedValues.size() != 0) {
+                    if (!timeSelectedValues.contains(timeValue.getTimeValue())) {
+                        continue;
+                    }
+                }
+                
+                timeConditionDimensionDto.getCodesDimension().add(timeValue.getTimeValue());
+                timeValuesNew.add(timeValue);
+            }
+            
+            conditionDimensionDtos.add(timeConditionDimensionDto);
+            if (timeValuesNew.size() > 0) {
+                timeValues = timeValuesNew;
+            }
+        }
+    }
+
+    private void filterGeographicalValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<GeographicalValue> geographicalValues, List<ConditionDimensionDto> conditionDimensionDtos) {
         // GEOGRAPHICAL
         List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         List<String> geographicalSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
@@ -121,47 +165,5 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
                 geographicalValues = geographicalValuesNew;
             }
         }
-
-        // TIME
-        List<String> timeSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
-        List<String> timeSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
-        
-        if ((timeSelectedValues != null && timeSelectedValues.size() != 0) ||
-            (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0)) {
-            List<TimeValue> timeValuesNew = new ArrayList<TimeValue>();
-            ConditionDimensionDto timeConditionDimensionDto = new ConditionDimensionDto();
-            timeConditionDimensionDto.setDimensionId(IndicatorDataDimensionTypeEnum.TIME.name());
-            
-            for (TimeValue timeValue : timeValues) {
-                // Granularity
-                if (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0) {
-                    if (!timeSelectedGranularities.contains(timeValue.getGranularity().getName())) {
-                        continue;
-                    }
-                }
-                
-                // Value
-                if (timeSelectedValues != null && timeSelectedValues.size() != 0) {
-                    if (!timeSelectedValues.contains(timeValue.getTimeValue())) {
-                        continue;
-                    }
-                }
-                
-                timeConditionDimensionDto.getCodesDimension().add(timeValue.getTimeValue());
-                timeValuesNew.add(timeValue);
-            }
-            
-            conditionDimensionDtos.add(timeConditionDimensionDto);
-            if (timeValuesNew.size() > 0) {
-                timeValues = timeValuesNew;
-            }
-        }
-        
-        
-        
-        Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorsVersion.getIndicator().getUuid(), conditionDimensionDtos);
-        
-        return DataTypeUtil.createDataType(geographicalValues, timeValues, measureValues, observationMap);
     }
-
 }

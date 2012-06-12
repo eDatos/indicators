@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "selfLink",
     "parentLink",
     "title",
+    "conceptDescription",
     "dimension",
     "decimalPlaces",
     "childLink"
@@ -26,11 +27,11 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
     private Integer                            decimalPlaces    = null;
     private LinkType                           childLink        = null;
 
-    public  Map<String,MetadataDimensionType> getDimension() {
+    public Map<String, MetadataDimensionType> getDimension() {
         return dimension;
     }
 
-    public void setDimension( Map<String,MetadataDimensionType> dimension) {
+    public void setDimension(Map<String, MetadataDimensionType> dimension) {
         this.dimension = dimension;
     }
 

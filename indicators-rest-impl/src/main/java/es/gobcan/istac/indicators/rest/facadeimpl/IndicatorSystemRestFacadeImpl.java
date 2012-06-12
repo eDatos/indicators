@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -25,6 +25,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
@@ -35,21 +36,20 @@ import es.gobcan.istac.indicators.rest.types.NoPagedResultType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
-import es.gobcan.istac.indicators.rest.util.DataTypeUtil;
 
 @Service("indicatorSystemRestFacade")
 public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade {
 
-    private Logger                   logger                      = LoggerFactory.getLogger(getClass());
+    private Logger                   logger                   = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IndicatorsSystemsService indicatorsSystemsService    = null;
+    private IndicatorsSystemsService indicatorsSystemsService = null;
 
     @Autowired
-    private IndicatorsDataService    indicatorsDataService       = null;
+    private IndicatorsDataService    indicatorsDataService    = null;
 
     @Autowired
-    private Do2TypeMapper            dto2TypeMapper              = null;
+    private Do2TypeMapper            dto2TypeMapper           = null;
 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseURL, final RestCriteriaPaginator paginator) throws Exception {
@@ -96,17 +96,16 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
     @Override
     public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance) throws Exception {
-        IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance); // Check Published
+        IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
         
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
         List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
         List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
+        Map<String, ObservationExtendedDto> observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid(), null);
         
-        Map<String, ObservationDto> observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid(), null);
-        
-        return DataTypeUtil.createDataType(geographicalValues, timeValues, measureValues, observationMap);
+        DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
+        return dto2TypeMapper.createDataType(dataTypeRequest);
     }
-
  
 
     private IndicatorInstance retrieveIndicatorInstanceByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {

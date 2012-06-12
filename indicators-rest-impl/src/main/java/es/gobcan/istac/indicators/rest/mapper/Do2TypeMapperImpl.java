@@ -1,11 +1,14 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacExceptionFault;
 import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10;
@@ -16,7 +19,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -30,12 +37,20 @@ import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
+import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
+import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.DataDimensionType;
+import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.ElementLevelType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
@@ -44,6 +59,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
 import es.gobcan.istac.indicators.rest.types.LinkType;
+import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
 import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
@@ -53,40 +69,53 @@ import es.gobcan.istac.indicators.rest.types.ThemeType;
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
-    @Autowired
-    private IndicatorsSystemsService                         indicatorsSystemsService = null;
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL  = "UNIT_MEAS_DETAIL";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE      = "UNIT_MEASURE";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MULT         = "UNIT_MULT";
+
+    private static String                                        REQUEST_CACHE_DATASOURCE         = "REQUEST_CACHE_DATASOURCE";
+    private static String                                        REQUEST_CACHE_UNITMULTIPLIER     = "REQUEST_CACHE_UNITMULTIPLIER";
+    private static String                                        REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                         = new ThreadLocal<Map<String, Map<String, Object>>>() {
+      protected java.util.Map<String, Map<String, Object>> initialValue() {
+          return new HashMap<String, Map<String, Object>>();
+      };
+    };
 
     @Autowired
-    private IndicatorsService                                indicatorsService        = null;
+    private IndicatorsSystemsService                             indicatorsSystemsService             = null;
 
     @Autowired
-    private IndicatorsDataService                            indicatorsDataService    = null;
+    private IndicatorsService                                    indicatorsService                    = null;
 
     @Autowired
-    private MetamacStatisticalOperationsExternalInterfaceV10 statisticalOperations    = null; 
+    private IndicatorsDataService                                indicatorsDataService                = null;
+
+    @Autowired
+    private MetamacStatisticalOperationsExternalInterfaceV10 statisticalOperations    = null;
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
         Assert.notNull(source);
         Assert.notNull(baseURL);
-        
+
         try {
             OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
             IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
-            return target; 
+            return target;
         } catch (MetamacExceptionFault e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
+
     @Override
     public IndicatorsSystemType indicatorsSystemDoToType(IndicatorsSystemVersion source, final String baseURL) {
         Assert.notNull(source);
         Assert.notNull(baseURL);
-        
+
         try {
             OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
-            
+
             IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperationBase, baseURL);
             return target;
         } catch (MetamacExceptionFault e) {
@@ -94,7 +123,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    
     @Override
     public List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(List<IndicatorsSystemVersion> sources, final String baseURL) {
         Assert.notNull(sources);
@@ -127,13 +155,18 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public List<IndicatorInstanceBaseType> indicatorsInstanceDoToBaseType(List<IndicatorInstance> sources, final String baseURL) {
         Assert.notNull(sources);
 
-        List<IndicatorInstanceBaseType> targets = new ArrayList<IndicatorInstanceBaseType>(sources.size());
-        for (IndicatorInstance source : sources) {
-            IndicatorInstanceBaseType target = new IndicatorInstanceBaseType();
-            _indicatorsInstanceDoToType(source, target, baseURL);
-            targets.add(target);
+        try {
+            List<IndicatorInstanceBaseType> targets = new ArrayList<IndicatorInstanceBaseType>(sources.size());
+            for (IndicatorInstance source : sources) {
+                IndicatorInstanceBaseType target = new IndicatorInstanceBaseType();
+                IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid()); // TODO HACER EN UNA CONSULTA
+                _indicatorsInstanceDoToType(source, indicatorVersion, target, baseURL);
+                targets.add(target);
+            }
+            return targets;
+        } catch (MetamacException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
-        return  targets;
     }
 
     @Override
@@ -147,7 +180,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
+
     @Override
     public List<IndicatorBaseType> indicatorDoToBaseType(final List<IndicatorVersion> sources, final String baseURL) {
         Assert.notNull(sources);
@@ -158,12 +191,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 _indicatorDoToType(source, target, baseURL);
                 targets.add(target);
             }
-            return  targets;
+            return targets;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
+
     @Override
     public MetadataGranularityType geographicalGranularityDoToType(GeographicalGranularity geographicalGranularity) {
         MetadataGranularityType metadataGranularityType = new MetadataGranularityType();
@@ -171,7 +204,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         metadataGranularityType.setTitle(MapperUtil.getLocalisedLabel(geographicalGranularity.getTitle()));
         return metadataGranularityType;
     }
-    
+
     @Override
     public List<MetadataGranularityType> geographicalGranularityDoToType(List<GeographicalGranularity> geographicalGranularities) {
         if (CollectionUtils.isEmpty(geographicalGranularities)) {
@@ -184,7 +217,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return geographicalGranularityTypes;
     }
-    
+
     @Override
     public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities) {
         if (CollectionUtils.isEmpty(timeGranularities)) {
@@ -199,7 +232,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return timeGranularityTypes;
     }
-    
+
     @Override
     public List<ThemeType> subjectDoToType(final List<Subject> subjects) {
         if (CollectionUtils.isEmpty(subjects)) {
@@ -210,16 +243,225 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             ThemeType themeType = new ThemeType();
             themeType.setCode(subject.getId());
             Map<String, String> title = new LinkedHashMap<String, String>();
-            title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle());  // title only in spanish
+            title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle()); // title only in spanish
             themeType.setTitle(title);
             themeTypes.add(themeType);
         }
         return themeTypes;
     }
+
+    @Override
+    public DataType createDataType(DataTypeRequest dataTypeRequest) {
+        requestCache.remove(); // Remove All Cache
+        try {
+            List<GeographicalValue> geographicalValues = dataTypeRequest.getGeographicalValues();
+            List<TimeValue> timeValues  = dataTypeRequest.getTimeValues();
+            List<MeasureValue> measureValues = dataTypeRequest.getMeasureValues();
+            Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservationMap();
+            
+            // TRANSFORM
+            Integer size = geographicalValues.size() * timeValues.size() * measureValues.size();
+            
+            List<String> format = new ArrayList<String>();
+            Map<String, DataDimensionType> dimension = new LinkedHashMap<String, DataDimensionType>();
+            List<String> observations = new ArrayList<String>(size);
+            List<Map<String, AttributeType>> attributes = new ArrayList<Map<String,AttributeType>>(size);
     
+            format.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
+            format.add(IndicatorDataDimensionTypeEnum.TIME.name());
+            format.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
+    
+            DataRepresentationType dataRepresentationTypeGeographical = new DataRepresentationType();
+            dataRepresentationTypeGeographical.setSize(geographicalValues.size());
+            dataRepresentationTypeGeographical.setIndex(new LinkedHashMap<String, Integer>());
+            DataDimensionType dataDimensionTypeGeographical = new DataDimensionType();
+            dataDimensionTypeGeographical.setRepresentation(dataRepresentationTypeGeographical);
+            dimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), dataDimensionTypeGeographical);
+    
+            DataRepresentationType dataRepresentationTypeTime = new DataRepresentationType();
+            dataRepresentationTypeTime.setSize(timeValues.size());
+            dataRepresentationTypeTime.setIndex(new LinkedHashMap<String, Integer>());
+            DataDimensionType dataDimensionTypeTime = new DataDimensionType();
+            dataDimensionTypeTime.setRepresentation(dataRepresentationTypeTime);
+            dimension.put(IndicatorDataDimensionTypeEnum.TIME.name(), dataDimensionTypeTime);
+    
+            DataRepresentationType dataRepresentationTypeMeasure = new DataRepresentationType();
+            dataRepresentationTypeMeasure.setSize(measureValues.size());
+            dataRepresentationTypeMeasure.setIndex(new LinkedHashMap<String, Integer>());
+            DataDimensionType dataDimensionTypeMeasure = new DataDimensionType();
+            dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
+            dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
+    
+            for (int i = 0; i < geographicalValues.size(); i++) {
+                GeographicalValue geographicalValue = geographicalValues.get(i);
+                dataRepresentationTypeGeographical.getIndex().put(geographicalValue.getCode(), i);
+    
+                for (int j = 0; j < timeValues.size(); j++) {
+                    TimeValue timeValue = timeValues.get(j);
+                    dataRepresentationTypeTime.getIndex().put(timeValue.getTimeValue(), j);
+    
+                    for (int k = 0; k < measureValues.size(); k++) {
+                        MeasureValue measureValue = measureValues.get(k);
+                        dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
+    
+                        // Observation ID: Be careful!!! don't change order of ids
+                        String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue();
+
+                        ObservationExtendedDto observationDto = observationMap.get(id);
+                        
+                        // PRIMARY MEASURE
+                        observations.add(observationDto.getPrimaryMeasure());
+                        
+                        // ATTRIBUTES
+                        Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
+                        setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationDto, observationAttributes);                        
+                        attributes.add(observationAttributes);
+                    }
+                }
+            }
+    
+            DataType dataType = new DataType();
+            dataType.setFormat(format);
+            dataType.setDimension(dimension);
+            dataType.setObservation(observations);
+            dataType.setAttribute(attributes);
+            return dataType;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        } finally {
+            // Remove All Cache
+            requestCache.remove(); 
+        }
+    }
+    
+
+    private void setUnitAndUnitMultiplier(DataTypeRequest dataTypeRequest, MeasureValue measureValue, ObservationExtendedDto observationDto, Map<String, AttributeType> observationAttributes) throws MetamacException {
+        AttributeBasicDto codeAttributeBasicDto = null;
+        for (AttributeBasicDto aux : observationDto.getAttributes()) {
+            if (aux.getAttributeId().equals(IndicatorDataAttributeTypeEnum.CODE.getName())) {
+                codeAttributeBasicDto = aux;
+                break;
+            }
+        }
+        if (codeAttributeBasicDto != null) {
+            // TODO Esto no tendría que ser un International String
+            DataSource dataSource = null;
+            if (!MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue())) {
+                dataSource = retrieveDatasource(codeAttributeBasicDto.getValue().getTexts().get(0).getLabel());
+            }
+
+            Quantity quantity = null;
+            switch (measureValue.getMeasureValue()) {
+                case ABSOLUTE:
+                    if (dataTypeRequest.getIndicatorInstance() != null) {
+                        IndicatorVersion indicatorVersion = retrieveIndicatorPublished(dataTypeRequest.getIndicatorInstance().getIndicator().getUuid());
+                        quantity = indicatorVersion.getQuantity();
+                    } else if (dataTypeRequest.getIndicatorVersion() != null) {
+                        quantity = dataTypeRequest.getIndicatorVersion().getQuantity();
+                    }
+                    break;
+                case ANNUAL_PERCENTAGE_RATE:
+                    quantity = dataSource.getAnnualPercentageRate() != null ? dataSource.getAnnualPercentageRate().getQuantity() : null;
+                    break;
+                case ANNUAL_PUNTUAL_RATE:
+                    quantity = dataSource.getAnnualPuntualRate() != null ? dataSource.getAnnualPuntualRate().getQuantity() : null;
+                    break;
+                case INTERPERIOD_PERCENTAGE_RATE:
+                    quantity = dataSource.getInterperiodPercentageRate() != null ? dataSource.getInterperiodPercentageRate().getQuantity() : null;
+                    break;
+                case INTERPERIOD_PUNTUAL_RATE:
+                    quantity = dataSource.getInterperiodPuntualRate() != null ? dataSource.getInterperiodPuntualRate().getQuantity() : null;
+                    break;
+            }
+
+            if (quantity != null) {
+                AttributeType unitAttribute = new AttributeType();
+                unitAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL);
+                unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
+                observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
+                
+                AttributeType unitMeasureSymbolAttribute = new AttributeType();
+                unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
+                unitMeasureSymbolAttribute.setValue(MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol()));
+                observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
+                
+                if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) || 
+                    MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
+                    MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
+                    UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
+                    
+                    AttributeType unitMultiplierAttribute = new AttributeType();
+                    unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_UNIT_MULT);
+                    unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
+                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);    
+                }
+            }
+        }
+    }
+    
+    private IndicatorVersion retrieveIndicatorPublished(String uuid) {
+        try {
+            Assert.notNull(uuid, "UUID is required");
+            
+            Map<String, Object> indicatorVersionCache =  getRequestCache(REQUEST_CACHE_INDICATIOR_VERSION);
+            IndicatorVersion indicatorVersion = (IndicatorVersion) indicatorVersionCache.get(uuid);
+            if (indicatorVersion == null) {
+                indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid);
+                indicatorVersionCache.put(uuid, indicatorVersion);
+            }
+            return indicatorVersion;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+        
+    }
+    
+
+    private DataSource retrieveDatasource(String uuid) {
+        try {
+            Assert.notNull(uuid, "UUID is required");
+            
+            Map<String, Object> datasourceCache =  getRequestCache(REQUEST_CACHE_DATASOURCE);
+            DataSource dataSource = (DataSource) datasourceCache.get(uuid);
+            if (dataSource == null) {
+                dataSource = indicatorsService.retrieveDataSource(RestConstants.SERVICE_CONTEXT, uuid);
+                datasourceCache.put(uuid, dataSource);
+            }
+            return dataSource;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+    
+    private UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierId) {
+        try {
+            Assert.notNull(unitMultiplierId, "unitMultiplierId is required");
+            
+            Map<String, Object> unitMultiplierCache = getRequestCache(REQUEST_CACHE_UNITMULTIPLIER);
+            UnitMultiplier unitMultiplier = (UnitMultiplier)unitMultiplierCache.get(unitMultiplierId.toString());
+            if (unitMultiplier == null) {
+                unitMultiplier = indicatorsService.retrieveUnitMultiplier(RestConstants.SERVICE_CONTEXT, unitMultiplierId);
+                unitMultiplierCache.put(unitMultiplierId.toString(), unitMultiplier);
+            }
+            return unitMultiplier;
+        } catch (Exception e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+    
+    
+    private Map<String, Object> getRequestCache(String name) {
+        Map<String, Object> requestCacheInstance = requestCache.get().get(name);
+        if (requestCacheInstance == null) {
+            requestCacheInstance = new HashMap<String, Object>();
+            requestCache.get().put(name, requestCacheInstance);
+        }
+        return requestCacheInstance;
+    }
+
     private QuantityType quantityDoToBaseType(final Quantity source, final String baseURL) {
         Assert.notNull(source);
-        
+
         QuantityType quantityType = new QuantityType();
         quantityType.setType(source.getQuantityType());
         if (source.getUnit() != null) {
@@ -231,14 +473,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         quantityType.setDecimalPlaces(source.getDecimalPlaces());
         quantityType.setMin(source.getMinimum());
         quantityType.setMax(source.getMaximum());
-        
+
         if (source.getDenominator() != null) {
             quantityType.setDenominatorLink(_createLinkType(source.getDenominator(), baseURL));
         }
         if (source.getNumerator() != null) {
             quantityType.setNumeratorLink(_createLinkType(source.getNumerator(), baseURL));
         }
-        
+
         quantityType.setIsPercentage(source.getIsPercentage());
         quantityType.setPercentageOf(MapperUtil.getLocalisedLabel(source.getPercentageOf()));
         quantityType.setBaseValue(source.getBaseValue());
@@ -249,10 +491,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         if (source.getBaseQuantity() != null) {
             quantityType.setBaseQuantityLink(_createLinkType(source.getBaseQuantity(), baseURL));
         }
-        
+
         return quantityType;
     }
-    
+
     private void _indicatorDoToType(IndicatorVersion source, IndicatorBaseType target, String baseURL) throws Exception {
         target.setId(source.getIndicator().getCode());
         target.setKind(RestConstants.KIND_INDICATOR);
@@ -263,102 +505,137 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setAcronym(MapperUtil.getLocalisedLabel(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle()));
-        
+
         List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsSystemsService.retrieveIndicatorsSystemPublishedForIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
-            List<LinkType> surveyLinks = new ArrayList<LinkType>();           
+            List<LinkType> surveyLinks = new ArrayList<LinkType>();
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
-                String href  = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystemVersion.getIndicatorsSystem(), baseURL);
+                String href = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystemVersion.getIndicatorsSystem(), baseURL);
                 LinkType linkType = new LinkType();
                 linkType.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
                 linkType.setHref(href);
                 surveyLinks.add(linkType);
-            }            
+            }
             target.setSystemSurveyLinks(surveyLinks);
         }
         target.setQuantity(quantityDoToBaseType(source.getQuantity(), baseURL));
         target.setConceptDescription(MapperUtil.getLocalisedLabel(source.getConceptDescription()));
         target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes()));
     }
-    
+
     private void _indicatorDoToType(IndicatorVersion source, IndicatorType target, String baseURL) throws Exception {
         _indicatorDoToType(source, (IndicatorBaseType) target, baseURL);
-        
+
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
-        
-        // GEOGRAPHICAL        
+
+        // GEOGRAPHICAL
         List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        
+
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
-        
+
         // TIME
         List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
         List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
 
-        MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);            
+        MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
-        
+
         // MEASURE
         List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
-      
+        
+        // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
+        Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
+        
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, metadataAttributeUnit);
+        
+        MetadataAttributeType metadataAttributeUnitMult = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MULT, "Multiplicador de la unidad", "Unit Multiplier");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, metadataAttributeUnitMult);
+        
+        MetadataAttributeType metadataAttributeUnitMeasure = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEASURE, "Unidad de medida", "Unit of Measure");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, metadataAttributeUnitMeasure);
+        target.setAttribute(metadataAttributes);
+
         // CHILD LINK
         target.setChildLink(_createLinkTypeIndicatorData(source.getIndicator(), baseURL));
     }
     
-    private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceBaseType target, final String baseURL) {
-        Assert.notNull(source);
+    private MetadataAttributeType createMetadataAttributeType(String code, String spanishLabel, String englishLabel) {        
+        LocalisedString localisedStringES = new LocalisedString();
+        localisedStringES.setLocale("es");
+        localisedStringES.setLabel(spanishLabel);
+        LocalisedString localisedStringEN = new LocalisedString();
+        localisedStringEN.setLocale("en");
+        localisedStringEN.setLabel(englishLabel);
+        InternationalString internationalString = new InternationalString();
+        internationalString.getTexts().add(localisedStringES);
+        internationalString.getTexts().add(localisedStringEN);
+        
+        MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
+        metadataAttributeUnit.setCode(code);
+        metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(internationalString));
+        metadataAttributeUnit.setAttachmentLevel(AttributeAttachmentLevelEnumType.OBSERVATION);
+        return metadataAttributeUnit;
+    }
+
+    private void _indicatorsInstanceDoToType(final IndicatorInstance sourceIndicatorInstance, final IndicatorVersion sourceIndicatorVersion, final IndicatorInstanceBaseType target,
+            final String baseURL) {
+        Assert.notNull(sourceIndicatorInstance);
         Assert.notNull(baseURL);
 
-        IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
+        IndicatorsSystem indicatorsSystem = sourceIndicatorInstance.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
         String parentLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, baseURL);
-        String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source, baseURL);
+        String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, sourceIndicatorInstance, baseURL);
 
-        target.setId(source.getCode());
+        target.setId(sourceIndicatorInstance.getCode());
         target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
         target.setSelfLink(selfLinkURL);
-        
+
         LinkType parentLink = new LinkType();
         parentLink.setKind(RestConstants.KIND_INDICATOR_SYSTEM);
         parentLink.setHref(parentLinkURL);
         target.setParentLink(parentLink);
 
-        target.setTitle(MapperUtil.getLocalisedLabel(source.getTitle()));
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorInstance.getTitle()));
+
+        target.setConceptDescription(MapperUtil.getLocalisedLabel(sourceIndicatorVersion.getConceptDescription()));
     }
-    
+
     private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
         try {
-            _indicatorsInstanceDoToType(source, (IndicatorInstanceBaseType)target, baseURL);
-    
+            IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
+
+            _indicatorsInstanceDoToType(source, indicatorVersion, (IndicatorInstanceBaseType) target, baseURL);
+
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
-            
+
             // GEOGRAPHICAL
             List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
             List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            
+
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
             List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
             List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            
+
             MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
             target.getDimension().put(timeDimension.getCode(), timeDimension);
 
             // MEASURE
             List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            
+
             MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
 
             // DECIMAL PLACES
-            IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
 
             String childLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, source, baseURL);
@@ -387,16 +664,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         geographicaDimension.setRepresentation(_geographicalValueDoToType(geographicalValues));
         return geographicaDimension;
     }
-    
+
     private MetadataDimensionType _createTimeDimension(List<TimeGranularity> timeGranularities, List<TimeValue> timeValues) {
         MetadataDimensionType timeDimension = new MetadataDimensionType();
         timeDimension.setCode(IndicatorDataDimensionTypeEnum.TIME.name());
         timeDimension.setGranularity(timeGranularityDoToType(timeGranularities));
-        //timeDimension.setTitle(MapperUtil.getLocalisedLabel(internationalString));
+        // timeDimension.setTitle(MapperUtil.getLocalisedLabel(internationalString));
         timeDimension.setRepresentation(_timeValueDoToType(timeValues));
         return timeDimension;
     }
-    
+
     private List<MetadataRepresentationType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
@@ -412,7 +689,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return geographicalValueTypes;
     }
-    
+
     private List<MetadataRepresentationType> _timeValueDoToType(List<TimeValue> timeValues) {
         if (CollectionUtils.isEmpty(timeValues)) {
             return null;
@@ -426,7 +703,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return timeValueTypes;
     }
-    
+
     private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureValue> measureValues) {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
@@ -440,7 +717,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return measureValueTypes;
     }
-    
+
     private LinkType _createLinkType(final Indicator indicator, final String baseURL) {
         String href = _createUrlIndicators_Indicator(indicator, baseURL);
         LinkType link = new LinkType();
@@ -448,7 +725,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         link.setHref(href);
         return link;
     }
-    
+
     private LinkType _createLinkTypeIndicatorData(final Indicator indicator, final String baseURL) {
         String href = _createUrlIndicators_Indicator_Data(indicator, baseURL);
         LinkType link = new LinkType();
@@ -456,7 +733,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         link.setHref(href);
         return link;
     }
-    
+
     private void _elementsLevelsDoToType(final List<ElementLevel> sources, IndicatorsSystemType target, final String baseURL) {
         if (CollectionUtils.isEmpty(sources)) {
             return;
@@ -465,7 +742,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         List<ElementLevelType> targetElements = _elementsLevelsDoToType(sources, baseURL);
         target.setElements(targetElements);
     }
-    
+
     private List<ElementLevelType> _elementsLevelsDoToType(final List<ElementLevel> sources, final String baseURL) {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
@@ -478,38 +755,37 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return targetElements;
     }
-    
+
     private ElementLevelType _elementsLevelsDoToType(ElementLevel source, final String baseURL) {
         ElementLevelType target = new ElementLevelType();
-        
+
         if (source.getDimension() != null) {
             target.setId(source.getDimension().getUuid());
             target.setKind(RestConstants.KIND_INDICATOR_DIMENSION);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getDimension().getTitle()));
-        } else{
+        } else {
             target.setId(source.getIndicatorInstance().getCode());
             target.setKind(RestConstants.KIND_INDICATOR_INSTANCE);
             target.setTitle(MapperUtil.getLocalisedLabel(source.getIndicatorInstance().getTitle()));
-            
+
             IndicatorsSystem indicatorsSystem = source.getIndicatorsSystemVersion().getIndicatorsSystem();
             String selfLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, source.getIndicatorInstance(), baseURL);
             target.setSelfLink(selfLinkURL);
         }
-        
+
         List<ElementLevelType> targetSubElements = _elementsLevelsDoToType(source.getChildren(), baseURL);
         target.setElements(targetSubElements);
-        
+
         return target;
     }
 
-    
     private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
         _operationBaseDoToType(sourceOperationBase, target, baseURL);
         return target;
     }
-    
+
     private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
         IndicatorsSystemType target = new IndicatorsSystemType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
@@ -517,9 +793,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         _elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target, baseURL);
         return target;
     }
-    
-    
-    
+
     private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemBaseType target, final String baseURL) {
         String selfLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem(source.getIndicatorsSystem(), baseURL);
 
@@ -533,19 +807,19 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // statisticalOperatioLink.setHref(sourceOperationBase.getUri()); // TODO Put when Operation Rest API is available
         target.setStatisticalOperationLink(statisticalOperatioLink);
     }
-    
+
     private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemType target, final String baseURL) {
-        _indicatorsSystemDoToType(source, (IndicatorsSystemBaseType)target, baseURL);
+        _indicatorsSystemDoToType(source, (IndicatorsSystemBaseType) target, baseURL);
 
         String childLinkURL = _createUrlIndicatorsSystems_IndicatorsSystem_Instances(source.getIndicatorsSystem(), baseURL);
-        
+
         LinkType childLink = new LinkType();
         childLink.setKind(RestConstants.KIND_INDICATOR_INSTANCES);
         childLink.setHref(childLinkURL);
-        
+
         target.setChildLink(childLink);
     }
-    
+
     private void _operationBaseDoToType(OperationBase sourceOperationBase, IndicatorsSystemBaseType target, final String baseURL) {
         target.setId(sourceOperationBase.getCode());
         target.setCode(sourceOperationBase.getCode());
@@ -554,32 +828,31 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDescription(MapperUtil.getLocalisedLabel(sourceOperationBase.getDescription()));
         target.setObjective(MapperUtil.getLocalisedLabel(sourceOperationBase.getObjective()));
     }
-    
-    
+
     private String _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
-        _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);        
+        _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);
         return uriComponentsBuilder.build().encode().toUriString();
     }
-    
+
     private String _createUrlIndicatorsSystems_IndicatorsSystem_Instances(final IndicatorsSystem indicatorsSystem, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
         return uriComponentsBuilder.build().encode().toUriString();
     }
-    
+
     private String _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
         return uriComponentsBuilder.build().encode().toUriString();
     }
-    
+
     private String _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
         return uriComponentsBuilder.build().encode().toUriString();
     }
-    
+
     private String _createUrlIndicators_Indicator(final Indicator indicator, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
         _createUrlIndicators_Indicator(indicator, uriComponentsBuilder);
@@ -597,56 +870,55 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
     }
-    
+
     private void _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems(uriComponentsBuilder);
-        
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicatorsSystem.getCode());        
-    }    
 
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(indicatorsSystem.getCode());
+    }
 
     private void _createUrlIndicatorsSystems_IndicatorsSystem_Instances(final IndicatorsSystem indicatorsSystem, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem(indicatorsSystem, uriComponentsBuilder);
-        
+
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES);
     }
-    
-    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final UriComponentsBuilder uriComponentsBuilder) {
+
+    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
+            final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
-        
+
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(indicatorsInstance.getCode());
     }
-    
-    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance, final UriComponentsBuilder uriComponentsBuilder) {
+
+    private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
+            final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
-        
+
         uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA);   
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_INSTANCES_DATA);
     }
-    
+
     private void _createUrlIndicators(UriComponentsBuilder uriComponentsBuilder) {
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS);
     }
-    
-    
+
     private void _createUrlIndicators_Indicator(final Indicator indicator, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicators(uriComponentsBuilder);
-        
+
         uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(indicator.getCode());        
-    } 
+        uriComponentsBuilder.path(indicator.getCode());
+    }
 
     private void _createUrlIndicators_Indicator_Data(final Indicator indicator, final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicators_Indicator(indicator, uriComponentsBuilder);
-        
-        uriComponentsBuilder.path(RestConstants.API_SLASH);
-        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_DATA);        
-    } 
 
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_DATA);
+    }
 
 }

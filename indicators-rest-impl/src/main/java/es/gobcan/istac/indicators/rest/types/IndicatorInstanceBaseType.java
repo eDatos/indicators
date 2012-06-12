@@ -10,21 +10,23 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "kind",
     "selfLink",
     "parentLink",
-    "title"
+    "title",
+    "conceptDescription"
 })
 public class IndicatorInstanceBaseType implements Serializable {
 
     /**
      * 
      */
-    private static final long   serialVersionUID = -2902494676944136458L;
+    private static final long   serialVersionUID   = -2902494676944136458L;
 
-    private String              id               = null;
-    private String              kind             = null;
-    private String              selfLink         = null;
-    private LinkType            parentLink       = null;
+    private String              id                 = null;
+    private String              kind               = null;
+    private String              selfLink           = null;
+    private LinkType            parentLink         = null;
 
-    private Map<String, String> title            = null;
+    private Map<String, String> title              = null;
+    private Map<String, String> conceptDescription = null;
 
     public String getId() {
         return id;
@@ -64,6 +66,14 @@ public class IndicatorInstanceBaseType implements Serializable {
 
     public void setTitle(Map<String, String> title) {
         this.title = title;
+    }
+
+    public Map<String, String> getConceptDescription() {
+        return conceptDescription;
+    }
+
+    public void setConceptDescription(Map<String, String> conceptDescription) {
+        this.conceptDescription = conceptDescription;
     }
 
 }

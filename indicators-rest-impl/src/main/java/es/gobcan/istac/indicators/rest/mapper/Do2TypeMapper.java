@@ -8,6 +8,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.rest.types.DataType;
 import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
@@ -39,5 +40,8 @@ public interface Do2TypeMapper {
     
     // Subjects
     public List<ThemeType> subjectDoToType(List<Subject> subjects);
+    
+    // Data
+    public DataType createDataType(DataTypeRequest dataTypeRequest);
 
 }

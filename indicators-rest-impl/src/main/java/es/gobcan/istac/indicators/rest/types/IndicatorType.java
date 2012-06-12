@@ -19,6 +19,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "conceptDescription",
     "notes",
     "dimension",
+    "attribute",
     "childLink"
 })
 public class IndicatorType extends IndicatorBaseType implements Serializable {
@@ -29,6 +30,7 @@ public class IndicatorType extends IndicatorBaseType implements Serializable {
     private static final long                  serialVersionUID = 8209440349762494817L;
 
     private Map<String, MetadataDimensionType> dimension        = null;
+    private Map<String, MetadataAttributeType> attribute        = null;
     private LinkType                           childLink        = null;
 
     public Map<String, MetadataDimensionType> getDimension() {
@@ -37,6 +39,14 @@ public class IndicatorType extends IndicatorBaseType implements Serializable {
 
     public void setDimension(Map<String, MetadataDimensionType> dimension) {
         this.dimension = dimension;
+    }
+
+    public Map<String, MetadataAttributeType> getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Map<String, MetadataAttributeType> attribute) {
+        this.attribute = attribute;
     }
 
     public LinkType getChildLink() {
