@@ -20,7 +20,7 @@
 
 
 	<!-- Configure Externalized Logging configuration file -->
-	<bean id="loggingSetup" class="es.gobcan.istac.indicators.web.server.logging.LoggingSetup">
+	<bean id="loggingSetup" class="org.siemac.metamac.core.common.logging.LoggingSetup">
 		<property name="logConfigurationFile" value="${environment.indicators.data}/conf/dynamic/logback-indicators-internal-web.xml"/>
 	</bean>
 
