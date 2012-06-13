@@ -235,7 +235,10 @@
                 var observation = this.data.observation[index];
                 var res;
                 if (observation) {
-                    res = parseFloat(observation).toFixed(decimalPlaces);
+                    res = observation;
+                    // No need to be fixed anymore, the api return the correct value
+                    //res = parseFloat(observation).toFixed(decimalPlaces);
+
                     res = res.replace("\.", ",");
                     res = addThousandSeparator(res);
                 } else {
