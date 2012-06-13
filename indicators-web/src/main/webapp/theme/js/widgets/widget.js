@@ -4,26 +4,30 @@
 ;
 (function(undefined){
 
+    var $tooltip = $('<p class="istact-widget-tooltip"></p>');
+    $("body").append($tooltip);
+
     function tooltip($el, text){
         var xOffset = 10;
         var yOffset = 20;
 
-        var $tooltip = $('<p class="istact-widget-tooltip">'+ text +'</p>');
-        $el.hover(function(e){
-                $("body").append($tooltip);
+        if(text){
+            $tooltip.text(text);
+            $el.hover(function(e){
+                    $tooltip
+                        .css("top",(e.pageY - xOffset) + "px")
+                        .css("left",(e.pageX + yOffset) + "px")
+                        .fadeIn("fast");
+                },
+                function(){
+                    $tooltip.fadeOut("fast");
+                });
+            $el.mousemove(function(e){
                 $tooltip
                     .css("top",(e.pageY - xOffset) + "px")
-                    .css("left",(e.pageX + yOffset) + "px")
-                    .fadeIn("fast");
-            },
-            function(){
-                $tooltip.remove();
+                    .css("left",(e.pageX + yOffset) + "px");
             });
-        $el.mousemove(function(e){
-            $tooltip
-                .css("top",(e.pageY - xOffset) + "px")
-                .css("left",(e.pageX + yOffset) + "px");
-        });
+        }
     }
 
 
@@ -142,16 +146,14 @@
         return Class;
     };
 
-    var Dataset = Class.extend({
+    var Dataset = function(apiUrl){
+        this.data = {}
+        this.structure = {};
+        this.apiUrl = apiUrl;
+    };
 
-        _cache : [],
-
-        init : function(apiUrl){
-            this.data = {}
-            this.structure = {};
-            this.apiUrl = apiUrl;
-        },
-
+    Dataset._cache = {};
+    $.extend(Dataset.prototype, {
         fetch : function(systemid, indicatorid, callback){
             var self = this;
             this.systemid = systemid;
@@ -228,6 +230,23 @@
             return null;
         },
 
+        getUnit : function (geo, time, measure) {
+            if(this.data.attribute) {
+                var index = this.getObservationIndex(geo, time, measure);
+                var attribute = this.data.attribute[index];
+
+                if(attribute){
+                    var result = "";
+                    if(attribute.UNIT_MULT !== undefined && attribute.UNIT_MULT.value.__default__ !== "Unidades"){
+                        result = result + attribute.UNIT_MULT.value.__default__ + " de ";
+                    }
+                    result = result + attribute.UNIT_MEAS_DETAIL.value.__default__;
+                    return result;
+                }
+            }
+            return "";
+        },
+
         getObservationStr : function(geo, time, measure){
             if(this.data.observation){
                 var index = this.getObservationIndex(geo, time, measure);
@@ -262,6 +281,12 @@
                 }
             }
             return result;
+        },
+
+        getDescription : function () {
+            if(this.structure.conceptDescription){
+                return this.structure.conceptDescription.__default__;
+            }
         },
 
         getTimeValues : function(){
@@ -309,12 +334,12 @@
             if(systemid != undefined && indicatorid != undefined){
                 return systemid + '#' + indicatorid;
             }
-         },
+        },
 
         _getDatasetFromCache : function(systemid, indicatorid){
             var key = this._getCacheKey(systemid, indicatorid);
             if(key){
-                var dataset = this._cache[key];
+                var dataset = Dataset._cache[key];
                 if(dataset){
                     this.data = dataset.data;
                     this.structure = dataset.structure;
@@ -327,7 +352,7 @@
         _saveCache : function(systemid, indicatorid){
             var self = this;
             var key = self._getCacheKey(systemid, indicatorid);
-            self._cache[key] = {
+            Dataset._cache[key] = {
                 data : self.data,
                 structure : self.structure
             };
@@ -335,6 +360,8 @@
 
         _getDatasetFromApi : function(systemid, indicatorid, callback){
             var self = this;
+
+            console.log('getDatasetFromApi ', systemid, indicatorid);
 
             var indicatorUrl = this.apiUrl + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
             var indicatorDataUrl = indicatorUrl + "/data";
@@ -364,8 +391,6 @@
                 callback();
             });
         }
-
-
     });
 
     /*
@@ -732,15 +757,24 @@
             var geographicalValue = this.geographicalValues[0];
 
             var observations = [];
+            var units = [];
             for (var i = 0; i < this.measures.length; i++) {
                 var measure = this.measures[i];
-                var observation = dataset.getObservationStr(geographicalValue, temporalValue, measure);
-                observations.push(observation);
+                var value = dataset.getObservationStr(geographicalValue, temporalValue, measure);
+
+                if(typeof(value) === 'undefined'){
+                    value = '-';
+                }
+
+                var unit = dataset.getUnit(geographicalValue, temporalValue, measure);
+
+                observations.push({value : value, unit : unit});
             }
 
             return {
                 temporalValue : temporalValue,
-                observations : observations
+                observations : observations,
+                units : units
             }
         },
 
@@ -794,22 +828,20 @@
                     var row = '<tr>' +
                     '<th>' +
                         '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
-                            dataset.structure.title.es + ' (' + timeValuesTitles[renderValues.temporalValue] + ')' +
+                            dataset.structure.title.__default__ + ' (' + timeValuesTitles[renderValues.temporalValue] + ')' +
                         '</a>' +
                     '</th>';
 
                     var observations = renderValues.observations;
                     for (var j = 0; j < observations.length; j++) {
-
-                        var value = observations[j];
-                        value = (typeof(value) === 'undefined') ? '-' : value;
-                        row += this._renderTableColumn(value);
+                        var observation = observations[j];
+                        row += this._renderTableColumn('<p class="istact-widget-observation">' + observation.value + '</p><p class="istact-widget-unit">' + observation.unit + '</p>');
                     }
 
                     row += '</tr>';
 
                     var $row = $(row);
-                    tooltip($row, dataset.indicatorid);
+                    tooltip($row, dataset.getDescription());
 
                     $tbody.append($row);
                 };
@@ -832,7 +864,7 @@
             link.media = 'all';
             head.appendChild(link);
         }
-    }
+    };
 
     var loadJS = function(condition, url){
         if (condition) {
@@ -841,7 +873,7 @@
             script.src = url;
             head.appendChild(script);
         }
-    }
+    };
 
     var loadResources = function(url){
         loadCSS('istac-widget-css', url + '/theme/css/widgets.css');

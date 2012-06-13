@@ -78,3 +78,11 @@
     color:#333;
     display:none;
 }
+
+.istac-widget p.istact-widget-unit {
+    margin-bottom : 0;
+}
+
+.istac-widget p.istact-widget-observation {
+    margin-bottom : 0;
+}
