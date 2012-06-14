@@ -114,7 +114,7 @@
         <metamac-web-common.version>1.1.1-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations-ws-int-api.version>1.0.1-SNAPSHOT</metamac-statistical-operations-ws-int-api.version>
         <metamac-statistical-operations-ws-ext-api.version>1.0.1-SNAPSHOT</metamac-statistical-operations-ws-ext-api.version>
-        <metamac-sso-client.version>1.1.1-SNAPSHOT</metamac-sso-client.version>
+        <metamac-sso-client.version>1.1.0</metamac-sso-client.version>
 
     </properties>
 
@@ -776,8 +776,26 @@
     </dependencyManagement>
 
     <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <inherited>true</inherited>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                    <configuration>
+                        <updateReleaseInfo>true</updateReleaseInfo>
+                    </configuration>
+                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -810,13 +828,35 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.2.2</version>
+                    <version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
                     <configuration>
                         <tagNameFormat>${maven.build.timestamp}-v@{project.version}</tagNameFormat>
-                        <autoversionsubmodules>true</autoversionsubmodules>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>indicators-perform-release</releaseProfiles>
+                        <providerImplementations>
+                            <svn>javasvn</svn>
+                        </providerImplementations>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+                            <artifactId>maven-scm-provider-svnjava</artifactId>
+                            <version>2.0</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.tmatesoft.svnkit</groupId>
+                                    <artifactId>svnkit</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.tmatesoft.svnkit</groupId>
+                            <artifactId>svnkit</artifactId>
+                            <version>1.7.4-v1</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
                 <plugin>
@@ -835,6 +875,15 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.1.2</version>
+                    <executions>
+                        <execution>
+                            <id>attach-source</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <!-- TO avoid ERROR: Plugin execution not covered by lifecycle configuration: org.fornax.toolsupport:fornax-oaw-m2-plugin:3.2.3:run-workflow (execution: default, phase: generate-sources) SEE:
@@ -943,81 +992,5 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>arte-prepare-release</id>
-            <activation>
-                <property>
-                    <name>artePrepareRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.1.2</version>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Not configured yet, but should be configured here in the future if needed -->
-        <profile>
-            <id>arte-perform-release</id>
-            <activation>
-                <property>
-                    <name>artePerformRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-        </profile>
-
-        <profile>
-            <id>development</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.1.2</version>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.8</version>
-                        <configuration>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <links>
-                                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                            </links>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
 
 </project>

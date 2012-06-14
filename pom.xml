@@ -37,46 +37,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>arte-prepare-release</id>
-
-            <activation>
-                <property>
-                    <name>artePrepareRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.1.2</version>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Not configured yet, but should be configured here if needed -->
-        <profile>
-            <id>arte-perform-release</id>
-            <activation>
-                <property>
-                    <name>artePerformRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-        </profile>
-    </profiles>
-
 </project>
