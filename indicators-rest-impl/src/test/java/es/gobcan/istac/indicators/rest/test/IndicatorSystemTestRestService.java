@@ -46,6 +46,8 @@ public class IndicatorSystemTestRestService {
     private WebApplicationContext wac     = null;
 
     private MockMvc               mockMvc = null;
+    
+    // TODO TESTEAR QUE AL FILTRAR SE OBTIENEN TANTAS OBSERVACIONES COMO SE ESPERAN
 
     //@SuppressWarnings("unchecked")
     @Before

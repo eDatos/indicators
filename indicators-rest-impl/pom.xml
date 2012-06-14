@@ -25,7 +25,7 @@
             <artifactId>metamac-statistical-operations-ws-ext-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.siemac.metamac</groupId>
+            <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
         </dependency>
 

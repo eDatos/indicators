@@ -134,9 +134,8 @@
 
         <!-- METAMAC SSO -->
         <dependency>
-            <groupId>org.siemac.metamac</groupId>
+            <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
-            <version>${metamac-sso-client.version}</version>
         </dependency>
 
         <!-- CAS -->
@@ -264,7 +263,7 @@
                     <compileSourcesArtifacts>
                         <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
                         <artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
-                        <artifact>org.siemac.metamac:metamac-sso-client:jar</artifact>
+                        <artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
                         <artifact>es.gobcan.istac.indicators:indicators-core:jar:client</artifact>
                     </compileSourcesArtifacts>
                 </configuration>

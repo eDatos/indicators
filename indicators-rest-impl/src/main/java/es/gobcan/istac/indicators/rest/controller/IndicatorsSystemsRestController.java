@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.rest.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,7 @@ import es.gobcan.istac.indicators.rest.types.NoPagedResultType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
+import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Controller("indicatorsSystemsRestController")
 @RequestMapping("/api/indicators/v1.0/indicatorsSystems/*")
@@ -104,9 +108,13 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
                                                                     @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                    @PathVariable("idIndicatorInstance") final String idIndicatorInstance) throws Exception {
+                                                                    @PathVariable("idIndicatorInstance") final String idIndicatorInstance,
+                                                                    @RequestParam(required=false, value="representation") final String representation,
+                                                                    @RequestParam(required=false, value="granularity") final String granularity) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
-        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance);
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }

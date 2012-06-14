@@ -21,7 +21,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
@@ -33,6 +32,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.IndicatorType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.ConditionUtil;
 import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
 
 @Service("indicatorRestFacade")
@@ -85,85 +85,13 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
                    
         List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
-        filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
-        filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
+        ConditionUtil.filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
+        ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
+        ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
+        
         Map<String, ObservationExtendedDto> observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorPublished(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
         
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, geographicalValues, timeValues, measureValues, observationMap);
         return dto2TypeMapper.createDataType(dataTypeRequest);
-    }
-
-    private void filterTimeValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<TimeValue> timeValues, List<ConditionDimensionDto> conditionDimensionDtos) {
-        List<String> timeSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
-        List<String> timeSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
-        
-        if ((timeSelectedValues != null && timeSelectedValues.size() != 0) ||
-            (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0)) {
-            List<TimeValue> timeValuesNew = new ArrayList<TimeValue>();
-            ConditionDimensionDto timeConditionDimensionDto = new ConditionDimensionDto();
-            timeConditionDimensionDto.setDimensionId(IndicatorDataDimensionTypeEnum.TIME.name());
-            
-            for (TimeValue timeValue : timeValues) {
-                // Granularity
-                if (timeSelectedGranularities != null && timeSelectedGranularities.size() != 0) {
-                    if (!timeSelectedGranularities.contains(timeValue.getGranularity().getName())) {
-                        continue;
-                    }
-                }
-                
-                // Value
-                if (timeSelectedValues != null && timeSelectedValues.size() != 0) {
-                    if (!timeSelectedValues.contains(timeValue.getTimeValue())) {
-                        continue;
-                    }
-                }
-                
-                timeConditionDimensionDto.getCodesDimension().add(timeValue.getTimeValue());
-                timeValuesNew.add(timeValue);
-            }
-            
-            conditionDimensionDtos.add(timeConditionDimensionDto);
-            if (timeValuesNew.size() > 0) {
-                timeValues = timeValuesNew;
-            }
-        }
-    }
-
-    private void filterGeographicalValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<GeographicalValue> geographicalValues, List<ConditionDimensionDto> conditionDimensionDtos) {
-        // GEOGRAPHICAL
-        List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        List<String> geographicalSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        
-        if ((geographicalSelectedValues != null && geographicalSelectedValues.size() != 0) ||
-            (geographicalSelectedGranularities != null && geographicalSelectedGranularities.size() != 0)) {
-            
-            List<GeographicalValue> geographicalValuesNew = new ArrayList<GeographicalValue>();
-            ConditionDimensionDto geographicalConditionDimensionDto = new ConditionDimensionDto();
-            geographicalConditionDimensionDto.setDimensionId(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-            
-            for (GeographicalValue geographicalValue : geographicalValues) {
-                // Granularity
-                if (geographicalSelectedGranularities != null && geographicalSelectedGranularities.size() != 0) {
-                    if (!geographicalSelectedGranularities.contains(geographicalValue.getGranularity().getCode())) {
-                        continue;
-                    }
-                }
-                
-                // Value
-                if (geographicalSelectedValues != null && geographicalSelectedValues.size() != 0) {
-                    if (!geographicalSelectedValues.contains(geographicalValue.getCode())) {
-                        continue;
-                    }
-                }
-                
-                geographicalConditionDimensionDto.getCodesDimension().add(geographicalValue.getCode());
-                geographicalValuesNew.add(geographicalValue);
-            }
-            
-            conditionDimensionDtos.add(geographicalConditionDimensionDto);
-            if (geographicalValuesNew.size() > 0) {
-                geographicalValues = geographicalValuesNew;
-            }
-        }
     }
 }

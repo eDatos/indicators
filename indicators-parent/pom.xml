@@ -114,7 +114,7 @@
         <metamac-web-common.version>1.1.1-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations-ws-int-api.version>1.0.1-SNAPSHOT</metamac-statistical-operations-ws-int-api.version>
         <metamac-statistical-operations-ws-ext-api.version>1.0.1-SNAPSHOT</metamac-statistical-operations-ws-ext-api.version>
-        <metamac-sso-client.version>1.0.1-SNAPSHOT</metamac-sso-client.version>
+        <metamac-sso-client.version>1.1.1-SNAPSHOT</metamac-sso-client.version>
 
     </properties>
 
@@ -465,7 +465,7 @@
 
             <!-- METAMAC -->
             <dependency>
-                <groupId>org.siemac.metamac</groupId>
+                <groupId>org.siemac.metamac.metamac-sso</groupId>
                 <artifactId>metamac-sso-client</artifactId>
                 <version>${metamac-sso-client.version}</version>
             </dependency>

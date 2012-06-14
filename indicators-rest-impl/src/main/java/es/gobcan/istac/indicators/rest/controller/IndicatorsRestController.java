@@ -1,14 +1,8 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +23,7 @@ import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
 import es.gobcan.istac.indicators.rest.types.PagedResultType;
 import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
+import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
 @Controller("indicatorsRestController")
 @RequestMapping("/api/indicators/v1.0/indicators/*")
@@ -79,47 +74,19 @@ public class IndicatorsRestController extends AbstractRestController {
      */
     @RequestMapping(value = "/{indicatorCode}/data", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
+    public ResponseEntity<DataType> retrieveIndicatorData(final UriComponentsBuilder uriComponentsBuilder,
                                                                    @PathVariable("indicatorCode") final String indicatorCode,
                                                                    @RequestParam(required=false, value="representation") final String representation,
                                                                    @RequestParam(required=false, value="granularity") final String granularity) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         
-        Map<String, List<String>> selectedRepresentations = parseParamExpression(representation);
-        Map<String, List<String>> selectedGranularities = parseParamExpression(granularity);
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }
     
-    @SuppressWarnings("unchecked")
-    private Map<String, List<String>> parseParamExpression(String paramExpression) {
-        if (StringUtils.isBlank(paramExpression)) {
-            return MapUtils.EMPTY_MAP;
-        }
 
-        // dimExpression = MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]
-        Pattern patternDimension = Pattern.compile("(\\w+)\\[((\\w\\|?)+)\\]");
-        Pattern patternCode = Pattern.compile("(\\w+)\\|?");
-
-        Matcher matcherDimension = patternDimension.matcher(paramExpression);
-
-        Map<String, List<String>> selectedDimension = new HashMap<String, List<String>>();
-        while (matcherDimension.find()) {
-            String dimIdentifier = matcherDimension.group(1);
-            String codes = matcherDimension.group(2);
-            Matcher matcherCode = patternCode.matcher(codes);
-            while (matcherCode.find()) {
-                List<String> codeDimensions = selectedDimension.get(dimIdentifier);
-                if (codeDimensions == null) {
-                    codeDimensions = new ArrayList<String>();
-                    selectedDimension.put(dimIdentifier, codeDimensions);
-                }
-                String codeIdentifier = matcherCode.group(1);
-                codeDimensions.add(codeIdentifier);
-            }
-        }
-        return selectedDimension;
-    }
     
 }
