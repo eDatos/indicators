@@ -192,6 +192,23 @@
         widgetView.render();
     </script>
 
-
 </div>
+
+
+<!--[if lt IE 8]>
+<script type="text/javascript"
+src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+
+<script>
+    console.log('aja');
+    // The conditional ensures that this code will only execute in IE,
+    // Therefore we can use the IE-specific attachEvent without worry
+    window.attachEvent("onload", function() {
+        CFInstall.check({
+            mode: "overlay"
+         });
+    });
+</script>
+<![endif]-->
+
 [/@template.base]

@@ -1,4 +1,5 @@
 [#ftl]
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=IE8">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />		
 <meta http-equiv="Content-language" content="es" />	
 <meta name="robots" content="all" />
