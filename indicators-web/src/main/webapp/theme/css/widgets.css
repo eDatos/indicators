@@ -70,13 +70,14 @@
     text-decoration: none;
 }
 
-.istact-widget-tooltip{
+.istact-widget-tooltip {
     position:absolute;
     border:1px solid #333;
     background:#fff;
     padding:2px 5px;
     color:#333;
     display:none;
+    font: 11px Arial, Helvetica, sans-serif;
 }
 
 .istac-widget p.istact-widget-unit {

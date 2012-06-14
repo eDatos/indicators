@@ -361,8 +361,6 @@
         _getDatasetFromApi : function(systemid, indicatorid, callback){
             var self = this;
 
-            console.log('getDatasetFromApi ', systemid, indicatorid);
-
             var indicatorUrl = this.apiUrl + "/indicatorsSystems/" + systemid + "/indicatorsInstances/" + indicatorid;
             var indicatorDataUrl = indicatorUrl + "/data";
 
@@ -414,7 +412,11 @@
             this.el = $(options.el);
 
             this.type = options.type;
+
             this.systemId = options.systemId;
+
+
+
             this.indicators = options.indicators || [];
             this.measures = options.measures || this._defaultOptions.measures;
             this.geographicalValues = options.geographicalValues;
@@ -447,7 +449,7 @@
             this.setWidth(options.width);
             this.setShowLabels(options.showLabels);
             this.setShowLegend(options.showLegend);
-
+            this.setSystemId(options.systemId);
         },
 
         setShowLabels : function(showLabels){
