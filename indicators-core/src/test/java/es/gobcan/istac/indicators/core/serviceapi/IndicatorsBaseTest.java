@@ -142,7 +142,11 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
     private void removeCyclicDependences() throws Exception {
         Connection connection = getConnection().getConnection();
-        connection.prepareStatement("UPDATE TB_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
+        try {
+            connection.prepareStatement("UPDATE TB_QUANTITIES SET NUMERATOR_FK = null, DENOMINATOR_FK = null, BASE_QUANTITY_FK = null").execute();
+        } finally {
+            connection.close();
+        }
     }
 
     public static <T> List<T> getList(T... values) {

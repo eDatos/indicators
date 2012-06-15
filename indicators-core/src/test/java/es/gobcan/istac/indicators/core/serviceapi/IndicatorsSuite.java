@@ -19,6 +19,6 @@ import org.junit.runners.Suite.SuiteClasses;
     SecurityIndicatorsServiceFacadeIndicatorsSystemsTest.class,
     SecurityIndicatorsServiceFacadeIndicatorsTest.class
                 })
-public class AllTests {
+public class IndicatorsSuite {
     
 }

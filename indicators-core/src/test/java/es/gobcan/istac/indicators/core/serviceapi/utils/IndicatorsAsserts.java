@@ -105,11 +105,11 @@ public class IndicatorsAsserts {
     }
 
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {
-        MetamacAsserts.assertEqualsInternationalString(expected, actual);
+        MetamacAsserts.assertEqualsInternationalStringDto(expected, actual);
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto internationalStringDto, String locale1, String label1, String locale2, String label2) {
-        MetamacAsserts.assertEqualsInternationalString(internationalStringDto, locale1, label1, locale2, label2);
+        MetamacAsserts.assertEqualsInternationalStringDto(internationalStringDto, locale1, label1, locale2, label2);
     }
     
     public static void assertEqualsDate(String expected, Date actual) {

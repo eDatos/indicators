@@ -104,13 +104,14 @@
         <dbunit.version>2.4.8</dbunit.version>
         <mockito.version>1.9.0</mockito.version>
         <json-path.version>0.5.5</json-path.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
 
         <!-- STATISTIC DATASET REPOSITORY -->
         <statistic-dataset-repository.version>1.0.0</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.1.0</metamac-core-common.version>
-        <metamac-common-test.version>1.0.0</metamac-common-test.version>
+        <metamac-common-test.version>1.1.1-SNAPSHOT</metamac-common-test.version>
         <metamac-web-common.version>1.2.0</metamac-web-common.version>
         <metamac-statistical-operations-ws-int-api.version>1.1.0</metamac-statistical-operations-ws-int-api.version>
         <metamac-statistical-operations-ws-ext-api.version>1.1.0</metamac-statistical-operations-ws-ext-api.version>

@@ -295,61 +295,71 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     private void setUpDatabaseTester(Class<?> clazz, DataSource dataSource, String datasetFileName) throws Exception {
         // Setup database tester
         if (databaseTester == null) {
-            databaseTester = new OracleDataSourceDatabaseTester(dataSource, dataSource.getConnection().getMetaData().getUserName());
+            Connection connection = dataSource.getConnection();
+            try {
+                databaseTester = new OracleDataSourceDatabaseTester(dataSource, connection.getMetaData().getUserName());
+            } finally {
+                connection.close();
+            }
         }
 
-        // Create dataset
-        ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(clazz.getClassLoader().getResource(datasetFileName)));
-        dataSetReplacement.addReplacementObject("[NULL]", null);
-        dataSetReplacement.addReplacementObject("[null]", null);
-        dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
-
-        // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys constraint
-        // violation.
-        // Since version 2.0, the DatabaseSequenceFilter can now be used to automatically determine the tables order using foreign/exported keys information.
-        /*
-         * ITableFilter filter = new DatabaseSequenceFilter(databaseTester.getConnection());
-         * IDataSet dataset = new (filter, dataSetReplacement);
-         */
-
-        // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
-        initializeDatabase(databaseTester.getConnection().getConnection());
-
-        databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-        databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
-        databaseTester.setDataSet(dataSetReplacement);
-        databaseTester.onSetup();
+        IDatabaseConnection dbUnitConnection = databaseTester.getConnection();
+        try {
+            // Create dataset
+            ReplacementDataSet dataSetReplacement = new ReplacementDataSet((new FlatXmlDataSetBuilder()).build(clazz.getClassLoader().getResource(datasetFileName)));
+            dataSetReplacement.addReplacementObject("[NULL]", null);
+            dataSetReplacement.addReplacementObject("[null]", null);
+            dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
+    
+            // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys constraint
+            // violation.
+            // Since version 2.0, the DatabaseSequenceFilter can now be used to automatically determine the tables order using foreign/exported keys information.
+            /*
+             * ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
+             * IDataSet dataset = new (filter, dataSetReplacement);
+             */
+    
+            // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
+            initializeDatabase(dbUnitConnection);
+    
+            databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
+            databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
+            databaseTester.setDataSet(dataSetReplacement);
+            databaseTester.onSetup();
+        } finally {
+            dbUnitConnection.close();
+        }
     }
 
-    private void initializeDatabase(Connection connection) throws Exception {
+    private void initializeDatabase(IDatabaseConnection dbUnitConnection) throws Exception {
         // Remove tables content
-        List<String> tableNamesToDelete = getDSRepoTablesToDelete();
+        List<String> tableNamesToDelete = getDSRepoTablesToDelete(dbUnitConnection);
         for (String tableNameToDelete : tableNamesToDelete) {
-            connection.prepareStatement("DELETE FROM " + tableNameToDelete).execute();
+            dbUnitConnection.getConnection().prepareStatement("DELETE FROM " + tableNameToDelete).execute();
         }
 
-        List<String> sequencesNamesToDrop = getDSRepoSequencesToDrop();
+        List<String> sequencesNamesToDrop = getDSRepoSequencesToDrop(dbUnitConnection);
         for (String sequenceNameToDrop : sequencesNamesToDrop) {
-            connection.prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
+            dbUnitConnection.getConnection().prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
         }
 
-        List<String> tableNamesToDrop = getDSRepoTablesToDrop();
+        List<String> tableNamesToDrop = getDSRepoTablesToDrop(dbUnitConnection);
         for (String tableNameToDrop : tableNamesToDrop) {
-            connection.prepareStatement("DROP TABLE " + tableNameToDrop).execute();
+            dbUnitConnection.getConnection().prepareStatement("DROP TABLE " + tableNameToDrop).execute();
         }
 
         // Restart sequences
         List<String> sequences = getDSRepoSequencesToRestart();
         if (sequences != null) {
             for (String sequence : sequences) {
-                restartSequence(databaseTester.getConnection(), sequence);
+                restartSequence(dbUnitConnection, sequence);
             }
         }
     }
 
-    private List<String> getDSRepoTablesToDrop() throws Exception {
+    private List<String> getDSRepoTablesToDrop(IDatabaseConnection dbUnitConnection) throws Exception {
         List<String> dynamicTables = new ArrayList<String>();
-        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+        for (String tableName : dbUnitConnection.createDataSet().getTableNames()) {
             if (tableName.startsWith("DATA_")) {
                 dynamicTables.add(tableName);
             }
@@ -357,9 +367,9 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return dynamicTables;
     }
 
-    private List<String> getDSRepoSequencesToDrop() throws Exception {
+    private List<String> getDSRepoSequencesToDrop(IDatabaseConnection dbUnitConnection) throws Exception {
         List<String> dynamicTables = new ArrayList<String>();
-        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+        for (String tableName : dbUnitConnection.createDataSet().getTableNames()) {
             if (tableName.startsWith("DATA_")) {
                 String seqName = tableName.replaceFirst("DATA", "SEQ");
                 dynamicTables.add(seqName);
@@ -368,9 +378,9 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return dynamicTables;
     }
 
-    private List<String> getDSRepoTablesToDelete() throws Exception {
+    private List<String> getDSRepoTablesToDelete(IDatabaseConnection dbUnitConnection) throws Exception {
         List<String> dynamicTables = new ArrayList<String>();
-        for (String tableName : databaseTester.getConnection().createDataSet().getTableNames()) {
+        for (String tableName : dbUnitConnection.createDataSet().getTableNames()) {
             if (tableName.startsWith("TB_")) {
                 dynamicTables.add(tableName);
             }
