@@ -3,4 +3,5 @@
 <properties>
   <comment>Indicators environment definition</comment>
   <entry key="environment.indicators.data">/data/istac/indicators</entry>
+  <entry key="environment.istac.data">/data/istac</entry>
 </properties>

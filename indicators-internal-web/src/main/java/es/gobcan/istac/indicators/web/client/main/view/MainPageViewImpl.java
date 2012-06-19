@@ -5,6 +5,7 @@ import java.util.List;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.widgets.ErrorMessagePanel;
+import org.siemac.metamac.web.common.client.widgets.IstacNavBar;
 import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
 
 import com.google.gwt.user.client.Timer;
@@ -77,7 +78,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
                 uiHandlers.closeSession();
             }
         });
-
+        
         // Help section
         masterHead.getHelpLink().addClickHandler(new ClickHandler() {
 
@@ -86,7 +87,13 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
                 uiHandlers.downloadUserGuide();
             }
         });
+        
+        IstacNavBar navBar = new IstacNavBar();
+        northLayout.setZIndex(0);
+        southLayout.setZIndex(0);
+        footerLayout.setZIndex(0);
 
+        panel.addMember(navBar);
         panel.addMember(northLayout);
         panel.addMember(southLayout);
         panel.addMember(footerLayout);
