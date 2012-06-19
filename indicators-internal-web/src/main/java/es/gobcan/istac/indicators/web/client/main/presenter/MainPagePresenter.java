@@ -26,15 +26,14 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
-import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
@@ -65,7 +64,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 
     @ProxyStandard
     @NameToken(NameTokens.mainPage)
-    @UseGatekeeper(LoggedInGatekeeper.class)
+    @NoGatekeeper
     public interface MainProxy extends Proxy<MainPagePresenter>, Place {
     }
 
