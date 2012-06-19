@@ -112,6 +112,7 @@
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.1.0</metamac-core-common.version>
+        <metamac-navbar.version>1.0.0-SNAPSHOT</metamac-navbar.version>
         <metamac-common-test.version>1.1.1-SNAPSHOT</metamac-common-test.version>
         <metamac-web-common.version>1.2.1-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations-ws-int-api.version>1.1.0</metamac-statistical-operations-ws-int-api.version>
@@ -471,6 +472,11 @@
             </dependency>
 
             <!-- METAMAC -->
+            <dependency>
+                <groupId>org.siemac.metamac</groupId>
+                <artifactId>metamac-navbar</artifactId>
+                <version>${metamac-navbar.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.siemac.metamac.metamac-sso</groupId>
                 <artifactId>metamac-sso-client</artifactId>
