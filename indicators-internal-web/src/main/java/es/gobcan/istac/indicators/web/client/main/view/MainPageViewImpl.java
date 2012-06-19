@@ -78,6 +78,15 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
             }
         });
 
+        // Help section
+        masterHead.getHelpLink().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.downloadUserGuide();
+            }
+        });
+
         panel.addMember(northLayout);
         panel.addMember(southLayout);
         panel.addMember(footerLayout);

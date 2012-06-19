@@ -45,6 +45,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetSubjectsListActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeGranularitiesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetTimeValuesInIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetUnitMultipliersActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetUserGuideUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.MoveSystemStructureContentActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PopulateIndicatorDataActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.PublishIndicatorActionHandler;
@@ -103,6 +104,7 @@ import es.gobcan.istac.indicators.web.shared.GetSubjectsListAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetUnitMultipliersAction;
+import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.PopulateIndicatorDataAction;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorAction;
@@ -210,8 +212,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
 
+        bindHandler(GetUserGuideUrlAction.class, GetUserGuideUrlActionHandler.class);
+
         // This action should be removed to use CAS authentication
         bindHandler(MockCASUserAction.class, MockCASUserActionHandler.class);
     }
-
 }

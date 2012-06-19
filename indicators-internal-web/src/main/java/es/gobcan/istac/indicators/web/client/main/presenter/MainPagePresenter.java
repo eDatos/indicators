@@ -17,6 +17,7 @@ import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -34,6 +35,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
@@ -45,6 +47,9 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesResult;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListAction;
 import es.gobcan.istac.indicators.web.shared.GetQuantityUnitsListResult;
+import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetUserGuideUrlResult;
+import es.gobcan.istac.indicators.web.shared.SharedTokens;
 
 public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, MainPagePresenter.MainProxy> implements ShowMessageHandler, HideMessageHandler, MainPageUiHandlers, SetTitleHandler {
 
@@ -155,6 +160,24 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             @Override
             public void onSuccess(CloseSessionResult result) {
                 Window.Location.assign(result.getLogoutPageUrl());
+            }
+        });
+    }
+
+    @Override
+    public void downloadUserGuide() {
+        dispatcher.execute(new GetUserGuideUrlAction(), new WaitingAsyncCallback<GetUserGuideUrlResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingUserGuide()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetUserGuideUrlResult result) {
+                StringBuffer url = new StringBuffer();
+                url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
+                url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(result.getUserGuideUrl()));
+                Window.open(url.toString(), "_blank", "");
             }
         });
     }

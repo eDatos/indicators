@@ -30,6 +30,15 @@
         <url-pattern>/dispatch/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>download</servlet-name>
+        <servlet-class>es.gobcan.istac.indicators.web.server.servlet.FileDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>download</servlet-name>
+        <url-pattern>/files/download/*</url-pattern>
+    </servlet-mapping>
+
     <!-- Remote logging -->
     <servlet>
         <servlet-name>remoteLogging</servlet-name>

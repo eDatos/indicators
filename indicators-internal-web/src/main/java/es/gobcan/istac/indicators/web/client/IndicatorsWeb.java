@@ -139,4 +139,29 @@ public class IndicatorsWeb extends MetamacEntryPoint {
         return constants;
     }
 
+    public static final String LOCAL_HOST  = GWT.getHostPageBaseURL();
+    public static final String REMOTE_HOST = GWT.getHostPageBaseURL();
+
+    public static String getRelativeURL(String url) {
+        String realModuleBase;
+
+        if (GWT.isScript()) {
+            String moduleBase = GWT.getModuleBaseURL();
+
+            // Use for deployment to PRODUCTION server
+            realModuleBase = REMOTE_HOST;
+
+            // Use to test compiled browser locally
+            if (moduleBase.indexOf("localhost") != -1) {
+                realModuleBase = LOCAL_HOST;
+            }
+        } else {
+            // This is the URL for GWT Hosted mode
+            realModuleBase = LOCAL_HOST;
+
+        }
+
+        return realModuleBase + url;
+    }
+
 }
