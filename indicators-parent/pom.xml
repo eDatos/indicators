@@ -472,11 +472,6 @@
 
             <!-- METAMAC -->
             <dependency>
-                <groupId>org.siemac.metamac</groupId>
-                <artifactId>metamac-navbar</artifactId>
-                <version>${metamac-navbar.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.siemac.metamac.metamac-sso</groupId>
                 <artifactId>metamac-sso-client</artifactId>
                 <version>${metamac-sso-client.version}</version>
