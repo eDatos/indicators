@@ -120,10 +120,6 @@
         </dependency>
 
         <!-- METAMAC -->
-		<dependency>
-            <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-navbar</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-web-common</artifactId>
