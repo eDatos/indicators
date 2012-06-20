@@ -32,18 +32,18 @@ public class FileDownloadServlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        logger.info("FileDownload Servlet");
-        tmpDir = new File(((File) getServletContext().getAttribute("javax.servlet.context.tempdir")).toString());
-        if (!tmpDir.isDirectory()) {
-            throw new ServletException(tmpDir.toString() + " is not a directory");
-        }
-        logger.info("tmpDir: " + tmpDir.toString());
-        String realPath = getServletContext().getRealPath("/" + SharedTokens.FILE_DOWNLOAD_DIR_PATH);
-        destinationDir = new File(realPath);
-        if (!destinationDir.isDirectory()) {
-            throw new ServletException(SharedTokens.FILE_DOWNLOAD_DIR_PATH + " is not a directory");
-        }
-        logger.info("destinationDir: " + destinationDir.toString());
+        // logger.info("FileDownload Servlet");
+        // tmpDir = new File(((File) getServletContext().getAttribute("javax.servlet.context.tempdir")).toString());
+        // if (!tmpDir.isDirectory()) {
+        // throw new ServletException(tmpDir.toString() + " is not a directory");
+        // }
+        // logger.info("tmpDir: " + tmpDir.toString());
+        // String realPath = getServletContext().getRealPath("/" + SharedTokens.FILE_DOWNLOAD_DIR_PATH);
+        // destinationDir = new File(realPath);
+        // if (!destinationDir.isDirectory()) {
+        // throw new ServletException(SharedTokens.FILE_DOWNLOAD_DIR_PATH + " is not a directory");
+        // }
+        // logger.info("destinationDir: " + destinationDir.toString());
     }
 
     @Override
