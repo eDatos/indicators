@@ -16,7 +16,7 @@ public class RestConstants {
     public static String         KIND_INDICATOR_INSTANCE_DATA             = "indicators#indicatorInstanceData";
     public static String         KIND_INDICATOR_DIMENSION                 = "indicators#dimension";
 
-    public static String         KIND_STATISTICAL_OPERATION               = "statisticaOperation#operation";              // TODO
+    public static String         KIND_STATISTICAL_OPERATION               = "statisticalOperation#operation";              // TODO
 
     public static String         API_SLASH                                = "/";
     public static String         API_INDICATORS_BASE                      = "/api/indicators/v1.0";
