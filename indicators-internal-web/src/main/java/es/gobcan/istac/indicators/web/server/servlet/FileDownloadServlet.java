@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,10 +24,10 @@ import es.gobcan.istac.indicators.web.shared.SharedTokens;
 @SuppressWarnings("serial")
 public class FileDownloadServlet extends HttpServlet {
 
-    private static Logger logger = Logger.getLogger(FileDownloadServlet.class.getName());
-
-    private File          tmpDir;
-    private File          destinationDir;
+    // private static Logger logger = Logger.getLogger(FileDownloadServlet.class.getName());
+    //
+    // private File tmpDir;
+    // private File destinationDir;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
