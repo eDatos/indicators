@@ -57,6 +57,7 @@ public class SystemGeneralPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = mainFormLayout.getTranslateToolStripButton().isSelected();
                 identifiersForm.setTranslationsShowed(translationsShowed);
+                contentForm.setTranslationsShowed(translationsShowed);
             }
         });
 
