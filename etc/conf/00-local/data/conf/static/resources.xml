@@ -7,4 +7,5 @@
 	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/metamac/statistical/operations/internal/v1.0/metamacStatisticalOperationsInternalInterface</entry>
     <entry key="indicators.ws.metamac.statistical.operations.external.endpoint">http://localhost:8080/metamac-statistical-operations-external-web/ws/metamac/statistical/operations/external/v1.0/metamacStatisticalOperationsExternalInterface</entry>
     <entry key="indicators.user.guide.file.name">INDICADORES_ManualUsuario.pdf</entry>
+    <entry key="indicators.internal.edition.languages">es,pt,en</entry>
 </properties>

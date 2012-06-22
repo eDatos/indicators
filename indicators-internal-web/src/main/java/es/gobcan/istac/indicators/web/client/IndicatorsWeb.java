@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
+import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.widgets.IstacNavBar;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
@@ -18,6 +19,8 @@ import com.google.gwt.user.client.Window;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
 
 import es.gobcan.istac.indicators.web.client.gin.IndicatorsWebGinjector;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
+import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlResult;
 
@@ -41,15 +44,12 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             @Override
             public void onWaitFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error loading toolbar");
-
-                checkAuthentication();
+                loadNonSecuredApplication();
             }
-
             public void onWaitSuccess(GetNavigationBarUrlResult result) {
                 // Load scripts for navigation bar
                 IstacNavBar.loadScripts(result.getNavigationBarUrl());
-
-                checkAuthentication();
+                loadNonSecuredApplication();
             };
         });
 
@@ -57,7 +57,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
 
     // TODO This method should be removed to use CAS authentication
     // Application id should be the same than the one defined in org.siemac.metamac.access.control.constants.AccessControlConstants.SECURITY_APPLICATION_ID
-    public void checkAuthentication() {
+    private void loadNonSecuredApplication() {
         ginjector.getDispatcher().execute(new MockCASUserAction("GESTOR_ACCESOS"), new WaitingAsyncCallback<MockCASUserResult>() {
 
             @Override
@@ -67,17 +67,27 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             @Override
             public void onWaitSuccess(MockCASUserResult result) {
                 IndicatorsWeb.principal = result.getMetamacPrincipal();
+                // Load edition languages
+                ginjector.getDispatcher().execute(new GetEditionLanguagesAction(), new WaitingAsyncCallback<GetEditionLanguagesResult>() {
 
-                LoginAuthenticatedEvent.fire(ginjector.getEventBus(), IndicatorsWeb.principal);
-
-                // This is required for GWT-Platform proxy's generator.
-                DelayedBindRegistry.bind(ginjector);
-                ginjector.getPlaceManager().revealCurrentPlace();
+                    @Override
+                    public void onWaitFailure(Throwable caught) {
+                        logger.log(Level.SEVERE, "Error loading edition languages");
+                        // If an error occurs while loading edition languages, enable SPANISH, ENGLISH and PORTUGUESE by default
+                        ApplicationEditionLanguages.setEditionLanguages(new String[]{ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH, ApplicationEditionLanguages.PORTUGUESE});
+                        loadApplication();
+                    }
+                    @Override
+                    public void onWaitSuccess(GetEditionLanguagesResult result) {
+                        ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
+                        loadApplication();
+                    }
+                });
             }
         });
     }
 
-    // public void onModuleLoad() {
+    // private void loadSecuredApplication() {
     // String ticketParam = Window.Location.getParameter(TICKET);
     // if (ticketParam != null) {
     // UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
@@ -87,9 +97,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     // Window.Location.replace(url);
     // return;
     // }
-    //
     // String hash = Window.Location.getHash();
-    //
     // String ticketHash = null;
     // if (hash.contains(TICKET_HASH)) {
     // ticketHash = hash.substring(hash.indexOf(TICKET_HASH) + TICKET_HASH.length(), hash.length());
@@ -112,15 +120,34 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     // String url = Window.Location.createUrlBuilder().setHash("").buildString();
     // Window.Location.assign(url);
     //
-    // LoginAuthenticatedEvent.fire(ginjector.getEventBus(), IndicatorsWeb.principal);
+    // // Load edition languages
+    // ginjector.getDispatcher().execute(new GetEditionLanguagesAction(), new WaitingAsyncCallback<GetEditionLanguagesResult>() {
     //
-    // // This is required for GWT-Platform proxy's generator.
-    // DelayedBindRegistry.bind(ginjector);
-    // ginjector.getPlaceManager().revealCurrentPlace();
+    // @Override
+    // public void onWaitFailure(Throwable caught) {
+    // logger.log(Level.SEVERE, "Error loading edition languages");
+    // // If an error occurs while loading edition languages, enable SPANISH, ENGLISH and PORTUGUESE by default
+    // ApplicationEditionLanguages.setEditionLanguages(new String[]{ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH,
+    // ApplicationEditionLanguages.PORTUGUESE});
+    // loadApplication();
+    // }
+    // @Override
+    // public void onWaitSuccess(GetEditionLanguagesResult result) {
+    // ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
+    // loadApplication();
+    // }
+    // });
     // }
     // });
     // }
     // }
+
+    private void loadApplication() {
+        LoginAuthenticatedEvent.fire(ginjector.getEventBus(), IndicatorsWeb.principal);
+        // This is required for GWT-Platform proxy's generator.
+        DelayedBindRegistry.bind(ginjector);
+        ginjector.getPlaceManager().revealCurrentPlace();
+    }
 
     public void displayLoginView() {
         String serviceUrl = Window.Location.createUrlBuilder().buildString();
