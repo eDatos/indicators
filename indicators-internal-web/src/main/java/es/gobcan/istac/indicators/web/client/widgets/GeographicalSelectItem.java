@@ -11,8 +11,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 
 public class GeographicalSelectItem extends CustomCanvasItem {
 
-    private CustomSelectItem        geoGranularitItem;
-    private CustomSelectItem        geoValueItem;
+    private CustomSelectItem  geoGranularitItem;
+    private CustomSelectItem  geoValueItem;
     private CustomDynamicForm form;
 
     public GeographicalSelectItem(String name, String title) {

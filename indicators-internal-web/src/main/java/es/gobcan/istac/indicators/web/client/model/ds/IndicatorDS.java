@@ -46,7 +46,7 @@ public class IndicatorDS extends DataSource {
     public static String QUANTITY_NUMERATOR_INDICATOR_TEXT     = "q-num-dtext";          // Not mapped in DTO
 
     public static String QUANTITY_IS_PERCENTAGE                = "q-is-perc";
-    public static String QUANTITY_IS_PERCENTAGE_TEXT           = "q-is-perc-text";             // Not mapped in DTO
+    public static String QUANTITY_IS_PERCENTAGE_TEXT           = "q-is-perc-text";       // Not mapped in DTO
 
     public static String QUANTITY_INDEX_BASE_TYPE              = "q-base-type";          // Not mapped in DTO
     public static String QUANTITY_BASE_VALUE                   = "q-value";

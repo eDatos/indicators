@@ -78,7 +78,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
                 uiHandlers.closeSession();
             }
         });
-        
+
         // Help section
         masterHead.getHelpLink().addClickHandler(new ClickHandler() {
 
@@ -87,7 +87,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
                 uiHandlers.downloadUserGuide();
             }
         });
-        
+
         IstacNavBar navBar = new IstacNavBar();
         northLayout.setZIndex(0);
         southLayout.setZIndex(0);
