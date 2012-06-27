@@ -516,7 +516,7 @@
         },
 
         includeLogo : function(){
-            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '/widgets/creator">ISTAC</a></div>');
+            this.el.append('<div class="istact-widget-footer"><a href="' + this.url + '/widgets/creator">Instituto Canario de Estadística (ISTAC)</a></div>');
         }
     });
 
