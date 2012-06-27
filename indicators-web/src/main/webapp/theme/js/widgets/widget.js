@@ -824,14 +824,16 @@
                     var indicator = this.indicators[i];
                     var renderValues = this.parse(dataset);
 
-
-                    //TODO LOCALIZE title!
-
                     var row = '<tr>' +
                     '<th>' +
-                        '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
-                            dataset.structure.title.__default__ + ' (' + timeValuesTitles[renderValues.temporalValue] + ')' +
-                        '</a>' +
+                        '<div class="title">' +
+                            '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
+                                dataset.structure.title.__default__ +
+                            '</a>' +
+                        '</div>' +
+                        '<div class="unit">' +
+                            timeValuesTitles[renderValues.temporalValue]+
+                        '</div>' +
                     '</th>';
 
                     var observations = renderValues.observations;

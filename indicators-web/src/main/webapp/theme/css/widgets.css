@@ -51,6 +51,10 @@
     font-weight: bold;
 }
 
+.istac-widget-lastData tbody th .unit {
+    font-weight: normal;
+}
+
 .istact-widget-footer{
     background: url("../images/istacLogoMini.png") no-repeat right;
     font-weight: bold;
@@ -82,6 +86,7 @@
 
 .istac-widget p.istact-widget-unit {
     margin-bottom : 0;
+    margin-top : 0;
 }
 
 .istac-widget p.istact-widget-observation {
