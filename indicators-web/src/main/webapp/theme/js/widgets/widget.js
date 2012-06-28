@@ -45,8 +45,7 @@
 
 
     function getHost(url){
-        var l = document.createElement("a"),
-            host;
+        var l = document.createElement("a");
         l.href = url;
         return l.host;
     }
@@ -511,6 +510,12 @@
         },
 
         isIstacDomain : function(){
+            if(this.url && this.url.indexOf("http://") !== 0) {
+                // si la url no empieza por http estoy en la misma página
+                // se muestra el footer para que el usuario lo vea igual que cuando
+                // lo va a incrustar
+                return false;
+            }
             var result = window.location.host === getHost(this.url);
             return result;
         },
@@ -635,7 +640,7 @@
 
         renderChart : function(chartData){
             var $chartContainer = $('<div id="chart"></div>');
-            $chartContainer.css('width', this.width);
+            $chartContainer.css('width', this.width - 10);
             $chartContainer.css('height', this.height);
             this.contentContainer.html($chartContainer);
 
