@@ -226,7 +226,7 @@ public class IndicatorGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.populateData(indicator.getUuid(), indicator.getVersionNumber());
+                uiHandlers.populateData(indicator.getUuid());
             }
         });
 

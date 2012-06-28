@@ -29,7 +29,7 @@ public class PopulateIndicatorDataActionHandler extends SecurityActionHandler<Po
     public PopulateIndicatorDataResult executeSecurityAction(PopulateIndicatorDataAction action) throws ActionException {
         try {
             indicatorsServiceFacade.populateIndicatorData(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid());
-            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), action.getVersion());
+            IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(ServiceContextHolder.getCurrentServiceContext(), action.getIndicatorUuid(), null);
             return new PopulateIndicatorDataResult(indicatorDto);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

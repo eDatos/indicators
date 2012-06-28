@@ -12,9 +12,6 @@ public class PopulateIndicatorData {
     @In(1)
     String       indicatorUuid;
 
-    @In(2)
-    String       version;
-
     @Out(1)
     IndicatorDto indicatorDto;
 

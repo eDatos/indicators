@@ -587,8 +587,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     @Override
-    public void populateData(String uuid, String version) {
-        dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
+    public void populateData(String uuid) {
+        dispatcher.execute(new PopulateIndicatorDataAction(uuid), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
