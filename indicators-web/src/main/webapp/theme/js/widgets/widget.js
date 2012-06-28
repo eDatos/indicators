@@ -832,7 +832,7 @@
                     var row = '<tr>' +
                     '<th>' +
                         '<div class="title">' +
-                            '<a href="'+ this.jaxiUrl +'/tabla.do?uuidInstanciaIndicador=' + dataset.indicatorid + '&codigoSistemaIndicadores=' + dataset.systemid + '&accion=html">' +
+                            '<a href="'+ this.jaxiUrl +'/tabla.do?instanciaIndicador=' + dataset.indicatorid + '&sistemaIndicadores=' + dataset.systemid + '&accion=html">' +
                                 dataset.structure.title.__default__ +
                             '</a>' +
                         '</div>' +
