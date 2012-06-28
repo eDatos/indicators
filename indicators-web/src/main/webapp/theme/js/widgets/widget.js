@@ -640,7 +640,7 @@
 
         renderChart : function(chartData){
             var $chartContainer = $('<div id="chart"></div>');
-            $chartContainer.css('width', this.width - 10);
+            $chartContainer.css('width', this.width - 20);
             $chartContainer.css('height', this.height);
             this.contentContainer.html($chartContainer);
 
@@ -648,10 +648,10 @@
             var colors = this.chartColors(chartData);
             var legendElements = _getKeys(chartData.legend);
 
-            var chartWidth = this.width;
+            var chartWidth = this.width - 20;
             var chartHeight = 200;
 
-            var legendWidth = this.width;
+            var legendWidth = this.width - 20;
             var legendHeight = this.showLegend? legendElements.length * 20 : 0;
 
             var chartTopMargin = 20;
