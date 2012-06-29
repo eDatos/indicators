@@ -43,7 +43,8 @@ public class NewIndicatorWindow extends CustomWindow {
         RequiredTextItem titleItem = new RequiredTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         RequiredSelectItem subjectItem = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
         ButtonItem saveItem = new ButtonItem(FIELD_SAVE, MetamacWebCommon.getConstants().actionSave());
-        saveItem.setAlign(Alignment.RIGHT);
+        saveItem.setColSpan(2);
+        saveItem.setAlign(Alignment.CENTER);
 
         form = new CustomDynamicForm();
         form.setFields(codeItem, titleItem, subjectItem, saveItem);
