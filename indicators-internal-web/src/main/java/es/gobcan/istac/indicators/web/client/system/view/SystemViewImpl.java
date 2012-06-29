@@ -138,6 +138,11 @@ public class SystemViewImpl extends ViewImpl implements SystemPresenter.SystemVi
     }
 
     @Override
+    public void setGeographicalGranularity(GeographicalGranularityDto geographicalGranularityDto) {
+        structurePanel.setGeographicalGranularity(geographicalGranularityDto);
+    }
+
+    @Override
     public void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos) {
         structurePanel.setGeographicalValuesForIndicatorForIndicator(geographicalValueDtos);
     }

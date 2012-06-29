@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.web.server.handlers.GetDimensionActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetEditionLanguagesActionHandlers;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularitiesInIndicatorActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalGranularityActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValueActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesByGranularityInIndicatorActionHandler;
@@ -91,6 +92,7 @@ import es.gobcan.istac.indicators.web.shared.GetDimensionAction;
 import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularityAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
@@ -200,6 +202,7 @@ public class ServerModule extends HandlerModule {
         // Indicators geographical and temporal variables and values
         bindHandler(GetGeographicalGranularitiesInIndicatorAction.class, GetGeographicalGranularitiesInIndicatorActionHandler.class);
         bindHandler(GetGeographicalValuesByGranularityInIndicatorAction.class, GetGeographicalValuesByGranularityInIndicatorActionHandler.class);
+        bindHandler(GetGeographicalGranularityAction.class, GetGeographicalGranularityActionHandler.class);
         bindHandler(GetTimeGranularitiesInIndicatorAction.class, GetTimeGranularitiesInIndicatorActionHandler.class);
         bindHandler(GetTimeValuesInIndicatorAction.class, GetTimeValuesInIndicatorActionHandler.class);
 

@@ -283,6 +283,10 @@ public class SystemStructurePanel extends HLayout {
         indicatorInstPanel.setGeographicalGranularitiesForIndicator(geographicalGranularityDtos);
     }
 
+    public void setGeographicalGranularity(GeographicalGranularityDto geographicalGranularityDto) {
+        indicatorInstPanel.setGeographicalGranularity(geographicalGranularityDto);
+    }
+
     public void setGeographicalValuesForIndicatorForIndicator(List<GeographicalValueDto> geographicalValueDtos) {
         indicatorInstPanel.setGeographicalValues(geographicalValueDtos);
     }
@@ -792,17 +796,15 @@ public class SystemStructurePanel extends HLayout {
 
     private class IndicatorInstancePanel extends VLayout {
 
-        private InternationalMainFormLayout      mainFormLayout;
-        private GroupDynamicForm                 form;                       // View mode
-        private GroupDynamicForm                 creationForm;               // Edition mode
-        private GroupDynamicForm                 editionForm;                // Edition mode
-        private boolean                          createMode;
+        private InternationalMainFormLayout mainFormLayout;
+        private GroupDynamicForm            form;                  // View mode
+        private GroupDynamicForm            creationForm;          // Edition mode
+        private GroupDynamicForm            editionForm;           // Edition mode
+        private boolean                     createMode;
 
-        private List<GeographicalGranularityDto> geographicalGranularityDtos;
+        private IndicatorSummaryDto         selectedIndicator;
 
-        private IndicatorSummaryDto              selectedIndicator;
-
-        private IndicatorsSearchWindow           indicatorsSearchWindow;
+        private IndicatorsSearchWindow      indicatorsSearchWindow;
 
         public IndicatorInstancePanel() {
             mainFormLayout = new InternationalMainFormLayout();
@@ -954,10 +956,20 @@ public class SystemStructurePanel extends HLayout {
         }
 
         public void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos) {
-            this.geographicalGranularityDtos = geographicalGranularityDtos;
             LinkedHashMap<String, String> valueMap = CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos);
             ((SelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY)).setValueMap(CommonUtils.getGeographicalGranularituesValueMap(geographicalGranularityDtos));
             ((GeographicalSelectItem) creationForm.getItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE)).setGeoGranularitiesValueMap(valueMap);
+        }
+
+        public void setGeographicalGranularity(GeographicalGranularityDto geographicalGranularityDto) {
+            String title = new String();
+            if (geographicalGranularityDto != null && geographicalGranularityDto.getTitle() != null) {
+                title = InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle());
+            }
+            // View form
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, title);
+            // Edition form (EDITION NOT ALLOWED)
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, title);
         }
 
         public void setGeographicalValues(List<GeographicalValueDto> geographicalValueDtos) {
@@ -999,7 +1011,12 @@ public class SystemStructurePanel extends HLayout {
 
             form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
             form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getGeoSelectionType(indInst));
-            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
+
+            // Geographical granularity title set in setGeographicalGranularityMethod
+            form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, new String());
+            if (!StringUtils.isBlank(indInst.getGeographicalGranularityUuid())) {
+                uiHandlers.retrieveGeographicalGranularity(indInst.getGeographicalGranularityUuid());
+            }
 
             // Geographical value set in setGeographicalValue method
             form.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
@@ -1024,7 +1041,12 @@ public class SystemStructurePanel extends HLayout {
 
             editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getGeographicalSelectionTypeEnum(indInst) != null ? getGeographicalSelectionTypeEnum(indInst).toString() : "");
             editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getGeoSelectionType(indInst));
-            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getGeographicalGranularityTitle(indInst.getGeographicalGranularityUuid()));
+
+            // Geographical granularity title set in setGeographicalGranularityMethod
+            editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, new String());
+            if (!StringUtils.isBlank(indInst.getGeographicalGranularityUuid())) {
+                uiHandlers.retrieveGeographicalGranularity(indInst.getGeographicalGranularityUuid());
+            }
 
             // Geographical value set in setGeographicalValue method
             editionForm.setValue(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, new String());
@@ -1061,6 +1083,13 @@ public class SystemStructurePanel extends HLayout {
             geographicSelection.setVisible(false);
 
             ViewTextItem geographicSelectionText = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE + "-text", getConstants().instanceGeographicalSelection());
+            geographicSelectionText.setShowIfCondition(new FormItemIfFunction() {
+
+                @Override
+                public boolean execute(FormItem item, Object value, DynamicForm form) {
+                    return value != null && !StringUtils.isBlank(value.toString());
+                }
+            });
 
             ViewTextItem geoGranularity = new ViewTextItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
             geoGranularity.setShowIfCondition(getGeoGranularityIfFunction());
@@ -1317,17 +1346,6 @@ public class SystemStructurePanel extends HLayout {
                 return GeographicalSelectionTypeEnum.VALUE;
             }
             return null;
-        }
-
-        private String getGeographicalGranularityTitle(String uuid) {
-            if (uuid != null && !uuid.isEmpty()) {
-                for (GeographicalGranularityDto dto : geographicalGranularityDtos) {
-                    if (uuid.equals(dto.getUuid())) {
-                        return InternationalStringUtils.getLocalisedString(dto.getTitle());
-                    }
-                }
-            }
-            return new String();
         }
 
         // private IndicatorDto getIndicatorDtoByUuid(String uuid) {

@@ -62,6 +62,8 @@ import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularityAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularityResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
@@ -131,6 +133,7 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums);
         void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues);
         void setGeographicalGranularitiesForIndicator(List<GeographicalGranularityDto> geographicalGranularityDtos);
+        void setGeographicalGranularity(GeographicalGranularityDto geographicalGranularityDto);
         void setGeographicalValuesForIndicator(List<GeographicalValueDto> geographicalValueDtos);
         void setGeographicalValue(GeographicalValueDto geographicalValueDto);
 
@@ -610,6 +613,21 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setIndicators(result.getIndicatorDtos());
+            }
+        });
+    }
+
+    @Override
+    public void retrieveGeographicalGranularity(String geographicalGranularityUuid) {
+        dispatcher.execute(new GetGeographicalGranularityAction(geographicalGranularityUuid), new WaitingAsyncCallback<GetGeographicalGranularityResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularity()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetGeographicalGranularityResult result) {
+                getView().setGeographicalGranularity(result.getGeographicalGranularityDto());
             }
         });
     }
