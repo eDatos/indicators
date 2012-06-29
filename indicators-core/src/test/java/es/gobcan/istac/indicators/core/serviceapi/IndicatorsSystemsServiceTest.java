@@ -25,7 +25,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=false,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
 @Transactional
 public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 

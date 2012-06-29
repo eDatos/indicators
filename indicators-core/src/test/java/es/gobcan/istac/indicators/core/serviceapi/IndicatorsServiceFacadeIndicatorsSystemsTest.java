@@ -16,6 +16,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.utils.DirtyDatabase;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -29,6 +30,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
@@ -59,6 +62,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
 
     @Autowired
@@ -112,6 +116,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_3                                      = "Indicator-3";
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -134,6 +139,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemWithAndWithoutVersion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -172,6 +178,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -188,6 +195,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -204,6 +212,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemErrorVersionNotExists() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -222,6 +231,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublished() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -233,6 +243,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedWhenSystemHasVersionProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -244,6 +255,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedErrorOnlyProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -261,6 +273,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -277,6 +290,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -293,6 +307,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemByCode() throws Exception {
 
         String code = "CODE-1";
@@ -309,6 +324,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemByCodeLastVersion() throws Exception {
 
         String code = "CODE-1";
@@ -325,6 +341,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemByCodeErrorNotExists() throws Exception {
 
         String code = "CODE_NOT_EXISTS";
@@ -341,6 +358,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedByCode() throws Exception {
 
         String code = "CODE-1";
@@ -356,6 +374,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedByCodeErrorNotExists() throws Exception {
 
         String code = "CODE_NOT_EXISTS";
@@ -372,6 +391,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemPublishedByCodeErrorNotExistsInDiffusion() throws Exception {
 
         String code = "CODE-2";
@@ -389,6 +409,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemStructure() throws Exception {
 
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
@@ -452,6 +473,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorsSystem() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
@@ -490,6 +512,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorsSystemErrorOperationNotAllowed() throws Exception {
 
         ServiceContext serviceContext = getServiceContextTecnicoProduccion();
@@ -510,6 +533,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorsSystemParametersRequired() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
@@ -528,6 +552,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorsSystemCodeDuplicated() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
@@ -545,6 +570,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorsSystemCodeDuplicatedInsensitive() throws Exception {
 
         IndicatorsSystemDto indicatorsSystemDto = new IndicatorsSystemDto();
@@ -562,6 +588,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -582,6 +609,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorsSystemWithPublishedAndDraft() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -669,6 +697,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorsSystemErrorInDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -686,6 +715,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorsSystemErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -703,6 +733,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToProductionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -753,6 +784,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToProductionValidationInProcStatusRejected() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_9;
@@ -780,6 +812,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToProductionValidationErrorWithoutIndicatorInstance() throws Exception {
         try {
             indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextAdministrador(), INDICATORS_SYSTEM_2);
@@ -793,6 +826,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToProductionValidationErrorNotExists() throws Exception {
 
         try {
@@ -807,6 +841,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToProductionValidationErrorWrongProcStatus() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -832,6 +867,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToDiffusionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_4;
@@ -876,6 +912,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToDiffusionValidationErrorNotExists() throws Exception {
 
         try {
@@ -890,6 +927,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToDiffusionValidationErrorWrongProcStatusDraft() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -916,6 +954,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testSendIndicatorsSystemToDiffusionValidationErrorWrongProcStatusPublished() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -942,6 +981,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemProductionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_4;
@@ -990,6 +1030,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemProductionValidationErrorNotExists() throws Exception {
 
         try {
@@ -1004,6 +1045,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemProductionValidationErrorWrongProcStatus() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -1029,6 +1071,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemDiffusionValidation() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_5;
@@ -1056,6 +1099,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemDiffusionValidationErrorNotExists() throws Exception {
 
         try {
@@ -1070,6 +1114,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemDiffusionValidationErrorWrongProcStatus() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -1095,6 +1140,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRejectIndicatorsSystemDiffusionValidationErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -1120,6 +1166,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_5;
@@ -1170,6 +1217,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemWithPublishedVersion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_6;
@@ -1213,6 +1261,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemWithArchivedVersion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_7;
@@ -1257,6 +1306,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
@@ -1271,6 +1321,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemErrorWrongProcStatusProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -1296,6 +1347,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -1321,6 +1373,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testPublishIndicatorsSystemErrorIndicatorNotPublished() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_5;
@@ -1377,6 +1430,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testArchiveIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -1428,6 +1482,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testArchiveIndicatorsSystemWithProductionVersion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_1;
@@ -1458,6 +1513,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testArchiveIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
@@ -1472,6 +1528,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testArchiveIndicatorsSystemErrorWrongProcStatusProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -1498,6 +1555,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testArchiveIndicatorsSystemErrorWrongProcStatusDiffusion() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_8;
@@ -1523,6 +1581,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testVersioningIndicatorsSystem() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -1596,6 +1655,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testVersioningIndicatorsSystemVersionMinor() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_3;
@@ -1637,6 +1697,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testVersioningIndicatorsSystemErrorNotExists() throws Exception {
 
         try {
@@ -1651,6 +1712,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testVersioningIndicatorsSystemErrorAlreadyExistsProduction() throws Exception {
 
         String uuid = INDICATORS_SYSTEM_2;
@@ -1669,6 +1731,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testFindIndicatorsSystems() throws Exception {
 
         // Retrieve last versions...
@@ -1772,6 +1835,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testFindIndicatorsSystemsByCriteria() throws Exception {
 
         // Retrieve code = y or z
@@ -1799,6 +1863,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testFindIndicatorsSystemsByCriteriaPaginated() throws Exception {
 
         // Retrieve code = y or z, paginated
@@ -1851,6 +1916,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
         MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextAdministrador(), null);
@@ -1871,6 +1937,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsSystemsPublishedWithIndicator() throws Exception {
 
         {
@@ -1921,6 +1988,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveDimension() throws Exception {
 
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V2);
@@ -1937,6 +2005,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveDimensionErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -1953,6 +2022,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveDimensionErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -1969,6 +2039,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimension() throws Exception {
 
         // Create dimension
@@ -2000,8 +2071,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
         assertEquals(0, indicatorsSystemStructureDto.getElements().get(4).getSubelements().size());
     }
-
+    
     @Test
+	@DirtyDatabase
     public void testCreateDimensionWithOrderInMiddle() throws Exception {
 
         // Create dimension
@@ -2035,6 +2107,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional()
     public void testCreateDimensionSubdimension() throws Exception {
 
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2067,6 +2140,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testCreateDimensionSubdimensionOrderInMiddle() throws Exception {
 
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2099,6 +2173,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionSubSubdimension() throws Exception {
 
         String parentUuid = DIMENSION_1A_INDICATORS_SYSTEM_1_V2;
@@ -2127,6 +2202,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionErrorParametersRequired() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
@@ -2149,6 +2225,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionErrorOrderIncorrect() throws Exception {
 
         // Create dimension
@@ -2168,6 +2245,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionErrorOrderIncorrectNegative() throws Exception {
 
         // Create dimension
@@ -2187,6 +2265,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionErrorIndicatorsSystemNotExists() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
@@ -2204,6 +2283,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
 
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
@@ -2223,6 +2303,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionSubdimensionErrorDimensionNotExists() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
@@ -2242,6 +2323,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateDimensionSubdimensionErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
@@ -2262,6 +2344,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteDimension() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2309,6 +2392,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteDimensionSubdimension() throws Exception {
 
         String uuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
@@ -2344,6 +2428,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteDimensionErrorIndicatorsSystemVersionPublished() throws Exception {
 
         try {
@@ -2362,6 +2447,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteDimensionErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -2379,6 +2465,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveDimensionsByIndicatorsSystem() throws Exception {
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2404,6 +2491,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveDimensionsByIndicatorsSystemErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -2422,6 +2510,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimension() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2438,6 +2527,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionErrorChangeParentDimensionAndOrder() throws Exception {
 
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1A_INDICATORS_SYSTEM_1_V2);
@@ -2477,6 +2567,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionErrorIndicatorsSystemPublished() throws Exception {
 
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), DIMENSION_1_INDICATORS_SYSTEM_1_V1);
@@ -2497,6 +2588,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionErrorNotExists() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
@@ -2515,6 +2607,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionErrorOptimisticLocking() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2550,11 +2643,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionLocation() throws Exception {
         // In other test testUpdateDimensionLocation*
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateDimensionLocationActualWithoutParentTargetWithParent() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2596,6 +2691,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateDimensionLocationActualWithParentTargetWithoutParent() throws Exception {
 
         String uuid = DIMENSION_1BA_INDICATORS_SYSTEM_1_V2;
@@ -2639,6 +2735,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateDimensionLocationChangingDimensionParent() throws Exception {
 
         String uuid = DIMENSION_1BA_INDICATORS_SYSTEM_1_V2;
@@ -2673,10 +2770,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, elementLevelDto.getSubelements().size());
             assertEquals(uuid, elementLevelDto.getSubelements().get(0).getDimension().getUuid());
         }
-
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateDimensionLocationActualSameParentOnlyChangeOrderWithoutParent() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2710,6 +2807,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateDimensionLocationActualSameParentOnlyChangeOrderWithParent() throws Exception {
 
         String uuid = DIMENSION_1BA_INDICATORS_SYSTEM_1_V2;
@@ -2740,6 +2838,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionLocationErrorParentIsChild() throws Exception {
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2757,6 +2856,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionLocationErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -2774,6 +2874,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateDimensionLocationErrorOrderIncorrect() throws Exception {
 
         try {
@@ -2788,6 +2889,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorInstance() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
@@ -2809,6 +2911,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorInstanceErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -2825,6 +2928,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorInstanceErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -2841,6 +2945,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorInstancePublishedByCode() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstancePublishedByCode(getServiceContextAdministrador(), "IndSys-1-IInstance-1-Code");
@@ -2851,6 +2956,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstance() throws Exception {
 
         // Create indicator instance
@@ -2887,6 +2993,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testCreateIndicatorInstanceWithOrderInMiddle() throws Exception {
 
         // Create indicator instance
@@ -2919,9 +3026,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(4).getDimension().getUuid());
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
+        
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceInDimension() throws Exception {
 
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2960,6 +3069,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testCreateIndicatorInstanceInDimensionInMiddle() throws Exception {
 
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
@@ -2994,9 +3104,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(2), elementLevelDto.getSubelements().get(1).getOrderInLevel());
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(2).getDimension().getUuid());
         assertEquals(Long.valueOf(3), elementLevelDto.getSubelements().get(2).getOrderInLevel());
+        
     }
 
     @Test
+	@DirtyDatabase
     public void testCreateIndicatorInstanceInSubDimension() throws Exception {
 
         String parentUuid = DIMENSION_1B_INDICATORS_SYSTEM_1_V2;
@@ -3027,9 +3139,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(0).getDimension().getUuid());
         assertEquals(indicatorInstanceDtoCreated.getUuid(), elementLevelDto.getSubelements().get(1).getIndicatorInstance().getUuid());
         assertEquals(INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(2).getIndicatorInstance().getUuid());
+        
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorParametersRequired() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -3064,6 +3178,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorOrderIncorrect() throws Exception {
 
         // Create indicatorInstance
@@ -3087,6 +3202,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorOrderIncorrectNegative() throws Exception {
 
         // Create indicatorInstance
@@ -3110,6 +3226,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorTimeValueIncorrect() throws Exception {
 
         // Create indicatorInstance
@@ -3134,6 +3251,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorGeographicValueNotExists() throws Exception {
 
         // Create indicatorInstance
@@ -3157,6 +3275,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorIndicatorNotExists() throws Exception {
 
         // Create indicator instance
@@ -3181,6 +3300,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorIndicatorDuplicatedInSameLevel() throws Exception {
 
         // Create indicator instance
@@ -3219,6 +3339,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorIndicatorsSystemNotExists() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -3240,6 +3361,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
 
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
@@ -3263,6 +3385,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorDimensionNotExists() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -3285,6 +3408,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCreateIndicatorInstanceErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -3308,6 +3432,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorInstance() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
@@ -3344,6 +3469,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
     }
     @Test
+	@Transactional
     public void testDeleteIndicatorInstanceErrorIndicatorsSystemVersionPublished() throws Exception {
 
         try {
@@ -3362,6 +3488,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testDeleteIndicatorInstanceErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -3379,6 +3506,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsInstances() throws Exception {
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -3402,6 +3530,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveIndicatorsInstancesErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -3420,6 +3549,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstance() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
@@ -3438,6 +3568,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceErrorChangeMetadataUnmodifiable() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2);
@@ -3490,6 +3621,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceErrorIndicatorsSystemPublished() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1);
@@ -3510,6 +3642,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceErrorNotExists() throws Exception {
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
@@ -3528,6 +3661,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceErrorOptimisticLocking() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
@@ -3563,11 +3697,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceLocation() throws Exception {
         // In other test testUpdateIndicatorInstanceLocation*
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateIndicatorInstanceLocationActualWithoutParentTargetWithParent() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
@@ -3609,6 +3745,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateIndicatorInstanceLocationActualWithParentTargetWithoutParent() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
@@ -3652,6 +3789,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateIndicatorInstanceLocationChangingDimensionParent() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
@@ -3685,10 +3823,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, elementLevelDto.getSubelements().size());
             assertEquals(uuid, elementLevelDto.getSubelements().get(0).getIndicatorInstance().getUuid());
         }
-
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateIndicatorInstanceLocationActualSameParentOnlyChangeOrderWithoutParent() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
@@ -3720,6 +3858,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@DirtyDatabase
     public void testUpdateIndicatorInstanceLocationActualSameParentOnlyChangeOrderWithParent() throws Exception {
 
         String uuid = INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2;
@@ -3750,9 +3889,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(1), elementLevelDto.getSubelements().get(0).getIndicatorInstance().getOrderInLevel());
         assertEquals(DIMENSION_1BA_INDICATORS_SYSTEM_1_V2, elementLevelDto.getSubelements().get(1).getDimension().getUuid());
         assertEquals(Long.valueOf(2), elementLevelDto.getSubelements().get(1).getDimension().getOrderInLevel());
+        
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceLocationErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -3770,6 +3911,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testUpdateIndicatorInstanceLocationErrorOrderIncorrect() throws Exception {
 
         try {
@@ -3784,6 +3926,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testValidateTimeGranularities() throws Exception {
 
         // Valid
@@ -3845,6 +3988,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCompareTimeGranularities() throws Exception {
 
         assertTrue(TimeVariableUtils.compareTo("2012", "2012") == 0);
@@ -3872,6 +4016,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCompareTimeGranularitiesErrorTimeValueIncorrect() throws Exception {
         try {
             TimeVariableUtils.compareTo("2010xx", "2010H2");
@@ -3885,6 +4030,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCompareTimeGranularitiesErrorDifferentGranularities() throws Exception {
         try {
             TimeVariableUtils.compareTo("2010", "2010H2");
@@ -3898,6 +4044,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testGuessTimeGranularity() throws Exception {
 
         assertEquals(TimeGranularityEnum.YEARLY, TimeVariableUtils.guessTimeGranularity("2012"));
@@ -3909,6 +4056,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testGuessTimeGranularityErrorTimeValueIncorrect() throws Exception {
         try {
             TimeVariableUtils.guessTimeGranularity("2012W51xx");
@@ -3922,6 +4070,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCalculatePreviousTimeValue() throws Exception {
 
         // Yearly
@@ -3964,6 +4113,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testCalculatePreviousYearTimeValue() throws Exception {
 
         // Yearly
@@ -4007,6 +4157,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValue() throws Exception {
 
         String uuid = GEOGRAPHICAL_VALUE_1;
@@ -4025,6 +4176,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValueErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -4041,6 +4193,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValueErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -4057,6 +4210,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValueByCode() throws Exception {
 
         String code = "ES";
@@ -4075,6 +4229,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValueByCodeErrorParameterRequired() throws Exception {
 
         try {
@@ -4089,6 +4244,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalValueByCodeErrorNotExists() throws Exception {
 
         String code = NOT_EXISTS;
@@ -4105,6 +4261,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testFindGeographicalValues() throws Exception {
 
         // All
@@ -4242,6 +4399,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularity() throws Exception {
 
         String uuid = GEOGRAPHICAL_GRANULARITY_2;
@@ -4254,6 +4412,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularityErrorParameterRequired() throws Exception {
 
         String uuid = null;
@@ -4270,6 +4429,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularityErrorNotExists() throws Exception {
 
         String uuid = NOT_EXISTS;
@@ -4286,6 +4446,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularityByCode() throws Exception {
 
         String code = "MUNICIPALITIES";
@@ -4298,6 +4459,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularityByCodeErrorParameterRequired() throws Exception {
 
         try {
@@ -4312,6 +4474,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularityByCodeErrorNotExists() throws Exception {
 
         String code = NOT_EXISTS;
@@ -4328,6 +4491,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveGeographicalGranularities() throws Exception {
 
         List<GeographicalGranularityDto> geographicalGranularities = indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContextAdministrador());
@@ -4341,6 +4505,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveTimeGranularity() throws Exception {
         {
             TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.YEARLY);
@@ -4375,6 +4540,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveTimeGranularityWithoutTranslation() throws Exception {
         TimeGranularityDto timeGranularityDto = indicatorsServiceFacade.retrieveTimeGranularity(getServiceContextAdministrador(), TimeGranularityEnum.DAILY);
         assertEquals(TimeGranularityEnum.DAILY, timeGranularityDto.getGranularity());
@@ -4382,6 +4548,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveTimeValue() throws Exception {
         // Yearly
         {
@@ -4509,6 +4676,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     }
 
     @Test
+	@Transactional
     public void testRetrieveTimeValueWithoutTranslation() throws Exception {
         String biyearly = "2012H2";
         TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);

@@ -29,7 +29,7 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=false,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
 @Transactional
 public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBaseTest {
 

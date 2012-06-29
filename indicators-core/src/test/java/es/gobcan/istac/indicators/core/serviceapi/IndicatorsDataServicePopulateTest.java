@@ -49,7 +49,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback = false, transactionManager = "txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
 
@@ -1389,7 +1389,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
         assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
     }
-
+    
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsDataServiceTest_Populate.xml";

@@ -25,6 +25,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
@@ -55,6 +57,8 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@Transactional
 public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Autowired

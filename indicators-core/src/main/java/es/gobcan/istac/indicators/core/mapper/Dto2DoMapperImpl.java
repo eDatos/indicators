@@ -244,6 +244,10 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.setSubjectCode(null);
             target.setSubjectTitle(null);
         }
+        
+        if (hasIndicatorDecimalPlacesChanged(source, target)) {
+            target.setInconsistentData(Boolean.TRUE);
+        }
 
         // Related entities
         target.setQuantity(quantityDtoToDo(ctx, source.getQuantity(), target.getQuantity()));
@@ -476,5 +480,22 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         return target;
+    }
+    
+    private boolean hasIndicatorDecimalPlacesChanged(IndicatorDto source, IndicatorVersion target) {
+        Integer oldDecimalPlaces = null;
+        if (target.getQuantity() != null) {
+            oldDecimalPlaces = target.getQuantity().getDecimalPlaces();
+        }
+        Integer newDecimalPlaces = null;
+        if (source.getQuantity() != null) {
+            newDecimalPlaces = source.getQuantity().getDecimalPlaces();
+        }
+        if (oldDecimalPlaces != null) {
+            return !oldDecimalPlaces.equals(newDecimalPlaces);
+        } else if (newDecimalPlaces != null) {
+            return !newDecimalPlaces.equals(oldDecimalPlaces);
+        }
+        return false;
     }
 }

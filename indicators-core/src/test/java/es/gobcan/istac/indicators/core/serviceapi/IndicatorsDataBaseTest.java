@@ -50,11 +50,10 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
-
+    
     protected abstract IndicatorsService getIndicatorsService();
     protected abstract DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade();
 
@@ -286,9 +285,9 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    
     @Override
-    public void setUpDatabaseTester() throws Exception {
-        super.setUpDatabaseTester();
+    public void specificSetUpDatabaseTester() throws Exception {
         setUpDatabaseTester(getClass(), jdbcTemplate.getDataSource(), getDataSetDSRepoFile());
     }
 
@@ -323,7 +322,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             initializeDatabase(dbUnitConnection);
     
             databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-            databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
+            databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataSetReplacement);
             databaseTester.onSetup();
         } finally {
@@ -399,10 +398,6 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         return sequences;
     }
 
-    @Override
-    public void tearDownDatabaseTester() throws Exception {
-        //NOTHING 
-    }
 
     /**
      * DatasourceTester with support for Oracle data types.

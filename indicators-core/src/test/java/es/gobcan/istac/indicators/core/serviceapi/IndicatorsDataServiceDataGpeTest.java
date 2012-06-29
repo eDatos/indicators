@@ -2,14 +2,12 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -32,7 +30,7 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=false,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
 @Transactional
 public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 

@@ -41,7 +41,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=false,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
 @Transactional
 public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest {
 
