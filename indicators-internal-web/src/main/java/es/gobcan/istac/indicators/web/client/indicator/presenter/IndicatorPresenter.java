@@ -597,6 +597,10 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
             @Override
             public void onWaitSuccess(PopulateIndicatorDataResult result) {
                 ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
+                // Indicator and its data sources must be reloaded (after populating data, indicator version changes)
+                indicatorDto = result.getIndicatorDto();
+                getView().setIndicator(indicatorDto);
+                retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber()); // Reload data sources
             }
         });
     }
