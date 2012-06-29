@@ -31,6 +31,7 @@ public class DataDefinitionsSearchWindow extends SearchWindow {
         // Form
 
         RequiredSelectItem operationCode = new RequiredSelectItem(DataSourceDS.SOURCE_SURVEY_CODE, getConstants().dataSourceSurveyCode());
+        operationCode.setWidth("100%");
         searchButton = new ButtonItem("search-ind", MetamacWebCommon.getConstants().search());
         searchButton.setWidth(80);
         searchButton.setAlign(Alignment.RIGHT);

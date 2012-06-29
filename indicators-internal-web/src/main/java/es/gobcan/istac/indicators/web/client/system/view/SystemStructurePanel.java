@@ -95,6 +95,8 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemStructurePanel extends HLayout {
 
+    private static final int         CUSTOM_FORM_ITEM_WIDTH = 380;
+
     private SystemUiHandler          uiHandlers;
     private IndicatorsSystemDtoWeb   system;
 
@@ -787,7 +789,7 @@ public class SystemStructurePanel extends HLayout {
 
         private void createEditForm() {
             editForm = new GroupDynamicForm(getConstants().systemStrucDimTitle());
-            MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName());
+            MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName(), CUSTOM_FORM_ITEM_WIDTH - 28);
             name.setRequired(true);
             editForm.setFields(name);
             mainFormLayout.addEditionCanvas(editForm);
@@ -1106,7 +1108,7 @@ public class SystemStructurePanel extends HLayout {
 
             // Name
 
-            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH - 28);
             name.setRequired(true);
 
             // SEARCH INDICATOR
@@ -1168,6 +1170,7 @@ public class SystemStructurePanel extends HLayout {
             // Time
 
             RequiredSelectItem timeSelectionType = new RequiredSelectItem(IndicatorInstanceDS.TIME_SELECTION_TYPE, getConstants().instanceTimeSelection());
+            timeSelectionType.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             timeSelectionType.setValueMap(CommonUtils.getTimeSelectionTypeMap());
             timeSelectionType.addChangedHandler(new ChangedHandler() {
 
@@ -1178,14 +1181,17 @@ public class SystemStructurePanel extends HLayout {
             });
 
             RequiredSelectItem timeGranularityItem = new RequiredSelectItem(IndicatorInstanceDS.TIME_GRANULARITY, getConstants().instanceTimeGranularity());
+            timeGranularityItem.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction()); // valueMap set in setTemporalGranularitiesForIndicator
 
             RequiredSelectItem timeValue = new RequiredSelectItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValue());
+            timeValue.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             timeValue.setShowIfCondition(getTimeValueIfFunction()); // valueMap set in setTemporalValuesForIndicator
 
             // Geographical
 
             CustomSelectItem geographicalSelectionType = new CustomSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_SELECTION_TYPE, getConstants().instanceGeographicalSelection());
+            geographicalSelectionType.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             geographicalSelectionType.setValueMap(CommonUtils.getGeographicalSelectionTypeValueMap());
             geographicalSelectionType.addChangedHandler(new ChangedHandler() {
 
@@ -1196,9 +1202,11 @@ public class SystemStructurePanel extends HLayout {
             });
 
             RequiredSelectItem geographicalGranularity = new RequiredSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_GRANULARITY, getConstants().instanceGeographicalGranularity());
+            geographicalGranularity.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             geographicalGranularity.setShowIfCondition(getGeoGranularityIfFunction());
 
-            final GeographicalSelectItem geographicalValue = new GeographicalSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue());
+            final GeographicalSelectItem geographicalValue = new GeographicalSelectItem(IndicatorInstanceDS.GEOGRAPHICAL_VALUE, getConstants().instanceGeographicalValue(), CUSTOM_FORM_ITEM_WIDTH);
+            geographicalGranularity.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             geographicalValue.setRequired(true);
             geographicalValue.setShowIfCondition(getGeoValueIfFunction());
             geographicalValue.getGeoGranularitySelectItem().addChangedHandler(new ChangedHandler() {
@@ -1230,7 +1238,7 @@ public class SystemStructurePanel extends HLayout {
 
             // Name
 
-            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField());
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH - 28);
             name.setRequired(true);
 
             ViewTextItem indicatorNameItem = new ViewTextItem(IndicatorInstanceDS.IND_TEXT, getConstants().systemStrucIndInstanceIndicator());
@@ -1265,7 +1273,6 @@ public class SystemStructurePanel extends HLayout {
 
             mainFormLayout.addEditionCanvas(editionForm);
         }
-
         // Time functions
 
         private FormItemIfFunction getTimeGranularityIfFunction() {

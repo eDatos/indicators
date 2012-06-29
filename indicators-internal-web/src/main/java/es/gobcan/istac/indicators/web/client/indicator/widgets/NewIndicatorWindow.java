@@ -27,7 +27,8 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class NewIndicatorWindow extends CustomWindow {
 
-    private static final String FIELD_SAVE = "save-ind";
+    private static final String FIELD_SAVE      = "save-ind";
+    private static final int    FORM_ITEM_WIDTH = 300;
 
     private CustomDynamicForm   form;
 
@@ -36,12 +37,15 @@ public class NewIndicatorWindow extends CustomWindow {
     public NewIndicatorWindow(String title) {
         super(title);
         setHeight(160);
-        setWidth(486);
+        setWidth(450);
 
         RequiredTextItem codeItem = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
         codeItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
+        codeItem.setWidth(FORM_ITEM_WIDTH);
         RequiredTextItem titleItem = new RequiredTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
+        titleItem.setWidth(FORM_ITEM_WIDTH);
         RequiredSelectItem subjectItem = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
+        subjectItem.setWidth(FORM_ITEM_WIDTH);
         ButtonItem saveItem = new ButtonItem(FIELD_SAVE, MetamacWebCommon.getConstants().actionSave());
         saveItem.setColSpan(2);
         saveItem.setAlign(Alignment.CENTER);

@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.LinkedHashMap;
 
+import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
@@ -17,10 +18,21 @@ public class GeographicalSelectItem extends CustomCanvasItem {
 
     public GeographicalSelectItem(String name, String title) {
         super(name, title);
+        create(FormItemUtils.FORM_ITEM_WIDTH);
+    }
+
+    public GeographicalSelectItem(String name, String title, int formItemWidth) {
+        super(name, title);
+        create(formItemWidth);
+    }
+
+    private void create(int formItemWidth) {
         setTitleVAlign(VerticalAlignment.TOP);
         geoGranularitItem = new CustomSelectItem("geo-gran", "geo-gran");
+        geoGranularitItem.setWidth(formItemWidth);
         geoGranularitItem.setShowTitle(false);
         geoValueItem = new CustomSelectItem("geo-val", "geo-val");
+        geoValueItem.setWidth(formItemWidth);
         geoValueItem.setShowTitle(false);
         geoValueItem.setStartRow(true);
         form = new CustomDynamicForm();
