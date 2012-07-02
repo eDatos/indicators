@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
@@ -62,11 +63,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsService                indicatorsService;
 
-    
-    @After
-    public void resetMocks() {
-        Mockito.validateMockitoUsage();
-    }
     
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
@@ -166,6 +162,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
 
         DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
+        verify(indicatorsDataProviderService).retrieveDataStructureJson(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals("Sociedades mercantiles que amplían capital Gran PX.", dataStruc.getTitle());
         assertEquals("urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e", dataStruc.getPxUri());
         assertEquals(CONSULTA1_UUID,dataStruc.getUuid());
@@ -234,6 +231,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA4_UUID);
             fail("Should throws a retrieve error exception");
         } catch (MetamacException e) {
+            verify(indicatorsDataProviderService).retrieveDataStructureJson(getServiceContextAdministrador(), CONSULTA4_UUID);
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
