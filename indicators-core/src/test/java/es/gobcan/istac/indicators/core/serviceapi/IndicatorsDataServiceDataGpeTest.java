@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,9 +63,9 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     private IndicatorsService                indicatorsService;
 
     
-    @Before
+    @After
     public void resetMocks() {
-        Mockito.reset(indicatorsDataProviderService);
+        Mockito.validateMockitoUsage();
     }
     
     @Test
