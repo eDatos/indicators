@@ -63,6 +63,10 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsService                indicatorsService;
 
+    @After
+    public void validateMocks() {
+        Mockito.validateMockitoUsage();
+    }
     
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
