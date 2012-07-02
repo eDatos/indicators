@@ -8,9 +8,11 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,6 +61,11 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Autowired
     private IndicatorsService                indicatorsService;
 
+    
+    @Before
+    public void resetMocks() {
+        Mockito.reset(indicatorsDataProviderService);
+    }
     
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
