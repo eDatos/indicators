@@ -3,14 +3,15 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -62,11 +63,13 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
-
-    @After
-    public void validateMocks() {
-        Mockito.validateMockitoUsage();
+    
+    @Before
+    public void before() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
+        when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA4_UUID))).thenReturn(CONSULTA4_JSON_STRUC);
     }
+    
     
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
@@ -163,7 +166,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
      */
     @Test
     public void testRetrieveDataStructure() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
+        
 
         DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
         verify(indicatorsDataProviderService).retrieveDataStructureJson(getServiceContextAdministrador(), CONSULTA1_UUID);
@@ -230,7 +233,8 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
     @Test
     public void testRetrieveDataStructureRetrieveError() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA4_UUID))).thenReturn(CONSULTA4_JSON_STRUC);
+        
+        
         try {
             indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA4_UUID);
             fail("Should throws a retrieve error exception");
