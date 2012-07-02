@@ -106,8 +106,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
     @Test
     public void testRetrieveDataDefinition() throws Exception {
-        when(indicatorsDataProviderService.retrieveDataStructureJson(Matchers.any(ServiceContext.class), Matchers.eq(CONSULTA1_UUID))).thenReturn(CONSULTA1_JSON_STRUC);
-
         DataDefinition dataDef = indicatorsDataService.retrieveDataDefinition(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals(CONSULTA1_UUID, dataDef.getUuid());
         assertEquals(CONSULTA1_OPERATION_CODE, dataDef.getIdOperacion());
