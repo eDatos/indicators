@@ -2107,11 +2107,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertNull(indicatorDto.getArchiveUser());
         }
     }
-
-    @After
-    public void after() {
-        Mockito.validateMockitoUsage();
-    }
     
     @Test
     public void testPublishIndicatorWithPublishedVersion() throws Exception {
@@ -2156,7 +2151,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             // Old diffusion dataset must have been deleted
             //Verify does not work so well with Spring
-            //Mockito.verify(indicatorsDataService).deleteIndicatorData(getServiceContextAdministrador(), uuid, diffusionVersionBefore);
+            //Mockito.verify(indicatorsDataService).deleteIndicatorData(Matchers.any(ServiceContext.class),Matchers.eq(uuid), Matchers.eq(diffusionVersionBefore));
         }
     }
 
