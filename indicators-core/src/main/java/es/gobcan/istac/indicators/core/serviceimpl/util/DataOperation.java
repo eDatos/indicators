@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import java.math.RoundingMode;
 import java.util.List;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
