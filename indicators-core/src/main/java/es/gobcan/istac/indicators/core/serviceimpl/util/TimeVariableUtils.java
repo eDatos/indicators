@@ -1,9 +1,9 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
-import static org.siemac.metamac.core.common.util.shared.TimeConstants.BIYEARLY_CHARACTER;
-import static org.siemac.metamac.core.common.util.shared.TimeConstants.MONTHLY_CHARACTER;
-import static org.siemac.metamac.core.common.util.shared.TimeConstants.QUARTERLY_CHARACTER;
-import static org.siemac.metamac.core.common.util.shared.TimeConstants.WEEKLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.BIYEARLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONTHLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
+import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +34,7 @@ public class TimeVariableUtils extends TimeUtils {
             throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value2);
         }
         int compareResult = value1.compareTo(value2);
-        //Inverse order
+        // Inverse order
         return compareResult * -1;
     }
 
@@ -62,7 +62,7 @@ public class TimeVariableUtils extends TimeUtils {
 
         TimeValue timeValueFields = new TimeValue();
         timeValueFields.setTimeValue(timeValue);
-        
+
         TimeGranularityEnum timeGranularity = guessTimeGranularity(timeValue);
         timeValueFields.setGranularity(timeGranularity);
 
