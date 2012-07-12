@@ -11,12 +11,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_EXTERNAL_ITEMS")
 public class ExternalItem extends ExternalItemBase {
+
     private static final long serialVersionUID = 1L;
 
     protected ExternalItem() {
     }
 
-    public ExternalItem(String uri, String urn, TypeExternalArtefactsEnum type) {
-        super(uri, urn, type);
+    public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type) {
+        super(code, uri, urn, type);
+    }
+
+    public ExternalItem(String code, String uri, String urn, TypeExternalArtefactsEnum type, InternationalString title, String managementAppUrl) {
+        super(code, uri, urn, type);
+        this.setTitle(title);
+        this.setManagementAppUrl(managementAppUrl);
     }
 }
