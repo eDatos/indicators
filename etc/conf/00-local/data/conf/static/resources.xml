@@ -4,7 +4,7 @@
 	<comment>Configurations</comment>
 	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
 	<entry key="indicators.update.quartz.expression">0 0 12 ? * *</entry>
-	<entry key="indicators.ws.metamac.statistical.operations.internal.endpoint">http://localhost:8080/metamac-statistical-operations-web/ws/metamac/statistical/operations/internal/v1.0/metamacStatisticalOperationsInternalInterface</entry>
+	<entry key="indicators.clients.statistical.operations.rest.internal">http://localhost:8080/metamac-statistical-operations-web/api/internal/v1.0</entry>
     <entry key="indicators.ws.metamac.statistical.operations.external.endpoint">http://localhost:8080/metamac-statistical-operations-external-web/ws/metamac/statistical/operations/external/v1.0/metamacStatisticalOperationsExternalInterface</entry>
     <entry key="indicators.user.guide.file.name">INDICADORES_ManualUsuario.pdf</entry>
     <entry key="indicators.internal.edition.languages">es,pt,en,ca,gl,eu,de,fr,it,ru,zh</entry>

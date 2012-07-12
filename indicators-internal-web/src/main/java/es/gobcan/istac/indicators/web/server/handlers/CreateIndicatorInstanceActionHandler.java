@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.Operation;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -14,8 +14,8 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.rest.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
-import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 
@@ -23,10 +23,10 @@ import es.gobcan.istac.indicators.web.shared.CreateIndicatorInstanceResult;
 public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<CreateIndicatorInstanceAction, CreateIndicatorInstanceResult> {
 
     @Autowired
-    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+    private IndicatorsServiceFacade                 indicatorsServiceFacade;
 
     @Autowired
-    private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
+    private StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
     public CreateIndicatorInstanceActionHandler() {
         super(CreateIndicatorInstanceAction.class);
@@ -43,9 +43,9 @@ public class CreateIndicatorInstanceActionHandler extends SecurityActionHandler<
             // If does not exist, create a new indicators system and set operation values
             try {
                 // Retrieve operation from WS
-                OperationBase operationBase = statisticalOperationsInternalWebServiceFacade.retrieveOperation(action.getIndicatorsSystem().getCode());
+                Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getIndicatorsSystem().getCode());
                 // Set values to indicators system
-                indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operationBase);
+                indicatorsSystemDto = DtoUtils.createIndicatorsSystemDtoWeb(operation);
                 // Create indicators system
                 indicatorsSystemDto = indicatorsServiceFacade.createIndicatorsSystem(ServiceContextHolder.getCurrentServiceContext(), indicatorsSystemDto);
             } catch (MetamacException e2) {

@@ -1,12 +1,8 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.ProcStatusType;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.Operation;
+import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.ProcStatus;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
@@ -29,14 +25,14 @@ public class DtoUtils {
     }
 
     /**
-     * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link OperationBase}
+     * Fills an {@link IndicatorsSystemDtoWeb} from {@link IndicatorsSystemDto} and {@link Operation}
      * 
      * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
-     * @param operationBase
+     * @param operation
      * @return
      */
-    public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto, OperationBase operationBase) {
+    public static IndicatorsSystemDtoWeb updateIndicatorsSystemDtoWeb(IndicatorsSystemDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemDto indicatorsSystemDto, Operation operation) {
         if (indicatorsSystemDto != null) {
             indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
             indicatorsSystemDtoWeb.setVersionNumber(indicatorsSystemDto.getVersionNumber());
@@ -58,87 +54,64 @@ public class DtoUtils {
             indicatorsSystemDtoWeb.setLastUpdated(indicatorsSystemDto.getLastUpdated());
             indicatorsSystemDtoWeb.setLastUpdatedBy(indicatorsSystemDto.getLastUpdatedBy());
         }
-        if (operationBase != null) {
-            indicatorsSystemDtoWeb.setCode(operationBase.getCode());
-            indicatorsSystemDtoWeb.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
-            indicatorsSystemDtoWeb.setAcronym(getInternationalStringDtoFromInternationalString(operationBase.getAcronym()));
-            indicatorsSystemDtoWeb.setDescription(getInternationalStringDtoFromInternationalString(operationBase.getDescription()));
-            indicatorsSystemDtoWeb.setObjective(getInternationalStringDtoFromInternationalString(operationBase.getObjective()));
-            indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatusType.PUBLISH_EXTERNALLY.equals(operationBase.getProcStatus()));
+        if (operation != null) {
+            indicatorsSystemDtoWeb.setCode(operation.getId());
+            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
+            indicatorsSystemDtoWeb.setAcronym(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getAcronym()));
+            indicatorsSystemDtoWeb.setDescription(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getDescription()));
+            indicatorsSystemDtoWeb.setObjective(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getObjective()));
+            indicatorsSystemDtoWeb.setOperationExternallyPublished(ProcStatus.PUBLISH_EXTERNALLY.equals(operation.getProcStatus()));
         }
         return indicatorsSystemDtoWeb;
     }
 
     /**
-     * Fills an {@link IndicatorsSystemSummaryDtoWeb} from {@link IndicatorsSystemSummaryDto} and {@link OperationBase}
+     * Fills an {@link IndicatorsSystemSummaryDtoWeb} from {@link IndicatorsSystemSummaryDto} and {@link Resource}
      * 
      * @param indicatorsSystemDtoWeb
      * @param indicatorsSystemDto
-     * @param operationBase
+     * @param operation
      * @return
      */
     public static IndicatorsSystemSummaryDtoWeb updateIndicatorsSystemSummaryDtoWeb(IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb, IndicatorsSystemSummaryDto indicatorsSystemDto,
-            OperationBase operationBase) {
+            Resource operation) {
         if (indicatorsSystemDto != null) {
             indicatorsSystemDtoWeb.setUuid(indicatorsSystemDto.getUuid());
             indicatorsSystemDtoWeb.setCode(indicatorsSystemDto.getCode());
             indicatorsSystemDtoWeb.setProductionVersion(indicatorsSystemDto.getProductionVersion());
             indicatorsSystemDtoWeb.setDiffusionVersion(indicatorsSystemDto.getDiffusionVersion());
         }
-        if (operationBase != null) {
-            indicatorsSystemDtoWeb.setCode(operationBase.getCode());
-            indicatorsSystemDtoWeb.setTitle(getInternationalStringDtoFromInternationalString(operationBase.getTitle()));
+        if (operation != null) {
+            indicatorsSystemDtoWeb.setCode(operation.getId());
+            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
         }
         return indicatorsSystemDtoWeb;
     }
 
     /**
-     * Create an {@link IndicatorsSystemDtoWeb} from a {@link OperationBase}
+     * Create an {@link IndicatorsSystemDtoWeb} from a {@link Operation}
      * 
-     * @param operationBase
+     * @param operation
      * @return
      */
-    public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(OperationBase operationBase) {
+    public static IndicatorsSystemDtoWeb createIndicatorsSystemDtoWeb(Operation operation) {
         IndicatorsSystemDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemDtoWeb();
         indicatorsSystemDtoWeb.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
-        return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
+        return updateIndicatorsSystemDtoWeb(indicatorsSystemDtoWeb, null, operation);
     }
 
     /**
-     * Create an {@link IndicatorsSystemSummaryDtoWeb} from a {@link OperationBase}
+     * Create an {@link IndicatorsSystemSummaryDtoWeb} from a {@link Resource}
      * 
-     * @param operationBase
+     * @param operation
      * @return
      */
-    public static IndicatorsSystemSummaryDtoWeb createIndicatorsSystemSummaryDtoWeb(OperationBase operationBase) {
+    public static IndicatorsSystemSummaryDtoWeb createIndicatorsSystemSummaryDtoWeb(Resource operation) {
         IndicatorsSystemSummaryDtoWeb indicatorsSystemDtoWeb = new IndicatorsSystemSummaryDtoWeb();
         IndicatorsSystemVersionSummaryDto summaryDto = new IndicatorsSystemVersionSummaryDto();
         summaryDto.setProcStatus(IndicatorsSystemProcStatusEnum.DRAFT);
         indicatorsSystemDtoWeb.setProductionVersion(summaryDto);
-        return updateIndicatorsSystemSummaryDtoWeb(indicatorsSystemDtoWeb, null, operationBase);
-    }
-
-    /**
-     * Returns an {@link InternationalStringDto} from an {@link InternationalString}
-     * 
-     * @param internationalString
-     * @return
-     */
-    private static InternationalStringDto getInternationalStringDtoFromInternationalString(InternationalString internationalString) {
-        if (internationalString != null) {
-            InternationalStringDto internationalStringDto = new InternationalStringDto();
-            LocalisedStringList localisedStringList = internationalString.getLocalisedStrings();
-            if (localisedStringList != null && localisedStringList.getLocalisedString() != null) {
-                for (LocalisedString localisedString : localisedStringList.getLocalisedString()) {
-                    LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-                    localisedStringDto.setLocale(localisedString.getLocale());
-                    localisedStringDto.setLabel(localisedString.getLabel());
-                    internationalStringDto.addText(localisedStringDto);
-                }
-            }
-            return internationalStringDto;
-        }
-        return null;
+        return updateIndicatorsSystemSummaryDtoWeb(indicatorsSystemDtoWeb, null, operation);
     }
 
 }

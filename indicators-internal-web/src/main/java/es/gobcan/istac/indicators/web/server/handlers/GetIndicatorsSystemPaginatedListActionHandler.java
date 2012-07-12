@@ -10,9 +10,8 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.FindOperationsResult;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBase;
-import org.siemac.metamac.statistical.operations.internal.ws.v1_0.domain.OperationBaseList;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
+import org.siemac.metamac.rest.common.v1_0.domain.ResourcesPagedResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -25,8 +24,8 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import es.gobcan.istac.indicators.core.criteria.IndicatorsSystemCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
+import es.gobcan.istac.indicators.web.server.rest.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.web.server.utils.DtoUtils;
-import es.gobcan.istac.indicators.web.server.ws.StatisticalOperationsInternalWebServiceFacade;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListResult;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
@@ -35,10 +34,10 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemSummaryDtoWeb;
 public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActionHandler<GetIndicatorsSystemPaginatedListAction, GetIndicatorsSystemPaginatedListResult> {
 
     @Autowired
-    private IndicatorsServiceFacade                       indicatorsServiceFacade;
+    private IndicatorsServiceFacade                 indicatorsServiceFacade;
 
     @Autowired
-    private StatisticalOperationsInternalWebServiceFacade statisticalOperationsInternalWebServiceFacade;
+    private StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
     public GetIndicatorsSystemPaginatedListActionHandler() {
         super(GetIndicatorsSystemPaginatedListAction.class);
@@ -46,35 +45,34 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
 
     @Override
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
-        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemDtos = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
+        List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
-        FindOperationsResult findOperationsResult = statisticalOperationsInternalWebServiceFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
-        OperationBaseList operationBaseList = findOperationsResult.getOperations();
-        if (operationBaseList != null && operationBaseList.getOperation() != null) {
-            totalResults = findOperationsResult.getTotalResults().intValue();
-            for (OperationBase operationBase : operationBaseList.getOperation()) {
+        ResourcesPagedResult result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
+        if (result != null && result.getItems() != null) {
+            totalResults = result.getTotal().intValue();
+            for (Resource resource : result.getItems()) {
                 // Check if operation (indicators system) exists in the DB
                 MetamacCriteria criteria = new MetamacCriteria();
                 criteria.setPaginator(new MetamacCriteriaPaginator());
                 criteria.getPaginator().setMaximumResultSize(1);
-                MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), operationBase.getCode(), OperationType.EQ);
+                MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), resource.getId(), OperationType.EQ);
                 criteria.setRestriction(restriction);
                 try {
-                    MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
-                    if (!CollectionUtils.isEmpty(result.getResults())) {
+                    MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
+                    if (!CollectionUtils.isEmpty(systems.getResults())) {
                         // If exists, updates indicators system
-                        IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = result.getResults().get(0);
-                        indicatorsSystemDtos.add(DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, operationBase));
+                        IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = systems.getResults().get(0);
+                        indicatorsSystemSummaryDtoWebs.add(DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource));
                     } else {
                         // If not, create a new indicators system
-                        indicatorsSystemDtos.add(DtoUtils.createIndicatorsSystemSummaryDtoWeb(operationBase));
+                        indicatorsSystemSummaryDtoWebs.add(DtoUtils.createIndicatorsSystemSummaryDtoWeb(resource));
                     }
                 } catch (MetamacException e) {
                     throw WebExceptionUtils.createMetamacWebException(e);
                 }
             }
         }
-        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemDtos, totalResults);
+        return new GetIndicatorsSystemPaginatedListResult(indicatorsSystemSummaryDtoWebs, totalResults);
     }
 
     @Override
