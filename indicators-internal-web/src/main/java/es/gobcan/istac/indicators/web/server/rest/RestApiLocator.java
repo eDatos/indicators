@@ -16,17 +16,18 @@ public class RestApiLocator {
     private ConfigurationService               configurationService;
 
     private StatisticalOperationsRestFacadeV10 statisticalOperationsRestFacadeV10 = null;
-    private String                             baseApi                            = null;
 
     @PostConstruct
     public void initService() throws Exception {
-        baseApi = configurationService.getProperties().getProperty(RestApiConstants.STATISTICAL_OPERATIONS_REST_INTERNAL);
-        statisticalOperationsRestFacadeV10 = JAXRSClientFactory.create(baseApi, StatisticalOperationsRestFacadeV10.class, null, Boolean.TRUE);
-        WebClient.client(statisticalOperationsRestFacadeV10).accept("application/xml");
+        String baseApi = configurationService.getProperties().getProperty(RestApiConstants.STATISTICAL_OPERATIONS_REST_INTERNAL);
+        statisticalOperationsRestFacadeV10 = JAXRSClientFactory.create(baseApi, StatisticalOperationsRestFacadeV10.class, null, true); // true to do thread safe
     }
 
-    // TODO thread safe??
     public StatisticalOperationsRestFacadeV10 getStatisticalOperationsRestFacadeV10() {
+        // reset thread context
+        WebClient.client(statisticalOperationsRestFacadeV10).reset();
+        WebClient.client(statisticalOperationsRestFacadeV10).accept("application/xml");
+        
         return statisticalOperationsRestFacadeV10;
     }
 
