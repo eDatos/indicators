@@ -27,8 +27,7 @@ public class RestApiLocator {
         // reset thread context
         WebClient.client(statisticalOperationsRestFacadeV10).reset();
         WebClient.client(statisticalOperationsRestFacadeV10).accept("application/xml");
-        
+
         return statisticalOperationsRestFacadeV10;
     }
-
 }
