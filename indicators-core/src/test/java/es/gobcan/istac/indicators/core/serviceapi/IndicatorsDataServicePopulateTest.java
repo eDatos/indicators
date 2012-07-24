@@ -710,7 +710,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         dimensionCodes.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(), MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
                 MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(), MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(), MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name()));
         // DATA
-        List<String> absolute = Arrays.asList("34413.00", "4546.00", "2471.00", "329.00", "2507.00", "347.00", "2036.00", "297.00", "33413.00", "3546.00", "1471.00", "229.00", "1507.00", "247.00", "1036.00", "197.00");
+        List<String> absolute = Arrays.asList("34413.00", "4546.00", "2471.00", "329.00", "2507.00", "347.00", "2036.00", "297.00", "33413.00", "3546.00", "1471.00", "229.00", "1507.00", "247.00",
+                "1036.00", "197.00");
         List<String> annualPercentageRate = Arrays.asList("2.992", "28.200", "67.980", "43.668", "66.357", "40.485", "96.525", "50.761", null, null, null, null, null, null, null, null);
         List<String> interperiodPercentageRate = Arrays.asList("2.99", "28.20", "-1.43", "-5.18", "23.13", "16.83", null, null, null, null, "-2.38", "-7.28", "45.46", "25.38", null, null);
         List<String> annualPuntualRate = Arrays.asList("1000.0", "1000.0", "1000.0", "100.0", "1000.0", "100.0", "1000.0", "100.0", null, null, null, null, null, null, null, null);
@@ -1256,7 +1257,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     }
 
     /* TESTS CHECKING POPULATE IS ONLY DONE WHEN IT'S NECESSARY */
-    
+
     /*
      * A second consecutive "populate" should not populate if no gpe data has changed
      */
@@ -1272,7 +1273,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         // Populate date must be updated
         assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
         String lastDataRepoId = indicatorVersion.getDataRepositoryId();
-        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
 
         // Second populate should do nothing
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
@@ -1280,7 +1281,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         assertEquals(lastPopulateDate, indicatorVersion.getLastPopulateDate());
         assertEquals(lastDataRepoId, indicatorVersion.getDataRepositoryId());
     }
-    
+
     /*
      * A second consecutive "populate" should not populate if no gpe data has changed
      */
@@ -1289,21 +1290,21 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         // Data gpe updated
         when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(Arrays.asList(INDICATOR1_DS_GPE_UUID));
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         indicatorVersion.setLastPopulateDate(new DateTime());
         indicatorVersionRepository.save(indicatorVersion);
-        
+
         Date beforePopulate = new Date();
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         // Populate date must be updated
         assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
         String lastDataRepoId = indicatorVersion.getDataRepositoryId();
-        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
-        
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
+
         // Second populate should do nothing
         // Data gpe NOT updated
         when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(new ArrayList<String>());
@@ -1312,7 +1313,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         assertEquals(lastPopulateDate, indicatorVersion.getLastPopulateDate());
         assertEquals(lastDataRepoId, indicatorVersion.getDataRepositoryId());
     }
-    
+
     /*
      * A second consecutive populate should populate if some changes have been made to data in gpe
      */
@@ -1327,8 +1328,8 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         // Populate date must be updated
         assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
         String lastDataRepoId = indicatorVersion.getDataRepositoryId();
-        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
-        
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
+
         // Suddenly data in gpe has been updated, so third populate should change data
         when(dataGpeRepository.filterDataDefinitionsWithDataUpdatedAfter(Matchers.anyListOf(String.class), Matchers.any(Date.class))).thenReturn(Arrays.asList(INDICATOR1_DS_GPE_UUID));
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
@@ -1338,7 +1339,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         lastPopulateDate = indicatorVersion.getLastPopulateDate();
         lastDataRepoId = indicatorVersion.getDataRepositoryId();
     }
-    
+
     /*
      * A second consecutive populate should populate if indicatorVersion NEEDS_UPDATE
      */
@@ -1346,15 +1347,15 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIndicatorNeedsUpdate() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         Date beforePopulate = new Date();
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         // Populate date must be updated
         assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
         String lastDataRepoId = indicatorVersion.getDataRepositoryId();
-        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
-        
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
+
         // Suppose last populate failed, so version has needs_update, should populate data
         indicatorVersion.setNeedsUpdate(true);
         indicatorVersionRepository.save(indicatorVersion);
@@ -1363,7 +1364,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
         assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
     }
-    
+
     /*
      * A second consecutive populate should populate if indicatorVersion could have inconsistent data
      */
@@ -1371,25 +1372,25 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     public void testPopulateIndicatorDataIndicatorInconsistentData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         Date beforePopulate = new Date();
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         // Populate date must be updated
         assertTrue(beforePopulate.before(indicatorVersion.getLastPopulateDate().toDate()));
         String lastDataRepoId = indicatorVersion.getDataRepositoryId();
-        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate(); 
-        
+        DateTime lastPopulateDate = indicatorVersion.getLastPopulateDate();
+
         // Suppose last populate failed, so version has needs_update, should populate data
         indicatorVersion.setInconsistentData(true);
         indicatorVersionRepository.save(indicatorVersion);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
         indicatorVersion = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
         assertFalse(lastPopulateDate.equals(indicatorVersion.getLastPopulateDate()));
         assertFalse(lastDataRepoId.equals(indicatorVersion.getDataRepositoryId()));
     }
-    
+
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsDataServiceTest_Populate.xml";
@@ -1408,6 +1409,11 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     @Override
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
+    }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
     }
 
 }

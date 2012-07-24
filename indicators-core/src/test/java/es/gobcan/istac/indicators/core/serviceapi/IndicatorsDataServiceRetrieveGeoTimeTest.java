@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBaseTest {
 
@@ -52,9 +53,9 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     private static final String              INDICATOR4_VERSION               = "1.000";
 
     /* Indicator instances */
-    /* GEO Granularity provinces, time granularity yearly*/
+    /* GEO Granularity provinces, time granularity yearly */
     private static final String              INDICATOR_INSTANCE_11_UUID       = "IndSys-1-v1-IInstance-11";
-    
+
     /* NOT geographic restrictions, TIME GRANULARITY monthly */
     private static final String              INDICATOR_INSTANCE_12_UUID       = "IndSys-1-v1-IInstance-12";
 
@@ -120,19 +121,18 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         String[] expectedCodes = new String[]{"PROVINCES"};
         checkElementsInCollection(expectedCodes, codes);
     }
-    
+
     @Test
     public void testRetrieveGeographicalGranularitiesInIndicatorInstanceNotGeoFilter() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> codes = getGeographicalGranularitiesCodes(granularities);
         String[] expectedCodes = new String[]{"COUNTRIES", "COMMUNITIES", "PROVINCES"};
         checkElementsInCollection(expectedCodes, codes);
     }
-    
 
     /* GEOGRAPHICAL VALUES BY GRANULARITY */
 
@@ -188,7 +188,8 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
-        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, GEO_GRANULARITY_COUNTRIES);
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
+                GEO_GRANULARITY_COUNTRIES);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCountryCodes = new String[]{"ES"};
         checkElementsOrder(expectedCountryCodes, countryCodes);
@@ -247,29 +248,28 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_11_UUID);
         List<String> geoCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCodes = new String[]{"ES611", "ES612", "ES613"};
         checkElementsOrder(expectedCodes, geoCodes);
     }
-    
+
     @Test
     public void testRetrieveGeographicalValuesInIndicatorInstanceNotGeo() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DRAFT_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> geoCodes = getGeographicalValuesCodes(geoValues);
-        String[] expectedCodes = new String[]{"ES", "ES61","ES611", "ES612", "ES613"};
+        String[] expectedCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
         checkElementsOrder(expectedCodes, geoCodes);
     }
-    
 
     /* TIME GRANULARITIES */
-    
+
     @Test
     public void testRetrieveTimeGranularitiesInIndicator() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DRAFT_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
@@ -310,15 +310,14 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     @Test
     public void testRetrieveTimeGranularitiesInIndicatorInstance() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> granularitiesCodes = getTimeGranularitiesNames(timeGranularities);
-        String[] expectedCodes = new String[] {"MONTHLY"};
-        checkElementsInCollection(expectedCodes, granularitiesCodes);    
+        String[] expectedCodes = new String[]{"MONTHLY"};
+        checkElementsInCollection(expectedCodes, granularitiesCodes);
     }
-    
 
     /* TIME VALUES BY GRANULARITY */
     @Test
@@ -327,18 +326,21 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
-        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
+                TimeGranularityEnum.YEARLY);
         List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
-        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
+                TimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
         checkElementsOrder(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
+                TimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
@@ -350,19 +352,22 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
 
-        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.YEARLY);
+        List<TimeValue> yearTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
+                TimeGranularityEnum.YEARLY);
         List<String> yearValues = getTimeValuesCodes(yearTimeValues);
         String[] expectedYearValues = new String[]{"2010"};
         checkElementsInCollection(expectedYearValues, yearValues);
 
         // NOT EXIST
-        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.MONTHLY);
+        List<TimeValue> monthTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
+                TimeGranularityEnum.MONTHLY);
         List<String> monthValues = getTimeValuesCodes(monthTimeValues);
         String[] expectedMonthValues = new String[]{};
         checkElementsInCollection(expectedMonthValues, monthValues);
 
         // NOT EXIST
-        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, TimeGranularityEnum.DAILY);
+        List<TimeValue> dayTimeValues = indicatorsDataService.retrieveTimeValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
+                TimeGranularityEnum.DAILY);
         List<String> dayValues = getTimeValuesCodes(dayTimeValues);
         String[] expectedDayValues = new String[]{};
         checkElementsInCollection(expectedDayValues, dayValues);
@@ -391,7 +396,6 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         checkElementsInCollection(expectedDayValues, dayValues);
     }
 
-    
     /* TIME VALUES */
 
     @Test
@@ -433,13 +437,13 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     @Test
     public void testRetrieveTimeValuesInIndicatorInstance() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> timeCodes = getTimeValuesCodes(timeValues);
-        String[] expectedCodes = new String[] {"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
-        checkElementsOrder(expectedCodes, timeCodes);    
+        String[] expectedCodes = new String[]{"2011M01", "2010M12", "2010M11", "2010M10", "2010M09"};
+        checkElementsOrder(expectedCodes, timeCodes);
     }
 
     /* MEASURE VALUES */
@@ -483,13 +487,13 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     @Test
     public void testRetrieveMeasureValuesInIndicatorInstance() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
-        
+
         List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID);
         List<String> measuresNames = getMeasureNames(measureValues);
         String[] expectedMeasures = new String[]{MeasureDimensionTypeEnum.ABSOLUTE.name()};
-        checkElementsInCollection(expectedMeasures, measuresNames);   
+        checkElementsInCollection(expectedMeasures, measuresNames);
     }
 
     @Override
@@ -511,4 +515,10 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
     }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
+    }
+
 }

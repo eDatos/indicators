@@ -8,13 +8,12 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -58,7 +57,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
@@ -2107,7 +2106,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertNull(indicatorDto.getArchiveUser());
         }
     }
-    
+
     @Test
     public void testPublishIndicatorWithPublishedVersion() throws Exception {
 
@@ -2150,8 +2149,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
 
             // Old diffusion dataset must have been deleted
-            //Verify does not work so well with Spring
-            //Mockito.verify(indicatorsDataService).deleteIndicatorData(Matchers.any(ServiceContext.class),Matchers.eq(uuid), Matchers.eq(diffusionVersionBefore));
+            // Verify does not work so well with Spring
+            // Mockito.verify(indicatorsDataService).deleteIndicatorData(Matchers.any(ServiceContext.class),Matchers.eq(uuid), Matchers.eq(diffusionVersionBefore));
         }
     }
 
@@ -4289,4 +4288,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
     }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
+    }
+
 }

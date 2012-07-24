@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,11 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
 /**
  * Test to IndicatorsSystemService. Testing: indicators systems, dimensions, indicators instances
  * Spring based transactional test with DbUnit support.
- * 
  * Only testing properties are not in Dto
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
@@ -136,4 +137,10 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsSystemsTest.xml";
     }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
+    }
+
 }

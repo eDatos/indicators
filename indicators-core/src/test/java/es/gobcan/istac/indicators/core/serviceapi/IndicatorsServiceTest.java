@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
@@ -180,4 +181,10 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
     }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
+    }
+
 }

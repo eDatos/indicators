@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
@@ -35,22 +36,21 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
-    private static final String              CONSULTA1_UUID                           = "1-1-1-1-1";
-    private static final String              CONSULTA1_OPERATION_CODE                 = "E10352A";
-    private static final String              CONSULTA1_JSON_STRUC                     = readFile("json/structure_1.json");
-    private static final String              CONSULTA2_UUID                           = "2-2-2-2-2";
-    private static final String              CONSULTA2_OPERATION_CODE                 = "E10352B";
-    private static final String              CONSULTA3_UUID                           = "3-3-3-3-3";
-    private static final String              CONSULTA4_UUID                           = "4-4-4-4-4";
-    private static final String              CONSULTA4_JSON_STRUC                     = readFile("json/structure_wrong_3.json");
-    private static final String              CONSULTA4_OPERATION_CODE                 = "E10352D";
-    private static final String              CONSULTA5_UUID                           = "5-5-5-5-5";
-    private static final String              CONSULTA5_OPERATION_CODE                 = "E10352E";
-
+    private static final String              CONSULTA1_UUID           = "1-1-1-1-1";
+    private static final String              CONSULTA1_OPERATION_CODE = "E10352A";
+    private static final String              CONSULTA1_JSON_STRUC     = readFile("json/structure_1.json");
+    private static final String              CONSULTA2_UUID           = "2-2-2-2-2";
+    private static final String              CONSULTA2_OPERATION_CODE = "E10352B";
+    private static final String              CONSULTA3_UUID           = "3-3-3-3-3";
+    private static final String              CONSULTA4_UUID           = "4-4-4-4-4";
+    private static final String              CONSULTA4_JSON_STRUC     = readFile("json/structure_wrong_3.json");
+    private static final String              CONSULTA4_OPERATION_CODE = "E10352D";
+    private static final String              CONSULTA5_UUID           = "5-5-5-5-5";
+    private static final String              CONSULTA5_OPERATION_CODE = "E10352E";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -63,11 +63,11 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
-    
+
     @Test
     public void testRetrieveDataDefinitionsOperationsCode() throws Exception {
         List<String> operationsCodes = indicatorsDataService.retrieveDataDefinitionsOperationsCodes(getServiceContextAdministrador());
-        assertEquals(3,operationsCodes.size());
+        assertEquals(3, operationsCodes.size());
         assertEquals(operationsCodes.get(0), CONSULTA1_OPERATION_CODE);
         assertEquals(operationsCodes.get(1), CONSULTA4_OPERATION_CODE);
         assertEquals(operationsCodes.get(2), CONSULTA5_OPERATION_CODE);
@@ -77,22 +77,22 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     public void testRetrieveDataDefinitions() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
         assertEquals(3, dataDefs.size());
-        assertEquals(CONSULTA1_UUID,dataDefs.get(0).getUuid());
-        assertEquals(CONSULTA4_UUID,dataDefs.get(1).getUuid());
-        assertEquals(CONSULTA5_UUID,dataDefs.get(2).getUuid());
+        assertEquals(CONSULTA1_UUID, dataDefs.get(0).getUuid());
+        assertEquals(CONSULTA4_UUID, dataDefs.get(1).getUuid());
+        assertEquals(CONSULTA5_UUID, dataDefs.get(2).getUuid());
     }
-    
+
     @Test
     public void testFindDataDefinitionsByOperationCode() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitionsByOperationCode(getServiceContextAdministrador(), CONSULTA1_OPERATION_CODE);
-        assertEquals(1,dataDefs.size());
+        assertEquals(1, dataDefs.size());
         assertEquals(CONSULTA1_UUID, dataDefs.get(0).getUuid());
     }
-    
+
     @Test
     public void testFindDataDefinitionsByOperationCodeNotVisible() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.findDataDefinitionsByOperationCode(getServiceContextAdministrador(), CONSULTA2_OPERATION_CODE);
-        assertEquals(0,dataDefs.size());
+        assertEquals(0, dataDefs.size());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(ServiceExceptionType.DATA_DEFINITION_RETRIEVE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
-    
+
     /*
      * Checking conversion from json to Data object
      * @see es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataServiceTestBase#testRetrieveDataStructure()
@@ -164,7 +164,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         DataStructure dataStruc = indicatorsDataService.retrieveDataStructure(getServiceContextAdministrador(), CONSULTA1_UUID);
         assertEquals("Sociedades mercantiles que amplían capital Gran PX.", dataStruc.getTitle());
         assertEquals("urn:uuid:bf800d7a-53cd-49a9-a90e-da2f1be18f0e", dataStruc.getPxUri());
-        assertEquals(CONSULTA1_UUID,dataStruc.getUuid());
+        assertEquals(CONSULTA1_UUID, dataStruc.getUuid());
 
         String[] stubs = new String[]{"Periodos", "Provincias por CC.AA."};
         checkElementsInCollection(stubs, dataStruc.getStub());
@@ -237,7 +237,6 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         }
     }
 
-
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsDataServiceTest_DataGpe.xml";
@@ -256,6 +255,11 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Override
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
+    }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
     }
 
 }

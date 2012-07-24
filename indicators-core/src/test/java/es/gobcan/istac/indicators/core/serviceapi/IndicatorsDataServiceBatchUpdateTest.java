@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,7 +41,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
-@TransactionConfiguration(defaultRollback=true,transactionManager="txManager")
+@TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
 public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest {
 
@@ -88,24 +88,24 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     private static final String              INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
     private static final String              INDICATOR7_VERSION        = "1.000";
-    
+
     /* Production and Diffusion versions */
     private static final String              INDICATOR8_UUID           = "Indicator-8";
     private static final String              INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
     private static final String              INDICATOR8_VERSION        = "1.000";
     private static final String              INDICATOR8_PROD_VERSION   = "1.001";
-    
+
     private static final String              INDICATOR9_UUID           = "Indicator-9";
     private static final String              INDICATOR9_DS_GPE_UUID    = "Indicator-9-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR9_GPE_JSON_DATA  = readFile("json/data_temporals_batch_update.json");
     private static final String              INDICATOR9_VERSION        = "1.000";
     private static final String              INDICATOR9_PROD_VERSION   = "1.322";
-    
-    //Groups with different data
-    private static final List<String> INDICATORS_GROUP1 = Arrays.asList(INDICATOR1_UUID, INDICATOR3_UUID, INDICATOR4_UUID, INDICATOR5_UUID, 
-                                                                        INDICATOR6_UUID, INDICATOR7_UUID, INDICATOR8_UUID, INDICATOR9_UUID);
-    private static final List<String> INDICATORS_GROUP2 = Arrays.asList(INDICATOR2_UUID);
+
+    // Groups with different data
+    private static final List<String>        INDICATORS_GROUP1         = Arrays.asList(INDICATOR1_UUID, INDICATOR3_UUID, INDICATOR4_UUID, INDICATOR5_UUID, INDICATOR6_UUID, INDICATOR7_UUID,
+                                                                               INDICATOR8_UUID, INDICATOR9_UUID);
+    private static final List<String>        INDICATORS_GROUP2         = Arrays.asList(INDICATOR2_UUID);
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -144,13 +144,13 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR1_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR1_UUID, newDiffusionVersion);
 
         assertNull(indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, oldDiffusionVersion));
-        
+
         IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, newDiffusionVersion);
         assertFalse(indVersion.getNeedsUpdate());
     }
@@ -169,12 +169,12 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         String oldDiffusionVersion = INDICATOR2_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR2_UUID, newDiffusionVersion);
 
-        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR2_UUID,newDiffusionVersion);
+        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR2_UUID, newDiffusionVersion);
         assertFalse(indVersion.getNeedsUpdate());
     }
 
@@ -217,14 +217,14 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion5 = INDICATOR5_VERSION;
         String newDiffusionVersion4 = ServiceUtils.generateVersionNumber(oldDiffusionVersion4, VersionTypeEnum.MINOR);
         String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, newDiffusionVersion4);
         checkDataContentForIndicator(INDICATOR5_UUID, newDiffusionVersion5);
 
-        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID,newDiffusionVersion4);
-        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID,newDiffusionVersion5);
+        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID, newDiffusionVersion4);
+        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID, newDiffusionVersion5);
         assertFalse(indVersion4.getNeedsUpdate());
         assertFalse(indVersion5.getNeedsUpdate());
     }
@@ -252,16 +252,16 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String newDiffusionVersion4 = ServiceUtils.generateVersionNumber(oldDiffusionVersion4, VersionTypeEnum.MINOR);
         String newDiffusionVersion5 = ServiceUtils.generateVersionNumber(oldDiffusionVersion5, VersionTypeEnum.MINOR);
         String newDiffusionVersion6 = ServiceUtils.generateVersionNumber(oldDiffusionVersion6, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR4_UUID, newDiffusionVersion4);
         checkDataContentForIndicator(INDICATOR5_UUID, newDiffusionVersion5);
         checkDataContentForIndicator(INDICATOR6_UUID, newDiffusionVersion6);
 
-        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID,newDiffusionVersion4);
-        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID,newDiffusionVersion5);
-        IndicatorVersion indVersion6 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID,newDiffusionVersion6);
+        IndicatorVersion indVersion4 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR4_UUID, newDiffusionVersion4);
+        IndicatorVersion indVersion5 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR5_UUID, newDiffusionVersion5);
+        IndicatorVersion indVersion6 = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID, newDiffusionVersion6);
         assertFalse(indVersion4.getNeedsUpdate());
         assertFalse(indVersion5.getNeedsUpdate());
         assertFalse(indVersion6.getNeedsUpdate());
@@ -278,7 +278,7 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList();
-        
+
         String oldDiffusionVersion6 = INDICATOR6_VERSION;
         String newDiffusionVersion6 = ServiceUtils.generateVersionNumber(oldDiffusionVersion6, VersionTypeEnum.MINOR);
 
@@ -289,18 +289,18 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
         checkDataContentForIndicator(INDICATOR6_UUID, newDiffusionVersion6);
 
-        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID,newDiffusionVersion6);
+        IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR6_UUID, newDiffusionVersion6);
         assertFalse(indVersion.getNeedsUpdate());
     }
-    
+
     /*
      * One Indicator which has production and diffusion versions, after the update diffusion version will take
      * production version number and production version number should increase
      */
     @Test
-    public void testUpdateIndicatorsDataDiffusionProductionVersionMatch()throws Exception {
+    public void testUpdateIndicatorsDataDiffusionProductionVersionMatch() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA);
-        
+
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList(INDICATOR8_DS_GPE_UUID);
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
@@ -310,33 +310,33 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldProductionVersion = INDICATOR8_PROD_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
         String newProductionVersion = ServiceUtils.generateVersionNumber(oldProductionVersion, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR8_UUID, newDiffusionVersion);
-        
-        //Old Diffusion version is gone
+
+        // Old Diffusion version is gone
         assertNull(indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR8_UUID, oldDiffusionVersion));
-        //Old production version is now diffusion
-        assertEquals(oldProductionVersion,newDiffusionVersion);
+        // Old production version is now diffusion
+        assertEquals(oldProductionVersion, newDiffusionVersion);
 
         IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR8_UUID, newDiffusionVersion);
         assertFalse(indVersion.getNeedsUpdate());
         assertEquals(newDiffusionVersion, indVersion.getVersionNumber());
-        //Check indicator relationships
+        // Check indicator relationships
         Indicator indicator = indVersion.getIndicator();
         assertEquals(newProductionVersion, indicator.getProductionVersion().getVersionNumber());
         assertEquals(newDiffusionVersion, indicator.getDiffusionVersion().getVersionNumber());
     }
-    
+
     /*
      * One Indicator which has production and diffusion versions, after the update diffusion version number will increase
      * but there is no need for production version number to increase
      */
     @Test
-    public void testUpdateIndicatorsDataDiffusionProductionVersionNotMatch()throws Exception {
+    public void testUpdateIndicatorsDataDiffusionProductionVersionNotMatch() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR9_DS_GPE_UUID))).thenReturn(INDICATOR9_GPE_JSON_DATA);
-        
+
         Date lastUpdateDate = createDate(2012, 05, 03);
         List<String> indicatorsToUpdate = Arrays.asList(INDICATOR9_DS_GPE_UUID);
         when(indicatorsConfigurationService.retrieveLastSuccessfulGpeQueryDate(Matchers.any(ServiceContext.class))).thenReturn(lastUpdateDate);
@@ -345,26 +345,26 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
         String oldDiffusionVersion = INDICATOR9_VERSION;
         String productionVersion = INDICATOR9_PROD_VERSION;
         String newDiffusionVersion = ServiceUtils.generateVersionNumber(oldDiffusionVersion, VersionTypeEnum.MINOR);
-        
+
         indicatorsDataService.updateIndicatorsData(getServiceContextAdministrador());
 
         checkDataContentForIndicator(INDICATOR9_UUID, newDiffusionVersion);
-        
-        //Old Diffusion version is gone
+
+        // Old Diffusion version is gone
         assertNull(indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR9_UUID, oldDiffusionVersion));
 
         IndicatorVersion indVersion = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR9_UUID, newDiffusionVersion);
         assertFalse(indVersion.getNeedsUpdate());
         assertEquals(newDiffusionVersion, indVersion.getVersionNumber());
-        //Check indicator relationships
+        // Check indicator relationships
         Indicator indicator = indVersion.getIndicator();
-        assertEquals(productionVersion, indicator.getProductionVersion().getVersionNumber()); //production remains the same as before
+        assertEquals(productionVersion, indicator.getProductionVersion().getVersionNumber()); // production remains the same as before
         assertEquals(newDiffusionVersion, indicator.getDiffusionVersion().getVersionNumber());
     }
 
     private void setNeedsUpdateTransaction(String indicatorUuid, String indicatorVersionNumber) {
         TransactionStatus status = txManager.getTransaction(null);
-        IndicatorVersion indicatorVersion = indicatorVersionRepository.retrieveIndicatorVersion(indicatorUuid,indicatorVersionNumber);
+        IndicatorVersion indicatorVersion = indicatorVersionRepository.retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
         indicatorVersion.setNeedsUpdate(Boolean.TRUE);
         indicatorVersion = indicatorVersionRepository.save(indicatorVersion);
         txManager.commit(status);
@@ -437,6 +437,11 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
 
     protected String getDataSetDSRepoFile() {
         return "dbunit/IndicatorsDataServiceTest_DataSetRepository.xml";
+    }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        return null;
     }
 
 }
