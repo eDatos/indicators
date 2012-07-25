@@ -515,10 +515,4 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }

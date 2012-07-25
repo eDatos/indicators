@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Assert;
@@ -18,6 +20,8 @@ import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
+
+    private Map<String, String> tablePrimaryKeys = null;
 
     @Override
     protected ServiceContext getServiceContextAdministrador() {
@@ -78,7 +82,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
         return serviceContext;
     }
-    
+
     @Override
     public void removeCyclicDependencies() throws Exception {
         super.removeCyclicDependencies();
@@ -89,7 +93,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             connection.close();
         }
     }
-    
+
     @Override
     protected List<String> getTablesToRemoveContent() {
         List<String> tables = new ArrayList<String>();
@@ -165,5 +169,15 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(role.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, null));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, metamacPrincipal);
+    }
+
+    @Override
+    protected Map<String, String> getTablePrimaryKeys() {
+        if (tablePrimaryKeys == null) {
+            tablePrimaryKeys = new HashMap<String, String>();
+            tablePrimaryKeys.put("TV_AREAS_TEMATICAS", "ID_AREA_TEMATICA");
+            tablePrimaryKeys.put("TV_CONSULTA", "ID_CONSULTA");
+        }
+        return tablePrimaryKeys;
     }
 }

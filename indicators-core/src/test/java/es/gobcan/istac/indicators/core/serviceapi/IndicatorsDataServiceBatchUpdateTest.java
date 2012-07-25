@@ -438,10 +438,4 @@ public class IndicatorsDataServiceBatchUpdateTest extends IndicatorsDataBaseTest
     protected String getDataSetDSRepoFile() {
         return "dbunit/IndicatorsDataServiceTest_DataSetRepository.xml";
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }

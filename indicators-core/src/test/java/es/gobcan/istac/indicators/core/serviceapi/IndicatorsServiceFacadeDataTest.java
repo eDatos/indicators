@@ -149,10 +149,4 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
         dataStructure1.setPublishers(getList("pub1", "pub2"));
 
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }

@@ -8,7 +8,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -4288,10 +4287,4 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsTest.xml";
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }

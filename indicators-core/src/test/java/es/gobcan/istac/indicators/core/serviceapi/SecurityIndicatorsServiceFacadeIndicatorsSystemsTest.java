@@ -3,8 +3,6 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.Map;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1226,11 +1224,6 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     @Override
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsSystemsTest.xml";
-    }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
     }
 
 }

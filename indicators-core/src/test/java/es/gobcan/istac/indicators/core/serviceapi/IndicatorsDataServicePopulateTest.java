@@ -1410,10 +1410,4 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
         return datasetRepositoriesServiceFacade;
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }

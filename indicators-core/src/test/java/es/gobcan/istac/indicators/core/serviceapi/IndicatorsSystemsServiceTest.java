@@ -4,8 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,10 +135,4 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     protected String getDataSetFile() {
         return "dbunit/IndicatorsServiceFacadeIndicatorsSystemsTest.xml";
     }
-
-    @Override
-    protected Map<String, String> getTablePrimaryKeys() {
-        return null;
-    }
-
 }
