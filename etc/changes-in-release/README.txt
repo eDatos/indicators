@@ -12,4 +12,4 @@ Cuando se cree la RELEASE, añadir estos pasos al manual de instalación:
     - Añadida propiedad "indicators.internal.edition.languages" ([DATA]/conf/static/resources.xml)
     - Añadida propiedad "indicators.clients.statistical.operations.rest.internal" ([DATA]/conf/static/resources.xml)
 
-99. Reiniciar Tomcat
+99. Reiniciar Tomcat 
