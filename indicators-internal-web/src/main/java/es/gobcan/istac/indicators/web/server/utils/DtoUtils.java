@@ -1,8 +1,8 @@
 package es.gobcan.istac.indicators.web.server.utils;
 
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
-import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.Operation;
-import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.ProcStatus;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.Operation;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.ProcStatus;
 
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;

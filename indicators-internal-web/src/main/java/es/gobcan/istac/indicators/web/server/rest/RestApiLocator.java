@@ -5,7 +5,7 @@ import javax.annotation.PostConstruct;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.statistical.operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +30,5 @@ public class RestApiLocator {
 
         return statisticalOperationsRestInternalFacadeV10;
     }
-    
+
 }

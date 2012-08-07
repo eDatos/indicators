@@ -11,7 +11,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
-import org.siemac.metamac.rest.common.v1_0.domain.ResourcesPagedResult;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.Operations;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -47,10 +47,10 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
     public GetIndicatorsSystemPaginatedListResult executeSecurityAction(GetIndicatorsSystemPaginatedListAction action) throws ActionException {
         List<IndicatorsSystemSummaryDtoWeb> indicatorsSystemSummaryDtoWebs = new ArrayList<IndicatorsSystemSummaryDtoWeb>();
         int totalResults = 0;
-        ResourcesPagedResult result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
-        if (result != null && result.getItems() != null) {
+        Operations result = statisticalOperationsRestInternalFacade.findOperationsIndicatorsSystem(action.getFirstResult(), action.getMaxResults());
+        if (result != null && result.getOperations() != null) {
             totalResults = result.getTotal().intValue();
-            for (Resource resource : result.getItems()) {
+            for (Resource resource : result.getOperations()) {
                 // Check if operation (indicators system) exists in the DB
                 MetamacCriteria criteria = new MetamacCriteria();
                 criteria.setPaginator(new MetamacCriteriaPaginator());

@@ -3,9 +3,9 @@ package es.gobcan.istac.indicators.web.server.rest;
 import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
-import org.siemac.metamac.rest.common.v1_0.domain.ResourcesPagedResult;
-import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.Operation;
-import org.siemac.metamac.statistical.operations.rest.internal.v1_0.domain.OperationCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.Operation;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.OperationCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.domain.Operations;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.constants.CommonSharedConstants;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -25,16 +25,16 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
         try {
             return restApiLocator.getStatisticalOperationsRestFacadeV10().retrieveOperationById(operationCode);
         } catch (ServerWebApplicationException e) {
-            org.siemac.metamac.rest.common.v1_0.domain.Error error = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
-                    org.siemac.metamac.rest.common.v1_0.domain.Error.class);
-            throw WebExceptionUtils.createMetamacWebException(error);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
+                    org.siemac.metamac.rest.common.v1_0.domain.Exception.class);
+            throw WebExceptionUtils.createMetamacWebException(exception);
         } catch (Exception e) {
             throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, IndicatorsWeb.getCoreMessages().exception_common_unknown());
         }
     }
 
     @Override
-    public ResourcesPagedResult findOperationsIndicatorsSystem(int firstResult, int maxResult) throws MetamacWebException {
+    public Operations findOperationsIndicatorsSystem(int firstResult, int maxResult) throws MetamacWebException {
         try {
             String query = OperationCriteriaPropertyRestriction.IS_INDICATORS_SYSTEM + " " + OperationType.EQ.name() + " \"" + Boolean.TRUE + "\"";
 
@@ -42,12 +42,12 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
 
-            ResourcesPagedResult findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
+            Operations findOperationsResult = restApiLocator.getStatisticalOperationsRestFacadeV10().findOperations(query, null, limit, offset);
             return findOperationsResult;
         } catch (ServerWebApplicationException e) {
-            org.siemac.metamac.rest.common.v1_0.domain.Error error = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
-                    org.siemac.metamac.rest.common.v1_0.domain.Error.class);
-            throw WebExceptionUtils.createMetamacWebException(error);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = e.toErrorObject(WebClient.client(restApiLocator.getStatisticalOperationsRestFacadeV10()),
+                    org.siemac.metamac.rest.common.v1_0.domain.Exception.class);
+            throw WebExceptionUtils.createMetamacWebException(exception);
         } catch (Exception e) {
             throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, IndicatorsWeb.getCoreMessages().exception_common_unknown());
         }
