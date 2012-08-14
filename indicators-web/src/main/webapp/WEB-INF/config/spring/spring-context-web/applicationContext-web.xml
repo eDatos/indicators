@@ -32,10 +32,6 @@
     
     <!-- Converters -->
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
-    	<property name="converters">
-        	<list>
-    	    </list>
-    	</property>
 	</bean>
     
     <!-- Configurer that sets up a shared FreeMarker Configuration for FreeMarker views -->
