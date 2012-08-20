@@ -21,9 +21,19 @@
         <constructor-arg value="es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService" />
     </bean>
         
-    <bean id="metamacStatisticalOperationsExternalInterfaceV10" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10" />
+    <bean id="configurationService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.core.common.conf.ConfigurationService" />
     </bean>
 
-    
+    <bean id="restApiLocator" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="es.gobcan.istac.indicators.rest.clients.RestApiLocator" />
+    </bean>    
+
+    <bean id="statisticalOperations" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical_operations.rest.external.v1_0.service.StatisticalOperationsV1_0" />
+    </bean>
+        
+    <bean id="statisticalOperationsRestInternalFacade" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade" />
+    </bean>
 </beans>

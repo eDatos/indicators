@@ -3,8 +3,8 @@ package es.gobcan.istac.indicators.rest.mapper;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 
 public class MapperUtil {
 
@@ -22,20 +22,20 @@ public class MapperUtil {
     }
 
     public static Map<String, String> getLocalisedLabel(InternationalString internationalString) {
-        if (internationalString == null || internationalString.getLocalisedStrings() == null || internationalString.getLocalisedStrings().getLocalisedString().size() == 0) {
+        if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
             return null;
         }
 
-        Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getLocalisedStrings().getLocalisedString().size() + 1);
+        Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
         String defaultLabel = null;
         String defaultLabelLocale = null;
-        for (LocalisedString localisedString : internationalString.getLocalisedStrings().getLocalisedString()) {
-            labels.put(localisedString.getLocale(), localisedString.getLabel());
+        for (LocalisedString localisedString : internationalString.getTexts()) {
+            labels.put(localisedString.getLang(), localisedString.getValue());
             if ((defaultLabel == null) || 
-                (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE)) ||
-                (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
-                defaultLabel = localisedString.getLabel();
-                defaultLabelLocale = localisedString.getLocale();
+                (defaultLabel != null && localisedString.getLang().equals(DEFAULT_LANGUAGE)) ||
+                (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLang().startsWith(DEFAULT_LANGUAGE))) {
+                defaultLabel = localisedString.getValue();
+                defaultLabelLocale = localisedString.getLang();
             }
         }
         labels.put(DEFAULT, defaultLabel);

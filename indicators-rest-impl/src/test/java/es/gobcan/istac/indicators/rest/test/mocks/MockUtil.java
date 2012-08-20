@@ -1,9 +1,8 @@
 package es.gobcan.istac.indicators.rest.test.mocks;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.siemac.metamac.schema.common.v1_0.domain.InternationalString;
-import org.siemac.metamac.schema.common.v1_0.domain.LocalisedString;
-import org.siemac.metamac.schema.common.v1_0.domain.LocalisedStringList;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 
 public class MockUtil {
 
@@ -18,28 +17,26 @@ public class MockUtil {
         localisedStringEN.setLabel(RandomStringUtils.randomAlphabetic(15));
         internationalString.addText(localisedStringEN);
 
-        LocalisedString localisedStringES = new LocalisedString();
+        org.siemac.metamac.core.common.ent.domain.LocalisedString localisedStringES = new org.siemac.metamac.core.common.ent.domain.LocalisedString();
         localisedStringES.setLocale("es");
         localisedStringES.setLabel(RandomStringUtils.randomAlphabetic(15));
-        internationalString.addText(localisedStringEN);
+        internationalString.addText(localisedStringES);
         return internationalString;
     }
     
     public static InternationalString createInternationalString() {
-        LocalisedStringList localisedStringList = new LocalisedStringList();
+        InternationalString internationalString = new InternationalString();
 
         LocalisedString localisedStringEN = new LocalisedString();
-        localisedStringEN.setLocale("en");
-        localisedStringEN.setLabel(RandomStringUtils.randomAlphabetic(15));
-        localisedStringList.getLocalisedString().add(localisedStringEN);
+        localisedStringEN.setLang("en");
+        localisedStringEN.setValue(RandomStringUtils.randomAlphabetic(15));
+        internationalString.getTexts().add(localisedStringEN);
 
         LocalisedString localisedStringES = new LocalisedString();
-        localisedStringES.setLocale("es");
-        localisedStringES.setLabel(RandomStringUtils.randomAlphabetic(15));
-        localisedStringList.getLocalisedString().add(localisedStringES);
+        localisedStringES.setLang("es");
+        localisedStringES.setValue(RandomStringUtils.randomAlphabetic(15));
+        internationalString.getTexts().add(localisedStringES);
 
-        InternationalString internationalString = new InternationalString();
-        internationalString.setLocalisedStrings(localisedStringList);
         return internationalString;
     }
 }

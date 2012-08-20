@@ -10,9 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacExceptionFault;
-import org.siemac.metamac.statistical.operations.external.ws.v1_0.MetamacStatisticalOperationsExternalInterfaceV10;
-import org.siemac.metamac.statistical.operations.external.ws.v1_0.domain.OperationBase;
+import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -45,6 +43,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
 import es.gobcan.istac.indicators.rest.types.AttributeType;
@@ -76,23 +75,24 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private static String                                        REQUEST_CACHE_DATASOURCE         = "REQUEST_CACHE_DATASOURCE";
     private static String                                        REQUEST_CACHE_UNITMULTIPLIER     = "REQUEST_CACHE_UNITMULTIPLIER";
     private static String                                        REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                         = new ThreadLocal<Map<String, Map<String, Object>>>() {
-      protected java.util.Map<String, Map<String, Object>> initialValue() {
-          return new HashMap<String, Map<String, Object>>();
-      };
-    };
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
+
+                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                          return new HashMap<String, Map<String, Object>>();
+                                                                                                      };
+                                                                                                  };
 
     @Autowired
-    private IndicatorsSystemsService                             indicatorsSystemsService             = null;
+    private IndicatorsSystemsService                             indicatorsSystemsService         = null;
 
     @Autowired
-    private IndicatorsService                                    indicatorsService                    = null;
+    private IndicatorsService                                    indicatorsService                = null;
 
     @Autowired
-    private IndicatorsDataService                                indicatorsDataService                = null;
+    private IndicatorsDataService                                indicatorsDataService            = null;
 
     @Autowired
-    private MetamacStatisticalOperationsExternalInterfaceV10 statisticalOperations    = null;
+    private StatisticalOperationsRestInternalFacade              statisticalOperations            = null;
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -100,10 +100,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(baseURL);
 
         try {
-            OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
+            Operation sourceOperationBase = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
             IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
             return target;
-        } catch (MetamacExceptionFault e) {
+        } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -114,11 +114,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(baseURL);
 
         try {
-            OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode());
+            Operation sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
 
-            IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperationBase, baseURL);
+            IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperation, baseURL);
             return target;
-        } catch (MetamacExceptionFault e) {
+        } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -131,12 +131,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
             for (IndicatorsSystemVersion source : sources) {
-                OperationBase sourceOperationBase = statisticalOperations.retrieveOperation(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
-                IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
+                Operation sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
+                IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperation, baseURL);
                 targets.add(target);
             }
             return targets;
-        } catch (MetamacExceptionFault e) {
+        } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -255,71 +255,71 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         requestCache.remove(); // Remove All Cache
         try {
             List<GeographicalValue> geographicalValues = dataTypeRequest.getGeographicalValues();
-            List<TimeValue> timeValues  = dataTypeRequest.getTimeValues();
+            List<TimeValue> timeValues = dataTypeRequest.getTimeValues();
             List<MeasureValue> measureValues = dataTypeRequest.getMeasureValues();
             Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservationMap();
-            
+
             // TRANSFORM
             Integer size = geographicalValues.size() * timeValues.size() * measureValues.size();
-            
+
             List<String> format = new ArrayList<String>();
             Map<String, DataDimensionType> dimension = new LinkedHashMap<String, DataDimensionType>();
             List<String> observations = new ArrayList<String>(size);
-            List<Map<String, AttributeType>> attributes = new ArrayList<Map<String,AttributeType>>(size);
-    
+            List<Map<String, AttributeType>> attributes = new ArrayList<Map<String, AttributeType>>(size);
+
             format.add(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
             format.add(IndicatorDataDimensionTypeEnum.TIME.name());
             format.add(IndicatorDataDimensionTypeEnum.MEASURE.name());
-    
+
             DataRepresentationType dataRepresentationTypeGeographical = new DataRepresentationType();
             dataRepresentationTypeGeographical.setSize(geographicalValues.size());
             dataRepresentationTypeGeographical.setIndex(new LinkedHashMap<String, Integer>());
             DataDimensionType dataDimensionTypeGeographical = new DataDimensionType();
             dataDimensionTypeGeographical.setRepresentation(dataRepresentationTypeGeographical);
             dimension.put(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), dataDimensionTypeGeographical);
-    
+
             DataRepresentationType dataRepresentationTypeTime = new DataRepresentationType();
             dataRepresentationTypeTime.setSize(timeValues.size());
             dataRepresentationTypeTime.setIndex(new LinkedHashMap<String, Integer>());
             DataDimensionType dataDimensionTypeTime = new DataDimensionType();
             dataDimensionTypeTime.setRepresentation(dataRepresentationTypeTime);
             dimension.put(IndicatorDataDimensionTypeEnum.TIME.name(), dataDimensionTypeTime);
-    
+
             DataRepresentationType dataRepresentationTypeMeasure = new DataRepresentationType();
             dataRepresentationTypeMeasure.setSize(measureValues.size());
             dataRepresentationTypeMeasure.setIndex(new LinkedHashMap<String, Integer>());
             DataDimensionType dataDimensionTypeMeasure = new DataDimensionType();
             dataDimensionTypeMeasure.setRepresentation(dataRepresentationTypeMeasure);
             dimension.put(IndicatorDataDimensionTypeEnum.MEASURE.name(), dataDimensionTypeMeasure);
-    
+
             for (int i = 0; i < geographicalValues.size(); i++) {
                 GeographicalValue geographicalValue = geographicalValues.get(i);
                 dataRepresentationTypeGeographical.getIndex().put(geographicalValue.getCode(), i);
-    
+
                 for (int j = 0; j < timeValues.size(); j++) {
                     TimeValue timeValue = timeValues.get(j);
                     dataRepresentationTypeTime.getIndex().put(timeValue.getTimeValue(), j);
-    
+
                     for (int k = 0; k < measureValues.size(); k++) {
                         MeasureValue measureValue = measureValues.get(k);
                         dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
-    
+
                         // Observation ID: Be careful!!! don't change order of ids
                         String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue();
 
                         ObservationExtendedDto observationDto = observationMap.get(id);
-                        
+
                         // PRIMARY MEASURE
                         observations.add(observationDto.getPrimaryMeasure());
-                        
+
                         // ATTRIBUTES
                         Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
-                        setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationDto, observationAttributes);                        
+                        setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationDto, observationAttributes);
                         attributes.add(observationAttributes);
                     }
                 }
             }
-    
+
             DataType dataType = new DataType();
             dataType.setFormat(format);
             dataType.setDimension(dimension);
@@ -330,10 +330,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         } finally {
             // Remove All Cache
-            requestCache.remove(); 
+            requestCache.remove();
         }
     }
-    
+
 
     private void setUnitAndUnitMultiplier(DataTypeRequest dataTypeRequest, MeasureValue measureValue, ObservationExtendedDto observationDto, Map<String, AttributeType> observationAttributes) throws MetamacException {
         AttributeBasicDto codeAttributeBasicDto = null;
@@ -379,31 +379,31 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 unitAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL);
                 unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
                 observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
-                
+
                 AttributeType unitMeasureSymbolAttribute = new AttributeType();
                 unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
                 unitMeasureSymbolAttribute.setValue(MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol()));
                 observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
-                
+
                 if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) || 
                     MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
                     MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
                     UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
-                    
+
                     AttributeType unitMultiplierAttribute = new AttributeType();
                     unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_UNIT_MULT);
                     unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
-                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);    
+                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);
                 }
             }
         }
     }
-    
+
     private IndicatorVersion retrieveIndicatorPublished(String uuid) {
         try {
             Assert.notNull(uuid, "UUID is required");
-            
-            Map<String, Object> indicatorVersionCache =  getRequestCache(REQUEST_CACHE_INDICATIOR_VERSION);
+
+            Map<String, Object> indicatorVersionCache = getRequestCache(REQUEST_CACHE_INDICATIOR_VERSION);
             IndicatorVersion indicatorVersion = (IndicatorVersion) indicatorVersionCache.get(uuid);
             if (indicatorVersion == null) {
                 indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid);
@@ -413,15 +413,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
-        
+
     }
-    
 
     private DataSource retrieveDatasource(String uuid) {
         try {
             Assert.notNull(uuid, "UUID is required");
-            
-            Map<String, Object> datasourceCache =  getRequestCache(REQUEST_CACHE_DATASOURCE);
+
+            Map<String, Object> datasourceCache = getRequestCache(REQUEST_CACHE_DATASOURCE);
             DataSource dataSource = (DataSource) datasourceCache.get(uuid);
             if (dataSource == null) {
                 dataSource = indicatorsService.retrieveDataSource(RestConstants.SERVICE_CONTEXT, uuid);
@@ -432,13 +431,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
+
     private UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierId) {
         try {
             Assert.notNull(unitMultiplierId, "unitMultiplierId is required");
-            
+
             Map<String, Object> unitMultiplierCache = getRequestCache(REQUEST_CACHE_UNITMULTIPLIER);
-            UnitMultiplier unitMultiplier = (UnitMultiplier)unitMultiplierCache.get(unitMultiplierId.toString());
+            UnitMultiplier unitMultiplier = (UnitMultiplier) unitMultiplierCache.get(unitMultiplierId.toString());
             if (unitMultiplier == null) {
                 unitMultiplier = indicatorsService.retrieveUnitMultiplier(RestConstants.SERVICE_CONTEXT, unitMultiplierId);
                 unitMultiplierCache.put(unitMultiplierId.toString(), unitMultiplier);
@@ -448,8 +447,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
-    
+
     private Map<String, Object> getRequestCache(String name) {
         Map<String, Object> requestCacheInstance = requestCache.get().get(name);
         if (requestCacheInstance == null) {
@@ -547,16 +545,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
-        
+
         // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
-        
+
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
         metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, metadataAttributeUnit);
-        
+
         MetadataAttributeType metadataAttributeUnitMult = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MULT, "Multiplicador de la unidad", "Unit Multiplier");
         metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, metadataAttributeUnitMult);
-        
+
         MetadataAttributeType metadataAttributeUnitMeasure = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEASURE, "Unidad de medida", "Unit of Measure");
         metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, metadataAttributeUnitMeasure);
         target.setAttribute(metadataAttributes);
@@ -564,8 +562,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // CHILD LINK
         target.setChildLink(_createLinkTypeIndicatorData(source.getIndicator(), baseURL));
     }
-    
-    private MetadataAttributeType createMetadataAttributeType(String code, String spanishLabel, String englishLabel) {        
+
+    private MetadataAttributeType createMetadataAttributeType(String code, String spanishLabel, String englishLabel) {
         LocalisedString localisedStringES = new LocalisedString();
         localisedStringES.setLocale("es");
         localisedStringES.setLabel(spanishLabel);
@@ -575,7 +573,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         InternationalString internationalString = new InternationalString();
         internationalString.getTexts().add(localisedStringES);
         internationalString.getTexts().add(localisedStringEN);
-        
+
         MetadataAttributeType metadataAttributeUnit = new MetadataAttributeType();
         metadataAttributeUnit.setCode(code);
         metadataAttributeUnit.setTitle(MapperUtil.getLocalisedLabel(internationalString));
@@ -779,17 +777,17 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return target;
     }
 
-    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
+    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, Operation sourceOperation, final String baseURL) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
-        _operationBaseDoToType(sourceOperationBase, target, baseURL);
+        _operationBaseDoToType(sourceOperation, target, baseURL);
         return target;
     }
 
-    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationBase sourceOperationBase, final String baseURL) {
+    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, Operation sourceOperation, final String baseURL) {
         IndicatorsSystemType target = new IndicatorsSystemType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
-        _operationBaseDoToType(sourceOperationBase, target, baseURL);
+        _operationBaseDoToType(sourceOperation, target, baseURL);
         _elementsLevelsDoToType(sourceIndicatorsSystem.getChildrenFirstLevel(), target, baseURL);
         return target;
     }
@@ -820,13 +818,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setChildLink(childLink);
     }
 
-    private void _operationBaseDoToType(OperationBase sourceOperationBase, IndicatorsSystemBaseType target, final String baseURL) {
-        target.setId(sourceOperationBase.getCode());
-        target.setCode(sourceOperationBase.getCode());
-        target.setTitle(MapperUtil.getLocalisedLabel(sourceOperationBase.getTitle()));
-        target.setAcronym(MapperUtil.getLocalisedLabel(sourceOperationBase.getAcronym()));
-        target.setDescription(MapperUtil.getLocalisedLabel(sourceOperationBase.getDescription()));
-        target.setObjective(MapperUtil.getLocalisedLabel(sourceOperationBase.getObjective()));
+    private void _operationBaseDoToType(Operation sourceOperation, IndicatorsSystemBaseType target, final String baseURL) {
+        target.setId(sourceOperation.getId());
+        target.setCode(sourceOperation.getId());
+        target.setTitle(MapperUtil.getLocalisedLabel(sourceOperation.getTitle()));
+        target.setAcronym(MapperUtil.getLocalisedLabel(sourceOperation.getAcronym()));
+        target.setDescription(MapperUtil.getLocalisedLabel(sourceOperation.getDescription()));
+        target.setObjective(MapperUtil.getLocalisedLabel(sourceOperation.getObjective()));
     }
 
     private String _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final String baseURL) {
