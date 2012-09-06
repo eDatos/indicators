@@ -244,7 +244,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.setSubjectCode(null);
             target.setSubjectTitle(null);
         }
-        
+
         if (hasIndicatorDecimalPlacesChanged(source, target)) {
             target.setInconsistentData(Boolean.TRUE);
         }
@@ -348,7 +348,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
         }
 
-        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts());
+        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts(), target);
         target.getTexts().clear();
         target.getTexts().addAll(localisedStringEntities);
 
@@ -358,7 +358,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     /**
      * Transform LocalisedString, reusing existing locales
      */
-    private Set<LocalisedString> localisedStringDtoToDo(ServiceContext ctx, Set<LocalisedStringDto> sources, Set<LocalisedString> targets) {
+    private Set<LocalisedString> localisedStringDtoToDo(ServiceContext ctx, Set<LocalisedStringDto> sources, Set<LocalisedString> targets, InternationalString internationalStringTarget) {
 
         Set<LocalisedString> targetsBefore = targets;
         targets = new HashSet<LocalisedString>();
@@ -367,28 +367,28 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             boolean existsBefore = false;
             for (LocalisedString target : targetsBefore) {
                 if (source.getLocale().equals(target.getLocale())) {
-                    targets.add(localisedStringDtoToDo(ctx, source, target));
+                    targets.add(localisedStringDtoToDo(ctx, source, target, internationalStringTarget));
                     existsBefore = true;
                     break;
                 }
             }
             if (!existsBefore) {
-                targets.add(localisedStringDtoToDo(ctx, source));
+                targets.add(localisedStringDtoToDo(ctx, source, internationalStringTarget));
             }
         }
         return targets;
     }
 
-    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source) {
+    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source, InternationalString internationalStringTarget) {
         LocalisedString target = new LocalisedString();
-        target.setLabel(source.getLabel());
-        target.setLocale(source.getLocale());
+        localisedStringDtoToDo(ctx, source, target, internationalStringTarget);
         return target;
     }
 
-    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source, LocalisedString target) {
+    private LocalisedString localisedStringDtoToDo(ServiceContext ctx, LocalisedStringDto source, LocalisedString target, InternationalString internationalStringTarget) {
         target.setLabel(source.getLabel());
         target.setLocale(source.getLocale());
+        target.setInternationalString(internationalStringTarget);
         return target;
     }
 
@@ -481,7 +481,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         return target;
     }
-    
+
     private boolean hasIndicatorDecimalPlacesChanged(IndicatorDto source, IndicatorVersion target) {
         Integer oldDecimalPlaces = null;
         if (target.getQuantity() != null) {

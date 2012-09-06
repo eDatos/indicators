@@ -220,18 +220,13 @@ public class DoCopyUtils {
             return null;
         }
         InternationalString target = new InternationalString();
-        target.getTexts().addAll(copyLocalisedStrings(source.getTexts()));
-        return target;
-    }
-
-    private static Set<LocalisedString> copyLocalisedStrings(Set<LocalisedString> sources) {
-        Set<LocalisedString> targets = new HashSet<LocalisedString>();
-        for (LocalisedString source : sources) {
-            LocalisedString target = new LocalisedString();
-            target.setLabel(source.getLabel());
-            target.setLocale(source.getLocale());
-            targets.add(target);
+        for (LocalisedString sourceLocalisedString : source.getTexts()) {
+            LocalisedString targetLocalisedString = new LocalisedString();
+            targetLocalisedString.setLabel(sourceLocalisedString.getLabel());
+            targetLocalisedString.setLocale(sourceLocalisedString.getLocale());
+            target.addText(targetLocalisedString);
         }
-        return targets;
+        
+        return target;
     }
 }

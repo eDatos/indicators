@@ -6,6 +6,7 @@ Cuando se cree la RELEASE, añadir estos pasos al manual de instalación:
 	- Ejecutar scripts de updates-in-release:
 	   · 01-translations-update.sql: traduce las etiquetas de la measure dimension a lo que quiere el ISTAC 
 	   · 02-external-items.sql: crea la tabla TBL_EXTERNAL_ITEMS
+	   · 03-international-string.sql: optimización de inserciones de LocalisedString para que no haga un insert y después un Update. Ver Metamac-107
 
 3. Cambios en el data
 	- Se han sustituido los clientes de ws de Statistical Operations por API Rest.
