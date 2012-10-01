@@ -29,7 +29,7 @@
             <groupId>es.gobcan.istac.indicators</groupId>
             <artifactId>indicators-rest-impl</artifactId>
         </dependency>
-        
+
         <!-- WEB -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -43,7 +43,7 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
-        
+
         <!-- json, xml -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
