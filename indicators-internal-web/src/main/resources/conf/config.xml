@@ -12,6 +12,7 @@
     <properties fileName="${environment.indicators.data}/conf/dynamic/security.xml" basePath="" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/resources.xml" basePath="" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/quartz.properties"  basePath="" config-optional="false" />
+    <properties fileName="${environment.indicators.data}/conf/static/datasources.xml"  basePath="" config-optional="false" />
 
   </override>
 </configuration>

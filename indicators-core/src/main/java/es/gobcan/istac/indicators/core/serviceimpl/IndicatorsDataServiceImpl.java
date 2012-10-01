@@ -119,7 +119,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     public IndicatorsDataServiceImpl() {
     }
-    
+
     @Override
     public List<String> retrieveDataDefinitionsOperationsCodes(ServiceContext ctx) throws MetamacException {
         // Validation
@@ -152,17 +152,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
         return dataDefinition;
     }
-    
+
     @Override
     public List<DataDefinition> findDataDefinitionsByOperationCode(ServiceContext ctx, String operationCode) throws MetamacException {
-         // Validation
+        // Validation
         InvocationValidator.checkFindDataDefinitionsByOperationCode(operationCode, null);
 
         // Find db
         List<DataDefinition> result = getDataGpeRepository().findCurrentDataDefinitionsByOperationCode(operationCode);
         return result;
     }
-    
 
     @Override
     public DataStructure retrieveDataStructure(ServiceContext ctx, String uuid) throws MetamacException {
@@ -184,7 +183,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        if (indicator.getIsPublished()) { //avoid populating archived
+        if (indicator.getIsPublished()) { // avoid populating archived
             try {
                 indicator = populateIndicatorVersionData(ctx, indicatorUuid, indicator.getDiffusionVersion().getVersionNumber());
             } catch (MetamacException e) {
@@ -198,24 +197,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 exceptionItems.addAll(e.getExceptionItems());
             }
         }
-        
+
         if (exceptionItems.size() > 0) {
             throw new MetamacException(exceptionItems);
         }
     }
-    
+
     @Override
     public Indicator populateIndicatorVersionData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkPopulateIndicatorVersionData(indicatorUuid, indicatorVersionNumber, null);
-        
+
         IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-        
+
         if (indicatorVersion != null) {
             Indicator indicator = indicatorVersion.getIndicator();
             if (shouldIndicatorVersionBePopulated(indicatorVersion)) {
                 String diffusionVersion = indicator.getIsPublished() ? indicator.getDiffusionVersion().getVersionNumber() : null;
-                
+
                 onlyPopulateIndicatorVersion(ctx, indicatorUuid, indicatorVersionNumber);
                 // After diffusion version's data is populated all related systems must update their versions
                 if (indicatorVersion.getVersionNumber().equals(diffusionVersion) && indicator.getIsPublished()) {
@@ -225,19 +224,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     changeVersionForModifiedIndicatorsSystems(modifiedSystems);
                 }
             } else {
-                LOG.info("Skipping unnecesary data populate for indicator uuid:"+indicatorUuid+" version "+indicatorVersionNumber);
+                LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
             }
             return indicator;
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_VERSION_NOT_FOUND, indicatorUuid, indicatorVersionNumber);
         }
     }
-    
+
     private boolean shouldIndicatorVersionBePopulated(IndicatorVersion indicatorVersion) {
         if (indicatorVersion.getDataRepositoryId() == null || indicatorVersion.getNeedsUpdate() || indicatorVersion.getInconsistentData() || indicatorVersion.getLastPopulateDate() == null) {
             return true;
         }
-        //All dataGpeUuids from indicator version
+        // All dataGpeUuids from indicator version
         List<String> dataGpeUuids = getDataSourceRepository().findDatasourceDataGpeUuidLinkedToIndicatorVersion(indicatorVersion.getId());
         List<String> dataDefinitionsUpdated = getDataGpeRepository().filterDataDefinitionsWithDataUpdatedAfter(dataGpeUuids, indicatorVersion.getLastPopulateDate().toDate());
         return dataDefinitionsUpdated.size() > 0;
@@ -273,7 +272,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         changeVersionForModifiedIndicatorsSystems(modifiedSystems);
         LOG.info("Finished Indicators data update process");
     }
-    
+
     private void changeVersionForModifiedIndicatorsSystems(Collection<String> modifiedSystems) {
         for (String systemUuid : modifiedSystems) {
             try {
@@ -282,27 +281,27 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 if (diffusionVersionInfo != null) {
                     String newDiffusionVersion = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
                     IndicatorsSystemVersionInformation productionVersionInfo = indicatorsSystem.getProductionVersion();
-                    
-                    //check version collision
+
+                    // check version collision
                     if (productionVersionInfo != null && newDiffusionVersion.equals(productionVersionInfo.getVersionNumber())) {
                         IndicatorsSystemVersion productionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, productionVersionInfo.getVersionNumber());
                         String newProductionVersion = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
-                        //new production version, new update date
+                        // new production version, new update date
                         productionVersion.setVersionNumber(newProductionVersion);
                         productionVersion.setLastUpdated(new DateTime());
                         productionVersion = getIndicatorsSystemVersionRepository().save(productionVersion);
-                        
-                        //change system relationship
+
+                        // change system relationship
                         indicatorsSystem.setProductionVersion(new IndicatorsSystemVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
                     }
-                    
-                    //update diffusion version
+
+                    // update diffusion version
                     IndicatorsSystemVersion diffusionVersion = getIndicatorsSystemVersionRepository().retrieveIndicatorsSystemVersion(systemUuid, diffusionVersionInfo.getVersionNumber());
                     diffusionVersion.setVersionNumber(newDiffusionVersion);
                     diffusionVersion.setLastUpdated(new DateTime());
                     diffusionVersion = getIndicatorsSystemVersionRepository().save(diffusionVersion);
-                    
-                    //change system
+
+                    // change system
                     indicatorsSystem.setDiffusionVersion(new IndicatorsSystemVersionInformation(diffusionVersion.getId(), diffusionVersion.getVersionNumber()));
                     getIndicatorsSystemRepository().save(indicatorsSystem);
                 }
@@ -342,7 +341,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (DataOperation dataOperation : dataOps) {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
-                datasetRepositoriesServiceFacade.insertObservationsExtended(datasetRepoDto.getDatasetId(), observations);
+                datasetRepositoriesServiceFacade.createObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);
@@ -358,23 +357,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             }
         }
     }
-    
+
     private Indicator changeDiffusionVersion(Indicator indicator) throws MetamacException {
         IndicatorVersionInformation diffusionVersionInfo = indicator.getIsPublished() ? indicator.getDiffusionVersion() : null;
         if (diffusionVersionInfo != null) {
-            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
-            //Check if new version number is the same as production version 
+            String nextDiffusionVersionNumber = ServiceUtils.generateVersionNumber(diffusionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
+            // Check if new version number is the same as production version
             IndicatorVersionInformation productionVersionInfo = indicator.getProductionVersion();
             if (productionVersionInfo != null && productionVersionInfo.getVersionNumber().equals(nextDiffusionVersionNumber)) {
-                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(),VersionTypeEnum.MINOR);
+                String nextProductionVersionNumber = ServiceUtils.generateVersionNumber(productionVersionInfo.getVersionNumber(), VersionTypeEnum.MINOR);
                 IndicatorVersion productionVersion = getIndicatorVersion(indicator.getUuid(), productionVersionInfo.getVersionNumber());
-                productionVersion.setVersionNumber(nextProductionVersionNumber); 
+                productionVersion.setVersionNumber(nextProductionVersionNumber);
                 productionVersion.setUpdateDate(new DateTime());
                 productionVersion = getIndicatorVersionRepository().save(productionVersion);
                 indicator.setProductionVersion(new IndicatorVersionInformation(productionVersion.getId(), productionVersion.getVersionNumber()));
             }
-            
-            //update diffusion version
+
+            // update diffusion version
             IndicatorVersion diffusionVersion = getIndicatorVersion(indicator.getUuid(), diffusionVersionInfo.getVersionNumber());
             diffusionVersion.setVersionNumber(nextDiffusionVersionNumber);
             diffusionVersion.setUpdateDate(new DateTime());
@@ -389,10 +388,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     public void deleteIndicatorData(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
         // Validation
         InvocationValidator.checkDeleteIndicatorData(indicatorUuid, indicatorVersionNumber, null);
-        
+
         try {
             IndicatorVersion indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-            
+
             if (indicatorVersion.getDataRepositoryId() != null) {
                 datasetRepositoriesServiceFacade.deleteDatasetRepository(indicatorVersion.getDataRepositoryId());
                 indicatorVersion.setDataRepositoryId(null);
@@ -445,7 +444,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -500,14 +500,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
                 Collections.sort(geographicalValuesInIndicator, new Comparator<GeographicalValue>() {
-                   @Override
+
+                    @Override
                     public int compare(GeographicalValue o1, GeographicalValue o2) {
-                       return o1.getOrder().compareTo(o2.getOrder());
-                   }
+                        return o1.getOrder().compareTo(o2.getOrder());
+                    }
                 });
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -545,14 +547,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
                 Collections.sort(geographicalValuesInIndicator, new Comparator<GeographicalValue>() {
+
                     @Override
-                     public int compare(GeographicalValue o1, GeographicalValue o2) {
+                    public int compare(GeographicalValue o1, GeographicalValue o2) {
                         return o1.getOrder().compareTo(o2.getOrder());
                     }
-                 });
+                });
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_GEOGRAPHICAL);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -611,7 +615,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return new ArrayList<TimeGranularity>(timeGranularitiesInIndicator);
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -669,19 +674,21 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
                 Collections.sort(timeValuesInIndicator, new Comparator<TimeValue>() {
-                   @Override
+
+                    @Override
                     public int compare(TimeValue o1, TimeValue o2) {
-                       try {
-                           return TimeVariableUtils.compareTo(o1.getTimeValue(), o2.getTimeValue());
-                       } catch (MetamacException e) {
-                           //This should never happen, all values have same granularity
-                           return -1;
-                       }
-                    } 
+                        try {
+                            return TimeVariableUtils.compareTo(o1.getTimeValue(), o2.getTimeValue());
+                        } catch (MetamacException e) {
+                            // This should never happen, all values have same granularity
+                            return -1;
+                        }
+                    }
                 });
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -721,7 +728,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -784,7 +792,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 }
                 return measureValuesInIndicator;
             } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
+                throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
+                        ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
             }
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -1044,10 +1053,11 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 } else {
                     throw new MetamacException(ServiceExceptionType.DATA_POPULATE_UNKNOWN_METHOD_TYPE, dataOperation.getMethodType());
                 }
-                
-                //check observation length
+
+                // check observation length
                 if (observation.getPrimaryMeasure() != null && observation.getPrimaryMeasure().length() > MAX_MEASURE_LENGTH) {
-                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH,dataOperation.getDataSourceUuid(), observation.getPrimaryMeasure(),MAX_MEASURE_LENGTH);
+                    throw new MetamacException(ServiceExceptionType.DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH, dataOperation.getDataSourceUuid(), observation.getPrimaryMeasure(),
+                            MAX_MEASURE_LENGTH);
                 }
                 observations.add(observation);
             }
@@ -1190,7 +1200,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         // Check for dotted notation
         if (isSpecialString(value)) {
             String text = getSpecialStringMeaning(value);
-            //Some Special Strings may not need to create an attribute 
+            // Some Special Strings may not need to create an attribute
             if (!StringUtils.isEmpty(text)) {
                 observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(value)));
             }
@@ -1205,7 +1215,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             String formattedValue = formatValue(numValue, dataOperation);
             observation.setPrimaryMeasure(formattedValue);
         }
-        
+
         return observation;
     }
     /*
@@ -1327,7 +1337,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private String formatValue(Double value, DataOperation dataOperation) {
         DecimalFormat formatter = (DecimalFormat) (DecimalFormat.getInstance(Locale.ENGLISH));
         formatter.setGroupingUsed(false); // DO NOT use thousands separator
-        
+
         if (RateDerivationRoundingEnum.UPWARD.equals(dataOperation.getRateRounding())) {
             formatter.setRoundingMode(RoundingMode.HALF_UP);
         } else if (RateDerivationRoundingEnum.DOWN.equals(dataOperation.getRateRounding())) {

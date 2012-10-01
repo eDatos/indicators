@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>Datasources Configuration</comment>
+  
+  <entry key="indicators.core.db.url">jdbc:oracle:thin:@RELLENAR_HOST:RELLENAR_PUERTO:XE</entry>
+  <entry key="indicators.core.db.driverName">oracle.jdbc.OracleDriver</entry>
+  <entry key="indicators.core.db.username">RELLENAR_USUARIO</entry>
+  <entry key="indicators.core.db.password">RELLENAR_PASSWORD</entry>
+
+  <entry key="indicators.dsrepo.db.url">jdbc:oracle:thin:@RELLENAR_HOST:RELLENAR_PUERTO:XE</entry>
+  <entry key="indicators.dsrepo.db.driverName">oracle.jdbc.OracleDriver</entry>
+  <entry key="indicators.dsrepo.db.username">RELLENAR_USUARIO</entry>
+  <entry key="indicators.dsrepo.db.password">RELLENAR_PASSWORD</entry>
+</properties>

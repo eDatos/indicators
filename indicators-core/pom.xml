@@ -220,7 +220,7 @@
 		<dependency>
 			<groupId>com.arte.statistic</groupId>
 			<artifactId>statistic-dataset-repository</artifactId>
-			<classifier>client-oracle</classifier>
+            <classifier>client</classifier>
 		</dependency>
 
 		<!-- METAMAC -->

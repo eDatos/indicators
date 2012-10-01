@@ -110,7 +110,7 @@
         <commons-dbcp.version>1.4</commons-dbcp.version>
 
         <!-- STATISTIC DATASET REPOSITORY -->
-        <statistic-dataset-repository.version>1.0.0</statistic-dataset-repository.version>
+        <statistic-dataset-repository.version>1.0.4-SNAPSHOT</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.1.1-SNAPSHOT</metamac-core-common.version>
@@ -170,6 +170,11 @@
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons-dbcp.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -458,8 +463,8 @@
             <dependency>
                 <groupId>com.arte.statistic</groupId>
                 <artifactId>statistic-dataset-repository</artifactId>
-                <classifier>client-oracle</classifier>
                 <version>${statistic-dataset-repository.version}</version>
+                <classifier>client</classifier>
                 <exclusions>
                     <exclusion>
                         <groupId>org.aspectj</groupId>
