@@ -864,6 +864,7 @@
                         <providerImplementations>
                             <svn>javasvn</svn>
                         </providerImplementations>
+                        <preparationGoals>clean install</preparationGoals>
                     </configuration>
                     <dependencies>
                         <dependency>
