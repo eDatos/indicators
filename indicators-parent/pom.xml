@@ -110,7 +110,7 @@
         <commons-dbcp.version>1.4</commons-dbcp.version>
 
         <!-- STATISTIC DATASET REPOSITORY -->
-        <statistic-dataset-repository.version>1.0.4-SNAPSHOT</statistic-dataset-repository.version>
+        <statistic-dataset-repository.version>1.0.4</statistic-dataset-repository.version>
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.2.0</metamac-core-common.version>
