@@ -95,27 +95,27 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
 
     @Override
-    protected List<String> getTablesToRemoveContent() {
+    protected List<String> getTableNamesOrderedByFKDependency() {
         List<String> tables = new ArrayList<String>();
-        tables.add("TB_LOCALISED_STRINGS");
-        tables.add("TB_ELEMENTS_LEVELS");
-        tables.add("TB_INDICATORS_INSTANCES");
-        tables.add("TB_DIMENSIONS");
-        tables.add("TB_INDIC_SYSTEMS_VERSIONS");
-        tables.add("TB_INDICATORS_SYSTEMS");
-        tables.add("TB_DATA_SOURCES_VARIABLES");
-        tables.add("TB_DATA_SOURCES");
-        tables.add("TB_INDICATORS_VERSIONS");
-        tables.add("TB_INDICATORS");
-        tables.add("TB_RATES_DERIVATIONS");
-        tables.add("TB_QUANTITIES");
-        tables.add("TB_LIS_QUANTITIES_UNITS");
-        tables.add("TB_LIS_GEOGR_VALUES");
-        tables.add("TB_LIS_GEOGR_GRANULARITIES");
-        tables.add("TB_LIS_UNITS_MULTIPLIERS");
-        tables.add("TB_TRANSLATIONS");
-        tables.add("TB_INTERNATIONAL_STRINGS");
         tables.add("TV_AREAS_TEMATICAS");
+        tables.add("TB_INTERNATIONAL_STRINGS");
+        tables.add("TB_TRANSLATIONS");
+        tables.add("TB_LIS_UNITS_MULTIPLIERS");
+        tables.add("TB_LIS_GEOGR_GRANULARITIES");
+        tables.add("TB_LIS_GEOGR_VALUES");
+        tables.add("TB_LIS_QUANTITIES_UNITS");
+        tables.add("TB_QUANTITIES");
+        tables.add("TB_RATES_DERIVATIONS");
+        tables.add("TB_INDICATORS");
+        tables.add("TB_INDICATORS_VERSIONS");
+        tables.add("TB_DATA_SOURCES");
+        tables.add("TB_DATA_SOURCES_VARIABLES");
+        tables.add("TB_INDICATORS_SYSTEMS");
+        tables.add("TB_INDIC_SYSTEMS_VERSIONS");
+        tables.add("TB_DIMENSIONS");
+        tables.add("TB_INDICATORS_INSTANCES");
+        tables.add("TB_ELEMENTS_LEVELS");
+        tables.add("TB_LOCALISED_STRINGS");
         return tables;
     }
 
