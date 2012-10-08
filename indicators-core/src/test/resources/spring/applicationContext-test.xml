@@ -21,7 +21,7 @@
   <import resource="classpath:/spring/include/indicators-beans-statistic-dataset-repository.xml"/>  
   <import resource="classpath:/spring/include/indicators-entity-manager-factory-test.xml"/>  
   <import resource="classpath:/spring/include/indicators-pub-sub.xml"/>  
-  <import resource="classpath:/spring/include/indicators-interceptor.xml"/>  
+  <import resource="classpath:/spring/include/indicators-interceptor-test.xml"/>  
   <import resource="classpath:/spring/include/indicators-beans-test.xml"/> 
   
 </beans>

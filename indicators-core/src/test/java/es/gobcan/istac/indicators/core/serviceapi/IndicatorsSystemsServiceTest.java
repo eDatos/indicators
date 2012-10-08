@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -45,7 +46,9 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
 
         // Create
         IndicatorsSystemVersion indicatorsSystemVersionCreated = indicatorsSystemService.createIndicatorsSystem(getServiceContextAdministrador(), indicatorsSystemVersion);
-
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemVersionCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemVersionCreated.getLastUpdatedBy());
+        
         // Validate properties are not in Dto
         String uuid = indicatorsSystemVersionCreated.getIndicatorsSystem().getUuid();
         String version = indicatorsSystemVersionCreated.getVersionNumber();
@@ -54,7 +57,7 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
         assertTrue(indicatorsSystemVersionCreated.getIsLastVersion());
         assertNull(indicatorsSystemCreated.getIndicatorsSystem().getDiffusionVersion());
     }
-
+    
     @Test
     public void testDeleteIndicatorWithPublishedAndDraft() throws Exception {
 

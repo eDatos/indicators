@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -65,6 +66,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getLastUpdatedBy());
 
         // Validate properties are not in Dto
         String uuid = indicatorVersionCreated.getIndicator().getUuid();
@@ -90,14 +93,18 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
 
         // Create
         IndicatorVersion indicatorVersionCreated = indicatorService.createIndicator(getServiceContextAdministrador(), indicatorVersion);
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionCreated.getLastUpdatedBy());
 
         // Check after creation needsUpdate is false
         assertFalse(indicatorVersionCreated.getNeedsUpdate());
 
         indicatorVersionCreated.setNeedsUpdate(Boolean.TRUE);
 
-        IndicatorVersion indicatorVersionUpdated = indicatorService.updateIndicatorVersion(getServiceContextAdministrador(), indicatorVersionCreated);
+        IndicatorVersion indicatorVersionUpdated = indicatorService.updateIndicatorVersion(getServiceContextAdministrador2(), indicatorVersionCreated);
         assertTrue(indicatorVersionUpdated.getNeedsUpdate());
+        assertEquals(getServiceContextAdministrador().getUserId(), indicatorVersionUpdated.getCreatedBy());
+        assertEquals(getServiceContextAdministrador2().getUserId(), indicatorVersionUpdated.getLastUpdatedBy());
     }
 
     @Test
