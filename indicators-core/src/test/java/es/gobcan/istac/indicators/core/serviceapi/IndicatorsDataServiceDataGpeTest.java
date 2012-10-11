@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -70,10 +72,9 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
     @Test
     public void testRetrieveDataDefinitions() throws Exception {
         List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
-        assertEquals(3, dataDefs.size());
-        assertEquals(CONSULTA1_UUID, dataDefs.get(0).getUuid());
-        assertEquals(CONSULTA4_UUID, dataDefs.get(1).getUuid());
-        assertEquals(CONSULTA5_UUID, dataDefs.get(2).getUuid());
+
+        String[] expected = {CONSULTA1_UUID, CONSULTA4_UUID, CONSULTA5_UUID};
+        checkElementsInCollection(expected,getDataDefinitionsUuids(dataDefs));
     }
 
     @Test
@@ -229,6 +230,14 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(CONSULTA4_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
+    }
+    
+    private List<String> getDataDefinitionsUuids(Collection<DataDefinition> dataDefinitions) {
+    	List<String> uuids = new ArrayList<String>();
+    	for (DataDefinition dataDef : dataDefinitions) {
+    		uuids.add(dataDef.getUuid());
+    	}
+    	return uuids;
     }
 
     @Override
