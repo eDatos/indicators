@@ -5,7 +5,7 @@ import java.util.List;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.widgets.ErrorMessagePanel;
-import org.siemac.metamac.web.common.client.widgets.IstacNavBar;
+import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.SuccessMessagePanel;
 
 import com.google.gwt.user.client.Timer;
@@ -88,7 +88,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
             }
         });
 
-        IstacNavBar navBar = new IstacNavBar();
+        MetamacNavBar navBar = new MetamacNavBar();
         northLayout.setZIndex(0);
         southLayout.setZIndex(0);
         footerLayout.setZIndex(0);

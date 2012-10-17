@@ -7,7 +7,7 @@ import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
-import org.siemac.metamac.web.common.client.widgets.IstacNavBar;
+import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlResult;
@@ -48,11 +48,10 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             }
             public void onWaitSuccess(GetNavigationBarUrlResult result) {
                 // Load scripts for navigation bar
-                IstacNavBar.loadScripts(result.getNavigationBarUrl());
+                MetamacNavBar.loadScripts(result.getNavigationBarUrl());
                 loadNonSecuredApplication();
             };
         });
-
     }
 
     // TODO This method should be removed to use CAS authentication

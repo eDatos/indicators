@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Configurations</comment>
+    <entry key="metamac.navbar.url">http://RELLENAR_SERVIDOR/metamac-navbar/</entry>
+</properties>
