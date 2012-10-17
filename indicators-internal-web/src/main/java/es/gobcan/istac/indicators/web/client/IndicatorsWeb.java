@@ -5,8 +5,10 @@ import java.util.logging.Logger;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.web.common.client.MetamacEntryPoint;
+import org.siemac.metamac.web.common.client.enums.ApplicationOrganisationEnum;
 import org.siemac.metamac.web.common.client.events.LoginAuthenticatedEvent;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
+import org.siemac.metamac.web.common.client.utils.ApplicationOrganisation;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
@@ -79,6 +81,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
                     @Override
                     public void onWaitSuccess(GetEditionLanguagesResult result) {
                         ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
+                        ApplicationOrganisation.setCurrentOrganisation(ApplicationOrganisationEnum.ISTAC.name());
                         loadApplication();
                     }
                 });
@@ -133,6 +136,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     // @Override
     // public void onWaitSuccess(GetEditionLanguagesResult result) {
     // ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
+    // ApplicationOrganisation.setCurrentOrganisation(ApplicationOrganisationEnum.ISTAC.name());
     // loadApplication();
     // }
     // });
