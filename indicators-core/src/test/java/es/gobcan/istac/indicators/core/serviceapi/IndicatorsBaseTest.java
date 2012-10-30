@@ -15,13 +15,17 @@ import org.siemac.metamac.common.test.MetamacBaseTests;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
+import org.springframework.beans.factory.annotation.Value;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
+    
+    @Value("${indicators.db.provider}")
+    private String databaseProvider;
 
-    private Map<String, String> tablePrimaryKeys = null;
+    private HashMap<String, List<String>> tablePrimaryKeys = null;
 
     @Override
     protected ServiceContext getServiceContextAdministrador() {
@@ -175,12 +179,17 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
 
     @Override
-    protected Map<String, String> getTablePrimaryKeys() {
+    protected Map<String, List<String>> getTablePrimaryKeys() {
         if (tablePrimaryKeys == null) {
-            tablePrimaryKeys = new HashMap<String, String>();
-            tablePrimaryKeys.put("TV_AREAS_TEMATICAS", "ID_AREA_TEMATICA");
-            tablePrimaryKeys.put("TV_CONSULTA", "ID_CONSULTA");
+            tablePrimaryKeys = new HashMap<String, List<String>>();
+            tablePrimaryKeys.put("TV_AREAS_TEMATICAS", Arrays.asList("ID_AREA_TEMATICA"));
+            tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
         }
         return tablePrimaryKeys;
+    }
+    
+    @Override
+    protected DataBaseProvider getDatabaseProvider() {
+        return DataBaseProvider.valueOf(databaseProvider);
     }
 }
