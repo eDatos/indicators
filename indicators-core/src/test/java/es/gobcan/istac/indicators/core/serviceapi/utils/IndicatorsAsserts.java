@@ -24,7 +24,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 /**
  * Asserts to tests
  */
-public class IndicatorsAsserts {
+public class IndicatorsAsserts extends MetamacAsserts {
     
     public static void assertEqualsIndicatorsSystem(IndicatorsSystemDto expected, IndicatorsSystemDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
@@ -105,11 +105,11 @@ public class IndicatorsAsserts {
     }
 
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {
-        MetamacAsserts.assertEqualsInternationalStringDto(expected, actual);
+        assertEqualsInternationalStringDto(expected, actual);
     }
     
     public static void assertEqualsInternationalString(InternationalStringDto internationalStringDto, String locale1, String label1, String locale2, String label2) {
-        MetamacAsserts.assertEqualsInternationalStringDto(internationalStringDto, locale1, label1, locale2, label2);
+        assertEqualsInternationalStringDto(internationalStringDto, locale1, label1, locale2, label2);
     }
     
     public static void assertEqualsDate(String expected, Date actual) {
