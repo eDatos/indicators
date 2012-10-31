@@ -8,13 +8,6 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
  * Mocks
  */
 public class IndicatorsMocks extends MetamacMocks {
-
-    /**
-     * Mock a simple String
-     */
-    public static String mockString(int count) {
-        return mockString(count);
-    }
     
     /**
      * Mock a InternationalString with locales "en" and "es"
