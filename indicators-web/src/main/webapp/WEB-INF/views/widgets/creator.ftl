@@ -4,203 +4,105 @@
 
 <div id="widget-creator">
 
-
     <div id="widget-preview-content" class="widget"></div>
 
     <div class="tabbable" id="widget-options-tabs">
-        <ul class="nav-tabs">
-            <li class="active" ><a href="#type" >Tipo</a></li>
-            <li><a href="#data">Datos</a></li>
-            <li><a href="#style">Estilos</a></li>
-            <li><a href="#export">Exportar</a></li>
+        <ul class="tab-navigation nav-tabs">
+            <li><a href="#" data-tab="data">Datos</a></li>
+            <li><a href="#" data-tab="style">Estilos</a></li>
+            <li><a href="#" data-tab="export">Exportar</a></li>
         </ul>
-
-        <div class="clearfix"></div>
         <div class="tab-content"></div>
-        <div class="clearfix"></div>
     </div>
-
-    <!-- Templates -->
-
-    <script id="typeOptionsTmpl" type="text/html">
-        <div class="widget-type-container">
-
-            <div class="col2 widget-type <% if(type === 'lastData'){ %>widget-type-active<% }%>">
-                <a href="#" data-type="lastData">
-                    <div class="widget-type-title">Últimos datos</div>
-                    <p>Tabla que muestra los últimos datos disponibles</p>
-                </a>
-            </div>
-
-
-            <div class="col2 widget-type <% if(type === 'temporal'){ %>widget-type-active<% }%>">
-                <a href="#" data-type="temporal">
-                    <div class="widget-type-title">Serie temporal</div>
-                    <p>Gráfica que muestra la evolución temporal de un indicador para diferentes valores geográficos</p>
-                </a>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </script>
-
-    <script id="dataOptionsTmpl" type="text/html">
-        <div class="clearfix">
-            <div class="widget-data-title">Medidas</div>
-            <div class="measures"></div>
-        </div>
-
-        <div class="clearfix">
-            <div class="col3">
-                <div>
-                    <div class="widget-data-title">Sistema de indicadores</div>
-                    <div class="selectionable-items clearfix">Puede seleccionar varios elementos</div>
-                    <div class="systems"></div>
-                </div>
-            </div>
-
-            <div class="col3">
-                <div>
-                    <div class="widget-data-title">Indicadores</div>
-                    <div class="indicators"></div>
-                </div>
-            </div>
-
-            <div class="col3">
-                <div>
-                    <div class="widget-data-title">Valores espaciales</div>
-                    <div class="geographicalValues"></div>
-                </div>
-            </div>
-        </div>
-     </script>
-
-    <script id="styleOptionsTmpl" type="text/html">
-        <div>
-            <div>
-                <label>Color del texto:</label>
-                <input type="text" name="text-color" id="text-color"/>
-            </div>
-            <div>
-                <label>Color del marco del widget:</label>
-                <input type="text" name="border-color" id="border-color">
-            </div>
-            <div>
-                <label>Ancho del widget<small>(px)</small>:</label>
-                <input type="text" name="width" id="widget-width"/>
-            </div>
-            <div class="width-slider"></div>
-            <div>
-                <label>Título del widget:</label>
-                <input type="text" name="title"/>
-            </div>
-            <% if(isTemporal) { %>
-                <div>
-                    <label>
-                        Mostrar etiquetas en el eje x
-                    </label>
-                    <input type="checkbox" name="showLabels">
-                </div>
-                <div>
-                    <label>
-                        Mostrar leyenda
-                    </label>
-                    <input type="checkbox" name="showLegend">
-                </div>
-            <% } %>
-        </div>
-    </script>
-
-    <script id="codeTmpl" type="text/html">
-        <div class="widget-export">
-            <p>Copia este código HTML en tu página</p>
-            <textarea id="code-container" readonly="readonly"><%= code %></textarea>
-        </div>
-    </script>
-
-    <script id="pagination" type="text/html">
-        <div class="pagination">
-            <ul>
-                <% if (page > firstPage) { %>
-                <li><a href="#" class="pagination-previous">&larr;</a></li>
-                <% } else { %>
-                <li class="disabled"><a href="#" class="pagination-previous">&larr;</a></li>
-                <% }%>
-
-                <li class="disabled"><a href="#" class="pagination-page"><%= page %> / <%= totalPages %></a></li>
-
-                <% if (page < totalPages) { %>
-                <li><a href="#" class="pagination-next">&rarr;</a></li>
-                <% } else { %>
-                <li class="disabled"><a href="#" class="pagination-next">&rarr;</a></li>
-                <% } %>
-
-            </ul>
-        </div>
-    </script>
-
-    <script id="systemsItem" type="text/html">
-        <a href="#" class="selectable-item item <%= selectedClass %>"><%= getLabel(item.title) %></a>
-    </script>
-
-    <!-- Template manager -->
-    <script src="[@spring.url "/theme/js/TemplateManager.js"/]"></script>
-    <script>
-        var templateManager = new TemplateManager();
-        templateManager.loadTemplatesInPage();
-
-        var apiBaseUrl = "[@spring.url ""/]";
-        var apiContext = apiBaseUrl + "/api/indicators/v1.0/";
-        var jaxiUrl = "${jaxiUrlBase}";
-    </script>
-
-    <script type="text/javascript" src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"/]"></script>
-    
-    <!-- Modelos -->
-    <script src="[@spring.url "/theme/js/models/widgets/IndicatorInstanceModel.js"/]"></script>
-    <script src="[@spring.url "/theme/js/models/widgets/WidgetOptionsModel.js"/]"></script>
-
-    <!-- Colecciones -->
-    <script src="[@spring.url "/theme/js/collections/PaginatedCollection.js"/]"></script>
-    <script src="[@spring.url "/theme/js/collections/widgets/GeographicalCollection.js"/]"></script>
-    <script src="[@spring.url "/theme/js/collections/widgets/IndicatorsCollection.js"/]"></script>
-    <script src="[@spring.url "/theme/js/collections/widgets/SystemsCollection.js"/]"></script>
-    <script src="[@spring.url "/theme/js/collections/widgets/ToggleSelection.js"/]"></script>
-
-    <!-- Vistas -->
-    <script src="[@spring.url "/theme/js/views/PaginatedView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/PaginatedItemViewWithSelection.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/PaginatedViewWithSelection.js"/]"></script>
-
-
-    <script src="[@spring.url "/theme/js/views/SelectionView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/GeographicalView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/IndicatorsView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/SystemsView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetCodeView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetPreviewView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/TabView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetStyleOptionsView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetDataOptionsView.js"/]"></script>
-    <script src="[@spring.url "/theme/js/views/widgets/WidgetTypeOptionsView.js"/]"></script>
-
-    <!-- Widget -->
-    <script src="[@spring.url "/theme/js/widgets/widget.js"/]"></script>
-
-    <script>
-        var widgetView = new WidgetView();
-        widgetView.render();
-    </script>
-
 </div>
 
+<!-- libs-->
+<script src="[@spring.url "/theme/js/libs/underscore.string.min-v.2.0.0-57.js"/]"></script>
+<script src="[@spring.url "/theme/js/libs/handlebars-1.0.0.beta.6.js"/]"></script>
+<script src="[@spring.url "/theme/js/libs/Backbone.ModelBinder.js"/]"></script>
+<script src="[@spring.url "/theme/js/libs/select2/select2.js"/]"></script>
 
-<!--[if lt IE 8]>
-<script type="text/javascript"
-src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+<!-- App -->
+<script src="[@spring.url "/theme/js/app/App.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/Templates.js"/]"></script>
+
+<!-- helpers -->
+<script src="[@spring.url "/theme/js/app/helpers/I18n.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/helpers/HandlebarsHelpers.js"/]"></script>
+
+<!-- Mixins-->
+<script src="[@spring.url "/theme/js/app/mixins/JsonpSync.js"/]"></script>
+
+
+<!-- Model -->
+<script src="[@spring.url "/theme/js/app/models/Subject.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/WidgetOptions.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/IndicatorSystem.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/GeographicalGranularity.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/GeographicalValue.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/IndicatorBase.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/Indicator.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/IndicatorInstance.js"/]"></script>
+
+<script src="[@spring.url "/theme/js/app/collections/Measures.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/IndicatorsBase.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/IndicatorsInstances.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/IndicatorSystems.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/ToggleSelection.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/Subjects.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/Indicators.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/GeographicalGranularities.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/GeographicalValues.js"/]"></script>
+
+
+<!-- Widget -->
+<script src="[@spring.url "/theme/js/widgets/libs/Class.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/libs/raphael-min.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/libs/elycharts.min.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/libs/jquery.sparkline.js"/]"></script>
+
+<script src="[@spring.url "/theme/js/widgets/src/Templates.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Istac.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Helper.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Dataset.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/DatasetRequestBuilder.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Base.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/LastData.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Temporal.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Loader.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/Factory.js"/]"></script>
+
+<!-- Vistas -->
+<script src="[@spring.url "/theme/js/app/views/TabView.js"/]"></script>
+
+<script src="[@spring.url "/theme/js/app/views/Select2View.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetCodeView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetDataOptionsLastDataView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetDataOptionsRecentView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetDataOptionsTemporalView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetPreviewView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetStyleOptionsView.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/views/WidgetView.js"/]"></script>
+
 
 <script>
-    console.log('aja');
+    var apiBaseUrl = "[@spring.url ""/]";
+    var apiContext = apiBaseUrl + "/api/indicators/v1.0";
+    var jaxiUrl = "${jaxiUrlBase}";
+
+    var options = {};
+    [#if RequestParameters.type??]
+    options.type = '${RequestParameters.type}';
+    [/#if]
+
+    var widgetView = new App.views.WidgetView(options);
+    widgetView.render();
+
+</script>
+
+<!--[if lt IE 8]>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+<script>
     // The conditional ensures that this code will only execute in IE,
     // Therefore we can use the IE-specific attachEvent without worry
     window.attachEvent("onload", function() {

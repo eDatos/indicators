@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.core.serviceimpl.util;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,6 +13,8 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.LastValue;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -69,5 +73,23 @@ public class ServiceUtils {
         target.addText(localisedStringEn);
         
         return target;
+    }
+    
+    public static void sortGeographicalValuesList(List<GeographicalValue> geographicalValues) {
+        Collections.sort(geographicalValues, new Comparator<GeographicalValue>() {
+            @Override
+             public int compare(GeographicalValue o1, GeographicalValue o2) {
+                return o1.getOrder().compareTo(o2.getOrder());
+            }
+         });
+    }
+    
+    public static void sortLastValuesCache(List<? extends LastValue> latestValues) {
+        Collections.sort(latestValues, new Comparator<LastValue>() {
+            @Override
+            public int compare(LastValue o1, LastValue o2) {
+                return o1.getLastDataUpdated().compareTo(o2.getLastDataUpdated()) * (-1); //desc order
+            }
+        });
     }
 }

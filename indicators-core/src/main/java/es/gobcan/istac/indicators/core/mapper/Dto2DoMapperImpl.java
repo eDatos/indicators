@@ -27,6 +27,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -41,6 +42,7 @@ import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
@@ -169,13 +171,17 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         } else {
             target.setGeographicalGranularity(null);
         }
-        if (source.getGeographicalValueUuid() != null) {
-            target.setGeographicalValue(indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getGeographicalValueUuid()));
-        } else {
-            target.setGeographicalValue(null);
+
+        target.getGeographicalValues().clear();
+        if (source.getGeographicalValues() != null && source.getGeographicalValues().size() > 0) {
+            for (GeographicalValueBaseDto geoValueBase : source.getGeographicalValues()) {
+                GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValue(ctx, geoValueBase.getUuid());
+                target.addGeographicalValue(geoValue);
+            }
         }
+
         target.setTimeGranularity(source.getTimeGranularity());
-        target.setTimeValue(source.getTimeValue());
+        target.setTimeValuesAsList(source.getTimeValues());
 
         // Related entities
         if (source.getParentUuid() != null) {

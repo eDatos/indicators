@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +38,7 @@ public class DataSourceCompatibilityChecker {
         
         return items;
     }
-    
+
     private static List<MetamacExceptionItem> checkGeographicVariableConstraints(DataSource dataSource, Data data) {
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
         String geographicVar = dataSource.getGeographicalVariable();

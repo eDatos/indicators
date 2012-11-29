@@ -25,6 +25,9 @@
     <entry key="page.indicators-system-list.title">Indicators systems</entry>
     <entry key="page.indicators-system.error.not-found">Indicators system not found</entry>
     <entry key="entity.indicators-system">Indicators system</entry>
+    <entry key="atom.author.name">Instituto Canario de Estadística (ISTAC)</entry>
+    <entry key="atom.entry.title">Indicators system update</entry>
+    <entry key="atom.entry.content">The Indicators system has been updated</entry>
     
 	<!-- Indicator instance -->
 	<entry key="entity.indicator-instance.geographical-granularities">Geographical granularities</entry>

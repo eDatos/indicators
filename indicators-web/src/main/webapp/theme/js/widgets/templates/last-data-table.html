@@ -1,0 +1,29 @@
+<table>
+    <thead>
+        <tr>
+            <th class="istac-widget-last-data-indicator-column istac-widget-lastData-title">Indicador</th>
+            {{#each measures}}
+                <th>{{this}}</th>
+            {{/each}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each datasets}}
+            <tr data-tooltip="{{description}}">
+                <td class="istac-widget-last-data-indicator-column">
+                    <div class="istac-widget-lastData-title"><a href="{{jaxiUrl}}">{{title}}</a></div>
+                    <div class="istac-widget-unit">{{ temporalLabel }}</div>
+                </td>
+                {{#each observations}}
+                <td>
+                    <div>
+                        {{#if showSparkline }}<span class="inlinesparkline">{{ values }}</span>{{/if}}
+                        <span class="istact-widget-observation">{{ value }} </span>
+                    </div>
+                    <div class="istact-widget-unit"> {{ unit }}</div>
+                </td>
+                {{/each}}
+            </tr>
+        {{/each}}
+    </tbody>
+</table>

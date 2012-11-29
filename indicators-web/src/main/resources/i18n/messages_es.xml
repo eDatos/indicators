@@ -15,6 +15,7 @@
     
     <!-- Menu -->
     <entry key="menu.indicators-systems">Sistemas de indicadores</entry>
+    <entry key="menu.indicators-systems.atom">Atom</entry>
     <entry key="menu.indicators">Indicadores</entry>
     
     <!-- Languages -->
@@ -25,6 +26,10 @@
     <entry key="page.indicators-system-list.title">Sistemas de indicadores</entry>
     <entry key="page.indicators-system.error.not-found">El sistema de indicadores no existe</entry>
     <entry key="entity.indicators-system">Sistema de indicadores</entry>
+    <entry key="atom.author.name">Instituto Canario de Estadística (ISTAC)</entry>
+    <entry key="atom.entry.title">Actualización del sistema de indicadores</entry>
+    <entry key="atom.entry.content">El Sistema de indicadores se ha actualizado</entry>
+    
 
 	<!-- Indicator instance -->
 	<entry key="entity.indicator-instance.geographical-granularities">Granularidades geográficas</entry>

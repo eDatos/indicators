@@ -26,7 +26,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionInformation;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
@@ -389,6 +388,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Populate data
         try {
             getIndicatorsDataService().populateIndicatorVersionData(ctx, uuid, indicatorInProduction.getVersionNumber());
+            getIndicatorsDataService().buildLastValuesCache(ctx, indicatorInProduction);
         } catch (MetamacException e) {
             indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLICATION_FAILED);
             indicatorInProduction.setPublicationFailedDate(new DateTime());
@@ -414,7 +414,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (indicator.getDiffusionVersion() != null) {
             IndicatorVersion indicatorDiffusionVersion = retrieveIndicator(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
             try {
-                getIndicatorsDataService().deleteIndicatorData(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
+                getIndicatorsDataService().deleteIndicatorVersionData(ctx, uuid, indicator.getDiffusionVersion().getVersionNumber());
             } catch (MetamacException e) {
                 LOG.warn("Dataset datasetId:" + indicatorDiffusionVersion.getDataRepositoryId() + " for indicator version with uuid:" + uuid + " and version:"
                         + indicator.getDiffusionVersion().getVersionNumber() + " could not be deleted", e);
@@ -455,7 +455,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInDiffusion.setArchiveDate(new DateTime());
         indicatorInDiffusion.setArchiveUser(ctx.getUserId());
         indicatorInDiffusion = getIndicatorVersionRepository().save(indicatorInDiffusion);
-
+        
+        try {
+            getIndicatorsDataService().deleteIndicatorVersionData(ctx, indicator.getUuid(), indicatorInDiffusion.getVersionNumber());
+        } catch (MetamacException e) {
+            LOG.warn("Data could not be deleted for indicator version just archived uuid:"+indicator.getUuid()+" version:"+indicatorInDiffusion.getVersionNumber(), e);
+        }
+        
         return indicatorInDiffusion;
     }
 
@@ -676,6 +682,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return unitsMultipliers;
     }
     
+    
     /**
      * Checks not exists another indicator with same code
      */
@@ -875,14 +882,11 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
      * - Check indicator is not in any published indicators system
      */
     private void checkConditionsToArchive(ServiceContext ctx, String indicatorUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        List<String> indicatorsSystemsDiffusion = getIndicatorInstanceRepository().findIndicatorsSystemsWithDiffusionVersionWithIndicator(indicatorUuid);
+        List<String> indicatorsSystemsDiffusion = getIndicatorInstanceRepository().findIndicatorsSystemsPublishedWithIndicator(indicatorUuid);
         for (String indicatorsSystemUuid : indicatorsSystemsDiffusion) {
-            IndicatorsSystem indicatorsSystem = getIndicatorsSystemRepository().retrieveIndicatorsSystem(indicatorsSystemUuid);
-            if (indicatorsSystem.getIsPublished()) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemUuid, new String[]{
-                        ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED,
-                        ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
-            }
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_WRONG_PROC_STATUS, indicatorsSystemUuid, new String[]{
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DRAFT, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_VALIDATION_REJECTED,
+                    ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
         }
     }
     

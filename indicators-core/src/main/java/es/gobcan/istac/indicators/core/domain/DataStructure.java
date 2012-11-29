@@ -58,7 +58,7 @@ public class DataStructure {
     @JsonProperty("categories")
     public void processCategories(List<Object> categories) {
         for (Object varDef : categories) {
-            Map<String, Object> mapa = (Map) varDef;
+            Map<String, Object> mapa = (Map<String,Object>) varDef;
             String var = (String) mapa.get("variable");
             List<String> labels = (List<String>) mapa.get("labels");
             List<String> codes = (List<String>) mapa.get("codes");

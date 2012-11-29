@@ -1,9 +1,16 @@
 package es.gobcan.istac.indicators.core.serviceapi.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
@@ -14,6 +21,7 @@ import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
@@ -120,9 +128,9 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getIndicatorUuid(), actual.getIndicatorUuid());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getGeographicalGranularityUuid(), actual.getGeographicalGranularityUuid());
-        assertEquals(expected.getGeographicalValueUuid(), actual.getGeographicalValueUuid());
+        assertEqualsGeographicalValuesBase(expected.getGeographicalValues(), actual.getGeographicalValues());
         assertEquals(expected.getTimeGranularity(), actual.getTimeGranularity());
-        assertEquals(expected.getTimeValue(), actual.getTimeValue());
+        assertStringCollectionEquals(expected.getTimeValues(), actual.getTimeValues());
     }
     
     public static void assertEqualsAttributeBasic(AttributeBasicDto expected, AttributeBasicDto actual) {
@@ -138,5 +146,45 @@ public class IndicatorsAsserts extends MetamacAsserts {
         DatasetRepositoryAsserts.assertEqualsInternationalString(expected.getValue(), actual.getValue());
     }
     
+    private static void assertEqualsGeographicalValuesBase(Collection<GeographicalValueBaseDto> expected, Collection<GeographicalValueBaseDto> actual) {
+        if (expected == null) {
+            if (actual == null) {
+                assertNull(actual);
+            } else {
+                assertEquals(0,actual.size());
+            }
+        } else {
+            assertNotNull(actual);
+            
+            Set<String> uuidsExpected =  getGeographicalValueBaseDtoUuids(expected);
+            Set<String> uuidsActual =  getGeographicalValueBaseDtoUuids(actual);
+            
+            assertStringCollectionEquals(uuidsExpected, uuidsActual);
+        }
+    }
+    
+    private static Set<String> getGeographicalValueBaseDtoUuids(Collection<GeographicalValueBaseDto> collection) {
+        Set<String> uuids = new HashSet<String>();
+        if (collection != null) {
+            for (GeographicalValueBaseDto geoValueBase : collection) {
+                uuids.add(geoValueBase.getUuid());
+            }
+        }
+        return uuids;
+    }
+    
+    private static void assertStringCollectionEquals(Collection<String> expected, Collection<String> actual) {
+        if (expected == null) {
+            assertNull(actual);
+        } else {
+            assertNotNull(actual);
+            assertEquals(expected.size(), actual.size());
+            
+            for (String str : expected) {
+                assertTrue(actual.contains(str));
+            }
+        }
+    }
 
 }
+

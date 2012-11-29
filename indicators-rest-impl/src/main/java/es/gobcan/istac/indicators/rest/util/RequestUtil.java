@@ -1,14 +1,11 @@
 package es.gobcan.istac.indicators.rest.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RequestUtil {
 
@@ -40,5 +37,16 @@ public class RequestUtil {
             }
         }
         return selectedDimension;
+    }
+
+    public static Set<String> parseFields(String fields) {
+        Set<String> result = new HashSet<String>();
+        if(!org.siemac.metamac.core.common.util.shared.StringUtils.isEmpty(fields)) {
+            String[] fieldsParts = fields.split(",");
+            for(String fieldPart : fieldsParts) {
+                result.add(fieldPart.trim());
+            }
+        }
+        return result;
     }
 }

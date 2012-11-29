@@ -1,22 +1,9 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import java.util.List;
+import es.gobcan.istac.indicators.core.domain.*;
+import es.gobcan.istac.indicators.rest.types.*;
 
-import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
-import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.domain.TimeGranularity;
-import es.gobcan.istac.indicators.rest.types.DataType;
-import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
-import es.gobcan.istac.indicators.rest.types.IndicatorType;
-import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
-import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
-import es.gobcan.istac.indicators.rest.types.ThemeType;
+import java.util.List;
 
 public interface Do2TypeMapper {
 
@@ -24,6 +11,7 @@ public interface Do2TypeMapper {
     public IndicatorsSystemType indicatorsSystemDoToType(final IndicatorsSystemVersion source, final String baseURL);
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(final IndicatorsSystemVersion source, final String baseURL);
     public List<IndicatorsSystemBaseType> indicatorsSystemDoToBaseType(final List<IndicatorsSystemVersion> sources, final String baseURL);
+    public IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory systemHistory, final String baseURL);
 
     // Indicators Instance
     public IndicatorInstanceType indicatorsInstanceDoToType(final IndicatorInstance source, final String baseURL);
@@ -39,9 +27,16 @@ public interface Do2TypeMapper {
     public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
     
     // Subjects
-    public List<ThemeType> subjectDoToType(List<Subject> subjects);
+    public SubjectType subjectDoToType(final Subject subject, List<IndicatorVersion> indicators, String baseUrl);
+    public List<SubjectBaseType> subjectDoToBaseType(List<Subject> subjects, String baseUrl);
     
     // Data
     public DataType createDataType(DataTypeRequest dataTypeRequest);
 
+    // GeographicalValues
+    public List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues);
+
+    void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws Exception;
+
+    void indicatorsInstanceDoToMetadataType(IndicatorInstance source, MetadataType target, String baseURL);
 }

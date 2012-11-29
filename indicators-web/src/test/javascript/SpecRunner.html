@@ -1,46 +1,76 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html >
 <head>
     <title>Jasmine Spec Runner</title>
-
+    <meta charset='utf-8'>
     <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.1.0/jasmine_favicon.png">
 
     <link rel="stylesheet" type="text/css" href="lib/jasmine-1.1.0/jasmine.css">
-    <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine.js"></script>
-    <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine-html.js"></script>
+    <script src="lib/jasmine-1.1.0/jasmine.js"></script>
+    <script src="lib/jasmine-1.1.0/jasmine-html.js"></script>
 
     <!-- libs -->
-    <script type="text/javascript" src="../../main/webapp/theme/js/libs/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/libs/underscore-min-1.3.1.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/libs/backbone-min-0.9.2.js"></script>
+    <script src="../../main/webapp/theme/js/libs/jquery-1.7.1.js"></script>
+    <script src="../../main/webapp/theme/js/libs/underscore-min-1.3.1.js"></script>
+    <script src="../../main/webapp/theme/js/libs/underscore.string.min-v.2.0.0-57.js"></script>
+    <script src="../../main/webapp/theme/js/libs/backbone-min-0.9.2.js"></script>
+    <script src="../../main/webapp/theme/js/libs/handlebars-1.0.0.beta.6.js"></script>
+    <script src="../../main/webapp/theme/js/libs/Backbone.ModelBinder.js"></script>
+    <script src="../../main/webapp/theme/js/libs/i18n.js"></script>
+    <script src="../../main/webapp/theme/js/libs/select2/select2.js"></script>
 
-    <!-- include source files here... -->
-    <script type="text/javascript" src="../../main/webapp/theme/js/TemplateManager.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/widgets/widget.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/collections/widgets/ToggleSelection.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/views/SelectionView.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/collections/PaginatedCollection.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/collections/widgets/SystemsCollection.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/models/widgets/IndicatorInstanceModel.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/collections/widgets/IndicatorsCollection.js"></script>
-    <script type="text/javascript" src="../../main/webapp/theme/js/collections/widgets/GeographicalCollection.js"></script>
 
-    <!-- include spec files here... -->
-    <script type="text/javascript" src="spec/TemplateManagerSpec.js"></script>
-    <script type="text/javascript" src="spec/WidgetSpec.js"></script>
-    <script type="text/javascript" src="spec/ToggleSelectionSpec.js"></script>
-    <script type="text/javascript" src="spec/SelectionViewSpec.js"></script>
-    <script type="text/javascript" src="spec/SystemsCollectionSpec.js"></script>
-    <script type="text/javascript" src="spec/IndicatorsCollectionSpec.js"></script>
-    <script type="text/javascript" src="spec/GeographicalCollectionSpec.js"></script>
+    <script src="../../main/webapp/theme/js/app/App.js"></script>
+    <script src="../../main/webapp/theme/js/app/Templates.js"></script>
+    <script src="../../main/webapp/theme/js/app/helpers/HandlebarsHelpers.js"></script>
+    <script src="../../main/webapp/theme/js/app/helpers/I18n.js"></script>
+
+    <script src="../../main/webapp/theme/js/app/mixins/JsonpSync.js"></script>
+
+    <script src="../../main/webapp/theme/js/app/models/GeographicalGranularity.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/GeographicalValue.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/IndicatorBase.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/IndicatorInstance.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/IndicatorSystem.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/WidgetOptions.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/Subject.js"></script>
+    <script src="../../main/webapp/theme/js/app/models/Indicator.js"></script>
+
+    <script src="../../main/webapp/theme/js/app/collections/GeographicalGranularities.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/GeographicalValues.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/IndicatorsBase.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/IndicatorsInstances.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/IndicatorSystems.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/Subjects.js"></script>
+    <script src="../../main/webapp/theme/js/app/collections/Indicators.js"></script>
+
+    <script src="../../main/webapp/theme/js/app/views/WidgetStyleOptionsView.js"></script>
+    <script src="../../main/webapp/theme/js/app/views/Select2View.js"></script>
+
+
+    <script src="../../main/webapp/theme/js/widgets/src/Istac.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Helper.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Templates.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Dataset.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Base.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/LastData.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Temporal.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Loader.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/Factory.js"></script>
+    <script src="../../main/webapp/theme/js/widgets/src/DatasetRequestBuilder.js"></script>
+
+    <script src="spec/SpecOptions.js"></script>
+    <script src="spec/models/SubjectSpec.js"></script>
+    <script src="spec/collections/GeographicalGranularitiesSpec.js"></script>
+    <script src="spec/collections/GeographicalValuesSpec.js"></script>
+    <script src="spec/collections/IndicatorInstances.js"></script>
+    <script src="spec/collections/IndicatorSystems.js"></script>
+    <script src="spec/collections/IndicatorsSpec.js"></script>
+    <script src="spec/collections/SubjectsSpec.js"></script>
+    <script src="spec/views/Select2ViewSpec.js"></script>
+    <script src="spec/widgets/DatasetRequestBuilder.spec.js"></script>
 
     <script>
-        var apiContext = "http://localhost:8080/indicators-web/api/indicators/v1.0";
-    </script>
-
-
-    <script type="text/javascript">
         (function(){
             var jasmineEnv = jasmine.getEnv();
             jasmineEnv.updateInterval = 1000;

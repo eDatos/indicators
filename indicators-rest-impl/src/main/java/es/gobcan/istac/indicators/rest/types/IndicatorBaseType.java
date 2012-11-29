@@ -1,11 +1,11 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({
     "id",
@@ -20,7 +20,8 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "systemSurveyLinks",
     "quantity",
     "conceptDescription",
-    "notes"
+    "notes",
+    "data"
 })
 public class IndicatorBaseType implements Serializable {
 
@@ -46,6 +47,9 @@ public class IndicatorBaseType implements Serializable {
     private QuantityType        quantity           = null;
     private Map<String, String> conceptDescription = null;
     private Map<String, String> notes              = null;
+
+    private MetadataType metadata;
+    private DataType data;
 
     public String getId() {
         return id;
@@ -151,4 +155,19 @@ public class IndicatorBaseType implements Serializable {
         this.notes = notes;
     }
 
+    public MetadataType getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(MetadataType metadata) {
+        this.metadata = metadata;
+    }
+
+    public DataType getData() {
+        return data;
+    }
+
+    public void setData(DataType data) {
+        this.data = data;
+    }
 }

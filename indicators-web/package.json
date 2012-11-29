@@ -1,0 +1,14 @@
+{
+    "name": "stat4you-web",
+    "author": "Arte Consultores",
+    "version" : "0.0.1",
+    "dependencies" : {
+        "grunt"   :  "0.3.11",
+        "grunt-less" : ">=0.1.5",
+        "handlebars" : "1.0.6",
+        "underscore" : "*"
+    },
+    "engine": {
+        "node": ">=0.4"
+    }
+}

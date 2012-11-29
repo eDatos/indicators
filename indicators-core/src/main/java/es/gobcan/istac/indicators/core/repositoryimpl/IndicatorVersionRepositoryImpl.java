@@ -36,6 +36,40 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
             return result.get(0);
         }
     }
+    
+    @Override
+    public IndicatorVersion findPublishedIndicatorVersionByCode(String indicatorCode) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("indicatorCode", indicatorCode);
+        parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
+        
+        String query = "from IndicatorVersion iv " +
+        		        "where iv.indicator.code = :indicatorCode " +
+        		        "and iv.procStatus = :publishedStatus " +
+        		        "and iv.indicator.diffusionVersion != null " +
+        		        "and iv.indicator.diffusionVersion.versionNumber = iv.versionNumber";
+        List<IndicatorVersion> result = findByQuery(query, parameters, 1);
+        if (result == null || result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+    
+    @Override
+    public List<IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("subjectCode", subjectCode);
+        parameters.put("publishedStatus", IndicatorProcStatusEnum.PUBLISHED);
+        
+        String query = "from IndicatorVersion iv " +
+                        "where iv.subjectCode = :subjectCode " +
+                        "and iv.procStatus = :publishedStatus " +
+                        "and iv.indicator.diffusionVersion != null " +
+                        "and iv.indicator.diffusionVersion.versionNumber = iv.versionNumber";
+        List<IndicatorVersion> result = findByQuery(query, parameters, Integer.MAX_VALUE);
+        return result;
+    }
 
     @Override
     public IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid) {

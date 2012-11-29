@@ -1,18 +1,17 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("geographicRestFacade")
 public class GeographicRestFacadeImpl implements GeographicRestFacade {
@@ -39,4 +38,6 @@ public class GeographicRestFacadeImpl implements GeographicRestFacade {
         List<MetadataGranularityType> granularityTypes = dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularities);
         return granularityTypes;
     }
+
+
 }

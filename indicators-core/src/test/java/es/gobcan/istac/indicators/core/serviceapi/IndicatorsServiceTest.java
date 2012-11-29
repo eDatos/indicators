@@ -5,10 +5,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.ConditionRoot;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,8 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties.IndicatorVersionProperty;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsMocks;
@@ -46,6 +57,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     private static String            INDICATOR_3         = "Indicator-3";
     private static String            INDICATOR_3_VERSION = "11.033";
     private static String            INDICATOR_5         = "Indicator-5";
+    private static String            INDICATOR_12         = "Indicator-12";
 
     // Quantity units
     private static String            QUANTITY_UNIT_1     = "1";
@@ -181,6 +193,53 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertFalse(indicatorCreated.getIndicator().getIsPublished());
+    }
+
+    @Test
+    public void testFindIndicatorsByCriteria() throws Exception {
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class)
+                    .withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code()).eq("ES")
+                    .orderBy(IndicatorVersionProperties.indicator().uuid()).ascending()
+                    .build();
+    
+            PagingParameter paging = PagingParameter.pageAccess(10);
+    
+            PagedResult<IndicatorVersion> indicatorsVersion = indicatorService.findIndicatorsPublished(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(3,indicatorsVersion.getValues().size());
+            
+            assertEquals(INDICATOR_1,indicatorsVersion.getValues().get(0).getIndicator().getUuid());
+            assertEquals(INDICATOR_12,indicatorsVersion.getValues().get(1).getIndicator().getUuid());
+            assertEquals(INDICATOR_3,indicatorsVersion.getValues().get(2).getIndicator().getUuid());
+        }
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class)
+            .withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code()).eq("FR")
+            .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            
+            PagingParameter paging = PagingParameter.pageAccess(10);
+            
+            PagedResult<IndicatorVersion> indicatorsVersion = indicatorService.findIndicatorsPublished(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(2,indicatorsVersion.getValues().size());
+            
+            assertEquals(INDICATOR_1,indicatorsVersion.getValues().get(0).getIndicator().getUuid());
+            assertEquals(INDICATOR_12,indicatorsVersion.getValues().get(1).getIndicator().getUuid());
+        }
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorVersion.class)
+            .withProperty(IndicatorVersionProperties.lastValuesCache().geographicalValue().code()).eq("ES-MD")
+            .orderBy(IndicatorVersionProperties.indicator().uuid()).build();
+            
+            PagingParameter paging = PagingParameter.pageAccess(10);
+            
+            PagedResult<IndicatorVersion> indicatorsVersion = indicatorService.findIndicatorsPublished(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(1,indicatorsVersion.getValues().size());
+            
+            assertEquals(INDICATOR_1,indicatorsVersion.getValues().get(0).getIndicator().getUuid());
+        }
     }
 
     @Override

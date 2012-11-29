@@ -19,9 +19,12 @@ Application Indicators {
     		> @IndicatorInstanceRepository
     		> @ElementLevelRepository
     		> @IndicatorRepository
+    		> @IndicatorsSystemHistoryRepository
     		> @GeographicalValueRepository
     		> @GeographicalGranularityRepository
     		> @TranslationRepository
+    		> @IndicatorInstanceLastValueCacheRepository
+    		> @IndicatorsDataService
     		
     		// Indicators system
     		@IndicatorsSystemVersion createIndicatorsSystem(@IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException;
@@ -58,8 +61,13 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstance(String uuid) throws MetamacException;
 	    	@IndicatorInstance retrieveIndicatorInstancePublishedByCode(String code) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
+	    	PagedResult<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	List<@IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(String uuid) throws MetamacException;
+	    	
+	    	// Indicators System History
+	    	List<@IndicatorsSystemHistory> findIndicatorsSystemHistory(String uuid, int maxResults) throws MetamacException;
+	    	PagedResult<@IndicatorsSystemHistory> findIndicatorsSystemsHistory(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    		    	
 	    	// Geographical values
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
@@ -149,6 +157,8 @@ Application Indicators {
     		> @GeographicalValueRepository
     		> @IndicatorInstanceRepository
     		> @DataSourceRepository
+    		> @IndicatorVersionLastValueCacheRepository
+    		> @IndicatorInstanceLastValueCacheRepository
 
 			"Retrieves all Data definition's operations"
 	    	List<String> retrieveDataDefinitionsOperationsCodes() throws MetamacException;
@@ -165,7 +175,7 @@ Application Indicators {
 	    	"Populates a given indicator version data"
 	    	@Indicator populateIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Deletes a given indicator data"
-	    	deleteIndicatorData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
+	    	deleteIndicatorVersionData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Updates data for all published indicators"
 	    	updateIndicatorsData() throws MetamacException;
 	    	
@@ -180,12 +190,26 @@ Application Indicators {
 	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values with granularity in the publidhed indicator"
 	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublished(String indicatorUuid, String granularityUuid) throws MetamacException;
+	    	"Retrieves geographic values with granularity in the indicator instance"
+	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, String granularityUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorInstance(String indicatorInstanceUuid) throws MetamacException;
+	    	"Retrieves geographic granularities in all indicators with a subject Code "
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode) throws MetamacException;
+	    	"Retrieves geographic values in all indicators with a subject Code by granularity"
+	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid) throws MetamacException;
+	    	"Retrieves geographic values in all indicators with a subject Code"
+	    	List<@GeographicalValue> retrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode(String subjectCode) throws MetamacException;
+	    	"Retrieves geographic granularities in all indicators instances in a indicators System"
+	    	List<@GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(String systemCode) throws MetamacException;
+	    	"Retrieves geographic values in all indicators instances in a published indicators System by granularity"
+	    	List<@GeographicalValue> retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, String granularityUuid) throws MetamacException;
+	    	"Retrieves geographic values in all indicators instances in a published indicators System"
+	    	List<@GeographicalValue> retrieveGeographicalValuesInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode) throws MetamacException;
 	    	
 	    	//Time Values and granularities related to Indicator data
 	    	"Retrieves time granularities in the indicator"
@@ -222,6 +246,19 @@ Application Indicators {
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	"Find Published Indicator Instance's Extended Observations by dimensions"
 	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	
+	    	//Find indicators/indicatorInstance based on code dimensions
+	    	List<@IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode) throws MetamacException;
+			List<IndicatorVersionLastValue> findLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
+			List<IndicatorVersionLastValue> findLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
+			buildIndicatorVersionLatestValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
+			
+			List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode) throws MetamacException;
+			List<IndicatorInstanceLastValue> findLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<@MeasureDimensionTypeEnum> measures, int numResults) throws MetamacException;
+			List<IndicatorInstanceLastValue> findLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorsInstancesCodes, String geoCode, List<@MeasureDimensionTypeEnum> measures) throws MetamacException;
+			buildIndicatorInstanceLatestValuesCache(@IndicatorInstance indicatorInstance) throws MetamacException;
+			
+			buildLastValuesCache(@IndicatorVersion indicatorVersion) throws MetamacException;
     	}
     	
     	"Provides access to indicators data from Jaxi"
@@ -489,6 +526,29 @@ Application Indicators {
 			}
 		} 
 		
+		"Indicators system entity"
+		Entity IndicatorsSystemHistory {
+			databaseTable="TB_INDICATORS_SYSTEMS_HIST"
+			hint="idSequence=INDICATORS_SYSTEMS_HIST"
+			!auditable
+        	!optimisticLocking
+        	gap
+			
+            - @IndicatorsSystem indicatorsSystem key not nullable databaseColumn="INDICATORS_SYSTEM_FK";
+            String versionNumber key not nullable; 
+            "Date when the indicators system version was published"
+			DateTimeTZ publicationDate not nullable;
+			
+			Repository IndicatorsSystemHistoryRepository {
+		   		@IndicatorsSystemHistory save(@IndicatorsSystemHistory entity);
+		   		delete;
+            	findByCondition(PagingParameter pagingParameter);
+            	protected List<@IndicatorsSystemHistory> findByQuery;
+            	protected List<@IndicatorsSystemHistory> findByQuery(String query, Map<String, Object> parameters, int maxResult);
+            	List<@IndicatorsSystemHistory> findIndicatorsSystemHistory(String uuid, int maxResults);
+			}
+		} 
+		
 		"Version of indicators system entity"
 		Entity IndicatorsSystemVersion {
 			databaseTable="TB_INDIC_SYSTEMS_VERSIONS"
@@ -520,9 +580,9 @@ Application Indicators {
 			// Relations
 			"Indicator system"
 			- @IndicatorsSystem indicatorsSystem not nullable cascade="none" databaseColumn="INDICATORS_SYSTEM_FK" <-> versions;
-			"All children"
+			"Association to all elements in the indicators system"
 			- Bag<@ElementLevel> childrenAllLevels cascade="all-delete-orphan" fetch="lazy" inverse orderby="parent asc, orderInLevel asc" <-> indicatorsSystemVersion;
-			"Children at first level"
+			"Association to elements in first level in the indicators system"
 			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> indicatorsSystemVersionFirstLevel;
 		
 			Repository IndicatorsSystemVersionRepository {
@@ -555,9 +615,9 @@ Application Indicators {
 			- @Dimension dimension cascade="all" nullable databaseColumn="DIMENSION_FK" <-> elementLevel;
 			"Indicator instance"
 			- @IndicatorInstance indicatorInstance cascade="all" nullable databaseColumn="INDICATOR_INSTANCE_FK" <-> elementLevel;
-            "Indicators system version"
+            "Relation to Indicators system to all items, regardless of the level"
 			- @IndicatorsSystemVersion indicatorsSystemVersion cascade="none" fetch="lazy" not nullable databaseColumn="IND_SYSTEM_VERSION_ALL_FK" <-> childrenAllLevels;
-			"Indicators system version"
+			"Relation to Indicators system, only filled for items in first level"
 			- @IndicatorsSystemVersion indicatorsSystemVersionFirstLevel cascade="none" fetch="lazy" nullable databaseColumn="IND_SYSTEM_VERSION_FIRST_FK" <-> childrenFirstLevel;
 			
 			"Provides access to ElementLevel"
@@ -593,7 +653,8 @@ Application Indicators {
         Entity IndicatorInstance {
         	databaseTable = "TB_INDICATORS_INSTANCES"
         	hint="idSequence=INDICATORS_INSTANCES"
-
+			gap
+			
 			"Code to indicator instance. Not unique (its duplicated when indicators system is versioned). Non modifiable"
        		String code not nullable;
 			"Title"
@@ -601,11 +662,13 @@ Application Indicators {
         	"Time granularity"
         	- @TimeGranularityEnum timeGranularity nullable;
         	"Time value"
-        	String timeValue nullable;
+        	Clob timeValues nullable;
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
 			
 			// Relations
+			"Last value cache"
+			- Set<@IndicatorInstanceLastValueCache> lastValuesCache cascade="delete-orphan" fetch="lazy" inverse <-> indicatorInstance;
             "Element level"
             - @ElementLevel elementLevel cascade="none" not nullable inverse <-> indicatorInstance;
         	"Indicator"
@@ -613,7 +676,7 @@ Application Indicators {
             "Geographical granularity"
 			- @GeographicalGranularity geographicalGranularity cascade="none" nullable databaseColumn="GEOGRAPHICAL_GRANULARITY_FK";
             "Geographical value"
-			- @GeographicalValue geographicalValue cascade="none" nullable databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			- Bag<@GeographicalValue> geographicalValues cascade="none" fetch="lazy" databaseJoinTable="TB_INDIC_INST_GEO_VALUES";
             
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {
@@ -622,8 +685,12 @@ Application Indicators {
             	@IndicatorInstance findIndicatorInstance(String uuid);
             	@IndicatorInstance findIndicatorInstancePublishedByCode(String code);
             	Boolean existAnyIndicatorInstance(String indicatorsSystemUuid, String indicatorsSystemVersionNumber);
+            	findByCondition(PagingParameter pagingParameter);
             	List<String> findIndicatorsLinkedWithIndicatorsSystemVersion(Long indicatorsSystemVersionId);
-            	List<String> findIndicatorsSystemsWithDiffusionVersionWithIndicator(String indicatorUuid);
+            	List<String> findIndicatorsSystemsPublishedWithIndicator(String indicatorUuid);
+            	List<String> findIndicatorsInstancesInPublishedIndicatorSystemWithIndicator(String indicatorUuid);
+            	@IndicatorInstance findIndicatorInstanceInPublishedIndicatorSystem(String systemCode, String indicatorInstanceCode);
+            	List<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorSystem(String systemCode);
             }
         }         
 		
@@ -731,6 +798,8 @@ Application Indicators {
 			DateTimeTZ lastPopulateDate nullable;
 					
 			// Relations
+			"Last value cache"
+			- Set<@IndicatorVersionLastValueCache> lastValuesCache cascade="delete-orphan" fetch="lazy" inverse <-> indicatorVersion;
 			"Indicator"
 			- @Indicator indicator not nullable cascade="none" databaseColumn="INDICATOR_FK" <-> versions;
 			"Quantity"
@@ -744,12 +813,15 @@ Application Indicators {
             	protected List<@IndicatorVersion> findByQuery;
             	protected List<@IndicatorVersion> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@IndicatorVersion retrieveIndicatorVersion(String uuid, String versionNumber);
+            	@IndicatorVersion findPublishedIndicatorVersionByCode(String indicatorCode);
             	findByCondition(PagingParameter pagingParameter);
             	@IndicatorVersion findOneIndicatorVersionLinkedToIndicator(String indicatorUuid);
             	List<@IndicatorVersion> findIndicatorsVersionNeedsUpdate() throws MetamacException;
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
+            	"Find all distinct subjects in published indicators"
+            	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
 			}
 		}     	
 		
@@ -1067,6 +1139,60 @@ Application Indicators {
 			}
         }
         
+        "Table for improving access to last value given a geocode"
+        Entity IndicatorVersionLastValueCache {
+        	databaseTable = "TB_INDIC_VERSION_LAST_VALUE"
+        	hint="idSequence=INDIC_VERSION_LAST_VALUE"
+        	!auditable
+        	!optimisticLocking
+        	
+        	"Geographical value"
+			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			"Indicator Version"
+			- @IndicatorVersion indicatorVersion not nullable key cascade="none" fetch="lazy" databaseColumn="INDICATOR_VERSION_FK" <-> lastValuesCache ;
+			"Last time value"
+			String lastTimeValue not nullable;
+			"Last time this object was updated"
+			DateTimeTZ lastDataUpdated not nullable;
+			
+			Repository IndicatorVersionLastValueCacheRepository {
+				delete;
+				@IndicatorVersionLastValueCache save(@IndicatorVersionLastValueCache entity);
+				List<@IndicatorVersionLastValueCache> findByQuery;
+				
+				List<@IndicatorVersion> findLastNIndicatorsVersionsWithGeoCodeAndSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, int numResults);
+				@IndicatorVersionLastValueCache retrieveLastValueCacheForIndicatorVersionWithGeoCode(String indicatorUuid, String geoCode);
+				deleteWithIndicatorVersion(String indicatorUuid);
+			}
+        }
+        
+        "Table for improving access to last value given a geocode"
+        Entity IndicatorInstanceLastValueCache {
+        	databaseTable = "TB_INDIC_INST_LAST_VALUE"
+        	hint="idSequence=INDIC_INST_LAST_VALUE"
+        	!auditable
+        	!optimisticLocking
+        	
+			"Geographical value"
+			- @GeographicalValue geographicalValue not nullable key cascade="none" databaseColumn="GEOGRAPHICAL_VALUE_FK";
+			"Indicator instance"
+			- @IndicatorInstance indicatorInstance not nullable key cascade="none" databaseColumn="INDICATOR_INSTANCE_FK"  <-> lastValuesCache;
+			"Last time value"
+			String lastTimeValue not nullable;
+			"Last time the object was updated"
+			DateTimeTZ lastDataUpdated not nullable;
+			
+			Repository IndicatorInstanceLastValueCacheRepository {
+				delete;
+				@IndicatorInstanceLastValueCache save(@IndicatorInstanceLastValueCache entity);
+				List<@IndicatorInstanceLastValueCache> findByQuery;
+				
+				List<@IndicatorInstance> findLastNIndicatorsInstancesWithGeoCodeInIndicatorsSystemOrderedByLastUpdate(String systemCode, String geoCode, int n);
+				@IndicatorInstanceLastValueCache retrieveLastValueCacheForIndicatorInstanceWithGeoCode(String indicatorInstanceUuid, String geoCode);
+				deleteWithIndicatorInstance(String indicatorInstanceUuid);
+			}
+        }
+        
         "Table for Data basic information"
 	    Entity Configuration {
         	databaseTable = "TB_CONFIGURATION"
@@ -1149,6 +1275,15 @@ Application Indicators {
 			JAVADATE archiveDate;
 			"User who archived"
 			String archiveUser;			
+	    }
+	    
+		"Dto for indicators system"
+	   	DataTransferObject IndicatorsSystemHistoryDto {
+			
+			"Indicators System uuid"
+			String indicatorsSystemUuid;
+			"Version number of this indicators system version"	
+			String versionNumber;
 	    }
 	    
 		"Dto for indicators system. Summary information"
@@ -1349,12 +1484,13 @@ Application Indicators {
 			String indicatorUuid;
         	"Time granularity"
         	- @TimeGranularityEnum timeGranularity;
-        	"Time value"
-        	String timeValue;
+        	"Time values"
+        	List<String> timeValues;
         	"Geographical granularity"
 			String geographicalGranularityUuid;
-        	"Geographical value"
-			String geographicalValueUuid;
+			
+        	"Geographical values"
+			List<GeographicalValueBaseDto> geographicalValues;
 			
             "Order in level"
 			Long orderInLevel;
@@ -1456,14 +1592,18 @@ Application Indicators {
        		- @InternationalStringDto title;
     	}
     	
-    	"Dto for geographical values"
-    	DataTransferObject GeographicalValueDto {
-	   		"Uuid"
-	   		String uuid;
+    	"Base Dto for geographical values"
+    	DataTransferObject GeographicalValueBaseDto {
 	   		"Code"
 			String code;
+	   		"Uuid"
+	   		String uuid;
        		"Title"
        		- @InternationalStringDto title;
+    	}
+    	
+    	"Dto for geographical values"
+    	DataTransferObject GeographicalValueDto extends GeographicalValueBaseDto {
        		"Granularity"
 			String granularityUuid;
        		"Latitude"

@@ -5,6 +5,11 @@ import static org.siemac.metamac.core.common.constants.shared.TimeConstants.MONT
 import static org.siemac.metamac.core.common.constants.shared.TimeConstants.QUARTERLY_CHARACTER;
 import static org.siemac.metamac.core.common.constants.shared.TimeConstants.WEEKLY_CHARACTER;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +17,9 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.TimeUtils;
+import org.springframework.util.Assert;
+
+import com.ibm.icu.util.Calendar;
 
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -21,21 +29,114 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  * Utilities to time variables
  */
 public class TimeVariableUtils extends TimeUtils {
+    
+    private static int getTimeGranularityOrder(TimeValue timeValue) {
+        List<TimeGranularityEnum> granularityOrder = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY, TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
+        Assert.isTrue(granularityOrder.size() == TimeGranularityEnum.values().length, "Se debe especificar un orden para cada valor de granularidad");
+        return granularityOrder.indexOf(timeValue.getGranularity())+1;
+    }
+    
+    /* Returns a Date representation for time value, it chooses the last time instant represented by the TimeValue */
+    private static Date timeValueToDate(TimeValue timeValue) {
+        Calendar cal = Calendar.getInstance();
+        switch(timeValue.getGranularity()) {
+            case BIYEARLY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
+                cal.set(Calendar.MONTH, subPeriod*6-1);
+                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                break;
+            }
+            case YEARLY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                cal.set(Calendar.DAY_OF_YEAR,cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+                break;
+            }
+            case QUARTERLY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
+                cal.set(Calendar.MONTH, (subPeriod*3)-1);
+                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                break;
+            }
+            case MONTHLY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
+                cal.set(Calendar.MONTH, subPeriod-1);
+                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                break;
+            }
+            case WEEKLY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                cal.set(Calendar.YEAR_WOY,Integer.parseInt(timeValue.getYear()));
+                int subPeriod = Integer.parseInt(timeValue.getWeek());
+                cal.set(Calendar.WEEK_OF_YEAR, subPeriod);
+                cal.set(Calendar.DAY_OF_WEEK,cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+                break;
+            }
+            case DAILY: {
+                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                int month = Integer.parseInt(timeValue.getMonth());
+                int day = Integer.parseInt(timeValue.getDay());
+                cal.set(Calendar.MONTH, month-1);
+                cal.set(Calendar.DAY_OF_MONTH, day);
+                break;
+            }
+        }
+        cal.set(Calendar.MILLISECONDS_IN_DAY,cal.getActualMaximum(Calendar.MILLISECONDS_IN_DAY));
+        return cal.getTime();
+    }
+    
+    public static TimeValue findLatestTimeValue(List<TimeValue> timeValues) {
+        if (timeValues == null || timeValues.size() == 0) {
+            return null;
+        }
+        sortTimeValuesMostRecentFirst(timeValues);
+        
+        return timeValues.get(0);
+    }
+    
+    public static void sortTimeValuesMostRecentFirst(List<TimeValue> values) {
+        Collections.sort(values, new Comparator<TimeValue>() {
+           @Override
+            public int compare(TimeValue o1, TimeValue o2) {
+                return compareToMostRecentFirst(o1, o2);
+            } 
+        });
+    }
 
     /**
-     * Compare two time values. These values must be refered to same granularity
+     * Compare two time values. 
+     * 
+     * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
+     */
+    public static int compareToMostRecentFirst(TimeValue timeValue1, TimeValue timeValue2) {
+        Date date1 = timeValueToDate(timeValue1);
+        Date date2 = timeValueToDate(timeValue2);
+        if (date1.after(date2)) {
+            return -1;
+        } else if (date1.before(date2)) {
+            return 1;
+        } else {
+            if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) { //least the granularity is latest the value will be
+                return -1;
+            } else if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) {
+                return 1; 
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+    /**
+     * Compare two time values in String representation
      * 
      * @return 0 if are equals; a value less than 0 if this value1 is less than value2; a value greater than 0 if this value1 is less than value2
      */
-    public static int compareTo(String value1, String value2) throws MetamacException {
-        TimeGranularityEnum timeGranularityEnum1 = guessTimeGranularity(value1);
-        TimeGranularityEnum timeGranularityEnum2 = guessTimeGranularity(value2);
-        if (!timeGranularityEnum1.equals(timeGranularityEnum2)) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, value2);
-        }
-        int compareResult = value1.compareTo(value2);
-        // Inverse order
-        return compareResult * -1;
+    public static int compareToMostRecentFirst(String value1, String value2) throws MetamacException {
+        TimeValue timeValue1 = parseTimeValue(value1);
+        TimeValue timeValue2 = parseTimeValue(value2);
+        return compareToMostRecentFirst(timeValue1, timeValue2);
     }
 
     /**

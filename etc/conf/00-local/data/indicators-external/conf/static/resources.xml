@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Configurations</comment>
+	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
+	<entry key="indicators.atoms.timetolive.minutes">5</entry>
+	<entry key="indicators.atoms.entries.num">10</entry>
+    <entry key="indicators.clients.statistical.operations.rest.external">http://localhost:8080/metamac-statistical-operations-external-web/apis/operations</entry>
+</properties>

@@ -2,6 +2,8 @@
 [#include "/inc/includes.ftl"]
 [@template.base]
 
+
+
 <div class="listadoTablas">
 	<div id="indicators-system-view"></div>
 	<div>
@@ -17,6 +19,7 @@
 		<div class="h2top"></div>
 		<div class="h2content">
 			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
+			<a href="<%= context %>/indicatorsSystems/<%=code%>/atom.xml?language=${.lang}" style="float: right; font-weight: normal; margin-right: 5px;" ><img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" />RSS</a>
 		</div>
 	</div>
 	[#include "/layout/language-selector.ftl"]

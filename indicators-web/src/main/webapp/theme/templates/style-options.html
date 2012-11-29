@@ -1,0 +1,107 @@
+<div>
+    <div>
+        <label>Título:</label>
+        <input type="text" name="title"/>
+    </div>
+
+    <fieldset>
+        <legend>Estilo</legend>
+
+        <label class="radio">
+            <input type="radio" name="style" value="custom"> Personalizado
+        </label>
+        <label class="radio">
+            <input type="radio" name="style" value="gobcan"> Gobierno de Canarias
+        </label>
+
+        {{#if showCustomStyle}}
+            <div>
+                <label>Color del texto:</label>
+                <input type="text" name="textColor" id="textColor" class="small"/>
+            </div>
+
+            <div>
+                <label>Color de la cabecera:</label>
+                <input type="text" name="headerColor" id="headerColor" class="small">
+            </div>
+
+            <div>
+                <label>Color del borde:</label>
+                <input type="text" name="borderColor" id="borderColor" class="small">
+            </div>
+
+            <div>
+                <label>Ancho del widget<small>(px)</small>:</label>
+                <input type="text" name="width" id="widget-width" class="small"/>
+            </div>
+            <div class="width-slider"></div>
+
+            <div>
+                <label>
+                    Bordes redondeados
+                </label>
+                <input type="checkbox" name="borderRadius">
+            </div>
+
+            <div>
+                <label>
+                    Sombra
+                </label>
+                <input type="checkbox" name="shadow">
+            </div>
+        {{else}}
+        <div>
+            <label class="radio">
+                <input type="radio" name="gobcanStyleColor" value="blue"> Azul
+            </label>
+            <label class="radio">
+                <input type="radio" name="gobcanStyleColor" value="green"> Verde
+            </label>
+        </div>
+        {{/if}}
+    </fieldset>
+
+
+
+    <fieldset>
+        <legend>Visualización</legend>
+        {{#if showSideView}}
+            <div>
+                <label>Visualización lateral</label>
+                <input type="checkbox" name="sideView">
+            </div>
+        {{/if}}
+        {{#if showAxisAndLegend }}
+            <div>
+                <label>Mostrar etiquetas en el eje x</label>
+                <input type="checkbox" name="showLabels">
+            </div>
+            <div>
+                <label>Mostrar leyenda</label>
+                <input type="checkbox" name="showLegend">
+            </div>
+        {{/if}}
+    </fieldset>
+
+    {{#if showSparkLines}}
+        <fieldset>
+            <legend>Sparklines</legend>
+            <label class="checkbox">
+                <input type="checkbox" name="sparkline_ABSOLUTE">Dato
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="sparkline_ANNUAL_PERCENTAGE_RATE">Variación anual
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="sparkline_ANNUAL_PUNTUAL_RATE">Variación interperiódica
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="sparkline_INTERPERIOD_PERCENTAGE_RATE">Tasa variación anual
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="sparkline_INTERPERIOD_PUNTUAL_RATE">Variación interperiódica
+            </label>
+        </fieldset>
+    {{/if}}
+
+</div>

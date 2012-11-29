@@ -16,7 +16,7 @@ public class IndicatorInstanceDS extends DataSource {
     public static String TIME_VALUE                  = "inst-temp";
     public static String TIME_GRANULARITY            = "inst-temp-gran";
     public static String GEOGRAPHICAL_SELECTION_TYPE = "inst-geo-sel";
-    public static String GEOGRAPHICAL_VALUE          = "inst-geo";
+    public static String GEOGRAPHICAL_VALUES         = "inst-geo";
     public static String GEOGRAPHICAL_GRANULARITY    = "inst-geo-gran";
 
     public IndicatorInstanceDS() {

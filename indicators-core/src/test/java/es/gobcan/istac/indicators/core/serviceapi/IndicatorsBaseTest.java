@@ -1,10 +1,14 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +22,8 @@ import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.springframework.beans.factory.annotation.Value;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
+import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
@@ -120,6 +126,10 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         tables.add("TB_EXTERNAL_ITEMS");
         tables.add("TB_LIS_UNITS_MULTIPLIERS");
         tables.add("TB_LOCALISED_STRINGS");
+        tables.add("TB_INDIC_VERSION_LAST_VALUE");
+        tables.add("TB_INDIC_INST_LAST_VALUE");
+        tables.add("TB_INDIC_INST_GEO_VALUES");
+        tables.add("TB_INDICATORS_SYSTEMS_HIST");
         tables.add("TB_TRANSLATIONS");
         tables.add("TV_AREAS_TEMATICAS");
         tables.add("TV_CONSULTA");
@@ -131,6 +141,8 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         List<String> sequences = new ArrayList<String>();
         sequences.add("SEQ_I18NSTRS");
         sequences.add("SEQ_L10NSTRS");
+        sequences.add("SEQ_INDIC_VERSION_LAST_VALUE");
+        sequences.add("SEQ_INDIC_INST_LAST_VALUE");
         sequences.add("SEQ_INDIC_SYSTEMS_VERSIONS");
         sequences.add("SEQ_INDICATORS_SYSTEMS");
         sequences.add("SEQ_DIMENSIONS");
@@ -145,6 +157,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         sequences.add("SEQ_QUANTITIES_UNITS");
         sequences.add("SEQ_GEOGR_VALUES");
         sequences.add("SEQ_GEOGR_GRANULARITIES");
+        sequences.add("SEQ_INDICATORS_SYSTEMS_HIST");
         sequences.add("SEQ_TRANSLATIONS");
         sequences.add("SEQ_UNITS_MULTIPLIERS");
 
@@ -184,10 +197,55 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             tablePrimaryKeys = new HashMap<String, List<String>>();
             tablePrimaryKeys.put("TV_AREAS_TEMATICAS", Arrays.asList("ID_AREA_TEMATICA"));
             tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
+            tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE","TB_INDICATORS_INSTANCES"));
         }
         return tablePrimaryKeys;
     }
     
+    
+    protected List<String> getIndicatorsInstancesUUIDs(List<IndicatorInstance> indicatorsInstances) {
+        if (indicatorsInstances == null) {
+            return null;
+        }
+        List<String> uuids = new ArrayList<String>();
+        for (IndicatorInstance indicatorInstance: indicatorsInstances) {
+            uuids.add(indicatorInstance.getUuid());
+        }
+        return uuids;
+    }
+    
+    protected List<String> getIndicatorsInstancesDtosUUIDs(List<IndicatorInstanceDto> indicatorsInstances) {
+        if (indicatorsInstances == null) {
+            return null;
+        }
+        List<String> uuids = new ArrayList<String>();
+        for (IndicatorInstanceDto indicatorInstance: indicatorsInstances) {
+            uuids.add(indicatorInstance.getUuid());
+        }
+        return uuids;
+    }
+    
+    protected void checkElementsInCollection(String[] expected, Collection<List<String>> collection) {
+        List<String> values = new ArrayList<String>();
+        for (List<String> vals : collection) {
+            values.addAll(vals);
+        }
+        checkElementsInCollection(expected, values);
+    }
+    protected void checkElementsInCollection(String[] expected, List<String> collection) {
+        for (String elem : expected) {
+            assertTrue("Element "+elem+" not in collection",collection.contains(elem));
+        }
+        assertEquals("Size does not match",expected.length, collection.size());
+    }
+    
+    protected void checkElementsOrder(String[] expected, List<String> collection) {
+        assertEquals(expected.length, collection.size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals("Element "+expected[i]+" not in collection",collection.get(i),expected[i]);
+        }
+    }
+
     @Override
     protected DataBaseProvider getDatabaseProvider() {
         return DataBaseProvider.valueOf(databaseProvider);

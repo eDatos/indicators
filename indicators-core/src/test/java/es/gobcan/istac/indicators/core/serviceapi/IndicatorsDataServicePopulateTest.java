@@ -242,6 +242,17 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR26_GPE_JSON_DATA                = readFile("json/data_temporals.json");
     private static final String              INDICATOR26_DIFFUSION_VERSION            = "1.000";
     private static final String              INDICATOR26_PRODUCTION_VERSION           = "2.000";
+    
+    /* DRAFT VERSION (major) */
+    private static final String              INDICATOR27_UUID                         = "Indicator-27";
+    private static final String              INDICATOR27_VERSION                      = "1.000";
+    
+    /* DRAFT VERSION (major) */
+    private static final String              INDICATOR28_UUID                         = "Indicator-28";
+    private static final String              INDICATOR28_VERSION                      = "1.000";
+    private static final String              INDICATOR28_DS_UUID                      = "Indicator-28-v1-DataSource-1";
+    private static final String              INDICATOR28_DS_GPE_UUID                  = "Indicator-28-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR28_GPE_JSON_DATA                = readFile("json/data_temporals.json");
 
     /* INDICATORS SYSTEM */
 
@@ -311,6 +322,27 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         List<String> data = Arrays.asList("3585", "497", "56", "60", "49", "34413", "4546", "422", "487", "410", "2471", "329", "36", "25", "38", "2507", "347", "31", "44", "27", "2036", "297", "20",
                 "46", "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataDraftNoDatasources() throws Exception {
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR27_UUID);
+        } catch (MetamacException e) {
+            assertEquals(1,e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(),e.getExceptionItems().get(0).getCode());
+        }
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataDraftNoDecimalPlaces() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR28_DS_GPE_UUID))).thenReturn(INDICATOR28_GPE_JSON_DATA);
+        try {
+            indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR28_UUID);
+        } catch (MetamacException e) {
+            assertEquals(1,e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DECIMAL_PLACES.getCode(),e.getExceptionItems().get(0).getCode());
+        }
     }
 
     @Test
@@ -1080,7 +1112,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         // delete
         assertNotNull(version.getDataRepositoryId());
         assertNotNull(version.getDataRepositoryTableName());
-        indicatorsDataService.deleteIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+        indicatorsDataService.deleteIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
 
         version = indicatorVersionRepository.retrieveIndicatorVersion(INDICATOR1_UUID, INDICATOR1_VERSION);
         assertNull(version.getDataRepositoryId());
@@ -1094,7 +1126,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         assertNull(version.getDataRepositoryId());
         assertNull(version.getDataRepositoryTableName());
         try {
-            indicatorsDataService.deleteIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
+            indicatorsDataService.deleteIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_VERSION);
             fail("Should throw an exception for empty data");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());

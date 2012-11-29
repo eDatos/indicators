@@ -1,0 +1,18 @@
+<div class="pagination">
+    <ul>
+        {{#if isFirstPage}}
+            <li class="disabled"><a href="#" class="pagination-previous">&larr;</a></li>
+        {{else}}
+            <li><a href="#" class="pagination-previous">&larr;</a></li>
+        {{/if}}
+
+        <li class="disabled"><a href="#" class="pagination-page">{{page}} / {{totalPages}}</a></li>
+
+        {{#if isLastPage }}
+            <li class="disabled"><a href="#" class="pagination-next">&rarr;</a></li>
+        {{else}}
+            <li><a href="#" class="pagination-next">&rarr;</a></li>
+        {{/if}}
+
+    </ul>
+</div>

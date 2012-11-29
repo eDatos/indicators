@@ -29,6 +29,7 @@ import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
@@ -46,12 +47,14 @@ import es.gobcan.istac.indicators.core.dto.DataStructureDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemHistoryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemVersionSummaryDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -106,7 +109,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
-    
+
     @Override
     public IndicatorsSystemSummaryDto indicatorsSystemDoToDtoSummary(IndicatorsSystemVersion source) {
 
@@ -150,9 +153,17 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setIndicatorUuid(source.getIndicator().getUuid());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setGeographicalGranularityUuid(source.getGeographicalGranularity() != null ? source.getGeographicalGranularity().getUuid() : null);
-        target.setGeographicalValueUuid(source.getGeographicalValue() != null ? source.getGeographicalValue().getUuid() : null);
+
+        List<GeographicalValueBaseDto> geographicalValuesBase = new ArrayList<GeographicalValueBaseDto>();
+        if (source.getGeographicalValues() != null) {
+            for (GeographicalValue geoValue : source.getGeographicalValues()) {
+                geographicalValuesBase.add(geographicalValueDoToBaseDto(geoValue));
+            }
+        }
+        target.setGeographicalValues(geographicalValuesBase);
         target.setTimeGranularity(source.getTimeGranularity());
-        target.setTimeValue(source.getTimeValue());
+        target.setTimeValues(source.getTimeValuesAsList());
+
         target.setParentUuid(source.getElementLevel().getParentUuid());
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
 
@@ -319,7 +330,6 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
     @Override
     public GeographicalValueDto geographicalValueDoToDto(GeographicalValue source) {
-
         GeographicalValueDto target = new GeographicalValueDto();
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());
@@ -328,6 +338,15 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLatitude(source.getLatitude());
         target.setLongitude(source.getLongitude());
         target.setOrder(source.getOrder());
+        return target;
+    }
+
+    @Override
+    public GeographicalValueBaseDto geographicalValueDoToBaseDto(GeographicalValue source) {
+        GeographicalValueBaseDto target = new GeographicalValueBaseDto();
+        target.setUuid(source.getUuid());
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringToDto(source.getTitle()));
         return target;
     }
 
@@ -400,7 +419,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         DataDto target = new DataDto();
         return target;
     }
-    
+
     @Override
     public UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source) {
         UnitMultiplierDto target = new UnitMultiplierDto();
@@ -408,14 +427,13 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setTitle(internationalStringToDto(source.getTitle()));
         return target;
     }
-    
+
     private IndicatorsSystemVersionSummaryDto indicatorsSystemVersionDoToDtoSummary(IndicatorsSystemVersion source) {
         IndicatorsSystemVersionSummaryDto target = new IndicatorsSystemVersionSummaryDto();
         target.setVersionNumber(source.getVersionNumber());
         target.setProcStatus(source.getProcStatus());
         return target;
     }
-
 
     private ElementLevelDto elementLevelDoToDto(ElementLevel source) {
         ElementLevelDto target = new ElementLevelDto();

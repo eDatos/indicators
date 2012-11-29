@@ -12,6 +12,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
@@ -132,9 +133,12 @@ public class DoCopyUtils {
         target.setTitle(copy(source.getTitle()));
         target.setIndicator(source.getIndicator());
         target.setGeographicalGranularity(source.getGeographicalGranularity());
-        target.setGeographicalValue(source.getGeographicalValue());
+        target.getGeographicalValues().clear();
+        for (GeographicalValue geoValue : source.getGeographicalValues()) {
+            target.addGeographicalValue(geoValue);
+        }
         target.setTimeGranularity(source.getTimeGranularity());
-        target.setTimeValue(source.getTimeValue());
+        target.setTimeValuesAsList(source.getTimeValuesAsList());
 
         return target;
     }
@@ -220,13 +224,19 @@ public class DoCopyUtils {
             return null;
         }
         InternationalString target = new InternationalString();
-        for (LocalisedString sourceLocalisedString : source.getTexts()) {
-            LocalisedString targetLocalisedString = new LocalisedString();
-            targetLocalisedString.setLabel(sourceLocalisedString.getLabel());
-            targetLocalisedString.setLocale(sourceLocalisedString.getLocale());
-            target.addText(targetLocalisedString);
-        }
-        
+        target.getTexts().addAll(copyLocalisedStrings(source.getTexts(),target));
         return target;
+    }
+
+    private static Set<LocalisedString> copyLocalisedStrings(Set<LocalisedString> sources, InternationalString intString) {
+        Set<LocalisedString> targets = new HashSet<LocalisedString>();
+        for (LocalisedString source : sources) {
+            LocalisedString target = new LocalisedString();
+            target.setLabel(source.getLabel());
+            target.setLocale(source.getLocale());
+            target.setInternationalString(intString);
+            targets.add(target);
+        }
+        return targets;
     }
 }

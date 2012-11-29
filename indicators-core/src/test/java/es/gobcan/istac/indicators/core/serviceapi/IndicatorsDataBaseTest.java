@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -45,6 +46,7 @@ import com.arte.statistic.dataset.repository.util.DtoUtils;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -63,27 +65,6 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, day);
         return cal.getTime();
-    }
-
-    protected void checkElementsInCollection(String[] expected, Collection<List<String>> collection) {
-        List<String> values = new ArrayList<String>();
-        for (List<String> vals : collection) {
-            values.addAll(vals);
-        }
-        checkElementsInCollection(expected, values);
-    }
-    protected void checkElementsInCollection(String[] expected, List<String> collection) {
-        for (String elem : expected) {
-            assertTrue("Element "+elem+" not in collection",collection.contains(elem));
-        }
-        assertEquals(expected.length, collection.size());
-    }
-    
-    protected void checkElementsOrder(String[] expected, List<String> collection) {
-        assertEquals(expected.length, collection.size());
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals("Element "+expected[i]+" not in collection",collection.get(i),expected[i]);
-        }
     }
 
     protected void assertIndicatorEmptyData(String indicatorUuid, String indicatorVersionNumber) throws MetamacException {
@@ -268,6 +249,19 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         return codes;
     }
+    
+    protected List<String> getIndicatorsVersionsUUIDs(List<IndicatorVersion> indicatorsVersions) {
+        if (indicatorsVersions == null) {
+            return null;
+        }
+        List<String> uuids = new ArrayList<String>();
+        for (IndicatorVersion indicatorVersion: indicatorsVersions) {
+            uuids.add(indicatorVersion.getUuid());
+        }
+        return uuids;
+    }
+    
+
 
     
     /*
@@ -322,7 +316,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             initializeDatabase(dbUnitConnection);
     
             databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-            databaseTester.setTearDownOperation(DatabaseOperation.NONE);
+            databaseTester.setTearDownOperation(DatabaseOperation.NONE); 
             databaseTester.setDataSet(dataSetReplacement);
             databaseTester.onSetup();
         } finally {
@@ -339,12 +333,20 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
         List<String> sequencesNamesToDrop = getDSRepoSequencesToDrop(dbUnitConnection);
         for (String sequenceNameToDrop : sequencesNamesToDrop) {
-            dbUnitConnection.getConnection().prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
+            try {
+                dbUnitConnection.getConnection().prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
+            } catch (SQLException e) {
+                //Sequence already dropped
+            }
         }
 
         List<String> tableNamesToDrop = getDSRepoTablesToDrop(dbUnitConnection);
         for (String tableNameToDrop : tableNamesToDrop) {
-            dbUnitConnection.getConnection().prepareStatement("DROP TABLE " + tableNameToDrop).execute();
+            try {
+                dbUnitConnection.getConnection().prepareStatement("DROP TABLE " + tableNameToDrop).execute();
+            } catch (SQLException e) {
+                //table already dropped
+            }
         }
 
         // Restart sequences

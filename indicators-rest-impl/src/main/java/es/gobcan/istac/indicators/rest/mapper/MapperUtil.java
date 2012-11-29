@@ -1,14 +1,14 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class MapperUtil {
 
-    private static String DEFAULT          = "__default__";
+    public static String DEFAULT          = "__default__";
     private static String DEFAULT_LANGUAGE = "es";
 
     public static Map<String, String> getDefaultLabel(Object defaultLabel) {

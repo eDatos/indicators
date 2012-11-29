@@ -1,32 +1,34 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 import java.io.Serializable;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
 @JsonPropertyOrder({
-    "id",
-    "kind",
-    "selfLink",
-    "parentLink",
-    "title",
-    "conceptDescription"
+        "id",
+        "kind",
+        "selfLink",
+        "parentLink",
+        "title",
+        "conceptDescription"
 })
 public class IndicatorInstanceBaseType implements Serializable {
 
-    /**
-     * 
-     */
-    private static final long   serialVersionUID   = -2902494676944136458L;
+    private static final long serialVersionUID = -2902494676944136458L;
 
-    private String              id                 = null;
-    private String              kind               = null;
-    private String              selfLink           = null;
-    private LinkType            parentLink         = null;
+    private String id;
+    private String kind;
+    private String selfLink;
+    private LinkType parentLink;
+    private String systemCode;
 
-    private Map<String, String> title              = null;
-    private Map<String, String> conceptDescription = null;
+    private Map<String, String> title;
+    private Map<String, String> conceptDescription;
+
+
+    private MetadataType metadata;
+    private DataType data;
 
     public String getId() {
         return id;
@@ -74,6 +76,30 @@ public class IndicatorInstanceBaseType implements Serializable {
 
     public void setConceptDescription(Map<String, String> conceptDescription) {
         this.conceptDescription = conceptDescription;
+    }
+
+    public String getSystemCode() {
+        return systemCode;
+    }
+
+    public void setSystemCode(String systemCode) {
+        this.systemCode = systemCode;
+    }
+
+    public MetadataType getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(MetadataType metadata) {
+        this.metadata = metadata;
+    }
+
+    public DataType getData() {
+        return data;
+    }
+
+    public void setData(DataType data) {
+        this.data = data;
     }
 
 }

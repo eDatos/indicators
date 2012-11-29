@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>Configurations</comment>
+	<entry key="indicators.jaxi.url">http://192.168.1.44:9080/jaxi-web</entry>
+	<entry key="indicators.update.quartz.expression">0 0 12 ? * *</entry>
+    <entry key="indicators.clients.statistical.operations.rest.internal">http://localhost:8080/metamac-statistical-operations-web/apis/operations-internal</entry>
+    <entry key="indicators.user.guide.file.name">INDICADORES_ManualUsuario.pdf</entry>
+    <entry key="indicators.internal.edition.languages">es,pt,en,ca,gl,eu,de,fr,it,ru,zh</entry>
+</properties>

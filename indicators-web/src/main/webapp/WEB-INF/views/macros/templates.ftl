@@ -41,7 +41,7 @@
 
 			<div id="bloq_interior">
 				<div class="bloque_completo">
-					<div class="conten">	
+					<div class="conten">
 						[#nested]
 					</div>
 				</div>

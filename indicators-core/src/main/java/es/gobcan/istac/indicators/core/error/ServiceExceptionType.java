@@ -70,6 +70,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType DATA_POPULATE_ERROR                                      = create("exception.indicators.data.populate.error");
     public static final CommonServiceExceptionType DATA_POPULATE_NO_DATASOURCES_ERROR                       = create("exception.indicators.data.populate.no_datasources.error");
+    public static final CommonServiceExceptionType DATA_POPULATE_NO_DECIMAL_PLACES                          = create("exception.indicators.data.populate.no_decimal_places.error");
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_METHOD_TYPE                        = create("exception.indicators.data.populate.unknown.methodtype.error");
     public static final CommonServiceExceptionType DATA_POPULATE_DATASETREPO_CREATE_ERROR                   = create("exception.indicators.data.populate.datasetrepo.create.error");
     public static final CommonServiceExceptionType DATA_POPULATE_DATASETREPO_FIND_ERROR                     = create("exception.indicators.data.populate.datasetrepo.find.error");

@@ -33,8 +33,8 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_INSTANCE_TITLE                                                      = "indicator_instance.title";
     public static final String INDICATOR_INSTANCE_INDICATOR_UUID                                             = "indicator_instance.indicator_uuid";
     public static final String INDICATOR_INSTANCE_TIME_GRANULARITY                                           = "indicator_instance.time_granularity";
-    public static final String INDICATOR_INSTANCE_TIME_VALUE                                                 = "indicator_instance.time_value";
-    public static final String INDICATOR_INSTANCE_GEOGRAPHICAL_VALUE_UUID                                    = "indicator_instance.geographical_value_uuid";
+    public static final String INDICATOR_INSTANCE_TIME_VALUES                                                = "indicator_instance.time_values";
+    public static final String INDICATOR_INSTANCE_GEOGRAPHICAL_VALUES                                        = "indicator_instance.geographical_values";
     public static final String INDICATOR_INSTANCE_PARENT_UUID                                                = "indicator_instance.parent_uuid";
 
     // Indicators
@@ -186,4 +186,12 @@ public class ServiceExceptionParameters {
     public static final String TIME_VALUE                                                                    = "time_value";
     public static final String TIME_GRANULARITY                                                              = "time_granularity";
     public static final String MEASURE_VALUE                                                                 = "measure_value";
+
+    // Miscellaneous
+    public static final String SUBJECT_CODE                                                                  = "subject_code";
+    public static final String INDICATOR_CODES                                                               = "indicator_codes";
+    public static final String INDICATOR_INSTANCES_CODES                                                     = "indicator_instances_codes";
+    public static final String GEO_CODE                                                                      = "geographical_code";
+    public static final String MEASURE_VALUES                                                                = "measure_values";
+    public static final String NUM_RESULTS                                                                   = "code";
 }

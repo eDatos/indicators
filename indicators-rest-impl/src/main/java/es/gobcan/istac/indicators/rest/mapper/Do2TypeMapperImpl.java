@@ -1,10 +1,19 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.*;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
+import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
+import es.gobcan.istac.indicators.rest.types.*;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
@@ -17,82 +26,38 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.domain.DataSource;
-import es.gobcan.istac.indicators.core.domain.ElementLevel;
-import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
-import es.gobcan.istac.indicators.core.domain.GeographicalValue;
-import es.gobcan.istac.indicators.core.domain.Indicator;
-import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
-import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.MeasureValue;
-import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.domain.TimeGranularity;
-import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
-import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
-import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
-import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
-import es.gobcan.istac.indicators.rest.types.AttributeType;
-import es.gobcan.istac.indicators.rest.types.DataDimensionType;
-import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
-import es.gobcan.istac.indicators.rest.types.DataType;
-import es.gobcan.istac.indicators.rest.types.ElementLevelType;
-import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
-import es.gobcan.istac.indicators.rest.types.IndicatorType;
-import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
-import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
-import es.gobcan.istac.indicators.rest.types.LinkType;
-import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
-import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
-import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
-import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
-import es.gobcan.istac.indicators.rest.types.QuantityType;
-import es.gobcan.istac.indicators.rest.types.ThemeType;
+import java.util.*;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL  = "UNIT_MEAS_DETAIL";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE      = "UNIT_MEASURE";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MULT         = "UNIT_MULT";
+    private static String PROP_ATTRIBUTE_UNIT_MEAS_DETAIL = "UNIT_MEAS_DETAIL";
+    private static String PROP_ATTRIBUTE_UNIT_MEASURE = "UNIT_MEASURE";
+    private static String PROP_ATTRIBUTE_UNIT_MULT = "UNIT_MULT";
 
-    private static String                                        REQUEST_CACHE_DATASOURCE         = "REQUEST_CACHE_DATASOURCE";
-    private static String                                        REQUEST_CACHE_UNITMULTIPLIER     = "REQUEST_CACHE_UNITMULTIPLIER";
-    private static String                                        REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static String REQUEST_CACHE_DATASOURCE = "REQUEST_CACHE_DATASOURCE";
+    private static String REQUEST_CACHE_UNITMULTIPLIER = "REQUEST_CACHE_UNITMULTIPLIER";
+    private static String REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                          return new HashMap<String, Map<String, Object>>();
-                                                                                                      };
-                                                                                                  };
+        protected java.util.Map<String, Map<String, Object>> initialValue() {
+            return new HashMap<String, Map<String, Object>>();
+        }
 
-    @Autowired
-    private IndicatorsSystemsService                             indicatorsSystemsService         = null;
-
-    @Autowired
-    private IndicatorsService                                    indicatorsService                = null;
+        ;
+    };
 
     @Autowired
-    private IndicatorsDataService                                indicatorsDataService            = null;
+    private IndicatorsSystemsService indicatorsSystemsService = null;
 
     @Autowired
-    private StatisticalOperationsRestInternalFacade              statisticalOperations            = null;
+    private IndicatorsService indicatorsService = null;
+
+    @Autowired
+    private IndicatorsDataService indicatorsDataService = null;
+
+    @Autowired
+    private StatisticalOperationsRestInternalFacade statisticalOperations = null;
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -139,6 +104,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+    }
+    
+    public IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory source, final String baseURL) {
+        IndicatorsSystemHistoryType target = new IndicatorsSystemHistoryType();
+        target.setIndicatorSystemId(source.getIndicatorsSystem().getUuid());
+        target.setVersion(source.getVersionNumber());
+        target.setPublicationDate(source.getPublicationDate().toDate());
+        
+        return target;
     }
 
     @Override
@@ -234,20 +208,57 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public List<ThemeType> subjectDoToType(final List<Subject> subjects) {
+    public List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues) {
+        List<GeographicalValueType> result = new ArrayList<GeographicalValueType>();
+
+        for(GeographicalValue geographicalValue : geographicalValues) {
+            GeographicalValueType type = new GeographicalValueType();
+            type.setCode(geographicalValue.getCode());
+            type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            type.setGranularityCode(geographicalValue.getGranularity().getCode());
+            result.add(type);
+        }
+
+        return result;
+    }
+
+    private void _subjectDoToBaseType(Subject subject, SubjectBaseType subjectBaseType, String baseUrl) {
+        subjectBaseType.setId(subject.getId());
+        subjectBaseType.setCode(subject.getId());
+        subjectBaseType.setKind(RestConstants.API_INDICATORS_SUBJECTS);
+        subjectBaseType.setSelfLink(_createUrlSubject(subject, baseUrl));
+
+        Map<String, String> title = new LinkedHashMap<String, String>();
+        title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle()); // title only in spanish
+        title.put(MapperUtil.DEFAULT, subject.getTitle());
+
+        subjectBaseType.setTitle(title);
+    }
+
+    @Override
+    public SubjectType subjectDoToType(final Subject subject, List<IndicatorVersion> indicators, String baseUrl) {
+        if (subject == null) {
+            return null;
+        }
+        SubjectType subjectType = new SubjectType();
+        _subjectDoToBaseType(subject, subjectType, baseUrl);
+        subjectType.setElements(indicatorDoToBaseType(indicators, baseUrl));
+
+        return subjectType;
+    }
+
+    @Override
+    public List<SubjectBaseType> subjectDoToBaseType(List<Subject> subjects, String baseUrl) {
         if (CollectionUtils.isEmpty(subjects)) {
             return null;
         }
-        List<ThemeType> themeTypes = new ArrayList<ThemeType>(subjects.size());
+        List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(subjects.size());
         for (Subject subject : subjects) {
-            ThemeType themeType = new ThemeType();
-            themeType.setCode(subject.getId());
-            Map<String, String> title = new LinkedHashMap<String, String>();
-            title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle()); // title only in spanish
-            themeType.setTitle(title);
-            themeTypes.add(themeType);
+            SubjectBaseType subjectType = new SubjectType();
+            _subjectDoToBaseType(subject, subjectType, baseUrl);
+            subjectTypes.add(subjectType);
         }
-        return themeTypes;
+        return subjectTypes;
     }
 
     @Override
@@ -385,9 +396,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                 unitMeasureSymbolAttribute.setValue(MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol()));
                 observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
 
-                if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) || 
-                    MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
-                    MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
+                if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) ||
+                        MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
+                        MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
                     UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
 
                     AttributeType unitMultiplierAttribute = new AttributeType();
@@ -521,6 +532,44 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setNotes(MapperUtil.getLocalisedLabel(source.getNotes()));
     }
 
+    @Override
+    public void indicatorDoToMetadataType(IndicatorVersion source, MetadataType target, String baseURL) throws Exception {
+        target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
+
+        // GEOGRAPHICAL
+        List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+
+        MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
+        target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+
+        // TIME
+        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+
+        MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
+        target.getDimension().put(timeDimension.getCode(), timeDimension);
+
+        // MEASURE
+        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+        target.getDimension().put(measureDimension.getCode(), measureDimension);
+
+        // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
+        Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
+
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, metadataAttributeUnit);
+
+        MetadataAttributeType metadataAttributeUnitMult = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MULT, "Multiplicador de la unidad", "Unit Multiplier");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, metadataAttributeUnitMult);
+
+        MetadataAttributeType metadataAttributeUnitMeasure = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEASURE, "Unidad de medida", "Unit of Measure");
+        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, metadataAttributeUnitMeasure);
+        target.setAttribute(metadataAttributes);
+    }
+
     private void _indicatorDoToType(IndicatorVersion source, IndicatorType target, String baseURL) throws Exception {
         _indicatorDoToType(source, (IndicatorBaseType) target, baseURL);
 
@@ -582,7 +631,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _indicatorsInstanceDoToType(final IndicatorInstance sourceIndicatorInstance, final IndicatorVersion sourceIndicatorVersion, final IndicatorInstanceBaseType target,
-            final String baseURL) {
+                                             final String baseURL) {
         Assert.notNull(sourceIndicatorInstance);
         Assert.notNull(baseURL);
 
@@ -599,10 +648,41 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         parentLink.setHref(parentLinkURL);
         target.setParentLink(parentLink);
 
+        target.setSystemCode(indicatorsSystem.getCode());
         target.setTitle(MapperUtil.getLocalisedLabel(sourceIndicatorInstance.getTitle()));
 
         target.setConceptDescription(MapperUtil.getLocalisedLabel(sourceIndicatorVersion.getConceptDescription()));
     }
+
+    @Override
+    public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, final String baseURL) {
+        try {
+            target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
+
+            // GEOGRAPHICAL
+            List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+
+            MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
+            target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
+
+            // TIME
+            List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+
+            MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
+            target.getDimension().put(timeDimension.getCode(), timeDimension);
+
+            // MEASURE
+            List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+            target.getDimension().put(measureDimension.getCode(), measureDimension);
+        } catch (MetamacException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
 
     private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
         try {
@@ -683,6 +763,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
             metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
             metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+            metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
             geographicalValueTypes.add(metadataRepresentationType);
         }
         return geographicalValueTypes;
@@ -884,7 +965,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
-            final UriComponentsBuilder uriComponentsBuilder) {
+                                                                                final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
 
         uriComponentsBuilder.path(RestConstants.API_SLASH);
@@ -892,7 +973,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
-            final UriComponentsBuilder uriComponentsBuilder) {
+                                                                                     final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
 
         uriComponentsBuilder.path(RestConstants.API_SLASH);
@@ -917,6 +998,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         uriComponentsBuilder.path(RestConstants.API_SLASH);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_DATA);
+    }
+
+    private String _createUrlSubject(final Subject subject, final String baseURL) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(RestConstants.API_INDICATORS_SUBJECTS);
+        uriComponentsBuilder.path(RestConstants.API_SLASH);
+        uriComponentsBuilder.path(subject.getId());
+        return uriComponentsBuilder.build().encode().toUriString();
     }
 
 }

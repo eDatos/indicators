@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.mockito.Mockito.when;
+import static junit.framework.Assert.*;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,6 +26,7 @@ import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -34,9 +37,12 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 @Transactional
 public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBaseTest {
 
-    private static final String              GEO_GRANULARITY_COUNTRIES        = "1";
-    private static final String              GEO_GRANULARITY_COMMUNITIES      = "2";
-    private static final String              GEO_GRANULARITY_PROVINCES        = "3";
+    private static final String              SUBJECT_CODE_1                   = "1";
+    private static final String              SUBJECT_CODE_3                   = "3";
+
+    private static final String              GEO_GRANULARITY_COUNTRIES_UUID        = "1";
+    private static final String              GEO_GRANULARITY_COMMUNITIES_UUID      = "2";
+    private static final String              GEO_GRANULARITY_PROVINCES_UUID        = "3";
 
     /* Has geographic and time variables */
     private static final String              INDICATOR1_UUID                  = "Indicator-1";
@@ -46,18 +52,40 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     private static final String              INDICATOR1_PUBLISHED_VERSION     = "1.000";
     private static final String              INDICATOR1_DRAFT_VERSION         = "2.000";
 
+    /* Has geographic and time variables */
+    private static final String              INDICATOR2_UUID                  = "Indicator-2";
+    private static final String              INDICATOR2_DS_GPE_UUID           = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR2_GPE_JSON_DATA         = readFile("json/data_temporal_spatials.json");
+    private static final String              INDICATOR2_VERSION               = "1.000";
+
+    /* Has no geographic and temporal variables */
+    private static final String              INDICATOR3_UUID                  = "Indicator-3";
+    private static final String              INDICATOR3_DS_GPE_UUID           = "Indicator-3-v1-DataSource-1-GPE-NOTIME-NOGEO";
+    private static final String              INDICATOR3_GPE_JSON_DATA         = readFile("json/data_fixed.json");
+    private static final String              INDICATOR3_VERSION               = "1.000";
+
     /* Has no geographic and temporal variables */
     private static final String              INDICATOR4_UUID                  = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID           = "Indicator-4-v1-DataSource-1-GPE-NOTIME-NOGEO";
     private static final String              INDICATOR4_GPE_JSON_DATA         = readFile("json/data_fixed.json");
     private static final String              INDICATOR4_VERSION               = "1.000";
 
+    /* Has no geographic and temporal variables */
+    private static final String              INDICATOR5_UUID                  = "Indicator-5";
+    private static final String              INDICATOR5_DS_GPE_UUID           = "Indicator-5-v1-DataSource-1-GPE-NOTIME-NOGEO";
+    private static final String              INDICATOR5_GPE_JSON_DATA         = readFile("json/data_fixed.json");
+    private static final String              INDICATOR5_VERSION               = "1.000";
+
     /* Indicator instances */
     /* GEO Granularity provinces, time granularity yearly */
     private static final String              INDICATOR_INSTANCE_11_UUID       = "IndSys-1-v1-IInstance-11";
-
     /* NOT geographic restrictions, TIME GRANULARITY monthly */
     private static final String              INDICATOR_INSTANCE_12_UUID       = "IndSys-1-v1-IInstance-12";
+    /* GEO es FIXED */
+    private static final String              INDICATOR_INSTANCE_13_UUID       = "IndSys-1-v1-IInstance-13";
+
+    private static final String              INDICATORS_SYSTEM_1_CODE         = "IndSys-CODE-1";
+    private static final String              INDICATORS_SYSTEM_2_CODE         = "IndSys-CODE-2";
 
     @Autowired
     protected IndicatorsDataService          indicatorsDataService;
@@ -87,6 +115,18 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     }
 
     @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorNotPopulated() throws Exception {
+        try {
+            List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID,
+                    INDICATOR1_DRAFT_VERSION);
+            fail("Should fail because indicator has not been populated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_POPULATED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
     public void testRetrieveGeographicalGranularitiesInIndicatorFixedValue() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR4_DS_GPE_UUID))).thenReturn(INDICATOR4_GPE_JSON_DATA);
 
@@ -111,6 +151,32 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
     }
 
     @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[]{"COUNTRIES", "COMMUNITIES", "PROVINCES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+
+    @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCodeFixedGeo() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR3_UUID, INDICATOR3_VERSION);
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR5_UUID, INDICATOR5_VERSION);
+
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[]{"COMMUNITIES", "PROVINCES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+
+    @Test
     public void testRetrieveGeographicalGranularitiesInIndicatorInstance() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
 
@@ -119,6 +185,29 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_11_UUID);
         List<String> codes = getGeographicalGranularitiesCodes(granularities);
         String[] expectedCodes = new String[]{"PROVINCES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+
+    @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorInstanceNotPopulated() throws Exception {
+        try {
+            List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_11_UUID);
+            fail("Should fail because indicator has not been populated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_NOT_POPULATED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorInstanceFixedGeoValue() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_13_UUID);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[]{"COUNTRIES"};
         checkElementsInCollection(expectedCodes, codes);
     }
 
@@ -134,6 +223,21 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         checkElementsInCollection(expectedCodes, codes);
     }
 
+    @Test
+    public void testRetrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
+
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(getServiceContextAdministrador(),
+                INDICATORS_SYSTEM_2_CODE);
+        List<String> codes = getGeographicalGranularitiesCodes(granularities);
+        String[] expectedCodes = new String[]{"COUNTRIES", "COMMUNITIES", "PROVINCES"};
+        checkElementsInCollection(expectedCodes, codes);
+    }
+
     /* GEOGRAPHICAL VALUES BY GRANULARITY */
 
     @Test
@@ -143,17 +247,17 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
         List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION,
-                GEO_GRANULARITY_COUNTRIES);
+                GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCountryCodes = new String[]{"ES"};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, GEO_GRANULARITY_COMMUNITIES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCommunityCodes = new String[]{"ES61"};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, GEO_GRANULARITY_PROVINCES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_DRAFT_VERSION, GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
@@ -166,17 +270,17 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
 
         List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION,
-                GEO_GRANULARITY_COUNTRIES);
+                GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCountryCodes = new String[]{"ES"};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, GEO_GRANULARITY_COMMUNITIES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCommunityCodes = new String[]{};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, GEO_GRANULARITY_PROVINCES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicator(getServiceContextAdministrador(), INDICATOR4_UUID, INDICATOR4_VERSION, GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedProvinceCodes = new String[]{};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
@@ -189,21 +293,193 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
 
         List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID,
-                GEO_GRANULARITY_COUNTRIES);
+                GEO_GRANULARITY_COUNTRIES_UUID);
         List<String> countryCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCountryCodes = new String[]{"ES"};
         checkElementsOrder(expectedCountryCodes, countryCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, GEO_GRANULARITY_COMMUNITIES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, GEO_GRANULARITY_COMMUNITIES_UUID);
         List<String> communityCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCommunityCodes = new String[]{"ES61"};
         checkElementsOrder(expectedCommunityCodes, communityCodes);
 
-        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, GEO_GRANULARITY_PROVINCES);
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublished(getServiceContextAdministrador(), INDICATOR1_UUID, GEO_GRANULARITY_PROVINCES_UUID);
         List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
         checkElementsOrder(expectedProvinceCodes, provinceCodes);
     }
+    
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+        
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1, GEO_GRANULARITY_COUNTRIES_UUID);
+        List<String> countryCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCountryCodes = new String[]{"ES"};
+        checkElementsOrder(expectedCountryCodes, countryCodes);
+        
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1, GEO_GRANULARITY_COMMUNITIES_UUID);
+        List<String> communityCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCommunityCodes = new String[]{"ES61"};
+        checkElementsOrder(expectedCommunityCodes, communityCodes);
+        
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1, GEO_GRANULARITY_PROVINCES_UUID);
+        List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
+        checkElementsOrder(expectedProvinceCodes, provinceCodes);
+    }
+    
+    
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCodeMultiFixed() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
+        
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3, GEO_GRANULARITY_COUNTRIES_UUID);
+        List<String> countryCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCountryCodes = new String[]{};
+        checkElementsOrder(expectedCountryCodes, countryCodes);
+        
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3, GEO_GRANULARITY_COMMUNITIES_UUID);
+        List<String> communityCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCommunityCodes = new String[]{"ES61"};
+        checkElementsOrder(expectedCommunityCodes, communityCodes);
+        
+        geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3, GEO_GRANULARITY_PROVINCES_UUID);
+        List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedProvinceCodes = new String[]{"ES611"};
+        checkElementsOrder(expectedProvinceCodes, provinceCodes);
+    }
+    
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorInstanceDifferentGranularity() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_11_UUID,
+                GEO_GRANULARITY_COUNTRIES_UUID);
+        assertNotNull(geoValues);
+        assertEquals(0, geoValues.size());
+    }
+
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorInstanceSameGranularity() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_11_UUID,
+                GEO_GRANULARITY_PROVINCES_UUID);
+        assertNotNull(geoValues);
+        assertEquals(3, geoValues.size());
+
+        List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
+        checkElementsOrder(expectedProvinceCodes, provinceCodes);
+    }
+
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorInstanceNotGeoFixed() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID,
+                    GEO_GRANULARITY_COUNTRIES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(1, geoValues.size());
+
+            List<String> countryCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCountryCodes = new String[]{"ES"};
+            checkElementsOrder(expectedCountryCodes, countryCodes);
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID,
+                    GEO_GRANULARITY_COMMUNITIES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(1, geoValues.size());
+
+            List<String> communityCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCommunityCodes = new String[]{"ES61"};
+            checkElementsOrder(expectedCommunityCodes, communityCodes);
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_12_UUID,
+                    GEO_GRANULARITY_PROVINCES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(3, geoValues.size());
+
+            List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedProvinceCodes = new String[]{"ES611", "ES612", "ES613"};
+            checkElementsOrder(expectedProvinceCodes, provinceCodes);
+        }
+    }
+
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorInstanceGeoValueFixed() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_13_UUID,
+                    GEO_GRANULARITY_COUNTRIES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(1, geoValues.size());
+
+            List<String> countryCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCountryCodes = new String[]{"ES"};
+            checkElementsOrder(expectedCountryCodes, countryCodes);
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_13_UUID,
+                    GEO_GRANULARITY_COMMUNITIES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(0, geoValues.size());
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorInstance(getServiceContextAdministrador(), INDICATOR_INSTANCE_13_UUID,
+                    GEO_GRANULARITY_PROVINCES_UUID);
+            assertNotNull(geoValues);
+            assertEquals(0, geoValues.size());
+        }
+    }
+    
+    @Test
+    public void testRetrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2_CODE, GEO_GRANULARITY_COUNTRIES_UUID);
+            assertNotNull(geoValues);
+            List<String> countryCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCountryCodes = new String[]{"ES"};
+            checkElementsOrder(expectedCountryCodes, countryCodes);
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2_CODE, GEO_GRANULARITY_COMMUNITIES_UUID);
+            assertNotNull(geoValues);
+            List<String> communityCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCommunityCodes = new String[]{"ES61"};
+            checkElementsOrder(expectedCommunityCodes, communityCodes);
+        }
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2_CODE,GEO_GRANULARITY_PROVINCES_UUID);
+            assertNotNull(geoValues);
+            List<String> provinceCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedProvinceCodes = new String[]{"ES611"};
+            checkElementsOrder(expectedProvinceCodes, provinceCodes);
+        }
+    }
+    
 
     /* GEOGRAPHICAL VALUES */
 
@@ -242,6 +518,32 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         String[] expectedCountryCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
         checkElementsOrder(expectedCountryCodes, countryCodes);
     }
+    
+    @Test
+    public void testRetrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_PUBLISHED_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorVersionData(getServiceContextAdministrador(), INDICATOR1_UUID, INDICATOR1_PUBLISHED_VERSION);
+        
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_1);
+        List<String> actualCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCodes = new String[]{"ES","ES61","ES611","ES612","ES613"};
+        checkElementsOrder(expectedCodes, actualCodes);
+    }
+    
+    @Test
+    public void testRetrieveGeographicalValuesInPublishedIndicatorsWithSubjectCodeMultiFixed() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS_GPE_UUID))).thenReturn(INDICATOR5_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
+        
+        List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
+        List<String> actualCodes = getGeographicalValuesCodes(geoValues);
+        String[] expectedCodes = new String[]{"ES61","ES611"};
+        checkElementsOrder(expectedCodes, actualCodes);
+    }
 
     @Test
     public void testRetrieveGeographicalValuesInIndicatorInstance() throws Exception {
@@ -266,6 +568,22 @@ public class IndicatorsDataServiceRetrieveGeoTimeTest extends IndicatorsDataBase
         List<String> geoCodes = getGeographicalValuesCodes(geoValues);
         String[] expectedCodes = new String[]{"ES", "ES61", "ES611", "ES612", "ES613"};
         checkElementsOrder(expectedCodes, geoCodes);
+    }
+    
+    @Test
+    public void testRetrieveGeographicalValuesInIndicatorsInstancesInPublishedIndicatorsSystem() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
+        {
+            List<GeographicalValue> geoValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorsInstancesInPublishedIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2_CODE);
+            assertNotNull(geoValues);
+            List<String> actualCodes = getGeographicalValuesCodes(geoValues);
+            String[] expectedCodes = new String[]{"ES","ES61","ES611"};
+            checkElementsOrder(expectedCodes, actualCodes);
+        }
     }
 
     /* TIME GRANULARITIES */

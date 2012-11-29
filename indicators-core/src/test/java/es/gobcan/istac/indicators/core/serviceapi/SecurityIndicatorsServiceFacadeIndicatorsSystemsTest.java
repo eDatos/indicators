@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
@@ -912,14 +915,16 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testCreateIndicatorInstance() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
         // With access
@@ -958,14 +963,16 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testCreateIndicatorInstanceOnlyAccessToIndicatorsSystem1() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
         // With access
@@ -974,14 +981,16 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testCreateIndicatorInstanceErrorOnlyWithoutAccessToIndicatorsSystem1() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
 
         // Without access

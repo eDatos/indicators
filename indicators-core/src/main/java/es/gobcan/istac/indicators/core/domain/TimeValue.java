@@ -7,8 +7,8 @@ import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 /**
  * It is not an entity. Only to returns in Service
  */
-public class TimeValue {
 
+public class TimeValue {
     private String              timeValue;
     private TimeGranularityEnum granularity;
     private String              year;

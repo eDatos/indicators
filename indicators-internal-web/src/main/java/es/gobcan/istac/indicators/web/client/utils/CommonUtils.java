@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -43,7 +44,7 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
         for (IndicatorDto indicatorDto : indicatorDtos) {
-            valueMap.put(indicatorDto.getUuid(), indicatorDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(indicatorDto.getTitle()));
+            valueMap.put(indicatorDto.getUuid(), CommonWebUtils.getElementName(indicatorDto.getCode(), indicatorDto.getTitle()));
         }
         return valueMap;
     }
@@ -122,7 +123,7 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
         for (GeographicalGranularityDto geographicalGranularityDto : geographicalGranularityDtos) {
-            valueMap.put(geographicalGranularityDto.getUuid(), geographicalGranularityDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalGranularityDto.getTitle()));
+            valueMap.put(geographicalGranularityDto.getUuid(), CommonWebUtils.getElementName(geographicalGranularityDto.getCode(), geographicalGranularityDto.getTitle()));
         }
         return valueMap;
     }
@@ -131,7 +132,7 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
         for (GeographicalValueDto geographicalValueDto : geographicalValueDtos) {
-            valueMap.put(geographicalValueDto.getUuid(), geographicalValueDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(geographicalValueDto.getTitle()));
+            valueMap.put(geographicalValueDto.getUuid(), CommonWebUtils.getElementName(geographicalValueDto.getCode(), geographicalValueDto.getTitle()));
         }
         return valueMap;
     }
@@ -140,7 +141,7 @@ public class CommonUtils {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
         for (SubjectDto subjectDto : subjectDtos) {
-            valueMap.put(subjectDto.getCode(), subjectDto.getCode() + " - " + InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
+            valueMap.put(subjectDto.getCode(), CommonWebUtils.getElementName(subjectDto.getCode(), subjectDto.getTitle()));
         }
         return valueMap;
     }
@@ -260,7 +261,7 @@ public class CommonUtils {
 
     public static String getIndicatorText(String indicatorCode, InternationalStringDto indicatorTitle) {
         if (indicatorCode != null) {
-            return indicatorCode + " - " + InternationalStringUtils.getLocalisedString(indicatorTitle);
+            return CommonWebUtils.getElementName(indicatorCode, indicatorTitle);
         }
         return new String();
     }

@@ -19,7 +19,8 @@
 
 <link rel="stylesheet" href="[@spring.url "/theme/css/gobcanoverwrite.css"/]" type="text/css" media="screen, projection" />
 <link rel="stylesheet" href="[@spring.url "/theme/css/main.css"/]" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="[@spring.url "/theme/css/widgets.css"/]" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="[@spring.url "/theme/js/widgets/widgets.css"/]" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="[@spring.url "/theme/js/libs/select2/select2.css"/]" type="text/css" media="screen, projection" />
 
 <!-- Js -->
 <script type="text/javascript" src="[@spring.url "/theme/js/libs/indicators-utils.js"                     /]" ></script>

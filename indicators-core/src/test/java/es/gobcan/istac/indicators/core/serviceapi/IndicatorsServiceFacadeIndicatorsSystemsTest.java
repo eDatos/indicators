@@ -6,16 +6,22 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.siemac.metamac.common.test.utils.DirtyDatabase;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
@@ -36,13 +42,16 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
 import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.criteria.IndicatorCriteriaPropertyEnum;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
 import es.gobcan.istac.indicators.core.dto.ElementLevelDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.IndicatorsSystemHistoryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
@@ -61,14 +70,30 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml","classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsServiceFacade indicatorsServiceFacade;
+    
+    @Autowired
+    protected IndicatorsSystemsService indicatorsSystemService;
+    
+    @Autowired
+    private IndicatorsDataService indicatorsDataService;
+    
+    @Autowired
+    private IndicatorsDataProviderService indicatorsDataProviderService;
 
     private static String             NOT_EXISTS                                       = "not-exists";
+    
+    //Subject codes
+    private static String             SUBJECT_CODE_1                                   = "1";
+    private static String             SUBJECT_CODE_2                                   = "2";
+    private static String             SUBJECT_CODE_3                                   = "3";
+    private static String             SUBJECT_CODE_4                                   = "4";
+    private static String             SUBJECT_CODE_NOT_EXIST                           = "not-exists";
 
     // Indicators systems
     private static String             INDICATORS_SYSTEM_1                              = "IndSys-1";
@@ -81,6 +106,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATORS_SYSTEM_7                              = "IndSys-7";
     private static String             INDICATORS_SYSTEM_8                              = "IndSys-8";
     private static String             INDICATORS_SYSTEM_9                              = "IndSys-9";
+    private static String             INDICATORS_SYSTEM_10                              = "IndSys-10";
 
     // Dimensions
     private static String             DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
@@ -98,22 +124,45 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-2";
     private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-3";
     private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE = "IndSys-1-v2-IInstance-3-code";
+    private static String             INDICATOR_INSTANCE_1A_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-1A";
     private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-2";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_6_V1      = "IndSys-2-v1-IInstance-2";
+    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-1";
+    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-2";
+    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-3";
 
     // Geographical values
     private static String             GEOGRAPHICAL_VALUE_1                             = "1";
     private static String             GEOGRAPHICAL_VALUE_2                             = "2";
     private static String             GEOGRAPHICAL_VALUE_3                             = "3";
     private static String             GEOGRAPHICAL_VALUE_4                             = "4";
+    private static String             GEOGRAPHICAL_VALUE_5                             = "5";
+    private static String             GEOGRAPHICAL_VALUE_6                             = "6";
+    private static String             GEOGRAPHICAL_VALUE_7                             = "7";
+    private static String             GEOGRAPHICAL_VALUE_8                             = "8";
+    private static String             GEOGRAPHICAL_VALUE_9                             = "9";
 
     // Geographical granularities
     private static String             GEOGRAPHICAL_GRANULARITY_1                       = "1";
     private static String             GEOGRAPHICAL_GRANULARITY_2                       = "2";
+    private static String             GEOGRAPHICAL_GRANULARITY_3                       = "3";
+    private static String             GEOGRAPHICAL_GRANULARITY_4                       = "4";
 
     // Indicators
     private static String             INDICATOR_1                                      = "Indicator-1";
+    private static String             INDICATOR_1_DS_GPE_UUID                          = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
+    private static String             INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
     private static String             INDICATOR_2                                      = "Indicator-2";
     private static String             INDICATOR_3                                      = "Indicator-3";
+    private static String             INDICATOR_3_DS_GPE_UUID                          = "Indicator-3-v1-DataSource-1-GPE-GEO-TIME";
+    private static String             INDICATOR_3_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    private static String             INDICATOR_4                                      = "Indicator-4";
+    private static String             INDICATOR_4_DS_GPE_UUID                          = "Indicator-4-v1-DataSource-1-GPE-GEO-TIME";
+    private static String             INDICATOR_4_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    private static String             INDICATOR_5                                      = "Indicator-5";
+    private static String             INDICATOR_5_DS_GPE_UUID                          = "Indicator-5-v1-DataSource-1-GPE-GEO-TIME";
+    private static String             INDICATOR_5_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    
 
     @Test
     @Transactional
@@ -1168,7 +1217,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testPublishIndicatorsSystem() throws Exception {
-
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
+        
         String uuid = INDICATORS_SYSTEM_5;
         String versionNumber = "1.000";
 
@@ -1178,6 +1230,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
+            
+            //Check empty history
+            List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
+            assertNotNull(history);
+            assertEquals(0,history.size());
         }
 
         // Publish
@@ -1199,6 +1256,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto1Updated.getArchiveUser());
         }
         {
+            //Check history
+            List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
+            assertNotNull(history);
+            assertEquals(1,history.size());
+            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(),history.get(0).getVersionNumber());
+        }
+        {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
             assertEquals(null, indicatorsSystemDto.getProductionVersion());
             assertEquals(versionNumber, indicatorsSystemDto.getPublishedVersion());
@@ -1215,13 +1279,93 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
+    
+    @Test
+    @Transactional
+    public void testPublishIndicatorsSystemExistingHistory() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
+        
+        String uuid = INDICATORS_SYSTEM_6;
+        String previousPublishedversionNumber = "1.500";
+        String versionNumber = "2.000";
+        
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
+            assertEquals(versionNumber, indicatorsSystemDto.getProductionVersion());
+            assertNotNull(indicatorsSystemDto.getPublishedVersion());
+            assertNull(indicatorsSystemDto.getArchivedVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
+            
+            //Check not empty history
+            List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
+            assertNotNull(history);
+            assertEquals(3,history.size());
+            
+            assertEquals(uuid,history.get(0).getIndicatorsSystem().getUuid());
+            assertEquals(previousPublishedversionNumber,history.get(0).getVersionNumber());
+        }
+        
+        // Publish
+        IndicatorsSystemDto indicatorsSystemDto1Updated = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
+        
+        // Validation
+        {
+            assertEquals(null, indicatorsSystemDto1Updated.getProductionVersion());
+            assertEquals(versionNumber, indicatorsSystemDto1Updated.getPublishedVersion());
+            assertEquals(null, indicatorsSystemDto1Updated.getArchivedVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto1Updated.getProcStatus());
+            IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto1Updated.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto1Updated.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorsSystemDto1Updated.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDto1Updated.getDiffusionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto1Updated.getPublicationDate()));
+            assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemDto1Updated.getPublicationUser());
+            assertNull(indicatorsSystemDto1Updated.getArchiveDate());
+            assertNull(indicatorsSystemDto1Updated.getArchiveUser());
+        }
+        {
+            //Check history
+            List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
+            assertNotNull(history);
+            assertEquals(4,history.size());
+            
+            assertEquals(indicatorsSystemDto1Updated.getUuid(),history.get(0).getIndicatorsSystem().getUuid());
+            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(),history.get(0).getVersionNumber());
+            
+            assertEquals(indicatorsSystemDto1Updated.getUuid(),history.get(1).getIndicatorsSystem().getUuid());
+            assertEquals(previousPublishedversionNumber,history.get(1).getVersionNumber());
+        }
+        {
+            IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
+            assertEquals(null, indicatorsSystemDto.getProductionVersion());
+            assertEquals(versionNumber, indicatorsSystemDto.getPublishedVersion());
+            assertEquals(null, indicatorsSystemDto.getArchivedVersion());
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
+            
+            IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto.getProductionValidationDate());
+            assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
+            IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
+            assertEquals("user2", indicatorsSystemDto.getDiffusionValidationUser());
+            assertTrue(DateUtils.isSameDay(new Date(), indicatorsSystemDto.getPublicationDate()));
+            assertEquals(getServiceContextAdministrador().getUserId(), indicatorsSystemDto.getPublicationUser());
+            assertNull(indicatorsSystemDto.getArchiveDate());
+            assertNull(indicatorsSystemDto.getArchiveUser());
+        }
+    }
 
     @Test
     @Transactional
     public void testPublishIndicatorsSystemWithPublishedVersion() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_3_DS_GPE_UUID))).thenReturn(INDICATOR_3_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_3);
 
         String uuid = INDICATORS_SYSTEM_6;
-        String diffusionVersionBefore = "1.000"; // will be deleted when publish current version in diffusion validation
+        String diffusionVersionBefore = "1.501"; // WAS 1.000, but it was changed to 1.001 after populating linked indicator 1
         String productionVersionBefore = "2.000"; // will be published
 
         {
@@ -1263,7 +1407,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testPublishIndicatorsSystemWithArchivedVersion() throws Exception {
-
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
+        
         String uuid = INDICATORS_SYSTEM_7;
         String archivedVersionBefore = "1.000"; // will be deleted when publish current version in diffusion validation
         String productionVersionBefore = "2.000"; // will be published
@@ -1379,17 +1526,21 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATORS_SYSTEM_5;
         String indicatorUuid2 = INDICATOR_2;
         String indicatorUuid3 = INDICATOR_3;
+        
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
 
         // Create indicators instances with indicator not published
         {
+            
             // Indicator 2
             IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
             indicatorInstanceDto.setIndicatorUuid(indicatorUuid2);
             indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-            indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-            indicatorInstanceDto.setTimeValue("2012");
+            indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+            indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
             indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuid, indicatorInstanceDto);
         }
         {
@@ -1399,8 +1550,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-            indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-            indicatorInstanceDto.setTimeValue("2012");
+            indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+            indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
             indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuid, indicatorInstanceDto);
         }
 
@@ -1736,7 +1887,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Retrieve last versions...
         MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystems(getServiceContextTecnicoProduccion(), null);
-        assertEquals(9, result.getResults().size());
+        assertEquals(10, result.getResults().size());
         List<IndicatorsSystemSummaryDto> indicatorsSystemsDto = result.getResults();
 
         {
@@ -1796,7 +1947,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals("CODE-6", indicatorsSystemSummaryDto.getCode());
 
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
-            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+            assertEquals("1.500", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
             assertEquals("2.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
@@ -1831,6 +1982,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
             assertEquals(IndicatorsSystemProcStatusEnum.VALIDATION_REJECTED, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
             assertEquals("1.000", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
+        }
+        {
+            IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(9);
+            assertEquals(INDICATORS_SYSTEM_10, indicatorsSystemSummaryDto.getUuid());
+            assertEquals("CODE-10", indicatorsSystemSummaryDto.getCode());
+            
+            assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
+            assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
+
+            assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.001", indicatorsSystemSummaryDto.getProductionVersion().getVersionNumber());
         }
     }
 
@@ -1920,7 +2082,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testFindIndicatorsSystemsPublished() throws Exception {
 
         MetamacCriteriaResult<IndicatorsSystemSummaryDto> result = indicatorsServiceFacade.findIndicatorsSystemsPublished(getServiceContextAdministrador(), null);
-        assertEquals(3, result.getResults().size());
+        assertEquals(4, result.getResults().size());
         List<IndicatorsSystemSummaryDto> indicatorsSystemsDto = result.getResults();
 
         assertEquals(INDICATORS_SYSTEM_1, indicatorsSystemsDto.get(0).getUuid());
@@ -1934,6 +2096,10 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getDiffusionVersion().getProcStatus());
         assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(2).getProductionVersion().getProcStatus());
+        
+        assertEquals(INDICATORS_SYSTEM_10, indicatorsSystemsDto.get(3).getUuid());
+        assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(3).getDiffusionVersion().getProcStatus());
+        assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(3).getProductionVersion().getProcStatus());
     }
 
     @Test
@@ -1963,7 +2129,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
                 } else if (indicatorsSystemDto.getUuid().equals(INDICATORS_SYSTEM_6)) {
                     indicator6 = Boolean.TRUE;
                     assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemDto.getUuid());
-                    assertEquals("1.000", indicatorsSystemDto.getVersionNumber());
+                    assertEquals("1.500", indicatorsSystemDto.getVersionNumber());
                     assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
                 }
             }
@@ -1982,7 +2148,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, indicatorsSystemsDto.size());
 
             assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(0).getUuid());
-            assertEquals("1.000", indicatorsSystemsDto.get(0).getVersionNumber());
+            assertEquals("1.500", indicatorsSystemsDto.get(0).getVersionNumber());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(0).getProcStatus());
         }
     }
@@ -2901,9 +3067,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
         assertEquals(TimeGranularityEnum.YEARLY, indicatorInstanceDto.getTimeGranularity());
-        assertNull(indicatorInstanceDto.getTimeValue());
+        assertEquals(0,indicatorInstanceDto.getTimeValues().size());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, indicatorInstanceDto.getGeographicalGranularityUuid());
-        assertNull(indicatorInstanceDto.getGeographicalValueUuid());
+        assertEquals(0,indicatorInstanceDto.getGeographicalValues().size());
         IndicatorsAsserts.assertEqualsDate("2011-05-05 01:02:04", indicatorInstanceDto.getCreatedDate());
         assertEquals("user1", indicatorInstanceDto.getCreatedBy());
         IndicatorsAsserts.assertEqualsDate("2011-06-06 05:06:07", indicatorInstanceDto.getLastUpdated());
@@ -2958,15 +3124,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstance() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -2985,6 +3153,89 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getDimension().getUuid());
         assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
         assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getDimension().getUuid());
+        assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
+        assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
+    }
+    
+    @Test
+    @Transactional
+    public void testCreateIndicatorInstanceMultiGeo() throws Exception {
+        GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
+        geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        GeographicalValueBaseDto geoValue2 = new GeographicalValueBaseDto();
+        geoValue2.setUuid(GEOGRAPHICAL_VALUE_2);
+        
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1,geoValue2));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
+        
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+        assertNotNull(indicatorInstanceDtoCreated.getCode());
+        
+        // Retrieve indicator instance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(5, indicatorsSystemStructureDto.getElements().size());
+        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getDimension().getUuid());
+        assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+        assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getUuid());
+        assertNotNull(indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getGeographicalValues());
+        assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getDimension().getUuid());
+        assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
+        assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
+    }
+    
+    @Test
+    @Transactional
+    public void testCreateIndicatorInstanceMultiTimeValues() throws Exception {
+        GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
+        geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012","2011","2010"));
+        
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+        assertNotNull(indicatorInstanceDtoCreated.getCode());
+        
+        // Retrieve indicator instance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(5, indicatorsSystemStructureDto.getElements().size());
+        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getDimension().getUuid());
+        assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+        assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getUuid());
+        assertNotNull(indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getGeographicalValues());
         assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getDimension().getUuid());
         assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
@@ -3032,7 +3283,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceInDimension() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
 
         // Create indicator instance
@@ -3041,8 +3294,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -3067,6 +3320,115 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), elementLevelDto.getSubelements().get(2).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(3), elementLevelDto.getSubelements().get(2).getOrderInLevel());
     }
+    
+
+    @Test
+    @DirtyDatabase
+    public void testCreateIndicatorInstanceIndicatorDuplicatedInSameRootLevel() throws Exception {
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid("Indicator-1");
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
+
+        // Root level
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+
+        // Retrieve indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        assertNull(indicatorInstanceDtoRetrieved.getParentUuid());
+        
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(5, indicatorsSystemStructureDto.getElements().size());
+        
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(0);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getIndicatorInstance());
+            assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, elementLevelDto.getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(1), elementLevelDto.getOrderInLevel());
+            
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getDimension());
+            assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+            assertEquals(Long.valueOf(2), elementLevelDto.getOrderInLevel());
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(2);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getIndicatorInstance());
+            assertEquals(indicatorInstanceDtoCreated.getUuid(), elementLevelDto.getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(3), elementLevelDto.getOrderInLevel());
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(3);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getIndicatorInstance());
+            assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getIndicatorInstance().getUuid());
+            assertEquals(Long.valueOf(4), elementLevelDto.getOrderInLevel());
+        }
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(4);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getDimension());
+            assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+            assertEquals(Long.valueOf(5), elementLevelDto.getOrderInLevel());
+        }
+    }
+    
+    @Test
+    @DirtyDatabase
+    public void testCreateIndicatorInstanceIndicatorDuplicatedInSameDimensionLevel() throws Exception {
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid("Indicator-1");
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(DIMENSION_2_INDICATORS_SYSTEM_1_V2);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
+        
+        // Root level
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+        
+        // Retrieve indicatorInstance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2,indicatorInstanceDtoRetrieved.getParentUuid());
+        
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(4, indicatorsSystemStructureDto.getElements().size());
+        
+        {
+            ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(3);
+            assertNull(elementLevelDto.getParentUuid());
+            assertNotNull(elementLevelDto.getDimension());
+            assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
+            
+            assertEquals(1,elementLevelDto.getSubelements().size());
+            ElementLevelDto subElementLevelDto = elementLevelDto.getSubelements().get(0);
+            assertEquals(elementLevelDto.getDimension().getUuid(),subElementLevelDto.getParentUuid());
+            assertNotNull(subElementLevelDto.getIndicatorInstance());
+            assertEquals(indicatorInstanceDtoCreated.getUuid(), subElementLevelDto.getIndicatorInstance().getUuid());
+        }
+    }
 
     @Test
     @DirtyDatabase
@@ -3080,7 +3442,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -3119,7 +3481,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
 
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
@@ -3169,7 +3531,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(2, e.getExceptionItems().get(2).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_GRANULARITY, e.getExceptionItems().get(2).getMessageParameters()[0]);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUE, e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES, e.getExceptionItems().get(2).getMessageParameters()[1]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
@@ -3180,13 +3542,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorOrderIncorrect() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MAX_VALUE);
 
@@ -3204,13 +3568,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorOrderIncorrectNegative() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.MIN_VALUE);
 
@@ -3228,16 +3594,18 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorTimeValueIncorrect() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
-        indicatorInstanceDto.setTimeValue("2012a");
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012a"));
 
         try {
             indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
@@ -3246,20 +3614,22 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorGeographicValueNotExists() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(NOT_EXISTS);
+        
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setTimeValue("2012");
-        indicatorInstanceDto.setGeographicalValueUuid(NOT_EXISTS);
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3270,22 +3640,24 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.GEOGRAPHICAL_VALUE_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorInstanceDto.getGeographicalValueUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(indicatorInstanceDto.getGeographicalValues().get(0).getUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorIndicatorNotExists() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(NOT_EXISTS);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
 
         // Root level
         try {
@@ -3301,52 +3673,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     @Transactional
-    public void testCreateIndicatorInstanceErrorIndicatorDuplicatedInSameLevel() throws Exception {
-
-        // Create indicator instance
-        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
-        indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setParentUuid(null);
-        indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
-
-        // Root level
-        try {
-            indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
-            fail("Indicator duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorInstanceDto.getIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-
-        // In dimension level
-        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setParentUuid(DIMENSION_1B_INDICATORS_SYSTEM_1_V2);
-        try {
-            indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
-            fail("Indicator duplicated");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.INDICATOR_INSTANCE_ALREADY_EXIST_INDICATOR_SAME_LEVEL.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(indicatorInstanceDto.getIndicatorUuid(), e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-
-    }
-
-    @Test
-    @Transactional
     public void testCreateIndicatorInstanceErrorIndicatorsSystemNotExists() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         try {
@@ -3363,13 +3698,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3387,12 +3724,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorDimensionNotExists() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(DIMENSION_NOT_EXISTS);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3410,12 +3749,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCreateIndicatorInstanceErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
-
+        GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
+        geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
+        
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorInstanceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
-        indicatorInstanceDto.setTimeValue("2012");
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
 
@@ -3556,7 +3897,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
-        indicatorInstanceDto.setGeographicalValueUuid(null);
+        indicatorInstanceDto.setGeographicalValues(null);
 
         // Update
         IndicatorInstanceDto indicatorInstanceDtoUpdated = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
@@ -3924,6 +4265,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
+    
+//    @Test
+//    @Transactional
+//    public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCodeNotExist() throws Exception {
+//        List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_NOT_EXIST);
+//        assertNotNull(instances);
+//        assertEquals(0,instances.size());
+//    }
+    
+//    @Test
+//    @Transactional
+//    public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode() throws Exception {
+//        {
+//            List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
+//            assertNotNull(instances);
+//            String[] expected = new String[] {INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1, INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1};
+//            assertEquals(expected.length,instances.size());
+//            
+//            checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
+//        }
+//        {
+//            List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_4);
+//            assertNotNull(instances);
+//            String[] expected = new String[] {INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1};
+//            assertEquals(expected.length,instances.size());
+//            
+//            checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
+//        }
+//    }
 
     @Test
     @Transactional
@@ -3991,35 +4361,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testCompareTimeGranularities() throws Exception {
 
-        assertTrue(TimeVariableUtils.compareTo("2012", "2012") == 0);
-        assertTrue(TimeVariableUtils.compareTo("2012H2", "2012H2") == 0);
-        assertTrue(TimeVariableUtils.compareTo("2012Q1", "2012Q1") == 0);
-        assertTrue(TimeVariableUtils.compareTo("2012M02", "2012M02") == 0);
-        assertTrue(TimeVariableUtils.compareTo("20120102", "20120102") == 0);
-        assertTrue(TimeVariableUtils.compareTo("2012W51", "2012W51") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012", "2012") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012H2", "2012H2") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012Q1", "2012Q1") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012M02", "2012M02") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120102") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012W51", "2012W51") == 0);
 
-        assertTrue(TimeVariableUtils.compareTo("2011", "2012") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2012H1", "2012H2") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2011H2", "2012H2") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2012Q2", "2012Q3") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2011Q1", "2012Q1") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2012M01", "2012M02") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2011M01", "2012M02") > 0);
-        assertTrue(TimeVariableUtils.compareTo("20120102", "20120202") > 0);
-        assertTrue(TimeVariableUtils.compareTo("20120102", "20120103") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2012W01", "2012W51") > 0);
-        assertTrue(TimeVariableUtils.compareTo("2011W51", "2012W51") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2012") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012H1", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012Q2", "2012Q3") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "2012Q1") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120202") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120103") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012W01", "2012W51") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W51", "2012W51") > 0);
 
-        assertTrue(TimeVariableUtils.compareTo("2013", "2012") < 0);
-        assertTrue(TimeVariableUtils.compareTo("2013H1", "2012H2") < 0);
-        assertTrue(TimeVariableUtils.compareTo("20130102", "20120103") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2013", "2012") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2013H1", "2012H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20130102", "20120103") < 0);
     }
 
     @Test
     @Transactional
     public void testCompareTimeGranularitiesErrorTimeValueIncorrect() throws Exception {
         try {
-            TimeVariableUtils.compareTo("2010xx", "2010H2");
+            TimeVariableUtils.compareToMostRecentFirst("2010xx", "2010H2");
             fail("time incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -4031,16 +4401,77 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     @Transactional
-    public void testCompareTimeGranularitiesErrorDifferentGranularities() throws Exception {
-        try {
-            TimeVariableUtils.compareTo("2010", "2010H2");
-            fail("granularities different");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals("2010H2", e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
+    public void testCompareTimeGranularitiesDifferentGranularities() throws Exception {
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011Q4") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "20111231") > 0);
+        
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H1", "2011Q2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H1", "2011M06") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011Q4") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011W52") > 0);
+        
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "2011M03") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "20110331") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "2011H1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "2011M06") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "20110630") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q3", "2011M09") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q3", "20110930") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "20111231") > 0);
+        
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M01", "20110131") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M02", "20110229") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M03", "20110331") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M04", "2011W17") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M04", "20110430") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M05", "20110531") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M06", "20110630") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M07", "20110731") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M08", "20110831") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M09", "20110930") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M10", "20111031") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M11", "20111130") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M12", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M12", "20111231") > 0);
+
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W17", "2011M04") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W17", "20110431") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011Q4") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011M12") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "20111231") > 0);
+        
+        
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110131", "2011M01") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110229", "2011M02") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110331", "2011Q1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110331", "2011M03") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110430", "2011M04") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110430", "2011W17") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110531", "2011M05") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011H1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011Q2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011M06") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110731", "2011M07") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110831", "2011M08") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110930", "2011Q3") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110930", "2011M09") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111031", "2011M10") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111130", "2011M11") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011Q4") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011M12") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011W52") < 0);
     }
 
     @Test
@@ -4269,57 +4700,77 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), null);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
             assertEquals(Integer.valueOf(25), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(4, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(9, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
             assertEquals("FR", geographicalValues.get(1).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(2).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(2).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(3).getUuid());
-            assertEquals("ES-MD", geographicalValues.get(3).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_5, geographicalValues.get(2).getUuid());
+            assertEquals("ES61", geographicalValues.get(2).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_6, geographicalValues.get(3).getUuid());
+            assertEquals("ES611", geographicalValues.get(3).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_7, geographicalValues.get(4).getUuid());
+            assertEquals("ES612", geographicalValues.get(4).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_8, geographicalValues.get(5).getUuid());
+            assertEquals("ES613", geographicalValues.get(5).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_9, geographicalValues.get(6).getUuid());
+            assertEquals("ES614", geographicalValues.get(6).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(7).getUuid());
+            assertEquals("EN-LN", geographicalValues.get(7).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(8).getUuid());
+            assertEquals("ES-MD", geographicalValues.get(8).getCode());
         }
 
-        // All, only 2 results
+        // All, only 5 results
         {
             MetamacCriteria criteria = new MetamacCriteria();
             criteria.setPaginator(new MetamacCriteriaPaginator());
-            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(5));
             criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
             assertEquals(Integer.valueOf(0), geographicalValuesResult.getPaginatorResult().getFirstResult());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(2, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(5), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(5, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
             assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValues.get(0).getUuid());
             assertEquals("ES", geographicalValues.get(0).getCode());
             assertEquals(GEOGRAPHICAL_VALUE_3, geographicalValues.get(1).getUuid());
             assertEquals("FR", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_5, geographicalValues.get(2).getUuid());
+            assertEquals("ES61", geographicalValues.get(2).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_6, geographicalValues.get(3).getUuid());
+            assertEquals("ES611", geographicalValues.get(3).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_7, geographicalValues.get(4).getUuid());
+            assertEquals("ES612", geographicalValues.get(4).getCode());
         }
 
         // All, only 2 results second page
         {
             MetamacCriteria criteria = new MetamacCriteria();
             criteria.setPaginator(new MetamacCriteriaPaginator());
-            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
-            criteria.getPaginator().setFirstResult(Integer.valueOf(2));
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(5));
+            criteria.getPaginator().setFirstResult(Integer.valueOf(5));
             criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
             MetamacCriteriaResult<GeographicalValueDto> geographicalValuesResult = indicatorsServiceFacade.findGeographicalValues(getServiceContextAdministrador(), criteria);
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getFirstResult());
-            assertEquals(Integer.valueOf(2), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
-            assertEquals(Integer.valueOf(4), geographicalValuesResult.getPaginatorResult().getTotalResults());
-            assertEquals(2, geographicalValuesResult.getResults().size());
+            assertEquals(Integer.valueOf(5), geographicalValuesResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(5), geographicalValuesResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(9), geographicalValuesResult.getPaginatorResult().getTotalResults());
+            assertEquals(4, geographicalValuesResult.getResults().size());
 
             List<GeographicalValueDto> geographicalValues = geographicalValuesResult.getResults();
-            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(0).getUuid());
-            assertEquals("EN-LN", geographicalValues.get(0).getCode());
-            assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(1).getUuid());
-            assertEquals("ES-MD", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_8, geographicalValues.get(0).getUuid());
+            assertEquals("ES613", geographicalValues.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_9, geographicalValues.get(1).getUuid());
+            assertEquals("ES614", geographicalValues.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_2, geographicalValues.get(2).getUuid());
+            assertEquals("EN-LN", geographicalValues.get(2).getCode());
+            assertEquals(GEOGRAPHICAL_VALUE_4, geographicalValues.get(3).getUuid());
+            assertEquals("ES-MD", geographicalValues.get(3).getCode());
         }
 
         // By granularity, with order default
@@ -4407,8 +4858,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         assertNotNull(geographicalGranularityDto);
         assertEquals(uuid, geographicalGranularityDto.getUuid());
-        assertEquals("MUNICIPALITIES", geographicalGranularityDto.getCode());
-        IndicatorsAsserts.assertEqualsInternationalString(geographicalGranularityDto.getTitle(), "es", "Municipios", "en", "Municipalities");
+        assertEquals("COMMUNITIES", geographicalGranularityDto.getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(geographicalGranularityDto.getTitle(), "es", "Comunidades", "en", "Communities");
     }
 
     @Test
@@ -4453,7 +4904,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         GeographicalGranularityDto geographicalGranularityDto = indicatorsServiceFacade.retrieveGeographicalGranularityByCode(getServiceContextAdministrador(), code);
 
         assertNotNull(geographicalGranularityDto);
-        assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularityDto.getUuid());
+        assertEquals(GEOGRAPHICAL_GRANULARITY_4, geographicalGranularityDto.getUuid());
         assertEquals("MUNICIPALITIES", geographicalGranularityDto.getCode());
         IndicatorsAsserts.assertEqualsInternationalString(geographicalGranularityDto.getTitle(), "es", "Municipios", "en", "Municipalities");
     }
@@ -4495,13 +4946,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testRetrieveGeographicalGranularities() throws Exception {
 
         List<GeographicalGranularityDto> geographicalGranularities = indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContextAdministrador());
-        assertEquals(2, geographicalGranularities.size());
+        assertEquals(4, geographicalGranularities.size());
 
-        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalGranularities.get(0).getUuid());
-        assertEquals("COUNTRIES", geographicalGranularities.get(0).getCode());
-
-        assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularities.get(1).getUuid());
-        assertEquals("MUNICIPALITIES", geographicalGranularities.get(1).getCode());
+        Map<String, String> granularitiesExpected = new HashMap<String, String>();
+        granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_1, "COUNTRIES");
+        granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_2, "COMMUNITIES");
+        granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_3, "PROVINCES");
+        granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_4, "MUNICIPALITIES");
+        
+        checkGranularitiesInCollection(granularitiesExpected,geographicalGranularities);
     }
 
     @Test
@@ -4684,6 +5137,15 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(biyearly, timeValueDto.getTimeValue());
         IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012H2", "es", "2012H2");
         IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012H2", "es", "2012H2");
+    }
+    
+    private void checkGranularitiesInCollection(Map<String, String> granularitiesExpected, Collection<GeographicalGranularityDto> geographicalGranularities) {
+        assertEquals(granularitiesExpected.size(),geographicalGranularities.size());
+        
+        for (GeographicalGranularityDto granularity : geographicalGranularities) {
+            String code = granularitiesExpected.get(granularity.getUuid());
+            assertEquals(code,granularity.getCode());
+        }
     }
 
     @Override

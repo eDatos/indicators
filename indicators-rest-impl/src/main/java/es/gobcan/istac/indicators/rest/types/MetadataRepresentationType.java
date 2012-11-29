@@ -1,9 +1,9 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({
     "code",
@@ -22,6 +22,8 @@ public class MetadataRepresentationType implements Serializable {
 
     private Double              latitude         = null;
     private Double              longitude        = null;
+
+    private String granularityCode;
 
     public String getCode() {
         return code;
@@ -55,4 +57,11 @@ public class MetadataRepresentationType implements Serializable {
         this.longitude = longitude;
     }
 
+    public String getGranularityCode() {
+        return granularityCode;
+    }
+
+    public void setGranularityCode(String granularityCode) {
+        this.granularityCode = granularityCode;
+    }
 }
