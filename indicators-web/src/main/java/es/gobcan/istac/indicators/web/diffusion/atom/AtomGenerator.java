@@ -47,7 +47,7 @@ public class AtomGenerator {
         //Configurations
         String atomsDir = getAtomsDir();
         
-        String atomFilePath = atomsDir + File.separator + code.toUpperCase() + locale.getLanguage().toUpperCase()+".xml"; 
+        String atomFilePath = atomsDir + File.separator + code.toUpperCase() + "_" + locale.getLanguage().toUpperCase()+".xml"; 
         
         if (atomFileManager.fileNeedsToBeReloaded(atomFilePath, getAtomTimeToLiveMinutes())) {
             generateAtomFileIndicatorsSystem(ctx,locale,baseUrl,systemUrl,feedUrl,code,atomFilePath);

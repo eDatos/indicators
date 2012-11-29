@@ -589,6 +589,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkFindIndicatorsInstancesInLastVersionIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkRetrieveIndicatorInstance(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 

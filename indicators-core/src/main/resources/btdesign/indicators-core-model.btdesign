@@ -62,6 +62,7 @@ Application Indicators {
 	    	@IndicatorInstance retrieveIndicatorInstancePublishedByCode(String code) throws MetamacException;
 	    	deleteIndicatorInstance(String uuid) throws MetamacException;
 	    	PagedResult<@IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	PagedResult<@IndicatorInstance> findIndicatorsInstancesInLastVersionIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	List<@IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException;
 	    	@IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(String uuid) throws MetamacException;
 	    	

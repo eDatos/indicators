@@ -657,6 +657,23 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         PagedResult<IndicatorInstance> indicatorsInstances = getIndicatorInstanceRepository().findByCondition(conditions, pagingParameter);
         return indicatorsInstances;
     }
+    
+    @Override
+    public PagedResult<IndicatorInstance> findIndicatorsInstancesInLastVersionIndicatorsSystems(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsInstancesInLastVersionIndicatorsSystems(conditions, pagingParameter, null);
+        
+        // Retrieve published
+        if (conditions == null) {
+            conditions = new ArrayList<ConditionalCriteria>();
+        }
+        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().isLastVersion(),Boolean.TRUE));
+        
+        // Find
+        PagedResult<IndicatorInstance> indicatorsInstances = getIndicatorInstanceRepository().findByCondition(conditions, pagingParameter);
+        return indicatorsInstances;
+    }
 
     @Override
     public List<IndicatorInstance> retrieveIndicatorsInstancesByIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, String indicatorsSystemVersionNumber) throws MetamacException {

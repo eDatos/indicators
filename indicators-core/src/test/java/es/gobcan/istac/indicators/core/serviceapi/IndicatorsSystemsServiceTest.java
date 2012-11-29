@@ -71,11 +71,15 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
     private static String             INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
 
     private static String             INDICATORS_SYSTEM_1_IINSTANCE_1                                      = "IndSys-1-v1-IInstance-1";
+    private static String             INDICATORS_SYSTEM_1_V2_IINSTANCE_1                                      = "IndSys-1-v2-IInstance-1";
+    private static String             INDICATORS_SYSTEM_1_V2_IINSTANCE_2                                      = "IndSys-1-v2-IInstance-2";
+    private static String             INDICATORS_SYSTEM_1_V2_IINSTANCE_3                                      = "IndSys-1-v2-IInstance-3";
     private static String             INDICATORS_SYSTEM_3_IINSTANCE_1A                                      = "IndSys-3-v1-IInstance-1A";
     private static String             INDICATORS_SYSTEM_3_IINSTANCE_2                                      = "IndSys-3-v1-IInstance-2";
     private static String             INDICATORS_SYSTEM_6_IINSTANCE_1                                      = "IndSys-6-v1-IInstance-1";
     private static String             INDICATORS_SYSTEM_6_IINSTANCE_2                                      = "IndSys-6-v1-IInstance-2";
     private static String             INDICATORS_SYSTEM_10_IINSTANCE_1                                      = "IndSys-10-v1-IInstance-1";
+    private static String             INDICATORS_SYSTEM_10_V2_IINSTANCE_1                                      = "IndSys-10-v2-IInstance-1";
     private static String             INDICATORS_SYSTEM_10_IINSTANCE_2                                      = "IndSys-10-v1-IInstance-2";
     private static String             INDICATORS_SYSTEM_10_IINSTANCE_3                                      = "IndSys-10-v1-IInstance-3";
     
@@ -265,6 +269,55 @@ public class IndicatorsSystemsServiceTest extends IndicatorsBaseTest {
             
             assertEquals(INDICATORS_SYSTEM_10_IINSTANCE_2,indicatorsInstances.getValues().get(0).getUuid());
             assertEquals(INDICATORS_SYSTEM_10_IINSTANCE_3,indicatorsInstances.getValues().get(1).getUuid());
+        }
+    } 
+    
+    @Test
+    public void testFindIndicatorsInstancesInLastVersionIndicatorsSystemsFilteredBySystem() throws Exception {
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
+            .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_1)
+            .orderBy(IndicatorInstanceProperties.uuid()).ascending()
+            .build();
+            
+            PagingParameter paging = PagingParameter.pageAccess(10);
+            
+            PagedResult<IndicatorInstance> indicatorsInstances = indicatorsSystemService.findIndicatorsInstancesInLastVersionIndicatorsSystems(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(3,indicatorsInstances.getValues().size());
+            
+            assertEquals(INDICATORS_SYSTEM_1_V2_IINSTANCE_1,indicatorsInstances.getValues().get(0).getUuid());
+            assertEquals(INDICATORS_SYSTEM_1_V2_IINSTANCE_2,indicatorsInstances.getValues().get(1).getUuid());
+            assertEquals(INDICATORS_SYSTEM_1_V2_IINSTANCE_3,indicatorsInstances.getValues().get(2).getUuid());
+        }
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
+            .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_3)
+            .orderBy(IndicatorInstanceProperties.uuid()).ascending()
+            .build();
+            
+            PagingParameter paging = PagingParameter.pageAccess(10);
+            
+            PagedResult<IndicatorInstance> indicatorsInstances = indicatorsSystemService.findIndicatorsInstancesInLastVersionIndicatorsSystems(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(2,indicatorsInstances.getValues().size());
+            
+            assertEquals(INDICATORS_SYSTEM_3_IINSTANCE_1A,indicatorsInstances.getValues().get(0).getUuid());
+            assertEquals(INDICATORS_SYSTEM_3_IINSTANCE_2,indicatorsInstances.getValues().get(1).getUuid());
+        }
+        {
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(IndicatorInstance.class).distinctRoot()
+            .withProperty(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().uuid()).eq(INDICATORS_SYSTEM_10)
+            .orderBy(IndicatorInstanceProperties.uuid()).ascending()
+            .build();
+            
+            PagingParameter paging = PagingParameter.pageAccess(10);
+            
+            PagedResult<IndicatorInstance> indicatorsInstances = indicatorsSystemService.findIndicatorsInstancesInLastVersionIndicatorsSystems(getServiceContextAdministrador(), conditions, paging);
+            
+            assertEquals(1,indicatorsInstances.getValues().size());
+            
+            assertEquals(INDICATORS_SYSTEM_10_V2_IINSTANCE_1,indicatorsInstances.getValues().get(0).getUuid());
         }
     }       
     
