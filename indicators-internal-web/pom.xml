@@ -171,6 +171,13 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
         </dependency>
+
+        <!-- Public API -->
+        <dependency>
+            <groupId>es.gobcan.istac.indicators</groupId>
+            <artifactId>indicators-rest-impl</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -25,21 +25,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Service("indicatorSystemRestFacade")
 public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IndicatorsSystemsService indicatorsSystemsService = null;
+    protected IndicatorsSystemsService indicatorsSystemsService = null;
 
     @Autowired
     private IndicatorsDataService indicatorsDataService = null;
@@ -53,7 +50,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     @Override
     public PagedResultType<IndicatorsSystemBaseType> findIndicatorsSystems(final String baseURL, final RestCriteriaPaginator paginator) throws Exception {
         PagingParameter pagingParameter = CriteriaUtil.createPagingParameter(paginator);
-        PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsSystemsService.findIndicatorsSystemsPublished(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
+        PagedResult<IndicatorsSystemVersion> indicatorsSystemVersions = findIndicatorsSystems(pagingParameter);
 
         List<IndicatorsSystemBaseType> result = dto2TypeMapper.indicatorsSystemDoToBaseType(indicatorsSystemVersions.getValues(), baseURL);
 
@@ -67,16 +64,52 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return resultType;
     }
 
+    protected PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
+        return indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
+    }
+
+
+    protected IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException {
+        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+        conditions.add(ConditionalCriteria.equal(IndicatorsSystemVersionProperties.indicatorsSystem().code(), idIndicatorSystem));
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1);
+        PagedResult<IndicatorsSystemVersion> result = indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
+
+        if(result.getValues().size() == 0) {
+            throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator System not found");
+        }
+
+        return result.getValues().get(0);
+    }
+
+    protected PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
+        return indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+    }
+
+    protected IndicatorInstance retrieveIndicatorInstanceByCode(String idIndicatorSystem, String idIndicatorInstance) throws MetamacException {
+        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem));
+        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.code(), idIndicatorInstance));
+
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1);
+        PagedResult<IndicatorInstance> result = indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
+
+        if(result.getValues().size() == 0) {
+            throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator instance not found");
+        }
+
+        return result.getValues().get(0);
+    }
 
     @Override
     public IndicatorsSystemType retrieveIndicatorsSystem(final String baseURL, String idIndicatorSystem) throws Exception {
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorSystem);
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemByCode(idIndicatorSystem);
         IndicatorsSystemType result = dto2TypeMapper.indicatorsSystemDoToType(indicatorsSystemVersion, baseURL);
         return result;
     }
-    
+
     public List<IndicatorsSystemHistoryType> findIndicatorsSystemHistoryByCode(final String baseURL, final String code, final int maxResults) throws Exception {
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, code);
+        IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemByCode(code);
         
         List<IndicatorsSystemHistory> systemHistories = indicatorsSystemsService.findIndicatorsSystemHistory(RestConstants.SERVICE_CONTEXT, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), maxResults);
         
@@ -95,10 +128,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         ConditionalCriteria systemCondition = ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem);
         sculptorCriteria.getConditions().add(systemCondition);
 
-        PagedResult<IndicatorInstance> instances = indicatorsSystemsService.findIndicatorsInstancesInPublishedIndicatorsSystems(
-                RestConstants.SERVICE_CONTEXT,
-                sculptorCriteria.getConditions(),
-                sculptorCriteria.getPagingParameter());
+
+        PagedResult<IndicatorInstance> instances = findIndicatorsInstancesInIndicatorsSystems(sculptorCriteria);
 
 
         // Mapping to type
@@ -137,6 +168,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return result;
     }
 
+
+
     @Override
     public IndicatorInstanceType retrieveIndicatorInstanceByCode(final String baseURL, final String idIndicatorSystem, final String idIndicatorInstance) throws Exception {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
@@ -161,18 +194,6 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
         return dto2TypeMapper.createDataType(dataTypeRequest);
-    }
-
-
-    private IndicatorInstance retrieveIndicatorInstanceByCode(final String idIndicatorSystem, final String idIndicatorInstance) throws MetamacException {
-        IndicatorInstance indicatorInstance = indicatorsSystemsService.retrieveIndicatorInstancePublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorInstance);
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublishedByCode(RestConstants.SERVICE_CONTEXT, idIndicatorSystem);
-        if (!indicatorInstance.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem().getCode().equals(indicatorsSystemVersion.getIndicatorsSystem().getCode())) {
-            String text = MessageFormat.format("IndicatorInstance: {0}, not in indicatorSystem: {1}", idIndicatorSystem, idIndicatorInstance);
-            logger.warn(text);
-            throw new RestRuntimeException(HttpStatus.NOT_FOUND, text);
-        }
-        return indicatorInstance;
     }
 
 

@@ -79,6 +79,10 @@
     <!-- Imports user-defined @Controller beans that process client requests -->
     <import resource="applicationContext-web-controllers.xml" />
     <import resource="applicationContext-web-resources.xml" />
+
+    <!-- Rest API -->
     <import resource="classpath:/spring/indicators-rest-applicationContext.xml" />
-    
+    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.PublishedIndicatorRestFacadeImpl"/>
+    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.PublishedIndicatorSystemRestFacadeImpl"/>
+
 </beans>
