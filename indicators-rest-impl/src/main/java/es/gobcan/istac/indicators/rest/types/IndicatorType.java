@@ -1,9 +1,9 @@
 package es.gobcan.istac.indicators.rest.types;
 
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({
     "id",
@@ -31,6 +31,10 @@ public class IndicatorType extends IndicatorBaseType implements Serializable {
 
     private Map<String, MetadataDimensionType> dimension        = null;
     private Map<String, MetadataAttributeType> attribute        = null;
+    private Integer                            decimalPlaces    = null;
+
+
+
     private LinkType                           childLink        = null;
 
     public Map<String, MetadataDimensionType> getDimension() {
@@ -56,4 +60,13 @@ public class IndicatorType extends IndicatorBaseType implements Serializable {
     public void setChildLink(LinkType childLink) {
         this.childLink = childLink;
     }
+
+    public Integer getDecimalPlaces() {
+        return decimalPlaces;
+    }
+
+    public void setDecimalPlaces(Integer decimalPlaces) {
+        this.decimalPlaces = decimalPlaces;
+    }
+
 }

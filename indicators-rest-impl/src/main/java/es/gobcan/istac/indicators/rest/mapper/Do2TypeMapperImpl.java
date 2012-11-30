@@ -610,6 +610,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // CHILD LINK
         target.setChildLink(_createLinkTypeIndicatorData(source.getIndicator(), baseURL));
+
+        // DECIMAL PLACES
+        target.setDecimalPlaces(source.getQuantity().getDecimalPlaces());
     }
 
     private MetadataAttributeType createMetadataAttributeType(String code, String spanishLabel, String englishLabel) {
