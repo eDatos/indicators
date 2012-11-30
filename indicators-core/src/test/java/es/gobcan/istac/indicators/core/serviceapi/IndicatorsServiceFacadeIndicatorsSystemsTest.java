@@ -4361,35 +4361,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testCompareTimeGranularities() throws Exception {
 
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012", "2012") == 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012H2", "2012H2") == 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012Q1", "2012Q1") == 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012M02", "2012M02") == 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120102") == 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012W51", "2012W51") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012", "2012") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012H2", "2012H2") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012Q1", "2012Q1") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012M02", "2012M02") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20120102", "20120102") == 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012W51", "2012W51") == 0);
 
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2012") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012H1", "2012H2") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2012H2") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012Q2", "2012Q3") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "2012Q1") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012M01", "2012M02") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M01", "2012M02") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120202") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20120102", "20120103") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2012W01", "2012W51") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W51", "2012W51") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2012") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012H1", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2012H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012Q2", "2012Q3") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q1", "2012Q1") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M01", "2012M02") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20120102", "20120202") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20120102", "20120103") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2012W01", "2012W51") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W51", "2012W51") > 0);
 
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2013", "2012") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2013H1", "2012H2") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20130102", "20120103") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2013", "2012") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2013H1", "2012H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20130102", "20120103") < 0);
     }
 
     @Test
     @Transactional
     public void testCompareTimeGranularitiesErrorTimeValueIncorrect() throws Exception {
         try {
-            TimeVariableUtils.compareToMostRecentFirst("2010xx", "2010H2");
+            TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2010xx", "2010H2");
             fail("time incorrect");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
@@ -4402,76 +4402,76 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Test
     @Transactional
     public void testCompareTimeGranularitiesDifferentGranularities() throws Exception {
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011H2") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011Q4") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011M12") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "2011W52") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011", "20111231") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011H2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011Q4") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "20111231") > 0);
         
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H1", "2011Q2") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H1", "2011M06") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011Q4") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011M12") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011H2", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H1", "2011Q2") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H1", "2011M06") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011Q4") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011W52") > 0);
         
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "2011M03") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q1", "20110331") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "2011H1") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "2011M06") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q2", "20110630") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q3", "2011M09") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q3", "20110930") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011H2") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011M12") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "2011W52") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011Q4", "20111231") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q1", "2011M03") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q1", "20110331") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q2", "2011H1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q2", "2011M06") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q2", "20110630") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q3", "2011M09") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q3", "20110930") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "2011M12") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "20111231") > 0);
         
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M01", "20110131") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M02", "20110229") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M03", "20110331") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M04", "2011W17") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M04", "20110430") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M05", "20110531") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M06", "20110630") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M07", "20110731") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M08", "20110831") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M09", "20110930") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M10", "20111031") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M11", "20111130") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M12", "2011W52") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011M12", "20111231") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M01", "20110131") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M02", "20110229") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M03", "20110331") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M04", "2011W17") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M04", "20110430") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M05", "20110531") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M06", "20110630") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M07", "20110731") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M08", "20110831") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M09", "20110930") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M10", "20111031") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M11", "20111130") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M12", "2011W52") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M12", "20111231") > 0);
 
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W17", "2011M04") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W17", "20110431") > 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011H2") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011Q4") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "2011M12") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("2011W52", "20111231") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W17", "2011M04") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W17", "20110431") > 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011Q4") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011M12") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "20111231") > 0);
         
         
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110131", "2011M01") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110229", "2011M02") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110331", "2011Q1") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110331", "2011M03") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110430", "2011M04") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110430", "2011W17") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110531", "2011M05") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011H1") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011Q2") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110630", "2011M06") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110731", "2011M07") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110831", "2011M08") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110930", "2011Q3") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20110930", "2011M09") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111031", "2011M10") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111130", "2011M11") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011H2") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011Q4") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011M12") < 0);
-        assertTrue(TimeVariableUtils.compareToMostRecentFirst("20111231", "2011W52") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110131", "2011M01") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110229", "2011M02") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110331", "2011Q1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110331", "2011M03") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110430", "2011M04") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110430", "2011W17") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110531", "2011M05") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110630", "2011H1") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110630", "2011Q2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110630", "2011M06") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110731", "2011M07") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110831", "2011M08") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110930", "2011Q3") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110930", "2011M09") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111031", "2011M10") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111130", "2011M11") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111231", "2011") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111231", "2011H2") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111231", "2011Q4") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111231", "2011M12") < 0);
+        assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20111231", "2011W52") < 0);
     }
 
     @Test

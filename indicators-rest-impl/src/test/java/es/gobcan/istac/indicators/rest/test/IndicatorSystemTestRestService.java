@@ -82,6 +82,7 @@ public class IndicatorSystemTestRestService {
         resultActions.andDo(print());
     }
 
+    @Ignore
     @Test
     public void retrieveRetrieveIndicatorsSystem() throws Exception {
         ResultActions resultActions = mockMvc.perform(get("/api/indicators/v1.0/indicatorsSystems/CODIGO_0001"));

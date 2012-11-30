@@ -1,5 +1,8 @@
 package es.gobcan.istac.indicators.rest.test.mocks;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
@@ -38,5 +41,14 @@ public class MockUtil {
         internationalString.getTexts().add(localisedStringES);
 
         return internationalString;
+    }
+    
+    public static Map<String,String> createInternationalStringMap() {
+        Map<String,String> internationalMap = new HashMap<String, String>();
+
+        internationalMap.put("en", RandomStringUtils.randomAlphabetic(15));
+        internationalMap.put("es",RandomStringUtils.randomAlphabetic(15));
+        
+        return internationalMap;
     }
 }

@@ -14,7 +14,12 @@
             http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
             http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
-    <import resource="classpath:/spring/include/indicators-rest-applicationContext-beans.xml" />
-    <import resource="classpath:/spring/include/indicators-rest-applicationContext-interceptor.xml" />
+    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.IndicatorRestFacadeImpl"/>
+    
+    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.IndicatorSystemRestFacadeImpl"/>
+    
+    <bean class="es.gobcan.istac.indicators.rest.clients.RestApiLocatorInternal"/>
+    
+    <bean class="es.gobcan.istac.indicators.rest.clients.StatisticalOperationsInternalRestInternalFacadeImpl"/>
 
 </beans>

@@ -91,7 +91,7 @@ public class TimeVariableUtils extends TimeUtils {
         if (timeValues == null || timeValues.size() == 0) {
             return null;
         }
-        sortTimeValuesMostRecentFirst(timeValues);
+        sortTimeValuesMostRecentFirstLowestGranularityMostRecent(timeValues);
         
         return timeValues.get(0);
     }
@@ -100,7 +100,16 @@ public class TimeVariableUtils extends TimeUtils {
         Collections.sort(values, new Comparator<TimeValue>() {
            @Override
             public int compare(TimeValue o1, TimeValue o2) {
-                return compareToMostRecentFirst(o1, o2);
+                return compareToMostRecentFirstHighestGranularityMostRecent(o1, o2);
+            } 
+        });
+    }
+    
+    private static void sortTimeValuesMostRecentFirstLowestGranularityMostRecent(List<TimeValue> values) {
+        Collections.sort(values, new Comparator<TimeValue>() {
+            @Override
+            public int compare(TimeValue o1, TimeValue o2) {
+                return compareToMostRecentFirstLowestGranularityMostRecent(o1, o2);
             } 
         });
     }
@@ -110,7 +119,7 @@ public class TimeVariableUtils extends TimeUtils {
      * 
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
-    public static int compareToMostRecentFirst(TimeValue timeValue1, TimeValue timeValue2) {
+    private static int compareToMostRecentFirstLowestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
         Date date1 = timeValueToDate(timeValue1);
         Date date2 = timeValueToDate(timeValue2);
         if (date1.after(date2)) {
@@ -129,14 +138,37 @@ public class TimeVariableUtils extends TimeUtils {
     }
     
     /**
+     * Compare two time values. if date values are the same
+     * 
+     * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
+     */
+    private static int compareToMostRecentFirstHighestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
+        Date date1 = timeValueToDate(timeValue1);
+        Date date2 = timeValueToDate(timeValue2);
+        if (date1.after(date2)) {
+            return -1;
+        } else if (date1.before(date2)) {
+            return 1;
+        } else {
+            if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) { //highest the granularity is latest the value will be
+                return -1;
+            } else if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) {
+                return 1; 
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+    /**
      * Compare two time values in String representation
      * 
      * @return 0 if are equals; a value less than 0 if this value1 is less than value2; a value greater than 0 if this value1 is less than value2
      */
-    public static int compareToMostRecentFirst(String value1, String value2) throws MetamacException {
+    public static int compareToMostRecentFirstLowestGranularityMostRecent(String value1, String value2) throws MetamacException {
         TimeValue timeValue1 = parseTimeValue(value1);
         TimeValue timeValue2 = parseTimeValue(value2);
-        return compareToMostRecentFirst(timeValue1, timeValue2);
+        return compareToMostRecentFirstLowestGranularityMostRecent(timeValue1, timeValue2);
     }
 
     /**

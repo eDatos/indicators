@@ -26,7 +26,7 @@
     </bean>
 
     <bean id="restApiLocator" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="es.gobcan.istac.indicators.rest.clients.RestApiLocator" />
+        <constructor-arg value="es.gobcan.istac.indicators.rest.clients.RestApiLocatorExternal" />
     </bean>    
 
     <bean id="statisticalOperations" class="org.mockito.Mockito" factory-method="mock">

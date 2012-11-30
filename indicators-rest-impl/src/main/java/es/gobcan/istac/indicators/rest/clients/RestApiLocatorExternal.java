@@ -9,8 +9,7 @@ import org.siemac.metamac.statistical_operations.rest.external.v1_0.service.Stat
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class RestApiLocator {
+public class RestApiLocatorExternal {
 
     @Autowired
     private ConfigurationService      configurationService;

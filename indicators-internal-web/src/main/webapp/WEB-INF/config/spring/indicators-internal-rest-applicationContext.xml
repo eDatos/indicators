@@ -10,10 +10,7 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
             http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-    <import resource="classpath:/spring/indicators-rest-applicationContext.xml" />
-
-    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.IndicatorRestFacadeImpl"/>
-    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.IndicatorSystemRestFacadeImpl"/>
+    <import resource="classpath:/spring/indicators-rest-internal-applicationContext.xml" />
 
     <!-- Dependency for JacksonFix -->
 

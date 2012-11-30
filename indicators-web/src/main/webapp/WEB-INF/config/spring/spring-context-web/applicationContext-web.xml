@@ -81,8 +81,7 @@
     <import resource="applicationContext-web-resources.xml" />
 
     <!-- Rest API -->
-    <import resource="classpath:/spring/indicators-rest-applicationContext.xml" />
-    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.PublishedIndicatorRestFacadeImpl"/>
-    <bean class="es.gobcan.istac.indicators.rest.facadeimpl.PublishedIndicatorSystemRestFacadeImpl"/>
+    <import resource="classpath:/spring/indicators-rest-external-applicationContext.xml" />
+
 
 </beans>

@@ -877,6 +877,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                     }
                 }
 
+                TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValuesInIndicator);
+                
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(), ServiceExceptionParameters.INDICATOR_DATA_DIMENSION_TYPE_TIME);
@@ -902,6 +904,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (String timeValueStr : indInstance.getTimeValuesAsList()) {
                 timeValues.add(getIndicatorsSystemsService().retrieveTimeValue(ctx, timeValueStr));
             }
+            TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
             return timeValues;
         } else if (indInstance.getTimeGranularity() != null) {
             return calculateTimeValuesByGranularityInIndicatorVersion(ctx, indInstance.getTimeGranularity(), indicatorVersion);

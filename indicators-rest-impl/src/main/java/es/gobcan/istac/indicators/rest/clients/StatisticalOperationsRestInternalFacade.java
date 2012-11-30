@@ -1,12 +1,12 @@
 package es.gobcan.istac.indicators.rest.clients;
 
-import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
+import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 
 public interface StatisticalOperationsRestInternalFacade {
 
     /**
      * Retrieves operation
      */
-    public Operation retrieveOperationById(String operationCode) throws Exception;
+    public OperationIndicators retrieveOperationById(String operationCode) throws Exception;
 
 }

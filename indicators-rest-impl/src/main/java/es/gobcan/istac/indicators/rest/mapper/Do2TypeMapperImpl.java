@@ -12,6 +12,7 @@ import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
+import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.types.*;
 
@@ -65,7 +66,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(baseURL);
 
         try {
-            Operation sourceOperationBase = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+            OperationIndicators sourceOperationBase = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
             IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperationBase, baseURL);
             return target;
         } catch (Exception e) {
@@ -79,7 +80,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         Assert.notNull(baseURL);
 
         try {
-            Operation sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
+            OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode());
 
             IndicatorsSystemType target = _indicatorsSystemDoToType(source, sourceOperation, baseURL);
             return target;
@@ -96,7 +97,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
             for (IndicatorsSystemVersion source : sources) {
-                Operation sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
+                OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
                 IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperation, baseURL);
                 targets.add(target);
             }
@@ -861,14 +862,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return target;
     }
 
-    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, Operation sourceOperation, final String baseURL) {
+    private IndicatorsSystemBaseType _indicatorsSystemDoToBaseType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation, final String baseURL) {
         IndicatorsSystemBaseType target = new IndicatorsSystemBaseType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
         _operationBaseDoToType(sourceOperation, target, baseURL);
         return target;
     }
 
-    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, Operation sourceOperation, final String baseURL) {
+    private IndicatorsSystemType _indicatorsSystemDoToType(IndicatorsSystemVersion sourceIndicatorsSystem, OperationIndicators sourceOperation, final String baseURL) {
         IndicatorsSystemType target = new IndicatorsSystemType();
         _indicatorsSystemDoToType(sourceIndicatorsSystem, target, baseURL);
         _operationBaseDoToType(sourceOperation, target, baseURL);
@@ -902,13 +903,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setChildLink(childLink);
     }
 
-    private void _operationBaseDoToType(Operation sourceOperation, IndicatorsSystemBaseType target, final String baseURL) {
+    private void _operationBaseDoToType(OperationIndicators sourceOperation, IndicatorsSystemBaseType target, final String baseURL) {
         target.setId(sourceOperation.getId());
         target.setCode(sourceOperation.getId());
-        target.setTitle(MapperUtil.getLocalisedLabel(sourceOperation.getTitle()));
-        target.setAcronym(MapperUtil.getLocalisedLabel(sourceOperation.getAcronym()));
-        target.setDescription(MapperUtil.getLocalisedLabel(sourceOperation.getDescription()));
-        target.setObjective(MapperUtil.getLocalisedLabel(sourceOperation.getObjective()));
+        target.setTitle(sourceOperation.getTitle());
+        target.setAcronym(sourceOperation.getAcronym());
+        target.setDescription(sourceOperation.getDescription());
+        target.setObjective(sourceOperation.getObjective());
     }
 
     private String _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final String baseURL) {
