@@ -20,6 +20,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     private PublishToolStripButton  archive;
     private PublishToolStripButton  versioning;
     private ToolStripButton         populateData;
+    private ToolStripButton         previewData;
 
     private IndicatorProcStatusEnum status;
 
@@ -46,6 +47,8 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
 
+        previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.link().getURL());
+
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(publish);
@@ -53,6 +56,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(versioning);
         toolStrip.addButton(populateData);
+        toolStrip.addButton(previewData);
     }
 
     public void updatePublishSection(IndicatorProcStatusEnum status) {
@@ -121,6 +125,10 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
     public HasClickHandlers getPopulateData() {
         return populateData;
+    }
+
+    public HasClickHandlers getPreviewData() {
+        return previewData;
     }
 
     private void hideAllPublishButtons() {

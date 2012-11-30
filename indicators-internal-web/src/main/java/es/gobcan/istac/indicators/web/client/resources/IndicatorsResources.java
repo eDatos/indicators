@@ -78,4 +78,7 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @Source("images/db_populate.png")
     ImageResource populateData();
 
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/link.png")
+    ImageResource link();
 }

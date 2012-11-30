@@ -230,6 +230,14 @@ public class IndicatorGeneralPanel extends VLayout {
             }
         });
 
+        // Preview data
+        mainFormLayout.getPreviewData().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.previewData(indicator.getCode());
+            }
+        });
     }
 
     /**

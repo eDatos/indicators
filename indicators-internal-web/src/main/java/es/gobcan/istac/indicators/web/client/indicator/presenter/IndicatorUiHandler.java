@@ -30,6 +30,8 @@ public interface IndicatorUiHandler extends UiHandlers {
 
     void populateData(String uuid);
 
+    void previewData(String code);
+    
     // DataSource
 
     void retrieveDataDefinitionsOperationsCodes();

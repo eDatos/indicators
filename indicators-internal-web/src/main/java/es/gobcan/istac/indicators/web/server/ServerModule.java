@@ -38,8 +38,10 @@ import es.gobcan.istac.indicators.web.server.handlers.GetGeographicalValuesByGra
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstanceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorInstancePreviewUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPaginatedListActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorPreviewUrlActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemByCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemPaginatedListActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.GetIndicatorsSystemStructureActionHandler;
@@ -99,8 +101,10 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityI
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstanceAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorPaginatedListAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorPreviewUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemPaginatedListAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
@@ -214,6 +218,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataStructureAction.class, GetDataStructureActionHandler.class);
 
         bindHandler(GetUnitMultipliersAction.class, GetUnitMultipliersActionHandler.class);
+
+        bindHandler(GetIndicatorPreviewUrlAction.class, GetIndicatorPreviewUrlActionHandler.class);
+        bindHandler(GetIndicatorInstancePreviewUrlAction.class, GetIndicatorInstancePreviewUrlActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
