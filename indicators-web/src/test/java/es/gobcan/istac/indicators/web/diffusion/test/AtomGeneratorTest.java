@@ -92,7 +92,7 @@ public class AtomGeneratorTest {
         when(indicatorSystemRestFacade.findIndicatorsSystemHistoryByCode(startsWith("http://"), eq(SYSTEM_1), anyInt())).thenReturn(mocks);
         
         Date beforeAtomCreationDate = removeMilliSeconds(new Date());
-        
+        Thread.sleep(1000);
         String atomPath = atomGenerator.getIndicatorsSystemAtomFilePath(getServiceContextAdministrador(), LOCALE_EN_UK, BASE_URL_MOCK, SYSTEM_URL_MOCK, FEED_URL_MOCK, SYSTEM_1);
         
         Date afterAtomCreationDate = removeMilliSeconds(new Date());
