@@ -41,6 +41,8 @@ public interface SystemUiHandler extends UiHandlers {
 
     // void populateIndicatorData(String uuid, String version);
 
+    void previewData(String instanceCode, String systemCode);
+
     // Geographical and temporal values and variables for indicators (in instance creation)
     void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion);
     void retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersion);

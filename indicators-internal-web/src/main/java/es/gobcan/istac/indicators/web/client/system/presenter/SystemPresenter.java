@@ -14,6 +14,7 @@ import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -69,6 +70,8 @@ import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesByGranularityInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlAction;
+import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemByCodeResult;
@@ -632,4 +635,18 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
         });
     }
 
+    @Override
+    public void previewData(String instanceCode, String systemCode) {
+        dispatcher.execute(new GetIndicatorInstancePreviewUrlAction(instanceCode, systemCode), new WaitingAsyncCallback<GetIndicatorInstancePreviewUrlResult>() {
+
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorBuildingIndicatorInstanceJaxiUrl()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onWaitSuccess(GetIndicatorInstancePreviewUrlResult result) {
+                Window.open(result.getUrl(), "_blank", "");
+            }
+        });
+    }
 }

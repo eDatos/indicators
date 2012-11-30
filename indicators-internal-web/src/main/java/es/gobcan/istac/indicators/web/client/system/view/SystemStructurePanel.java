@@ -93,6 +93,7 @@ import es.gobcan.istac.indicators.web.client.system.view.tree.IndSystemContentNo
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 import es.gobcan.istac.indicators.web.client.widgets.GeographicalValuesDragAndDropItem;
+import es.gobcan.istac.indicators.web.client.widgets.IndicatorInstanceMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.IndicatorsSearchWindow;
 import es.gobcan.istac.indicators.web.client.widgets.TimeValuesDragAndDropItem;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
@@ -802,18 +803,20 @@ public class SystemStructurePanel extends HLayout {
 
     private class IndicatorInstancePanel extends VLayout {
 
-        private InternationalMainFormLayout mainFormLayout;
-        private GroupDynamicForm            form;                  // View mode
-        private GroupDynamicForm            creationForm;          // Edition mode
-        private GroupDynamicForm            editionForm;           // Edition mode
-        private boolean                     createMode;
+        private IndicatorInstanceMainFormLayout mainFormLayout;
+        private GroupDynamicForm                form;                  // View mode
+        private GroupDynamicForm                creationForm;          // Edition mode
+        private GroupDynamicForm                editionForm;           // Edition mode
+        private boolean                         createMode;
 
-        private IndicatorSummaryDto         selectedIndicator;
+        private IndicatorSummaryDto             selectedIndicator;
 
-        private IndicatorsSearchWindow      indicatorsSearchWindow;
+        private IndicatorsSearchWindow          indicatorsSearchWindow;
+
+        private IndicatorInstanceDto            indicatorInstanceDto;
 
         public IndicatorInstancePanel() {
-            mainFormLayout = new InternationalMainFormLayout();
+            mainFormLayout = new IndicatorInstanceMainFormLayout();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle());
             mainFormLayout.setMargin(0);
 
@@ -897,6 +900,14 @@ public class SystemStructurePanel extends HLayout {
                     }
                 }
             });
+
+            mainFormLayout.getPreviewData().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    uiHandlers.previewData(indicatorInstanceDto.getCode(), system.getCode());
+                }
+            });
         }
 
         public void resetTitle() {
@@ -950,6 +961,8 @@ public class SystemStructurePanel extends HLayout {
         }
 
         public void setIndicatorInstance(IndicatorInstanceDto indInst) {
+            this.indicatorInstanceDto = indInst;
+
             createMode = indInst.getUuid() == null;
             mainFormLayout.setViewMode();
             mainFormLayout.setTitleLabelContents(getConstants().systemStrucIndInstanceTitle() + ": " + InternationalStringUtils.getLocalisedString(indInst.getTitle()));

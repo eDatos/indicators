@@ -47,7 +47,7 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
 
         populateData = new ToolStripButton(getConstants().indicatorPopulateData(), IndicatorsResources.RESOURCE.populateData().getURL());
 
-        previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.link().getURL());
+        previewData = new ToolStripButton(getConstants().indicatorPreviewData(), IndicatorsResources.RESOURCE.preview().getURL());
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
@@ -91,12 +91,14 @@ public class IndicatorMainFormLayout extends InternationalMainFormLayout {
     public void setViewMode() {
         super.setViewMode();
         updateVisibility();
+        previewData.show();
     }
 
     @Override
     public void setEditionMode() {
         super.setEditionMode();
         hideAllPublishButtons();
+        previewData.hide();
     }
 
     public HasClickHandlers getProductionValidation() {
