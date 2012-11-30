@@ -1,5 +1,5 @@
 [#ftl]
-[#macro base]
+[#macro base migas='']
 <!DOCTYPE html>
 <html>
 	<head>
@@ -33,9 +33,11 @@
 					<li>
 						<a href="/istac">Inicio</a>
 					</li>
+                    [#if migas?has_content]
 					<li>
-						<strong>PENDIENTE MIGAS</strong>
+						<strong>${migas}</strong>
 					</li>
+                    [/#if]
 				</ul>
 			</div>
 
