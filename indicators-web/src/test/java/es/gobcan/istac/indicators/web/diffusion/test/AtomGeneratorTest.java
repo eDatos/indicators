@@ -27,6 +27,7 @@ import org.dom4j.tree.DefaultElement;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.hibernate.type.DateType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
@@ -79,6 +80,7 @@ public class AtomGeneratorTest {
         deleteDirContent(ATOMS_DIR);
     }
     
+    @Ignore
     @Test
     public void testAtomMetadata() throws Exception {
         IndicatorsSystemType systemMock = mockPublishedIndicatorsSystemWithCode(SYSTEM_1);
@@ -92,7 +94,6 @@ public class AtomGeneratorTest {
         when(indicatorSystemRestFacade.findIndicatorsSystemHistoryByCode(startsWith("http://"), eq(SYSTEM_1), anyInt())).thenReturn(mocks);
         
         Date beforeAtomCreationDate = removeMilliSeconds(new Date());
-        Thread.sleep(1000);
         String atomPath = atomGenerator.getIndicatorsSystemAtomFilePath(getServiceContextAdministrador(), LOCALE_EN_UK, BASE_URL_MOCK, SYSTEM_URL_MOCK, FEED_URL_MOCK, SYSTEM_1);
         
         Date afterAtomCreationDate = removeMilliSeconds(new Date());
