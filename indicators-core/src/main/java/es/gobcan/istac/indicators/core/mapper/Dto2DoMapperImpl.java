@@ -173,10 +173,14 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         }
 
         target.getGeographicalValues().clear();
+        Set<String> geoCodesAdded = new HashSet<String>();
         if (source.getGeographicalValues() != null && source.getGeographicalValues().size() > 0) {
             for (GeographicalValueBaseDto geoValueBase : source.getGeographicalValues()) {
                 GeographicalValue geoValue = indicatorsSystemsService.retrieveGeographicalValue(ctx, geoValueBase.getUuid());
-                target.addGeographicalValue(geoValue);
+                if (!geoCodesAdded.contains(geoValue.getCode())) {
+                    target.addGeographicalValue(geoValue);
+                    geoCodesAdded.add(geoValue.getCode());
+                }
             }
         }
 

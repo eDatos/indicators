@@ -3242,6 +3242,50 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
     }
+    
+    @Test
+    @Transactional
+    public void testCreateIndicatorInstanceMultiGeoDuplicated() throws Exception {
+        GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
+        geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        GeographicalValueBaseDto geoValue2 = new GeographicalValueBaseDto();
+        geoValue2.setUuid(GEOGRAPHICAL_VALUE_1);
+        
+        // Create indicator instance
+        IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
+        indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setParentUuid(null);
+        indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1,geoValue2));
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
+        
+        String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
+        IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
+        assertNotNull(indicatorInstanceDtoCreated.getUuid());
+        assertNotNull(indicatorInstanceDtoCreated.getCode());
+        
+        // Retrieve indicator instance
+        IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
+        IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
+        assertEquals(1,indicatorInstanceDtoRetrieved.getGeographicalValues().size());
+        
+        // Validate new structure
+        IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
+        assertEquals(5, indicatorsSystemStructureDto.getElements().size());
+        assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(0).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(1), indicatorsSystemStructureDto.getElements().get(0).getOrderInLevel());
+        assertEquals(DIMENSION_1_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(1).getDimension().getUuid());
+        assertEquals(Long.valueOf(2), indicatorsSystemStructureDto.getElements().get(1).getOrderInLevel());
+        assertEquals(INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getUuid());
+        assertNotNull(indicatorsSystemStructureDto.getElements().get(2).getIndicatorInstance().getGeographicalValues());
+        assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(3).getDimension().getUuid());
+        assertEquals(Long.valueOf(4), indicatorsSystemStructureDto.getElements().get(3).getOrderInLevel());
+        assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
+        assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
+    }
 
     @Test
     @DirtyDatabase
