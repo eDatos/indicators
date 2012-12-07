@@ -1,0 +1,14 @@
+{
+    "apiVersion" : "0.2",
+    "swaggerVersion" : "1.1",
+    "basePath" : "http://localhost:8081/api-docs/",
+    "apis" : [
+        {
+            "path" : "/api-docs/indicators",
+            "description" : "Operations about store"
+        }, {
+            "path" : "/api-docs/test",
+            "description" : "tests"
+        }
+    ]
+}

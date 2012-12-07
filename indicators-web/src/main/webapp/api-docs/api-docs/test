@@ -1,0 +1,45 @@
+{
+    "apiVersion" : "0.2",
+    "swaggerVersion" : "1.1",
+    "basePath" : "http://localhost:8081/api/indicators/v1.0",
+    "resourcePath" : "",
+    "apis" : [
+        {
+            "path" : "/geographicalValues",
+            "description" : "Operaciones de valores geográficos",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar valores geográficos",
+                    "notes" : "",
+                    "responseClass" : "WithList",
+                    "nickname" : "findGeographicalValues"
+                }
+            ]
+        }
+    ],
+    "models" : {
+        "WithList" : {
+            "id" : "WithList",
+            "properties" : {
+                "lista" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "InternationalString"
+                    }
+                }
+            }
+        },
+        "InternationalString" : {
+            "id" : "InternationalString",
+            "properties" : {
+                "${locale}" : {
+                    "type" : "string"
+                },
+                "__default__" : {
+                    "type" : "string"
+                }
+            }
+        }
+    }
+}

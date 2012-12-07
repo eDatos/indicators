@@ -1,0 +1,1051 @@
+{
+    "apiVersion" : "0.2",
+    "swaggerVersion" : "1.1",
+    "basePath" : "http://localhost:8081/api/indicators/v1.0",
+    "resourcePath" : "",
+    "apis" : [
+        {
+            "path" : "/geographicalValues",
+            "description" : "Operaciones de valores geográficos",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar valores geográficos",
+                    "notes" : "",
+                    "responseClass" : "List[GeographicalValue]",
+                    "nickname" : "findGeographicalValues",
+                    "parameters" : [
+                        {
+                            "name" : "subjectCode",
+                            "description" : "Códgio del tema",
+                            "paramType" : "query",
+                            "required" : false,
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "systemCode",
+                            "description" : "Código del sistema de indicadorse",
+                            "paramType" : "query",
+                            "required" : false,
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "geographicalGranularityCode",
+                            "description" : "Código de la granularidad geográfica",
+                            "paramType" : "query",
+                            "required" : true,
+                            "dataType" : "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/geographicGranularities/",
+            "description" : "Operaciones de granularidades geográficas",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar valores geográficos",
+                    "nickname" : "findGeographicGranularities",
+                    "notes" : "",
+                    "responseClass" : "List[GeographicalGranularity]",
+                    "parameters" : []
+                }
+            ]
+        },
+        {
+            "path" : "/geographicGranularities/{granularityCode}",
+            "description" : "Operaciones de granularidade geográfica",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar granularidad geográfica",
+                    "nickname" : "findGeographicGranularities",
+                    "notes" : "",
+                    "responseClass" : "GeographicalGranularity",
+                    "parameters" : [
+                        {
+                            "name" : "granularityCode",
+                            "description" : "Código de la granularidad",
+                            "paramType" : "path",
+                            "dataType" : "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/subjects/",
+            "description" : "Temas",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar temas",
+                    "nickname" : "findSubjects",
+                    "notes" : "",
+                    "responseClass" : "List[Subject]"
+                }
+            ]
+        },
+        {
+            "path" : "/indicators/",
+            "description" : "Indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar Indicadores",
+                    "nickname" : "findIndicators",
+                    "notes" : "",
+                    "responseClass" : "IndicatorsPagination",
+                    "parameters" : [
+                        {
+                            "name" : "q",
+                            "description" : "Consulta",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "order",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "limit",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        },
+                        {
+                            "name" : "offset",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        },
+                        {
+                            "name" : "fields",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicators/{indicatorCode}",
+            "description" : "Indicador",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar indicador",
+                    "nickname" : "findIndicator",
+                    "notes" : "",
+                    "responseClass" : "Indicator",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorCode",
+                            "paramType" : "path",
+                            "description" : "Código del indicador",
+                            "dataType" : "string",
+                            "required" : true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicators/{indicatorCode}/data",
+            "description" : "Datos del indicador",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar datos de un indicador",
+                    "nickname" : "findIndicator",
+                    "notes" : "",
+                    "responseClass" : "Data",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorCode",
+                            "paramType" : "path",
+                            "description" : "Código del indicador",
+                            "dataType" : "string",
+                            "required" : true
+                        },
+                        {
+                            "name" : "representation",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "granularity",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicatorsSystems/",
+            "description" : "Sistemas de indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar sistemas de indicadores",
+                    "nickname" : "findIndicatorsSystems",
+                    "notes" : "",
+                    "responseClass" : "IndicatorsSystemsPagination",
+                    "parameters" : [
+                        {
+                            "name" : "limit",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        },
+                        {
+                            "name" : "offset",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicatorsSystems/{indicatorSystemCode}",
+            "description" : "Sistema de indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Sistema de indicadores",
+                    "nickname" : "findIndicatorsSystem",
+                    "notes" : "",
+                    "responseClass" : "IndicatorSystem",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorSystemCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : "true"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances",
+            "description" : "Buscar instancias de un sistema de indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar instancias de un sistema de indicadores",
+                    "nickname" : "retrieveIndicatorsInstances",
+                    "notes" : "",
+                    "responseClass" : "InstancesPagination",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorSystemCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : "true"
+                        },
+                        {
+                            "name" : "q",
+                            "description" : "Consulta",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "order",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "limit",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        },
+                        {
+                            "name" : "offset",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        },
+                        {
+                            "name" : "fields",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "integer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances/{indicatorInstanceCode}",
+            "description" : "Instancia de un sistema de indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Instancia de un sistema de indicadores",
+                    "nickname" : "retrieveIndicatorsInstance",
+                    "notes" : "",
+                    "responseClass" : "Instance",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorSystemCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : true
+                        },
+                        {
+                            "name" : "indicatorInstanceCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/indicatorsSystems/{indicatorSystemCode}/indicatorInstances/{indicatorInstanceCode}/data",
+            "description" : "Datos de una instancias de indicadores",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Datos de una instancias de indicadores",
+                    "nickname" : "retrieveIndicatorsInstanceData",
+                    "notes" : "",
+                    "responseClass" : "Data",
+                    "parameters" : [
+                        {
+                            "name" : "indicatorSystemCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : true
+                        },
+                        {
+                            "name" : "indicatorInstanceCode",
+                            "description" : "",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : true
+                        },
+                        {
+                            "name" : "representation",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "granularity",
+                            "description" : "",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models" : {
+        "InternationalString" : {
+            "id" : "InternationalString",
+            "properties" : {
+                "${locale}" : {
+                    "type" : "string"
+                },
+                "__default__" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "GeographicalValue" : {
+            "id" : "GeographicalValue",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "granularityCode" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "GeographicalGranularity" : {
+            "id" : "GeographicalGranularity",
+            "properties" : {
+                "code" : {
+                    "type"  : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+        "Subject" : {
+            "id" : "Subject",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+        "IndicatorsPagination" : {
+            "id" : "IndicatorsPagination",
+            "properties" : {
+                "kind" : {
+                    "type" : "string"
+                },
+                "limit" : {
+                    "type" : "string"
+                },
+                "offset" : {
+                    "type" : "integer"
+                },
+                "total" : {
+                    "type" : "integer"
+                },
+                "items" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "IndicatorBase"
+                    }
+                }
+            }
+        },
+        "IndicatorBase" : {
+            "id" : "IndicatorBase",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "code" : {
+                    "type" : "string"
+                },
+                "version" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "acronym" : {
+                    "type" : "InternationalString"
+                },
+                "subjectCode" : {
+                    "type" : "string"
+                },
+                "subjectTitle" : {
+                    "type" : "InternationalString"
+                },
+                "systemSurveyLinks" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "Link"
+                    }
+                },
+                "quantity" : {
+                    "type" : "Quantity"
+                },
+                "conceptDescription" : {
+                    "type" : "InternationalString"
+                },
+                "notes" : {
+                    "type" : "InternationalString"
+                },
+                "metadata" : {
+                    "type" : "Metadata"
+                },
+                "data" : {
+                    "type" : "Data"
+                }
+            }
+        },
+        "Link" : {
+            "id" : "Link",
+            "properties" : {
+                "kind" : {
+                    "type" : "string"
+                },
+                "href" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "Quantity" : {
+            "id" : "Quantity",
+            "properties" : {
+                "type" : {
+                    "type" : "string",
+                    "allowallableValues" : {
+                        "valueType" : "List",
+                        "values" : [
+                            "QUANTITY",
+                            "AMOUNT",
+                            "MAGNITUDE",
+                            "FRACTION",
+                            "RATIO",
+                            "RATE",
+                            "INDEX",
+                            "CHANGE_RATE"
+                        ]
+                    }
+                },
+                "unitSymbol" : {
+                    "type" : "string"
+                },
+                "unitSymbolPosition" : {
+                    "type" : "string",
+                    "allowallableValues" : {
+                        "valueType" : "List",
+                        "values" : [
+                            "START",
+                            "END"
+                        ]
+                    }
+                },
+                "unitMultiplier" : {
+                    "type" : "integer"
+                },
+                "significantDigits" : {
+                    "type" : "integer"
+                },
+                "decimalPlaces" : {
+                    "type" : "integer"
+                },
+                "min" : {
+                    "type" : "integer"
+                },
+                "max" : {
+                    "type" : "integer"
+                },
+                "denominatorLink" : {
+                    "type" : "Link"
+                },
+                "numeratorLink" : {
+                    "type" : "Link"
+                },
+                "isPercentage" : {
+                    "type" : "boolean"
+                },
+                "percentageOf" : {
+                    "type" : "string"
+                },
+                "baseValue" : {
+                    "type" : "integer"
+                },
+                "baseTime" : {
+                    "type" : "string"
+                },
+                "baseLocation" : {
+                    "type" : "string"
+                },
+                "baseQuantityLink" : {
+                    "type" : "Link"
+                }
+            }
+        },
+        "Metadata" : {
+            "id" : "Metadata",
+            "properties" : {
+                "dimension" : {
+                    "type" : "MetadataDimensionMap"
+                },
+                "attribute" : {
+                    "type" : "MetadataAttributeMap"
+                }
+            }
+        },
+        "MetadataDimensionMap" : {
+            "id" : "MetadataDimensionMap",
+            "properties" : {
+                "GEOGRAPHICAL" : {
+                    "type" : "Dimension"
+                },
+                "TIME" : {
+                    "type" : "Dimension"
+                },
+                "MEASURE" : {
+                    "type" : "Dimension"
+                }
+            }
+        },
+        "Dimension" : {
+            "id" : "Dimension",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "granularity" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "Granularity"
+                    }
+                },
+                "representation" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "Representation"
+                    }
+                }
+            }
+        },
+        "Granularity" : {
+            "id" : "Granularity",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+        "Representation" : {
+            "id" : "Representation",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "string"
+                },
+                "latitude" : {
+                    "type" : "double"
+                },
+                "longitude" : {
+                    "type" : "double"
+                },
+                "granularityCode" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "MetadataAttributeMap" :{
+            "id" : "MetadataAttributeMap",
+            "properties" : {
+                "UNIT_MEAS_DETAIL" : {
+                    "type" : "Attribute"
+                },
+                "${attribute}" : {
+                    "type" : "Attribute"
+                }
+            }
+        },
+        "Attribute" : {
+            "id" : "Attribute",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "attachmentLevel" : {
+                    "type" : "string",
+                    "allowableValues":{
+                        "valueType":"LIST",
+                        "values":[
+                            "DATASET",
+                            "DIMENSION",
+                            "OBSERVATION"
+                        ]
+                    }
+                }
+            }
+        },
+        "Data" : {
+            "id" : "Data",
+            "properties" : {
+                "format" : {
+                    "type": "array",
+                    "items":{
+                        "$ref":"string"
+                    }
+                },
+                "dimension" : {
+                    "type" : "DataDimensionMap"
+                },
+                "observation" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "string"
+                    }
+                },
+                "attribute" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "DataAttributeMap"
+                    }
+                }
+            }
+        },
+        "DataDimensionMap" : {
+            "id" : "DataDimensionMap",
+            "properties" : {
+                "${dimension}" : {
+                    "type" : "DataDimension"
+                }
+            }
+        },
+        "DataDimension" : {
+            "id" : "DataDimension",
+            "properties" : {
+                "representation"  : {
+                    "type" : "DataDimensionRepresentation"
+                }
+            }
+        },
+        "DataDimensionRepresentation" : {
+            "id" : "DataDimensionRepresentation",
+             "properties" : {
+                 "size" : {
+                     "type" : "integer"
+                 },
+                 "index" : {
+                     "type" : "DataDimensionRepresentationIndexMap"
+                 }
+             }
+        },
+        "DataDimensionRepresentationIndexMap" : {
+            "id" : "DataDimensionRepresentationIndexMap",
+            "properties" : {
+                "${category}" : {
+                    "type" : "integer"
+                }
+            }
+        },
+        "DataAttributeMap" : {
+            "id" : "DataAttributeMap",
+            "properties" : {
+                "${attribute}" : {
+                    "type" : "DataAttribute"
+                }
+            }
+        },
+        "DataAttribute" : {
+            "id" : "DataAttribute",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "value" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+        "Indicator": {
+            "id" : "Indicator",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "code" : {
+                    "type" : "string"
+                },
+                "version" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "acronym" : {
+                    "type" : "InternationalString"
+                },
+                "subjectCode" : {
+                    "type" : "string"
+                },
+                "subjectTitle" : {
+                    "type" : "InternationalString"
+                },
+                "systemSurveyLinks" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "Link"
+                    }
+                },
+                "quantity" : {
+                    "type" : "Quantity"
+                },
+                "conceptDescription" : {
+                    "type" : "InternationalString"
+                },
+                "notes" : {
+                    "type" : "InternationalString"
+                },
+                "dimension" : {
+                    "type" : "MetadataDimensionMap"
+                },
+                "attribute" : {
+                    "type" : "MetadataAttributeMap"
+                },
+                "decimalPlaces" : {
+                    "type" : "integer"
+                }
+            }
+        },
+        "IndicatorsSystemsPagination" : {
+            "id" : "IndicatorsSystemsPagination",
+            "properties" : {
+                "kind" : {
+                    "type" : "string"
+                },
+                "limit" : {
+                    "type" : "string"
+                },
+                "offset" : {
+                    "type" : "integer"
+                },
+                "total" : {
+                    "type" : "integer"
+                },
+                "items" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "IndicatorSystemBase"
+                    }
+                }
+            }
+        },
+        "IndicatorSystemBase" : {
+            "id" : "IndicatorSystemBase",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "code" : {
+                    "type" : "string"
+                },
+                "version" : {
+                    "type" : "string"
+                },
+                "publicationDate" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "acronym" : {
+                    "type" : "InternationalString"
+                },
+                "statisticalOperationLink" : {
+                    "type" : "Link"
+                },
+                "description" : {
+                    "type" : "InternationalString"
+                },
+                "objective" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+        "IndicatorSystem" : {
+            "id" : "IndicatorSystem",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "code" : {
+                    "type" : "string"
+                },
+                "version" : {
+                    "type" : "string"
+                },
+                "publicationDate" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "acronym" : {
+                    "type" : "InternationalString"
+                },
+                "statisticalOperationLink" : {
+                    "type" : "Link"
+                },
+                "description" : {
+                    "type" : "InternationalString"
+                },
+                "objective" : {
+                    "type" : "InternationalString"
+                },
+                "elements" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "ElementLevel"
+                    }
+                },
+                "childLink" : {
+                    "type" : "Link"
+                }
+            }
+        },
+        "ElementLevel" : {
+            "id" : "ElementLevel",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "elements" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "ElementLevel"
+                    }
+                }
+            }
+        },
+        "InstancesPagination" : {
+            "id" : "IndicatorsSystemsPagination",
+            "properties" : {
+                "kind" : {
+                    "type" : "string"
+                },
+                "limit" : {
+                    "type" : "string"
+                },
+                "offset" : {
+                    "type" : "integer"
+                },
+                "total" : {
+                    "type" : "integer"
+                },
+                "items" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "InstanceBase"
+                    }
+                }
+            }
+        },
+        "InstanceBase" : {
+            "id" : "InstanceBase",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "parentLink": {
+                    "type" : "Link"
+                },
+                "systemCode" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "conceptDescription" : {
+                    "type" : "InternationalString"
+                },
+                "metadata" : {
+                    "type" : "Metadata"
+                },
+                "data" : {
+                    "type" : "Data"
+                }
+            }
+        },
+        "Instance" : {
+            "id" : "Instance",
+            "properties" : {
+                "id" : {
+                    "type" : "string"
+                },
+                "kind" : {
+                    "type" : "string"
+                },
+                "selfLink" : {
+                    "type" : "string"
+                },
+                "parentLink": {
+                    "type" : "Link"
+                },
+                "systemCode" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "conceptDescription" : {
+                    "type" : "InternationalString"
+                },
+                "dimension" : {
+                    "type" : "MetadataDimensionMap"
+                },
+                "decimalPlaces" : {
+                    "type" : "integer"
+                },
+                "childLink" : {
+                    "type" : "Link"
+                }
+            }
+        }
+    }
+}
