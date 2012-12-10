@@ -1,102 +1,18 @@
 {
-    "apiVersion" : "0.2",
+    "apiVersion" : "1.0",
     "swaggerVersion" : "1.1",
     "basePath" : "http://localhost:8081/api/indicators/v1.0",
     "resourcePath" : "",
     "apis" : [
-        {
-            "path" : "/geographicalValues",
-            "description" : "Operaciones de valores geográficos",
-            "operations" : [
-                {
-                    "httpMethod" : "GET",
-                    "summary" : "Buscar valores geográficos",
-                    "notes" : "",
-                    "responseClass" : "List[GeographicalValue]",
-                    "nickname" : "findGeographicalValues",
-                    "parameters" : [
-                        {
-                            "name" : "subjectCode",
-                            "description" : "Códgio del tema",
-                            "paramType" : "query",
-                            "required" : false,
-                            "dataType" : "string"
-                        },
-                        {
-                            "name" : "systemCode",
-                            "description" : "Código del sistema de indicadorse",
-                            "paramType" : "query",
-                            "required" : false,
-                            "dataType" : "string"
-                        },
-                        {
-                            "name" : "geographicalGranularityCode",
-                            "description" : "Código de la granularidad geográfica",
-                            "paramType" : "query",
-                            "required" : true,
-                            "dataType" : "string"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "path" : "/geographicGranularities/",
-            "description" : "Operaciones de granularidades geográficas",
-            "operations" : [
-                {
-                    "httpMethod" : "GET",
-                    "summary" : "Buscar valores geográficos",
-                    "nickname" : "findGeographicGranularities",
-                    "notes" : "",
-                    "responseClass" : "List[GeographicalGranularity]",
-                    "parameters" : []
-                }
-            ]
-        },
-        {
-            "path" : "/geographicGranularities/{granularityCode}",
-            "description" : "Operaciones de granularidade geográfica",
-            "operations" : [
-                {
-                    "httpMethod" : "GET",
-                    "summary" : "Buscar granularidad geográfica",
-                    "nickname" : "findGeographicGranularities",
-                    "notes" : "",
-                    "responseClass" : "GeographicalGranularity",
-                    "parameters" : [
-                        {
-                            "name" : "granularityCode",
-                            "description" : "Código de la granularidad",
-                            "paramType" : "path",
-                            "dataType" : "string"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "path" : "/subjects/",
-            "description" : "Temas",
-            "operations" : [
-                {
-                    "httpMethod" : "GET",
-                    "summary" : "Buscar temas",
-                    "nickname" : "findSubjects",
-                    "notes" : "",
-                    "responseClass" : "List[Subject]"
-                }
-            ]
-        },
         {
             "path" : "/indicators/",
             "description" : "Indicadores",
             "operations" : [
                 {
                     "httpMethod" : "GET",
-                    "summary" : "Buscar Indicadores",
+                    "summary" : "Buscar indicadores",
                     "nickname" : "findIndicators",
-                    "notes" : "",
+                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\"</li><li>q=id IN (\"CODE-1\", \"CODE-2\")</li><li>q=id EQ \"CODE-1\"</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong> y <strong>metadata</strong></p>fields=+data,+metadata",
                     "responseClass" : "IndicatorsPagination",
                     "parameters" : [
                         {
@@ -107,27 +23,27 @@
                         },
                         {
                             "name" : "order",
-                            "description" : "",
+                            "description" : "Orden",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "limit",
-                            "description" : "",
+                            "description" : "Límite",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         },
                         {
                             "name" : "offset",
-                            "description" : "",
+                            "description" : "Desplazamiento",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         },
                         {
                             "name" : "fields",
-                            "description" : "",
+                            "description" : "Permite añadir más campos a la respuesta",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "string"
                         }
                     ]
                 }
@@ -139,9 +55,8 @@
             "operations" : [
                 {
                     "httpMethod" : "GET",
-                    "summary" : "Buscar indicador",
+                    "summary" : "Indicador",
                     "nickname" : "findIndicator",
-                    "notes" : "",
                     "responseClass" : "Indicator",
                     "parameters" : [
                         {
@@ -157,13 +72,13 @@
         },
         {
             "path" : "/indicators/{indicatorCode}/data",
-            "description" : "Datos del indicador",
+            "description" : "Datos de un indicador",
             "operations" : [
                 {
                     "httpMethod" : "GET",
-                    "summary" : "Buscar datos de un indicador",
+                    "summary" : "Datos de un indicador",
                     "nickname" : "findIndicator",
-                    "notes" : "",
+                    "notes" : "Los parámetros <strong>representation</strong> y <strong>granularity</strong> permiten filtrar los datos. El formato es el siguiente:<br><br> representation={dimension1}[{categoria1}|{categoria2}]:{dimension2}[{categoria3}|{categoria4}]<br>representation=MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]<br><br>granularity={dimension1}[{granularity1}|{granularity2}]:{dimension2}[{granularity3}]<br>granularity=TIME[YEARLY|MONTHLY]:GEOGRAPHICAL[COUNTRY]<br>",
                     "responseClass" : "Data",
                     "parameters" : [
                         {
@@ -175,13 +90,13 @@
                         },
                         {
                             "name" : "representation",
-                            "description" : "",
+                            "description" : "Filtro de representación",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "granularity",
-                            "description" : "",
+                            "description" : "Filtro de granularidad",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -202,15 +117,15 @@
                     "parameters" : [
                         {
                             "name" : "limit",
-                            "description" : "",
+                            "description" : "Límite",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         },
                         {
                             "name" : "offset",
-                            "description" : "",
+                            "description" : "Desplazamiento",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         }
                     ]
                 }
@@ -229,7 +144,7 @@
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "",
+                            "description" : "Código del sistema",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : "true"
@@ -246,15 +161,15 @@
                     "httpMethod" : "GET",
                     "summary" : "Buscar instancias de un sistema de indicadores",
                     "nickname" : "retrieveIndicatorsInstances",
-                    "notes" : "",
+                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=geographicalValue EQ \"ES\"</li><li>q=id EQ \"IndSys-1-v1-IInstance-1.111-CODE\"</li><li>q=id IN (\"IndSys-1-v1-IInstance-2.112-CODE\", \"IndSys-1-v1-IInstance-1.111-CODE\")</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong> y <strong>metadata</strong></p>fields=+data,+metadata",
                     "responseClass" : "InstancesPagination",
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "",
+                            "description" : "Código del sistema",
                             "paramType" : "path",
                             "dataType" : "string",
-                            "required" : "true"
+                            "required" : true
                         },
                         {
                             "name" : "q",
@@ -264,27 +179,27 @@
                         },
                         {
                             "name" : "order",
-                            "description" : "",
+                            "description" : "Orden",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "limit",
-                            "description" : "",
+                            "description" : "Límite",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         },
                         {
                             "name" : "offset",
-                            "description" : "",
+                            "description" : "Desplazamiento",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "int"
                         },
                         {
                             "name" : "fields",
-                            "description" : "",
+                            "description" : "Permite añadir más campos a la respuesta",
                             "paramType" : "query",
-                            "dataType" : "integer"
+                            "dataType" : "string"
                         }
                     ]
                 }
@@ -303,14 +218,14 @@
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "",
+                            "description" : "Código del sistema",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "indicatorInstanceCode",
-                            "description" : "",
+                            "description" : "Código de la instancia",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
@@ -325,38 +240,123 @@
             "operations" : [
                 {
                     "httpMethod" : "GET",
-                    "summary" : "Datos de una instancias de indicadores",
+                    "summary" : "Datos de una instancia",
                     "nickname" : "retrieveIndicatorsInstanceData",
-                    "notes" : "",
+                    "notes" : "Los parámetros <strong>representation</strong> y <strong>granularity</strong> permiten filtrar los datos. El formato es el siguiente:<br><br> representation={dimension1}[{categoria1}|{categoria2}]:{dimension2}[{categoria3}|{categoria4}]<br>representation=MOTIVOS_ESTANCIA[000|001|002]:ISLAS_DESTINO_PRINCIPAL[005|006]<br><br>granularity={dimension1}[{granularity1}|{granularity2}]:{dimension2}[{granularity3}]<br>granularity=TIME[YEARLY|MONTHLY]:GEOGRAPHICAL[COUNTRY]<br>",
                     "responseClass" : "Data",
                     "parameters" : [
                         {
                             "name" : "indicatorSystemCode",
-                            "description" : "",
+                            "description" : "Código del sistema",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "indicatorInstanceCode",
-                            "description" : "",
+                            "description" : "Código de la instancia",
                             "paramType" : "path",
                             "dataType" : "string",
                             "required" : true
                         },
                         {
                             "name" : "representation",
-                            "description" : "",
+                            "description" : "Filtro de representación",
                             "paramType" : "query",
                             "dataType" : "string"
                         },
                         {
                             "name" : "granularity",
-                            "description" : "",
+                            "description" : "Filtro de granularidad",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "path" : "/geographicGranularities/",
+            "description" : "Operaciones de granularidades geográficas",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar granularidades geográficas",
+                    "nickname" : "findGeographicGranularities",
+                    "notes" : "",
+                    "responseClass" : "List[GeographicalGranularity]",
+                    "parameters" : []
+                }
+            ]
+        },
+        {
+            "path" : "/geographicGranularities/{granularityCode}",
+            "description" : "Operaciones de granularidade geográfica",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Granularidad geográfica",
+                    "nickname" : "findGeographicGranularities",
+                    "notes" : "",
+                    "responseClass" : "GeographicalGranularity",
+                    "parameters" : [
+                        {
+                            "name" : "granularityCode",
+                            "description" : "Código de la granularidad",
+                            "paramType" : "path",
+                            "dataType" : "string",
+                            "required" : true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/geographicalValues/",
+            "description" : "Operaciones de valores geográficos",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar valores geográficos",
+                    "notes" : "Es obligatorio especificar un <strong>subjectCode</strong> o un <strong>systemCode</strong>.",
+                    "responseClass" : "List[GeographicalValue]",
+                    "nickname" : "findGeographicalValues",
+                    "parameters" : [
+                        {
+                            "name" : "subjectCode",
+                            "description" : "Código del tema",
+                            "paramType" : "query",
+                            "required" : false,
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "systemCode",
+                            "description" : "Código del sistema de indicadores",
+                            "paramType" : "query",
+                            "required" : false,
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "geographicalGranularityCode",
+                            "description" : "Código de la granularidad geográfica",
+                            "paramType" : "query",
+                            "required" : true,
+                            "dataType" : "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path" : "/subjects/",
+            "description" : "Temas",
+            "operations" : [
+                {
+                    "httpMethod" : "GET",
+                    "summary" : "Buscar temas",
+                    "nickname" : "findSubjects",
+                    "notes" : "",
+                    "responseClass" : "List[Subject]"
                 }
             ]
         }
@@ -428,10 +428,10 @@
                     "type" : "string"
                 },
                 "offset" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "total" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "items" : {
                     "type" : "array",
@@ -538,19 +538,19 @@
                     }
                 },
                 "unitMultiplier" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "significantDigits" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "decimalPlaces" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "min" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "max" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "denominatorLink" : {
                     "type" : "Link"
@@ -565,7 +565,7 @@
                     "type" : "string"
                 },
                 "baseValue" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "baseTime" : {
                     "type" : "string"
@@ -736,7 +736,7 @@
             "id" : "DataDimensionRepresentation",
              "properties" : {
                  "size" : {
-                     "type" : "integer"
+                     "type" : "int"
                  },
                  "index" : {
                      "type" : "DataDimensionRepresentationIndexMap"
@@ -747,7 +747,7 @@
             "id" : "DataDimensionRepresentationIndexMap",
             "properties" : {
                 "${category}" : {
-                    "type" : "integer"
+                    "type" : "int"
                 }
             }
         },
@@ -822,7 +822,7 @@
                     "type" : "MetadataAttributeMap"
                 },
                 "decimalPlaces" : {
-                    "type" : "integer"
+                    "type" : "int"
                 }
             }
         },
@@ -836,10 +836,10 @@
                     "type" : "string"
                 },
                 "offset" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "total" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "items" : {
                     "type" : "array",
@@ -967,10 +967,10 @@
                     "type" : "string"
                 },
                 "offset" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "total" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "items" : {
                     "type" : "array",
@@ -1028,10 +1028,12 @@
                     "type" : "Link"
                 },
                 "systemCode" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "description" : "Código del sistema"
                 },
                 "title" : {
-                    "type" : "InternationalString"
+                    "type" : "InternationalString",
+                    "description" : "Título"
                 },
                 "conceptDescription" : {
                     "type" : "InternationalString"
@@ -1040,7 +1042,7 @@
                     "type" : "MetadataDimensionMap"
                 },
                 "decimalPlaces" : {
-                    "type" : "integer"
+                    "type" : "int"
                 },
                 "childLink" : {
                     "type" : "Link"

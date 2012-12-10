@@ -1513,8 +1513,10 @@ body ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operatio
     font-size: 0.9em;
     line-height: 1.5em;
 }
+/*
 .model-signature .description span:nth-child(odd)    { color:#333; }
 .model-signature .description span:nth-child(even)    { color:#C5862B; }
+*/
 .model-signature .signature-nav a {
     text-decoration: none;
     color: #AAA;
@@ -1587,4 +1589,26 @@ pre code {
   font-size: 1.1em;
   margin: 0;
   padding: 15px 0 5px 0px;
+}
+
+.swagger-signature-class {
+    border: 1px solid #C3D9EC;
+    margin-bottom: 10px;
+}
+
+.swagger-signature-class-name {
+    border-bottom: 1px solid #C3D9EC;
+    padding: 5px;
+}
+
+.swagger-signature-class-properties {
+    padding: 5px;
+}
+
+.swagger-signature-prop-name {
+    font-weight: bold;
+}
+
+.swagger-signature-prop-description {
+    margin-left: 10px;
 }
