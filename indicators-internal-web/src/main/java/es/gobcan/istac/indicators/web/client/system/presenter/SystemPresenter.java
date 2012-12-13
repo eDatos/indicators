@@ -658,24 +658,24 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle()), new AsyncCallback<ExportSystemInDsplResult>() {
+        dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle(), indicatorsSystemDto.getDescription()),
+                new AsyncCallback<ExportSystemInDsplResult>() {
 
-            @Override
-            public void onFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorExportingSystemsInDspl()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onSuccess(ExportSystemInDsplResult result) {
-                // TODO this works?
-                if (result.getFiles() != null) {
-                    for (String file : result.getFiles()) {
-                        StringBuffer url = new StringBuffer();
-                        url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
-                        url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(file));
-                        Window.open(url.toString(), "_blank", "");
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorExportingSystemsInDspl()), MessageTypeEnum.ERROR);
                     }
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(ExportSystemInDsplResult result) {
+                        if (result.getFiles() != null) {
+                            for (String file : result.getFiles()) {
+                                StringBuffer url = new StringBuffer();
+                                url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
+                                url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(file));
+                                Window.open(url.toString(), "_blank", "");
+                            }
+                        }
+                    }
+                });
     }
 }

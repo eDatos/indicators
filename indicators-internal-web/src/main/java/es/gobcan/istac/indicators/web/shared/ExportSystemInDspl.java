@@ -17,6 +17,9 @@ public class ExportSystemInDspl {
     @In(2)
     InternationalStringDto systemTitle;
 
+    @In(3)
+    InternationalStringDto systemDescription;
+
     @Out(1)
     List<String>           files;
 }
