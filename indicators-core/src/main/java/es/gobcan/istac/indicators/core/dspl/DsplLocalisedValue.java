@@ -45,6 +45,11 @@ public class DsplLocalisedValue {
     public String getValue() {
         return value;
     }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public String getText(String locale) {
         return localisedValues.get(locale);
     }

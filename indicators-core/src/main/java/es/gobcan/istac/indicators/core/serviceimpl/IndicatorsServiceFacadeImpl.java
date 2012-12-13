@@ -557,16 +557,18 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalStringDto title, String systemUrl) throws MetamacException {
+    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalStringDto title, InternationalStringDto description)
+            throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Transform
         InternationalString intTitle = dto2DoMapper.internationalStringDtoToDo(ctx, title, null);
+        InternationalString intDescription = dto2DoMapper.internationalStringDtoToDo(ctx, description, null);
 
         // Service call
-        return getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorsSystemUuid, intTitle, systemUrl);
+        return getDsplExporterService().exportIndicatorsSystemPublishedToDsplFiles(ctx, indicatorsSystemUuid, intTitle, intDescription);
     }
 
     @Override

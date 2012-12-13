@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -42,6 +43,14 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     @Autowired
     protected DsplExporterService            dsplExporterService;
 
+    @Autowired
+    private ConfigurationService             configurationService;
+
+    private static final String              PROP_PROVIDER_NAME        = "indicators.dspl.provider.name";
+    private static final String              PROP_PROVIDER_DESCRIPTION = "indicators.dspl.provider.description";
+    private static final String              PROP_PROVIDER_URL         = "indicators.dspl.provider.url";
+    private static final String              PROP_SYSTEM_URL_TEMPLATE  = "indicators.dspl.indicators.system.url";
+
     private static final String              INDICATORS_SYSTEM_1       = "IndSys-1";
     private static final String              INDICATORS_SYSTEM_2       = "IndSys-2";
 
@@ -76,6 +85,11 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
 
     @Before
     public void prepareData() throws MetamacException {
+        // when(configurationService.getProperty(PROP_SYSTEM_URL_TEMPLATE)).thenReturn("http://istac.arte-consultores.com/indicators-web/indicatorsSystems/{systemCode}/");
+        // when(configurationService.getProperty(PROP_PROVIDER_URL)).thenReturn("http://www.gobiernodecanarias.org/istac/");
+        // when(configurationService.getProperty(PROP_PROVIDER_NAME)).thenReturn("Instituto Canrio de Estadística");
+        // when(configurationService.getProperty(PROP_PROVIDER_DESCRIPTION)).thenReturn("Descripción Instituto Canario de Estadística");
+
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR3_DS_GPE_UUID))).thenReturn(INDICATOR3_GPE_JSON_DATA);
@@ -89,26 +103,27 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
+
     }
 
     @Test
     public void testExportIndicatorsSystemPublished() throws Exception {
 
-        InternationalString title = createInternationalString("title es", "title en");
-        String systemUrl = "http://istac.arte-consultores.com/indicators-web/indicatorsSystems/E30259A";
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
-        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, systemUrl));
+        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc));
     }
-
     @Test
     public void testExportIndicatorsSystemPublished2() throws Exception {
+        long millis = System.currentTimeMillis();
+        InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
+        InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        InternationalString title = createInternationalString("title es", "title en");
-        String systemUrl = "http://istac.arte-consultores.com/indicators-web/indicatorsSystems/E30259A";
-
-        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, systemUrl));
+        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc));
         // List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, systemUrl);
         // System.out.println(datasets);
+        System.out.println(System.currentTimeMillis() - millis);
     }
 
     private InternationalString createInternationalString(String label_es, String label_en) {

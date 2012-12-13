@@ -287,8 +287,8 @@ Application Indicators {
     		> @IndicatorsService
     		
     		"Export Indicators System as a DSPL zip file"
-		    List<DsplDataset> exportIndicatorsSystemPublishedToDspl(String indicatorsSystemUuid, @InternationalString title, String systemUrl) throws MetamacException;
-		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, String systemUrl) throws MetamacException;
+		    List<DsplDataset> exportIndicatorsSystemPublishedToDspl(String indicatorsSystemUuid, @InternationalString title, @InternationalString description) throws MetamacException;
+		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description) throws MetamacException;
     	}
 			    
     	"Provides access to indicators, indicators systems..."
@@ -334,7 +334,7 @@ Application Indicators {
 	    	"Retrieves all indicators system published where indicator is"
 	    	List<@IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	"Export a published Indicators System as a set of dspl zip files"
-	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, String systemUrl) throws MetamacException;
+	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"

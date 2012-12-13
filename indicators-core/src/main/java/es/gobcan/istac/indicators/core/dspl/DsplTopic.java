@@ -1,25 +1,21 @@
 package es.gobcan.istac.indicators.core.dspl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DsplTopic extends DsplNode {
 
-    public DsplInfo         info;
-    private List<DsplTopic> topics;
+    private DsplInfo info;
+    private String   parent;
 
     public DsplTopic(String id, DsplInfo info) {
         super(id);
         this.info = info;
-        topics = new ArrayList<DsplTopic>();
     }
 
-    public void addChildTopic(DsplTopic topic) {
-        topics.add(topic);
+    public void setParentTopic(DsplTopic topic) {
+        parent = topic != null ? topic.getId() : null;
     }
 
-    public List<DsplTopic> getChildrenTopics() {
-        return new ArrayList<DsplTopic>(topics);
+    public String getParentTopic() {
+        return parent;
     }
 
     public DsplInfo getInfo() {

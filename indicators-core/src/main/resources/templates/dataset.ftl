@@ -48,18 +48,43 @@
    	</info>
    	
    	<provider>
-      	<name>
-         	<value>Proveedor</value>
-      	</name>
-      	<url>
-         	<value>http://proveedor.com/es</value>
-      	</url>
+   		[#assign info = dataset.getProviderInfo()]
+   		[#if info.getName()?? && !info.getName().isEmpty()]
+   		<name>
+			[#if info.getName().hasNotLocalisedValue()]
+			<value>${info.getName().getValue()}</value>
+			[/#if]
+			[#list info.getName().getLocales() as locale]
+			<value xml:lang="${locale}">${info.getName().getText(locale)}</value>
+			[/#list]
+		</name>
+		[/#if]
+		[#if info.getDescription()?? && !info.getDescription().isEmpty()]
+		<description>
+			[#if info.getDescription().hasNotLocalisedValue()]
+			<value>${info.getDescription().getValue()}</value>
+			[/#if]
+			[#list info.getDescription().getLocales() as locale]
+			<value xml:lang="${locale}">${info.getDescription().getText(locale)}</value>
+			[/#list]
+		</description>
+		[/#if]
+		[#if info.getUrl()?? && !info.getUrl().isEmpty()]
+		<url>
+			[#if info.getUrl().hasNotLocalisedValue()]
+			<value>${info.getUrl().getValue()}</value>
+			[/#if]
+			[#list info.getUrl().getLocales() as locale]
+			<value xml:lang="${locale}">${info.getUrl().getText(locale)}</value>
+			[/#list]
+		</url>
+		[/#if]
    	</provider>
    	
    	[#if dataset.getTopics()?has_content]
    	<topics>
    	[#list dataset.getTopics() as topic]
-   		<topic id="${topic.getId()}">
+   		<topic id="${topic.getId()}" [#if topic.getParentTopic()??]parentTopic="${topic.getParentTopic()}"[/#if]>
    			<info>
 		   		[#assign info = topic.getInfo()]
 		   		[#if info.getName()?? && !info.getName().isEmpty()]
@@ -155,6 +180,7 @@
    	[/#list]
    	</concepts>
    	
+   	[#if dataset.getSlices()?has_content]
    	<slices>
    	[#list dataset.getSlices() as slice]
    		<slice id="${slice.getId()}">
@@ -170,6 +196,7 @@
    		</slice>
    	[/#list]
    	</slices>
+   	[/#if]
    	
    	<tables>
    	[#list dataset.getTables() as table]

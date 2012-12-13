@@ -95,8 +95,8 @@
     <TB_LIS_GEOGR_VALUES 
         ID="11" 
         CODE="GB" 
-        LATITUDE="22.0656233" 
-        LONGITUDE="-35.454564645" 
+        LATITUDE="55.378051" 
+        LONGITUDE="-3.435973" 
         UUID="11"
         TITLE_FK="9" 
         GLOBAL_ORDER="GB"
@@ -105,8 +105,8 @@
     <TB_LIS_GEOGR_VALUES 
         ID="12" 
         CODE="FR" 
-        LATITUDE="27.0656233" 
-        LONGITUDE="-20.454564645" 
+        LATITUDE="46.227638" 
+        LONGITUDE="2.213749" 
         UUID="12"
         TITLE_FK="10" 
         GLOBAL_ORDER="FR"
@@ -115,8 +115,8 @@
     <TB_LIS_GEOGR_VALUES 
         ID="13" 
         CODE="ES" 
-        LATITUDE="20.0656233" 
-        LONGITUDE="-25.454564645" 
+        LATITUDE="40.463667" 
+        LONGITUDE="-3.74922" 
         UUID="13"
         TITLE_FK="11" 
         GLOBAL_ORDER="ES"
@@ -1292,6 +1292,121 @@
                             LAST_UPDATED="2011-06-06 05:06:07"
                             LAST_UPDATED_TZ="Europe/London"
                         />
+                        <TB_ELEMENTS_LEVELS
+                            ID="1152"
+                            UUID="uuid-ignored-1152"
+                            PARENT_FK="115"
+                            ORDER_IN_LEVEL="2"
+                            
+                            IND_SYSTEM_VERSION_ALL_FK="11"
+                            IND_SYSTEM_VERSION_FIRST_FK="[null]"
+                            DIMENSION_FK="[null]"
+                            INDICATOR_INSTANCE_FK="1152"
+                            VERSION="1"
+                        />          
+                        <TB_INDICATORS_INSTANCES
+                            ID="1152"
+                            UUID="IndSys-1-v1-IInstance-4.1152"
+                            CODE="IndSys-1-v1-IInstance-4.1152-CODE"
+                            TIME_GRANULARITY="QUARTERLY"
+                            TIME_VALUES="[null]"
+                            GEOGRAPHICAL_GRANULARITY_FK="[null]"
+                            TITLE_FK="45"
+                            INDICATOR_FK="4" 
+                            
+                            VERSION="1"
+                            CREATED_BY="user1"
+                            CREATED_DATE="2011-05-05 01:02:04"
+                            CREATED_DATE_TZ="Europe/London"
+                            LAST_UPDATED_BY="user2"
+                            LAST_UPDATED="2011-06-06 05:06:07"
+                            LAST_UPDATED_TZ="Europe/London"
+                        />
+                        <TB_ELEMENTS_LEVELS
+                            ID="1153"
+                            UUID="uuid-ignored-1153"
+                            PARENT_FK="115"
+                            ORDER_IN_LEVEL="3"
+                            
+                            IND_SYSTEM_VERSION_ALL_FK="11"
+                            IND_SYSTEM_VERSION_FIRST_FK="[null]"
+                            DIMENSION_FK="1153"
+                            INDICATOR_INSTANCE_FK="[null]"
+                            VERSION="1"
+                        />
+                        <TB_DIMENSIONS
+                            ID="1153"
+                            TITLE_FK="46"
+                            UUID="IndSys-1-v1-Dimension-1153"
+                            
+                            VERSION="1"
+                            CREATED_BY="user1"
+                            CREATED_DATE="2011-03-03 01:02:04"
+                            CREATED_DATE_TZ="Europe/London"
+                            LAST_UPDATED_BY="user2"
+                            LAST_UPDATED="2011-03-04 05:06:07"
+                            LAST_UPDATED_TZ="Europe/London"             
+                        />
+                            <TB_ELEMENTS_LEVELS
+                                ID="11531"
+                                UUID="uuid-ignored-11531"
+                                PARENT_FK="1153"
+                                ORDER_IN_LEVEL="1"
+                                
+                                IND_SYSTEM_VERSION_ALL_FK="11"
+                                IND_SYSTEM_VERSION_FIRST_FK="[null]"
+                                DIMENSION_FK="[null]"
+                                INDICATOR_INSTANCE_FK="11531"
+                                VERSION="1"
+                            />              
+                            <TB_INDICATORS_INSTANCES
+                                ID="11531"
+                                UUID="IndSys-1-v1-IInstance-4.11531"
+                                CODE="IndSys-1-v1-IInstance-4.11531-CODE"
+                                TIME_GRANULARITY="WEEKLY"
+                                TIME_VALUES="[null]"
+                                GEOGRAPHICAL_GRANULARITY_FK="1"
+                                TITLE_FK="47"
+                                INDICATOR_FK="4" 
+                                
+                                VERSION="1"
+                                CREATED_BY="user1"
+                                CREATED_DATE="2011-05-05 01:02:04"
+                                CREATED_DATE_TZ="Europe/London"
+                                LAST_UPDATED_BY="user2"
+                                LAST_UPDATED="2011-06-06 05:06:07"
+                                LAST_UPDATED_TZ="Europe/London"
+                            />
+                            <TB_ELEMENTS_LEVELS
+                                ID="11532"
+                                UUID="uuid-ignored-11532"
+                                PARENT_FK="1153"
+                                ORDER_IN_LEVEL="2"
+                                
+                                IND_SYSTEM_VERSION_ALL_FK="11"
+                                IND_SYSTEM_VERSION_FIRST_FK="[null]"
+                                DIMENSION_FK="[null]"
+                                INDICATOR_INSTANCE_FK="11532"
+                                VERSION="1"
+                            />              
+                            <TB_INDICATORS_INSTANCES
+                                ID="11532"
+                                UUID="IndSys-1-v1-IInstance-4.11532"
+                                CODE="IndSys-1-v1-IInstance-4.11532-CODE"
+                                TIME_GRANULARITY="WEEKLY"
+                                TIME_VALUES="[null]"
+                                GEOGRAPHICAL_GRANULARITY_FK="[null]"
+                                TITLE_FK="48"
+                                INDICATOR_FK="4" 
+                                
+                                VERSION="1"
+                                CREATED_BY="user1"
+                                CREATED_DATE="2011-05-05 01:02:04"
+                                CREATED_DATE_TZ="Europe/London"
+                                LAST_UPDATED_BY="user2"
+                                LAST_UPDATED="2011-06-06 05:06:07"
+                                LAST_UPDATED_TZ="Europe/London"
+                            />
                 <TB_ELEMENTS_LEVELS
                     ID="116"
                     UUID="uuid-ignored-116"
@@ -2166,6 +2281,50 @@
         LABEL="libras" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="44"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="45"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="58"
+        LABEL="Indicator Instance 4.1152" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="45"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="46"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="59"
+        LABEL="Dimension 1153" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="46"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="47"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="60"
+        LABEL="Indicator instance 4.11531" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="47"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="48"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="61"
+        LABEL="Indicator instance 4.11532" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="48"
         VERSION="1"
     />
         

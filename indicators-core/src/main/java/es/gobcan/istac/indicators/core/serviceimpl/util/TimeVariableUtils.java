@@ -29,123 +29,126 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  * Utilities to time variables
  */
 public class TimeVariableUtils extends TimeUtils {
-    
+
     public static TimeValue convertToLastMonth(TimeValue timeValue) throws MetamacException {
         Date date = timeValueToLastPossibleDate(timeValue);
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH)+1;
-        
+        int month = cal.get(Calendar.MONTH) + 1;
+
         String yearStr = String.valueOf(year);
-        String monthStr = String.valueOf(month);
-        
-        return parseTimeValue(yearStr+"M"+monthStr);
+        String monthStr = month < 10 ? "0" + String.valueOf(month) : String.valueOf(month);
+
+        return parseTimeValue(yearStr + "M" + monthStr);
     }
-    
+
     public static TimeValue convertToLastDay(TimeValue timeValue) throws MetamacException {
         Date date = timeValueToLastPossibleDate(timeValue);
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH)+1;
+        int month = cal.get(Calendar.MONTH) + 1;
         int day = cal.get(Calendar.DAY_OF_MONTH);
-        
+
         String yearStr = String.valueOf(year);
-        String monthStr = month < 10 ? "0"+String.valueOf(month) : String.valueOf(month); 
-        String dayStr = String.valueOf(day);
-        
-        return parseTimeValue(yearStr+monthStr+dayStr);
+        String monthStr = month < 10 ? "0" + String.valueOf(month) : String.valueOf(month);
+        String dayStr = day < 10 ? "0" + String.valueOf(day) : String.valueOf(day);
+
+        return parseTimeValue(yearStr + monthStr + dayStr);
     }
-    
+
     private static int getTimeGranularityOrder(TimeValue timeValue) {
-        List<TimeGranularityEnum> granularityOrder = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY, TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
+        List<TimeGranularityEnum> granularityOrder = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY,
+                TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
         Assert.isTrue(granularityOrder.size() == TimeGranularityEnum.values().length, "Se debe especificar un orden para cada valor de granularidad");
-        return granularityOrder.indexOf(timeValue.getGranularity())+1;
+        return granularityOrder.indexOf(timeValue.getGranularity()) + 1;
     }
-    
+
     /* Returns a Date representation for time value, it chooses the last time instant represented by the TimeValue */
     private static Date timeValueToLastPossibleDate(TimeValue timeValue) {
         Calendar cal = Calendar.getInstance();
-        switch(timeValue.getGranularity()) {
+        switch (timeValue.getGranularity()) {
             case BIYEARLY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
-                cal.set(Calendar.MONTH, subPeriod*6-1);
-                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                cal.set(Calendar.MONTH, subPeriod * 6 - 1);
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 break;
             }
             case YEARLY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                cal.set(Calendar.DAY_OF_YEAR,cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+                cal.set(Calendar.DAY_OF_YEAR, cal.getActualMaximum(Calendar.DAY_OF_YEAR));
                 break;
             }
             case QUARTERLY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
-                cal.set(Calendar.MONTH, (subPeriod*3)-1);
-                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                cal.set(Calendar.MONTH, (subPeriod * 3) - 1);
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 break;
             }
             case MONTHLY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); //Ignore granularity character
-                cal.set(Calendar.MONTH, subPeriod-1);
-                cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
+                cal.set(Calendar.MONTH, subPeriod - 1);
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 break;
             }
             case WEEKLY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                cal.set(Calendar.YEAR_WOY,Integer.parseInt(timeValue.getYear()));
+                cal.set(Calendar.YEAR_WOY, Integer.parseInt(timeValue.getYear()));
                 int subPeriod = Integer.parseInt(timeValue.getWeek());
                 cal.set(Calendar.WEEK_OF_YEAR, subPeriod);
-                cal.set(Calendar.DAY_OF_WEEK,cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+                cal.set(Calendar.DAY_OF_WEEK, cal.getActualMaximum(Calendar.DAY_OF_WEEK));
                 break;
             }
             case DAILY: {
                 cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
                 int month = Integer.parseInt(timeValue.getMonth());
                 int day = Integer.parseInt(timeValue.getDay());
-                cal.set(Calendar.MONTH, month-1);
+                cal.set(Calendar.MONTH, month - 1);
                 cal.set(Calendar.DAY_OF_MONTH, day);
                 break;
             }
         }
-        cal.set(Calendar.MILLISECONDS_IN_DAY,cal.getActualMaximum(Calendar.MILLISECONDS_IN_DAY));
+        cal.set(Calendar.MILLISECONDS_IN_DAY, cal.getActualMaximum(Calendar.MILLISECONDS_IN_DAY));
         return cal.getTime();
     }
-    
+
     public static TimeValue findLatestTimeValue(List<TimeValue> timeValues) {
         if (timeValues == null || timeValues.size() == 0) {
             return null;
         }
         sortTimeValuesMostRecentFirstLowestGranularityMostRecent(timeValues);
-        
+
         return timeValues.get(0);
     }
-    
+
     public static void sortTimeValuesMostRecentFirst(List<TimeValue> values) {
         Collections.sort(values, new Comparator<TimeValue>() {
-           @Override
+
+            @Override
             public int compare(TimeValue o1, TimeValue o2) {
                 return compareToMostRecentFirstHighestGranularityMostRecent(o1, o2);
-            } 
+            }
         });
     }
-    
+
     private static void sortTimeValuesMostRecentFirstLowestGranularityMostRecent(List<TimeValue> values) {
         Collections.sort(values, new Comparator<TimeValue>() {
+
             @Override
             public int compare(TimeValue o1, TimeValue o2) {
                 return compareToMostRecentFirstLowestGranularityMostRecent(o1, o2);
-            } 
+            }
         });
     }
 
     /**
-     * Compare two time values. 
+     * Compare two time values.
      * 
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
@@ -157,16 +160,16 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) { //least the granularity is latest the value will be
+            if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) { // least the granularity is latest the value will be
                 return -1;
             } else if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) {
-                return 1; 
+                return 1;
             } else {
                 return 0;
             }
         }
     }
-    
+
     /**
      * Compare two time values. if date values are the same
      * 
@@ -180,16 +183,16 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) { //highest the granularity is latest the value will be
+            if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) { // highest the granularity is latest the value will be
                 return -1;
             } else if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) {
-                return 1; 
+                return 1;
             } else {
                 return 0;
             }
         }
     }
-    
+
     /**
      * Compare two time values in String representation
      * 

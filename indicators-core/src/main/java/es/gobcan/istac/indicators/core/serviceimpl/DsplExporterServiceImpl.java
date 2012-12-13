@@ -24,12 +24,14 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
@@ -64,7 +66,6 @@ import es.gobcan.istac.indicators.core.dspl.DsplSlice;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import freemarker.template.Configuration;
@@ -76,28 +77,31 @@ import freemarker.template.Template;
 @Service("dsplExporterService")
 public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
-    private static final Logger logger                            = LoggerFactory.getLogger(DsplExporterServiceImpl.class);
+    private static final String  PROP_PROVIDER_NAME                = "indicators.dspl.provider.name";
+    private static final String  PROP_PROVIDER_DESCRIPTION         = "indicators.dspl.provider.description";
+    private static final String  PROP_PROVIDER_URL                 = "indicators.dspl.provider.url";
+    private static final String  PROP_SYSTEM_URL_TEMPLATE          = "indicators.dspl.indicators.system.url";
 
-    private static final String GEO_CONCEPT_BASE                  = "geo:location";
-    private static final String UNIT_CONCEPT_BASE                 = "unit:unit";
-    private static final String GEO_CONCEPT_PREFIX                = "geo_";
+    @Autowired
+    private ConfigurationService configurationService;
 
-    private static final String QUANTITY_CONCEPT_BASE             = "quantity:quantity";
-    private static final String QUANTITY_AMOUNT_CONCEPT_BASE      = "quantity:amount";
-    private static final String QUANTITY_MAGNITUDE_CONCEPT_BASE   = "quantity:magnitude";
-    private static final String QUANTITY_FRACTION_CONCEPT_BASE    = "quantity:fraction";
-    private static final String QUANTITY_RATE_CONCEPT_BASE        = "quantity:rate";
-    private static final String QUANTITY_RATIO_CONCEPT_BASE       = "quantity:ratio";
-    private static final String QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
-    private static final String QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
+    private static final Logger  LOG                               = LoggerFactory.getLogger(DsplExporterServiceImpl.class);
 
-    public DsplExporterServiceImpl() {
-    }
+    private static final String  GEO_CONCEPT_BASE                  = "geo:location";
+    private static final String  UNIT_CONCEPT_BASE                 = "unit:unit";
+    private static final String  GEO_CONCEPT_PREFIX                = "geo_";
 
-    // TODO: description for dataset should be from statistical operation
-    // TODO: provider info externalized?
+    private static final String  QUANTITY_CONCEPT_BASE             = "quantity:quantity";
+    private static final String  QUANTITY_AMOUNT_CONCEPT_BASE      = "quantity:amount";
+    private static final String  QUANTITY_MAGNITUDE_CONCEPT_BASE   = "quantity:magnitude";
+    private static final String  QUANTITY_FRACTION_CONCEPT_BASE    = "quantity:fraction";
+    private static final String  QUANTITY_RATE_CONCEPT_BASE        = "quantity:rate";
+    private static final String  QUANTITY_RATIO_CONCEPT_BASE       = "quantity:ratio";
+    private static final String  QUANTITY_INDEX_CONCEPT_BASE       = "quantity:index";
+    private static final String  QUANTITY_CHANGE_RATE_CONCEPT_BASE = "quantity:change_rate";
+
     @Override
-    public List<DsplDataset> exportIndicatorsSystemPublishedToDspl(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, String systemUrl) throws MetamacException {
+    public List<DsplDataset> exportIndicatorsSystemPublishedToDspl(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
 
         // TODO: call validator
 
@@ -126,24 +130,27 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             // slides
             Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
 
-            DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, systemUrl, timeGranularity);
+            if (slices.size() > 0) {
+                DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
+                DsplInfo providerInfo = buildProviderInfo();
+                DsplDataset dataset = new DsplDataset(datasetInfo, providerInfo);
 
-            DsplInfo providerInfo = buildProviderInfo(ctx, indicatorsSystemVersion, title, systemUrl, timeGranularity);
+                dataset.addConcepts(concepts);
+                dataset.addTopics(topics);
+                dataset.addSlices(slices);
 
-            DsplDataset dataset = new DsplDataset(datasetInfo, providerInfo);
-
-            dataset.addConcepts(concepts);
-            dataset.addTopics(topics);
-            dataset.addSlices(slices);
-
-            datasets.add(dataset);
+                datasets.add(dataset);
+            }
         }
         return datasets;
     }
 
     @Override
-    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, String systemUrl) throws MetamacException {
-        List<DsplDataset> datasets = exportIndicatorsSystemPublishedToDspl(ctx, indicatorsSystemUuid, title, systemUrl);
+    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
+
+        // TODO: call validator
+
+        List<DsplDataset> datasets = exportIndicatorsSystemPublishedToDspl(ctx, indicatorsSystemUuid, title, description);
 
         List<String> datasetArchives = new ArrayList<String>();
         try {
@@ -216,7 +223,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return temp;
     }
 
-    private DsplInfo buildDatasetInfo(ServiceContext ctx, IndicatorsSystemVersion systemVersion, InternationalString title, String systemUrl, TimeGranularityEnum timeGranularity)
+    private DsplInfo buildDatasetInfo(ServiceContext ctx, IndicatorsSystemVersion systemVersion, InternationalString title, InternationalString description, TimeGranularityEnum timeGranularity)
             throws MetamacException {
         DsplInfo datasetInfo = new DsplInfo();
 
@@ -226,29 +233,38 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             String baseTitle = buildTitleWithGranularityInLocale(text, granularity);
             datasetInfo.getName().setText(text.getLocale(), baseTitle);
 
-            datasetInfo.getDescription().setText(text.getLocale(), baseTitle);
-
-            String localisedUrl = systemUrl + "?language=" + text.getLocale();
+            String localisedUrl = buildLocalisedSystemUrl(systemVersion, text.getLocale());
             datasetInfo.getUrl().setText(text.getLocale(), localisedUrl);
         }
+
+        populateDsplLocalisedTextForInternString(datasetInfo.getDescription(), description);
 
         return datasetInfo;
     }
 
-    private DsplInfo buildProviderInfo(ServiceContext ctx, IndicatorsSystemVersion systemVersion, InternationalString title, String systemUrl, TimeGranularityEnum timeGranularity)
-            throws MetamacException {
+    private String buildLocalisedSystemUrl(IndicatorsSystemVersion systemVersion, String locale) {
+        String systemUrlBase = configurationService.getProperty(PROP_SYSTEM_URL_TEMPLATE);
+        String url = systemUrlBase.replaceAll("\\[SYSTEM\\]", systemVersion.getIndicatorsSystem().getCode());
+        return url + "?language=" + locale;
+    }
+
+    private DsplInfo buildProviderInfo() throws MetamacException {
         DsplInfo providerInfo = new DsplInfo();
 
-        TimeGranularity granularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, timeGranularity);
+        String providerName = getProviderName();
+        String providerDescription = getProviderDescription();
+        String providerUrl = getProviderUrl();
 
-        for (LocalisedString text : title.getTexts()) {
-            String baseTitle = buildTitleWithGranularityInLocale(text, granularity);
-            providerInfo.getName().setText(text.getLocale(), baseTitle);
+        if (providerName != null) {
+            providerInfo.getName().setValue(providerName);
+        }
 
-            providerInfo.getDescription().setText(text.getLocale(), baseTitle);
+        if (providerDescription != null) {
+            providerInfo.getDescription().setValue(providerDescription);
+        }
 
-            String localisedUrl = systemUrl + "?language=" + text.getLocale();
-            providerInfo.getUrl().setText(text.getLocale(), localisedUrl);
+        if (providerUrl != null) {
+            providerInfo.getUrl().setValue(providerUrl);
         }
 
         return providerInfo;
@@ -473,7 +489,10 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                     instancesUsingGeoGranularity.add(instance);
                 }
             }
-            slices.add(createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity));
+            DsplSlice slice = createSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+            if (slice != null) {
+                slices.add(slice);
+            }
         }
         return slices;
     }
@@ -485,7 +504,13 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private DsplSlice createSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instancesUsingGeoGranularity)
             throws MetamacException {
+        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
+        if (table.getData().getColumnNames().size() == 0) { // No data
+            return null;
+        }
+
         DsplSlice slice = new DsplSlice(getIdForSlice(geoGranularity, timeGranularity));
+        slice.setTable(table);
 
         slice.addDimension(getIdForGeoConcept(geoGranularity));
         slice.addDimension(getIdForTimeConcept(timeGranularity));
@@ -493,9 +518,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         for (IndicatorInstance instance : instancesUsingGeoGranularity) {
             slice.addMetric(getIdForQuantityIndicatorConcept(instance.getIndicator()));
         }
-
-        DsplTable table = createTableForSlice(ctx, geoGranularity, timeGranularity, instancesUsingGeoGranularity);
-        slice.setTable(table);
 
         return slice;
     }
@@ -513,11 +535,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private DsplData createTableDataForSlice(ServiceContext ctx, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity, Set<IndicatorInstance> instances) throws MetamacException {
         DsplData data = new DsplData();
-
-        // Set<Row> rows = new HashSet<DsplData.Row>();
-        // for (IndicatorInstance instance : instances) {
-        // rows.addAll(createTableDataRowsForSliceInIndicatorInstance(ctx, instance, geoGranularity, timeGranularity);
-        // }
 
         Set<Row> rows = createTableDataRowsForSliceInIndicatorsInstances(ctx, instances, geoGranularity, timeGranularity);
         data.setRows(rows);
@@ -546,7 +563,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 row.addColumn(getColumnForTime(timeGranularity), dsplTimeCode);
 
                 for (IndicatorInstance instance : instances) {
-                    Map<String, ObservationDto> observations = findObservationsForIndicatorInstance(ctx, instance, geoCodes, timeCodes, measureCode);
+                    Map<String, ObservationDto> observations = findObservationForIndicatorInstance(ctx, instance, geoCode, timeCode, measureCode);
 
                     String observationKey = DtoUtils.generateUniqueKeyWithCodes(Arrays.asList(geoCode, timeCode, measureCode));
                     ObservationDto obs = observations.get(observationKey);
@@ -578,34 +595,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return new ArrayList<String>(timeCodes);
     }
 
-    private Set<Row> createTableDataRowsForSliceInIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity)
-            throws MetamacException {
-        List<String> geoCodes = getCodesForInstanceGeoValues(ctx, instance, geoGranularity);
-        List<String> timeCodes = getCodesForTimeValues(ctx, instance, timeGranularity);
-        String measureCode = MeasureDimensionTypeEnum.ABSOLUTE.name();
-
-        Map<String, ObservationDto> observations = findObservationsForIndicatorInstance(ctx, instance, geoCodes, timeCodes, measureCode);
-
-        Set<Row> rows = new HashSet<DsplData.Row>();
-        for (String geoCode : geoCodes) {
-            for (String timeCode : timeCodes) {
-                String observationKey = DtoUtils.generateUniqueKeyWithCodes(Arrays.asList(geoCode, timeCode, measureCode));
-                ObservationDto obs = observations.get(observationKey);
-
-                // CAUTION: Data Explorer does not support all kind of time granularities, so some time codes must be converted
-                String dsplTimeCode = transformTimeCodeToDataExplorerCompatible(timeCode);
-
-                Row row = new Row();
-                row.addColumn(getColumnForGeo(geoGranularity), geoCode);
-                row.addColumn(getColumnForTime(timeGranularity), dsplTimeCode);
-                row.addColumn(getColumnForInstanceMetric(instance), obs.getPrimaryMeasure());
-                rows.add(row);
-            }
-        }
-
-        return rows;
-    }
-
     private String transformTimeCodeToDataExplorerCompatible(String timeCode) throws MetamacException {
         TimeValue timeValue = TimeVariableUtils.parseTimeValue(timeCode);
 
@@ -619,28 +608,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 compatTimeValue = TimeVariableUtils.convertToLastDay(timeValue);
         }
         return compatTimeValue.getTimeValue();
-    }
-
-    private Map<String, ObservationDto> findObservationsForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, List<String> geoCodes, List<String> timeCodes, String measureCode)
-            throws MetamacException {
-        List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
-
-        ConditionDimensionDto geoCondition = new ConditionDimensionDto();
-        geoCondition.setDimensionId(IndicatorsDataServiceImpl.GEO_DIM);
-        geoCondition.setCodesDimension(geoCodes);
-        conditions.add(geoCondition);
-
-        ConditionDimensionDto timeCondition = new ConditionDimensionDto();
-        timeCondition.setDimensionId(IndicatorsDataServiceImpl.TIME_DIM);
-        timeCondition.setCodesDimension(timeCodes);
-        conditions.add(timeCondition);
-
-        ConditionDimensionDto measureCondition = new ConditionDimensionDto();
-        measureCondition.setDimensionId(IndicatorsDataServiceImpl.MEASURE_DIM);
-        measureCondition.setCodesDimension(Arrays.asList(measureCode));
-        conditions.add(measureCondition);
-
-        return getIndicatorsDataService().findObservationsByDimensionsInIndicatorInstance(ctx, instance.getUuid(), conditions);
     }
 
     private Map<String, ObservationDto> findObservationForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, String geoCode, String timeCode, String measureCode)
@@ -732,23 +699,24 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     }
 
     private void addReferencedIndicators(ServiceContext ctx, String indicatorUuid, Set<IndicatorVersion> usedIndicators) throws MetamacException {
-
         IndicatorVersion indicatorVersion = getIndicatorsService().retrieveIndicatorPublished(ctx, indicatorUuid);
 
         if (!usedIndicators.contains(indicatorVersion)) {
             usedIndicators.add(indicatorVersion);
 
-            // For numerator and denominator quantities
-            if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.FRACTION, QuantityTypeEnum.RATIO, QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE,
-                    QuantityTypeEnum.RATE)) {
-                addReferencedIndicators(ctx, indicatorVersion.getQuantity().getNumerator().getUuid(), usedIndicators);
-                addReferencedIndicators(ctx, indicatorVersion.getQuantity().getDenominator().getUuid(), usedIndicators);
-            }
+            // TODO: referenced quantities seem not to work in data explorer. if a concept can link to other quantities in a near future this code should be uncommented
 
-            // Base quantity
-            if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE)) {
-                addReferencedIndicators(ctx, indicatorVersion.getQuantity().getBaseQuantity().getUuid(), usedIndicators);
-            }
+            // // For numerator and denominator quantities
+            // if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.FRACTION, QuantityTypeEnum.RATIO, QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE,
+            // QuantityTypeEnum.RATE)) {
+            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getNumerator().getUuid(), usedIndicators);
+            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getDenominator().getUuid(), usedIndicators);
+            // }
+            //
+            // // Base quantity
+            // if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE)) {
+            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getBaseQuantity().getUuid(), usedIndicators);
+            // }
         }
     }
 
@@ -943,40 +911,52 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         }
     }
 
-    private boolean isEqualsAny(Object obj, Object... values) {
-        for (Object objCheck : values) {
-            if (obj.equals(objCheck)) {
-                return true;
+    // private Set<DsplTopic> getHierarchyTopics(List<ElementLevel> levels) {
+    // Set<DsplTopic> topics = new HashSet<DsplTopic>();
+    // for (ElementLevel level : levels) {
+    // ElementLevel parentLevel = level.getParent();
+    //
+    // if (parentLevel != null && parentLevel.isDimension()) {
+    // Dimension dim = parentLevel.getDimension();
+    // DsplTopic topic = buildTopicFromDimension(dim);
+    //
+    // if (parentLevel.getParent() != null) {
+    // for (DsplTopic childTopic : getHierarchyTopics(Arrays.asList(parentLevel.getParent()))) {
+    // topic.addChildTopic(childTopic);
+    // }
+    // }
+    // topics.add(topic);
+    // }
+    // }
+    // return topics;
+    // }
+
+    public DsplTopic getHierarchyTopics2(ElementLevel level, Set<DsplTopic> foundTopics) {
+        if (level.isDimension()) {
+            Dimension dim = level.getDimension();
+            DsplTopic topic = buildTopicFromDimension(dim);
+            foundTopics.add(topic);
+
+            if (level.getParent() != null) {
+                DsplTopic parentTopic = getHierarchyTopics2(level.getParent(), foundTopics);
+                if (parentTopic != null) {
+                    topic.setParentTopic(parentTopic);
+                }
             }
+            return topic;
         }
-        return false;
+        return null;
     }
 
-    public Set<DsplTopic> getHierarchyTopics(List<ElementLevel> levels) {
+    public Set<DsplTopic> buildTopicsForInstances(List<IndicatorInstance> instances) {
         Set<DsplTopic> topics = new HashSet<DsplTopic>();
-        for (ElementLevel level : levels) {
-            ElementLevel parentLevel = level.getParent();
-
-            if (parentLevel != null && parentLevel.isDimension()) {
-                Dimension dim = parentLevel.getDimension();
-                DsplTopic topic = buildTopicFromDimension(dim);
-
-                if (parentLevel.getParent() != null) {
-                    for (DsplTopic childTopic : getHierarchyTopics(Arrays.asList(parentLevel.getParent()))) {
-                        topic.addChildTopic(childTopic);
-                    }
-                }
-                topics.add(topic);
+        for (IndicatorInstance instance : instances) {
+            ElementLevel parentLevel = instance.getElementLevel().getParent();
+            if (parentLevel != null) {
+                getHierarchyTopics2(parentLevel, topics);
             }
         }
         return topics;
-    }
-    public Set<DsplTopic> buildTopicsForInstances(List<IndicatorInstance> instances) {
-        List<ElementLevel> levels = new ArrayList<ElementLevel>();
-        for (IndicatorInstance instance : instances) {
-            levels.add(instance.getElementLevel());
-        }
-        return getHierarchyTopics(levels);
     }
 
     private DsplTopic buildTopicFromDimension(Dimension dimension) {
@@ -1019,6 +999,18 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             }
         }
         return filename;
+    }
+
+    private String getProviderName() {
+        return configurationService.getProperty(PROP_PROVIDER_NAME);
+    }
+
+    private String getProviderDescription() {
+        return configurationService.getProperty(PROP_PROVIDER_DESCRIPTION);
+    }
+
+    private String getProviderUrl() {
+        return configurationService.getProperty(PROP_PROVIDER_URL);
     }
 
     private Template getTemplateFreemarker(String templateName) throws Exception {
