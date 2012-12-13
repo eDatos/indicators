@@ -1,6 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
@@ -16,6 +22,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
+import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -74,23 +83,66 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR5_VERSION        = "1.000";
 
     @Test
-    public void testExportIndicatorsSystemPublishedSimple() throws Exception {
-        populateForIndicatorsSystem2();
-        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-
-        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc));
-    }
-
-    @Test
     public void testExportEmptyDescription() throws Exception {
         populateForIndicatorsSystem2();
 
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = null;
 
-        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc));
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(files);
+        assertTrue(files.size() > 0);
     }
+
+    @Test
+    public void testExportEmptyTitle() throws Exception {
+        populateForIndicatorsSystem2();
+
+        InternationalString title = null;
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        try {
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+            fail("Should not allow empty title");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.DSPL_DATASET_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testExportEmptySystemUuid() throws Exception {
+        populateForIndicatorsSystem2();
+
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        try {
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), null, title, desc);
+            fail("Should not allow empty indicators system uuid");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testExportIndicatorsSystemPublishedSimple() throws Exception {
+        populateForIndicatorsSystem2();
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(files);
+        assertTrue(files.size() > 0);
+    }
+
     @Test
     public void testExportIndicatorsSystemPublishedComplex() throws Exception {
         populateForIndicatorsSystem1();
@@ -99,9 +151,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
         InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        System.out.println(dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc));
-        // List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, systemUrl);
-        // System.out.println(datasets);
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
+        assertNotNull(files);
+        assertTrue(files.size() > 0);
         System.out.println(System.currentTimeMillis() - millis);
     }
 
