@@ -6,6 +6,7 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
@@ -578,8 +579,9 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindIndicatorsInstancesInPublishedIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindIndicatorsInstancesInPublishedIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
 
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -589,15 +591,16 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindIndicatorsInstancesInLastVersionIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        
+
+    public static void checkFindIndicatorsInstancesInLastVersionIndicatorsSystems(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
+
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -645,15 +648,14 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(String subjectCode, List<MetamacExceptionItem> exceptions)
-    throws MetamacException {
+
+    public static void checkFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(String subjectCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(subjectCode, ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -776,14 +778,13 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
 
     public static void checkFindIndicatorsSystemHistory(String uuid, int maxResults, List<MetamacExceptionItem> exceptions) throws MetamacException {
-      
+
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(uuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
         if (maxResults <= 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.NUM_RESULTS));
@@ -791,7 +792,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkFindIndicatorsSystemsHistory(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -802,7 +803,31 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
+    public static void checkExportIndicatorsSystemPublishedToDspl(String indicatorsSystemUuid, InternationalString title, InternationalString description, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+        ValidationUtils.checkParameterRequired(title, ServiceExceptionParameters.DSPL_DATASET_TITLE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
+    public static void checkExportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, InternationalString title, InternationalString description, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(indicatorsSystemUuid, ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, exceptions);
+        ValidationUtils.checkParameterRequired(title, ServiceExceptionParameters.DSPL_DATASET_TITLE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveGeographicalValue(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -979,7 +1004,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalGranularitiesInIndicatorsPublishedWithSubjectCode(String subjectCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -999,7 +1024,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(String systemCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1033,8 +1058,9 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(String subjectCode, String granularityUuid, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -1044,46 +1070,48 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalValuesInPublishedIndicatorsWithSubjectCode(String subjectCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(subjectCode, ServiceExceptionParameters.SUBJECT_CODE, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, String granularityUuid, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(indicatorInstanceUuid, ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
         ValidationUtils.checkParameterRequired(granularityUuid, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY_UUID, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, String granularityUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkRetrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, String granularityUuid, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(systemCode, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
         ValidationUtils.checkParameterRequired(granularityUuid, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY_UUID, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveGeographicalValuesInIndicatorsInstancesInPublishedIndicatorsSystem(String systemCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(systemCode, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -1117,8 +1145,6 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-
 
     public static void checkRetrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
@@ -1174,15 +1200,16 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkRetrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkRetrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(indicatorInstanceUuid, ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
         ValidationUtils.checkParameterRequired(granularity, ServiceExceptionParameters.TIME_GRANULARITY, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -1268,7 +1295,7 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkFindGeographicalValuesInIndicatorsVersionsWithSubject(String subjectCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1289,19 +1316,21 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(subjectCode, ServiceExceptionParameters.SUBJECT_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues, int numResults, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindLastValueNLastIndicatorsVersionsWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues,
+            int numResults, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -1316,7 +1345,8 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<MeasureDimensionTypeEnum> measureValues, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindLastValueForIndicatorsVersionsWithGeoCodeOrderedByLastUpdate(List<String> indicatorsCodes, String geoCode, List<MeasureDimensionTypeEnum> measureValues,
+            List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -1325,7 +1355,7 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
         ValidationUtils.checkParameterRequired(measureValues, ServiceExceptionParameters.MEASURE_VALUES, exceptions);
 
-        ExceptionUtils.throwIfException(exceptions);   
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     public static void checkFindLastValueIndicatorsVersionsWithSubjectCodeOrderedByLastUpdate(String subjectCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -1348,7 +1378,7 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindIndicatorsInstancesWithGeoCodeAndSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MetamacExceptionItem> exceptions) throws MetamacException  {
+    public static void checkFindIndicatorsInstancesWithGeoCodeAndSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -1356,10 +1386,11 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(subjectCode, ServiceExceptionParameters.SUBJECT_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
 
-        ExceptionUtils.throwIfException(exceptions);        
+        ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkFindLastValueIndicatorsInstancesWithSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkFindLastValueIndicatorsInstancesWithSubjectCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues,
+            List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
@@ -1368,60 +1399,64 @@ public class InvocationValidator {
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
         ValidationUtils.checkParameterRequired(measureValues, ServiceExceptionParameters.MEASURE_VALUES, exceptions);
 
-        ExceptionUtils.throwIfException(exceptions);   
+        ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindIndicatorsInstancesInPublishedIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<MetamacExceptionItem> exceptions)
+            throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(systemCode, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
-        
-        ExceptionUtils.throwIfException(exceptions);   
+
+        ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues, int n, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindLastValueNLastIndicatorsInstancesInIndicatorsSystemWithGeoCodeOrderedByLastUpdate(String systemCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues,
+            int n, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(systemCode, ServiceExceptionParameters.INDICATORS_SYSTEM_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
         ValidationUtils.checkParameterRequired(measureValues, ServiceExceptionParameters.MEASURE_VALUES, exceptions);
         if (n <= 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.NUM_RESULTS));
         }
-        
-        ExceptionUtils.throwIfException(exceptions);   
+
+        ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindLastValueNLastIndicatorsInstancesWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues, int n, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindLastValueNLastIndicatorsInstancesWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode, List<MeasureDimensionTypeEnum> measureValues, int n,
+            List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(subjectCode, ServiceExceptionParameters.SUBJECT_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
         ValidationUtils.checkParameterRequired(measureValues, ServiceExceptionParameters.MEASURE_VALUES, exceptions);
         if (n <= 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.NUM_RESULTS));
         }
-        
-        ExceptionUtils.throwIfException(exceptions);   
+
+        ExceptionUtils.throwIfException(exceptions);
     }
-    
-    public static void checkFindLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorInstancesCodes, String geoCode, List<MeasureDimensionTypeEnum> measures, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+    public static void checkFindLastValueForIndicatorsInstancesWithGeoCodeOrderedByLastUpdate(String systemCode, List<String> indicatorInstancesCodes, String geoCode,
+            List<MeasureDimensionTypeEnum> measures, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         ValidationUtils.checkParameterRequired(indicatorInstancesCodes, ServiceExceptionParameters.SUBJECT_CODE, exceptions);
         ValidationUtils.checkParameterRequired(geoCode, ServiceExceptionParameters.GEO_CODE, exceptions);
         ValidationUtils.checkParameterRequired(measures, ServiceExceptionParameters.MEASURE_VALUES, exceptions);
-        
-        ExceptionUtils.throwIfException(exceptions);   
+
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     private static void checkIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion, List<MetamacExceptionItem> exceptions) {
@@ -1462,7 +1497,7 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(indicatorInstance.getTimeGranularity()) && !ValidationUtils.isEmpty(indicatorInstance.getTimeValues())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES));
         }
-        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeValues())) { 
+        if (!ValidationUtils.isEmpty(indicatorInstance.getTimeValues())) {
             for (String timeValueStr : indicatorInstance.getTimeValuesAsList()) {
                 if (!TimeVariableUtils.isTimeValue(timeValueStr)) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_TIME_VALUES));
@@ -1472,13 +1507,11 @@ public class InvocationValidator {
         if (!ValidationUtils.isEmpty(indicatorInstance.getGeographicalGranularity()) && (indicatorInstance.getGeographicalValues() != null && indicatorInstance.getGeographicalValues().size() > 0)) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.INDICATOR_INSTANCE_GEOGRAPHICAL_VALUES));
         }
-        
-        
+
         if (indicatorInstance.getGeographicalValues() != null && indicatorInstance.getGeographicalValues().size() > 0) {
-            //check duplicated entries
+            // check duplicated entries
         }
-        
-        
+
         ValidationUtils.checkMetadataRequired(indicatorInstance.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, exceptions);
         if (indicatorInstance.getElementLevel().getOrderInLevel() != null && indicatorInstance.getElementLevel().getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL));
@@ -1665,10 +1698,5 @@ public class InvocationValidator {
             checkQuantity(rateDerivation.getQuantity(), parameterName, true, exceptions);
         }
     }
-
-
-    
-
-    
 
 }

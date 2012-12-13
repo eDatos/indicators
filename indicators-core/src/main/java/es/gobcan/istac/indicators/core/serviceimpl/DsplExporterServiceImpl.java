@@ -67,6 +67,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -103,7 +104,8 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     @Override
     public List<DsplDataset> exportIndicatorsSystemPublishedToDspl(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
 
-        // TODO: call validator
+        // Validator
+        InvocationValidator.checkExportIndicatorsSystemPublishedToDspl(indicatorsSystemUuid, title, description, null);
 
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
         List<ElementLevel> structure = getIndicatorsSystemsService().retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
@@ -148,7 +150,8 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     @Override
     public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
 
-        // TODO: call validator
+        // Validator
+        InvocationValidator.checkExportIndicatorsSystemPublishedToDsplFiles(indicatorsSystemUuid, title, description, null);
 
         List<DsplDataset> datasets = exportIndicatorsSystemPublishedToDspl(ctx, indicatorsSystemUuid, title, description);
 
