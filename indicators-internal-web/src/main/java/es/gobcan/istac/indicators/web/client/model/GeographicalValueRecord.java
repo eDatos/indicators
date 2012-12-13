@@ -8,9 +8,9 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 
 public class GeographicalValueRecord extends ListGridRecord {
 
-    public static final String CODE = "geo-value";
-    public static final String TITLE              = "geo-value-title";
-    public static final String DTO                = "geo-dto";
+    public static final String CODE  = "geo-value";
+    public static final String TITLE = "geo-value-title";
+    public static final String DTO   = "geo-dto";
 
     public GeographicalValueRecord(GeographicalValueDto geographicalValueDto) {
         setCode(geographicalValueDto.getCode());
