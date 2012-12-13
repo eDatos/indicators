@@ -17,6 +17,7 @@ import org.junit.runners.Suite.SuiteClasses;
     IndicatorsServiceFacadeTest.class,
     IndicatorsServiceTest.class,
     IndicatorsSystemsServiceTest.class,
+    DsplExporterServiceTest.class,
     SecurityIndicatorsServiceFacadeIndicatorsSystemsTest.class,
     SecurityIndicatorsServiceFacadeIndicatorsTest.class
                 })

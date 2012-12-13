@@ -320,6 +320,22 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
 
+    public InternationalString internationalStringDtoToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        if (target == null) {
+            target = new InternationalString();
+        }
+
+        Set<LocalisedString> localisedStringEntities = localisedStringDtoToDo(ctx, source.getTexts(), target.getTexts(), target);
+        target.getTexts().clear();
+        target.getTexts().addAll(localisedStringEntities);
+
+        return target;
+    }
+
     private RateDerivation rateDerivationDtoToDo(ServiceContext ctx, RateDerivationDto source, RateDerivation target) throws MetamacException {
 
         if (source == null) {
@@ -342,6 +358,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
     }
 
     private InternationalString internationalStringToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target, String metadataName) throws MetamacException {
+
         if (source == null) {
             if (target != null) {
                 // delete previous entity

@@ -1174,6 +1174,17 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+    
+    public static void checkRetrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, TimeGranularityEnum granularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+        
+        ValidationUtils.checkParameterRequired(indicatorInstanceUuid, ServiceExceptionParameters.INDICATOR_INSTANCE_UUID, exceptions);
+        ValidationUtils.checkParameterRequired(granularity, ServiceExceptionParameters.TIME_GRANULARITY, exceptions);
+        
+        ExceptionUtils.throwIfException(exceptions);
+    }
 
     public static void checkRetrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {

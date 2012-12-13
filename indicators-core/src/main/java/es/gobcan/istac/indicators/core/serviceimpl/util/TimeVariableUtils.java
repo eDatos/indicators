@@ -30,6 +30,36 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 public class TimeVariableUtils extends TimeUtils {
     
+    public static TimeValue convertToLastMonth(TimeValue timeValue) throws MetamacException {
+        Date date = timeValueToLastPossibleDate(timeValue);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        
+        String yearStr = String.valueOf(year);
+        String monthStr = String.valueOf(month);
+        
+        return parseTimeValue(yearStr+"M"+monthStr);
+    }
+    
+    public static TimeValue convertToLastDay(TimeValue timeValue) throws MetamacException {
+        Date date = timeValueToLastPossibleDate(timeValue);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        
+        String yearStr = String.valueOf(year);
+        String monthStr = month < 10 ? "0"+String.valueOf(month) : String.valueOf(month); 
+        String dayStr = String.valueOf(day);
+        
+        return parseTimeValue(yearStr+monthStr+dayStr);
+    }
+    
     private static int getTimeGranularityOrder(TimeValue timeValue) {
         List<TimeGranularityEnum> granularityOrder = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY, TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
         Assert.isTrue(granularityOrder.size() == TimeGranularityEnum.values().length, "Se debe especificar un orden para cada valor de granularidad");
@@ -37,7 +67,7 @@ public class TimeVariableUtils extends TimeUtils {
     }
     
     /* Returns a Date representation for time value, it chooses the last time instant represented by the TimeValue */
-    private static Date timeValueToDate(TimeValue timeValue) {
+    private static Date timeValueToLastPossibleDate(TimeValue timeValue) {
         Calendar cal = Calendar.getInstance();
         switch(timeValue.getGranularity()) {
             case BIYEARLY: {
@@ -120,8 +150,8 @@ public class TimeVariableUtils extends TimeUtils {
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
     private static int compareToMostRecentFirstLowestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
-        Date date1 = timeValueToDate(timeValue1);
-        Date date2 = timeValueToDate(timeValue2);
+        Date date1 = timeValueToLastPossibleDate(timeValue1);
+        Date date2 = timeValueToLastPossibleDate(timeValue2);
         if (date1.after(date2)) {
             return -1;
         } else if (date1.before(date2)) {
@@ -143,8 +173,8 @@ public class TimeVariableUtils extends TimeUtils {
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
     private static int compareToMostRecentFirstHighestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
-        Date date1 = timeValueToDate(timeValue1);
-        Date date2 = timeValueToDate(timeValue2);
+        Date date1 = timeValueToLastPossibleDate(timeValue1);
+        Date date2 = timeValueToLastPossibleDate(timeValue2);
         if (date1.after(date2)) {
             return -1;
         } else if (date1.before(date2)) {

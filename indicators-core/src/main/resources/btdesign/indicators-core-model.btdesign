@@ -223,6 +223,8 @@ Application Indicators {
 	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicator(String indicatorUuid, String indicatorVersionNumber, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values granularities in the publidhed indicator"
 	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorPublished(String indicatorUuid, @TimeGranularityEnum granularity) throws MetamacException;
+	    	"Retrieves time values with granularity in the indicator instance"
+	    	List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(String indicatorInstanceUuid, @TimeGranularityEnum granularity) throws MetamacException;
 	    	"Retrieves time values in the indicator"
 	    	List<TimeValue> retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves time values in the publidhed indicator"
@@ -277,10 +279,22 @@ Application Indicators {
 		    DateTimestamp retrieveLastSuccessfulGpeQueryDate() throws MetamacException;
 		    setLastSuccessfulGpeQueryDate(DateTimestamp date) throws MetamacException;
     	}
+    	
+    	"Provides access to indicators data from Jaxi"
+    	Service DsplExporterService {
+    		> @IndicatorsSystemsService
+    		> @IndicatorsDataService
+    		> @IndicatorsService
+    		
+    		"Export Indicators System as a DSPL zip file"
+		    List<DsplDataset> exportIndicatorsSystemPublishedToDspl(String indicatorsSystemUuid, @InternationalString title, String systemUrl) throws MetamacException;
+		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, String systemUrl) throws MetamacException;
+    	}
 			    
     	"Provides access to indicators, indicators systems..."
     	Service IndicatorsServiceFacade {
 			> @IndicatorsSystemsService
+			> @DsplExporterService
     		> @IndicatorsService
     		> @IndicatorsDataService
 	    	
@@ -319,6 +333,8 @@ Application Indicators {
 	    	@IndicatorsSystemStructureDto retrieveIndicatorsSystemStructure(String uuid, String versionNumber) throws MetamacException;
 	    	"Retrieves all indicators system published where indicator is"
 	    	List<@IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+	    	"Export a published Indicators System as a set of dspl zip files"
+	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, String systemUrl) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"

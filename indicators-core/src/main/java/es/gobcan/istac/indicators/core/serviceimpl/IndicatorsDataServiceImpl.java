@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,7 +60,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionLastValueCache;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersionInformation;
-import es.gobcan.istac.indicators.core.domain.LastValue;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -819,6 +816,46 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorUuid);
         return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
+    }
+    
+    @Override
+    public List<TimeValue> retrieveTimeValuesByGranularityInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid, TimeGranularityEnum granularity) throws MetamacException {
+        // Validation
+        InvocationValidator.checkRetrieveTimeValuesByGranularityInIndicatorInstance(indicatorInstanceUuid, granularity, null);
+
+        IndicatorInstance indicatorInstance = getIndicatorInstance(indicatorInstanceUuid);
+        IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indicatorInstance.getIndicator().getUuid());
+        return calculateTimeValuesByGranularityInIndicatorInstance(ctx, granularity, indicatorInstance, indicatorVersion);
+    }
+    
+    private List<TimeValue> calculateTimeValuesByGranularityInIndicatorInstance(ServiceContext ctx, TimeGranularityEnum granularity, IndicatorInstance indicatorInstance, IndicatorVersion indicatorVersion) throws MetamacException {
+        String datasetId = indicatorVersion.getDataRepositoryId();
+        if (datasetId != null) {
+            
+            if (indicatorInstance.getTimeValuesAsList() != null && indicatorInstance.getTimeValuesAsList().size() > 0) {
+                List<TimeValue> timeValuesInIndicatorInstance = new ArrayList<TimeValue>();
+                for (String timeStr : indicatorInstance.getTimeValuesAsList()) {
+                    TimeValue value = TimeVariableUtils.parseTimeValue(timeStr);
+                    if (granularity.equals(value.getGranularity())) {
+                        timeValuesInIndicatorInstance.add(value);
+                    }
+                }
+                
+                TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValuesInIndicatorInstance);
+                
+                return timeValuesInIndicatorInstance;
+            } else if (indicatorInstance.getTimeGranularity() != null) {
+                if (granularity.equals(indicatorInstance.getTimeGranularity())) {
+                    return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
+                } else {
+                    return new ArrayList<TimeValue>();
+                }
+            } else {
+                return calculateTimeValuesByGranularityInIndicatorVersion(ctx, granularity, indicatorVersion);
+            }
+        } else {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
+        }
     }
 
     private List<TimeValue> calculateTimeValuesByGranularityInIndicatorVersion(ServiceContext ctx, TimeGranularityEnum granularity, IndicatorVersion indicatorVersion) throws MetamacException {
