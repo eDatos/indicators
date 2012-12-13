@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
+import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 
@@ -52,6 +53,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
 
     private static final String              INDICATORS_SYSTEM_1       = "IndSys-1";
     private static final String              INDICATORS_SYSTEM_2       = "IndSys-2";
+    private static final String              INDICATORS_SYSTEM_3       = "IndSys-3";
 
     private static final String              INDICATOR1_UUID           = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
@@ -82,6 +84,25 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR5_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
     private static final String              INDICATOR5_VERSION        = "1.000";
 
+    private static final String              INDICATOR6_UUID           = "Indicator-6";
+    private static final String              INDICATOR6_DS1_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR6_DS2_GPE_UUID   = "Indicator-6-v1-DataSource-2-GPE-TIME-GEO";
+    private static final String              INDICATOR6_DS3_GPE_UUID   = "Indicator-6-v1-DataSource-3-GPE-TIME-GEO";
+    private static final String              INDICATOR6_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
+    private static final String              INDICATOR6_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
+    private static final String              INDICATOR6_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
+    private static final String              INDICATOR6_VERSION        = "1.000";
+
+    private static final String              INDICATOR7_UUID           = "Indicator-7";
+    private static final String              INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    private static final String              INDICATOR7_VERSION        = "1.000";
+
+    private static final String              INDICATOR8_UUID           = "Indicator-8";
+    private static final String              INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
+    private static final String              INDICATOR8_VERSION        = "1.000";
+
     @Test
     public void testExportEmptyDescription() throws Exception {
         populateForIndicatorsSystem2();
@@ -89,9 +110,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = null;
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
-        assertNotNull(files);
-        assertTrue(files.size() > 0);
+        List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(datasets);
+        assertTrue(datasets.size() > 0);
     }
 
     @Test
@@ -138,9 +159,34 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
+        List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(datasets);
+        assertEquals(1, datasets.size());
+    }
+
+    @Test
+    public void testExportIndicatorsSystemPublishedSimpleZip() throws Exception {
+        populateForIndicatorsSystem2();
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+
+        List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
         List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(datasets);
         assertNotNull(files);
-        assertTrue(files.size() > 0);
+        assertEquals(1, datasets.size());
+        assertEquals(1, files.size());
+    }
+
+    @Test
+    public void testExportInstancesDifferentQuantities() throws Exception {
+        populateForIndicatorsSystem3();
+        InternationalString title = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
+        InternationalString desc = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
+
+        List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
+        assertNotNull(datasets);
+        assertEquals(3, datasets.size());
     }
 
     @Test
@@ -151,9 +197,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
         InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
-        assertNotNull(files);
-        assertTrue(files.size() > 0);
+        List<DsplDataset> datasets = dsplExporterService.exportIndicatorsSystemPublishedToDspl(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
+        assertNotNull(datasets);
+        assertEquals(4, datasets.size());
         System.out.println(System.currentTimeMillis() - millis);
     }
 
@@ -177,6 +223,20 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
 
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
+    }
+
+    private void populateForIndicatorsSystem3() throws MetamacException {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS1_GPE_UUID))).thenReturn(INDICATOR6_GPE1_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS2_GPE_UUID))).thenReturn(INDICATOR6_GPE2_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS3_GPE_UUID))).thenReturn(INDICATOR6_GPE3_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR7_DS_GPE_UUID))).thenReturn(INDICATOR7_GPE_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR8_DS_GPE_UUID))).thenReturn(INDICATOR8_GPE_JSON_DATA);
+
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR6_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR7_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR8_UUID);
     }
 
     private InternationalString createInternationalString(String label_es, String label_en) {

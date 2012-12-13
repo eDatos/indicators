@@ -275,6 +275,9 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private String buildTitleWithGranularityInLocale(LocalisedString text, TimeGranularity granularity) {
         String granularitySuffix = granularity.getTitle().getLocalisedLabel(text.getLocale());
+        if (granularitySuffix == null) {
+            granularitySuffix = granularity.getGranularity().name().toLowerCase();
+        }
         return text.getLabel() + " (" + granularitySuffix + ")";
     }
 
@@ -556,6 +559,13 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         List<String> timeCodes = getCodesForInstancesTimeValues(ctx, instances, timeGranularity);
         String measureCode = MeasureDimensionTypeEnum.ABSOLUTE.name();
 
+        Map<String, Map<String, ObservationDto>> observationsByInstanceUuid = new HashMap<String, Map<String, ObservationDto>>();
+
+        for (IndicatorInstance instance : instances) {
+            Map<String, ObservationDto> observations = findObservationsForIndicatorInstance(ctx, instance, geoCodes, timeCodes, measureCode);
+            observationsByInstanceUuid.put(instance.getUuid(), observations);
+        }
+
         Set<Row> rows = new HashSet<DsplData.Row>();
         for (String geoCode : geoCodes) {
             for (String timeCode : timeCodes) {
@@ -566,7 +576,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 row.addColumn(getColumnForTime(timeGranularity), dsplTimeCode);
 
                 for (IndicatorInstance instance : instances) {
-                    Map<String, ObservationDto> observations = findObservationForIndicatorInstance(ctx, instance, geoCode, timeCode, measureCode);
+                    Map<String, ObservationDto> observations = observationsByInstanceUuid.get(instance.getUuid());
 
                     String observationKey = DtoUtils.generateUniqueKeyWithCodes(Arrays.asList(geoCode, timeCode, measureCode));
                     ObservationDto obs = observations.get(observationKey);
@@ -613,18 +623,18 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return compatTimeValue.getTimeValue();
     }
 
-    private Map<String, ObservationDto> findObservationForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, String geoCode, String timeCode, String measureCode)
+    private Map<String, ObservationDto> findObservationsForIndicatorInstance(ServiceContext ctx, IndicatorInstance instance, List<String> geoCodes, List<String> timeCodes, String measureCode)
             throws MetamacException {
         List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
 
         ConditionDimensionDto geoCondition = new ConditionDimensionDto();
         geoCondition.setDimensionId(IndicatorsDataServiceImpl.GEO_DIM);
-        geoCondition.setCodesDimension(Arrays.asList(geoCode));
+        geoCondition.setCodesDimension(geoCodes);
         conditions.add(geoCondition);
 
         ConditionDimensionDto timeCondition = new ConditionDimensionDto();
         timeCondition.setDimensionId(IndicatorsDataServiceImpl.TIME_DIM);
-        timeCondition.setCodesDimension(Arrays.asList(timeCode));
+        timeCondition.setCodesDimension(timeCodes);
         conditions.add(timeCondition);
 
         ConditionDimensionDto measureCondition = new ConditionDimensionDto();
@@ -709,17 +719,18 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
             // TODO: referenced quantities seem not to work in data explorer. if a concept can link to other quantities in a near future this code should be uncommented
 
-            // // For numerator and denominator quantities
-            // if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.FRACTION, QuantityTypeEnum.RATIO, QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE,
-            // QuantityTypeEnum.RATE)) {
-            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getNumerator().getUuid(), usedIndicators);
-            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getDenominator().getUuid(), usedIndicators);
-            // }
-            //
-            // // Base quantity
-            // if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE)) {
-            // addReferencedIndicators(ctx, indicatorVersion.getQuantity().getBaseQuantity().getUuid(), usedIndicators);
-            // }
+            /*
+             * // For numerator and denominator quantities
+             * if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.FRACTION, QuantityTypeEnum.RATIO, QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE,
+             * QuantityTypeEnum.RATE)) {
+             * addReferencedIndicators(ctx, indicatorVersion.getQuantity().getNumerator().getUuid(), usedIndicators);
+             * addReferencedIndicators(ctx, indicatorVersion.getQuantity().getDenominator().getUuid(), usedIndicators);
+             * }
+             * // Base quantity
+             * if (isEqualsAny(indicatorVersion.getQuantity().getQuantityType(), QuantityTypeEnum.INDEX, QuantityTypeEnum.CHANGE_RATE)) {
+             * addReferencedIndicators(ctx, indicatorVersion.getQuantity().getBaseQuantity().getUuid(), usedIndicators);
+             * }
+             */
         }
     }
 
@@ -914,34 +925,14 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         }
     }
 
-    // private Set<DsplTopic> getHierarchyTopics(List<ElementLevel> levels) {
-    // Set<DsplTopic> topics = new HashSet<DsplTopic>();
-    // for (ElementLevel level : levels) {
-    // ElementLevel parentLevel = level.getParent();
-    //
-    // if (parentLevel != null && parentLevel.isDimension()) {
-    // Dimension dim = parentLevel.getDimension();
-    // DsplTopic topic = buildTopicFromDimension(dim);
-    //
-    // if (parentLevel.getParent() != null) {
-    // for (DsplTopic childTopic : getHierarchyTopics(Arrays.asList(parentLevel.getParent()))) {
-    // topic.addChildTopic(childTopic);
-    // }
-    // }
-    // topics.add(topic);
-    // }
-    // }
-    // return topics;
-    // }
-
-    public DsplTopic getHierarchyTopics2(ElementLevel level, Set<DsplTopic> foundTopics) {
+    public DsplTopic getHierarchyTopics(ElementLevel level, Set<DsplTopic> foundTopics) {
         if (level.isDimension()) {
             Dimension dim = level.getDimension();
             DsplTopic topic = buildTopicFromDimension(dim);
             foundTopics.add(topic);
 
             if (level.getParent() != null) {
-                DsplTopic parentTopic = getHierarchyTopics2(level.getParent(), foundTopics);
+                DsplTopic parentTopic = getHierarchyTopics(level.getParent(), foundTopics);
                 if (parentTopic != null) {
                     topic.setParentTopic(parentTopic);
                 }
@@ -956,7 +947,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         for (IndicatorInstance instance : instances) {
             ElementLevel parentLevel = instance.getElementLevel().getParent();
             if (parentLevel != null) {
-                getHierarchyTopics2(parentLevel, topics);
+                getHierarchyTopics(parentLevel, topics);
             }
         }
         return topics;
