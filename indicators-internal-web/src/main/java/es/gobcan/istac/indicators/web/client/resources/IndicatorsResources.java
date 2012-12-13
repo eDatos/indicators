@@ -81,4 +81,8 @@ public interface IndicatorsResources extends ClientBundleWithLookup {
     @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/preview.png")
     ImageResource preview();
+
+    @ImageOptions(repeatStyle = RepeatStyle.Both)
+    @Source("images/export.png")
+    ImageResource export();
 }

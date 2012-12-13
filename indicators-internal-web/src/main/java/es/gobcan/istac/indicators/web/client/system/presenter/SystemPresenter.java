@@ -14,7 +14,9 @@ import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -43,6 +45,7 @@ import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
@@ -59,6 +62,8 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteDimensionResult;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceResult;
+import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplAction;
+import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplResult;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesInIndicatorAction;
@@ -93,6 +98,7 @@ import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionVali
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationResult;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToProductionValidationResult;
+import es.gobcan.istac.indicators.web.shared.SharedTokens;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionAction;
 import es.gobcan.istac.indicators.web.shared.UpdateDimensionResult;
 import es.gobcan.istac.indicators.web.shared.UpdateIndicatorInstanceAction;
@@ -646,6 +652,29 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
             @Override
             public void onWaitSuccess(GetIndicatorInstancePreviewUrlResult result) {
                 Window.open(result.getUrl(), "_blank", "");
+            }
+        });
+    }
+
+    @Override
+    public void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto) {
+        dispatcher.execute(new ExportSystemInDsplAction(indicatorsSystemDto.getUuid(), indicatorsSystemDto.getTitle()), new AsyncCallback<ExportSystemInDsplResult>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorExportingSystemsInDspl()), MessageTypeEnum.ERROR);
+            }
+            @Override
+            public void onSuccess(ExportSystemInDsplResult result) {
+                // TODO this works?
+                if (result.getFiles() != null) {
+                    for (String file : result.getFiles()) {
+                        StringBuffer url = new StringBuffer();
+                        url.append(URL.encode(IndicatorsWeb.getRelativeURL(SharedTokens.FILE_DOWNLOAD_DIR_PATH)));
+                        url.append("?").append(URL.encode(SharedTokens.PARAM_FILE_NAME)).append("=").append(URL.encode(file));
+                        Window.open(url.toString(), "_blank", "");
+                    }
+                }
             }
         });
     }

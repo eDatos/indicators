@@ -115,6 +115,15 @@ public class SystemGeneralPanel extends VLayout {
             }
         });
 
+        // Export in Dspl
+        mainFormLayout.getExportDspl().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDto);
+            }
+        });
+
         createViewForm();
         this.addMember(mainFormLayout);
 

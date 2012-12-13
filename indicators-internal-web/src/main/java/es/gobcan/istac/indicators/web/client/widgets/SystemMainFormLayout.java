@@ -5,6 +5,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.resources.IndicatorsResources;
@@ -18,6 +19,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
     private PublishToolStripButton         publish;
     private PublishToolStripButton         archive;
     private PublishToolStripButton         versioning;
+    private ToolStripButton                exportDspl;
 
     private IndicatorsSystemProcStatusEnum status;
 
@@ -30,6 +32,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         archive = new PublishToolStripButton(getConstants().indicatorArchive(), IndicatorsResources.RESOURCE.archive().getURL());
         rejectValidation = new PublishToolStripButton(getConstants().indicatorRejectValidation(), IndicatorsResources.RESOURCE.reject().getURL());
         versioning = new PublishToolStripButton(getConstants().systemVersioning(), IndicatorsResources.RESOURCE.version().getURL());
+        exportDspl = new ToolStripButton(getConstants().systemExportDspl(), IndicatorsResources.RESOURCE.export().getURL());
 
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
@@ -37,6 +40,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         toolStrip.addButton(archive);
         toolStrip.addButton(rejectValidation);
         toolStrip.addButton(versioning);
+        toolStrip.addButton(exportDspl);
     }
 
     public void updatePublishSection(IndicatorsSystemProcStatusEnum status) {
@@ -60,8 +64,10 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         } else if (IndicatorsSystemProcStatusEnum.PUBLISHED.equals(status)) {
             showArchiveButton();
             showVersioningButton();
+            showExportDsplButton();
         } else if (IndicatorsSystemProcStatusEnum.ARCHIVED.equals(status)) {
             showVersioningButton();
+            showExportDsplButton();
         }
     }
 
@@ -99,6 +105,10 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         return versioning;
     }
 
+    public HasClickHandlers getExportDspl() {
+        return exportDspl;
+    }
+
     private void hideAllPublishButtons() {
         productionValidation.hide();
         diffusionValidation.hide();
@@ -106,6 +116,7 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         publish.hide();
         archive.hide();
         versioning.hide();
+        exportDspl.hide();
     }
 
     private void showProductionValidationButton() {
@@ -148,6 +159,10 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
         if (ClientSecurityUtils.canVersioningIndicatorsSystem(indicatorsSystemCode)) {
             versioning.show();
         }
+    }
+
+    private void showExportDsplButton() {
+        exportDspl.show();
     }
 
 }

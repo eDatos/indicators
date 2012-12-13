@@ -39,6 +39,8 @@ public interface SystemUiHandler extends UiHandlers {
 
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);
 
+    void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto);
+
     // void populateIndicatorData(String uuid, String version);
 
     void previewData(String instanceCode, String systemCode);
