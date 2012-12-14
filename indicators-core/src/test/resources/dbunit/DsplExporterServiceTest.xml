@@ -27,7 +27,7 @@
     <!-- ************************************************************************************ -->
     <TB_LIS_QUANTITIES_UNITS 
         ID="1" 
-        UUID="1"
+        UUID="unit-1"
         SYMBOL="km"
         SYMBOL_POSITION="END" 
         TITLE_FK="5"
@@ -35,7 +35,7 @@
     
     <TB_LIS_QUANTITIES_UNITS 
         ID="2" 
-        UUID="2"
+        UUID="unit-2"
         SYMBOL="m"
         SYMBOL_POSITION="END" 
         TITLE_FK="43"
@@ -43,7 +43,7 @@
     
     <TB_LIS_QUANTITIES_UNITS 
         ID="3" 
-        UUID="3"
+        UUID="unit-3"
         SYMBOL="£"
         SYMBOL_POSITION="START" 
         TITLE_FK="44"
@@ -56,14 +56,14 @@
         ID="1"
         UNIT_MULTIPLIER="1"
         TITLE_FK="41"
-        UUID="1"
+        UUID="unit-mult-1"
     />
     
     <TB_LIS_UNITS_MULTIPLIERS
         ID="2"
         UNIT_MULTIPLIER="10"
         TITLE_FK="42"
-        UUID="2"
+        UUID="unit-mult-2"
     />
   
     <!-- ************************************************************************************ -->

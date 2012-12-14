@@ -2,16 +2,18 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -23,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
-import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
+import es.gobcan.istac.indicators.core.dspl.DsplDataset;
+import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 
 /**
  * Spring based transactional test with DbUnit support.
@@ -33,10 +37,13 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
-public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
+public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
+
+    @Autowired
+    private IndicatorsSystemsService         indicatorsSystemsService;
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
@@ -48,7 +55,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private IndicatorsDataService            indicatorsDataService;
 
     @Autowired
-    protected DsplExporterService            dsplExporterService;
+    private ConfigurationService             configurationService;
+
+    private DsplTransformer                  dsplTransformer;
 
     private static final String              INDICATORS_SYSTEM_1       = "IndSys-1";
     private static final String              INDICATORS_SYSTEM_2       = "IndSys-2";
@@ -102,63 +111,18 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
     private static final String              INDICATOR8_VERSION        = "1.000";
 
-    @Test
-    public void testExportEmptyDescription() throws Exception {
-        populateForIndicatorsSystem2();
-
-        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-        InternationalString desc = null;
-
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
-        assertNotNull(files);
-        assertTrue(files.size() > 0);
+    @Before
+    public void createTransformer() {
+        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
     }
 
     @Test
-    public void testExportEmptyTitle() throws Exception {
-        populateForIndicatorsSystem2();
-
-        InternationalString title = null;
-        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-        try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
-            fail("Should not allow empty title");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.DSPL_DATASET_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testExportEmptySystemUuid() throws Exception {
-        populateForIndicatorsSystem2();
+    public void testTransformNotPopulatedInstances() throws Exception {
 
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), null, title, desc);
-            fail("Should not allow empty indicators system uuid");
-        } catch (MetamacException e) {
-            assertNotNull(e.getExceptionItems());
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
-    }
-
-    @Test
-    public void testExportNotPopulatedInstances() throws Exception {
-
-        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
-        try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+            dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
             fail("Should not allow exports with not populated instances");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -176,9 +140,35 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
-        assertNotNull(files);
-        assertEquals(1, files.size());
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        assertNotNull(datasets);
+        assertEquals(1, datasets.size());
+
+        DsplDataset dataset = datasets.get(0);
+
+        // Topics
+        assertNotNull(dataset.getTopics());
+        assertEquals(0, dataset.getTopics().size());
+
+        // Concepts
+        assertNotNull(dataset.getConcepts());
+        assertEquals(3, dataset.getConcepts().size());
+        assertNotNull(findNode(getGeoConceptId("countries"), dataset.getConcepts()));
+        assertNotNull(findNode(getUnitConceptId("unit-2"), dataset.getConcepts()));
+        assertNotNull(findNode(getIndicatorConceptId(INDICATOR2_UUID), dataset.getConcepts()));
+
+        // Slices
+        assertNotNull(dataset.getSlices());
+        assertEquals(1, dataset.getSlices().size());
+        assertNotNull(findNode(getSliceId("countries", "monthly"), dataset.getSlices()));
+
+        // Tables
+        assertNotNull(dataset.getTables());
+        assertEquals(3, dataset.getTables().size());
+        assertNotNull(findNode(getGeoTableId("countries"), dataset.getTables()));
+        assertNotNull(findNode(getUnitTableId("unit-2"), dataset.getTables()));
+        assertNotNull(findNode(getSliceTableId("countries", "monthly"), dataset.getTables()));
+
     }
 
     @Test
@@ -187,9 +177,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
         InternationalString desc = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
-        assertNotNull(files);
-        assertEquals(3, files.size());
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
+        assertNotNull(datasets);
+        assertEquals(3, datasets.size());
     }
 
     @Test
@@ -199,9 +189,9 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
         InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
-        assertNotNull(files);
-        assertEquals(4, files.size());
+        List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
+        assertNotNull(datasets);
+        assertEquals(4, datasets.size());
     }
 
     private void populateForIndicatorsSystem1() throws MetamacException {
@@ -255,6 +245,43 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         intStr.addText(localisedEN);
 
         return intStr;
+    }
+
+    private <T extends DsplNode> T findNode(String id, Collection<T> nodes) {
+        for (T node : nodes) {
+            if (node.getId().equals(id)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    private String getGeoConceptId(String geoGranularity) {
+        return "geo_" + geoGranularity;
+    }
+
+    private String getUnitConceptId(String unitUuid) {
+        return "unit_" + unitUuid;
+    }
+
+    private String getIndicatorConceptId(String indicatorUuid) {
+        return indicatorUuid;
+    }
+
+    private String getSliceId(String geoGranularity, String timeGranularity) {
+        return "slice_" + geoGranularity + "_" + timeGranularity;
+    }
+
+    private String getGeoTableId(String geoGranularity) {
+        return getGeoConceptId(geoGranularity) + "_table";
+    }
+
+    private String getUnitTableId(String unit_uuid) {
+        return getUnitConceptId(unit_uuid) + "_table";
+    }
+
+    private String getSliceTableId(String geoGranularity, String timeGranularity) {
+        return getSliceId(geoGranularity, timeGranularity) + "_table";
     }
 
     @Override

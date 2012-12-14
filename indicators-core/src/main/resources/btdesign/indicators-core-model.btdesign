@@ -287,7 +287,6 @@ Application Indicators {
     		> @IndicatorsService
     		
     		"Export Indicators System as a DSPL zip file"
-		    List<DsplDataset> exportIndicatorsSystemPublishedToDspl(String indicatorsSystemUuid, @InternationalString title, @InternationalString description) throws MetamacException;
 		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description) throws MetamacException;
     	}
 			    

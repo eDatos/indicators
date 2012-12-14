@@ -6,6 +6,7 @@ import java.util.List;
 
 public class DsplDataset {
 
+    private String            id;
     private DsplInfo          datasetInfo;
     private DsplInfo          providerInfo;
 
@@ -14,7 +15,8 @@ public class DsplDataset {
     private List<DsplSlice>   slices;
     private List<DsplTable>   tables;
 
-    public DsplDataset(DsplInfo dsInfo, DsplInfo providerInfo) {
+    public DsplDataset(String id, DsplInfo dsInfo, DsplInfo providerInfo) {
+        this.id = id;
         this.datasetInfo = dsInfo;
         this.providerInfo = providerInfo;
 
@@ -22,6 +24,10 @@ public class DsplDataset {
         this.concepts = new ArrayList<DsplConcept>();
         this.slices = new ArrayList<DsplSlice>();
         this.tables = new ArrayList<DsplTable>();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void addTopics(Collection<DsplTopic> topics) {
