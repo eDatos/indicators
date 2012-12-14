@@ -1,20 +1,22 @@
+[#ftl]
+[#include "/inc/includes.ftl"]
 <!DOCTYPE html>
 <html>
 <head>
     <title>Swagger UI</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
-    <link href='css/hightlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-    <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='lib/handlebars-1.0.rc.1.js' type='text/javascript'></script>
-    <script src='lib/underscore-min.js' type='text/javascript'></script>
-    <script src='lib/backbone-min.js' type='text/javascript'></script>
-    <script src='lib/swagger.js' type='text/javascript'></script>
-    <script src='swagger-ui.js' type='text/javascript'></script>
-    <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+    <link href='[@spring.url "/apidocs/css/hightlight.default.css"/]' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='[@spring.url "/apidocs/css/screen.css"/]' media='screen' rel='stylesheet' type='text/css'/>
+    <script src='[@spring.url "/apidocs/lib/jquery-1.8.0.min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/jquery.slideto.min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/jquery.wiggle.min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/jquery.ba-bbq.min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/handlebars-1.0.rc.1.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/underscore-min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/backbone-min.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/swagger.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/swagger-ui.js"/]' type='text/javascript'></script>
+    <script src='[@spring.url "/apidocs/lib/highlight.7.3.pack.js"/]' type='text/javascript'></script>
 
     <style type="text/css">
         .swagger-ui-wrap {
@@ -45,7 +47,7 @@
     <script type="text/javascript">
         $(function () {
             window.swaggerUi = new SwaggerUi({
-                discoveryUrl:"http://localhost:8081/api-docs/api-docs.json",
+                discoveryUrl:"${appBaseUrl}/apidocs/apis",
                 apiKey:"special-key",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: false,

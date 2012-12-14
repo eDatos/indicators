@@ -1,7 +1,7 @@
 {
     "apiVersion" : "1.0",
     "swaggerVersion" : "1.1",
-    "basePath" : "http://localhost:8081/api/indicators/v1.0",
+    "basePath" : "${appBaseUrl}/api/indicators/v1.0",
     "resourcePath" : "",
     "apis" : [
         {
@@ -365,7 +365,7 @@
         "InternationalString" : {
             "id" : "InternationalString",
             "properties" : {
-                "${locale}" : {
+                "{locale}" : {
                     "type" : "string"
                 },
                 "__default__" : {
@@ -663,7 +663,7 @@
                 "UNIT_MEAS_DETAIL" : {
                     "type" : "Attribute"
                 },
-                "${attribute}" : {
+                "{attribute}" : {
                     "type" : "Attribute"
                 }
             }
@@ -719,7 +719,7 @@
         "DataDimensionMap" : {
             "id" : "DataDimensionMap",
             "properties" : {
-                "${dimension}" : {
+                "{dimension}" : {
                     "type" : "DataDimension"
                 }
             }
@@ -746,7 +746,7 @@
         "DataDimensionRepresentationIndexMap" : {
             "id" : "DataDimensionRepresentationIndexMap",
             "properties" : {
-                "${category}" : {
+                "{category}" : {
                     "type" : "int"
                 }
             }
@@ -754,7 +754,7 @@
         "DataAttributeMap" : {
             "id" : "DataAttributeMap",
             "properties" : {
-                "${attribute}" : {
+                "{attribute}" : {
                     "type" : "DataAttribute"
                 }
             }
