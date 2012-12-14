@@ -1,18 +1,20 @@
 package es.gobcan.istac.indicators.web.diffusion.apidoc;
 
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 @Controller
 public class ApiDocController {
@@ -55,7 +57,7 @@ public class ApiDocController {
 
     public String getServerUrlWithContextPath(HttpServletRequest request) {
         String url = request.getRequestURL().toString();
-        return url.substring(0, url.length() - request.getRequestURI().length());
+        return url.substring(0, url.length() - request.getPathInfo().length());
     }
 
 }
