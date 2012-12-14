@@ -27,7 +27,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
-import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +66,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.dspl.DsplTopic;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import freemarker.template.Configuration;
@@ -107,44 +107,48 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         // Validator
         InvocationValidator.checkExportIndicatorsSystemPublishedToDspl(indicatorsSystemUuid, title, description, null);
 
-        IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
-        List<ElementLevel> structure = getIndicatorsSystemsService().retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
-                indicatorsSystemVersion.getVersionNumber());
+        try {
+            IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
+            List<ElementLevel> structure = getIndicatorsSystemsService().retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
+                    indicatorsSystemVersion.getVersionNumber());
 
-        List<IndicatorInstance> instances = filterIndicatorsInstances(structure);
+            List<IndicatorInstance> instances = filterIndicatorsInstances(structure);
 
-        // organize by time granularity
-        Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = organizeIndicatorsInstancesByTimeGranularity(ctx, instances);
+            // organize by time granularity
+            Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = organizeIndicatorsInstancesByTimeGranularity(ctx, instances);
 
-        List<DsplDataset> datasets = new ArrayList<DsplDataset>();
-        for (TimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
-            List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
+            List<DsplDataset> datasets = new ArrayList<DsplDataset>();
+            for (TimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
+                List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
 
-            // topics
-            Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
+                // topics
+                Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
 
-            // concepts
-            List<DsplConcept> concepts = new ArrayList<DsplConcept>();
-            concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
-            List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
-            concepts.addAll(metrics);
+                // concepts
+                List<DsplConcept> concepts = new ArrayList<DsplConcept>();
+                concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
+                List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
+                concepts.addAll(metrics);
 
-            // slides
-            Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
+                // slides
+                Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
 
-            if (slices.size() > 0) {
-                DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
-                DsplInfo providerInfo = buildProviderInfo();
-                DsplDataset dataset = new DsplDataset(datasetInfo, providerInfo);
+                if (slices.size() > 0) {
+                    DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
+                    DsplInfo providerInfo = buildProviderInfo();
+                    DsplDataset dataset = new DsplDataset(datasetInfo, providerInfo);
 
-                dataset.addConcepts(concepts);
-                dataset.addTopics(topics);
-                dataset.addSlices(slices);
+                    dataset.addConcepts(concepts);
+                    dataset.addTopics(topics);
+                    dataset.addSlices(slices);
 
-                datasets.add(dataset);
+                    datasets.add(dataset);
+                }
             }
+            return datasets;
+        } catch (MetamacException e) {
+            throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
         }
-        return datasets;
     }
 
     @Override
@@ -172,8 +176,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
                 datasetArchives.add(zipFilename);
             }
         } catch (Exception e) {
-            // TODO: improve this exception
-            throw new MetamacException(e, CommonServiceExceptionType.UNKNOWN);
+            throw new MetamacException(e, ServiceExceptionType.DSPL_FILES_CREATE_ERROR, indicatorsSystemUuid);
         }
         return datasetArchives;
     }
@@ -850,14 +853,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return instancesByIndicator;
     }
 
-    private String getIdForSlice(GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) {
-        return "slice_" + geoGranularity.getCode().toLowerCase() + "_" + timeGranularity.name().toLowerCase();
-    }
-
-    private String getIdForGeoConcept(GeographicalGranularity geoGranularity) {
-        return GEO_CONCEPT_PREFIX + geoGranularity.getCode().toLowerCase();
-    }
-
     private String getIdForTimeConcept(TimeGranularityEnum timeGranularity) {
         switch (timeGranularity) {
             case YEARLY:
@@ -897,6 +892,14 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         return new TextColumn(getIdForGeoConcept(geoGranularity));
     }
 
+    private String getIdForSlice(GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) {
+        return "slice_" + geoGranularity.getCode().toLowerCase() + "_" + timeGranularity.name().toLowerCase();
+    }
+
+    private String getIdForGeoConcept(GeographicalGranularity geoGranularity) {
+        return GEO_CONCEPT_PREFIX + geoGranularity.getCode().toLowerCase();
+    }
+
     private String getTableIdForSlice(String idSlice) {
         return idSlice + "_table";
     }
@@ -915,6 +918,18 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private String getTableIdForGeoConcept(GeographicalGranularity granularity) {
         return "concept_" + granularity.getCode().toLowerCase() + "_table";
+    }
+
+    private String getProviderName() {
+        return configurationService.getProperty(PROP_PROVIDER_NAME);
+    }
+
+    private String getProviderDescription() {
+        return configurationService.getProperty(PROP_PROVIDER_DESCRIPTION);
+    }
+
+    private String getProviderUrl() {
+        return configurationService.getProperty(PROP_PROVIDER_URL);
     }
 
     private void populateDsplLocalisedTextForInternString(DsplLocalisedValue localisedText, InternationalString intStr) {
@@ -993,18 +1008,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
             }
         }
         return filename;
-    }
-
-    private String getProviderName() {
-        return configurationService.getProperty(PROP_PROVIDER_NAME);
-    }
-
-    private String getProviderDescription() {
-        return configurationService.getProperty(PROP_PROVIDER_DESCRIPTION);
-    }
-
-    private String getProviderUrl() {
-        return configurationService.getProperty(PROP_PROVIDER_URL);
     }
 
     private Template getTemplateFreemarker(String templateName) throws Exception {
