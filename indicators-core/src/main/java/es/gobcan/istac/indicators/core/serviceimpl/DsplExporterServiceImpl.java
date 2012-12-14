@@ -48,7 +48,6 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
         // Validator
         InvocationValidator.checkExportIndicatorsSystemPublishedToDsplFiles(indicatorsSystemUuid, title, description, null);
 
-        // List<DsplDataset> datasets = exportIndicatorsSystemPublishedToDspl(ctx, indicatorsSystemUuid, title, description);
         DsplTransformer transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
 
