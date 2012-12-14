@@ -191,7 +191,7 @@ public class DsplTransformer {
     }
 
     private String buildDatasetId(IndicatorsSystemVersion indicatorsSystemVersion, TimeGranularityEnum timeGranularity) {
-        return indicatorsSystemVersion.getIndicatorsSystem().getUuid() + "_" + timeGranularity.name().toLowerCase();
+        return indicatorsSystemVersion.getIndicatorsSystem().getCode() + "_" + timeGranularity.name().toLowerCase();
     }
 
     private List<IndicatorInstance> filterIndicatorsInstances(List<ElementLevel> structure) {
