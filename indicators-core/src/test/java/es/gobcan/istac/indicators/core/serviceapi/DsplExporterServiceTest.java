@@ -154,6 +154,24 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     }
 
     @Test
+    public void testExportNotPopulatedInstances() throws Exception {
+
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        try {
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+            fail("Should not allow exports with not populated instances");
+        } catch (MetamacException e) {
+            assertNotNull(e.getExceptionItems());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNotNull(e.getExceptionItems().get(0).getMessageParameters());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(INDICATORS_SYSTEM_2, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testExportIndicatorsSystemPublishedSimple() throws Exception {
         populateForIndicatorsSystem2();
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
