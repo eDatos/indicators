@@ -134,8 +134,9 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
         TransferImgButton rightImg = new TransferImgButton(TransferImgButton.RIGHT);
         rightImg.addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
-                Record[] records = sourceList.getRecords();
+                Record[] records = sourceList.getSelectedRecords();
                 for (Record record : records) {
                     addNonDuplicatedRecordToTarget(record);
                 }
@@ -145,6 +146,7 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
         TransferImgButton rightAll = new TransferImgButton(TransferImgButton.RIGHT_ALL);
         rightAll.addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 Record[] records = sourceList.getRecords();
                 for (Record record : records) {
@@ -223,5 +225,4 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
             targetList.addData(record);
         }
     }
-
 }
