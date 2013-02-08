@@ -106,13 +106,13 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
-    
+
     public IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory source, final String baseURL) {
         IndicatorsSystemHistoryType target = new IndicatorsSystemHistoryType();
         target.setIndicatorSystemId(source.getIndicatorsSystem().getUuid());
         target.setVersion(source.getVersionNumber());
         target.setPublicationDate(source.getPublicationDate().toDate());
-        
+
         return target;
     }
 
@@ -212,7 +212,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues) {
         List<GeographicalValueType> result = new ArrayList<GeographicalValueType>();
 
-        for(GeographicalValue geographicalValue : geographicalValues) {
+        for (GeographicalValue geographicalValue : geographicalValues) {
             GeographicalValueType type = new GeographicalValueType();
             type.setCode(geographicalValue.getCode());
             type.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
@@ -394,7 +394,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
                 AttributeType unitMeasureSymbolAttribute = new AttributeType();
                 unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
-                unitMeasureSymbolAttribute.setValue(MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol()));
+
+                Map<String, String> unitMeasure;
+                if (quantity.getUnit().getSymbol() == null) {
+                    unitMeasure = MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol());
+                } else {
+                    unitMeasure = MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle());
+                }
+                unitMeasureSymbolAttribute.setValue(unitMeasure);
                 observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
 
                 if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) ||
