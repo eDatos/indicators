@@ -15,6 +15,8 @@ import org.siemac.metamac.web.common.shared.GetNavigationBarUrlAction;
 import org.siemac.metamac.web.common.shared.GetNavigationBarUrlResult;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.gwtplatform.mvp.client.DelayedBindRegistry;
@@ -149,10 +151,32 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     }
 
     private void loadApplication() {
+        setUncaughtExceptionHandler();
         LoginAuthenticatedEvent.fire(ginjector.getEventBus(), IndicatorsWeb.principal);
         // This is required for GWT-Platform proxy's generator.
         DelayedBindRegistry.bind(ginjector);
         ginjector.getPlaceManager().revealCurrentPlace();
+    }
+
+    public void setUncaughtExceptionHandler() {
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+            @Override
+            public void onUncaughtException(Throwable e) {
+                Throwable unwrapped = unwrap(e);
+                logger.log(Level.SEVERE, unwrapped.toString(), e);
+            }
+        });
+    }
+
+    public Throwable unwrap(Throwable e) {
+        if (e instanceof UmbrellaException) {
+            UmbrellaException ue = (UmbrellaException) e;
+            if (ue.getCauses().size() == 1) {
+                return unwrap(ue.getCauses().iterator().next());
+            }
+        }
+        return e;
     }
 
     public void displayLoginView() {
