@@ -23,7 +23,7 @@
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
                     values = _.map(values, function (value) { // The library needs explicit null to draw a gap
-                        return value === null ? "null" : value;
+                        return value === undefined ? "null" : value;
                     });
                     values.push("null"); //Extra null to improve visibility of last element
 
@@ -75,6 +75,7 @@
                         height : this.options.sparklineHeight + "px",
                         lineColor : this.options.headerColor,
                         fillColor : this.options.sparklineFillColor,
+                        highlightLineColor: null,
                         spotRadius : 0
                     };
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
