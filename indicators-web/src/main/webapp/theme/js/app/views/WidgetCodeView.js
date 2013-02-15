@@ -34,7 +34,8 @@
                 script : url + '/theme/js/widgets/widget.min.all.js',
                 code : JSON.stringify(code, null, 8),
                 parameters : parameters,
-                uwaParameters : uwaParameters
+                uwaParameters : uwaParameters,
+                context : apiBaseUrl
             };
 
             this.$el.html(this.template(templateContext));
