@@ -81,8 +81,6 @@
         },
 
         chartColors : function (chartData) {
-            var seriesLength = chartData.tooltips.length;
-
             var result = {
                 serie0 : {
                     color : "#4F81BD"

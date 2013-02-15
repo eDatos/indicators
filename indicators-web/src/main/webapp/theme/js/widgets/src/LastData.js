@@ -16,13 +16,16 @@
         {},
         Istac.widget.Base.prototype,
         {
-
             parseDataset : function (dataset) {
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
+                    values = _.map(values, function (value) { // The library needs explicit null to draw a gap
+                        return value === null ? "null" : value;
+                    });
+                    values.push("null"); //Extra null to improve visibility of last element
 
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
                     var unit = dataset.getUnit(geographicalValue, lastTimeValue, measure);
@@ -39,9 +42,14 @@
                 }, this);
 
                 var temporalLabel = dataset.getTimeValuesTitles(this.locale)[lastTimeValue];
+
+                var jaxiUrl = this.options.groupType === 'system' ?
+                    this.jaxiUrl + '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem + '&accion=html' :
+                    this.jaxiUrl + '/tabla.do?indicador=' + dataset.request.id + '&accion=html';
+
                 return {
                     title : dataset.getTitle(this.locale),
-                    jaxiUrl : this.jaxiUrl + '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem + '&accion=html',
+                    jaxiUrl : jaxiUrl,
                     temporalLabel : temporalLabel,
                     observations : observations,
                     description : dataset.getDescription(this.locale)
