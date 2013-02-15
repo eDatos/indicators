@@ -81,16 +81,20 @@
             if (this.data.observation) {
                 var index = this.getObservationIndex(geo, time, measure);
                 var observation = this.data.observation[index];
-                var res;
-                if (observation) {
-                    res = observation;
-                    // No need to be fixed anymore, the api return the correct value
-                    //res = parseFloat(observation).toFixed(decimalPlaces);
-
-                    res = res.replace("\.", ",");
-                    res = Istac.widget.helper.addThousandSeparator(res);
-                } else {
-                    res = "-";
+                var attributes = this.data.attribute[index];
+                
+                var res = null;
+                if (attributes) {
+	                if (observation) {
+	                    res = observation;
+	                    // No need to be fixed anymore, the api return the correct value
+	                    //res = parseFloat(observation).toFixed(decimalPlaces);
+	
+	                    res = res.replace("\.", ",");
+	                    res = Istac.widget.helper.addThousandSeparator(res);
+	                } else {
+	                    res = "-";
+	                }
                 }
                 return res;
             }
@@ -125,12 +129,18 @@
         },
 
         getTimeValues : function () {
-            var timeValues;
-            if (this.data.dimension) {
-                timeValues = Istac.widget.helper.getKeys(this.data.dimension.TIME.representation.index);
-                return timeValues.sort();
+            var timeValues = [];
+            if (this.data.dimension.TIME.representation.index) {
+            	timeValues = _.chain(this.data.dimension.TIME.representation.index)
+	            	.map(function (value, key) {
+	            		return {key : key, value : value};
+	            	}).sortBy(function (dimension) {
+	            		return dimension.value;
+	            	}).map(function (dimension) {
+	            		return dimension.key;
+	            	}).value().reverse();            
             }
-            return [];
+            return timeValues;
         },
 
         getTimeValuesTitles : function (locale) {
