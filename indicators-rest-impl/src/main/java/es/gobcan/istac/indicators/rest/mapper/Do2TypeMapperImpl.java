@@ -10,6 +10,7 @@ import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
@@ -41,6 +42,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private static String REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
     private static ThreadLocal<Map<String, Map<String, Object>>> requestCache = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
+        @Override
         protected java.util.Map<String, Map<String, Object>> initialValue() {
             return new HashMap<String, Map<String, Object>>();
         }
@@ -107,6 +109,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
+    @Override
     public IndicatorsSystemHistoryType indicatorsSystemHistoryDoToType(final IndicatorsSystemHistory source, final String baseURL) {
         IndicatorsSystemHistoryType target = new IndicatorsSystemHistoryType();
         target.setIndicatorSystemId(source.getIndicatorsSystem().getUuid());
@@ -327,7 +330,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         // ATTRIBUTES
                         Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
                         setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationDto, observationAttributes);
-                        attributes.add(observationAttributes);
+                        if (!observationAttributes.isEmpty()) {
+                            attributes.add(observationAttributes);
+                        } else {
+                            attributes.add(null);
+                        }
                     }
                 }
             }
@@ -387,32 +394,36 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
 
             if (quantity != null) {
-                AttributeType unitAttribute = new AttributeType();
-                unitAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL);
-                unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
-                observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
+                if (quantity.getUnit() != null) {
+                    AttributeType unitAttribute = new AttributeType();
+                    unitAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL);
+                    unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
+                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
 
-                AttributeType unitMeasureSymbolAttribute = new AttributeType();
-                unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
-
-                Map<String, String> unitMeasure;
-                if (quantity.getUnit().getSymbol() == null) {
-                    unitMeasure = MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol());
-                } else {
-                    unitMeasure = MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle());
+                    AttributeType unitMeasureSymbolAttribute = new AttributeType();
+                    unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
+                    Map<String, String> unitMeasure;
+                    if (quantity.getUnit().getSymbol() != null) {
+                        unitMeasure = MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol());
+                    } else {
+                        unitMeasure = MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle());
+                    }
+                    unitMeasureSymbolAttribute.setValue(unitMeasure);
+                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
                 }
-                unitMeasureSymbolAttribute.setValue(unitMeasure);
-                observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
 
                 if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) ||
                         MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
                         MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
-                    UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
-
-                    AttributeType unitMultiplierAttribute = new AttributeType();
-                    unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_UNIT_MULT);
-                    unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
-                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);
+                    
+                    if (quantity.getUnitMultiplier() != null) {
+                        UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
+    
+                        AttributeType unitMultiplierAttribute = new AttributeType();
+                        unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_UNIT_MULT);
+                        unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
+                        observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);
+                    }
                 }
             }
         }
@@ -699,7 +710,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
 
-            _indicatorsInstanceDoToType(source, indicatorVersion, (IndicatorInstanceBaseType) target, baseURL);
+            _indicatorsInstanceDoToType(source, indicatorVersion, target, baseURL);
 
             IndicatorsSystem indicatorsSystem = source.getElementLevel().getIndicatorsSystemVersion().getIndicatorsSystem();
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
