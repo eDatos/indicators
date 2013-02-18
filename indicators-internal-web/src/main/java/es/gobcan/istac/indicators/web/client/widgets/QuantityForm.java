@@ -6,6 +6,7 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
@@ -254,7 +255,7 @@ public class QuantityForm extends BaseQuantityForm {
         super.setQuantityUnits(units);
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityUnitDto unit : units) {
-            valueMap.put(unit.getUuid(), unit.getSymbol());
+            valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
         }
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }

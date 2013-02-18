@@ -132,7 +132,17 @@ public class TimeVariableUtils extends TimeUtils {
 
             @Override
             public int compare(TimeValue o1, TimeValue o2) {
-                return compareToMostRecentFirstHighestGranularityMostRecent(o1, o2);
+                return compareToHighestGranularityFirst(o1, o2);
+            }
+        });
+    }
+    
+    public static void sortTimeValuesMostRecentFirstLastValue(List<TimeValue> values) {
+        Collections.sort(values, new Comparator<TimeValue>() {
+            
+            @Override
+            public int compare(TimeValue o1, TimeValue o2) {
+                return compareToLowestGranularityFirst(o1, o2);
             }
         });
     }
@@ -142,7 +152,7 @@ public class TimeVariableUtils extends TimeUtils {
 
             @Override
             public int compare(TimeValue o1, TimeValue o2) {
-                return compareToMostRecentFirstLowestGranularityMostRecent(o1, o2);
+                return compareToLowestGranularityFirst(o1, o2);
             }
         });
     }
@@ -152,7 +162,7 @@ public class TimeVariableUtils extends TimeUtils {
      * 
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
-    private static int compareToMostRecentFirstLowestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
+    private static int compareToLowestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
         Date date1 = timeValueToLastPossibleDate(timeValue1);
         Date date2 = timeValueToLastPossibleDate(timeValue2);
         if (date1.after(date2)) {
@@ -175,7 +185,7 @@ public class TimeVariableUtils extends TimeUtils {
      * 
      * @return 0 if are equals; a value less than 0 if this timeValue1 is less than timeValue2; a value greater than 0 if this timeValue1 is less than timeValue2
      */
-    private static int compareToMostRecentFirstHighestGranularityMostRecent(TimeValue timeValue1, TimeValue timeValue2) {
+    private static int compareToHighestGranularityFirst(TimeValue timeValue1, TimeValue timeValue2) {
         Date date1 = timeValueToLastPossibleDate(timeValue1);
         Date date2 = timeValueToLastPossibleDate(timeValue2);
         if (date1.after(date2)) {
@@ -201,7 +211,7 @@ public class TimeVariableUtils extends TimeUtils {
     public static int compareToMostRecentFirstLowestGranularityMostRecent(String value1, String value2) throws MetamacException {
         TimeValue timeValue1 = parseTimeValue(value1);
         TimeValue timeValue2 = parseTimeValue(value2);
-        return compareToMostRecentFirstLowestGranularityMostRecent(timeValue1, timeValue2);
+        return compareToLowestGranularityFirst(timeValue1, timeValue2);
     }
 
     /**

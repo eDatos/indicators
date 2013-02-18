@@ -51,7 +51,6 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
-import es.gobcan.istac.indicators.core.dto.IndicatorsSystemHistoryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;

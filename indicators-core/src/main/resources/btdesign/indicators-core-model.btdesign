@@ -243,12 +243,20 @@ Application Indicators {
 	    	//Data finders
 	    	"Find Published Indicator's Observations by dimensions"
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Last version Indicator's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorLastVersion(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	"Find Published Indicator's Extended Observations by dimensions"
 	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Last version Indicator's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorLastVersion(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	"Find Published Indicator Instance's Observations by dimensions"
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Last version Indicator Instance's Observations by dimensions"
+	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorInstanceLastVersion(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	"Find Published Indicator Instance's Extended Observations by dimensions"
 	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
+	    	"Find Last version Indicator Instance's Extended Observations by dimensions"
+	    	Map<String,ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceLastVersion(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
 	    	
 	    	//Find indicators/indicatorInstance based on code dimensions
 	    	List<@IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(String subjectCode, String geoCode) throws MetamacException;
@@ -994,9 +1002,9 @@ Application Indicators {
 			"Symbol of unit (example: km)"
 			String symbol nullable;
 			"Position of symbol of unit"
-			- @QuantityUnitSymbolPositionEnum symbolPosition not nullable;
+			- @QuantityUnitSymbolPositionEnum symbolPosition nullable;
        		"Title of unit"
-       		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
        		
        		Repository QuantityUnitRepository {
        			findAll;

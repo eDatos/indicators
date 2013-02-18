@@ -79,7 +79,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
         if (quantityDto != null) {
             setValue(IndicatorDS.QUANTITY_TYPE, quantityDto.getType() != null ? quantityDto.getType().toString() : "");
             setValue(IndicatorDS.QUANTITY_TYPE + "-text", quantityDto.getType() != null ? getCoreMessages().getString(getCoreMessages().quantityTypeEnum() + quantityDto.getType().toString()) : "");
-            setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitSymbol(quantityDto.getUnitUuid()));
+            setValue(IndicatorDS.QUANTITY_UNIT_UUID, getQuantityUnitTitle(quantityDto.getUnitUuid()));
             setValue(IndicatorDS.QUANTITY_UNIT_MULTIPLIER, RecordUtils.getInternationalStringRecord(quantityDto.getUnitMultiplierLabel()));
             setValue(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS, quantityDto.getSignificantDigits() != null ? quantityDto.getSignificantDigits().toString() : "");
             setValue(IndicatorDS.QUANTITY_DECIMAL_PLACES, quantityDto.getDecimalPlaces() != null ? quantityDto.getDecimalPlaces().toString() : "");

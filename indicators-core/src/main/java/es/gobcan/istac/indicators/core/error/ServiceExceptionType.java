@@ -39,6 +39,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                      = create("exception.indicators.indicator.not_found");
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND_WITH_CODE                            = create("exception.indicators.indicator.not_found_code");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NOT_FOUND                              = create("exception.indicators.indicator.version_not_found");
+    public static final CommonServiceExceptionType INDICATOR_VERSION_LAST_ARCHIVED                          = create("exception.indicators.indicator.version_last_archived");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NO_DATA                                = create("exception.indicators.indicator.version_no_data");
     public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_CODE_DUPLICATED                  = create("exception.indicators.indicator.already_exists.code_duplicated");
     public static final CommonServiceExceptionType INDICATOR_IN_PRODUCTION_NOT_FOUND                        = create("exception.indicators.indicator.production_not_found");

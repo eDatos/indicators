@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
@@ -417,7 +418,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
         super.setQuantityUnits(units);
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         for (QuantityUnitDto unit : units) {
-            valueMap.put(unit.getUuid(), unit.getSymbol());
+            valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
         }
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
