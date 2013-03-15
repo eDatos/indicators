@@ -160,7 +160,12 @@
                 series : colors,
                 defaultAxis : {
                     labels : true,
-                    labelsDistance : 20
+                    labelsDistance : 1,
+                    labelsFormatHandler : function (label) {
+                        var res = label.toString().replace("\.", ",");
+                        res = Istac.widget.helper.addThousandSeparator(res);
+                        return res;
+                    }
                 },
                 features : {
                     grid : {
