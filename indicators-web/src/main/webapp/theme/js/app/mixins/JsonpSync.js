@@ -1,7 +1,8 @@
 (function () {
     App.mixins.JsonpSync = {
         sync : function (method, model, options) {
-            options.timeout = 2000;
+            this.trigger('syncStart', model);
+            options.timeout = 10000;
             options.dataType = "jsonp";
             options.jsonp = '_callback';
             return Backbone.sync(method, model, options);

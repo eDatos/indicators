@@ -11,42 +11,81 @@
             this.$el.html(this.$input);
 
             this.collection.on('reset', this.collectionReset, this);
+            this.collection.on('syncStart', function (model) {
+                if (model === this.collection) {
+                    this.loading();
+                }
+            }, this);
+
             this.$input.on('change', function () {
                 self.trigger('change', self.$('input').select2('data'));
             });
 
-            this.collectionReset();
+            _.bindAll(this, "_format");
+            this.render();
         },
 
-        collectionReset : function () {
-            var self = this;
-
+        _getData : function () {
             var data = this.collection.toJSON();
             _.each(data, function (value) {
-                value.id = value[self.options.idAttribute];
-            });
-            this.$el.select2('destroy');
+                value.id = value[this.options.idAttribute];
+            }, this);
+            return data;
+        },
 
-            var format = function (item) {
-                return item[self.options.textAttribute];
-            };
+        _format : function (item) {
+            var result = item[this.options.textAttribute];
+            return result;
+        },
 
-            this.$input.val('');
-            this.$input.select2({
-                data : {
-                    results : data,
-                    text : self.options.textAttribute,
-                    id : "code"
-                },
-                formatSelection : format,
-                formatResult : format,
+        _defaultValues : function () {
+            var values = {
+                formatSelection : this._format,
+                formatResult : this._format,
                 multiple : this.options.multiple,
                 width : this.options.width,
                 formatNoMatches : function () {
                     return "No hay resultados";
+                },
+                placeholder : ""
+            };
+            return values;
+        },
+
+        _updateSelectWithDefaults : function (values) {
+            var extendedValues = _.extend({}, this._defaultValues(), values);
+            this.$input.select2(extendedValues);
+        },
+
+        render : function () {
+            this._updateSelectWithDefaults({
+                data : {
+                    results : this._getData(),
+                    text : this.options.textAttribute,
+                    id : "code"
                 }
             });
-            this.$input.trigger('change');
+            this.$input.select2("enable");
+        },
+
+        emptySelection : function () {
+            this.$input.val('');
+            this.$input.trigger("change");
+        },
+
+        loading : function () {
+            this.emptySelection();
+            this._updateSelectWithDefaults({
+                data : [],
+                placeholder : "Cargando..."
+            });
+            this.$input.select2("disable");
+        },
+
+        collectionReset : function () {
+            //this.$input.select2("enable");
+            this.emptySelection();
+            this.render();
         }
 
     });

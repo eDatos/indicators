@@ -48,6 +48,7 @@
                 var instanceId = instances[0];
                 var instanceModel = this.instances.get(instanceId);
                 var req = instanceModel.fetch();
+                this.geographicalValues.trigger('syncStart', this.geographicalValues);
                 req.success(function () {
                     self.geographicalValues.reset(instanceModel.getGeographicalValues());
                 });
