@@ -700,7 +700,7 @@ Application Indicators {
             "Geographical granularity"
 			- @GeographicalGranularity geographicalGranularity cascade="none" nullable databaseColumn="GEOGRAPHICAL_GRANULARITY_FK";
             "Geographical value"
-			- Bag<@GeographicalValue> geographicalValues cascade="none" fetch="lazy" databaseJoinTable="TB_INDIC_INST_GEO_VALUES" databaseColumn="GEOGRAPHICAL_VALUE_FK" databaseJoinColumn="INDICATOR_INSTANCE_FK";
+			- Bag<@GeographicalValue> geographicalValues cascade="none" fetch="lazy" databaseJoinTable="TB_INDIC_INST_GEO_VALUES" databaseColumn="GEOGRAPHICAL_VALUE_FK" databaseJoinColumn="INDICATOR_INSTANCE_FK" orderby="order asc";
             
 			"Provides access to IndicatorInstance"
             Repository IndicatorInstanceRepository {

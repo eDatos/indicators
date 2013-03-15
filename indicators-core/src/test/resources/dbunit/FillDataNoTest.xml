@@ -160,7 +160,7 @@
         LONGITUDE="-25.454564645" 
         UUID="1311"
         TITLE_FK="13" 
-        GLOBAL_ORDER="ES0101"
+        GLOBAL_ORDER="ES611"
         GRANULARITY_FK="3"
     />
     <TB_LIS_GEOGR_VALUES 
@@ -170,7 +170,7 @@
         LONGITUDE="-25.454564645" 
         UUID="1312"
         TITLE_FK="14" 
-        GLOBAL_ORDER="ES0102"
+        GLOBAL_ORDER="ES612"
         GRANULARITY_FK="3"
     />
     <TB_LIS_GEOGR_VALUES 
@@ -180,7 +180,7 @@
         LONGITUDE="-25.454564645" 
         UUID="1313"
         TITLE_FK="15" 
-        GLOBAL_ORDER="ES0103"
+        GLOBAL_ORDER="ES613"
         GRANULARITY_FK="3"
     />
     <TB_LIS_GEOGR_VALUES 
@@ -190,7 +190,7 @@
         LONGITUDE="-25.454564645" 
         UUID="1314"
         TITLE_FK="16" 
-        GLOBAL_ORDER="ES0104"
+        GLOBAL_ORDER="ES614"
         GRANULARITY_FK="3"
     />
     
@@ -1409,13 +1409,13 @@
                 />          
                 <TB_INDICATORS_INSTANCES
                     ID="118"
-                    UUID="IndSys-1-v1-IInstance-3.118"
-                    CODE="IndSys-1-v1-IInstance-3.118-CODE"
+                    UUID="IndSys-1-v1-IInstance-5.118"
+                    CODE="IndSys-1-v1-IInstance-5.118-CODE"
                     TIME_GRANULARITY="[null]"
                     TIME_VALUES="[null]"
                     GEOGRAPHICAL_GRANULARITY_FK="[null]"
-                    TITLE_FK="33"
-                    INDICATOR_FK="3" 
+                    TITLE_FK="46"
+                    INDICATOR_FK="5" 
                     
                     VERSION="1"
                     CREATED_BY="user1"
@@ -1426,8 +1426,20 @@
                     LAST_UPDATED_TZ="Europe/London"
                 />  
                 <TB_INDIC_INST_GEO_VALUES
-                    GEOGRAPHICAL_VALUE_FK="ES611"
-                    INDICATOR_INSTANCES=""
+                    GEOGRAPHICAL_VALUE_FK="1311"
+                    INDICATOR_INSTANCE_FK="118"
+                />
+                <TB_INDIC_INST_GEO_VALUES
+                    GEOGRAPHICAL_VALUE_FK="131"
+                    INDICATOR_INSTANCE_FK="118"
+                />
+                <TB_INDIC_INST_GEO_VALUES
+                    GEOGRAPHICAL_VALUE_FK="1313"
+                    INDICATOR_INSTANCE_FK="118"
+                />
+                <TB_INDIC_INST_GEO_VALUES
+                    GEOGRAPHICAL_VALUE_FK="132"
+                    INDICATOR_INSTANCE_FK="118"
                 />
                 
                         
@@ -2196,6 +2208,17 @@
         LABEL="personas" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="45"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="46"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="58"
+        LABEL="Indicator Instance 5.118" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="46"
         VERSION="1"
     />
 </dataset>
