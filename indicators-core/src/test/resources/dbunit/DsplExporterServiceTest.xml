@@ -2366,14 +2366,14 @@
                     LAST_UPDATED_TZ="Europe/London"
                 />
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="132"
-                        TB_INDICATORS_INSTANCES="311"/>
+                        GEOGRAPHICAL_VALUE_FK="132"
+                        INDICATOR_INSTANCE_FK="311"/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="133"
-                        TB_INDICATORS_INSTANCES="311"/>
+                        GEOGRAPHICAL_VALUE_FK="133"
+                        INDICATOR_INSTANCE_FK="311"/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="134"
-                        TB_INDICATORS_INSTANCES="311"/>
+                        GEOGRAPHICAL_VALUE_FK="134"
+                        INDICATOR_INSTANCE_FK="311"/>
                         
                 <TB_ELEMENTS_LEVELS
                     ID="312"
@@ -2406,17 +2406,17 @@
                     LAST_UPDATED_TZ="Europe/London"
                 />
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="13"
-                        TB_INDICATORS_INSTANCES="312"/>
+                        GEOGRAPHICAL_VALUE_FK="13"
+                        INDICATOR_INSTANCE_FK="312"/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="1311"
-                        TB_INDICATORS_INSTANCES="312"/>
+                        GEOGRAPHICAL_VALUE_FK="1311"
+                        INDICATOR_INSTANCE_FK="312"/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="1312"
-                        TB_INDICATORS_INSTANCES="312"/>
+                        GEOGRAPHICAL_VALUE_FK="1312"
+                        INDICATOR_INSTANCE_FK="312"/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="1313"
-                        TB_INDICATORS_INSTANCES="312"/>
+                        GEOGRAPHICAL_VALUE_FK="1313"
+                        INDICATOR_INSTANCE_FK="312"/>
                 <TB_ELEMENTS_LEVELS
                     ID="313"
                     UUID="uuid-ignored-313"

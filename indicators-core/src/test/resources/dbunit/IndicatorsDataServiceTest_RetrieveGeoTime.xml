@@ -1151,8 +1151,8 @@
 						LAST_UPDATED_TZ="Europe/London"
 					/>
                     <TB_INDIC_INST_GEO_VALUES
-                        GEOGRAPHICAL_VALUE="1"
-                        TB_INDICATORS_INSTANCES="13"
+                        GEOGRAPHICAL_VALUE_FK="1"
+                        INDICATOR_INSTANCE_FK="13"
                     />
 	<!-- ************************************************************************************** -->
     <!--    INDICATORS SYSTEM 2                                                                 -->

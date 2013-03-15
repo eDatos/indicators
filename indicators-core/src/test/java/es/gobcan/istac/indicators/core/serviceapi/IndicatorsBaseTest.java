@@ -197,7 +197,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             tablePrimaryKeys = new HashMap<String, List<String>>();
             tablePrimaryKeys.put("TV_AREAS_TEMATICAS", Arrays.asList("ID_AREA_TEMATICA"));
             tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
-            tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE","TB_INDICATORS_INSTANCES"));
+            tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE_FK","INDICATOR_INSTANCE_FK"));
         }
         return tablePrimaryKeys;
     }

@@ -1395,6 +1395,41 @@
                             LAST_UPDATED="2011-06-06 05:06:07"
                             LAST_UPDATED_TZ="Europe/London"
                         />
+                <TB_ELEMENTS_LEVELS
+                    ID="118"
+                    UUID="uuid-ignored-118"
+                    PARENT_FK="[null]"
+                    ORDER_IN_LEVEL="8"
+                    
+                    IND_SYSTEM_VERSION_ALL_FK="11"
+                    IND_SYSTEM_VERSION_FIRST_FK="11"
+                    DIMENSION_FK="[null]"
+                    INDICATOR_INSTANCE_FK="118"
+                    VERSION="1"
+                />          
+                <TB_INDICATORS_INSTANCES
+                    ID="118"
+                    UUID="IndSys-1-v1-IInstance-3.118"
+                    CODE="IndSys-1-v1-IInstance-3.118-CODE"
+                    TIME_GRANULARITY="[null]"
+                    TIME_VALUES="[null]"
+                    GEOGRAPHICAL_GRANULARITY_FK="[null]"
+                    TITLE_FK="33"
+                    INDICATOR_FK="3" 
+                    
+                    VERSION="1"
+                    CREATED_BY="user1"
+                    CREATED_DATE="2011-05-05 01:02:04"
+                    CREATED_DATE_TZ="Europe/London"
+                    LAST_UPDATED_BY="user2"
+                    LAST_UPDATED="2011-06-06 05:06:07"
+                    LAST_UPDATED_TZ="Europe/London"
+                />  
+                <TB_INDIC_INST_GEO_VALUES
+                    GEOGRAPHICAL_VALUE_FK="ES611"
+                    INDICATOR_INSTANCES=""
+                />
+                
                         
                 
     <TB_INDICATORS_SYSTEMS_HIST

@@ -64,6 +64,7 @@ public class FillData extends IndicatorsDataBaseTest {
     private static final String              INDICATOR5_GPE3_JSON_DATA                 = readFile("json/data_temporal_spatials_provinces.json");
     private static final String              INDICATOR5_VERSION                       = "1.000";
     
+    @Test
     public void testCreateData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
