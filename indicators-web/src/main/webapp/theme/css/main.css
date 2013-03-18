@@ -99,3 +99,5 @@ html[xmlns] .clearfix{display:block;}
 #widget-creator .select2-search-field{background:none;}
 #widget-creator .hidden{display:none;}
 #widget-creator .widget-import-netvibes img{vertical-align:middle;}
+#widget-creator .widget-export a:link,#widget-creator .widget-export a:visited,#widget-creator .widget-export a:active,#widget-creator .widget-export a:hover{color:#0058B0;}
+#widget-creator .widget-export a:hover{text-decoration:underline;}
