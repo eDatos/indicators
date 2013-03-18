@@ -22,5 +22,4 @@ public class GetGeographicalValuesByGranularityInIndicator {
 
     @Out(1)
     List<GeographicalValueDto> geographicalValueDtos;
-
 }
