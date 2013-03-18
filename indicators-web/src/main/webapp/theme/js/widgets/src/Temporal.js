@@ -34,7 +34,7 @@
                     var unit = dataset.getUnit(geoValue, timeValue, measureValue);
 
                     data.push(value);
-                    tooltip.push('<div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div><div>' + valueStr + ' ' + unit +'</div>');
+                    tooltip.push('<div><strong>' + valueStr + ' ' + unit +'</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
                 }
 
                 legend[serie] = geoValueTitle;
