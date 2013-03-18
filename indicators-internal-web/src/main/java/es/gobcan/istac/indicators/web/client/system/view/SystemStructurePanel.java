@@ -1200,9 +1200,26 @@ public class SystemStructurePanel extends HLayout {
             timeGranularityItem.setShowIfCondition(getTimeGranularityIfFunction()); // valueMap set in setTemporalGranularitiesForIndicator
 
             // Time values
-            final TimeValuesDragAndDropItem timeValues = new TimeValuesDragAndDropItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValues());
+            final TimeValuesDragAndDropItem timeValues = new TimeValuesDragAndDropItem(IndicatorInstanceDS.TIME_VALUE, getConstants().instanceTimeValues(), CUSTOM_FORM_ITEM_WIDTH);
             timeValues.setWidth(CUSTOM_FORM_ITEM_WIDTH);
             timeValues.setShowIfCondition(getTimeValueIfFunction()); // valueMap set in setTemporalValuesForIndicator
+            timeValues.getGranularitySelectItem().addChangedHandler(new ChangedHandler() {
+
+                @Override
+                public void onChanged(ChangedEvent event) {
+                    // Clear time value
+                    timeValues.clearSourceTimeValues();
+                    // Set values with selected granularity
+                    if (event.getValue() != null && !StringUtils.isBlank(event.getValue().toString())) {
+                        TimeGranularityEnum timeGranularity = TimeGranularityEnum.valueOf(event.getValue().toString());
+                        if (creationForm.getValue(IndicatorInstanceDS.IND_UUID) != null && !StringUtils.isBlank(creationForm.getValue(IndicatorInstanceDS.IND_UUID).toString())) {
+                            if (selectedIndicator != null) {
+                                uiHandlers.retrieveTimeValuesWithGranularityInIndicator(selectedIndicator.getUuid(), CommonUtils.getIndicatorVersionNumber(selectedIndicator), timeGranularity);
+                            }
+                        }
+                    }
+                }
+            });
             CustomValidator timeValueValidator = new CustomValidator() {
 
                 @Override
@@ -1432,10 +1449,11 @@ public class SystemStructurePanel extends HLayout {
 
         public void setTemporalGranularitiesForIndicator(List<TimeGranularityDto> timeGranularityEnums) {
             creationForm.getItem(IndicatorInstanceDS.TIME_GRANULARITY).setValueMap(CommonUtils.getTimeGranularityValueMap(timeGranularityEnums));
+            ((TimeValuesDragAndDropItem) creationForm.getItem(IndicatorInstanceDS.TIME_VALUE)).setTimeGranularities(timeGranularityEnums);
         }
 
         public void setTemporalValuesFormIndicator(List<TimeValueDto> timeValues) {
-            ((TimeValuesDragAndDropItem) creationForm.getItem(IndicatorInstanceDS.TIME_VALUE)).setSourceValues(timeValues);
+            ((TimeValuesDragAndDropItem) creationForm.getItem(IndicatorInstanceDS.TIME_VALUE)).setTimeValues(timeValues);
         }
 
         public GroupDynamicForm getCreationForm() {
@@ -1482,7 +1500,7 @@ public class SystemStructurePanel extends HLayout {
                                 // }
                                 // Load indicators temporal and geographical granularities and values
                                 uiHandlers.retrieveTimeGranularitiesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
-                                uiHandlers.retrieveTimeValuesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
+                                // uiHandlers.retrieveTimeValuesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
                                 uiHandlers.retrieveGeographicalGranularitiesInIndicator(indicatorSummaryDto.getUuid(), CommonUtils.getIndicatorVersionNumber(indicatorSummaryDto));
                             }
                             creationForm.markForRedraw();
@@ -1511,5 +1529,4 @@ public class SystemStructurePanel extends HLayout {
         }
         return CommonWebUtils.getStringListToString(values);
     }
-
 }

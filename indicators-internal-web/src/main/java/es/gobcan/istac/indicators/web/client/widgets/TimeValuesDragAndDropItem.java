@@ -2,8 +2,11 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
+import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
 import com.smartgwt.client.data.Record;
@@ -13,30 +16,49 @@ import com.smartgwt.client.types.DragDataAction;
 import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.grid.events.RecordDropEvent;
+import com.smartgwt.client.widgets.grid.events.RecordDropHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
+import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.web.client.model.TimeValueRecord;
+import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class TimeValuesDragAndDropItem extends CustomCanvasItem {
 
-    protected ListGrid sourceList;
-    protected ListGrid targetList;
+    private final static String TIME_GRANULARITY_SELECTION = "time-gran";
 
-    protected boolean  required;
+    private CustomDynamicForm   form;
 
-    public TimeValuesDragAndDropItem(String name, String title) {
+    protected ListGrid          sourceList;
+    protected ListGrid          targetList;
+
+    protected boolean           required;
+
+    public TimeValuesDragAndDropItem(String name, String title, int formItemWidth) {
         super(name, title);
+        setWidth(formItemWidth);
+
         String dragDropType = new Date().toString();
 
         setCellStyle("dragAndDropCellStyle");
+
+        // SelectItem to select the time granularity
+        form = new CustomDynamicForm();
+        form.setWidth(formItemWidth);
+        SelectItem selectItem = new SelectItem(TIME_GRANULARITY_SELECTION);
+        selectItem.setShowTitle(false);
+        selectItem.setWidth(formItemWidth);
+        form.setFields(selectItem);
 
         sourceList = new ListGrid();
         sourceList.setShowHeader(false);
@@ -57,10 +79,17 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
 
             @Override
             public void onCellDoubleClick(CellDoubleClickEvent event) {
-                sourceList.removeRecordClick(event.getRowNum());
-                targetList.addData(event.getRecord());
+                addNonDuplicatedRecordToTarget(event.getRecord());
             }
         });
+        sourceList.addRecordDropHandler(new RecordDropHandler() {
+
+            @Override
+            public void onRecordDrop(RecordDropEvent event) {
+                event.cancel();
+            }
+        });
+        sourceList.setCanDrop(false);
         ListGridField sourceField = new ListGridField(TimeValueRecord.TITLE);
         sourceList.setFields(sourceField);
 
@@ -78,14 +107,21 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         targetList.setSaveLocally(true);
         targetList.setDragType(dragDropType);
         targetList.setDropTypes(dragDropType);
-        targetList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+        targetList.addRecordDropHandler(new RecordDropHandler() {
 
             @Override
-            public void onCellDoubleClick(CellDoubleClickEvent event) {
-                targetList.removeRecordClick(event.getRowNum());
-                sourceList.addData(event.getRecord());
+            public void onRecordDrop(RecordDropEvent event) {
+                if (event.getDropRecords() != null) {
+                    ListGridRecord[] records = event.getDropRecords();
+                    for (Record record : records) {
+                        addNonDuplicatedRecordToTarget(record);
+                    }
+                    event.cancel();
+                }
             }
         });
+        targetList.setCanRemoveRecords(true);
+        targetList.setRemoveIcon(GlobalResources.RESOURCE.deleteListGrid().getURL());
         ListGridField targetField = new ListGridField(TimeValueRecord.TITLE);
         targetList.setFields(targetField);
 
@@ -97,47 +133,29 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         TransferImgButton rightImg = new TransferImgButton(TransferImgButton.RIGHT);
         rightImg.addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
-                targetList.transferSelectedData(sourceList);
-            }
-        });
-
-        TransferImgButton leftImg = new TransferImgButton(TransferImgButton.LEFT);
-        leftImg.addClickHandler(new ClickHandler() {
-
-            public void onClick(ClickEvent event) {
-                sourceList.transferSelectedData(targetList);
+                Record[] records = sourceList.getSelectedRecords();
+                for (Record record : records) {
+                    addNonDuplicatedRecordToTarget(record);
+                }
             }
         });
 
         TransferImgButton rightAll = new TransferImgButton(TransferImgButton.RIGHT_ALL);
         rightAll.addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 Record[] records = sourceList.getRecords();
-                sourceList.setData(new Record[]{});
                 for (Record record : records) {
-                    targetList.addData(record);
-                }
-            }
-        });
-
-        TransferImgButton leftAll = new TransferImgButton(TransferImgButton.LEFT_ALL);
-        leftAll.addClickHandler(new ClickHandler() {
-
-            public void onClick(ClickEvent event) {
-                Record[] records = targetList.getRecords();
-                targetList.setData(new Record[]{});
-                for (Record record : records) {
-                    sourceList.addData(record);
+                    addNonDuplicatedRecordToTarget(record);
                 }
             }
         });
 
         buttonStack.addMember(rightImg);
-        buttonStack.addMember(leftImg);
         buttonStack.addMember(rightAll);
-        buttonStack.addMember(leftAll);
 
         HLayout hLayout = new HLayout(1);
         hLayout.addMember(sourceList);
@@ -145,13 +163,23 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         hLayout.addMember(targetList);
 
         VLayout vLayout = new VLayout();
+        vLayout.setWidth(formItemWidth);
+        vLayout.addMember(form);
         vLayout.addMember(hLayout);
 
         setCanvas(vLayout);
     }
 
-    public void setSourceValues(List<TimeValueDto> timeValueDtos) {
+    public void setTimeGranularities(List<TimeGranularityDto> timeGranularityDtos) {
+        // Clear previous values
         clearValue();
+        // Set granularities
+        LinkedHashMap<String, String> valueMap = CommonUtils.getTimeGranularityValueMap(timeGranularityDtos);
+        form.getItem(TIME_GRANULARITY_SELECTION).setValueMap(valueMap);
+    }
+
+    public void setTimeValues(List<TimeValueDto> timeValueDtos) {
+        clearSourceTimeValues();
         for (TimeValueDto timeValueDto : timeValueDtos) {
             TimeValueRecord record = new TimeValueRecord(timeValueDto);
             sourceList.addData(record);
@@ -163,17 +191,39 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         ListGridRecord records[] = targetList.getRecords();
         for (ListGridRecord record : records) {
             TimeValueRecord timeValueRecord = (TimeValueRecord) record;
-            selectedTimeValues.add(timeValueRecord.getTimeValue());
+            if (timeValueRecord != null && timeValueRecord.getTimeValueDto() != null) {
+                selectedTimeValues.add(timeValueRecord.getTimeValueDto().getTimeValue());
+            }
         }
         return selectedTimeValues;
     }
 
-    @Override
-    public void clearValue() {
-        sourceList.selectAllRecords();
-        sourceList.removeSelectedData();
+    public SelectItem getGranularitySelectItem() {
+        return (SelectItem) form.getItem(TIME_GRANULARITY_SELECTION);
+    }
+
+    public void clearTimeValues() {
+        clearSourceTimeValues();
         targetList.selectAllRecords();
         targetList.removeSelectedData();
     }
 
+    public void clearSourceTimeValues() {
+        sourceList.selectAllRecords();
+        sourceList.removeSelectedData();
+    }
+
+    @Override
+    public void clearValue() {
+        ((SelectItem) form.getItem(TIME_GRANULARITY_SELECTION)).setValue(new String());
+        ((SelectItem) form.getItem(TIME_GRANULARITY_SELECTION)).setValueMap(new LinkedHashMap<String, String>());
+        clearTimeValues();
+    }
+
+    private void addNonDuplicatedRecordToTarget(Record record) {
+        String timeValue = record.getAttribute(TimeValueRecord.TIME_VALUE);
+        if (targetList.getRecordList().find(TimeValueRecord.TIME_VALUE, timeValue) == null) {
+            targetList.addData(record);
+        }
+    }
 }
