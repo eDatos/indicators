@@ -84,4 +84,69 @@
         return result;
     }
 
+    var colorHueDistributor = function (n) {
+        var result = [0];
+        var total = 400;
+        var divisions = 3;
+        var step = total / divisions;
+        var offset = 0;
+
+        for(var i = 1; i < n; i ++) {
+            if ((i != 0) && ((i * step) % total === 0)) {
+                offset = step / 2;
+            }
+            result[i] = (result[i - 1] + step + offset) % total;
+            if ((i != 0) && ((i * step) % total === 0)) {
+                step = step / 2;
+            }
+        }
+
+        result = _.map(result, function (color) {
+            return color / total;
+        });
+
+        return result;
+    };
+
+    var hsvToRgb = function(h, s, v){
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch(i % 6){
+            case 0: r = v, g = t, b = p; break;
+            case 1: r = q, g = v, b = p; break;
+            case 2: r = p, g = v, b = t; break;
+            case 3: r = p, g = q, b = v; break;
+            case 4: r = t, g = p, b = v; break;
+            case 5: r = v, g = p, b = q; break;
+        }
+
+        return [r * 255, g * 255, b * 255];
+    };
+
+    var componentToHex = function (c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    };
+
+    var rgbToHex = function (r, g, b) {
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    };
+
+    Istac.widget.helper.colorPaletteGenerator = function (n) {
+        var hues = colorHueDistributor(n);
+        return _.map(hues, function (hue) {
+            var rgb = hsvToRgb(hue, 0.84, 0.84);
+            rgb = _.map(rgb, function (component) {
+                return Math.round(component);
+            });
+            return rgbToHex.apply(null, rgb);
+        });
+    }
+
 }(jQuery));

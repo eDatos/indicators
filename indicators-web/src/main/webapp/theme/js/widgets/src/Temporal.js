@@ -80,34 +80,18 @@
             }
         },
 
+
+
         chartColors : function (chartData) {
-            var result = {
-                serie0 : {
-                    color : "#4F81BD"
-                },
-                serie1 : {
-                    color : "#FFC000"
-                },
-                serie2 : {
-                    color : "#92D050"
-                },
-                serie3 : {
-                    color : "#F79646"
-                },
-                serie4 : {
-                    color : "#C00000"
-                },
-                serie5 : {
-                    color : "#8064A2"
-                },
-                serie6 : {
-                    color : "#808080"
-                },
-                serie7 : {
-                    color : "#00B0F0"
-                }
-            };
-            return result;
+            var nSeries = chartData.labels.length;
+            var colors = Istac.widget.helper.colorPaletteGenerator(nSeries);
+
+            var chartColors = {};
+            _.each(colors, function (color, i) {
+                chartColors["serie" + i] = { color : color};
+            });
+
+            return chartColors;
         },
 
         renderChart : function (chartData) {
