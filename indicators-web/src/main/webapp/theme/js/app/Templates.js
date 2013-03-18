@@ -5,7 +5,7 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"widget-export\">\r\n    <p>Copia este código HTML en tu página</p>\r\n\r\n    <textarea id=\"code-container\" readonly=\"readonly\">\r\n<div id=\"istac-widget\"></div>\r\n<script src=\"";
+  buffer += "<div class=\"widget-export\">\r\n    <p>Selecciona, copia y pega este código en tu página</p>\r\n\r\n    <textarea id=\"code-container\" readonly=\"readonly\">\r\n<div id=\"istac-widget\"></div>\r\n<script src=\"";
   foundHelper = helpers.script;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.script; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
