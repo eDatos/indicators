@@ -182,7 +182,8 @@
                         fill : "#fff",
                         "stroke-width" : 0,
                         "stroke-opacity" : 0
-                    }
+                    },
+                    textProps : { font: '10px Arial', fill: "#000" }
                 }
                 chartOptions.legend = renderData.legend;
             }
