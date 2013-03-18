@@ -1,7 +1,6 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         super(name, title);
         setWidth(formItemWidth);
 
-        String dragDropType = new Date().toString();
+        String dragDropType = "time";
 
         setCellStyle("dragAndDropCellStyle");
 
@@ -74,7 +73,6 @@ public class TimeValuesDragAndDropItem extends CustomCanvasItem {
         sourceList.setDragDataAction(DragDataAction.MOVE);
         sourceList.setSaveLocally(true);
         sourceList.setDragType(dragDropType);
-        sourceList.setDropTypes(dragDropType);
         sourceList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 
             @Override
