@@ -202,23 +202,23 @@
 
 .istac-widget-lateral-title {
     font-weight: bold;
-    line-height: 2em;
-    padding: 3px 0;
+    line-height: 16px;
 }
 
 .istac-widget-lateral-subtitle {
     color : #AFAFAF;
+    line-height: 14px;
     border-top: dotted 1px #C4D0DC;
     border-bottom: dotted 1px #C4D0DC;
     padding: 0;
-    font-size: xx-small;
+    font-size: 9px;
 }
 
 .istac-widget-lateral-value {
     text-align: right;
     font-weight: bold;
-    font-size: 20px;
-    padding: 7px 0;
+    font-size: 18px;
+    line-height: 27px;
 }
 
 .istac-widget-lateral-dataset {
