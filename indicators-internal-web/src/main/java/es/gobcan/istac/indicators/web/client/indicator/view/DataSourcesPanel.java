@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.InformationWindow;
@@ -465,17 +465,17 @@ public class DataSourcesPanel extends VLayout {
     private void createViewForm() {
         generalForm = new ViewDataSourceGeneralForm(getConstants().datasourceGeneral());
 
-        interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
+        interperiodPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodVariation(), RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
 
         dataForm = new GroupDynamicForm(getConstants().dataSourceData());
         ViewTextItem absoluteMethod = new ViewTextItem(DataSourceDS.ABSOLUTE_METHOD, getConstants().dataSourceDataSelection());
         dataForm.setFields(absoluteMethod);
 
-        interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
+        interperiodPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceInterperiodVariationRate(), RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
 
-        annualPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
+        annualPuntualRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualVariation(), RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
 
-        annualPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
+        annualPercentageRateForm = new ViewRateDerivationForm(getConstants().dataSourceAnnualVariationRate(), RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
 
         mainFormLayout.addViewCanvas(generalForm);
         mainFormLayout.addViewCanvas(dataForm);
@@ -651,17 +651,17 @@ public class DataSourcesPanel extends VLayout {
         absoluteMethod.setValidators(emptyAbsoluteMethodValidator, filledAbsoluteMethodValidator);
         dataEditionForm.setFields(staticAbsoluteMethod, absoluteMethod);
 
-        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
+        interperiodPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodVariation(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.INTERPERIOD_PUNTUAL_RATE_TYPE);
         interperiodPuntualRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
-        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodPercentageRate(), QuantityTypeEnum.CHANGE_RATE,
+        interperiodPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceInterperiodVariationRate(), QuantityTypeEnum.CHANGE_RATE,
                 RateDerivationTypeEnum.INTERPERIOD_PERCENTAGE_RATE_TYPE);
         interperiodPercentageRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
-        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPuntualRate(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
+        annualPuntualRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualVariation(), QuantityTypeEnum.AMOUNT, RateDerivationTypeEnum.ANNUAL_PUNTUAL_RATE_TYPE);
         annualPuntualRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
-        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualPercentageRate(), QuantityTypeEnum.CHANGE_RATE, RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
+        annualPercentageRateEditionForm = new RateDerivationForm(getConstants().dataSourceAnnualVariationRate(), QuantityTypeEnum.CHANGE_RATE, RateDerivationTypeEnum.ANNUAL_PERCENTAGE_RATE_TYPE);
         annualPercentageRateEditionForm.setMethodChangedHandler(getRateDerivationMethodChangeHandler());
 
         mainFormLayout.addEditionCanvas(generalEditionForm);
@@ -672,6 +672,7 @@ public class DataSourcesPanel extends VLayout {
         mainFormLayout.addEditionCanvas(annualPuntualRateEditionForm);
         mainFormLayout.addEditionCanvas(annualPercentageRateEditionForm);
     }
+
     public void setDataDefinitionsOperationCodes(List<String> operationCodes) {
         this.dataDefinitionsOperationCodes = operationCodes;
     }
