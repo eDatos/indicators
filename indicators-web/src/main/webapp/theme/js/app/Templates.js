@@ -112,7 +112,7 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\r\n        <div>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"blue\"> Azul\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"green\"> Verde\r\n            </label>\r\n        </div>\r\n        ";}
+  return "\r\n        <div>\r\n            <label>Colores:</label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"blue\"> Azul\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"green\"> Verde\r\n            </label>\r\n        </div>\r\n        ";}
 
 function program5(depth0,data) {
   
