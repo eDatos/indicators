@@ -89,7 +89,7 @@ html[xmlns] .clearfix{display:block;}
 .tab-content{*zoom:1;display:inline-block;width:100%;}.tab-content:before,.tab-content:after{display:table;content:"";line-height:0;}
 .tab-content:after{clear:both;}
 #widget-creator fieldset{border:1px solid #B9C5D3;padding:10px;margin-bottom:10px;}
-#widget-creator .checkbox{display:block;color:#333;cursor:default;height:20px;line-height:20px;margin:0 0 5px 0;}#widget-creator .checkbox input{margin:0 10px 0 0;}
+#widget-creator .checkbox{display:block;color:#333;cursor:default;height:20px;line-height:20px;margin:0 0 5px 0;width:500px;}#widget-creator .checkbox input{margin:0 10px 0 0;}
 #widget-creator input[type=text]{font-size:11px;width:400px;padding:5px;}
 #widget-creator .radio input{margin:0 0 10px 0;}
 #widget-creator .control-group{margin-bottom:20px;}
