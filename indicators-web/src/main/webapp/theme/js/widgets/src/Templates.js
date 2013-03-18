@@ -5,11 +5,11 @@ templates['container'] = template(function (Handlebars,depth0,helpers,partials,d
   var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"istac-widget-title\">\r\n    <a class=\"istac-widget-title-text\" href=\"#\" target=\"_blank\"></a>\r\n</div>\r\n<div class=\"istac-widget-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <a href=\"#\" class=\"hideEmbed\">Cerrar</a>\r\n    </div>\r\n    <div class=\"istac-widget-body-allIndicators\" style=\"display:none\">\r\n        <a target=\"_blank\" href=\"#\">Todos los indicadores</a>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <p class=\"istac-widget-credits\"><a target=\"_blank\" href=\"";
+  buffer += "<div class=\"istac-widget-title\">\r\n    <a class=\"istac-widget-title-text\" href=\"#\" target=\"_blank\"></a>\r\n</div>\r\n<div class=\"istac-widget-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <a href=\"#\" class=\"hideEmbed\">Cerrar</a>\r\n    </div>\r\n    <div class=\"istac-widget-body-allIndicators\" style=\"display:none\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <img src=\"http://www.gobiernodecanarias.org/opencms8/export/system/modules/es.gobcan.istac.web/resources/images/maslight.gif\"><a target=\"_blank\" href=\"#\">más indicadores</a>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-credits\"><a target=\"_blank\" href=\"";
   foundHelper = helpers.url;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "/widgets/creator\">Instituto Canario de Estadística (ISTAC)</a></p>\r\n    </div>\r\n</div>\r\n";
+  buffer += escapeExpression(stack1) + "/widgets/creator\">Widget facilitado por ISTAC</a></p>\r\n    </div>\r\n</div>\r\n";
   return buffer;});
 
 templates['embed'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -32,14 +32,23 @@ function program1(depth0,data) {
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</div>\r\n            ";
   stack1 = depth0.observations;
-  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program2, data, depth0)});
+  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(2, program2, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n        </div>\r\n    ";
   return buffer;}
-function program2(depth0,data,depth1) {
+function program2(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n                ";
+  stack1 = depth0.hasValue;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program3, data, depth0)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n            ";
+  return buffer;}
+function program3(depth0,data,depth1) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "\r\n                <div class=\"istac-widget-lateral-subtitle\">";
+  buffer += "\r\n                    <div class=\"istac-widget-lateral-subtitle\">";
   stack1 = depth1.temporalLabel;
   stack1 = typeof stack1 === functionType ? stack1() : stack1;
   buffer += escapeExpression(stack1) + " - ";
@@ -50,17 +59,17 @@ function program2(depth0,data,depth1) {
   foundHelper = helpers.unit;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + ")</div>\r\n                <div class=\"istac-widget-lateral-value\">";
+  buffer += escapeExpression(stack1) + ")</div>\r\n                    <div class=\"istac-widget-lateral-value\">";
   stack1 = depth0.showSparkline;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(3, program3, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(4, program4, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += " ";
   foundHelper = helpers.value;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</div>\r\n            ";
+  buffer += escapeExpression(stack1) + "</div>\r\n                ";
   return buffer;}
-function program3(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
   buffer += "<span class=\"inlinesparkline\">";

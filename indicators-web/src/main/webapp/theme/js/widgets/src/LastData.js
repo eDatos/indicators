@@ -37,7 +37,8 @@
                         values : values.join(','),
                         value : value,
                         unit : unit,
-                        measure : measuresLabels[measure]
+                        measure : measuresLabels[measure],
+                        hasValue : value !== null &&  value !== "-"
                     };
                 }, this);
 

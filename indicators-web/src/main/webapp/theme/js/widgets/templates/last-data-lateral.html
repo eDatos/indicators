@@ -3,8 +3,10 @@
         <div class="istac-widget-lateral-dataset">
             <div class="istac-widget-lateral-title">{{title}}</div>
             {{#each observations}}
-                <div class="istac-widget-lateral-subtitle">{{../temporalLabel}} - {{ measure }} ({{unit}})</div>
-                <div class="istac-widget-lateral-value">{{#if showSparkline }}<span class="inlinesparkline">{{ values }}</span>{{/if}} {{ value }}</div>
+                {{#if hasValue}}
+                    <div class="istac-widget-lateral-subtitle">{{../temporalLabel}} - {{ measure }} ({{unit}})</div>
+                    <div class="istac-widget-lateral-value">{{#if showSparkline }}<span class="inlinesparkline">{{ values }}</span>{{/if}} {{ value }}</div>
+                {{/if}}
             {{/each}}
         </div>
     {{/each}}
