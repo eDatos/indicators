@@ -33,7 +33,7 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "/theme/images/netvibes.png\"> Importar a Netvibes</a>\r\n    </p>\r\n\r\n</div>\r\n";
+  buffer += escapeExpression(stack1) + "/theme/images/netvibes.png\"> Añadir a Netvibes</a>\r\n    </p>\r\n\r\n</div>\r\n";
   return buffer;});
 
 templates['data-options-lastData'] = template(function (Handlebars,depth0,helpers,partials,data) {
