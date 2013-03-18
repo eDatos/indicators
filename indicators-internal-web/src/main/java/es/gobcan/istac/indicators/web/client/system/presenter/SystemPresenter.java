@@ -44,6 +44,7 @@ import es.gobcan.istac.indicators.core.dto.IndicatorsSystemStructureDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
+import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -84,8 +85,8 @@ import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorsSystemStructureResult;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetTimeGranularitiesInIndicatorResult;
-import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorAction;
-import es.gobcan.istac.indicators.web.shared.GetTimeValuesInIndicatorResult;
+import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorAction;
+import es.gobcan.istac.indicators.web.shared.GetTimeValuesByGranularityInIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentAction;
 import es.gobcan.istac.indicators.web.shared.MoveSystemStructureContentResult;
 import es.gobcan.istac.indicators.web.shared.PublishIndicatorsSystemAction;
@@ -566,15 +567,15 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     }
 
     @Override
-    public void retrieveTimeValuesInIndicator(String indicatorUuid, String indicatorVersion) {
-        dispatcher.execute(new GetTimeValuesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetTimeValuesInIndicatorResult>() {
+    public void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, TimeGranularityEnum timeGranularity) {
+        dispatcher.execute(new GetTimeValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, timeGranularity), new WaitingAsyncCallback<GetTimeValuesByGranularityInIndicatorResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorTimeValues()), MessageTypeEnum.ERROR);
             }
             @Override
-            public void onWaitSuccess(GetTimeValuesInIndicatorResult result) {
+            public void onWaitSuccess(GetTimeValuesByGranularityInIndicatorResult result) {
                 getView().setTemporalValuesFormIndicator(result.getTimeValueDtos());
             }
         });
