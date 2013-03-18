@@ -23,7 +23,7 @@ public class AskVersionWindow extends CustomWindow {
 
     public AskVersionWindow(String title) {
         super(title);
-        setHeight(100);
+        setHeight(110);
         setWidth(330);
 
         SelectItem versionItem = new SelectItem(FIELD_VERSION, getConstants().indicDetailVersion());
