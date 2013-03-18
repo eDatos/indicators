@@ -30,7 +30,14 @@
             _.each(data, function (value) {
                 value.id = value[this.options.idAttribute];
             }, this);
-            return data;
+
+
+            var sortedData = _.sortBy(data, function (value) {
+                return value[this.options.textAttribute];
+            }, this);
+
+
+            return sortedData;
         },
 
         _format : function (item) {
