@@ -244,7 +244,7 @@
         initializeEmbed : function () {
             this.hideEmbed();
             var self = this;
-            this.embedContainer.find('button').click(function () {
+            this.embedContainer.find('.hideEmbed').click(function () {
                 self.hideEmbed();
                 return false;
             });

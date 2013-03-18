@@ -5,7 +5,7 @@ templates['container'] = template(function (Handlebars,depth0,helpers,partials,d
   var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"istac-widget-title\">\r\n    <a class=\"istac-widget-title-text\" href=\"#\" target=\"_blank\"></a>\r\n</div>\r\n<div class=\"istac-widget-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <button>Aceptar</button>\r\n    </div>\r\n    <div class=\"istac-widget-body-allIndicators\" style=\"display:none\">\r\n        <a target=\"_blank\" href=\"#\">Todos los indicadores</a>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <p class=\"istac-widget-credits\"><a target=\"_blank\" href=\"";
+  buffer += "<div class=\"istac-widget-title\">\r\n    <a class=\"istac-widget-title-text\" href=\"#\" target=\"_blank\"></a>\r\n</div>\r\n<div class=\"istac-widget-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <a href=\"#\" class=\"hideEmbed\">Cerrar</a>\r\n    </div>\r\n    <div class=\"istac-widget-body-allIndicators\" style=\"display:none\">\r\n        <a target=\"_blank\" href=\"#\">Todos los indicadores</a>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <p class=\"istac-widget-credits\"><a target=\"_blank\" href=\"";
   foundHelper = helpers.url;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -157,7 +157,7 @@ templates['uwaContainer'] = template(function (Handlebars,depth0,helpers,partial
   var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"istac-widget-uwa-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <button>Aceptar</button>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <p class=\"istac-widget-credits\"><a href=\"";
+  buffer += "<div class=\"istac-widget-uwa-body\">\r\n    <div class=\"istac-widget-content\">\r\n    </div>\r\n    <div class=\"istac-widget-body-embed\">\r\n        <textarea rows=\"10\"></textarea>\r\n        <a href=\"#\" class=\"hideEmbed\">Cerrar</a>\r\n    </div>\r\n    <div class=\"istac-widget-footer\">\r\n        <p class=\"istac-widget-embed\"><a href=\"#\" title=\"Incrustar widget\">&lt;/&gt;</a></p>\r\n        <p class=\"istac-widget-credits\"><a href=\"";
   foundHelper = helpers.url;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.url; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
