@@ -291,5 +291,4 @@ public class BaseQuantityForm extends GroupDynamicForm {
         }
         return new String();
     }
-
 }
