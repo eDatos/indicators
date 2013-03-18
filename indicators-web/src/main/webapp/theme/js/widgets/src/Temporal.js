@@ -123,12 +123,26 @@
                 margins : [chartTopMargin, 20, chartBottomMargin, 50],
                 defaultSeries : {
                     plotProps : {
-                        "stroke-width" : 1
+                        "stroke-width" : 1.5
                     },
-                    dot : false,
+                    dot : true,
+                    rounded : false,
+                    stacked : false,
                     dotProps : {
+                        r : 0,
                         stroke : "white",
-                        "stroke-width" : 2
+                        "stroke-width" : 0,
+                        opacity : 0
+                    },
+                    highlight : {
+                        newProps : {
+                            r : 3,
+                            opacity : 1
+                        },
+                        overlayProps : {
+                            fill : "white",
+                            opacity : 0.2
+                        }
                     },
                     tooltip : {
                         active : true,
