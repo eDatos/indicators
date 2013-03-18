@@ -1,29 +1,37 @@
 (function ($) {
-    Istac.widget.Factory = function (options) {
+
+    var showError = function (msg) {
+        $(options.el).text(msg);
+    };
+
+    Istac.widget.Factory = function (options, callback) {
         options = options || {};
 
-        var showError = function (msg) {
-            $(options.el).text(msg);
-        };
-
         if (options.hasOwnProperty('url')) {
-            if (!options.uwa) {
-                Istac.widget.loader.all(options.url);
-            }
+            $.getJSON(options.url + "/widgets/external/configuration").success(function (configuration) {
+                Istac.widget.configuration = configuration;
 
-            var widget;
-            if (options.type === 'temporal') {
-                widget = new Istac.widget.Temporal(options);
-            } else if (options.type === 'lastData' || options.type === 'recent') {
-                widget = new Istac.widget.LastData(options);
-            }
+                if (!options.uwa) {
+                    Istac.widget.loader.all(options.url);
+                }
 
-            if (widget) {
-                widget.render();
-                return widget;
-            } else {
-                showError("Tipo de widget no soportado");
-            }
+                var widget;
+                if (options.type === 'temporal') {
+                    widget = new Istac.widget.Temporal(options);
+                } else if (options.type === 'lastData' || options.type === 'recent') {
+                    widget = new Istac.widget.LastData(options);
+                }
+
+                if (widget) {
+                    widget.render();
+                } else {
+                    showError("Tipo de widget no soportado");
+                }
+
+                if (callback) {
+                    callback(widget);
+                }
+            });
         } else {
             showError("Error, no se ha especificado la url del servicio web");
         }

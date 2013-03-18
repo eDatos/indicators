@@ -44,9 +44,11 @@
 
                 var temporalLabel = dataset.getTimeValuesTitles(this.locale)[lastTimeValue];
 
+                var jaxiBaseUrl = Istac.widget.configuration['indicators.jaxi.url'];
+
                 var jaxiUrl = this.options.groupType === 'system' ?
-                    this.jaxiUrl + '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem + '&accion=html' :
-                    this.jaxiUrl + '/tabla.do?indicador=' + dataset.request.id + '&accion=html';
+                    jaxiBaseUrl + '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem + '&accion=html' :
+                    jaxiBaseUrl + '/tabla.do?indicador=' + dataset.request.id + '&accion=html';
 
                 return {
                     title : dataset.getTitle(this.locale),

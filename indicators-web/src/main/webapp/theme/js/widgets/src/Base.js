@@ -72,7 +72,7 @@
             this.datasets = [];
 
             //Create containers
-            var templateOptions = {url : this.url};
+            var templateOptions = { widgetsTypeUrl : Istac.widget.configuration['indicators.widgets.typelist.url'] };
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));

@@ -6,4 +6,5 @@
 	<entry key="indicators.atoms.timetolive.minutes">5</entry>
 	<entry key="indicators.atoms.entries.num">10</entry>
     <entry key="indicators.clients.statistical.operations.rest.external">http://localhost:8080/metamac-statistical-operations-external-web/apis/operations</entry>
+    <entry key="indicators.widgets.typelist.url">http://RELLENAR_URL</entry>
 </properties>

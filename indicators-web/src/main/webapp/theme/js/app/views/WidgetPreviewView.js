@@ -15,8 +15,10 @@
             widgetOptions.el = this.el;
             widgetOptions.url = apiBaseUrl;
 
-            widgetOptions.jaxiUrl = jaxiUrl;
-            this.widget = new IstacWidget(widgetOptions);
+            var self = this;
+            this.widget = new IstacWidget(widgetOptions, function (widget) {
+                self.widget = widget;
+            });
         },
 
         bindModelToWidget : function () {
