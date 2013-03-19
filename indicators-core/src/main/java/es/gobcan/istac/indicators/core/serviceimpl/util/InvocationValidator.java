@@ -1528,7 +1528,7 @@ public class InvocationValidator {
         ValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
         ValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, exceptions);
-        if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.isSemanticIdentifier(indicatorVersion.getIndicator().getCode())) {
+        if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
         }
 
