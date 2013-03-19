@@ -235,12 +235,6 @@
 			<groupId>org.siemac.metamac</groupId>
 			<artifactId>metamac-core-common</artifactId>
 			<classifier>client</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>com.flipthebird.gwt-hashcode-equals</groupId>
-					<artifactId>gwt-hashcode-equals</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.siemac.metamac.metamac-sso</groupId>
