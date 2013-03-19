@@ -13,7 +13,7 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.code;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.code; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + ");\r\n</script>\r\n    </textarea>\r\n\r\n    <p>\r\n        <a target=\"_blank\" href=\"";
+  buffer += escapeExpression(stack1) + ");\r\n</script>\r\n    </textarea>\r\n\r\n    <p class=\"widget-import-netvibes\">\r\n        <a target=\"_blank\" href=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -21,7 +21,7 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.parameters;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.parameters; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\">Ejemplo de uso</a>\r\n    </p>\r\n    <p class=\"widget-import-netvibes\">\r\n        <a target=\"_blank\" href=\"";
+  buffer += escapeExpression(stack1) + "\">Ejemplo de uso</a> | <a target=\"_blank\" href=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
