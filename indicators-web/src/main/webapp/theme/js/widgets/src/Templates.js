@@ -174,6 +174,6 @@ templates['uwaContainer'] = template(function (Handlebars,depth0,helpers,partial
   foundHelper = helpers.widgetsTypeUrl;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.widgetsTypeUrl; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\">Instituto Canario de Estadística (ISTAC)</a></p>\r\n    </div>\r\n</div>";
+  buffer += escapeExpression(stack1) + "\">Widget facilitado por ISTAC</a></p>\r\n    </div>\r\n</div>";
   return buffer;});
 })();
