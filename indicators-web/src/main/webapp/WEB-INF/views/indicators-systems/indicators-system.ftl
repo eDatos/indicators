@@ -23,11 +23,16 @@
 		</div>
 	</div>
 
-	<% if (description != null) { %>
+	<% if (description) { %>
 		<div>
 			<p><%= getLabel(description) %></p>
 		</div>
-	<% } %>	
+	<% } %>
+
+    <% if (objective) { %>
+        <p><%= getLabel(objective) %></p>
+    <% } %>
+
 </script>
 
 <script type="text/html" id="elementTemplate">
@@ -152,6 +157,7 @@
 			if (!this.model.description) {
 				json.description = null;
 			}
+            console.log(json);
 			$(this.el).html(this.template(json));
 			return this;
 		}
