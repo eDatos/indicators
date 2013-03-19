@@ -75,34 +75,28 @@
 			if (filtered.length > 0){
 				var self = this;
 				var viewHtml = '';
-				filtered.forEach(function(model){
+
+                var sorted = filtered.sortBy(function (model) {
+                    return getLabel(model.get('title'));
+                });
+
+				sorted.forEach(function(model){
 					var indicatorsSystemView = new IndicatorsSystemView({ model : model});
 					var subViewHtml = indicatorsSystemView.render();
 					viewHtml += subViewHtml; 
 				});
+
 				$(self.el).html(viewHtml);
 			} else if (this.collection.query != null) {
 				$(this.el).html(this.noResultsHtml({ query : this.collection.query }));
 			}
 		}
 	});
-	
-	var SearchView = Backbone.View.extend({
-		events : {
-			'keyup #indicatorsSystems-search-input': 'searchBoxKeydown'
-		},
-		
-		searchBoxKeydown : function(e){
-			var text = $("#indicatorsSystems-search-input", this.el).val();		
-			this.collection.search(text);
-		}
-	});
-	
+
 	$(function(){
 		var indicatorsSystemsCollection = new IndicatorsSystemsCollection();
 		var indicatorsSystemsView = new IndicatorsSystemsView({el : $("#indicatorsSystems"), collection : indicatorsSystemsCollection});
 		indicatorsSystemsView.render();
-		new SearchView({el : $("#indicatorsSystems-search"), collection : indicatorsSystemsCollection});
 	});
 	
 </script>
