@@ -22,7 +22,7 @@
 			<a href="<%= context %>/indicatorsSystems/<%=code%>/atom.xml?language=${.lang}" style="float: right; font-weight: normal; margin-right: 5px;" ><img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" />RSS</a>
 		</div>
 	</div>
-	[#include "/layout/language-selector.ftl"]
+
 	<% if (description != null) { %>
 		<div>
 			<p><%= getLabel(description) %></p>

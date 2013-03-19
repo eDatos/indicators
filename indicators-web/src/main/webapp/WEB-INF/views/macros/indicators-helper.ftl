@@ -12,4 +12,4 @@ ${springMacroRequestContext.getMessage(code, args, '', escape)}[/#macro]
 [#--
  * returns current locale
  --]
-[#macro locale]${springMacroRequestContext.locale}[/#macro]
+[#macro locale]${springMacroRequestContext.locale.getLanguage()}[/#macro]

@@ -67,15 +67,16 @@
 <!--     </bean> -->
     
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="es" />
 	</bean>
 	
-	<mvc:interceptors>  
+	<!--
+    <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
               <property name="paramName" value="language"></property>
         </bean>
 	</mvc:interceptors> 
-    
+    -->
+
     <!-- Imports user-defined @Controller beans that process client requests -->
     <import resource="applicationContext-web-controllers.xml" />
     <import resource="applicationContext-web-resources.xml" />

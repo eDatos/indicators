@@ -2,8 +2,6 @@
 [#include "/inc/includes.ftl"]
 [@template.base migas='Indicadores']
 
-[#include "/layout/language-selector.ftl"]
-
 <div id="indicators"></div>
 
 <script type="text/html" id="indicatorTmpl">

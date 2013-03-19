@@ -2,7 +2,6 @@
 [#include "/inc/includes.ftl"]
 [@template.base migas='Sistemas de indicadores']
 
-[#include "/layout/language-selector.ftl"]
 
 <div style="display:none">
 	<div id="indicatorsSystems-search">
