@@ -34,9 +34,7 @@
 						<a href="/istac">Inicio</a>
 					</li>
                     [#if migas?has_content]
-					<li>
-						<strong>${migas}</strong>
-					</li>
+                        ${migas}
                     [/#if]
 				</ul>
 			</div>
