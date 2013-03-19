@@ -190,6 +190,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
         this.uiHandlers = uiHandlers;
     }
 
+    @Override
     public void refreshStatusBar() {
         // update Selected label e.g "0 of 50 selected"
         String selectedLabel = IndicatorsWeb.getMessages().selected(String.valueOf(getNumberSelected()), String.valueOf(getNumberOfElements()));
@@ -207,6 +208,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
 
         getStatusBar().getResultSetFirstButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetFirstButtonClicked();
@@ -216,6 +218,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
 
         getStatusBar().getResultSetPreviousButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetPreviousButtonClicked();
@@ -227,6 +230,7 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
 
         getStatusBar().getResultSetNextButton().addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 if (uiHandlers != null) {
                     uiHandlers.onResultSetNextButtonClicked();
@@ -264,5 +268,4 @@ public class SystemListViewImpl extends PaginationViewImpl<SystemListPresenter> 
     public void onIndicatorsSystemsDeleted() {
         indSystemListGrid.deselectAllRecords();
     }
-
 }
