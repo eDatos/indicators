@@ -193,6 +193,6 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_INSTANCES_CODES                                                     = "indicator_instances_codes";
     public static final String GEO_CODE                                                                      = "geographical_code";
     public static final String MEASURE_VALUES                                                                = "measure_values";
-    public static final String NUM_RESULTS                                                                   = "code";
+    public static final String NUM_RESULTS                                                                   = "num_results";
     public static final String DSPL_DATASET_TITLE                                                            = "dataset_title";
 }
