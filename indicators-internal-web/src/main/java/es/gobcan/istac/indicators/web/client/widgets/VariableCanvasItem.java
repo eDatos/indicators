@@ -22,13 +22,14 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class VariableCanvasItem extends CustomCanvasItem {
 
-    private final static Integer SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH - 64;
+    // private final static Integer SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH - 64;
+    private final static String SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH;
 
-    private Logger               logger            = Logger.getLogger(VariableCanvasItem.class.getName());
+    private Logger              logger            = Logger.getLogger(VariableCanvasItem.class.getName());
 
-    private CustomDynamicForm    form;
+    private CustomDynamicForm   form;
 
-    protected boolean            required;
+    protected boolean           required;
 
     public VariableCanvasItem(String name, String title) {
         super(name, title);
@@ -53,6 +54,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
         setTitleStyle("requiredFormLabel");
     }
 
+    @Override
     public void clearValue() {
         form.clearValues();
         // Set an empty hidden item to remove fields from the form.
@@ -93,6 +95,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
         }
     }
 
+    @Override
     public List<DataSourceVariableDto> getValue() {
         List<DataSourceVariableDto> dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
         FormItem[] formItems = form.getFields();
@@ -127,5 +130,4 @@ public class VariableCanvasItem extends CustomCanvasItem {
         }
         return true;
     }
-
 }

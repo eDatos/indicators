@@ -45,7 +45,7 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
 
     protected boolean           required;
 
-    public GeographicalValuesDragAndDropItem(String name, String title, int formItemWidth) {
+    public GeographicalValuesDragAndDropItem(String name, String title, String formItemWidth) {
         super(name, title);
         setWidth(formItemWidth);
 
@@ -55,7 +55,7 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
 
         // SelectItem to select the geographical granularity
         form = new CustomDynamicForm();
-        form.setWidth(formItemWidth);
+        form.setColWidths("100%");
         SelectItem selectItem = new SelectItem(GEOGRAPHICAL_GRANULARITY_SELECTION);
         selectItem.setShowTitle(false);
         selectItem.setWidth(formItemWidth);
@@ -65,7 +65,7 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
         sourceList.setShowHeader(false);
         sourceList.setLeaveScrollbarGap(false);
         sourceList.setAlternateRecordStyles(false);
-        sourceList.setWidth(150);
+        sourceList.setWidth("*");
         sourceList.setHeight(100);
         sourceList.setAutoFitMaxRecords(10);
         sourceList.setAutoFitData(Autofit.VERTICAL);
@@ -98,7 +98,7 @@ public class GeographicalValuesDragAndDropItem extends CustomCanvasItem {
         targetList.setLeaveScrollbarGap(false);
         targetList.setShowHeader(false);
         targetList.setAlternateRecordStyles(false);
-        targetList.setWidth(150);
+        targetList.setWidth("*");
         targetList.setHeight(100);
         targetList.setAutoFitMaxRecords(10);
         targetList.setAutoFitData(Autofit.VERTICAL);

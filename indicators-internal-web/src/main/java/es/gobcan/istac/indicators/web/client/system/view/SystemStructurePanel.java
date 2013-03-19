@@ -16,6 +16,7 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
+import org.siemac.metamac.web.common.client.utils.FormItemUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -100,7 +101,7 @@ import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemStructurePanel extends HLayout {
 
-    private static final int         CUSTOM_FORM_ITEM_WIDTH = 380;
+    private static final String      CUSTOM_FORM_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH;
 
     private SystemUiHandler          uiHandlers;
     private IndicatorsSystemDtoWeb   system;
@@ -794,7 +795,7 @@ public class SystemStructurePanel extends HLayout {
 
         private void createEditForm() {
             editForm = new GroupDynamicForm(getConstants().systemStrucDimTitle());
-            MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName(), CUSTOM_FORM_ITEM_WIDTH - 28);
+            MultiLanguageTextItem name = new MultiLanguageTextItem(DimensionDS.TITLE, getConstants().systemStrucDimName(), CUSTOM_FORM_ITEM_WIDTH);
             name.setRequired(true);
             editForm.setFields(name);
             mainFormLayout.addEditionCanvas(editForm);
@@ -1121,7 +1122,7 @@ public class SystemStructurePanel extends HLayout {
 
             // Name
 
-            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH - 28);
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH);
             name.setRequired(true);
 
             // SEARCH INDICATOR
@@ -1299,7 +1300,7 @@ public class SystemStructurePanel extends HLayout {
 
             // Name
 
-            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH - 28);
+            MultiLanguageTextItem name = new MultiLanguageTextItem(IndicatorInstanceDS.TITLE, getConstants().systemStrucIndInstanceTitleField(), CUSTOM_FORM_ITEM_WIDTH);
             name.setRequired(true);
 
             ViewTextItem indicatorNameItem = new ViewTextItem(IndicatorInstanceDS.IND_TEXT, getConstants().systemStrucIndInstanceIndicator());

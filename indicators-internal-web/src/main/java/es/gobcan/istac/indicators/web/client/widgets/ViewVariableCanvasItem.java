@@ -28,7 +28,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         setTextBoxStyle("variableCanvasCell");
 
         form = new CustomDynamicForm();
-        form.setWidth(270);
+        form.setWidth("*");
 
         VLayout vLayout = new VLayout();
         vLayout.addMember(form);
@@ -42,6 +42,7 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
         setTitleStyle("requiredFormLabel");
     }
 
+    @Override
     public void clearValue() {
         // Set an empty hidden item to remove fields from the form.
         ViewTextItem item = new ViewTextItem();
@@ -77,5 +78,4 @@ public class ViewVariableCanvasItem extends CustomCanvasItem {
             form.markForRedraw();
         }
     }
-
 }

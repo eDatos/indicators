@@ -21,12 +21,12 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         create(FormItemUtils.FORM_ITEM_WIDTH);
     }
 
-    public GeographicalSelectItem(String name, String title, int formItemWidth) {
+    public GeographicalSelectItem(String name, String title, String formItemWidth) {
         super(name, title);
         create(formItemWidth);
     }
 
-    private void create(int formItemWidth) {
+    private void create(String formItemWidth) {
         setTitleVAlign(VerticalAlignment.TOP);
         geoGranularitItem = new CustomSelectItem("geo-gran", "geo-gran");
         geoGranularitItem.setWidth(formItemWidth);
@@ -36,6 +36,8 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         geoValueItem.setShowTitle(false);
         geoValueItem.setStartRow(true);
         form = new CustomDynamicForm();
+        form.setWidth(formItemWidth);
+        form.setColWidths("100%");
         form.setFields(geoGranularitItem, geoValueItem);
         form.setStyleName("canvasCellStyle");
         setCanvas(form);
@@ -75,6 +77,7 @@ public class GeographicalSelectItem extends CustomCanvasItem {
         return geoValueItem.getValueAsString();
     }
 
+    @Override
     public void clearValue() {
         form.clearErrors(true);
         geoGranularitItem.clearValue();
@@ -90,5 +93,4 @@ public class GeographicalSelectItem extends CustomCanvasItem {
     public Boolean validate() {
         return validateItem();
     }
-
 }
