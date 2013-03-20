@@ -24,7 +24,9 @@ public class WidgetsController extends BaseController {
     private ConfigurationService configurationService;
     
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
-    public ModelAndView creator() throws Exception {
+    public ModelAndView creator(@RequestParam(value="type", defaultValue = "lastData") String type) throws Exception {
+        String breadCrumb = getBreadCrumb(type);
+
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
 
@@ -34,10 +36,27 @@ public class WidgetsController extends BaseController {
         }
 
         modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
-        modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
+        modelAndView.addObject("breadcrumb", breadCrumb);
 
         return modelAndView;
     }
+
+    private String getBreadCrumb(String type) {
+        String widgetTypeListUrl = configurationService.getProperty(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY);
+        String queryToolsUrl = configurationService.getProperty(WebConstants.WIDGETS_QUERY_TOOLS_URL_PROPERTY);
+        return "<li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
+    }
+
+    public String getTypeLabel(String type) {
+        if(type.equals("temporal")) {
+            return "Temporal";
+        } else if (type.equals("recent")) {
+            return "Último dato más reciente";
+        } else {
+            return "Último dato";
+        }
+    }
+
 
     @RequestMapping(value = "/widgets/external/configuration", method = RequestMethod.GET)
     @ResponseBody

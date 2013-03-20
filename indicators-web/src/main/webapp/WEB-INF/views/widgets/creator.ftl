@@ -1,6 +1,7 @@
 [#ftl]
 [#include "/inc/includes.ftl"]
-[@template.base migas='Widgets ']
+
+[@template.base migas=breadcrumb]
 
 <div id="widget-creator">
 
