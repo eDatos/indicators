@@ -78,6 +78,7 @@
                         height : this.options.sparklineHeight + "px",
                         lineColor : this.options.headerColor,
                         fillColor : this.options.sparklineFillColor,
+                        lineWidth: 1.5,
                         highlightLineColor: null,
                         spotRadius : 0
                     };
