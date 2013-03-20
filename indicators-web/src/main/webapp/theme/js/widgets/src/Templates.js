@@ -76,7 +76,15 @@ function program3(depth0,data,depth1) {
 function program4(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "<span class=\"inlinesparkline\">";
+  buffer += "<span class=\"inlinesparkline\" data-time=\"";
+  foundHelper = helpers.timeTitles;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.timeTitles; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\" data-unit=\"";
+  foundHelper = helpers.unit;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\">";
   foundHelper = helpers.values;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.values; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -147,7 +155,15 @@ function program4(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "<span class=\"inlinesparkline\">";
+  buffer += "<span class=\"inlinesparkline\" data-time=\"";
+  foundHelper = helpers.timeTitles;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.timeTitles; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\" data-unit=\"";
+  foundHelper = helpers.unit;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "\">";
   foundHelper = helpers.values;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.values; stack1 = typeof stack1 === functionType ? stack1() : stack1; }

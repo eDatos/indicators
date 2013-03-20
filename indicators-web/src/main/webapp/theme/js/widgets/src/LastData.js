@@ -32,11 +32,21 @@
 
                     var showSparkline = this['sparkline_' + measure];
 
+                    var timeValues = dataset.getTimeValues();
+                    var timeValuesTitles = dataset.getTimeValuesTitles();
+
+                    var timeTitles = _.map(timeValues, function (timeValue) {
+                        return timeValuesTitles[timeValue];
+                    });
+
+                    console.log("timeTitles", timeTitles);
+
                     return {
                         showSparkline : showSparkline,
                         values : values.join(','),
                         value : value,
                         unit : unit,
+                        timeTitles : timeTitles.join(','),
                         measure : measuresLabels[measure],
                         hasValue : value !== null &&  value !== "-"
                     };
@@ -72,6 +82,7 @@
 
             addSparklines : function ($el) {
                 if (this.options.showSparkline) {
+                    var self = this;
                     var sparklineOptions = {
                         type : this.options.sparklineType,
                         width : this.options.sparklineWidth + "px",
@@ -80,7 +91,17 @@
                         fillColor : this.options.sparklineFillColor,
                         lineWidth: 1.5,
                         highlightLineColor: null,
-                        spotRadius : 0
+                        spotRadius : 0,
+                        tooltipFormatter : function (sparkline, options, fields) {
+                            if (fields.y !== null) {
+                                var time = sparkline.$el.data('time');
+                                var timeTitle = time.split(",")[fields.x];
+                                var unit = sparkline.$el.data('unit');
+                                var value = Istac.widget.helper.addThousandSeparator(fields.y);
+                                return "<strong>" + value + " " + unit + "</strong><br>" + timeTitle;
+                            }
+                            return "";
+                        }
                     };
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
                 }
@@ -92,6 +113,8 @@
                     return measuresLabels[measure];
                 });
                 context.datasets = _.map(datasets, this.parseDataset, this);
+
+                console.log(context.datasets);
 
                 this.el.toggleClass("istac-widget-lateral", this.options.sideView);
                 this.el.toggleClass("istac-widget-lastData", !this.options.sideView);
