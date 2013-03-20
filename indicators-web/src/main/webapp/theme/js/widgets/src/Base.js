@@ -41,7 +41,7 @@
             sparklineWidth : 30,
             sparklineHeight : 20,
             sparklineLineColor : "#0058B0",
-            sparklineFillColor : "#DADADA",
+            sparklineFillColor : null,
             uwa : false,
             shadow : true,
             borderRadius : true
