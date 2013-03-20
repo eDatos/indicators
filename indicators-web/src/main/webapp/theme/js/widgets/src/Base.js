@@ -214,14 +214,20 @@
         setStyle : function (style) {
             var isGobcan = style === "gobcan";
             this.el.toggleClass("gobcan-style", isGobcan);
+            this.set('gobcanStyleColor', this.gobcanStyleColor);
             if (isGobcan) {
                 this.set('textColor', '#000000');
             }
         },
 
         setGobcanStyleColor : function (color) {
-            this.el.toggleClass("blue", color === "blue");
-            this.el.toggleClass("green", color === "green");
+            if (color === "blue") {
+                this.el.toggleClass("blue", color);
+                this.set('headerColor', "#0F5B95");
+            } else if (color === "green") {
+                this.el.toggleClass("green", color);
+                this.set('headerColor', "#457A0E");
+            }
         },
 
         isIstacDomain : function () {
