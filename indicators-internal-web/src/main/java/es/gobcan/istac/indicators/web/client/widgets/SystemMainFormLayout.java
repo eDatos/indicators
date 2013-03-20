@@ -67,7 +67,6 @@ public class SystemMainFormLayout extends InternationalViewMainFormLayout {
             showExportDsplButton();
         } else if (IndicatorsSystemProcStatusEnum.ARCHIVED.equals(status)) {
             showVersioningButton();
-            showExportDsplButton();
         }
     }
 
