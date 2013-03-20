@@ -59,7 +59,6 @@
 }
 
 .gobcan-style .istac-widget-title {
-    background-color: red !important;
 }
 
 .gobcan-style .istac-widget-body {
@@ -252,8 +251,8 @@
 
 .istac-widget-body-allIndicators {
     text-align: right;
-    margin-right: 5px;
-    margin-left: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
     border-top:  solid 1px #EBEBEB;
 }
 
