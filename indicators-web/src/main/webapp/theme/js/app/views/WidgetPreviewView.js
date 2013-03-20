@@ -2,9 +2,10 @@
     "use strict";
 
     App.views.WidgetPreviewView = Backbone.View.extend({
+
         initialize : function () {
             this.initializeWidget();
-            this.bindModelToWidget();
+            this.on('initialized', this.bindModelToWidget, this);
         },
 
         initializeWidget : function () {
@@ -16,9 +17,12 @@
             widgetOptions.url = apiBaseUrl;
 
             var self = this;
-            this.widget = new IstacWidget(widgetOptions, function (widget) {
+
+            Istac.widget.Factory(widgetOptions, function (widget) {
                 self.widget = widget;
+                self.trigger("initialized");
             });
+
         },
 
         bindModelToWidget : function () {

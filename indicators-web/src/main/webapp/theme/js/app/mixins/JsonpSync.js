@@ -5,6 +5,7 @@
             options.timeout = 10000;
             options.dataType = "jsonp";
             options.jsonp = '_callback';
+
             return Backbone.sync(method, model, options);
         }
     };

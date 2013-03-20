@@ -28,9 +28,6 @@
             this.model.on('change:geographicalValues', this._fetchIndicators, this);
 
             this.measures.resetDefaults();
-            this.systems.fetch();
-            this.subjects.fetch();
-            this.geographicalGranularities.fetch();
         },
 
         events : {
@@ -236,6 +233,13 @@
 
             // Visible zones
             this._renderGroupType();
+
+
+
+
+            this.systems.fetch();
+            this.subjects.fetch();
+            this.geographicalGranularities.fetch();
 
             return this;
         }

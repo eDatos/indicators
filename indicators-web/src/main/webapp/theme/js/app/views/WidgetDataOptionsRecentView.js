@@ -37,11 +37,6 @@
             this.model.on('change:subjectCode', this._fetchGeographicalValues, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalValues, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValues, this);
-
-            this.measures.resetDefaults();
-            this.systems.fetch();
-            this.subjects.fetch();
-            this.geographicalGranularities.fetch();
         },
 
         _fetchGeographicalValues : function () {
@@ -184,6 +179,11 @@
 
             // Visible zones
             this._renderGroupType();
+
+            this.measures.resetDefaults();
+            this.systems.fetch();
+            this.subjects.fetch();
+            this.geographicalGranularities.fetch();
 
             return this;
         }
