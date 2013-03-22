@@ -44,7 +44,7 @@
                     });
 
                     values = this._limitMaxSparkLine(values);
-                    timeTitles = this._limitMaxSparkLine(values);
+                    timeTitles = this._limitMaxSparkLine(timeTitles);
 
                     return {
                         showSparkline : showSparkline,
