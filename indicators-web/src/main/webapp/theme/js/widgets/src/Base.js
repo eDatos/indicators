@@ -183,7 +183,40 @@
             this.el.css('width', width);
         },
 
+        updateTitle : function () {
+            this.setTitle(this.options.title);
+        },
+
+        _getDefaultTitle : function () {
+            var title;
+            if (this.options.type === "lastData") {
+                title = "Últimos datos";
+
+                if (this.datasets && this.datasets.length > 0) {
+                    var geographicalValue = this.options.geographicalValues[0];
+                    title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
+                }
+            } else if (this.options.type === "recent") {
+                title = "Últimos indicadores actualizados";
+
+                if (this.datasets && this.datasets.length > 0) {
+                    var geographicalValue = this.options.geographicalValues[0];
+                    title += ". " + this.datasets[0].getGeographicalValuesTitles()[geographicalValue];
+                }
+            } else if (this.options.type === "temporal") {
+                if (this.datasets && this.datasets.length > 0) {
+                    title = this.datasets[0].getTitle();
+                } else {
+                    title = "Serie temporal";
+                }
+            }
+            return title;
+        },
+
         setTitle : function (title) {
+            if (_.isUndefined(title) || title.length === 0) {
+                title = this._getDefaultTitle();
+            }
             this.titleLink.text(title);
         },
 

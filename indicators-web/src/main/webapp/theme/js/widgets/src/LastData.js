@@ -39,8 +39,6 @@
                         return timeValuesTitles[timeValue];
                     });
 
-                    console.log("timeTitles", timeTitles);
-
                     return {
                         showSparkline : showSparkline,
                         values : values.join(','),
@@ -71,6 +69,7 @@
 
             render : function () {
                 this.renderTable(this.datasets);
+                this.updateTitle();
             },
 
             addTooltips : function ($el) {

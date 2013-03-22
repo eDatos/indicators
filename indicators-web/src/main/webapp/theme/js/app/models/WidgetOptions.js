@@ -9,7 +9,7 @@
     App.models.WidgetOptions = Backbone.Model.extend({
 
         defaults : {
-            title : 'Poner aquí el título del widget',
+            title : '',
             type : 'lastData', // temporal, lastData, recent
             width : CENTRAL_WIDTH,
             headerColor : '#0F5B95',

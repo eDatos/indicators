@@ -78,9 +78,8 @@
                 var chartData = this.parse(this.datasets[0]);
                 this.renderChart(chartData);
             }
+            this.updateTitle();
         },
-
-
 
         chartColors : function (chartData) {
             var nSeries = chartData.labels.length;
