@@ -432,16 +432,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
                     observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
 
-                    AttributeType unitMeasureSymbolAttribute = new AttributeType();
-                    unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
-                    Map<String, String> unitMeasure;
                     if (quantity.getUnit().getSymbol() != null) {
+                        AttributeType unitMeasureSymbolAttribute = new AttributeType();
+                        unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
+                        Map<String, String> unitMeasure;
                         unitMeasure = MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol());
-                    } else {
-                        unitMeasure = MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle());
+                        unitMeasureSymbolAttribute.setValue(unitMeasure);
+                        observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
                     }
-                    unitMeasureSymbolAttribute.setValue(unitMeasure);
-                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
                 }
 
                 if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) ||
