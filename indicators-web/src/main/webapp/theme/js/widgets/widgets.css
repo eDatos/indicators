@@ -158,7 +158,7 @@
 }
 
 .istac-widget-footer a:link, .istac-widget-footer a:visited, .istac-widget-footer a:active {
-    color: #808080;
+    color: #808080 !important;
 }
 
 .istac-widget-footer p {
