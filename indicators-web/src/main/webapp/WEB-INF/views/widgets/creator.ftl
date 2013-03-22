@@ -22,7 +22,7 @@
 <script src="[@spring.url "/theme/js/libs/handlebars-1.0.0.beta.6.js"/]"></script>
 <script src="[@spring.url "/theme/js/libs/Backbone.ModelBinder.js"/]"></script>
 <script src="[@spring.url "/theme/js/libs/select2/select2.js"/]"></script>
-
+<script src="[@spring.url "/theme/js/libs/jquery.qtip-1.0.0-rc3.min.js"/]"></script>
 <!-- App -->
 <script src="[@spring.url "/theme/js/app/App.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/Templates.js"/]"></script>
@@ -61,6 +61,7 @@
 <script src="[@spring.url "/theme/js/widgets/libs/raphael-min.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/libs/elycharts.min.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/libs/jquery.sparkline.js"/]"></script>
+
 
 <script src="[@spring.url "/theme/js/widgets/src/Templates.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Istac.js"/]"></script>

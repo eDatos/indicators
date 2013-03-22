@@ -29,6 +29,12 @@
             };
             this.$el.html(this.template(context));
 
+            this.$('.old-browser-warning').qtip({
+                content: 'Este estilo no se visualiza correctamente en algunos navegadores',
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
             this.bindColorPickers();
             this.bindSlider();
 

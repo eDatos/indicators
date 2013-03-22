@@ -102,12 +102,21 @@ function program7(depth0,data) {
 
 templates['style-options'] = template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
-  
-  return "\r\n            <div>\r\n                <label>Color del texto:</label>\r\n                <input type=\"text\" name=\"textColor\" id=\"textColor\" class=\"small\"/>\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>\r\n                    Sombra\r\n                </label>\r\n                <input type=\"checkbox\" name=\"shadow\">\r\n            </div>\r\n        ";}
+  var buffer = "", stack1, foundHelper;
+  buffer += "\r\n            <div>\r\n                <label>Color del texto:</label>\r\n                <input type=\"text\" name=\"textColor\" id=\"textColor\" class=\"small\"/>\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n                <img class=\"old-browser-warning\" src=\"";
+  foundHelper = helpers.context;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n            </div>\r\n\r\n            <div>\r\n                <label>\r\n                    Sombra\r\n                </label>\r\n                <input type=\"checkbox\" name=\"shadow\">\r\n                <img class=\"old-browser-warning\" src=\"";
+  foundHelper = helpers.context;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n            </div>\r\n        ";
+  return buffer;}
 
 function program3(depth0,data) {
   
