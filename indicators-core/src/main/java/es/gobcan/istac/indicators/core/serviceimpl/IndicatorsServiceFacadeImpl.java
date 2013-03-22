@@ -700,23 +700,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return geographicalValueDtos;
     }
 
-//    @Override
-//    public List<GeographicalValueDto> retrieveGeographicalValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-//
-//        // Security
-//        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-//
-//        // Retrieve
-//        List<GeographicalValue> geographicalValues = getIndicatorsDataService().retrieveGeographicalValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-//
-//        // Transform
-//        List<GeographicalValueDto> geographicalValueDtos = new ArrayList<GeographicalValueDto>();
-//        for (GeographicalValue geoValue : geographicalValues) {
-//            geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
-//        }
-//        return geographicalValueDtos;
-//    }
-
     @Override
     public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -799,23 +782,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         return geographicalGranularityDtos;
     }
 
-//    @Override
-//    public List<GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-//        // Security
-//        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-//
-//        // Retrieve
-//        List<GeographicalGranularity> geographicalGranularities = getIndicatorsDataService().retrieveGeographicalGranularitiesInIndicatorInstance(ctx, indicatorInstanceUuid);
-//
-//        // Transform
-//        List<GeographicalGranularityDto> geographicalGranularityDtos = new ArrayList<GeographicalGranularityDto>();
-//        for (GeographicalGranularity geographicalGranularity : geographicalGranularities) {
-//            geographicalGranularityDtos.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
-//        }
-//
-//        return geographicalGranularityDtos;
-//    }
-
     @Override
     public TimeGranularityDto retrieveTimeGranularity(ServiceContext ctx, TimeGranularityEnum timeGranularity) throws MetamacException {
 
@@ -879,23 +845,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         return timeGranularitiesDtos;
     }
-
-//    @Override
-//    public List<TimeGranularityDto> retrieveTimeGranularitiesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-//        // Security
-//        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-//
-//        // Retrieve
-//        List<TimeGranularity> timeGranularities = getIndicatorsDataService().retrieveTimeGranularitiesInIndicatorPublished(ctx, indicatorInstanceUuid);
-//
-//        // Transform
-//        List<TimeGranularityDto> timeGranularitiesDtos = new ArrayList<TimeGranularityDto>();
-//        for (TimeGranularity granularity : timeGranularities) {
-//            TimeGranularityDto timeGranularityDto = do2DtoMapper.timeGranularityDoToTimeGranularityDto(granularity);
-//            timeGranularitiesDtos.add(timeGranularityDto);
-//        }
-//        return timeGranularitiesDtos;
-//    }
 
     @Override
     public List<TimeValueDto> retrieveTimeValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, TimeGranularityEnum granularity)
@@ -969,24 +918,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
         }
         return timeValuesDtos;
     }
-
-//    @Override
-//    public List<TimeValueDto> retrieveTimeValuesInIndicatorInstance(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
-//
-//        // Security
-//        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-//
-//        // Retrieve
-//        List<TimeValue> timeValues = getIndicatorsDataService().retrieveTimeValuesInIndicatorInstance(ctx, indicatorInstanceUuid);
-//
-//        // Transform
-//        List<TimeValueDto> timeValuesDtos = new ArrayList<TimeValueDto>();
-//        for (TimeValue timeValue : timeValues) {
-//            TimeValueDto timeValueDto = do2DtoMapper.timeValueDoToTimeValueDto(timeValue);
-//            timeValuesDtos.add(timeValueDto);
-//        }
-//        return timeValuesDtos;
-//    }
 
     @Override
     public IndicatorDto createIndicator(ServiceContext ctx, IndicatorDto indicatorDto) throws MetamacException {
