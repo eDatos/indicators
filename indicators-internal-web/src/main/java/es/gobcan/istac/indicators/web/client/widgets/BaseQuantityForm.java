@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.widgets;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class BaseQuantityForm extends GroupDynamicForm {
     }
 
     public void setQuantityUnits(List<QuantityUnitDto> units) {
+        sortQuantityUnits(units);
         this.quantityUnitDtos = units;
     }
 
@@ -290,5 +293,17 @@ public class BaseQuantityForm extends GroupDynamicForm {
             }
         }
         return new String();
+    }
+    
+    private void sortQuantityUnits(List<QuantityUnitDto> units) {
+        Collections.sort(units, new Comparator<QuantityUnitDto>() {
+
+            @Override
+            public int compare(QuantityUnitDto first, QuantityUnitDto second) {
+                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
+                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
+                return firstText.compareTo(secondText);
+            }
+        });
     }
 }

@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.utils;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -140,6 +142,7 @@ public class CommonUtils {
     public static LinkedHashMap<String, String> getSubjectsValueMap(List<SubjectDto> subjectDtos) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
+        sortSubjectList(subjectDtos);
         for (SubjectDto subjectDto : subjectDtos) {
             valueMap.put(subjectDto.getCode(), CommonWebUtils.getElementName(subjectDto.getCode(), subjectDto.getTitle()));
         }
@@ -290,4 +293,15 @@ public class CommonUtils {
         }
     }
 
+    private static void sortSubjectList(List<SubjectDto> subjectDtos) {
+        Collections.sort(subjectDtos, new Comparator<SubjectDto>() {
+
+            @Override
+            public int compare(SubjectDto first, SubjectDto second) {
+                String firstText = CommonWebUtils.getElementName(first.getCode(), first.getTitle());
+                String secondText = CommonWebUtils.getElementName(second.getCode(), second.getTitle());
+                return firstText.compareTo(secondText);
+            }
+        });
+    }
 }

@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -259,6 +261,8 @@ public class QuantityForm extends BaseQuantityForm {
         }
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
+    
+
 
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
