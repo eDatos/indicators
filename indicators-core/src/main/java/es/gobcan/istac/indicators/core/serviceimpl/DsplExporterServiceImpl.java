@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +31,8 @@ import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -159,7 +162,8 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     private Template getTemplateFreemarker(String templateName) throws Exception {
         Configuration cfg = new Configuration();
         URL url = Thread.currentThread().getContextClassLoader().getResource("templates/" + templateName + ".ftl");
-        return new Template(templateName, new FileReader(url.getPath()), cfg);
+        String path = URLDecoder.decode(url.getPath(),"UTF-8");
+        return new Template(templateName, new FileReader(path),cfg);
     }
 
 }

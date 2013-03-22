@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -63,8 +64,8 @@ public class TemplateFileGenerator {
     
     private Template getTemplateFreemarker(Locale locale) throws Exception {
         Configuration cfg = new Configuration();
-        cfg.setLocale(locale);
         URL url = Thread.currentThread().getContextClassLoader().getResource("templates/atom.ftl");
-        return new Template("atom", new FileReader(url.getPath()), cfg);
+        String path = URLDecoder.decode(url.getPath(),"UTF-8");
+        return new Template("atom", new FileReader(path),cfg);
     }
 }
