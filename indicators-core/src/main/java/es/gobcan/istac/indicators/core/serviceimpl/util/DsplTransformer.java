@@ -210,7 +210,7 @@ public class DsplTransformer {
         Map<TimeGranularityEnum, List<IndicatorInstance>> instancesByGranularity = new HashMap<TimeGranularityEnum, List<IndicatorInstance>>();
 
         for (IndicatorInstance instance : instances) {
-            List<TimeGranularity> granularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(ctx, instance.getUuid());
+            List<TimeGranularity> granularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
 
             for (TimeGranularity granularity : granularities) {
                 List<IndicatorInstance> instancesWithGranularity = instancesByGranularity.get(granularity.getGranularity());
@@ -275,7 +275,7 @@ public class DsplTransformer {
         Set<GeographicalGranularity> granularitiesUsed = new HashSet<GeographicalGranularity>();
 
         for (IndicatorInstance instance : instances) {
-            granularitiesUsed.addAll(indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(ctx, instance.getUuid()));
+            granularitiesUsed.addAll(indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid()));
         }
         return granularitiesUsed;
     }
@@ -442,8 +442,10 @@ public class DsplTransformer {
         for (LocalisedString localisedStr : unit.getTitle().getTexts()) {
             row.addColumn(new TextColumn("unit_text", localisedStr.getLocale()), localisedStr.getLabel());
         }
-        row.addColumn(new TextColumn("symbol"), unit.getSymbol());
-        row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
+        if (unit.getSymbol() != null) {
+            row.addColumn(new TextColumn("symbol"), unit.getSymbol());
+            row.addColumn(new TextColumn("symbol_position"), unit.getSymbolPosition().name());
+        }
 
         data.setRows(Arrays.asList(row));
 
@@ -638,7 +640,7 @@ public class DsplTransformer {
     }
 
     private boolean indicatorInstanceUsesGeoGranularity(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity) throws MetamacException {
-        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(ctx, instance.getUuid());
+        List<GeographicalGranularity> granularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid());
         return granularities.contains(geoGranularity);
     }
 
@@ -656,7 +658,10 @@ public class DsplTransformer {
         slice.addDimension(getIdForTimeConcept(timeGranularity));
 
         for (IndicatorInstance instance : instancesUsingGeoGranularity) {
-            slice.addMetric(getIdForQuantityIndicatorConcept(instance.getIndicator()));
+            String conceptId = getIdForQuantityIndicatorConcept(instance.getIndicator());
+            if (!slice.getMetrics().contains(conceptId)) {
+                slice.addMetric(conceptId);
+            }
         }
 
         return slice;
@@ -776,7 +781,7 @@ public class DsplTransformer {
         measureCondition.setCodesDimension(Arrays.asList(measureCode));
         conditions.add(measureCondition);
 
-        return indicatorsDataService.findObservationsByDimensionsInIndicatorInstance(ctx, instance.getUuid(), conditions);
+        return indicatorsDataService.findObservationsByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, instance.getUuid(), conditions);
     }
 
     private List<String> getCodesForInstanceGeoValues(ServiceContext ctx, IndicatorInstance instance, GeographicalGranularity geoGranularity) throws MetamacException {

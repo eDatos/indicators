@@ -1,20 +1,10 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import es.gobcan.istac.indicators.core.domain.*;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
-import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
-import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
-import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
-import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
-import es.gobcan.istac.indicators.rest.mapper.IndicatorInstancesRest2DoMapper;
-import es.gobcan.istac.indicators.rest.types.*;
-import es.gobcan.istac.indicators.rest.util.ConditionUtil;
-import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
-import es.gobcan.istac.indicators.rest.util.RequestUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -24,22 +14,46 @@ import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
+import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
+import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorInstancesRest2DoMapper;
+import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.MetadataType;
+import es.gobcan.istac.indicators.rest.types.PagedResultType;
+import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import es.gobcan.istac.indicators.rest.util.CriteriaUtil;
+import es.gobcan.istac.indicators.rest.util.RequestUtil;
+
+@Service
 public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    protected IndicatorsSystemsService indicatorsSystemsService = null;
-
-    @Autowired
-    private IndicatorsDataService indicatorsDataService = null;
+    protected IndicatorsApiService indicatorsApiService = null;
 
     @Autowired
     private Do2TypeMapper dto2TypeMapper = null;
@@ -65,40 +79,19 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     protected PagedResult<IndicatorsSystemVersion> findIndicatorsSystems(PagingParameter pagingParameter) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
+        return indicatorsApiService.findIndicatorsSystems(pagingParameter);
     }
 
-
     protected IndicatorsSystemVersion retrieveIndicatorsSystemByCode(String idIndicatorSystem) throws MetamacException {
-        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
-        conditions.add(ConditionalCriteria.equal(IndicatorsSystemVersionProperties.indicatorsSystem().code(), idIndicatorSystem));
-        PagingParameter pagingParameter = PagingParameter.pageAccess(1);
-        PagedResult<IndicatorsSystemVersion> result = indicatorsSystemsService.findIndicatorsSystems(RestConstants.SERVICE_CONTEXT, null, pagingParameter);
-
-        if(result.getValues().size() == 0) {
-            throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator System not found");
-        }
-
-        return result.getValues().get(0);
+        return indicatorsApiService.retrieveIndicatorsSystemByCode(idIndicatorSystem);
     }
 
     protected PagedResult<IndicatorInstance> findIndicatorsInstancesInIndicatorsSystems(SculptorCriteria sculptorCriteria) throws MetamacException {
-        return indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        return indicatorsApiService.findIndicatorsInstancesInIndicatorsSystems(sculptorCriteria);
     }
 
     protected IndicatorInstance retrieveIndicatorInstanceByCode(String idIndicatorSystem, String idIndicatorInstance) throws MetamacException {
-        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
-        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().indicatorsSystem().code(), idIndicatorSystem));
-        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.code(), idIndicatorInstance));
-
-        PagingParameter pagingParameter = PagingParameter.pageAccess(1);
-        PagedResult<IndicatorInstance> result = indicatorsSystemsService.findIndicatorsInstancesInLastVersionIndicatorsSystems(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
-
-        if(result.getValues().size() == 0) {
-            throw new RestRuntimeException(HttpStatus.NOT_FOUND, "Indicator instance not found");
-        }
-
-        return result.getValues().get(0);
+        return indicatorsApiService.retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
     }
 
     @Override
@@ -108,10 +101,11 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         return result;
     }
 
+    @Override
     public List<IndicatorsSystemHistoryType> findIndicatorsSystemHistoryByCode(final String baseURL, final String code, final int maxResults) throws Exception {
         IndicatorsSystemVersion indicatorsSystemVersion = retrieveIndicatorsSystemByCode(code);
         
-        List<IndicatorsSystemHistory> systemHistories = indicatorsSystemsService.findIndicatorsSystemHistory(RestConstants.SERVICE_CONTEXT, indicatorsSystemVersion.getIndicatorsSystem().getUuid(), maxResults);
+        List<IndicatorsSystemHistory> systemHistories = indicatorsApiService.findIndicatorsSystemHistory(indicatorsSystemVersion.getIndicatorsSystem().getUuid(), maxResults);
         
         List<IndicatorsSystemHistoryType> systemHistoriesType = new ArrayList<IndicatorsSystemHistoryType>();
         for (IndicatorsSystemHistory systemHistory : systemHistories) {
@@ -181,16 +175,16 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws Exception {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid());
+        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(indicatorInstance.getUuid());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(indicatorInstance.getUuid());
 
         List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
         ConditionUtil.filterGeographicalValues(selectedRepresentations, selectedGranularities, geographicalValues, conditionDimensionDtos);
         ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
         ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
 
-        Map<String, ObservationExtendedDto> observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstance(RestConstants.SERVICE_CONTEXT, indicatorInstance.getUuid(), conditionDimensionDtos);
+        Map<String, ObservationExtendedDto> observationMap = indicatorsApiService.findObservationsExtendedByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
         return dto2TypeMapper.createDataType(dataTypeRequest);

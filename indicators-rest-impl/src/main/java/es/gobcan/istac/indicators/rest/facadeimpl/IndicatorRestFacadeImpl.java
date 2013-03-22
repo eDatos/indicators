@@ -1,19 +1,11 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
 
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import es.gobcan.istac.indicators.core.domain.*;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
-import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
-import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
-import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
-import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
-import es.gobcan.istac.indicators.rest.types.*;
-import es.gobcan.istac.indicators.rest.util.ConditionUtil;
-import es.gobcan.istac.indicators.rest.util.RequestUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -23,13 +15,34 @@ import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
+import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.facadeapi.IndicatorRestFacade;
+import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
+import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
+import es.gobcan.istac.indicators.rest.mapper.IndicatorsRest2DoMapper;
+import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.MetadataType;
+import es.gobcan.istac.indicators.rest.types.PagedResultType;
+import es.gobcan.istac.indicators.rest.types.RestCriteriaPaginator;
+import es.gobcan.istac.indicators.rest.util.ConditionUtil;
+import es.gobcan.istac.indicators.rest.util.RequestUtil;
 
+@Service
 public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
     protected Logger logger = LoggerFactory.getLogger(IndicatorRestFacadeImpl.class);
@@ -38,7 +51,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private Do2TypeMapper dto2TypeMapper;
 
     @Autowired
-    protected IndicatorsService indicatorsService;
+    protected IndicatorsApiService indicatorsApiService;
 
     @Autowired
     private IndicatorsDataService indicatorsDataService;
@@ -94,22 +107,11 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     protected PagedResult<IndicatorVersion> findIndicators(SculptorCriteria sculptorCriteria) throws org.siemac.metamac.core.common.exception.MetamacException {
-        return indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        return indicatorsApiService.findIndicators(sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
     }
 
     protected IndicatorVersion retrieveIndicatorByCode(String indicatorCode) throws org.siemac.metamac.core.common.exception.MetamacException {
-
-        ArrayList<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
-        conditions.add(ConditionalCriteria.equal(IndicatorVersionProperties.indicator().code(), indicatorCode));
-        PagingParameter pagingParameter = PagingParameter.pageAccess(1);
-
-        PagedResult<IndicatorVersion> result = indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);
-
-        if(result.getValues().size() == 0) {
-            throw new MetamacException();
-        }
-
-        return result.getValues().get(0);
+        return indicatorsApiService.retrieveIndicatorByCode(indicatorCode);
     }
 
     @Override

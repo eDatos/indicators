@@ -12,6 +12,8 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
     "parentLink",
     "title",
     "conceptDescription",
+    "subjectCode",
+    "subjectTitle",
     "dimension",
     "decimalPlaces",
     "childLink"
@@ -25,6 +27,8 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
 
     private Map<String, MetadataDimensionType> dimension        = null;
     private Integer                            decimalPlaces    = null;
+    private String                             subjectCode      = null;
+    private Map<String, String>                subjectTitle     = null;
     private LinkType                           childLink        = null;
 
     public Map<String, MetadataDimensionType> getDimension() {
@@ -51,4 +55,19 @@ public class IndicatorInstanceType extends IndicatorInstanceBaseType implements 
         this.decimalPlaces = decimalPlaces;
     }
 
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+    
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+    
+    public Map<String, String> getSubjectTitle() {
+        return subjectTitle;
+    }
+    
+    public void setSubjectTitle(Map<String, String> subjectTitle) {
+        this.subjectTitle = subjectTitle;
+    }
 }

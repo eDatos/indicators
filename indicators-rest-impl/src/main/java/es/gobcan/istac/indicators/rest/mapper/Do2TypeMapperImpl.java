@@ -1,34 +1,72 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
-import es.gobcan.istac.indicators.core.domain.*;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
-import es.gobcan.istac.indicators.rest.RestConstants;
-import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
-import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
-import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
-import es.gobcan.istac.indicators.rest.types.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.*;
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.Indicator;
+import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
+import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
+import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.MeasureValue;
+import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.TimeGranularity;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
+import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
+import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
+import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
+import es.gobcan.istac.indicators.rest.types.AttributeAttachmentLevelEnumType;
+import es.gobcan.istac.indicators.rest.types.AttributeType;
+import es.gobcan.istac.indicators.rest.types.DataDimensionType;
+import es.gobcan.istac.indicators.rest.types.DataRepresentationType;
+import es.gobcan.istac.indicators.rest.types.DataType;
+import es.gobcan.istac.indicators.rest.types.ElementLevelType;
+import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
+import es.gobcan.istac.indicators.rest.types.IndicatorBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorInstanceType;
+import es.gobcan.istac.indicators.rest.types.IndicatorType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemBaseType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemHistoryType;
+import es.gobcan.istac.indicators.rest.types.IndicatorsSystemType;
+import es.gobcan.istac.indicators.rest.types.LinkType;
+import es.gobcan.istac.indicators.rest.types.MetadataAttributeType;
+import es.gobcan.istac.indicators.rest.types.MetadataDimensionType;
+import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
+import es.gobcan.istac.indicators.rest.types.MetadataRepresentationType;
+import es.gobcan.istac.indicators.rest.types.MetadataType;
+import es.gobcan.istac.indicators.rest.types.QuantityType;
+import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
+import es.gobcan.istac.indicators.rest.types.SubjectType;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -51,13 +89,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     };
 
     @Autowired
-    private IndicatorsSystemsService indicatorsSystemsService = null;
-
-    @Autowired
-    private IndicatorsService indicatorsService = null;
-
-    @Autowired
-    private IndicatorsDataService indicatorsDataService = null;
+    private IndicatorsApiService indicatorsApiService = null;
 
     @Autowired
     private StatisticalOperationsRestInternalFacade statisticalOperations = null;
@@ -137,7 +169,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             List<IndicatorInstanceBaseType> targets = new ArrayList<IndicatorInstanceBaseType>(sources.size());
             for (IndicatorInstance source : sources) {
                 IndicatorInstanceBaseType target = new IndicatorInstanceBaseType();
-                IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid()); // TODO HACER EN UNA CONSULTA
+                IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid()); // TODO HACER EN UNA CONSULTA
                 _indicatorsInstanceDoToType(source, indicatorVersion, target, baseURL);
                 targets.add(target);
             }
@@ -373,7 +405,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             switch (measureValue.getMeasureValue()) {
                 case ABSOLUTE:
                     if (dataTypeRequest.getIndicatorInstance() != null) {
-                        IndicatorVersion indicatorVersion = retrieveIndicatorPublished(dataTypeRequest.getIndicatorInstance().getIndicator().getUuid());
+                        IndicatorVersion indicatorVersion = retrieveIndicatorFromCacheIfPossible(dataTypeRequest.getIndicatorInstance().getIndicator().getUuid());
                         quantity = indicatorVersion.getQuantity();
                     } else if (dataTypeRequest.getIndicatorVersion() != null) {
                         quantity = dataTypeRequest.getIndicatorVersion().getQuantity();
@@ -429,14 +461,14 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private IndicatorVersion retrieveIndicatorPublished(String uuid) {
+    private IndicatorVersion retrieveIndicatorFromCacheIfPossible(String uuid) {
         try {
             Assert.notNull(uuid, "UUID is required");
 
             Map<String, Object> indicatorVersionCache = getRequestCache(REQUEST_CACHE_INDICATIOR_VERSION);
             IndicatorVersion indicatorVersion = (IndicatorVersion) indicatorVersionCache.get(uuid);
             if (indicatorVersion == null) {
-                indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, uuid);
+                indicatorVersion = indicatorsApiService.retrieveIndicator(uuid);
                 indicatorVersionCache.put(uuid, indicatorVersion);
             }
             return indicatorVersion;
@@ -453,7 +485,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             Map<String, Object> datasourceCache = getRequestCache(REQUEST_CACHE_DATASOURCE);
             DataSource dataSource = (DataSource) datasourceCache.get(uuid);
             if (dataSource == null) {
-                dataSource = indicatorsService.retrieveDataSource(RestConstants.SERVICE_CONTEXT, uuid);
+                dataSource = indicatorsApiService.retrieveDataSource(uuid);
                 datasourceCache.put(uuid, dataSource);
             }
             return dataSource;
@@ -469,7 +501,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             Map<String, Object> unitMultiplierCache = getRequestCache(REQUEST_CACHE_UNITMULTIPLIER);
             UnitMultiplier unitMultiplier = (UnitMultiplier) unitMultiplierCache.get(unitMultiplierId.toString());
             if (unitMultiplier == null) {
-                unitMultiplier = indicatorsService.retrieveUnitMultiplier(RestConstants.SERVICE_CONTEXT, unitMultiplierId);
+                unitMultiplier = indicatorsApiService.retrieveUnitMultiplier(unitMultiplierId);
                 unitMultiplierCache.put(unitMultiplierId.toString(), unitMultiplier);
             }
             return unitMultiplier;
@@ -534,7 +566,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(MapperUtil.getLocalisedLabel(source.getSubjectTitle()));
 
-        List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsSystemsService.retrieveIndicatorsSystemPublishedForIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
+        List<IndicatorsSystemVersion> indicatorsSystemVersions = indicatorsApiService.retrieveIndicatorsSystemPublishedForIndicator(source.getIndicator().getUuid());
         if (indicatorsSystemVersions.size() != 0) {
             List<LinkType> surveyLinks = new ArrayList<LinkType>();
             for (IndicatorsSystemVersion indicatorsSystemVersion : indicatorsSystemVersions) {
@@ -556,21 +588,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
-        List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicator(source.getIndicator().getUuid());
+        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
-        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicator(source.getIndicator().getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
 
         // MEASURE
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
@@ -595,21 +627,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
         // GEOGRAPHICAL
-        List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicator(source.getIndicator().getUuid());
+        List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
         target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
         // TIME
-        List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
-        List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicator(source.getIndicator().getUuid());
+        List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
         target.getDimension().put(timeDimension.getCode(), timeDimension);
 
         // MEASURE
-        List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicator(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid(), source.getVersionNumber());
+        List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
 
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
@@ -682,21 +714,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
             // GEOGRAPHICAL
-            List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
+            List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
-            List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicatorInstance(source.getUuid());
+            List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
             target.getDimension().put(timeDimension.getCode(), timeDimension);
 
             // MEASURE
-            List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
@@ -708,7 +740,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
     private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
         try {
-            IndicatorVersion indicatorVersion = indicatorsService.retrieveIndicatorPublished(RestConstants.SERVICE_CONTEXT, source.getIndicator().getUuid());
+            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid());
 
             _indicatorsInstanceDoToType(source, indicatorVersion, target, baseURL);
 
@@ -716,27 +748,33 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
             // GEOGRAPHICAL
-            List<GeographicalGranularity> geographicalGranularities = indicatorsDataService.retrieveGeographicalGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<GeographicalGranularity> geographicalGranularities = indicatorsApiService.retrieveGeographicalGranularitiesInIndicatorInstance(source.getUuid());
+            List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType geographicaDimension = _createGeographicalDimension(geographicalGranularities, geographicalValues);
             target.getDimension().put(geographicaDimension.getCode(), geographicaDimension);
 
             // TIME
-            List<TimeGranularity> timeGranularities = indicatorsDataService.retrieveTimeGranularitiesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
-            List<TimeValue> timeValues = indicatorsDataService.retrieveTimeValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<TimeGranularity> timeGranularities = indicatorsApiService.retrieveTimeGranularitiesInIndicatorInstance(source.getUuid());
+            List<TimeValue> timeValues = indicatorsApiService.retrieveTimeValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType timeDimension = _createTimeDimension(timeGranularities, timeValues);
             target.getDimension().put(timeDimension.getCode(), timeDimension);
 
             // MEASURE
-            List<MeasureValue> measureValues = indicatorsDataService.retrieveMeasureValuesInIndicatorInstance(RestConstants.SERVICE_CONTEXT, source.getUuid());
+            List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
             MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
 
             // DECIMAL PLACES
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
+            
+            // SUBJECT CODE
+            target.setSubjectCode(indicatorVersion.getSubjectCode());
+            
+            // SUBJECT TITLE
+            target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle()));
 
             String childLinkURL = _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(indicatorsSystem, source, baseURL);
             LinkType childLink = new LinkType();

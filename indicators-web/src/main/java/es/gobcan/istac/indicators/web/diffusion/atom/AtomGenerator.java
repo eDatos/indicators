@@ -106,12 +106,20 @@ public class AtomGenerator {
     private String getAtomsDir() {
         String dataDir = configurationService.getProperty(WebConstants.DATA_URL_PROPERTY);
         
+        String path = null;
         if (dataDir.endsWith(File.separator)) {
-            return dataDir + WebConstants.ATOMS_DIR;
+            path = dataDir + WebConstants.ATOMS_DIR;
         } else {
-            return dataDir + File.separator + WebConstants.ATOMS_DIR;
+            path = dataDir + File.separator + WebConstants.ATOMS_DIR;
         }
-    }
+        
+        File file = new File(path);
+        if (file.exists() && file.isDirectory()) {
+            return path;
+        } else {
+            throw new IllegalStateException("The ATOMS directory does not exist in data directory");
+        }
+    }        
     
     private int getAtomsNumEntries() {
         return Integer.parseInt(configurationService.getProperty(WebConstants.ATOMS_NUM_ENTRIES_PROPERTY));
