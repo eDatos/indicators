@@ -16,7 +16,12 @@
         {},
         Istac.widget.Base.prototype,
         {
+            _limitMaxSparkLine : function (arr) {
+                return _.last(arr, Istac.widget.configuration["indicators.widgets.sparkline.max"]);
+            },
+
             parseDataset : function (dataset) {
+
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
 
@@ -25,7 +30,6 @@
                     values = _.map(values, function (value) { // The library needs explicit null to draw a gap
                         return value === undefined ? "null" : value;
                     });
-                    values.push("null"); //Extra null to improve visibility of last element
 
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
                     var unit = dataset.getUnit(geographicalValue, lastTimeValue, measure);
@@ -38,6 +42,9 @@
                     var timeTitles = _.map(timeValues, function (timeValue) {
                         return timeValuesTitles[timeValue];
                     });
+
+                    values = this._limitMaxSparkLine(values);
+                    timeTitles = this._limitMaxSparkLine(values);
 
                     return {
                         showSparkline : showSparkline,

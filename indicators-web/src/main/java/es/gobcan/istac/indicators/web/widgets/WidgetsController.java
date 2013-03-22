@@ -64,6 +64,7 @@ public class WidgetsController extends BaseController {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(WebConstants.JAXI_URL_PROPERTY, configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY));
         properties.put(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY, configurationService.getProperties().getProperty(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY));
+        properties.put(WebConstants.WIDGETS_SPARKLINE_MAX, configurationService.getProperties().getProperty(WebConstants.WIDGETS_SPARKLINE_MAX));
         return properties;
     }
 
