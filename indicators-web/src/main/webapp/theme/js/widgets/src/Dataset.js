@@ -70,7 +70,13 @@
                     if (attribute.UNIT_MULT !== undefined && attribute.UNIT_MULT.value.__default__ !== "Unidades") {
                         result = result + attribute.UNIT_MULT.value.__default__ + " de ";
                     }
-                    result = result + attribute.UNIT_MEASURE.value.__default__;
+
+                    if(attribute.UNIT_MEASURE) {
+                        result = result + attribute.UNIT_MEASURE.value.__default__;
+                    } else {
+                        result = result + attribute.UNIT_MEAS_DETAIL.value.__default__;
+                    }
+
                     return result;
                 }
             }

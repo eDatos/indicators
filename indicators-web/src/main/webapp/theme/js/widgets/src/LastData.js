@@ -114,8 +114,6 @@
                 });
                 context.datasets = _.map(datasets, this.parseDataset, this);
 
-                console.log(context.datasets);
-
                 this.el.toggleClass("istac-widget-lateral", this.options.sideView);
                 this.el.toggleClass("istac-widget-lastData", !this.options.sideView);
                 var template = this.options.sideView ? Handlebars.templates['last-data-lateral'] : Handlebars.templates['last-data-table'];
