@@ -115,12 +115,11 @@
             var legendTop = chartTopMargin + chartHeight + labelHeight;
 
             var chartBottomMargin = legendHeight + labelHeight;
-
             var containerHeight = chartTopMargin + chartHeight + chartBottomMargin;
 
             var chartOptions = {
                 type : "line",
-                margins : [chartTopMargin, 20, chartBottomMargin, 50],
+                margins : [chartTopMargin, 1, chartBottomMargin, 65],
                 defaultSeries : {
                     plotProps : {
                         "stroke-width" : 1.5
@@ -158,7 +157,7 @@
                 series : colors,
                 defaultAxis : {
                     labels : true,
-                    labelsDistance : 1,
+                    labelsDistance : 5,
                     labelsFormatHandler : function (label) {
                         var res = label.toString().replace("\.", ",");
                         res = Istac.widget.helper.addThousandSeparator(res);
