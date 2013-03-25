@@ -170,8 +170,9 @@
     margin: 0;
 }
 
-.istac-widget-credits {
+.istac-widget-credits a {
     margin: 0;
+    font-size: 9px;
 }
 
 .istact-widget-tooltip {

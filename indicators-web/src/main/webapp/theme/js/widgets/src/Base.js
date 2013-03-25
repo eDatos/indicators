@@ -250,6 +250,9 @@
             this.set('gobcanStyleColor', this.gobcanStyleColor);
             if (isGobcan) {
                 this.set('textColor', '#000000');
+
+                var width = this.options.sideView ? 151 : 423;
+                this.set('width', width);
             }
         },
 
