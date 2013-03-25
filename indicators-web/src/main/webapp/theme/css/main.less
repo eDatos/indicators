@@ -622,3 +622,36 @@ html[xmlns] .clearfix {
     }
 
 }
+
+a.rounded_button,span.rounded_button-dis {
+    line-height: 12px;
+/* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
+    height: 20px; /* Height of button background height */
+    margin-left: 2px;
+    margin-right: 2px;
+    display: block; /*opera*/
+    display: inline-block; /*ie*/
+    display: -moz-inline-box; /*ff*/
+}
+
+a.rounded_button {
+    background: transparent url('../images/boton_accion.gif') no-repeat right top;
+}
+
+a.rounded_button {
+    cursor: pointer;
+}
+
+a.rounded_button span,span.rounded_button-dis span {
+    height: 12px;
+    display: block;
+    display: inline-block;
+    padding: 4px 16px 4px 11px;
+    line-height: 12px;
+    color: black;
+}
+
+a.rounded_button span {
+    background: transparent url('../images/boton_accion_left.gif')
+    no-repeat left top;
+}

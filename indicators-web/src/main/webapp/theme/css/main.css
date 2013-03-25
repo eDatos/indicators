@@ -105,3 +105,8 @@ html[xmlns] .clearfix{display:block;}
 #principal_interior .conten a:hover{text-decoration:underline;}
 #principal_interior .conten a:link,#principal_interior .conten a:visited{color:#003366;text-decoration:none;}
 #principal_interior .conten a.nouline:hover{text-decoration:underline;}
+a.rounded_button,span.rounded_button-dis{line-height:12px;height:20px;margin-left:2px;margin-right:2px;display:block;display:inline-block;display:-moz-inline-box;}
+a.rounded_button{background:transparent url('../images/boton_accion.gif') no-repeat right top;}
+a.rounded_button{cursor:pointer;}
+a.rounded_button span,span.rounded_button-dis span{height:12px;display:block;display:inline-block;padding:4px 16px 4px 11px;line-height:12px;color:black;}
+a.rounded_button span{background:transparent url('../images/boton_accion_left.gif') no-repeat left top;}
