@@ -137,22 +137,31 @@ function program3(depth0,data) {
   return buffer;}
 function program4(depth0,data) {
   
-  var buffer = "", stack1, foundHelper;
-  buffer += "\r\n                <td>\r\n                    <div>\r\n                        ";
-  stack1 = depth0.showSparkline;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(5, program5, data)});
+  var buffer = "", stack1;
+  buffer += "\r\n                <td>\r\n                    ";
+  stack1 = depth0.value;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(8, program8, data),fn:self.program(5, program5, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n                        <span class=\"istact-widget-observation\">";
+  buffer += "\r\n                </td>\r\n                ";
+  return buffer;}
+function program5(depth0,data) {
+  
+  var buffer = "", stack1, foundHelper;
+  buffer += "\r\n                        <div>\r\n                            ";
+  stack1 = depth0.showSparkline;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n                            <span class=\"istact-widget-observation\">";
   foundHelper = helpers.value;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + " </span>\r\n                    </div>\r\n                    <div class=\"istact-widget-unit\"> ";
+  buffer += escapeExpression(stack1) + " </span>\r\n                        </div>\r\n                        <div class=\"istact-widget-unit\"> ";
   foundHelper = helpers.unit;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</div>\r\n                </td>\r\n                ";
+  buffer += escapeExpression(stack1) + "</div>\r\n                    ";
   return buffer;}
-function program5(depth0,data) {
+function program6(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
   buffer += "<span class=\"inlinesparkline\" data-time=\"";
@@ -169,6 +178,11 @@ function program5(depth0,data) {
   else { stack1 = depth0.values; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</span>";
   return buffer;}
+
+function program8(depth0,data) {
+  
+  
+  return "\r\n                        -\r\n                    ";}
 
   buffer += "<table>\r\n    <thead>\r\n        <tr>\r\n            <th class=\"istac-widget-last-data-indicator-column istac-widget-lastData-title\">Indicador</th>\r\n            ";
   stack1 = depth0.measures;

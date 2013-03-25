@@ -74,6 +74,8 @@
 .gobcan-style .istac-widget-body-embed {
     border-left: 1px solid #EBEBEB;
     border-right: 1px solid #EBEBEB;
+    margin: 0;
+    padding: 10px;
 }
 
 
@@ -162,7 +164,7 @@
 }
 
 .istac-widget-footer p {
-    margin-left: 0;
+    margin: 0;
 }
 
 .istac-widget-embed {

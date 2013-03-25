@@ -34,7 +34,8 @@
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
                     var unit = dataset.getUnit(geographicalValue, lastTimeValue, measure);
 
-                    var showSparkline = this['sparkline_' + measure];
+
+                    var showSparkline = this.options['sparkline_' + measure];
 
                     var timeValues = dataset.getTimeValues();
                     var timeValuesTitles = dataset.getTimeValuesTitles();
@@ -109,6 +110,7 @@
                             return "";
                         }
                     };
+
                     $el.find('.inlinesparkline').sparkline('html', sparklineOptions);
                 }
             },
