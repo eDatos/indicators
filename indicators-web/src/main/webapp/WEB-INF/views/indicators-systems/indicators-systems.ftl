@@ -79,7 +79,7 @@
                     return getLabel(model.get('title'));
                 });
 
-				sorted.forEach(function(model){
+                _.each(sorted, function(model){
 					var indicatorsSystemView = new IndicatorsSystemView({ model : model});
 					var subViewHtml = indicatorsSystemView.render();
 					viewHtml += subViewHtml; 
