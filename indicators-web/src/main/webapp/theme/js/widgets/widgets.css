@@ -124,7 +124,9 @@
     font-size: 11px;
 }
 
-.istac-widget-lastData tbody tr:nth-child(odd) td, .istac-widget-lastData tbody tr:nth-child(odd) th {
+.istac-widget-lastData tbody tr.even td,
+.istac-widget-lastData tbody tr.even th
+{
 	background-color: #E3E9EE;
 }
 

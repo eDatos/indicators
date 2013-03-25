@@ -88,6 +88,7 @@
 
 
 <script>
+
     var apiBaseUrl = "[@spring.url ""/]";
     var apiContext = apiBaseUrl + "/api/indicators/v1.0";
     var jaxiUrl = "${jaxiUrlBase}";
@@ -97,8 +98,12 @@
     options.type = '${RequestParameters.type}';
     [/#if]
 
-    var widgetView = new App.views.WidgetView(options);
-    widgetView.render();
+
+
+    $(function () {
+        var widgetView = new App.views.WidgetView(options);
+        widgetView.render();
+    });
 
 </script>
 

@@ -122,6 +122,12 @@
                 });
                 context.datasets = _.map(datasets, this.parseDataset, this);
 
+                _.each(context.datasets, function (dataset, i) {
+                    dataset.isOdd = i % 2 === 1;
+                    dataset.cssClass = dataset.isOdd ? "odd" : "even";
+                });
+
+
                 this.el.toggleClass("istac-widget-lateral", this.options.sideView);
                 this.el.toggleClass("istac-widget-lastData", !this.options.sideView);
                 var template = this.options.sideView ? Handlebars.templates['last-data-lateral'] : Handlebars.templates['last-data-table'];

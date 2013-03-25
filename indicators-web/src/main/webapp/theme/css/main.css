@@ -110,3 +110,4 @@ a.rounded_button{background:transparent url('../images/boton_accion.gif') no-rep
 a.rounded_button{cursor:pointer;}
 a.rounded_button span,span.rounded_button-dis span{height:12px;display:block;display:inline-block;padding:4px 16px 4px 11px;line-height:12px;color:black;}
 a.rounded_button span{background:transparent url('../images/boton_accion_left.gif') no-repeat left top;}
+#principal_interior .select2-container a:link,#principal_interior .select2-container a:active,#principal_interior .select2-container a:visited{color:#000;}
