@@ -18,7 +18,9 @@
                 <td>
                     {{#if value}}
                         <div>
-                            {{#if showSparkline }}<span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>{{/if}}
+                            {{#if showSparkline }}
+                                <span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>
+                            {{/if}}
                             <span class="istact-widget-observation">{{ value }} </span>
                         </div>
                         <div class="istact-widget-unit"> {{ unit }}</div>

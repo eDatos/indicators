@@ -84,27 +84,25 @@
         },
 
         getObservationStr : function (geo, time, measure) {
+            var res = null;
             if (this.data.observation) {
                 var index = this.getObservationIndex(geo, time, measure);
                 var observation = this.data.observation[index];
                 var attributes = this.data.attribute[index];
-                
-                var res = null;
+
                 if (attributes) {
-	                if (observation) {
+	                if (!_.isUndefined(observation) && !_.isNull(observation)) {
 	                    res = observation;
 	                    // No need to be fixed anymore, the api return the correct value
 	                    //res = parseFloat(observation).toFixed(decimalPlaces);
 	
 	                    res = res.replace("\.", ",");
 	                    res = Istac.widget.helper.addThousandSeparator(res);
-	                } else {
-	                    res = "-";
 	                }
                 }
-                return res;
             }
-            return null;
+
+            return res;
         },
 
         getObservationsByGeoAndMeasure : function (geo, measure) {

@@ -164,7 +164,7 @@ function program5(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "<span class=\"inlinesparkline\" data-time=\"";
+  buffer += "\r\n                                <span class=\"inlinesparkline\" data-time=\"";
   foundHelper = helpers.timeTitles;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.timeTitles; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -176,7 +176,7 @@ function program6(depth0,data) {
   foundHelper = helpers.values;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.values; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "</span>";
+  buffer += escapeExpression(stack1) + "</span>\r\n                            ";
   return buffer;}
 
 function program8(depth0,data) {

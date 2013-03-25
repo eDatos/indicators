@@ -33,10 +33,25 @@
             this.instances = new App.collections.IndicatorsInstances();
             this.indicators = new App.collections.Indicators();
 
-            this.model.on('change:groupType', this._fetchGeographicalValues, this);
-            this.model.on('change:subjectCode', this._fetchGeographicalValues, this);
-            this.model.on('change:indicatorSystem', this._fetchGeographicalValues, this);
+            this.model.on('change:groupType', this._fetchGeographicalGranularities, this);
+            this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
+            this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
             this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValues, this);
+        },
+
+        _fetchGeographicalGranularities : function () {
+            this.geographicalGranularities.reset([]);
+            this.model.set('geographicalGranularityCode', undefined);
+
+            var groupType = this.model.get('groupType');
+            var indicatorSystemCode = this.model.get('indicatorSystem');
+            var subjectCode = this.model.get('subjectCode');
+
+            if (groupType === 'system' && indicatorSystemCode) {
+                this.geographicalGranularities.fetchByIndicatorSystemCode(indicatorSystemCode);
+            } else if (groupType === 'subject' && subjectCode) {
+                this.geographicalGranularities.fetchBySubjectCode(subjectCode);
+            }
         },
 
         _fetchGeographicalValues : function () {
@@ -183,7 +198,6 @@
             this.measures.resetDefaults();
             this.systems.fetch();
             this.subjects.fetch();
-            this.geographicalGranularities.fetch();
 
             return this;
         }
