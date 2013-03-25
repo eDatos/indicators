@@ -156,11 +156,16 @@
                 series : colors,
                 defaultAxis : {
                     labels : true,
-                    labelsDistance : 5,
-                    labelsFormatHandler : function (label) {
-                        var res = label.toString().replace("\.", ",");
-                        res = Istac.widget.helper.addThousandSeparator(res);
-                        return res;
+                    labelsDistance : 15
+                },
+                axis : {
+                    l : {
+                        labelsDistance : 5,
+                        labelsFormatHandler : function (label) {
+                            var res = label.toString().replace("\.", ",");
+                            res = Istac.widget.helper.addThousandSeparator(res);
+                            return res;
+                        }
                     }
                 },
                 features : {
@@ -201,10 +206,8 @@
             }
 
             if (!this.showLabels) {
-                chartOptions.axis = {
-                    x : {
-                        labels : false
-                    }
+                chartOptions.axis.x = {
+                    labels : false
                 }
             }
 
