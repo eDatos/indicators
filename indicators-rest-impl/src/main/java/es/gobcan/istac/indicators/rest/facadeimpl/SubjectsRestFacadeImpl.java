@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.indicators.core.domain.Subject;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
-import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.rest.facadeapi.SubjectsRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
@@ -28,7 +26,7 @@ public class SubjectsRestFacadeImpl implements SubjectsRestFacade {
 
     @Override
     public List<SubjectBaseType> retrieveSubjects(final String baseUrl) throws Exception {
-        List<Subject> subjects = indicatorsApiService.retrieveSubjects();
+        List<SubjectIndicatorResult> subjects = indicatorsApiService.retrieveSubjectsInIndicators();
         List<SubjectBaseType> subjectTypes = mapper.subjectDoToBaseType(subjects, baseUrl);
         return subjectTypes;
     }

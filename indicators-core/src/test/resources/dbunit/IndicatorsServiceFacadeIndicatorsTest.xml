@@ -2656,6 +2656,126 @@
         LAST_DATA_UPDATED="2011-01-22 01:02:04"
         LAST_DATA_UPDATED_TZ="Europe/London"
     />
+    
+    <!-- ************************************************************************************** -->
+    <!--    INDICATOR 13                                                                         -->
+    <!--        - Version 1: diffusion validation                                               -->
+    <!-- *************************************************************************************  -->
+    <TB_INDICATORS
+        ID="13"
+        UUID="Indicator-13"
+        CODE="CODE-13"
+        PRODUCTION_ID="1"
+        PRODUCTION_VERSION_NUMBER="1.000"
+        DIFFUSION_ID="[null]"
+        DIFFUSION_VERSION_NUMBER="[null]"
+        IS_PUBLISHED="0"
+
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:03"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:03"
+        LAST_UPDATED_TZ="Europe/London"
+     />
+  
+            <TB_INDICATORS_VERSIONS
+                ID="131"
+                UUID="Indicator-13-v1"
+                VERSION_NUMBER="1.000"
+                TITLE_FK="75"
+                ACRONYM_FK="[null]"
+                NOTES_FK="[null]"
+                COMMENTS_FK="[null]"
+                COMMENTS_URL="http://indicators/comments/13"
+                INDICATOR_FK="13"
+                PROC_STATUS="DIFFUSION_VALIDATION"
+                NOTES_URL="http://indicators/13"
+                SUBJECT_CODE="5"
+                SUBJECT_TITLE_FK="73"
+                QUANTITY_FK="1311"
+                IS_LAST_VERSION="1"
+                INCONSISTENT_DATA="0"
+                NEEDS_UPDATE="0"
+                DATA_REPOSITORY_ID="data:repository:13"
+                DATA_REPOSITORY_TABLE_NAME="TABLE_NAME_13"
+                
+                PRODUCTION_VALIDATION_DATE="2011-06-06 01:02:04"
+                PRODUCTION_VALIDATION_DATE_TZ="Europe/London"
+                PRODUCTION_VALIDATION_USER="user1"
+                DIFFUSION_VALIDATION_DATE="2011-07-07 03:02:04"
+                DIFFUSION_VALIDATION_DATE_TZ="Europe/London"
+                DIFFUSION_VALIDATION_USER="user2"
+                PUBLICATION_DATE="[null]"
+                PUBLICATION_DATE_TZ="[null]"
+                PUBLICATION_USER="[null]"
+                PUBLICATION_FAILED_DATE="[null]"
+                PUBLICATION_FAILED_DATE_TZ="[null]"
+                PUBLICATION_FAILED_USER="[null]"
+                ARCHIVE_DATE="[null]"
+                ARCHIVE_DATE_TZ="[null]"
+                ARCHIVE_USER="[null]"           
+                
+                VERSION="1"
+                CREATED_BY="user1"
+                CREATED_DATE="2011-01-01 01:02:04"
+                CREATED_DATE_TZ="Europe/London"
+                LAST_UPDATED_BY="user2"
+                LAST_UPDATED="2011-01-22 01:02:04"
+                LAST_UPDATED_TZ="Europe/London"
+            />  
+            
+                <TB_QUANTITIES
+                    ID="1311"
+                    UUID="Quantity-1311"
+                    QUANTITY_TYPE="FRACTION"
+                    UNIT_MULTIPLIER="10"
+                    SIGNIFICANT_DIGITS="[null]"
+                    DECIMAL_PLACES="3"
+                    UNIT_FK="1"
+                    NUMERATOR_FK="[null]"
+
+                    VERSION="1"
+                    CREATED_BY="user1"
+                    CREATED_DATE="2011-01-01 01:02:04"
+                    CREATED_DATE_TZ="Europe/London"
+                    LAST_UPDATED_BY="user2"
+                    LAST_UPDATED="2011-01-22 01:02:04"
+                    LAST_UPDATED_TZ="Europe/London"
+                />
+            
+                <TB_DATA_SOURCES
+                    ID="1311"
+                    UUID="Indicator-13-v1-DataSource-1"
+                    DATA_GPE_UUID="query-gpe Indicator-13-v1-DataSource-1"
+                    PX_URI="px Indicator-13-v1-DataSource-1"
+                    TIME_VARIABLE="time v Indicator-13-v1-DataSource-1"
+                    TIME_VALUE="[null]"
+                    GEOGRAPHICAL_VALUE_FK="[null]"
+                    GEOGRAPHICAL_VARIABLE="geographical v Indicator-13-v1-DataSource-1"
+                    INDICATOR_VERSION_FK="131"
+                    ABSOLUTE_METHOD="OBS_VALUE"
+                    INTERPERIOD_PUNTUAL_RATE_FK="[null]"
+                    ANNUAL_PUNTUAL_RATE_FK="[null]"
+                    INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+                    ANNUAL_PERCENTAGE_RATE_FK="[null]"
+                    SOURCE_SURVEY_CODE="code-Indicator-13-v1-DataSource-1"
+                    SOURCE_SURVEY_URL="http Indicator-13-v1-DataSource-1"
+                    PUBLISHERS="ISTAC##INE"
+                    SOURCE_SURVEY_TITLE_FK="74"
+                    SOURCE_SURVEY_ACRONYM_FK="[null]"
+                
+                    VERSION="1"
+                    CREATED_BY="user1"
+                    CREATED_DATE="2011-03-03 01:02:04"
+                    CREATED_DATE_TZ="Europe/London"
+                    LAST_UPDATED_BY="user2"
+                    LAST_UPDATED="2011-03-3 01:02:04"
+                    LAST_UPDATED_TZ="Europe/London"
+                />
+
 
 			  			
 	<!-- **************************************************************************************	-->
@@ -3012,6 +3132,11 @@
 	<TV_AREAS_TEMATICAS
 		ID_AREA_TEMATICA="4"
 		DESCRIPCION="Área temática 4"
+	/>
+    
+	<TV_AREAS_TEMATICAS
+		ID_AREA_TEMATICA="5"
+		DESCRIPCION="Área temática 5"
 	/>
     
     <!-- ************************************************************************************ -->
@@ -4236,5 +4361,45 @@
         LOCALE="es"
         VERSION="1"
         INTERNATIONAL_STRING_FK="72"
+    />
+            
+    <TB_INTERNATIONAL_STRINGS
+        ID="73"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="103"
+        LABEL="Area tematica 5 old title"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="73"
     />        
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="74"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="104"
+        LABEL="Título xx"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="74"
+    />  
+    
+        
+    <TB_INTERNATIONAL_STRINGS
+        ID="75"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="105"
+        LABEL="Título Indicator-6-v1"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="75"
+    />
 </dataset>

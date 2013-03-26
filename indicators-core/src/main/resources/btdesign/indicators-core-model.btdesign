@@ -96,7 +96,6 @@ Application Indicators {
     		> @IndicatorVersionRepository
     		> @DataSourceRepository
     		> @QuantityUnitRepository
-    		> @SubjectRepository
     		> @IndicatorInstanceRepository
     		> @IndicatorsDataService
     		> @IndicatorsSystemRepository
@@ -134,9 +133,10 @@ Application Indicators {
 	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
 	    	
 	    	// Subjects
-	    	@Subject retrieveSubject(String code) throws MetamacException;
-	    	List<@Subject> retrieveSubjects() throws MetamacException;
+	    	Subject retrieveSubject(String code) throws MetamacException;
+	    	List<Subject> retrieveSubjects() throws MetamacException;
 	    	List<SubjectIndicatorResult> retrieveSubjectsInPublishedIndicators() throws MetamacException;
+	    	List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators() throws MetamacException;
 	    	
 	    	// Units multipliers
 	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException;
@@ -846,6 +846,7 @@ Application Indicators {
             	List<@IndicatorVersion> findIndicatorsVersionLinkedToAnyDataGpeUuids(List<String> dataGpeUuids) throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<SubjectIndicatorResult> findSubjectsInPublishedIndicators() throws MetamacException;
+            	List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException;
             	"Find all distinct subjects in published indicators"
             	List<@IndicatorVersion> findPublishedIndicatorVersionWithSubjectCode(String subjectCode) throws MetamacException;
 			}
@@ -1091,26 +1092,7 @@ Application Indicators {
 			}
         }
         
-        "Table values for subjects. It is a table view of an already existing table"
-	    Entity Subject {
-        	databaseTable = "TV_AREAS_TEMATICAS"
-			!auditable
-			!optimisticLocking
-			hint="strategy=IDENTITY"
-			
-			"Id"
-			String id not nullable databaseColumn="ID_AREA_TEMATICA" length="15" key;
-       		"Title"
-       		String title not nullable databaseColumn="DESCRIPCION" length="200";
-       		
-       		Repository SubjectRepository {
-            	protected List<@Subject> findByQuery;
-            	protected List<@Subject> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@Subject retrieveSubject(String code);
-            	List<@Subject> findSubjects;
-			}
-        }
-        
+       
         "Table view for Data basic information"
 	    Entity DataDefinition {
         	databaseTable = "TV_CONSULTA"

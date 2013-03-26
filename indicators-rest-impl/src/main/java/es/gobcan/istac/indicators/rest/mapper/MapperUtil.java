@@ -73,6 +73,7 @@ public class MapperUtil {
         target.setAcronym(getLocalisedLabel(operation.getAcronym()));
         target.setDescription(getLocalisedLabel(operation.getDescription()));
         target.setObjective(getLocalisedLabel(operation.getObjective()));
+        target.setUri(operation.getSelfLink().getHref());
         return target;
     }
     
@@ -83,6 +84,7 @@ public class MapperUtil {
         target.setAcronym(getLocalisedLabel(operation.getAcronym()));
         target.setDescription(getLocalisedLabel(operation.getDescription()));
         target.setObjective(getLocalisedLabel(operation.getObjective()));
+        target.setUri(operation.getSelfLink().getHref());
         return target;
     }
     

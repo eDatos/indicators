@@ -12,6 +12,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
+import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 
@@ -116,10 +117,31 @@ public class IndicatorVersionRepositoryImpl extends IndicatorVersionRepositoryBa
                 String subjectCode = (String)((Object[]) result)[0];
                 InternationalString subjectTitle = (InternationalString)((Object[]) result)[1];
                 
-                SubjectIndicatorResult subjectIndicatorResult = new SubjectIndicatorResult();
-                subjectIndicatorResult.setId(subjectCode);
-                subjectIndicatorResult.setTitle(subjectTitle);
-                subjectsResults.add(subjectIndicatorResult);
+                SubjectIndicatorResult subject = new SubjectIndicatorResult();
+                subject.setId(subjectCode);
+                subject.setTitle(subjectTitle);
+                subjectsResults.add(subject);
+            }
+        } 
+        return subjectsResults;
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SubjectIndicatorResult> findSubjectsInLastVersionIndicators() throws MetamacException {
+        Query query = getEntityManager().createQuery("select iv.subjectCode, min(iv.subjectTitle) from IndicatorVersion iv where iv.isLastVersion = true group by iv.subjectCode");
+        List<Object> results = query.getResultList();
+        
+        List<SubjectIndicatorResult> subjectsResults = new ArrayList<SubjectIndicatorResult>();
+        if (results != null) {
+            for (Object result : results) {
+                String subjectCode = (String)((Object[]) result)[0];
+                InternationalString subjectTitle = (InternationalString)((Object[]) result)[1];
+                
+                SubjectIndicatorResult subject = new SubjectIndicatorResult();
+                subject.setId(subjectCode);
+                subject.setTitle(subjectTitle);
+                subjectsResults.add(subject);
             }
         } 
         return subjectsResults;

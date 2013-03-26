@@ -13,6 +13,7 @@ public class OperationIndicators {
     private Map<String,String>  acronym;
     private Map<String,String>  description;
     private Map<String,String>  objective;
+    private String uri;
     
     public String getId() {
         return id;
@@ -20,6 +21,14 @@ public class OperationIndicators {
     
     public void setId(String id) {
         this.id = id;
+    }
+    
+    public String getUri() {
+        return uri;
+    }
+    
+    public void setUri(String uri) {
+        this.uri = uri;
     }
     
     public Map<String, String> getTitle() {
@@ -53,6 +62,5 @@ public class OperationIndicators {
     public void setObjective(Map<String, String> objective) {
         this.objective = objective;
     }
-    
     
 }

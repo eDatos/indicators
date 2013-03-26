@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import es.gobcan.istac.indicators.core.domain.*;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.rest.types.*;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public interface Do2TypeMapper {
     public List<MetadataGranularityType> timeGranularityDoToType(List<TimeGranularity> timeGranularities);
     
     // Subjects
-    public SubjectType subjectDoToType(final Subject subject, List<IndicatorVersion> indicators, String baseUrl);
-    public List<SubjectBaseType> subjectDoToBaseType(List<Subject> subjects, String baseUrl);
+    public SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators, String baseUrl);
+    public List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects, String baseUrl);
     
     // Data
     public DataType createDataType(DataTypeRequest dataTypeRequest);

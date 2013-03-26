@@ -7,4 +7,9 @@
     <entry key="indicators.dspl.provider.description">El Instituto Canario de Estadística (ISTAC), es el órgano central del sistema estadístico autonómico y centro oficial de investigación del Gobierno de Canarias, creado y regulado por la Ley 1/1991, de 28 de enero, de Estadística de la Comunidad Autónoma de Canarias (CAC)</entry>
     <entry key="indicators.dspl.provider.url">http://www.gobiernodecanarias.org/istac/</entry>
     <entry key="indicators.dspl.indicators.system.url">http://rcorrod:8070/indicators-web/indicatorsSystems/[SYSTEM]/</entry>
+    
+    <!--  ONLY IN TESTS this should go in datasources.xml -->
+    <entry key="indicators.subjects.db.table">TV_AREAS_TEMATICAS</entry>
+    <entry key="indicators.subjects.db.column.code">ID_AREA_TEMATICA</entry>
+    <entry key="indicators.subjects.db.column.title">DESCRIPCION</entry>
 </properties>

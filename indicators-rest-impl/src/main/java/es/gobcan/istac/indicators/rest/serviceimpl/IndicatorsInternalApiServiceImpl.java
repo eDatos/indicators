@@ -10,7 +10,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
@@ -29,8 +28,7 @@ import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.exception.RestRuntimeException;
 import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
@@ -38,6 +36,12 @@ import es.gobcan.istac.indicators.rest.serviceapi.IndicatorsApiService;
 
 public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseImpl implements IndicatorsApiService {
 
+    @Override
+    public List<SubjectIndicatorResult> retrieveSubjectsInIndicators() throws MetamacException {
+        return indicatorsService.retrieveSubjectsInLastVersionIndicators(RestConstants.SERVICE_CONTEXT);
+    }
+    
+    
     @Override
     public PagedResult<IndicatorVersion> findIndicators(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         return indicatorsService.findIndicators(RestConstants.SERVICE_CONTEXT, conditions, pagingParameter);

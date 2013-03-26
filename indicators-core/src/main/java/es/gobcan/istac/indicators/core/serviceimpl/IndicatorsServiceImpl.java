@@ -12,11 +12,14 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -29,6 +32,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.Quantity;
 import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
+import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -46,6 +50,9 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
+    
+    @Autowired(required=false)
+    private SubjectRepository subjectRepository;
 
     private final Logger LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
@@ -401,6 +408,8 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             return publishIndicatorResult;
         }
 
+        tryRefreshSubjectTitle(indicatorInProduction);
+        
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
@@ -434,6 +443,22 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
         return publishIndicatorResult;
     }
+    
+    private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {
+        try {
+            Subject subject = subjectRepository.retrieveSubject(indicatorVersion.getSubjectCode());
+            InternationalString title = new InternationalString();
+            LocalisedString localised = new LocalisedString();
+            localised.setLabel(subject.getTitle());
+            localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            title.addText(localised);
+            indicatorVersion.setSubjectTitle(title);
+            LOG.info("Subject title successfully refreshed for indicator: "+indicatorVersion.getUuid()+" version: "+indicatorVersion.getVersionNumber());
+        } catch (Exception e) {
+            LOG.warn("Can not update the subject title for subject code: "+indicatorVersion.getSubjectCode()+" for indicator: "+indicatorVersion.getUuid()+" version "+indicatorVersion.getVersionNumber());
+        }
+    }
+    
     @Override
     public IndicatorVersion archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -622,7 +647,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkRetrieveSubject(code, null);
 
         // Retrieve
-        Subject subject = getSubjectRepository().retrieveSubject(code);
+        Subject subject = subjectRepository.retrieveSubject(code);
         if (subject == null) {
             throw new MetamacException(ServiceExceptionType.SUBJECT_NOT_FOUND, code);
         }
@@ -639,7 +664,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         InvocationValidator.checkRetrieveSubjects(null);
 
         // Find
-        List<Subject> subjects = getSubjectRepository().findSubjects();
+        List<Subject> subjects = subjectRepository.findSubjects();
         return subjects;
     }
 
@@ -654,6 +679,20 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Find
         List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
+        return subjects;
+    }
+    
+    /**
+     * This operation retrieves subjects from indicators table
+     */
+    @Override
+    public List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators(ServiceContext ctx) throws MetamacException {
+        
+        // Validation of parameters
+        InvocationValidator.checkRetrieveSubjectsInLastVersionIndicators(null);
+        
+        // Find
+        List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInLastVersionIndicators();
         return subjects;
     }
 
@@ -915,7 +954,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
 
         // Remove possible own indicator, because this can be as base quantity and it is not published yet
         for (Iterator<String> iterator = indicatorsUuidLinked.iterator(); iterator.hasNext();) {
-            String indicatorUuidLinked = (String) iterator.next();
+            String indicatorUuidLinked = iterator.next();
             if (indicatorUuidLinked.equals(indicatorVersion.getIndicator().getUuid())) {
                 iterator.remove();
             }
@@ -925,7 +964,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         if (indicatorsUuidLinked.size() != 0) {
             List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuidLinked);
             if (indicatorsNotPublishedUuid.size() != 0) {
-                String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
+                String[] indicatorsNotPublishedUuidArray = indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATOR_MUST_HAVE_ALL_LINKED_INDICATORS_PUBLISHED, indicatorVersion.getIndicator().getUuid(),
                         indicatorsNotPublishedUuidArray));
             }

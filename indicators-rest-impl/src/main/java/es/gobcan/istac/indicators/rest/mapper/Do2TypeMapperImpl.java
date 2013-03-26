@@ -32,13 +32,13 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataAttributeTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.MeasureDimensionTypeEnum;
+import es.gobcan.istac.indicators.core.repositoryimpl.finders.SubjectIndicatorResult;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.clients.StatisticalOperationsRestInternalFacade;
 import es.gobcan.istac.indicators.rest.clients.adapters.OperationIndicators;
@@ -258,21 +258,16 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return result;
     }
 
-    private void _subjectDoToBaseType(Subject subject, SubjectBaseType subjectBaseType, String baseUrl) {
+    private void _subjectDoToBaseType(SubjectIndicatorResult subject, SubjectBaseType subjectBaseType, String baseUrl) {
         subjectBaseType.setId(subject.getId());
         subjectBaseType.setCode(subject.getId());
         subjectBaseType.setKind(RestConstants.API_INDICATORS_SUBJECTS);
         subjectBaseType.setSelfLink(_createUrlSubject(subject, baseUrl));
-
-        Map<String, String> title = new LinkedHashMap<String, String>();
-        title.put(IndicatorsConstants.LOCALE_SPANISH, subject.getTitle()); // title only in spanish
-        title.put(MapperUtil.DEFAULT, subject.getTitle());
-
-        subjectBaseType.setTitle(title);
+        subjectBaseType.setTitle(MapperUtil.getLocalisedLabel(subject.getTitle()));
     }
 
     @Override
-    public SubjectType subjectDoToType(final Subject subject, List<IndicatorVersion> indicators, String baseUrl) {
+    public SubjectType subjectDoToType(final SubjectIndicatorResult subject, List<IndicatorVersion> indicators, String baseUrl) {
         if (subject == null) {
             return null;
         }
@@ -284,12 +279,12 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public List<SubjectBaseType> subjectDoToBaseType(List<Subject> subjects, String baseUrl) {
+    public List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects, String baseUrl) {
         if (CollectionUtils.isEmpty(subjects)) {
             return null;
         }
         List<SubjectBaseType> subjectTypes = new ArrayList<SubjectBaseType>(subjects.size());
-        for (Subject subject : subjects) {
+        for (SubjectIndicatorResult subject : subjects) {
             SubjectBaseType subjectType = new SubjectType();
             _subjectDoToBaseType(subject, subjectType, baseUrl);
             subjectTypes.add(subjectType);
@@ -938,11 +933,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setSelfLink(selfLinkURL);
         target.setVersion(source.getVersionNumber());
         target.setPublicationDate(source.getPublicationDate());
-
-        LinkType statisticalOperatioLink = new LinkType();
-        statisticalOperatioLink.setKind(RestConstants.KIND_STATISTICAL_OPERATION);
-        // statisticalOperatioLink.setHref(sourceOperationBase.getUri()); // TODO Put when Operation Rest API is available
-        target.setStatisticalOperationLink(statisticalOperatioLink);
     }
 
     private void _indicatorsSystemDoToType(IndicatorsSystemVersion source, IndicatorsSystemType target, final String baseURL) {
@@ -964,6 +954,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setAcronym(sourceOperation.getAcronym());
         target.setDescription(sourceOperation.getDescription());
         target.setObjective(sourceOperation.getObjective());
+        
+        LinkType statisticalOperatioLink = new LinkType();
+        statisticalOperatioLink.setKind(RestConstants.KIND_STATISTICAL_OPERATION);
+        statisticalOperatioLink.setHref(sourceOperation.getUri()); 
+        target.setStatisticalOperationLink(statisticalOperatioLink);
     }
 
     private String _createUrlIndicatorsSystems_IndicatorsSystem(final IndicatorsSystem indicatorsSystem, final String baseURL) {
@@ -1058,7 +1053,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_INDICATORS_DATA);
     }
 
-    private String _createUrlSubject(final Subject subject, final String baseURL) {
+    private String _createUrlSubject(final SubjectIndicatorResult subject, final String baseURL) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseURL);
         uriComponentsBuilder.path(RestConstants.API_INDICATORS_BASE);
         uriComponentsBuilder.path(RestConstants.API_SLASH);

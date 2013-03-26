@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
-import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -33,10 +32,6 @@ public abstract class IndicatorsApiServiceBaseImpl implements IndicatorsApiServi
         return indicatorsSystemsService.findIndicatorsSystemHistory(RestConstants.SERVICE_CONTEXT, idIndicatorSystem, maxResults);
     }
     
-    @Override
-    public List<Subject> retrieveSubjects() throws MetamacException {
-        return indicatorsService.retrieveSubjects(RestConstants.SERVICE_CONTEXT);
-    }
     
     @Override
     public DataSource retrieveDataSource(String uuid) throws MetamacException {

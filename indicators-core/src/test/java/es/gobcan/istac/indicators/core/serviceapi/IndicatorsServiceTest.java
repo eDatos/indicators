@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
@@ -58,6 +59,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
     private static String            INDICATOR_3_VERSION = "11.033";
     private static String            INDICATOR_5         = "Indicator-5";
     private static String            INDICATOR_12         = "Indicator-12";
+    private static String            INDICATOR_13         = "Indicator-13";
 
     // Quantity units
     private static String            QUANTITY_UNIT_1     = "1";
@@ -179,6 +181,23 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         // Validate properties are not in Dto
         IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertTrue(indicatorCreated.getIndicator().getIsPublished());
+    }
+    
+    @Test
+    public void testPublishIndicatorSubjectTitleChange() throws Exception {
+        
+        String uuid = INDICATOR_13;
+        String versionNumber = "1.000";
+        
+        String subjectTitleOld = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber).getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH);
+        // Publish
+        indicatorService.publishIndicator(getServiceContextAdministrador(), uuid);
+        
+        // Validate properties are not in Dto
+        IndicatorVersion indicatorCreated = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        assertTrue(indicatorCreated.getIndicator().getIsPublished());
+        assertFalse(subjectTitleOld.equals(indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)));
+        assertEquals("Área temática 5",indicatorCreated.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH));
     }
 
     @Test

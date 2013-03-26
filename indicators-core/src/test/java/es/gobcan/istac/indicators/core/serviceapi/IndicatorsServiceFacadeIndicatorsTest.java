@@ -83,6 +83,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             INDICATOR_10                 = "Indicator-10";
     private static String             INDICATOR_11                 = "Indicator-11";
     private static String             INDICATOR_12                 = "Indicator-12";
+    private static String             INDICATOR_13                 = "Indicator-13";
 
     // Indicators systems
     private static String             INDICATORS_SYSTEM_2          = "IndSys-2";
@@ -107,6 +108,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     private static String             SUBJECT_2                    = "2";
     private static String             SUBJECT_3                    = "3";
     private static String             SUBJECT_4                    = "4";
+    private static String             SUBJECT_5                    = "5";
 
     @Test
     public void testRetrieveIndicator() throws Exception {
@@ -2757,7 +2759,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Retrieve last versions...
         MetamacCriteriaResult<IndicatorSummaryDto> result = indicatorsServiceFacade.findIndicators(getServiceContextTecnicoProduccion(), null);
-        assertEquals(12, result.getResults().size());
+        assertEquals(13, result.getResults().size());
         List<IndicatorSummaryDto> indicatorsDto = result.getResults();
 
         {
@@ -2890,6 +2892,16 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
             assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
+        }
+        {
+            IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(12);
+            assertEquals(INDICATOR_13, indicatorSummaryDto.getUuid());
+            assertEquals("CODE-13", indicatorSummaryDto.getCode());
+
+            assertNull(indicatorSummaryDto.getDiffusionVersion());
+
+            assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorSummaryDto.getProductionVersion().getProcStatus());
+            assertEquals("1.000", indicatorSummaryDto.getProductionVersion().getVersionNumber());
         }
     }
 
@@ -4305,7 +4317,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testRetrieveSubjects() throws Exception {
 
         List<SubjectDto> subjects = indicatorsServiceFacade.retrieveSubjects(getServiceContextAdministrador());
-        assertEquals(4, subjects.size());
+        assertEquals(5, subjects.size());
 
         assertEquals(SUBJECT_1, subjects.get(0).getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
@@ -4315,6 +4327,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(2).getTitle(), "es", "Área temática 3", null, null);
         assertEquals(SUBJECT_4, subjects.get(3).getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(3).getTitle(), "es", "Área temática 4", null, null);
+        assertEquals(SUBJECT_5, subjects.get(4).getCode());
+        IndicatorsAsserts.assertEqualsInternationalString(subjects.get(4).getTitle(), "es", "Área temática 5", null, null);
     }
 
     @Test

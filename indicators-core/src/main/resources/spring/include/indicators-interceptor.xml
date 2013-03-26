@@ -26,7 +26,10 @@
     </tx:attributes> 
   </tx:advice>  
   <aop:config> 
-	<aop:pointcut id="updateServicePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*Service.*update*(..))" />
+     <aop:pointcut id="updateServicePointCut" expression="(execution(public * es.gobcan.istac.indicators..serviceapi.*Service.*(..)) and not 
+                                                                (execution(public * es.gobcan.istac.indicators..serviceapi.*Service.retrieve*(..)) or 
+                                                                 execution(public * es.gobcan.istac.indicators..serviceapi.*Service.find*(..))))" /> 
+    
     <aop:pointcut id="serviceFacadePointCut" expression="execution(public * es.gobcan.istac.indicators..serviceapi.*ServiceFacade.*(..))" />
     <aop:pointcut id="doMapperPointCut" expression="execution(public * es.gobcan.istac.indicators.core.mapper.*2DoMapper.*(..))" />
     <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->  

@@ -12,4 +12,13 @@
   <entry key="indicators.dsrepo.db.driverName">oracle.jdbc.OracleDriver</entry>
   <entry key="indicators.dsrepo.db.username">RELLENAR_USUARIO</entry>
   <entry key="indicators.dsrepo.db.password">RELLENAR_PASSWORD</entry>
+  
+  <entry key="indicators.subjects.db.url">jdbc:oracle:thin:@RELLENAR_HOST:RELLENAR_PUERTO:XE</entry>
+  <entry key="indicators.subjects.db.driverName">oracle.jdbc.OracleDriver</entry>
+  <entry key="indicators.subjects.db.username">RELLENAR_USUARIO</entry>
+  <entry key="indicators.subjects.db.password">RELLENAR_USUARIO</entry>  
+  <entry key="indicators.subjects.db.table">RELLENAR_TABLA_AREAS_TEMATICAS</entry>
+  <entry key="indicators.subjects.db.column.code">RELLENAR_NOMBRE_COLUMNA_CODIGO_AREAS_TEMATICAS</entry>
+  <entry key="indicators.subjects.db.column.title">RELLENAR_NOMBRE_COLUMNA_TITULO_AREAS_TEMATICAS</entry>
+  
 </properties>

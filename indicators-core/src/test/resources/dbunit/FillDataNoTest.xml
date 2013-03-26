@@ -39,6 +39,13 @@
         SYMBOL_POSITION="[null]" 
         TITLE_FK="45"
     />
+    <TB_LIS_QUANTITIES_UNITS 
+        ID="3" 
+        UUID="3"
+        SYMBOL="%"
+        SYMBOL_POSITION="END" 
+        TITLE_FK="49"
+    />
     
         <!-- ************************************************************************************ -->
     <!--                                 UNITS MULTIPLIERS                                    -->
@@ -1035,6 +1042,187 @@
                         VARIABLE="Naturaleza jurídica"
                         CATEGORY="T"
                         DATA_SOURCE_FK="513"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-04 05:06:07"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />
+    <!-- ************************************************************************************** -->
+    <!--    INDICATOR 6                                                                         -->
+    <!--        - Version 1: PUBLISHED                                                              -->
+    <!--        - One datasource, linked to a query with spatial and temporal               -->
+    <!-- *************************************************************************************  -->
+    <TB_INDICATORS
+        ID="6"
+        UUID="Indicator-6"
+        CODE="CODE-6"
+        PRODUCTION_ID="[null]"
+        PRODUCTION_VERSION_NUMBER="[null]"
+        DIFFUSION_ID="61"
+        DIFFUSION_VERSION_NUMBER="1.000"
+        IS_PUBLISHED="1"
+                
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:03"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:03"
+        LAST_UPDATED_TZ="Europe/London"
+     />
+            
+            <TB_INDICATORS_VERSIONS
+                ID="61"
+                UUID="Indicator-6-v1"
+                VERSION_NUMBER="1.000"
+                TITLE_FK="47"
+                COMMENTS_URL="http://indicators/comments/6"
+                INDICATOR_FK="6"
+                PROC_STATUS="PUBLISHED"
+                NOTES_URL="http://indicators/6"
+                SUBJECT_CODE="EDUCACION"
+                SUBJECT_TITLE_FK="1"
+                QUANTITY_FK="611"
+                IS_LAST_VERSION="1"
+                INCONSISTENT_DATA="0"
+                NEEDS_UPDATE="1"
+
+                PRODUCTION_VALIDATION_DATE="[null]"
+                PRODUCTION_VALIDATION_DATE_TZ="[null]"
+                PRODUCTION_VALIDATION_USER="[null]"
+                DIFFUSION_VALIDATION_DATE="[null]"
+                DIFFUSION_VALIDATION_DATE_TZ="[null]"
+                DIFFUSION_VALIDATION_USER="[null]"
+                PUBLICATION_DATE="[null]"
+                PUBLICATION_DATE_TZ="[null]"
+                PUBLICATION_USER="[null]"
+                PUBLICATION_FAILED_DATE="[null]"
+                PUBLICATION_FAILED_DATE_TZ="[null]"
+                PUBLICATION_FAILED_USER="[null]"
+                ARCHIVE_DATE="[null]"
+                ARCHIVE_DATE_TZ="[null]"
+                ARCHIVE_USER="[null]"
+                
+                VERSION="1"
+                CREATED_BY="user1"
+                CREATED_DATE="2011-03-03 01:02:04"
+                CREATED_DATE_TZ="Europe/London"
+                LAST_UPDATED_BY="user2"
+                LAST_UPDATED="2011-03-3 01:02:04"
+                LAST_UPDATED_TZ="Europe/London"
+            />
+            
+                <TB_QUANTITIES
+                    ID="611"
+                    UUID="Quantity-611"
+                    QUANTITY_TYPE="QUANTITY"
+                    UNIT_MULTIPLIER="10"
+                    SIGNIFICANT_DIGITS="2"
+                    DECIMAL_PLACES="0"
+                    UNIT_FK="1"
+
+                    VERSION="1"
+                    CREATED_BY="user1"
+                    CREATED_DATE="2011-01-01 01:02:04"
+                    CREATED_DATE_TZ="Europe/London"
+                    LAST_UPDATED_BY="user2"
+                    LAST_UPDATED="2011-01-22 01:02:04"
+                    LAST_UPDATED_TZ="Europe/London"
+                />
+            
+            
+                <TB_DATA_SOURCES
+                    ID="611"
+                    UUID="Indicator-6-v1-DataSource-1"
+                    DATA_GPE_UUID="Indicator-6-v1-DataSource-1-GPE-TIME-GEO"
+                    PX_URI="Indicator-6-v1-DataSource-1-PX"
+                    TIME_VARIABLE="Periodos"
+                    TIME_VALUE="[null]"
+                    GEOGRAPHICAL_VALUE_FK="[null]"
+                    GEOGRAPHICAL_VARIABLE="Provincias por CC.AA."
+                    INDICATOR_VERSION_FK="61"
+                    INTERPERIOD_PUNTUAL_RATE_FK="[null]" 
+                    INTERPERIOD_PERCENTAGE_RATE_FK="[null]"
+                    ANNUAL_PUNTUAL_RATE_FK="[null]"
+                    ANNUAL_PERCENTAGE_RATE_FK="61111"
+                    SOURCE_SURVEY_CODE="code"
+                    SOURCE_SURVEY_URL="http"
+                    PUBLISHERS="ISTAC##INE"
+                    SOURCE_SURVEY_TITLE_FK="48"
+                    SOURCE_SURVEY_ACRONYM_FK="[null]"
+                    ABSOLUTE_METHOD="##OBS_VALUE##"
+                    
+                    VERSION="1"
+                    CREATED_BY="user1"
+                    CREATED_DATE="2011-03-03 01:02:04"
+                    CREATED_DATE_TZ="Europe/London"
+                    LAST_UPDATED_BY="user2"
+                    LAST_UPDATED="2011-03-04 05:06:07"
+                    LAST_UPDATED_TZ="Europe/London"
+                />
+                
+                <!-- ANNUAL PERCENTAGE RATE -->
+                    <TB_RATES_DERIVATIONS
+                        ID="61111"
+                        UUID="RateDerivation-61111"
+                        METHOD_TYPE="CALCULATE"
+                        METHOD="method"
+                        ROUNDING="DOWN"
+                        QUANTITY_FK="611111"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-3 01:02:04"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />
+                    
+                        <TB_QUANTITIES
+                            ID="611111"
+                            UUID="Quantity-611111"
+                            QUANTITY_TYPE="CHANGE_RATE"
+                            UNIT_MULTIPLIER="100"
+                            SIGNIFICANT_DIGITS="2"
+                            DECIMAL_PLACES="3"
+                            UNIT_FK="3"
+        
+                            VERSION="1"
+                            CREATED_BY="user1"
+                            CREATED_DATE="2011-01-01 01:02:04"
+                            CREATED_DATE_TZ="Europe/London"
+                            LAST_UPDATED_BY="user2"
+                            LAST_UPDATED="2011-01-22 01:02:04"
+                            LAST_UPDATED_TZ="Europe/London"
+                        />
+        
+                    <TB_DATA_SOURCES_VARIABLES
+                        ID="6111"
+                        UUID="Indicator-6-v1-DataSource-1-Var-1"
+                        VARIABLE="Indicadores"
+                        CATEGORY="NumSoc"
+                        DATA_SOURCE_FK="611"
+                        
+                        VERSION="1"
+                        CREATED_BY="user1"
+                        CREATED_DATE="2011-03-03 01:02:04"
+                        CREATED_DATE_TZ="Europe/London"
+                        LAST_UPDATED_BY="user2"
+                        LAST_UPDATED="2011-03-04 05:06:07"
+                        LAST_UPDATED_TZ="Europe/London"
+                    />
+                    
+                    <TB_DATA_SOURCES_VARIABLES
+                        ID="6112"
+                        UUID="Indicator-6-v1-DataSource-1-Var-2"
+                        VARIABLE="Naturaleza jurídica"
+                        CATEGORY="T"
+                        DATA_SOURCE_FK="611"
                         
                         VERSION="1"
                         CREATED_BY="user1"
@@ -2219,6 +2407,47 @@
         LABEL="Indicator Instance 5.118" 
         LOCALE="es"
         INTERNATIONAL_STRING_FK="46"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="47"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="59"
+        LABEL="Indicator 6" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="47"
+        VERSION="1"
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="48"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="60"
+        LABEL="Survey 6" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="48"
+        VERSION="1"
+    />
+    <TB_INTERNATIONAL_STRINGS
+        ID="49"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="61"
+        LABEL="percentage of kms" 
+        LOCALE="en"
+        INTERNATIONAL_STRING_FK="49"
+        VERSION="1"
+    />
+    <TB_LOCALISED_STRINGS 
+        ID="62"
+        LABEL="porcentaje de kms" 
+        LOCALE="es"
+        INTERNATIONAL_STRING_FK="49"
         VERSION="1"
     />
 </dataset>

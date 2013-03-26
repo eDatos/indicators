@@ -64,7 +64,13 @@ public class FillData extends IndicatorsDataBaseTest {
     private static final String              INDICATOR5_GPE3_JSON_DATA                 = readFile("json/data_temporal_spatials_provinces.json");
     private static final String              INDICATOR5_VERSION                       = "1.000";
     
-    @Test
+    
+    private static final String              INDICATOR6_UUID                          = "Indicator-6";
+    private static final String              INDICATOR6_DS_GPE_UUID                   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
+    private static final String              INDICATOR6_GPE_JSON_DATA                 = readFile("json/data_temporal_spatials_communities.json");
+    private static final String              INDICATOR6_VERSION                       = "1.000";
+    
+    //@Test
     public void testCreateData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);
@@ -73,12 +79,14 @@ public class FillData extends IndicatorsDataBaseTest {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS1_GPE_UUID))).thenReturn(INDICATOR5_GPE1_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS2_GPE_UUID))).thenReturn(INDICATOR5_GPE2_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR5_DS3_GPE_UUID))).thenReturn(INDICATOR5_GPE3_JSON_DATA);
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR6_DS_GPE_UUID))).thenReturn(INDICATOR6_GPE_JSON_DATA);
         
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR1_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR2_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR3_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR4_UUID);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR5_UUID);
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR6_UUID);
     }
     
     

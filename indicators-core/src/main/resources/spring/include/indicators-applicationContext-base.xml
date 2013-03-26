@@ -11,7 +11,6 @@
   </context:component-scan>  
 
   <!-- import additional spring configuration files -->  
-  <import resource="classpath:/spring/include/indicators-datasources.xml"/>  
   <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>
   <import resource="classpath:/spring/include/indicators-entity-manager-factory.xml"/>  
   <import resource="classpath:/spring/include/indicators-pub-sub.xml"/>  
