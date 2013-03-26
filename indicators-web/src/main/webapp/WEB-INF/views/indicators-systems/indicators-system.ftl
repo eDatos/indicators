@@ -19,7 +19,12 @@
 		<div class="h2top"></div>
 		<div class="h2content">
 			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
-			<a href="<%= context %>/indicatorsSystems/<%=code%>/atom.xml?language=${.lang}" style="float: right; font-weight: normal; margin-right: 5px;" ><img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" /></a>
+			<a href="<%= context %>/indicatorsSystems/<%=code%>/atom.xml?language=${.lang}" style="float: right; font-weight: normal; margin-right: 5px;" >
+                <img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/atom.png"/]" title="RSS" alt="RSS" />
+            </a>
+            <a href="<%= context %>/api/indicators/v1.0/indicatorsSystems/<%=code%>" style="float: right; font-weight: normal; margin-right: 5px;" >
+                <img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/json_metadata.png"/]" title="Metadatos" alt="Metadatos" />
+            </a>
 		</div>
 	</div>
 
