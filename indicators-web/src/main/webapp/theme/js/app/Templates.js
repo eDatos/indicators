@@ -102,12 +102,16 @@ function program7(depth0,data) {
 
 templates['style-options'] = template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, self=this, functionType="function", escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "\r\n            <div>\r\n                <label>Color del texto:</label>\r\n                <input type=\"text\" name=\"textColor\" id=\"textColor\" class=\"small\"/>\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n                <img class=\"old-browser-warning\" src=\"";
+  buffer += "\r\n\r\n            ";
+  stack1 = depth0.showTextColor;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(2, program2, data)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n                <img class=\"old-browser-warning\" src=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -117,42 +121,46 @@ function program1(depth0,data) {
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n            </div>\r\n        ";
   return buffer;}
+function program2(depth0,data) {
+  
+  
+  return "\r\n            <div>\r\n                <label>Color del texto:</label>\r\n                <input type=\"text\" name=\"textColor\" id=\"textColor\" class=\"small\"/>\r\n            </div>\r\n            ";}
 
-function program3(depth0,data) {
+function program4(depth0,data) {
   
   
   return "\r\n        <div>\r\n            <label>Colores:</label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"blue\"> Azul\r\n            </label>\r\n            <label class=\"radio\">\r\n                <input type=\"radio\" name=\"gobcanStyleColor\" value=\"green\"> Verde\r\n            </label>\r\n        </div>\r\n        ";}
 
-function program5(depth0,data) {
+function program6(depth0,data) {
   
   
   return "\r\n            <div>\r\n                <label>Visualización lateral</label>\r\n                <input type=\"checkbox\" name=\"sideView\">\r\n            </div>\r\n        ";}
 
-function program7(depth0,data) {
+function program8(depth0,data) {
   
   
   return "\r\n            <div>\r\n                <label>Mostrar etiquetas en el eje x</label>\r\n                <input type=\"checkbox\" name=\"showLabels\">\r\n            </div>\r\n            <div>\r\n                <label>Mostrar leyenda</label>\r\n                <input type=\"checkbox\" name=\"showLegend\">\r\n            </div>\r\n        ";}
 
-function program9(depth0,data) {
+function program10(depth0,data) {
   
   
   return "\r\n        <fieldset>\r\n            <legend>Sparklines</legend>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ABSOLUTE\">Dato\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PERCENTAGE_RATE\">Variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PUNTUAL_RATE\">Variación interperiódica\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PERCENTAGE_RATE\">Tasa variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PUNTUAL_RATE\">Tasa variación interperiódica\r\n            </label>\r\n        </fieldset>\r\n    ";}
 
   buffer += "<div>\r\n    <div>\r\n        <label>Título:</label>\r\n        <input type=\"text\" name=\"title\"/>\r\n    </div>\r\n\r\n    <fieldset>\r\n        <legend>Estilo</legend>\r\n\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"style\" value=\"custom\"> Personalizado\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"style\" value=\"gobcan\"> Gobierno de Canarias\r\n        </label>\r\n\r\n        ";
   stack1 = depth0.showCustomStyle;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    </fieldset>\r\n\r\n\r\n\r\n    <fieldset>\r\n        <legend>Visualización</legend>\r\n        ";
   stack1 = depth0.showSideView;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(5, program5, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n        ";
   stack1 = depth0.showAxisAndLegend;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(7, program7, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(8, program8, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    </fieldset>\r\n\r\n    ";
   stack1 = depth0.showSparkLines;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(9, program9, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(10, program10, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n\r\n</div>\r\n";
   return buffer;});

@@ -25,7 +25,8 @@
                 showSparkLines : this._isLastDataOrRecent(),
                 showAxisAndLegend : this._isTemporal(),
                 showSideView : this._isLastDataOrRecent(),
-                showCustomStyle : this.model.get('style') === 'custom'
+                showCustomStyle : this.model.get('style') === 'custom',
+                showTextColor : !this._isTemporal()
             };
             this.$el.html(this.template(context));
 
