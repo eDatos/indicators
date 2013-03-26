@@ -142,9 +142,6 @@ var IndicatorsSystemView = Backbone.View.extend({
     render : function () {
         // render is called by fetch method of IndicatorsSystemModel
         var json = this.model.toJSON();
-        if (!this.model.description) {
-            json.description = null;
-        }
         $(this.el).html(this.template(json));
         return this;
     }
