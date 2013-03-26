@@ -73,7 +73,7 @@
                 options.indicatorSystem +
                 '/indicatorsInstances/?q=geographicalValue EQ "' +
                 geographicalValue +
-                '"&order=update DESC&limit=' +
+                '"&order=update DESC, id DESC&limit=' +
                 options.nrecent +
                 this._fieldsParameter();
         },
@@ -88,7 +88,7 @@
                 options.subjectCode +
                 '" AND geographicalValue EQ "' +
                 geographicalValue +
-                '"&order=update DESC&limit='
+                '"&order=update DESC, id DESC&limit='
                 + options.nrecent +
                 this._fieldsParameter();
         },
