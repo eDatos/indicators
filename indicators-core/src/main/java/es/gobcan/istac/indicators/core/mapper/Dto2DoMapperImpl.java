@@ -244,12 +244,15 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
             Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
-            if (source.getSubjectTitle() != null
-                    && (source.getSubjectTitle().getTexts().size() != 1 || !subject.getTitle().equals(source.getSubjectTitle().getLocalisedLabel(IndicatorsConstants.LOCALE_SPANISH)))) {
-                throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE);
-            }
+            
+            InternationalStringDto subjectTitleIntDto = new InternationalStringDto();
+            LocalisedStringDto localised = new LocalisedStringDto();
+            localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
+            localised.setLabel(subject.getTitle());
+            subjectTitleIntDto.addText(localised);
+            
             target.setSubjectCode(source.getSubjectCode());
-            target.setSubjectTitle(internationalStringToDo(ctx, source.getSubjectTitle(), target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
+            target.setSubjectTitle(internationalStringToDo(ctx, subjectTitleIntDto, target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
         } else {
             target.setSubjectCode(null);
             target.setSubjectTitle(null);
@@ -320,6 +323,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         return target;
     }
 
+    @Override
     public InternationalString internationalStringDtoToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException {
         if (source == null) {
             return null;

@@ -951,7 +951,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
-    public void testCreateIndicatorErrorSubjectTitleIncorrect() throws Exception {
+    public void testCreateIndicatorReloadSubjectTitleIncorrect() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
@@ -963,15 +963,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
-        try {
-            indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
-            fail("subject title incorrect not exists");
-        } catch (MetamacException e) {
-            assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
-        }
+        IndicatorDto indicatorCreated = indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
+        assertEquals("Área temática 1",indicatorCreated.getSubjectTitle().getLocalised(IndicatorsConstants.LOCALE_SPANISH).getLabel());
     }
 
     @Test
