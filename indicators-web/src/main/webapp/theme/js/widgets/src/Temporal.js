@@ -55,11 +55,16 @@
                 }
             }
 
+            var maxValue = _.chain(values).values().flatten().compact().max().value();
+            var minValue = _.chain(values).values().flatten().compact().min().value();
+
             var chartData = {
                 labels : labels,
                 values : values,
                 legend : legend,
-                tooltips : tooltips
+                tooltips : tooltips,
+                maxValue : maxValue,
+                minValue : minValue
             };
             return chartData;
         },
@@ -165,7 +170,9 @@
                             var res = label.toString().replace("\.", ",");
                             res = Istac.widget.helper.addThousandSeparator(res);
                             return res;
-                        }
+                        },
+                        min : renderData.minValue,
+                        max : renderData.maxValue
                     }
                 },
                 features : {

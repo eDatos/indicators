@@ -84,4 +84,6 @@ module.exports = function (grunt) {
     grunt.registerTask('widgets', 'handlebars:widgets min:widgets');
     grunt.registerTask('widgets:dev', 'handlebars:widgets concat:widgets');
 
+    grunt.registerTask('default', 'handlebars less min');
+
 };
