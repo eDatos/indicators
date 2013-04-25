@@ -144,7 +144,7 @@ public class CommonUtils {
         valueMap.put(new String(), new String());
         sortSubjectList(subjectDtos);
         for (SubjectDto subjectDto : subjectDtos) {
-            valueMap.put(subjectDto.getCode(), CommonWebUtils.getElementName(subjectDto.getCode(), subjectDto.getTitle()));
+            valueMap.put(subjectDto.getCode(), InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
         }
         return valueMap;
     }
@@ -298,8 +298,8 @@ public class CommonUtils {
 
             @Override
             public int compare(SubjectDto first, SubjectDto second) {
-                String firstText = CommonWebUtils.getElementName(first.getCode(), first.getTitle());
-                String secondText = CommonWebUtils.getElementName(second.getCode(), second.getTitle());
+                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
+                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
                 return firstText.compareTo(secondText);
             }
         });
