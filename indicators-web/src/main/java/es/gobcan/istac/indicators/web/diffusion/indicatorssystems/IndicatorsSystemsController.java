@@ -65,7 +65,7 @@ public class IndicatorsSystemsController extends BaseController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/indicatorsSystems/{code}/atom.xml", method = RequestMethod.GET)
+    //@RequestMapping(value = "/indicatorsSystems/{code}/atom.xml", method = RequestMethod.GET)
     public void indicatorsSystemAtom(UriComponentsBuilder uriComponentsBuilder, @PathVariable("code") String code, 
                                                                                 @RequestParam(required = false, value = "language",defaultValue="es")String language, 
                                                                                 HttpServletResponse response) throws Exception {
