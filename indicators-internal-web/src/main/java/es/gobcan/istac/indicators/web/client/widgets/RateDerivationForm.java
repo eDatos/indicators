@@ -435,7 +435,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
      */
     public void setEditionQueryMode() {
         this.viewMode = false;
-        // TODO clear query dependent values (method and method type)
+        // NOTE clear query dependent values (method and method type)
     }
 
     public void setMeasureVariableValues(LinkedHashMap<String, String> valueMap) {
