@@ -54,6 +54,12 @@
         return l.host;
     };
 
+    Istac.widget.helper.absoluteUrl = function (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.href;
+    };
+
     Istac.widget.helper.getKeys = function (hash) {
         var keys = [];
         for (var i in hash) {
