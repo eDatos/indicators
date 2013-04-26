@@ -87,7 +87,7 @@
         },
 
         chartColors : function (chartData) {
-            var nSeries = chartData.labels.length;
+            var nSeries = _.keys(chartData.values).length;
             var colors = Istac.widget.helper.colorPaletteGenerator(nSeries);
 
             var chartColors = {};
