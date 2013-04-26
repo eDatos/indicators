@@ -22,6 +22,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.SubjectDto;
 import es.gobcan.istac.indicators.core.dto.TimeGranularityDto;
 import es.gobcan.istac.indicators.core.dto.TimeValueDto;
@@ -145,6 +146,16 @@ public class CommonUtils {
         sortSubjectList(subjectDtos);
         for (SubjectDto subjectDto : subjectDtos) {
             valueMap.put(subjectDto.getCode(), InternationalStringUtils.getLocalisedString(subjectDto.getTitle()));
+        }
+        return valueMap;
+    }
+    
+    public static LinkedHashMap<String, String> getQuantityUnitsValueMap(List<QuantityUnitDto> units) {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
+        sortQuantityUnitsList(units);
+        for (QuantityUnitDto unit : units) {
+            valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
         }
         return valueMap;
     }
@@ -298,6 +309,18 @@ public class CommonUtils {
 
             @Override
             public int compare(SubjectDto first, SubjectDto second) {
+                String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
+                String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
+                return firstText.compareTo(secondText);
+            }
+        });
+    }
+    
+    private static void sortQuantityUnitsList(List<QuantityUnitDto> units) {
+        Collections.sort(units, new Comparator<QuantityUnitDto>() {
+            
+            @Override
+            public int compare(QuantityUnitDto first, QuantityUnitDto second) {
                 String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());
                 String secondText = InternationalStringUtils.getLocalisedString(second.getTitle());
                 return firstText.compareTo(secondText);

@@ -255,10 +255,7 @@ public class QuantityForm extends BaseQuantityForm {
     @Override
     public void setQuantityUnits(List<QuantityUnitDto> units) {
         super.setQuantityUnits(units);
-        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-        for (QuantityUnitDto unit : units) {
-            valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
-        }
+        LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(units);
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
     
