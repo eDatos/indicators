@@ -265,7 +265,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     }
 
     private String getIndicatorConceptId(String indicatorUuid) {
-        return indicatorUuid;
+        return "quantity_"+indicatorUuid;
     }
 
     private String getSliceId(String geoGranularity, String timeGranularity) {
