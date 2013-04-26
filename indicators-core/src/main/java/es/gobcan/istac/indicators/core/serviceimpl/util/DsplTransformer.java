@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.LogFactory;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -17,6 +18,8 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
@@ -59,6 +62,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 public class DsplTransformer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DsplTransformer.class);
     private IndicatorsSystemsService indicatorsSystemsService;
     private IndicatorsDataService    indicatorsDataService;
     private IndicatorsService        indicatorsService;
@@ -91,10 +95,13 @@ public class DsplTransformer {
     }
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
+            LOG.info("Building dspl for indicators System "+indicatorsSystemUuid);
+            
             IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
             List<ElementLevel> structure = indicatorsSystemsService.retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsSystemVersion.getVersionNumber());
 
+            LOG.info("Retrieving indicators instances...");
             List<IndicatorInstance> instances = filterIndicatorsInstances(structure);
 
             // organize by time granularity
@@ -102,21 +109,27 @@ public class DsplTransformer {
 
             List<DsplDataset> datasets = new ArrayList<DsplDataset>();
             for (TimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
+                LOG.info("Processing indicators instances with granularity "+timeGranularity+" ...");
+                
                 List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
 
                 // topics
+                LOG.info("Building topics with granularity "+timeGranularity+" ...");
                 Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
 
                 // concepts
+                LOG.info("Building concepts with granularity "+timeGranularity+" ...");
                 List<DsplConcept> concepts = new ArrayList<DsplConcept>();
                 concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
                 List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
                 concepts.addAll(metrics);
 
                 // slides
+                LOG.info("Computing slices with granularity "+timeGranularity+" ...");
                 Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
 
                 if (slices.size() > 0) {
+                    LOG.info("Building slices with granularity "+timeGranularity+" ...");
                     DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
                     DsplInfo providerInfo = buildProviderInfo();
                     String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
@@ -127,8 +140,10 @@ public class DsplTransformer {
                     dataset.addSlices(slices);
 
                     datasets.add(dataset);
+                    LOG.info("Dataset with granularity "+timeGranularity+" has been built");
                 }
             }
+            LOG.info("Dspl succesfully built for Indicators System: "+indicatorsSystemUuid);
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
@@ -258,7 +273,7 @@ public class DsplTransformer {
         for (LocalisedString text : dimension.getTitle().getTexts()) {
             info.getName().setText(text.getLocale(), text.getLabel());
         }
-        return new DsplTopic(dimension.getUuid(), info);
+        return new DsplTopic(getIdForTopic(dimension), info);
     }
 
     private List<DsplConcept> buildStandardConceptsForGeoDimensions(ServiceContext ctx, List<IndicatorInstance> instances) throws MetamacException {
@@ -610,7 +625,7 @@ public class DsplTransformer {
         for (IndicatorInstance instance : instancesIndicator) {
             ElementLevel parentElement = instance.getElementLevel().getParent();
             if (parentElement != null && parentElement.isDimension()) {
-                topicsIds.add(parentElement.getDimension().getUuid());
+                topicsIds.add(getIdForTopic(parentElement.getDimension()));
             }
         }
 
@@ -853,6 +868,11 @@ public class DsplTransformer {
         }
         return null;
     }
+    
+    private String getIdForTopic(Dimension dim) {
+        return "topic_"+dim.getUuid();
+    }
+    
 
     private String getIdForSlice(GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) {
         return "slice_" + geoGranularity.getCode().toLowerCase() + "_" + timeGranularity.name().toLowerCase();
@@ -871,7 +891,7 @@ public class DsplTransformer {
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {
-        return indicatorQuantity.getUuid();
+        return "quantity_"+indicatorQuantity.getUuid();
     }
 
     private String getTableIdForUnitConcept(QuantityUnit unit) {
