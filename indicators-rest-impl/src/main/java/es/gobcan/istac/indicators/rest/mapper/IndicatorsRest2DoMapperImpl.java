@@ -41,7 +41,7 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
     }
 
     private enum IndicatorsPropertyOrder {
-        update
+        update, id
     }
 
     public enum IndicatorsPropertyRestriction {
@@ -89,6 +89,9 @@ public class IndicatorsRest2DoMapperImpl implements IndicatorsRest2DoMapper {
                             CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME,
                             true,
                             IndicatorVersion.class);
+                }
+                case id: {
+                    return IndicatorVersionProperties.id();
                 }
             }
             throw createInvalidParameterException("order");
