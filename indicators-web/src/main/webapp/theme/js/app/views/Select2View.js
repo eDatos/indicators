@@ -33,7 +33,8 @@
 
 
             var sortedData = _.sortBy(data, function (value) {
-                return _.string.slugify(value[this.options.textAttribute].trim().toLocaleLowerCase());
+                var trimmedLowerCase = _.string.trim(value[this.options.textAttribute].toLocaleLowerCase());
+                return _.string.slugify(trimmedLowerCase);
             }, this);
 
 
