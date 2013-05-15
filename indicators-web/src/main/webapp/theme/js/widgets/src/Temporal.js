@@ -170,9 +170,7 @@
                             var res = label.toString().replace("\.", ",");
                             res = Istac.widget.helper.addThousandSeparator(res);
                             return res;
-                        },
-                        min : renderData.minValue,
-                        max : renderData.maxValue
+                        }
                     }
                 },
                 features : {
@@ -216,6 +214,19 @@
                 chartOptions.axis.x = {
                     labels : false
                 }
+            }
+
+            // Scale algorithm
+            if (this.options.scale === "minmax") {
+                chartOptions.axis.l.normalize = 0;
+                chartOptions.axis.l.min = renderData.minValue;
+                chartOptions.axis.l.max = renderData.maxValue;
+            } else if(this.options.scale == "natural-lib") {
+                chartOptions.axis.l.normalize = 2;
+                chartOptions.axis.l.min = renderData.minValue;
+                chartOptions.axis.l.max = renderData.maxValue;
+            } else if(this.options.scale == "natural") {
+                // istac algorithm
             }
 
             $chartContainer.chart(chartOptions);

@@ -35,7 +35,8 @@
             borderRadius : true,
             style : 'custom', //custom, gobcan,
             gobcanStyleColor : 'blue', //blue, green
-            sideView : false
+            sideView : false,
+            scale : 'natural'
         },
 
         validate : function (attrs) {

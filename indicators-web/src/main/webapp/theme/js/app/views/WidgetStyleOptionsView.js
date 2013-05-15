@@ -26,7 +26,8 @@
                 showAxisAndLegend : this._isTemporal(),
                 showSideView : this._isLastDataOrRecent(),
                 showCustomStyle : this.model.get('style') === 'custom',
-                showTextColor : !this._isTemporal()
+                showTextColor : !this._isTemporal(),
+                showScale : this._isTemporal()
             };
             this.$el.html(this.template(context));
 

@@ -77,7 +77,11 @@ module.exports = function (grunt) {
             handlebarsWidgets : {
                 files : widgetsPath + '/templates/*.html',
                 tasks : 'handlebars:widgets'
-            }
+            },
+            widgets : {
+               files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js'],
+               tasks : ['handlebars:widgets', 'concat:widgets']
+	    }
         }
     });
 

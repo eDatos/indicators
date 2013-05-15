@@ -67,7 +67,20 @@
         {{/if}}
     </fieldset>
 
-
+    {{#if showScale}}
+    <fieldset>
+        <legend>Escalamiento</legend>
+        <label class="radio">
+            <input type="radio" name="scale" value="natural-lib"> Escalamiento natural absoluto
+        </label>
+        <label class="radio">
+            <input type="radio" name="scale" value="minmax"> No escalado
+        </label>
+        <label class="radio">
+            <input type="radio" name="scale" value="natural"> Escalamiento natural
+        </label>
+    </fieldset>
+    {{/if}}
 
     <fieldset>
         <legend>Visualización</legend>

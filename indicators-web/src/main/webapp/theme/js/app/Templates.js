@@ -134,14 +134,19 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   
-  return "\r\n            <div>\r\n                <label>Visualización lateral</label>\r\n                <input type=\"checkbox\" name=\"sideView\">\r\n            </div>\r\n        ";}
+  return "\r\n    <fieldset>\r\n        <legend>Escalamiento</legend>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural-lib\"> Escalamiento natural absoluto\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"minmax\"> No escalado\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural\"> Escalamiento natural\r\n        </label>\r\n    </fieldset>\r\n    ";}
 
 function program8(depth0,data) {
   
   
-  return "\r\n            <div>\r\n                <label>Mostrar etiquetas en el eje x</label>\r\n                <input type=\"checkbox\" name=\"showLabels\">\r\n            </div>\r\n            <div>\r\n                <label>Mostrar leyenda</label>\r\n                <input type=\"checkbox\" name=\"showLegend\">\r\n            </div>\r\n        ";}
+  return "\r\n            <div>\r\n                <label>Visualización lateral</label>\r\n                <input type=\"checkbox\" name=\"sideView\">\r\n            </div>\r\n        ";}
 
 function program10(depth0,data) {
+  
+  
+  return "\r\n            <div>\r\n                <label>Mostrar etiquetas en el eje x</label>\r\n                <input type=\"checkbox\" name=\"showLabels\">\r\n            </div>\r\n            <div>\r\n                <label>Mostrar leyenda</label>\r\n                <input type=\"checkbox\" name=\"showLegend\">\r\n            </div>\r\n        ";}
+
+function program12(depth0,data) {
   
   
   return "\r\n        <fieldset>\r\n            <legend>Sparklines</legend>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ABSOLUTE\">Dato\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PERCENTAGE_RATE\">Variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PUNTUAL_RATE\">Variación interperiódica\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PERCENTAGE_RATE\">Tasa variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PUNTUAL_RATE\">Tasa variación interperiódica\r\n            </label>\r\n        </fieldset>\r\n    ";}
@@ -150,17 +155,21 @@ function program10(depth0,data) {
   stack1 = depth0.showCustomStyle;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    </fieldset>\r\n\r\n\r\n\r\n    <fieldset>\r\n        <legend>Visualización</legend>\r\n        ";
-  stack1 = depth0.showSideView;
+  buffer += "\r\n    </fieldset>\r\n\r\n    ";
+  stack1 = depth0.showScale;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n\r\n    <fieldset>\r\n        <legend>Visualización</legend>\r\n        ";
+  stack1 = depth0.showSideView;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(8, program8, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n        ";
   stack1 = depth0.showAxisAndLegend;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(8, program8, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(10, program10, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    </fieldset>\r\n\r\n    ";
   stack1 = depth0.showSparkLines;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(10, program10, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(12, program12, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n\r\n</div>\r\n";
   return buffer;});

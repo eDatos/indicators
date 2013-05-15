@@ -44,7 +44,8 @@
             sparklineFillColor : null,
             uwa : false,
             shadow : true,
-            borderRadius : true
+            borderRadius : true,
+            scale : "natural"
         },
 
         _containerTemplate : Handlebars.templates.container,
