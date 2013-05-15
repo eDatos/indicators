@@ -111,11 +111,11 @@ function program1(depth0,data) {
   stack1 = depth0.showTextColor;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(2, program2, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                    <img class=\"old-browser-warning\" src=\"";
+  buffer += "\r\n\r\n            <div>\r\n                <label>Color de la cabecera:</label>\r\n                <input type=\"text\" name=\"headerColor\" id=\"headerColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Color del borde:</label>\r\n                <input type=\"text\" name=\"borderColor\" id=\"borderColor\" class=\"small\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>Ancho del widget<small>(px)</small>:</label>\r\n                <input type=\"text\" name=\"width\" id=\"widget-width\" class=\"small\"/>\r\n            </div>\r\n            <div class=\"width-slider\"></div>\r\n\r\n            <div>\r\n                <label>\r\n                    Bordes redondeados\r\n                    <img class=\"old-browser-warning help-icon\" src=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>\r\n                    Sombra\r\n                    <img class=\"old-browser-warning\" src=\"";
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n                </label>\r\n                <input type=\"checkbox\" name=\"borderRadius\">\r\n            </div>\r\n\r\n            <div>\r\n                <label>\r\n                    Sombra\r\n                    <img class=\"old-browser-warning help-icon\" src=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -133,8 +133,21 @@ function program4(depth0,data) {
 
 function program6(depth0,data) {
   
-  
-  return "\r\n    <fieldset>\r\n        <legend>Escalamiento</legend>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural-lib\"> Escalamiento natural absoluto\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"minmax\"> No escalado\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural\"> Escalamiento natural\r\n        </label>\r\n    </fieldset>\r\n    ";}
+  var buffer = "", stack1, foundHelper;
+  buffer += "\r\n    <fieldset>\r\n        <legend>Escalamiento</legend>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural-lib\"> Natural equilibrado\r\n            <img class=\"scale-natural-lib-help help-icon\" src=\"";
+  foundHelper = helpers.context;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"natural\"> Natural no equilibrado\r\n            <img class=\"scale-natural-help help-icon\" src=\"";
+  foundHelper = helpers.context;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"scale\" value=\"minmax\"> No natural, no equilibrado\r\n            <img class=\"scale-minmax-help help-icon\" src=\"";
+  foundHelper = helpers.context;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/theme/images/question-white.png\"/>\r\n        </label>\r\n    </fieldset>\r\n    ";
+  return buffer;}
 
 function program8(depth0,data) {
   

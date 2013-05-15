@@ -70,6 +70,7 @@
 <script src="[@spring.url "/theme/js/widgets/src/DatasetRequestBuilder.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Base.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/LastData.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/NaturalScale.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Temporal.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Loader.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Factory.js"/]"></script>

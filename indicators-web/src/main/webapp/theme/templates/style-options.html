@@ -42,7 +42,7 @@
             <div>
                 <label>
                     Bordes redondeados
-                    <img class="old-browser-warning" src="{{context}}/theme/images/question-white.png"/>
+                    <img class="old-browser-warning help-icon" src="{{context}}/theme/images/question-white.png"/>
                 </label>
                 <input type="checkbox" name="borderRadius">
             </div>
@@ -50,7 +50,7 @@
             <div>
                 <label>
                     Sombra
-                    <img class="old-browser-warning" src="{{context}}/theme/images/question-white.png"/>
+                    <img class="old-browser-warning help-icon" src="{{context}}/theme/images/question-white.png"/>
                 </label>
                 <input type="checkbox" name="shadow">
             </div>
@@ -71,13 +71,16 @@
     <fieldset>
         <legend>Escalamiento</legend>
         <label class="radio">
-            <input type="radio" name="scale" value="natural-lib"> Escalamiento natural absoluto
+            <input type="radio" name="scale" value="natural-lib"> Natural equilibrado
+            <img class="scale-natural-lib-help help-icon" src="{{context}}/theme/images/question-white.png"/>
         </label>
         <label class="radio">
-            <input type="radio" name="scale" value="minmax"> No escalado
+            <input type="radio" name="scale" value="natural"> Natural no equilibrado
+            <img class="scale-natural-help help-icon" src="{{context}}/theme/images/question-white.png"/>
         </label>
         <label class="radio">
-            <input type="radio" name="scale" value="natural"> Escalamiento natural
+            <input type="radio" name="scale" value="minmax"> No natural, no equilibrado
+            <img class="scale-minmax-help help-icon" src="{{context}}/theme/images/question-white.png"/>
         </label>
     </fieldset>
     {{/if}}

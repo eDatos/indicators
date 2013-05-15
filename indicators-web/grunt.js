@@ -24,6 +24,7 @@ module.exports = function (grunt) {
         widgetsPath + '/src/DatasetRequestBuilder.js',
         widgetsPath + '/src/Base.js',
         widgetsPath + '/src/LastData.js',
+        widgetsPath + '/src/NaturalScale.js',
         widgetsPath + '/src/Temporal.js',
         widgetsPath + '/src/Loader.js',
         widgetsPath + '/src/Factory.js'
@@ -81,7 +82,7 @@ module.exports = function (grunt) {
             widgets : {
                files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js'],
                tasks : ['handlebars:widgets', 'concat:widgets']
-	    }
+	        }
         }
     });
 

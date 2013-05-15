@@ -227,6 +227,11 @@
                 chartOptions.axis.l.max = renderData.maxValue;
             } else if(this.options.scale == "natural") {
                 // istac algorithm
+                chartOptions.axis.l.normalize = 0;
+                var scale = Istac.widget.NaturalScale.scale({ymin : renderData.minValue, ymax : renderData.maxValue });
+                chartOptions.axis.l.min = scale.ydown;
+                chartOptions.axis.l.max = scale.ytop;
+                chartOptions.features.grid.ny = scale.ranges;
             }
 
             $chartContainer.chart(chartOptions);

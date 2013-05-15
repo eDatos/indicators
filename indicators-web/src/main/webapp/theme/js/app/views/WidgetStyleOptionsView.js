@@ -37,6 +37,24 @@
                 hide: 'mouseout'
             });
 
+            this.$('.scale-natural-lib-help').qtip({
+                content: 'El escalamiento utiliza incrementos que las personas reconocen como naturales a la hora de contar. Además, en la representación conjunta de números positivos y negativos las líneas de escala coinciden en valor absoluto.',
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
+            this.$('.scale-natural-help').qtip({
+                content: 'El escalamiento utiliza incrementos que las personas reconocen como naturales a la hora de contar. La visualización se ajusta al valor mínimo y máximo de la serie.',
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
+            this.$('.scale-minmax-help').qtip({
+                content: 'El escalamiento utiliza incrementos mejor ajustados a la serie de datos, pero sin respetar los que las personas reconocen como naturales a la hora de contar. La visualización se ajusta al valor mínimo y máximo de la serie.',
+                show: 'mouseover',
+                hide: 'mouseout'
+            });
+
             this.bindColorPickers();
             this.bindSlider();
 
