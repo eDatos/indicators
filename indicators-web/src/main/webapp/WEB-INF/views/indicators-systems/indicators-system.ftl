@@ -17,10 +17,10 @@
 <script type="text/html" id="indicatorsSystemTemplate">
 	<div class="h2roundbox">
 		<div class="h2top"></div>
-		<div class="h2content">
+		<div class="h2content" style="min-height: 15px; margin-top: 3px;">
 			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
             <a href="<%= context %>/api/indicators/v1.0/indicatorsSystems/<%=code%>" style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
-                <img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/json_metadata.png"/]" title="Metadatos en JSON" alt="Metadatos en JSON" />
+                <img height="16" width="16" style="margin-right:5px; vertical-align: text-bottom; float: none; margin-top: -2px" src="[@spring.url "/theme/images/json_metadata.gif"/]" title="Metadatos en JSON" alt="Metadatos en JSON" />
             </a>
 		</div>
 	</div>
@@ -101,7 +101,7 @@
             <tr>
                 <td><strong>Descarga: </strong></td>
                 <td>
-                    <a href="<%= selfLink %>" target="_blank" title="Metadatos"><img src="[@spring.url "/theme/images/json_metadata.png"/]" width="14" height="14" class="middle"> Metadatos</a> |
+                    <a href="<%= selfLink %>" target="_blank" title="Metadatos"><img src="[@spring.url "/theme/images/json_metadata.gif"/]" width="16" height="16" class="middle"> Metadatos</a> |
                     <a href="<%= selfLink %>/data" target="_blank" title="Datos"><img src="[@spring.url "/theme/images/tabla.gif"/]" class="middle"> Datos</a>
                 </td>
             </tr>
