@@ -112,8 +112,12 @@
 
 /* LastData Widget*/
 
+.istac-widget-lastData .istac-widget-content {
+    padding: 0 3px;
+}
+
 .istac-widget-lastData-title {
-    line-height: 20px;
+    line-height: 13px;
     font-weight: normal;
 }
 
@@ -124,15 +128,9 @@
     font-size: 11px;
 }
 
-.istac-widget-lastData tbody tr.even td,
-.istac-widget-lastData tbody tr.even th
-{
-	background-color: #E3E9EE;
-}
-
 .istac-widget-lastData th, .istac-widget-lastData table td {
 	padding: 3px;
-	line-height: 18px;
+	line-height: 13px;
 	text-align: right;
 	vertical-align: top;
 }
@@ -140,8 +138,12 @@
 .istac-widget-lastData th {
 	font-weight:  bold;
     text-align: right;
-    background-color: #B9C5D3;
     border: 0;
+    border-bottom: 2px #EBEBEB solid;
+}
+
+.istac-widget-lastData td {
+    border-bottom: 1px #EBEBEB solid;
 }
 
 .istac-widget-lastData tbody th {
@@ -252,6 +254,10 @@
     width: 100%;
     box-sizing: border-box;
     margin:0;
+}
+
+.istac-widget-lastData .istac-widget-body-allIndicators {
+    border-top:  0;
 }
 
 .istac-widget-body-allIndicators {
