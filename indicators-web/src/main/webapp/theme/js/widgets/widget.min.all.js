@@ -21420,7 +21420,7 @@ function program4(depth0,data) {
   var buffer = "", stack1;
   buffer += "\r\n                <td>\r\n                    ";
   stack1 = depth0.value;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(8, program8, data),fn:self.program(5, program5, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(11, program11, data),fn:self.program(5, program5, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n                </td>\r\n                ";
   return buffer;}
@@ -21429,13 +21429,13 @@ function program5(depth0,data) {
   var buffer = "", stack1, foundHelper;
   buffer += "\r\n                        <div>\r\n                            ";
   stack1 = depth0.showSparkline;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n                            <span class=\"istact-widget-observation\">";
+  buffer += "\r\n                            <span class=\"istac-widget-observation\">";
   foundHelper = helpers.value;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.value; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + " </span>\r\n                        </div>\r\n                        <div class=\"istact-widget-unit\"> ";
+  buffer += escapeExpression(stack1) + " </span>\r\n                        </div>\r\n                        <div class=\"istac-widget-unit\"> ";
   foundHelper = helpers.unit;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -21460,6 +21460,20 @@ function program6(depth0,data) {
   return buffer;}
 
 function program8(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n                                ";
+  stack1 = depth0.anySparkline;
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(9, program9, data)});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n                            ";
+  return buffer;}
+function program9(depth0,data) {
+  
+  
+  return "\r\n                                    <span class=\"inlinesparkline\"></span>\r\n                                ";}
+
+function program11(depth0,data) {
   
   
   return "\r\n                        -\r\n                    ";}
@@ -22247,12 +22261,14 @@ window.Istac = {
         },
 
         setGobcanStyleColor : function (color) {
-            this.el.toggleClass("blue", color === "blue");
-            this.el.toggleClass("green", color === "green");
-            if (color === "blue") {
-                this.set('headerColor', "#0F5B95");
-            } else if (color === "green") {
-                this.set('headerColor', "#457A0E");
+            if (this.options.style === "gobcan") {
+                this.el.toggleClass("blue", color === "blue");
+                this.el.toggleClass("green", color === "green");
+                if (color === "blue") {
+                    this.set('headerColor', "#0F5B95");
+                } else if (color === "green") {
+                    this.set('headerColor', "#457A0E");
+                }
             }
         },
 
@@ -22368,9 +22384,15 @@ window.Istac = {
             },
 
             parseDataset : function (dataset) {
-
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
+
+                var self = this;
+                var anySparkline = _.chain(this.measures).map(function (measure) {
+                    return self.options['sparkline_' + measure];
+                }).reduce(function (memo, current) {
+                    return memo || current;
+                }, false).value();
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
@@ -22380,7 +22402,6 @@ window.Istac = {
 
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
                     var unit = dataset.getUnit(geographicalValue, lastTimeValue, measure);
-
 
                     var showSparkline = this.options['sparkline_' + measure];
 
@@ -22395,13 +22416,14 @@ window.Istac = {
                     timeTitles = this._limitMaxSparkLine(timeTitles);
 
                     return {
+                        anySparkline : anySparkline,
                         showSparkline : showSparkline,
                         values : values.join(','),
                         value : value,
                         unit : unit,
                         timeTitles : timeTitles.join(','),
                         measure : measuresLabels[measure],
-                        hasValue : value !== null &&  value !== "-"
+                        hasValue : value !== null && value !== "-"
                     };
                 }, this);
 
@@ -22443,8 +22465,8 @@ window.Istac = {
                         height : this.options.sparklineHeight + "px",
                         lineColor : this.options.headerColor,
                         fillColor : this.options.sparklineFillColor,
-                        lineWidth: 1.5,
-                        highlightLineColor: null,
+                        lineWidth : 1.5,
+                        highlightLineColor : null,
                         spotRadius : 0,
                         tooltipFormatter : function (sparkline, options, fields) {
                             if (fields.y !== null) {
@@ -22575,7 +22597,7 @@ window.Istac = {
                     var unit = dataset.getUnit(geoValue, timeValue, measureValue);
 
                     data.push(value);
-                    tooltip.push('<div><strong>' + valueStr + ' ' + unit +'</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
+                    tooltip.push('<div><strong>' + valueStr + ' ' + unit + '</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
                 }
 
                 legend[serie] = geoValueTitle;
@@ -22596,8 +22618,10 @@ window.Istac = {
                 }
             }
 
-            var maxValue = _.chain(values).values().flatten().compact().max().value();
-            var minValue = _.chain(values).values().flatten().compact().min().value();
+            var isNumber = function (n) { return _.isNumber(n) };
+
+            var maxValue = _.chain(values).values().flatten().filter(isNumber).max().value();
+            var minValue = _.chain(values).values().flatten().filter(isNumber).min().value();
 
             var chartData = {
                 labels : labels,
@@ -22613,14 +22637,14 @@ window.Istac = {
 
         _getIndicatorInstanceCode : function () {
             var instances = this.options.instances;
-            if(instances && instances.length > 0) {
+            if (instances && instances.length > 0) {
                 return instances[0];
             }
         },
 
         render : function () {
             this.el.addClass('istac-widget-temporal');
-            if(this.datasets && this.datasets.length > 0) {
+            if (this.datasets && this.datasets.length > 0) {
                 var chartData = this.parse(this.datasets[0]);
                 this.renderChart(chartData);
             }
@@ -22746,7 +22770,7 @@ window.Istac = {
                         "stroke-width" : 0,
                         "stroke-opacity" : 0
                     },
-                    textProps : { font: '10px Arial', fill: "#000" }
+                    textProps : { font : '10px Arial', fill : "#000" }
                 }
                 chartOptions.legend = renderData.legend;
             }
@@ -22762,11 +22786,11 @@ window.Istac = {
                 chartOptions.axis.l.normalize = 0;
                 chartOptions.axis.l.min = renderData.minValue;
                 chartOptions.axis.l.max = renderData.maxValue;
-            } else if(this.options.scale == "natural-lib") {
+            } else if (this.options.scale == "natural-lib") {
                 chartOptions.axis.l.normalize = 2;
                 chartOptions.axis.l.min = renderData.minValue;
                 chartOptions.axis.l.max = renderData.maxValue;
-            } else if(this.options.scale == "natural") {
+            } else if (this.options.scale == "natural") {
                 // istac algorithm
                 chartOptions.axis.l.normalize = 0;
                 var scale = Istac.widget.NaturalScale.scale({ymin : renderData.minValue, ymax : renderData.maxValue });

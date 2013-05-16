@@ -151,6 +151,10 @@
     font-weight: bold;
 }
 
+.istac-widget-lastData .istac-widget-unit {
+    color: #AFAFAF;
+}
+
 .istac-widget-unit {
     font-weight: normal;
 }
