@@ -34,7 +34,7 @@
                     var unit = dataset.getUnit(geoValue, timeValue, measureValue);
 
                     data.push(value);
-                    tooltip.push('<div><strong>' + valueStr + ' ' + unit +'</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
+                    tooltip.push('<div><strong>' + valueStr + ' ' + unit + '</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
                 }
 
                 legend[serie] = geoValueTitle;
@@ -55,8 +55,10 @@
                 }
             }
 
-            var maxValue = _.chain(values).values().flatten().compact().max().value();
-            var minValue = _.chain(values).values().flatten().compact().min().value();
+            var isNumber = function (n) { return _.isNumber(n) };
+
+            var maxValue = _.chain(values).values().flatten().filter(isNumber).max().value();
+            var minValue = _.chain(values).values().flatten().filter(isNumber).min().value();
 
             var chartData = {
                 labels : labels,
@@ -72,14 +74,14 @@
 
         _getIndicatorInstanceCode : function () {
             var instances = this.options.instances;
-            if(instances && instances.length > 0) {
+            if (instances && instances.length > 0) {
                 return instances[0];
             }
         },
 
         render : function () {
             this.el.addClass('istac-widget-temporal');
-            if(this.datasets && this.datasets.length > 0) {
+            if (this.datasets && this.datasets.length > 0) {
                 var chartData = this.parse(this.datasets[0]);
                 this.renderChart(chartData);
             }
@@ -205,7 +207,7 @@
                         "stroke-width" : 0,
                         "stroke-opacity" : 0
                     },
-                    textProps : { font: '10px Arial', fill: "#000" }
+                    textProps : { font : '10px Arial', fill : "#000" }
                 }
                 chartOptions.legend = renderData.legend;
             }
@@ -221,11 +223,11 @@
                 chartOptions.axis.l.normalize = 0;
                 chartOptions.axis.l.min = renderData.minValue;
                 chartOptions.axis.l.max = renderData.maxValue;
-            } else if(this.options.scale == "natural-lib") {
+            } else if (this.options.scale == "natural-lib") {
                 chartOptions.axis.l.normalize = 2;
                 chartOptions.axis.l.min = renderData.minValue;
                 chartOptions.axis.l.max = renderData.maxValue;
-            } else if(this.options.scale == "natural") {
+            } else if (this.options.scale == "natural") {
                 // istac algorithm
                 chartOptions.axis.l.normalize = 0;
                 var scale = Istac.widget.NaturalScale.scale({ymin : renderData.minValue, ymax : renderData.maxValue });

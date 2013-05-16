@@ -36,7 +36,7 @@
             style : 'custom', //custom, gobcan,
             gobcanStyleColor : 'blue', //blue, green
             sideView : false,
-            scale : 'natural'
+            scale : 'natural-lib'
         },
 
         validate : function (attrs) {
