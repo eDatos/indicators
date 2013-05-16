@@ -20,10 +20,14 @@
                         <div>
                             {{#if showSparkline }}
                                 <span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>
+                            {{else}}
+                                {{#if anySparkline}}
+                                    <span class="inlinesparkline"></span>
+                                {{/if}}
                             {{/if}}
-                            <span class="istact-widget-observation">{{ value }} </span>
+                            <span class="istac-widget-observation">{{ value }} </span>
                         </div>
-                        <div class="istact-widget-unit"> {{ unit }}</div>
+                        <div class="istac-widget-unit"> {{ unit }}</div>
                     {{else}}
                         -
                     {{/if}}

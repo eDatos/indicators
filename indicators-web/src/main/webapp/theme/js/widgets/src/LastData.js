@@ -21,9 +21,15 @@
             },
 
             parseDataset : function (dataset) {
-
                 var lastTimeValue = dataset.getLastTimeValue();
                 var geographicalValue = this.geographicalValues[0];
+
+                var self = this;
+                var anySparkline = _.chain(this.measures).map(function (measure) {
+                    return self.options['sparkline_' + measure];
+                }).reduce(function (memo, current) {
+                    return memo || current;
+                }, false).value();
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
@@ -33,7 +39,6 @@
 
                     var value = dataset.getObservationStr(geographicalValue, lastTimeValue, measure);
                     var unit = dataset.getUnit(geographicalValue, lastTimeValue, measure);
-
 
                     var showSparkline = this.options['sparkline_' + measure];
 
@@ -48,13 +53,14 @@
                     timeTitles = this._limitMaxSparkLine(timeTitles);
 
                     return {
+                        anySparkline : anySparkline,
                         showSparkline : showSparkline,
                         values : values.join(','),
                         value : value,
                         unit : unit,
                         timeTitles : timeTitles.join(','),
                         measure : measuresLabels[measure],
-                        hasValue : value !== null &&  value !== "-"
+                        hasValue : value !== null && value !== "-"
                     };
                 }, this);
 
@@ -96,8 +102,8 @@
                         height : this.options.sparklineHeight + "px",
                         lineColor : this.options.headerColor,
                         fillColor : this.options.sparklineFillColor,
-                        lineWidth: 1.5,
-                        highlightLineColor: null,
+                        lineWidth : 1.5,
+                        highlightLineColor : null,
                         spotRadius : 0,
                         tooltipFormatter : function (sparkline, options, fields) {
                             if (fields.y !== null) {
