@@ -20,7 +20,7 @@
 		<div class="h2content">
 			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
             <a href="<%= context %>/api/indicators/v1.0/indicatorsSystems/<%=code%>" style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
-                <img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/json_metadata.png"/]" title="Metadatos" alt="Metadatos" />
+                <img height="14" width="14" style="margin-right:5px; vertical-align: text-bottom; float: none;" src="[@spring.url "/theme/images/json_metadata.png"/]" title="Metadatos en JSON" alt="Metadatos en JSON" />
             </a>
 		</div>
 	</div>
@@ -99,12 +99,11 @@
             </tr>
             <% } %>
             <tr>
-                <td><strong>Indicador: </strong></td>
-                <td><a href="<%= selfLink %>" target="_blank"><img src="[@spring.url "/theme/images/download_json.png"/]"></a></td>
-            </tr>
-            <tr>
-                <td><strong>Datos del indicador: </strong></td>
-                <td><a href="<%= selfLink %>/data" target="_blank"><img src="[@spring.url "/theme/images/download_json.png"/]"></a></td>
+                <td><strong>Descarga: </strong></td>
+                <td>
+                    <a href="<%= selfLink %>" target="_blank" title="Metadatos"><img src="[@spring.url "/theme/images/json_metadata.png"/]" width="14" height="14"> Metadatos</a> |
+                    <a href="<%= selfLink %>/data" target="_blank" title="Datos"><img src="[@spring.url "/theme/images/tabla.gif"/]"> Datos</a>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -165,9 +164,6 @@ var ElementView = Backbone.View.extend({
         console.log("making api call", this.model.get('selfLink'));
         $.get(this.model.get('selfLink'))
                 .success(function (indicatorInstance) {
-                    console.log(indicatorInstance);
-
-
                     //var $detail = $('.indicatorInstanceDetail', self.el);
                     var view = new IndicatorInstanceDetail({model : indicatorInstance});
                     view.render();

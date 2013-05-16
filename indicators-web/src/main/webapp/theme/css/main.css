@@ -98,7 +98,11 @@ html[xmlns] .clearfix{display:block;}
 #widget-creator .widget-data-geographicalGranularities{margin-bottom:10px;}
 #widget-creator .select2-search-field{background:none;}
 #widget-creator .hidden{display:none;}
-.popupInfoDescarga td{font-weight:bold;vertical-align:middle;}
+.popupInfoDescarga a:hover{text-decoration:underline;}
+.popupInfoDescarga a:link{color:#003366;text-decoration:none;}
+.popupInfoDescarga a:visited{color:#800080;text-decoration:none;}
+.popupInfoDescarga a.nouline:hover{text-decoration:underline;}
+.popupInfoDescarga td{vertical-align:middle;}
 .popupInfoDescarga td{padding-right:1em;}
 .popupInfoDescarga th,td{padding:1px;}
 .linkDescargaDocumento{cursor:pointer !important;text-decoration:none;}
