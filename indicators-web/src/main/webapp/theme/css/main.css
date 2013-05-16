@@ -117,3 +117,5 @@ a.rounded_button span,span.rounded_button-dis span{height:12px;display:block;dis
 a.rounded_button span{background:transparent url('../images/boton_accion_left.gif') no-repeat left top;}
 #principal_interior .select2-container a:link,#principal_interior .select2-container a:active,#principal_interior .select2-container a:visited{color:#000;}
 .help-icon{margin-bottom:-5px;}
+.middle{margin-bottom:-2px;}
+.netvibes-icon{margin-bottom:-4px;}

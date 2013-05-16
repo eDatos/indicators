@@ -101,8 +101,8 @@
             <tr>
                 <td><strong>Descarga: </strong></td>
                 <td>
-                    <a href="<%= selfLink %>" target="_blank" title="Metadatos"><img src="[@spring.url "/theme/images/json_metadata.png"/]" width="14" height="14"> Metadatos</a> |
-                    <a href="<%= selfLink %>/data" target="_blank" title="Datos"><img src="[@spring.url "/theme/images/tabla.gif"/]"> Datos</a>
+                    <a href="<%= selfLink %>" target="_blank" title="Metadatos"><img src="[@spring.url "/theme/images/json_metadata.png"/]" width="14" height="14" class="middle"> Metadatos</a> |
+                    <a href="<%= selfLink %>/data" target="_blank" title="Datos"><img src="[@spring.url "/theme/images/tabla.gif"/]" class="middle"> Datos</a>
                 </td>
             </tr>
         </tbody>
