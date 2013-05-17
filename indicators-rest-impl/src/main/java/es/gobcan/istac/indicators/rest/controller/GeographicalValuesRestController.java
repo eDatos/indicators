@@ -17,17 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller("geographicalValuesRestController")
-@RequestMapping("/api/indicators/v1.0/geographicalValues")
 public class GeographicalValuesRestController extends AbstractRestController {
 
     @Autowired
     private GeographicalValuesRestFacade geographicalValuesRestFacade;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/geographicalValues", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<GeographicalValueType>> findGeographicalValues(@RequestParam(value = "subjectCode", required = false) String subjectCode,
                                                                               @RequestParam(value = "systemCode", required = false) String systemCode,
-                                                                              @RequestParam(value = "geographicalGranularityCode", required = true) String geographicalGranularityCode) throws MetamacException {
+                                                                              @RequestParam(value = "geographicalGranularityCode", required = true) String geographicalGranularityCode)
+            throws MetamacException {
 
         List<GeographicalValueType> items = null;
         if (subjectCode != null) {

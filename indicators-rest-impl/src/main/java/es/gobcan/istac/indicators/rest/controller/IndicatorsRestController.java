@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller("indicatorsRestController")
-@RequestMapping("/api/indicators/v1.0/indicators/*")
 public class IndicatorsRestController extends AbstractRestController {
 
     @Autowired
@@ -28,7 +27,7 @@ public class IndicatorsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorBaseType>> findIndicators(final UriComponentsBuilder uriComponentsBuilder,
                                                                              @RequestParam(required = false, value = "q") final String q,
@@ -51,7 +50,7 @@ public class IndicatorsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/{indicatorCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<IndicatorBaseType> retrieveIndicator(final UriComponentsBuilder uriComponentsBuilder,
                                                                @PathVariable("indicatorCode") final String indicatorCode) throws Exception {
@@ -66,7 +65,7 @@ public class IndicatorsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/{indicatorCode}/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicators/{indicatorCode}/data", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorData(final UriComponentsBuilder uriComponentsBuilder,
                                                           @PathVariable("indicatorCode") final String indicatorCode,

@@ -18,17 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller("indicatorsSystemsRestController")
-@RequestMapping("/api/indicators/v1.0/indicatorsSystems/*")
 public class IndicatorsSystemsRestController extends AbstractRestController {
 
     @Autowired
     private IndicatorSystemRestFacade indicatorSystemRestFacade = null;
 
-    /**
-     * @throws Exception
-     * @throws ApplicationException
-     */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(final UriComponentsBuilder uriComponentsBuilder,
                                                                                            @RequestParam(required = false, value = "limit") final Integer limit,
@@ -44,11 +39,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return response;
     }
 
-    /**
-     * @throws Exception
-     * @throws ApplicationException
-     */
-    @RequestMapping(value = "/{idIndicatorSystem}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<IndicatorsSystemType> retrieveIndicatorsSystem(final UriComponentsBuilder uriComponentsBuilder,
                                                                          @PathVariable("idIndicatorSystem") final String idIndicatorSystem) throws Exception {
@@ -60,15 +51,15 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     }
 
 
-    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
-                                                                                                    @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                                                    @RequestParam(required = false, value = "q") final String q,
-                                                                                                    @RequestParam(required = false, value = "order") final String order,
-                                                                                                    @RequestParam(required = false, value = "limit") final Integer limit,
-                                                                                                    @RequestParam(required = false, value = "offset") final Integer offset,
-                                                                                                    @RequestParam(required = false, value = "fields") final String fields) throws Exception {
+                                                                                                  @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
+                                                                                                  @RequestParam(required = false, value = "q") final String q,
+                                                                                                  @RequestParam(required = false, value = "order") final String order,
+                                                                                                  @RequestParam(required = false, value = "limit") final Integer limit,
+                                                                                                  @RequestParam(required = false, value = "offset") final Integer offset,
+                                                                                                  @RequestParam(required = false, value = "fields") final String fields) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields);
         ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> response = new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
@@ -76,12 +67,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return response;
     }
 
-
-    /**
-     * @throws Exception
-     * @throws ApplicationException
-     */
-    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<IndicatorInstanceType> retrieveIndicatorsInstance(final UriComponentsBuilder uriComponentsBuilder,
                                                                             @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
@@ -92,11 +78,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return response;
     }
 
-    /**
-     * @throws Exception
-     * @throws ApplicationException
-     */
-    @RequestMapping(value = "/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
                                                                    @PathVariable("idIndicatorSystem") final String idIndicatorSystem,

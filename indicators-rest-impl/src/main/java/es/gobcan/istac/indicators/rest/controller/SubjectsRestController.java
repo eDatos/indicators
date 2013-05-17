@@ -15,17 +15,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @Controller("subjectsRestController")
-@RequestMapping("/api/indicators/v1.0/subjects/*")
 public class SubjectsRestController extends AbstractRestController {
 
     @Autowired
     private SubjectsRestFacade subjectsRestFacade = null;
-    
-    /**
-     * @throws Exception
-     * @throws ApplicationException
-     */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/api/indicators/v1.0/subjects", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<SubjectBaseType>> findSubjects(final UriComponentsBuilder uriComponentsBuilder) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
