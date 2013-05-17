@@ -27,7 +27,7 @@ public class IndicatorsRestController extends AbstractRestController {
      * @throws Exception
      * @throws ApplicationException
      */
-    @RequestMapping(value = "/api/indicators/v1.0/indicators/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/indicators/v1.0/indicators", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorBaseType>> findIndicators(final UriComponentsBuilder uriComponentsBuilder,
                                                                              @RequestParam(required = false, value = "q") final String q,
