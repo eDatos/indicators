@@ -242,7 +242,7 @@
 
             this.titleLink.attr('href', url);
             this.allIndicatorsContainer.find('a').attr('href', url);
-            this.allIndicatorsContainer.toggle(hasSystemId);
+            this.el.find('.istac-widget-body-allIndicators-text').toggle(hasSystemId);
         },
 
         setStyle : function (style) {
