@@ -28,8 +28,8 @@
                 var anySparkline = _.chain(this.measures).map(function (measure) {
                     return self.options['sparkline_' + measure];
                 }).reduce(function (memo, current) {
-                    return memo || current;
-                }, false).value();
+                        return memo || current;
+                    }, false).value();
 
                 var observations = _.map(this.measures, function (measure) {
                     var values = dataset.getObservationsByGeoAndMeasure(geographicalValue, measure);
@@ -68,13 +68,20 @@
 
                 var jaxiBaseUrl = Istac.widget.configuration['indicators.jaxi.url'];
 
-                var jaxiUrl = this.options.groupType === 'system' ?
-                    jaxiBaseUrl + '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem + '&accion=html' :
-                    jaxiBaseUrl + '/tabla.do?indicador=' + dataset.request.id + '&accion=html';
+                var jaxiUrl = jaxiBaseUrl;
+                if (this.options.groupType === 'system') {
+                    jaxiUrl += '/tabla.do?instanciaIndicador=' + dataset.request.id + '&sistemaIndicadores=' + this.indicatorSystem;
+                } else {
+                    jaxiUrl += '/tabla.do?indicador=' + dataset.request.id;
+                }
+
+                jaxiUrl += '&accion=html';
+                jaxiUrl += '&measure=' + this.measures.join(",");
+                jaxiUrl += "&geo=" + geographicalValue;
 
                 return {
                     title : dataset.getTitle(this.locale),
-                    jaxiUrl : jaxiUrl,
+                    titleLink : jaxiUrl,
                     temporalLabel : temporalLabel,
                     observations : observations,
                     description : dataset.getDescription(this.locale)

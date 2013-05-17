@@ -122,9 +122,9 @@ function program3(depth0,data) {
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.cssClass; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "\">\r\n                <td class=\"istac-widget-last-data-indicator-column\">\r\n                    <div class=\"istac-widget-lastData-title\"><a href=\"";
-  foundHelper = helpers.jaxiUrl;
+  foundHelper = helpers.titleLink;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.jaxiUrl; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.titleLink; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "\">";
   foundHelper = helpers.title;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
