@@ -9,7 +9,8 @@ import java.util.Map;
     "code",
     "title",
     "latitude",
-    "longitude"
+    "longitude",
+    "quantity"
 })
 public class MetadataRepresentationType implements Serializable {
 
@@ -22,6 +23,7 @@ public class MetadataRepresentationType implements Serializable {
 
     private Double              latitude         = null;
     private Double              longitude        = null;
+    private QuantityType        quantity         = null;
 
     private String granularityCode;
 
@@ -39,6 +41,14 @@ public class MetadataRepresentationType implements Serializable {
 
     public void setTitle(Map<String, String> title) {
         this.title = title;
+    }
+    
+    public QuantityType getQuantity() {
+        return quantity;
+    }
+    
+    public void setQuantity(QuantityType quantity) {
+        this.quantity = quantity;
     }
 
     public Double getLatitude() {

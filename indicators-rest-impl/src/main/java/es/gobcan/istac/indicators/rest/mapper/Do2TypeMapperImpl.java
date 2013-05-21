@@ -34,6 +34,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
@@ -532,6 +533,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         QuantityType quantityType = new QuantityType();
         quantityType.setType(source.getQuantityType());
         if (source.getUnit() != null) {
+            quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle()));
             quantityType.setUnitSymbol(source.getUnit().getSymbol());
             quantityType.setUntiSymbolPosition(source.getUnit().getSymbolPosition());
         }
@@ -611,7 +613,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
@@ -650,7 +652,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues,source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
@@ -718,6 +720,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     @Override
     public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, final String baseURL) {
         try {
+            IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid());
+            
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
             // GEOGRAPHICAL
@@ -737,7 +741,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, baseURL);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
         } catch (MetamacException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -771,7 +775,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             // MEASURE
             List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicatorInstance(source.getUuid());
 
-            MetadataDimensionType measureDimension = createMeasureDimension(measureValues);
+            MetadataDimensionType measureDimension = createMeasureDimension(measureValues, indicatorVersion, baseURL);
             target.getDimension().put(measureDimension.getCode(), measureDimension);
 
             // DECIMAL PLACES
@@ -793,11 +797,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues) {
+    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) {
         MetadataDimensionType measureDimension = new MetadataDimensionType();
         measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
         // measureDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
-        measureDimension.setRepresentation(_measureValueDoToType(measureValues));
+        measureDimension.setRepresentation(_measureValueDoToType(measureValues, indicatorVersion, baseURL));
         return measureDimension;
     }
 
@@ -850,7 +854,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return timeValueTypes;
     }
 
-    private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureValue> measureValues) {
+    private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
@@ -859,9 +863,54 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
             metadataRepresentationType.setCode(measureValue.getMeasureValue().getName());
             metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(measureValue.getTitle()));
+            Quantity quantity = getQuantityForMeasure(measureValue.getMeasureValue(), indicatorVersion);
+            if (quantity != null) {
+                metadataRepresentationType.setQuantity(quantityDoToBaseType(quantity, baseURL));
+            }
             measureValueTypes.add(metadataRepresentationType);
         }
         return measureValueTypes;
+    }
+
+    private Quantity getQuantityForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
+        switch (measure) {
+            case ABSOLUTE:
+                return indicatorVersion.getQuantity();
+            default:
+                RateDerivation rate = getRateDerivationForMeasure(measure, indicatorVersion);
+                if (rate != null) {
+                    return rate.getQuantity();
+                }
+        }
+        return null;
+    }
+    
+    private RateDerivation getRateDerivationForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
+        for (DataSource datasource : indicatorVersion.getDataSources()) {
+            switch (measure) {
+                case ANNUAL_PERCENTAGE_RATE:
+                    if (datasource.getAnnualPercentageRate() != null) {
+                        return datasource.getAnnualPercentageRate();
+                    }
+                    break;
+                case ANNUAL_PUNTUAL_RATE:
+                    if (datasource.getAnnualPuntualRate() != null) {
+                        return datasource.getAnnualPuntualRate();
+                    }
+                    break;
+                case INTERPERIOD_PERCENTAGE_RATE:
+                    if (datasource.getInterperiodPercentageRate() != null) {
+                        return datasource.getInterperiodPercentageRate();
+                    }
+                    break;
+                case INTERPERIOD_PUNTUAL_RATE:
+                    if (datasource.getInterperiodPercentageRate() != null) {
+                        return datasource.getInterperiodPercentageRate();
+                    }
+                    break;
+            }
+        }
+        return null;
     }
 
     private LinkType _createLinkType(final Indicator indicator, final String baseURL) {

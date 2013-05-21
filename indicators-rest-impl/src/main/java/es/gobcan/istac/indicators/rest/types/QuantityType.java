@@ -10,8 +10,9 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEn
 
 @JsonPropertyOrder({
     "type",
+    "unit",
     "unitSymbol",
-    "untiSymbolPosition",
+    "unitSymbolPosition",
     "unitMultiplier",
     "significantDigits",
     "decimalPlaces",
@@ -34,6 +35,7 @@ public class QuantityType implements Serializable {
     private static final long              serialVersionUID   = -456489258156288381L;
 
     private QuantityTypeEnum               type               = null;
+    private Map<String, String>            unit               = null;
     private String                         unitSymbol         = null;
     private QuantityUnitSymbolPositionEnum untiSymbolPosition = null;
     private Integer                        unitMultiplier     = null;
@@ -57,6 +59,14 @@ public class QuantityType implements Serializable {
 
     public void setType(QuantityTypeEnum type) {
         this.type = type;
+    }
+    
+    public Map<String, String> getUnit() {
+        return unit;
+    }
+    
+    public void setUnit(Map<String, String> unit) {
+        this.unit = unit;
     }
 
     public String getUnitSymbol() {
