@@ -34,13 +34,15 @@ public class IndicatorsRestController extends AbstractRestController {
                                                                              @RequestParam(required = false, value = "order") final String order,
                                                                              @RequestParam(required = false, value = "limit") final Integer limit,
                                                                              @RequestParam(required = false, value = "offset") final Integer offset,
-                                                                             @RequestParam(required = false, value = "fields") final String fields
+                                                                             @RequestParam(required = false, value = "fields") final String fields,
+                                                                             @RequestParam(required = false, value = "representation") String representation
                                                                              ) throws Exception {
 
         String baseURL = uriComponentsBuilder.build().toUriString();
 
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
-        PagedResultType<IndicatorBaseType> indicatorsBaseType = indicatorRestFacade.findIndicators(baseURL, q, order, paginator, fields);
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        PagedResultType<IndicatorBaseType> indicatorsBaseType = indicatorRestFacade.findIndicators(baseURL, q, order, paginator, fields, selectedRepresentations);
         ResponseEntity<PagedResultType<IndicatorBaseType>> response = new ResponseEntity<PagedResultType<IndicatorBaseType>>(indicatorsBaseType, HttpStatus.OK);
 
         return response;

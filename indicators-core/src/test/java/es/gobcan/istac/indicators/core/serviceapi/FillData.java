@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.mockito.Mockito.when;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -70,7 +71,8 @@ public class FillData extends IndicatorsDataBaseTest {
     private static final String              INDICATOR6_GPE_JSON_DATA                 = readFile("json/data_temporal_spatials_communities.json");
     private static final String              INDICATOR6_VERSION                       = "1.000";
     
-    //@Test
+    @Ignore
+    @Test
     public void testCreateData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR1_DS_GPE_UUID))).thenReturn(INDICATOR1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR2_DS_GPE_UUID))).thenReturn(INDICATOR2_GPE_JSON_DATA);

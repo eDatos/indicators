@@ -767,6 +767,17 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    public static void checkRetrieveTimeValues(List<String> timeValues, List<MetamacExceptionItem> exceptions) throws MetamacException {
+
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        ValidationUtils.checkParameterRequired(timeValues, ServiceExceptionParameters.TIME_VALUE, exceptions);
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveTimeGranularity(TimeGranularityEnum timeGranularity, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {

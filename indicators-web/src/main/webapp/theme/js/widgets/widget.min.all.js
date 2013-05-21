@@ -22534,7 +22534,9 @@ window.Istac = {
             }
 
             var m;
-            if (rango < 5 * Math.pow(10, n - 1)) {
+            if (rango < 3 * Math.pow(10, n - 1)) {
+                m = Math.pow(10, n - 2) * 5;
+            } else if (rango < 5 * Math.pow(10, n - 1)) {
                 m = Math.pow(10, n - 1);
             } else {
                 m = 5 * Math.pow(10, n - 1) / 2;

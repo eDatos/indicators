@@ -381,8 +381,14 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
     private List<String> getDSRepoTablesToDelete(IDatabaseConnection dbUnitConnection) throws Exception {
         List<String> dynamicTables = new ArrayList<String>();
+        dynamicTables.add("TB_ATTRIBUTE_DIMENSIONS");
+        dynamicTables.add("TB_DATASET_DIMENSIONS");
+        dynamicTables.add("TB_ATTRIBUTES");
+        dynamicTables.add("TB_DATASETS");
+        dynamicTables.add("TB_LOCALISED_STRINGS");
+        dynamicTables.add("TB_INTERNATIONAL_STRINGS");
         for (String tableName : dbUnitConnection.createDataSet().getTableNames()) {
-            if (tableName.startsWith("TB_")) {
+            if (tableName.startsWith("TB_") && !dynamicTables.contains(tableName)) {
                 dynamicTables.add(tableName);
             }
         }

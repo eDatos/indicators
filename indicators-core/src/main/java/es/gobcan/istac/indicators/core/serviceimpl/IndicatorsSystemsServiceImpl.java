@@ -1,9 +1,6 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -817,6 +814,66 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Translate
         TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeValue);
+        String translationCode = getTimeValueTranslationCode(timeValue);
+
+        Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+        if (translation == null) {
+            // Put code as title
+            InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
+            timeValueDo.setTitle(title);
+            timeValueDo.setTitleSummary(title);
+        } else {
+            timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
+            if (translation.getTitleSummary() != null) {
+                timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
+            } else {
+                timeValueDo.setTitleSummary(timeValueDo.getTitle());
+            }
+        }
+
+        return timeValueDo;
+    }
+
+    public List<TimeValue> retrieveTimeValues(ServiceContext ctx, List<String> timeValues) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveTimeValues(timeValues, null);
+
+        List<String> translationCodes = new ArrayList<String>();
+        for (String timeValue : timeValues) {
+            String translationCode = getTimeValueTranslationCode(timeValue);
+            translationCodes.add(translationCode);
+        }
+
+        Map<String,Translation> translations = getTranslationRepository().findTranslationsByCodes(translationCodes);
+
+        List<TimeValue> timeValuesDo = new ArrayList<TimeValue>();
+        for (String timeValue : timeValues) {
+            TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeValue);
+            String translationCode = getTimeValueTranslationCode(timeValue);
+            Translation translation = translations.get(translationCode);
+            if (translation == null) {
+                // Put code as title
+                InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
+                timeValueDo.setTitle(title);
+                timeValueDo.setTitleSummary(title);
+            } else {
+                timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
+                if (translation.getTitleSummary() != null) {
+                    timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
+                } else {
+                    timeValueDo.setTitleSummary(timeValueDo.getTitle());
+                }
+            }
+            timeValuesDo.add(timeValueDo);
+        }
+
+        return timeValuesDo;
+    }
+
+
+    private String getTimeValueTranslationCode(String timeCode) throws MetamacException {
+        TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeCode);
         String translationCode = null;
         switch (timeValueDo.getGranularity()) {
             case YEARLY:
@@ -838,23 +895,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_TIME_VALUE_MONTHLY).append(".").append(timeValueDo.getSubperiod()).toString();
                 break;
         }
-
-        Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translation == null) {
-            // Put code as title
-            InternationalString title = ServiceUtils.generateInternationalStringInDefaultLocales(timeValueDo.getTimeValue());
-            timeValueDo.setTitle(title);
-            timeValueDo.setTitleSummary(title);
-        } else {
-            timeValueDo.setTitle(translateTimeValue(timeValueDo, translation.getTitle()));
-            if (translation.getTitleSummary() != null) {
-                timeValueDo.setTitleSummary(translateTimeValue(timeValueDo, translation.getTitleSummary()));
-            } else {
-                timeValueDo.setTitleSummary(timeValueDo.getTitle());
-            }
-        }
-
-        return timeValueDo;
+        return translationCode;
     }
 
     @Override
@@ -898,9 +939,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Translate
         String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureValue.name()).toString();
         Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+        fillMeasureValueTitlesWithTranslation(measureValueDo, translation);
+        return measureValueDo;
+    }
+
+    private void fillMeasureValueTitlesWithTranslation(MeasureValue measureValueDo, Translation translation) {
         if (translation == null || translation.getTitle() == null) {
             InternationalString title = new InternationalString();
-            String measureValueCode = measureValue.getName();
+            String measureValueCode = measureValueDo.getMeasureValue().getName();
             LocalisedString localisedStringEs = new LocalisedString();
             localisedStringEs.setLabel(measureValueCode);
             localisedStringEs.setLocale(IndicatorsConstants.LOCALE_SPANISH);
@@ -919,9 +965,33 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
                 measureValueDo.setTitleSummary(measureValueDo.getTitle());
             }
         }
-        return measureValueDo;
     }
-    
+
+    @Override
+    public List<MeasureValue> retrieveMeasuresValues(ServiceContext ctx, List<String> measureCodes) {
+        List<String> translationCodes = new ArrayList<String>();
+        for (String measureCode : measureCodes) {
+            String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureCode).toString();
+            translationCodes.add(translationCode);
+        }
+
+        Map<String,Translation> translationMap = getTranslationRepository().findTranslationsByCodes(translationCodes);
+
+        List<MeasureValue> measureValues = new ArrayList<MeasureValue>();
+        for (String measureCode : measureCodes) {
+            String translationCode = new StringBuilder().append(IndicatorsConstants.TRANSLATION_MEASURE_DIMENSION).append(".").append(measureCode).toString();
+
+            MeasureValue measureValueDo = new MeasureValue();
+            measureValueDo.setMeasureValue(MeasureDimensionTypeEnum.valueOf(measureCode));
+
+            Translation translation = translationMap.get(translationCode);
+
+            fillMeasureValueTitlesWithTranslation(measureValueDo, translation);
+            measureValues.add(measureValueDo);
+        }
+        return measureValues;
+    }
+
     private void deleteIndicatorInstanceLastValuesCacheInIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion) {
         for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
             IndicatorInstance instance = level.getIndicatorInstance();

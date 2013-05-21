@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.TimeUtils;
 import org.springframework.util.Assert;
@@ -69,53 +70,52 @@ public class TimeVariableUtils extends TimeUtils {
 
     /* Returns a Date representation for time value, it chooses the last time instant represented by the TimeValue */
     private static Date timeValueToLastPossibleDate(TimeValue timeValue) {
-        Calendar cal = Calendar.getInstance();
+        MutableDateTime dt = new MutableDateTime();
         switch (timeValue.getGranularity()) {
             case BIYEARLY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
-                cal.set(Calendar.MONTH, subPeriod * 6 - 1);
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                dt.setMonthOfYear(subPeriod * 6);
+                dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
             case YEARLY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                cal.set(Calendar.DAY_OF_YEAR, cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
+                dt.setDayOfYear(dt.dayOfYear().getMaximumValue());
                 break;
             }
             case QUARTERLY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
-                cal.set(Calendar.MONTH, (subPeriod * 3) - 1);
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                dt.setMonthOfYear(subPeriod * 3);
+                dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
             case MONTHLY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
                 int subPeriod = Integer.parseInt(timeValue.getSubperiod().substring(1)); // Ignore granularity character
-                cal.set(Calendar.MONTH, subPeriod - 1);
-                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                dt.setMonthOfYear(subPeriod);
+                dt.setDayOfMonth(dt.dayOfMonth().getMaximumValue());
                 break;
             }
             case WEEKLY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
-                cal.set(Calendar.YEAR_WOY, Integer.parseInt(timeValue.getYear()));
+                dt.setWeekyear(Integer.parseInt(timeValue.getYear()));
                 int subPeriod = Integer.parseInt(timeValue.getWeek());
-                cal.set(Calendar.WEEK_OF_YEAR, subPeriod);
-                cal.set(Calendar.DAY_OF_WEEK, cal.getActualMaximum(Calendar.DAY_OF_WEEK));
+                dt.setWeekOfWeekyear(subPeriod);
+                dt.setDayOfWeek(dt.dayOfWeek().getMaximumValue());
                 break;
             }
             case DAILY: {
-                cal.set(Calendar.YEAR, Integer.parseInt(timeValue.getYear()));
+                dt.setYear(Integer.parseInt(timeValue.getYear()));
                 int month = Integer.parseInt(timeValue.getMonth());
                 int day = Integer.parseInt(timeValue.getDay());
-                cal.set(Calendar.MONTH, month - 1);
-                cal.set(Calendar.DAY_OF_MONTH, day);
+                dt.setMonthOfYear(month);
+                dt.setDayOfMonth(day);
                 break;
             }
         }
-        cal.set(Calendar.MILLISECONDS_IN_DAY, cal.getActualMaximum(Calendar.MILLISECONDS_IN_DAY));
-        return cal.getTime();
+        dt.setMillisOfDay(dt.millisOfDay().getMaximumValue());
+        return dt.toDate();
     }
 
     public static TimeValue findLatestTimeValue(List<TimeValue> timeValues) {

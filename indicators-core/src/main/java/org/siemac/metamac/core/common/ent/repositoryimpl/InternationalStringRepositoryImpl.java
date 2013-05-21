@@ -15,8 +15,6 @@ public class InternationalStringRepositoryImpl
 
     public void deleteInternationalStringsEfficiently(
         Collection<Long> internationalStringToDelete) {
-
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException(
             "deleteInternationalStringsEfficiently not implemented");
 

@@ -7,15 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.MapUtils;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
@@ -23,7 +19,6 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
-import es.gobcan.istac.indicators.core.domain.IndicatorVersionProperties;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
@@ -60,7 +55,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     private IndicatorsRest2DoMapper indicatorsRest2DoMapper;
 
     @Override
-    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields) throws Exception {
+    public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation) throws Exception {
 
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorsRest2DoMapper.queryParams2SculptorCriteria(q, order, paginator.getLimit(), paginator.getOffset());
@@ -88,9 +83,8 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
 
         if(fieldsToAdd.contains("+data")) {
             for(IndicatorBaseType indicatorType : result) {
-                Map<String, List<String>> selectedRepresentations = MapUtils.EMPTY_MAP;
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), selectedRepresentations, selectedGranularities);
+                DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), representation, selectedGranularities);
                 indicatorType.setData(dataType);
             }
         }

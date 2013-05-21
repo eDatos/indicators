@@ -14,7 +14,6 @@ import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
@@ -27,7 +26,6 @@ import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeValue;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.DataTypeRequest;
@@ -115,7 +113,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public PagedResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, Integer limit, Integer offset, String fields) throws Exception {
+    public PagedResultType<IndicatorInstanceBaseType> retrieveIndicatorsInstances(final String baseUrl, final String idIndicatorSystem, String q, String order, Integer limit, Integer offset, String fields, Map<String, List<String>> representation) throws Exception {
 
         // Parse Query
         SculptorCriteria sculptorCriteria = indicatorInstancesRest2DoMapper.queryParams2SculptorCriteria(q, order, limit, offset);
@@ -152,9 +150,8 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
         if(fieldsToAdd.contains("+data")) {
             for(IndicatorInstanceBaseType type : result.getItems()) {
-                Map<String, List<String>> selectedRepresentations = MapUtils.EMPTY_MAP;
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorInstanceDataByCode(baseUrl, type.getSystemCode(), type.getId(), selectedRepresentations, selectedGranularities);
+                DataType dataType = retrieveIndicatorInstanceDataByCode(baseUrl, type.getSystemCode(), type.getId(), representation, selectedGranularities);
                 type.setData(dataType);
             }
         }

@@ -8,6 +8,10 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import es.gobcan.istac.indicators.core.domain.Translation;
+import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
+import es.gobcan.istac.indicators.core.util.ListBlockIterator;
+import es.gobcan.istac.indicators.core.util.ListBlockIteratorFn;
 import org.springframework.stereotype.Repository;
 
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
@@ -20,7 +24,7 @@ import es.gobcan.istac.indicators.core.domain.DataDefinition;
 public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
     public DataGpeRepositoryImpl() {
     }
-    
+
     @Override
     public List<String> findCurrentDataDefinitionsOperationsCodes() {
         Date now = Calendar.getInstance().getTime();
@@ -41,7 +45,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         List<String> result = query.getResultList();
         return result;
     }
-    
+
     @Override
     public List<DataDefinition> findCurrentDataDefinitions() {
         Date now = Calendar.getInstance().getTime();
@@ -58,7 +62,7 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         List<DataDefinition> result = findByQuery(query,parameters);
         return result;
     }
-    
+
     @Override
     public List<DataDefinition> findCurrentDataDefinitionsByOperationCode(String operationCode) {
         Date now = Calendar.getInstance().getTime();
@@ -77,8 +81,8 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         List<DataDefinition> result = findByQuery(query,parameters);
         return result;
     }
-    
-    
+
+
     @Override
     public DataDefinition findCurrentDataDefinition(String uuid) {
         Date now = Calendar.getInstance().getTime();
@@ -121,28 +125,32 @@ public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {
         List<String> result = query.getResultList();
         return result;
     }
-    
-    //TODO: CAUTION! more than 1000 uuids
+
     @Override
-    public List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, Date date) {
-        Date now = Calendar.getInstance().getTime();
-        String queryHql = "select df.uuid " +
-                       "from DataDefinition df "+
-                       "where df.uuid in (:uuids) " +
-                       "and df.availableEndDate is null "+
-                       "and df.dataUpdateDate > :lastUpdateDate "+
-                       "and df.availableStartDate = ("+
-                                                      " select max(df2.availableStartDate) " +
-                                                      " from DataDefinition df2 "+
-                                                      " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
-                                                      " and df2.availableEndDate is NULL "+ //It's not archived
-                                                      " and df.uuid = df2.uuid)";
-        Query query = getEntityManager().createQuery(queryHql);
-        query.setParameter("now", now);
-        query.setParameter("lastUpdateDate", date);
-        query.setParameter("uuids", dataDefinitionsUuids);
-        List<String> result = query.getResultList();
+    public List<String> filterDataDefinitionsWithDataUpdatedAfter(List<String> dataDefinitionsUuids, final Date date) {
+        final Date now = Calendar.getInstance().getTime();
+        List<String> result = new ListBlockIterator<String, String>(dataDefinitionsUuids, ServiceUtils.ORACLE_IN_MAX)
+                .iterate(new ListBlockIteratorFn<String, String>() {
+                    public List<String> apply(List<String> subcodes) {
+                        String queryHql = "select df.uuid " +
+                                "from DataDefinition df "+
+                                "where df.uuid in (:uuids) " +
+                                "and df.availableEndDate is null "+
+                                "and df.dataUpdateDate > :lastUpdateDate "+
+                                "and df.availableStartDate = ("+
+                                " select max(df2.availableStartDate) " +
+                                " from DataDefinition df2 "+
+                                " where df2.availableStartDate <= :now "+ //Its not a NOT visible query
+                                " and df2.availableEndDate is NULL "+ //It's not archived
+                                " and df.uuid = df2.uuid)";
+                        Query query = getEntityManager().createQuery(queryHql);
+                        query.setParameter("now", now);
+                        query.setParameter("lastUpdateDate", date);
+                        query.setParameter("uuids", subcodes);
+                        return query.getResultList();
+                    }
+                });
         return result;
     }
-    
+
 }

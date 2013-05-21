@@ -446,11 +446,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
                 Set<GeographicalGranularity> geoGranularitiesInIndicator = new HashSet<GeographicalGranularity>();
                 List<String> geoCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
 
-                for (String geoCode : geoCodesInIndicator) {
-                    GeographicalValue geographicalValue = getGeographicalValueRepository().findGeographicalValueByCode(geoCode);
-                    if (geographicalValue != null) {
-                        geoGranularitiesInIndicator.add(geographicalValue.getGranularity());
-                    }
+                List<GeographicalValue> geographicalValues = getGeographicalValueRepository().findGeographicalValuesByCodes(geoCodesInIndicator);
+
+                for (GeographicalValue geographicalValue  : geographicalValues) {
+                    geoGranularitiesInIndicator.add(geographicalValue.getGranularity());
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
             } catch (ApplicationException e) {
@@ -603,14 +602,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<GeographicalValue> geographicalValuesInIndicator = new ArrayList<GeographicalValue>();
                 List<String> geographicalCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.GEOGRAPHICAL);
-                for (String geoCode : geographicalCodesInIndicator) {
-                    GeographicalValue geoValue = getGeographicalValueRepository().findGeographicalValueByCode(geoCode);
-                    if (geoValue != null) {
-                        geographicalValuesInIndicator.add(geoValue);
-                    }
-                }
+                List<GeographicalValue> geographicalValuesInIndicator = getGeographicalValueRepository().findGeographicalValuesByCodes(geographicalCodesInIndicator);
                 ServiceUtils.sortGeographicalValuesList(geographicalValuesInIndicator);
                 return geographicalValuesInIndicator;
             } catch (ApplicationException e) {
@@ -915,15 +908,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             try {
                 List<TimeValue> timeValuesInIndicator = new ArrayList<TimeValue>();
                 List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
+                List<String> timeCodesByGranularity = new ArrayList<String>();
                 for (String timeCode : timeCodesInIndicator) {
                     TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(timeCode);
                     if (granularity.equals(guessedGranularity)) {
-                        TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, timeCode);
-                        timeValuesInIndicator.add(timeValue);
+                        timeCodesByGranularity.add(timeCode);
                     }
                 }
 
-                TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValuesInIndicator);
+                if (!timeCodesByGranularity.isEmpty()) {
+                    timeValuesInIndicator = getIndicatorsSystemsService().retrieveTimeValues(ctx, timeCodesByGranularity);
+                    TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValuesInIndicator);
+                }
 
                 return timeValuesInIndicator;
             } catch (ApplicationException e) {
@@ -957,14 +953,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<TimeValue> timeValuesInIndicator = new ArrayList<TimeValue>();
                 List<String> timeCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.TIME);
-                for (String timeCode : timeCodesInIndicator) {
-                    if (TimeVariableUtils.isTimeValue(timeCode)) {
-                        TimeValue timeValue = getIndicatorsSystemsService().retrieveTimeValue(ctx, timeCode);
-                        timeValuesInIndicator.add(timeValue);
-                    }
-                }
+
+                List<TimeValue> timeValuesInIndicator = getIndicatorsSystemsService().retrieveTimeValues(ctx, timeCodesInIndicator);
 
                 TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValuesInIndicator);
 
@@ -999,10 +990,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private List<TimeValue> calculateTimeValuesInIndicatorInstance(ServiceContext ctx, IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
         if (!StringUtils.isEmpty(indInstance.getTimeValues())) {
-            List<TimeValue> timeValues = new ArrayList<TimeValue>();
-            for (String timeValueStr : indInstance.getTimeValuesAsList()) {
-                timeValues.add(getIndicatorsSystemsService().retrieveTimeValue(ctx, timeValueStr));
-            }
+            List<TimeValue> timeValues = getIndicatorsSystemsService().retrieveTimeValues(ctx, indInstance.getTimeValuesAsList());
             TimeVariableUtils.sortTimeValuesMostRecentFirst(timeValues);
             return timeValues;
         } else if (indInstance.getTimeGranularity() != null) {
@@ -1052,13 +1040,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
             try {
-                List<MeasureValue> measureValuesInIndicator = new ArrayList<MeasureValue>();
                 List<String> measureCodesInIndicator = findCodesForDimensionInIndicator(indicatorVersion, IndicatorDataDimensionTypeEnum.MEASURE);
-                for (String measureCode : measureCodesInIndicator) {
-                    MeasureDimensionTypeEnum measureDimValue = MeasureDimensionTypeEnum.valueOf(measureCode);
-                    MeasureValue measureValue = getIndicatorsSystemsService().retrieveMeasureValue(ctx, measureDimValue);
-                    measureValuesInIndicator.add(measureValue);
-                }
+                List<MeasureValue> measureValuesInIndicator = getIndicatorsSystemsService().retrieveMeasuresValues(ctx, measureCodesInIndicator);
                 return measureValuesInIndicator;
             } catch (ApplicationException e) {
                 throw new MetamacException(e, ServiceExceptionType.INDICATOR_FIND_DIMENSION_CODES_ERROR, indicatorVersion.getIndicator().getUuid(),
@@ -1514,32 +1497,57 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             rawConditions = conditions;
         }
 
-        List<ConditionDimensionDto> newConditions = new ArrayList<ConditionDimensionDto>();
+        ConditionDimensionDto geoCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL, rawConditions, getCodesInGeographicalValues(geoValues));
+        ConditionDimensionDto timeCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.TIME, rawConditions, getCodesInTimeValues(timeValues));
+        ConditionDimensionDto measureCondition = filterConditionsByType(IndicatorDataDimensionTypeEnum.MEASURE, rawConditions, getCodesInMeasureValues(MeasureDimensionTypeEnum.values()));
+        return Arrays.asList(geoCondition, timeCondition, measureCondition);
+    }
+
+    private ConditionDimensionDto filterConditionsByType(IndicatorDataDimensionTypeEnum type, List<ConditionDimensionDto> rawConditions, List<String> dimensionCodes) {
+
+        Set<String> selectedCodes = new HashSet<String>();
         for (ConditionDimensionDto condition : rawConditions) {
-            ConditionDimensionDto newCondition = new ConditionDimensionDto();
-            newCondition.setDimensionId(condition.getDimensionId());
-            if (IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name().equals(condition.getDimensionId())) {
-                List<String> newCodeDims = new ArrayList<String>();
-                for (GeographicalValue geoVal : geoValues) {
-                    if (condition.getCodesDimension().contains(geoVal.getCode())) {
-                        newCodeDims.add(geoVal.getCode());
-                    }
+            if (type.name().equals(condition.getDimensionId())) {
+                for (String code : condition.getCodesDimension()) {
+                    selectedCodes.add(code);
                 }
-                newCondition.setCodesDimension(newCodeDims);
-            } else if (IndicatorDataDimensionTypeEnum.TIME.name().equals(condition.getDimensionId())) {
-                List<String> newCodeDims = new ArrayList<String>();
-                for (TimeValue timeVal : timeValues) {
-                    if (condition.getCodesDimension().contains(timeVal.getTimeValue())) {
-                        newCodeDims.add(timeVal.getTimeValue());
-                    }
-                }
-                newCondition.setCodesDimension(newCodeDims);
-            } else { // Other dimensions get their conditions unmodified
-                newCondition.setCodesDimension(condition.getCodesDimension());
             }
-            newConditions.add(newCondition);
         }
-        return newConditions;
+
+        selectedCodes.retainAll(dimensionCodes);
+
+        if (selectedCodes.isEmpty()) {
+            selectedCodes.addAll(dimensionCodes);
+        }
+
+        ConditionDimensionDto newCondition = new ConditionDimensionDto();
+        newCondition.setDimensionId(type.name());
+        newCondition.setCodesDimension(new ArrayList<String>(selectedCodes));
+        return newCondition;
+    }
+
+    private List<String> getCodesInGeographicalValues(List<GeographicalValue> geoValues) {
+        List<String> geoCodes = new ArrayList<String>();
+        for (GeographicalValue geoValue : geoValues) {
+            geoCodes.add(geoValue.getCode());
+        }
+        return geoCodes;
+    }
+
+    private List<String> getCodesInTimeValues(List<TimeValue> timeValues) {
+        List<String> codes = new ArrayList<String>();
+        for (TimeValue timeValue : timeValues) {
+            codes.add(timeValue.getTimeValue());
+        }
+        return codes;
+    }
+
+    private List<String> getCodesInMeasureValues(MeasureDimensionTypeEnum[] values) {
+        List<String> codes = new ArrayList<String>();
+        for (MeasureDimensionTypeEnum measure : values) {
+            codes.add(measure.getName());
+        }
+        return codes;
     }
 
     /* Private methods */
@@ -1573,7 +1581,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throws MetamacException, ApplicationException {
         String datasetId = indicatorVersion.getDataRepositoryId();
         if (datasetId != null) {
-            return fillEmptyDataCrossExtended(datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(datasetId, conditions));
+            return datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(datasetId, conditions);
         } else {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }

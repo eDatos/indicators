@@ -24,6 +24,8 @@ public class ServiceUtils {
     private static final NumberFormat formatterMinor = new DecimalFormat("000");
     private static final String SEPARATOR_LIST_DTO_TO_STRING_DO = "##";
 
+    public static final int ORACLE_IN_MAX = 1000;
+
     public static String generateVersionNumber(String actualVersionNumber, VersionTypeEnum versionType) throws MetamacException {
 
         if (actualVersionNumber == null) {

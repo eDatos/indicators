@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
@@ -347,9 +349,21 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
 
                         // Observation ID: Be careful!!! don't change order of ids
-                        String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue();
+                        String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue().name();
 
                         ObservationExtendedDto observationDto = observationMap.get(id);
+                        if (observationDto == null) {
+                            observationDto = new ObservationExtendedDto();
+                            observationDto.setPrimaryMeasure(null);
+
+                            CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalValue.getCode());
+                            CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValue.getTimeValue());
+                            CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValue.getMeasureValue().name());
+                            observationDto.getCodesDimension().add(geoCodeDimDto);
+                            observationDto.getCodesDimension().add(timeCodeDimDto);
+                            observationDto.getCodesDimension().add(measureCodeDimDto);
+                        }
+
 
                         // PRIMARY MEASURE
                         observations.add(observationDto.getPrimaryMeasure());

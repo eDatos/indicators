@@ -5,7 +5,6 @@ import es.gobcan.istac.indicators.rest.facadeapi.IndicatorSystemRestFacade;
 import es.gobcan.istac.indicators.rest.types.*;
 import es.gobcan.istac.indicators.rest.util.HttpHeaderUtil;
 import es.gobcan.istac.indicators.rest.util.RequestUtil;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,14 +53,16 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
-                                                                                                  @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                                                  @RequestParam(required = false, value = "q") final String q,
-                                                                                                  @RequestParam(required = false, value = "order") final String order,
-                                                                                                  @RequestParam(required = false, value = "limit") final Integer limit,
-                                                                                                  @RequestParam(required = false, value = "offset") final Integer offset,
-                                                                                                  @RequestParam(required = false, value = "fields") final String fields) throws Exception {
+                                                                                                  @PathVariable("idIndicatorSystem") String idIndicatorSystem,
+                                                                                                  @RequestParam(required = false, value = "q") String q,
+                                                                                                  @RequestParam(required = false, value = "order") String order,
+                                                                                                  @RequestParam(required = false, value = "limit") Integer limit,
+                                                                                                  @RequestParam(required = false, value = "offset") Integer offset,
+                                                                                                  @RequestParam(required = false, value = "fields") String fields,
+                                                                                                  @RequestParam(required = false, value = "representation") String representation) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
-        PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields);
+        Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
+        PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields, selectedRepresentations);
         ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> response = new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
 
         return response;

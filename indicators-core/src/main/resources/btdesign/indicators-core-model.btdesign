@@ -83,11 +83,14 @@ Application Indicators {
 			// Time values
 	    	TimeValue retrieveTimeValue(String timeValue) throws MetamacException;
 
+	    	 List<TimeValue> retrieveTimeValues(List<String> timeValues) throws MetamacException;
+
 	    	// Time granularities
 	    	TimeGranularity retrieveTimeGranularity(@TimeGranularityEnum timeGranularity) throws MetamacException;
 	    	
 	    	// Measure value
 	    	MeasureValue retrieveMeasureValue(@MeasureDimensionTypeEnum measureValue) throws MetamacException;
+	    	List<MeasureValue> retrieveMeasuresValues(List<String> measureCodes) throws MetamacException;
     	}
     	
     	"Provides access to indicators"
@@ -1044,6 +1047,7 @@ Application Indicators {
             	protected List<@GeographicalValue> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@GeographicalValue retrieveGeographicalValue(String uuid);
             	@GeographicalValue findGeographicalValueByCode(String code);
+            	List<@GeographicalValue> findGeographicalValuesByCodes(List<String> codes);
             	List<@GeographicalValue> findGeographicalValuesByGranularity(String granularityCode);
             	findByCondition(PagingParameter pagingParameter);
 			}
@@ -1238,6 +1242,7 @@ Application Indicators {
             	protected List<@Translation> findByQuery;
             	protected List<@Translation> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@Translation findTranslationByCode(String code);
+            	Map<String,@Translation> findTranslationsByCodes(List<String> translationCodes);
 			}
 		} 
 	}

@@ -83,6 +83,7 @@
 
     <!-- Rest API -->
     <import resource="classpath:/spring/indicators-rest-external-applicationContext.xml" />
+    <import resource="application-cache.xml" />
 
 
 </beans>
