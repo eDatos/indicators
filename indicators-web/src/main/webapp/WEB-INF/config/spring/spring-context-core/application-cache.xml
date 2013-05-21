@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:jee="http://www.springframework.org/schema/jee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:cache="http://www.springframework.org/schema/cache"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+            http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+            http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+            http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+            ">
+
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="default"/>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="indicatorsVersions"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="clearCacheInterceptor" class="es.gobcan.istac.indicators.rest.util.cache.ClearCacheInterceptor">
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <!-- cache definitions -->
+    <cache:advice id="cacheAdvice" cache-manager="cacheManager">
+        <cache:caching cache="indicatorsVersions">
+            <cache:cacheable method="retrieveIndicatorVersion" key="'retrieveIndicatorVersion' + #uuid + #versionNumber"/>
+            <cache:cacheable method="findIndicatorInstance" key="'findIndicatorInstance' + #uuid"/>
+            <cache:cacheable method="findGeographicalValuesByCodes" key="'findGeographicalValuesByCodes' + T(es.gobcan.istac.indicators.rest.util.cache.CacheUtils).findGeographicalValuesByCodesKey(#codes)" />
+        </cache:caching>
+    </cache:advice>
+
+    <aop:config>
+
+        <aop:pointcut id="indicatorVersionPointcut" expression="execution(*  es.gobcan.istac.indicators.core.domain.IndicatorVersionRepository.retrieveIndicatorVersion(..))" />
+        <aop:pointcut id="indicatorInstancePointcut" expression="execution(*  es.gobcan.istac.indicators.core.domain.IndicatorInstanceRepository.findIndicatorInstance(..))" />
+        <aop:pointcut id="geographicalValuePointcut" expression="execution(*  es.gobcan.istac.indicators.core.domain.GeographicalValueRepository.findGeographicalValuesByCodes(..))" />
+
+        <aop:pointcut id="requestMappingMethods" expression="@within(org.springframework.web.bind.annotation.RequestMapping)"/>
+        
+        <aop:advisor pointcut-ref="indicatorVersionPointcut" advice-ref="cacheAdvice" order="3" />
+        <aop:advisor pointcut-ref="indicatorInstancePointcut" advice-ref="cacheAdvice" order="3" />
+        <aop:advisor pointcut-ref="geographicalValuePointcut" advice-ref="cacheAdvice" order="3" />
+        <aop:advisor pointcut-ref="requestMappingMethods" advice-ref="clearCacheInterceptor" order="1"/>
+
+    </aop:config>
+
+
+</beans>
