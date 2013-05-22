@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
@@ -139,6 +138,6 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         }
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, geographicalValues, timeValues, measureValues, observationMap);
-        return dto2TypeMapper.createDataType(dataTypeRequest);
+        return dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
     }
 }

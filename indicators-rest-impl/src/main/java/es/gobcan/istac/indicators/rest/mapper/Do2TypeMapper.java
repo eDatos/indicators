@@ -32,7 +32,7 @@ public interface Do2TypeMapper {
     public List<SubjectBaseType> subjectDoToBaseType(List<SubjectIndicatorResult> subjects, String baseUrl);
     
     // Data
-    public DataType createDataType(DataTypeRequest dataTypeRequest);
+    public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata);
 
     // GeographicalValues
     public List<GeographicalValueType> geographicalValuesDoToType(List<GeographicalValue> geographicalValues);

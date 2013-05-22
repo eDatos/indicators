@@ -77,6 +77,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private static String PROP_ATTRIBUTE_UNIT_MEAS_DETAIL = "UNIT_MEAS_DETAIL";
     private static String PROP_ATTRIBUTE_UNIT_MEASURE = "UNIT_MEASURE";
     private static String PROP_ATTRIBUTE_UNIT_MULT = "UNIT_MULT";
+    private static String PROP_ATTRIBUTE_OBS_CONF = "OBS_CONF";
 
     private static String REQUEST_CACHE_DATASOURCE = "REQUEST_CACHE_DATASOURCE";
     private static String REQUEST_CACHE_UNITMULTIPLIER = "REQUEST_CACHE_UNITMULTIPLIER";
@@ -296,7 +297,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     @Override
-    public DataType createDataType(DataTypeRequest dataTypeRequest) {
+    public DataType createDataType(DataTypeRequest dataTypeRequest, boolean includeObservationMetadata) {
         requestCache.remove(); // Remove All Cache
         try {
             List<GeographicalValue> geographicalValues = dataTypeRequest.getGeographicalValues();
@@ -343,43 +344,34 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
                 for (int j = 0; j < timeValues.size(); j++) {
                     TimeValue timeValue = timeValues.get(j);
-                    dataRepresentationTypeTime.getIndex().put(timeValue.getTimeValue(), j);
+                    String timeValueCode = timeValue.getTimeValue();
+                    dataRepresentationTypeTime.getIndex().put(timeValueCode, j);
 
                     for (int k = 0; k < measureValues.size(); k++) {
                         MeasureValue measureValue = measureValues.get(k);
-                        dataRepresentationTypeMeasure.getIndex().put(measureValue.getMeasureValue().name(), k);
+                        String measureValueCode = measureValue.getMeasureValue().name();
+                        dataRepresentationTypeMeasure.getIndex().put(measureValueCode, k);
 
                         // Observation ID: Be careful!!! don't change order of ids
-                        String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue().name();
+                        String geographicalValueCode = geographicalValue.getCode();
+                        String id = geographicalValueCode + "#" + timeValueCode + "#" + measureValueCode;
 
                         ObservationDto observationDto = observationMap.get(id);
                         if (observationDto == null) {
-                            observationDto = new ObservationExtendedDto();
-                            observationDto.setPrimaryMeasure(null);
-
-                            CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalValue.getCode());
-                            CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValue.getTimeValue());
-                            CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValue.getMeasureValue().name());
-                            observationDto.getCodesDimension().add(geoCodeDimDto);
-                            observationDto.getCodesDimension().add(timeCodeDimDto);
-                            observationDto.getCodesDimension().add(measureCodeDimDto);
+                            observationDto = createObservationExtendedDto(geographicalValueCode, timeValueCode, measureValueCode, null);
+                        } else if (observationDto.getPrimaryMeasure() == null) {
+                            observationDto.setPrimaryMeasure(".");
                         }
-
 
                         // PRIMARY MEASURE
                         observations.add(observationDto.getPrimaryMeasure());
 
                         // ATTRIBUTES
-                        if(observationDto instanceof ObservationExtendedDto) {
+                        if(includeObservationMetadata) {
                             ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto)observationDto;
-                            Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
-                            setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationExtendedDto, observationAttributes);
-                            if (!observationAttributes.isEmpty()) {
-                                attributes.add(observationAttributes);
-                            } else {
-                                attributes.add(null);
-                            }
+                            attributes.add(setObservationAttributes(observationExtendedDto));
                         }
+
                     }
                 }
             }
@@ -402,78 +394,33 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
+    private ObservationDto createObservationExtendedDto(String geographicalValueCode, String timeValueCode, String measureValueCode, String primaryMeasure) {
+        ObservationDto observationDto;
+        observationDto = new ObservationExtendedDto();
+        observationDto.setPrimaryMeasure(primaryMeasure);
+        CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name(), geographicalValueCode);
+        CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.TIME.name(), timeValueCode);
+        CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(IndicatorDataDimensionTypeEnum.MEASURE.name(), measureValueCode);
+        observationDto.getCodesDimension().add(geoCodeDimDto);
+        observationDto.getCodesDimension().add(timeCodeDimDto);
+        observationDto.getCodesDimension().add(measureCodeDimDto);
+        return observationDto;
+    }
 
-    private void setUnitAndUnitMultiplier(DataTypeRequest dataTypeRequest, MeasureValue measureValue, ObservationExtendedDto observationDto, Map<String, AttributeType> observationAttributes) throws MetamacException {
-        AttributeBasicDto codeAttributeBasicDto = null;
-        for (AttributeBasicDto aux : observationDto.getAttributes()) {
-            if (aux.getAttributeId().equals(IndicatorDataAttributeTypeEnum.CODE.getName())) {
-                codeAttributeBasicDto = aux;
-                break;
+
+    private Map<String, AttributeType> setObservationAttributes(ObservationExtendedDto observationDto) throws MetamacException {
+        for (AttributeBasicDto codeAttributeBasicDto : observationDto.getAttributes()) {
+            if (codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.OBS_CONF.getName())) {
+                AttributeType unitMultiplierAttribute = new AttributeType();
+                unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_OBS_CONF);
+                unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(codeAttributeBasicDto.getValue()));
+
+                Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
+                observationAttributes.put(PROP_ATTRIBUTE_OBS_CONF, unitMultiplierAttribute);
+                return observationAttributes;
             }
         }
-        if (codeAttributeBasicDto != null) {
-            // TODO Esto no tendría que ser un International String
-            DataSource dataSource = null;
-            if (!MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue())) {
-                dataSource = retrieveDatasource(codeAttributeBasicDto.getValue().getTexts().get(0).getLabel());
-            }
-
-            Quantity quantity = null;
-            switch (measureValue.getMeasureValue()) {
-                case ABSOLUTE:
-                    if (dataTypeRequest.getIndicatorInstance() != null) {
-                        IndicatorVersion indicatorVersion = retrieveIndicatorFromCacheIfPossible(dataTypeRequest.getIndicatorInstance().getIndicator().getUuid());
-                        quantity = indicatorVersion.getQuantity();
-                    } else if (dataTypeRequest.getIndicatorVersion() != null) {
-                        quantity = dataTypeRequest.getIndicatorVersion().getQuantity();
-                    }
-                    break;
-                case ANNUAL_PERCENTAGE_RATE:
-                    quantity = dataSource.getAnnualPercentageRate() != null ? dataSource.getAnnualPercentageRate().getQuantity() : null;
-                    break;
-                case ANNUAL_PUNTUAL_RATE:
-                    quantity = dataSource.getAnnualPuntualRate() != null ? dataSource.getAnnualPuntualRate().getQuantity() : null;
-                    break;
-                case INTERPERIOD_PERCENTAGE_RATE:
-                    quantity = dataSource.getInterperiodPercentageRate() != null ? dataSource.getInterperiodPercentageRate().getQuantity() : null;
-                    break;
-                case INTERPERIOD_PUNTUAL_RATE:
-                    quantity = dataSource.getInterperiodPuntualRate() != null ? dataSource.getInterperiodPuntualRate().getQuantity() : null;
-                    break;
-            }
-
-            if (quantity != null) {
-                if (quantity.getUnit() != null) {
-                    AttributeType unitAttribute = new AttributeType();
-                    unitAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL);
-                    unitAttribute.setValue(MapperUtil.getLocalisedLabel(quantity.getUnit().getTitle()));
-                    observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, unitAttribute);
-
-                    if (quantity.getUnit().getSymbol() != null) {
-                        AttributeType unitMeasureSymbolAttribute = new AttributeType();
-                        unitMeasureSymbolAttribute.setCode(PROP_ATTRIBUTE_UNIT_MEASURE);
-                        Map<String, String> unitMeasure;
-                        unitMeasure = MapperUtil.getDefaultLabel(quantity.getUnit().getSymbol());
-                        unitMeasureSymbolAttribute.setValue(unitMeasure);
-                        observationAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, unitMeasureSymbolAttribute);
-                    }
-                }
-
-                if (MeasureDimensionTypeEnum.ABSOLUTE.equals(measureValue.getMeasureValue()) ||
-                        MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.equals(measureValue.getMeasureValue()) ||
-                        MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.equals(measureValue.getMeasureValue())) {
-                    
-                    if (quantity.getUnitMultiplier() != null) {
-                        UnitMultiplier unitMultiplier = retrieveUnitMultiplier(quantity.getUnitMultiplier());
-    
-                        AttributeType unitMultiplierAttribute = new AttributeType();
-                        unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_UNIT_MULT);
-                        unitMultiplierAttribute.setValue(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
-                        observationAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, unitMultiplierAttribute);
-                    }
-                }
-            }
-        }
+        return null;
     }
 
     private IndicatorVersion retrieveIndicatorFromCacheIfPossible(String uuid) {

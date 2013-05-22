@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -168,7 +167,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationsAttributes) throws Exception {
+    public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
         List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
@@ -182,14 +181,14 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
 
 
         Map<String, ? extends ObservationDto> observationMap;
-        if(includeObservationsAttributes) {
+        if(includeObservationMetadata) {
             observationMap = indicatorsApiService.findObservationsExtendedByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
         } else {
             observationMap = indicatorsApiService.findObservationsByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
         }
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
-        return dto2TypeMapper.createDataType(dataTypeRequest);
+        return dto2TypeMapper.createDataType(dataTypeRequest, includeObservationMetadata);
     }
 
 

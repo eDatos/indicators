@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
+import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
@@ -65,7 +67,29 @@ public class MapperUtil {
         labels.put(DEFAULT, defaultLabel);
         return labels;
     }
-    
+
+    public static Map<String, String> getLocalisedLabel(InternationalStringDto internationalString) {
+        if (internationalString == null || internationalString.getTexts() == null || internationalString.getTexts().size() == 0) {
+            return null;
+        }
+
+        Map<String, String> labels = new LinkedHashMap<String, String>(internationalString.getTexts().size() + 1);
+        String defaultLabel = null;
+        String defaultLabelLocale = null;
+        for (LocalisedStringDto localisedString : internationalString.getTexts()) {
+            labels.put(localisedString.getLocale(), localisedString.getLabel());
+            if ((defaultLabel == null) ||
+                    (defaultLabel != null && localisedString.getLocale().equals(DEFAULT_LANGUAGE)) ||
+                    (defaultLabel != null && defaultLabelLocale.equals(DEFAULT_LANGUAGE) && localisedString.getLocale().startsWith(DEFAULT_LANGUAGE))) {
+                defaultLabel = localisedString.getLabel();
+                defaultLabelLocale = localisedString.getLocale();
+            }
+        }
+        labels.put(DEFAULT, defaultLabel);
+        return labels;
+    }
+
+
     public static OperationIndicators getOperationIndicators(Operation operation) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
