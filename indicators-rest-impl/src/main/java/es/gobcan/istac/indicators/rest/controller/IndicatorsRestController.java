@@ -72,12 +72,15 @@ public class IndicatorsRestController extends AbstractRestController {
     public ResponseEntity<DataType> retrieveIndicatorData(final UriComponentsBuilder uriComponentsBuilder,
                                                           @PathVariable("indicatorCode") final String indicatorCode,
                                                           @RequestParam(required = false, value = "representation") final String representation,
-                                                          @RequestParam(required = false, value = "granularity") final String granularity) throws Exception {
+                                                          @RequestParam(required = false, value = "granularity") final String granularity,
+                                                          @RequestParam(required = false, value = "fields") final String fields) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
 
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-        DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities);
+
+        boolean includeObservationMetadata = !fields.contains("-observationsMetadata");
+        DataType dataType = indicatorRestFacade.retrieveIndicatorData(baseURL, indicatorCode, selectedRepresentations, selectedGranularities, includeObservationMetadata);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }

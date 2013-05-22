@@ -1,10 +1,8 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -149,9 +147,10 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         }
 
         if(fieldsToAdd.contains("+data")) {
+            boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
             for(IndicatorInstanceBaseType type : result.getItems()) {
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorInstanceDataByCode(baseUrl, type.getSystemCode(), type.getId(), representation, selectedGranularities);
+                DataType dataType = retrieveIndicatorInstanceDataByCode(baseUrl, type.getSystemCode(), type.getId(), representation, selectedGranularities, includeObservationsAttributes);
                 type.setData(dataType);
             }
         }
@@ -169,7 +168,7 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
     }
 
     @Override
-    public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws Exception {
+    public DataType retrieveIndicatorInstanceDataByCode(String baseUrl, String idIndicatorSystem, String idIndicatorInstance, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationsAttributes) throws Exception {
         IndicatorInstance indicatorInstance = retrieveIndicatorInstanceByCode(idIndicatorSystem, idIndicatorInstance);
 
         List<GeographicalValue> geographicalValues = indicatorsApiService.retrieveGeographicalValuesInIndicatorInstance(indicatorInstance.getUuid());
@@ -181,7 +180,13 @@ public class IndicatorSystemRestFacadeImpl implements IndicatorSystemRestFacade 
         ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
         ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
 
-        Map<String, ObservationExtendedDto> observationMap = indicatorsApiService.findObservationsExtendedByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
+
+        Map<String, ? extends ObservationDto> observationMap;
+        if(includeObservationsAttributes) {
+            observationMap = indicatorsApiService.findObservationsExtendedByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
+        } else {
+            observationMap = indicatorsApiService.findObservationsByDimensionsInIndicatorInstance(indicatorInstance.getUuid(), conditionDimensionDtos);
+        }
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorInstance, geographicalValues, timeValues, measureValues, observationMap);
         return dto2TypeMapper.createDataType(dataTypeRequest);

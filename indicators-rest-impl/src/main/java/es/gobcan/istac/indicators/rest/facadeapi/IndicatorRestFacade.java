@@ -8,6 +8,6 @@ import java.util.Map;
 public interface IndicatorRestFacade {
 
     public IndicatorType retrieveIndicator(final String baseUrl, final String indicatorCode) throws Exception;
-    public DataType retrieveIndicatorData(final String baseUrl, final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws Exception;
+    public DataType retrieveIndicatorData(final String baseUrl, final String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception;
     public PagedResultType<IndicatorBaseType> findIndicators(String baseUrl, String q, String order, final RestCriteriaPaginator paginator, String fields, Map<String, List<String>> representation) throws Exception;
 }

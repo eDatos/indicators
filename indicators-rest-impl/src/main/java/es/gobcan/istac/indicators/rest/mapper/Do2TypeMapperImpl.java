@@ -302,7 +302,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             List<GeographicalValue> geographicalValues = dataTypeRequest.getGeographicalValues();
             List<TimeValue> timeValues = dataTypeRequest.getTimeValues();
             List<MeasureValue> measureValues = dataTypeRequest.getMeasureValues();
-            Map<String, ObservationExtendedDto> observationMap = dataTypeRequest.getObservationMap();
+            Map<String, ? extends ObservationDto> observationMap = dataTypeRequest.getObservationMap();
 
             // TRANSFORM
             Integer size = geographicalValues.size() * timeValues.size() * measureValues.size();
@@ -352,7 +352,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         // Observation ID: Be careful!!! don't change order of ids
                         String id = geographicalValue.getCode() + "#" + timeValue.getTimeValue() + "#" + measureValue.getMeasureValue().name();
 
-                        ObservationExtendedDto observationDto = observationMap.get(id);
+                        ObservationDto observationDto = observationMap.get(id);
                         if (observationDto == null) {
                             observationDto = new ObservationExtendedDto();
                             observationDto.setPrimaryMeasure(null);
@@ -370,12 +370,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         observations.add(observationDto.getPrimaryMeasure());
 
                         // ATTRIBUTES
-                        Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
-                        setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationDto, observationAttributes);
-                        if (!observationAttributes.isEmpty()) {
-                            attributes.add(observationAttributes);
-                        } else {
-                            attributes.add(null);
+                        if(observationDto instanceof ObservationExtendedDto) {
+                            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto)observationDto;
+                            Map<String, AttributeType> observationAttributes = new LinkedHashMap<String, AttributeType>();
+                            setUnitAndUnitMultiplier(dataTypeRequest, measureValue, observationExtendedDto, observationAttributes);
+                            if (!observationAttributes.isEmpty()) {
+                                attributes.add(observationAttributes);
+                            } else {
+                                attributes.add(null);
+                            }
                         }
                     }
                 }
@@ -385,7 +388,11 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             dataType.setFormat(format);
             dataType.setDimension(dimension);
             dataType.setObservation(observations);
-            dataType.setAttribute(attributes);
+
+            if (!attributes.isEmpty()) {
+                dataType.setAttribute(attributes);
+            }
+
             return dataType;
         } catch (Exception e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);

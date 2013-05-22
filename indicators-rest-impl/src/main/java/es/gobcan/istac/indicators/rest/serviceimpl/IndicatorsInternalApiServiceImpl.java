@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -176,7 +177,12 @@ public class IndicatorsInternalApiServiceImpl extends IndicatorsApiServiceBaseIm
     public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
         return indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, conditions);
     }
-    
+
+    @Override
+    public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstance(String indicatorInstanceUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
+        return indicatorsDataService.findObservationsByDimensionsInIndicatorInstanceWithLastVersionIndicator(RestConstants.SERVICE_CONTEXT, indicatorInstanceUuid, conditions);
+    }
+
     private String getLastVersionIndicator(ServiceContext ctx, String indicatorUuid) throws MetamacException {
         Indicator indicator = indicatorsService.retrieveIndicator(ctx, indicatorUuid);
         

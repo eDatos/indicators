@@ -82,14 +82,16 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
-                                                                   @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                   @PathVariable("idIndicatorInstance") final String idIndicatorInstance,
-                                                                   @RequestParam(required = false, value = "representation") final String representation,
-                                                                   @RequestParam(required = false, value = "granularity") final String granularity) throws Exception {
+                                                                   @PathVariable("idIndicatorSystem") String idIndicatorSystem,
+                                                                   @PathVariable("idIndicatorInstance") String idIndicatorInstance,
+                                                                   @RequestParam(required = false, value = "representation") String representation,
+                                                                   @RequestParam(required = false, value = "granularity") String granularity,
+                                                                   @RequestParam(required = false, value = "fields") String fields) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities);
+        boolean includeObservationsAttributes = !fields.contains("-observationsMetadata");
+        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, includeObservationsAttributes);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }

@@ -3,6 +3,7 @@ package es.gobcan.istac.indicators.rest.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
@@ -18,10 +19,10 @@ public class DataTypeRequest {
     private List<GeographicalValue>             geographicalValues = null;
     private List<TimeValue>                     timeValues         = null;
     private List<MeasureValue>                  measureValues      = null;
-    private Map<String, ObservationExtendedDto> observationMap     = null;
+    private Map<String, ? extends ObservationDto> observationMap     = null;
 
     public DataTypeRequest(IndicatorInstance indicatorInstance, List<GeographicalValue> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues,
-            Map<String, ObservationExtendedDto> observationMap) {
+                           Map<String, ? extends ObservationDto> observationMap) {
         super();
         this.indicatorInstance = indicatorInstance;
         this.geographicalValues = geographicalValues;
@@ -31,7 +32,7 @@ public class DataTypeRequest {
     }
 
     public DataTypeRequest(IndicatorVersion indicatorVersion, List<GeographicalValue> geographicalValues, List<TimeValue> timeValues, List<MeasureValue> measureValues,
-            Map<String, ObservationExtendedDto> observationMap) {
+                           Map<String, ? extends ObservationDto> observationMap) {
         super();
         this.indicatorVersion = indicatorVersion;
         this.geographicalValues = geographicalValues;
@@ -80,7 +81,7 @@ public class DataTypeRequest {
         this.measureValues = measureValues;
     }
 
-    public Map<String, ObservationExtendedDto> getObservationMap() {
+    public Map<String, ? extends ObservationDto> getObservationMap() {
         return observationMap;
     }
 

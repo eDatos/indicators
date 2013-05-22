@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.apache.commons.collections.MapUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
@@ -82,9 +83,10 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         }
 
         if(fieldsToAdd.contains("+data")) {
+            boolean includeObservationsAttributes = fieldsToAdd.contains("+observationsMetadata");
             for(IndicatorBaseType indicatorType : result) {
                 Map<String, List<String>> selectedGranularities = MapUtils.EMPTY_MAP;
-                DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), representation, selectedGranularities);
+                DataType dataType = retrieveIndicatorData(baseUrl, indicatorType.getCode(), representation, selectedGranularities, includeObservationsAttributes);
                 indicatorType.setData(dataType);
             }
         }
@@ -116,7 +118,7 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
     }
 
     @Override
-    public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities) throws Exception {
+    public DataType retrieveIndicatorData(String baseUrl, String indicatorCode, Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, boolean includeObservationMetadata) throws Exception {
         IndicatorVersion indicatorVersion = retrieveIndicatorByCode(indicatorCode);
 
         List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesInIndicator(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -128,7 +130,13 @@ public class IndicatorRestFacadeImpl implements IndicatorRestFacade {
         ConditionUtil.filterTimeValues(selectedRepresentations, selectedGranularities, timeValues, conditionDimensionDtos);
         ConditionUtil.filterMeasureValues(selectedRepresentations, selectedGranularities, measureValues, conditionDimensionDtos);
 
-        Map<String, ObservationExtendedDto> observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
+        Map<String, ? extends ObservationDto> observationMap;
+
+        if(includeObservationMetadata) {
+            observationMap = indicatorsDataService.findObservationsExtendedByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
+        } else {
+            observationMap = indicatorsDataService.findObservationsByDimensionsInIndicatorLastVersion(RestConstants.SERVICE_CONTEXT, indicatorVersion.getIndicator().getUuid(), conditionDimensionDtos);
+        }
 
         DataTypeRequest dataTypeRequest = new DataTypeRequest(indicatorVersion, geographicalValues, timeValues, measureValues, observationMap);
         return dto2TypeMapper.createDataType(dataTypeRequest);
