@@ -45,7 +45,7 @@
         },
 
         _observationToNumber : function (observation) {
-            if (observation) {
+            if (this._isValidObservation(observation)) {
                 return parseFloat(observation);
             }
         },
@@ -60,27 +60,34 @@
             return null;
         },
 
-        getUnit : function (geo, time, measure) {
-            if (this.data.attribute) {
-                var index = this.getObservationIndex(geo, time, measure);
-                var attribute = this.data.attribute[index];
+        getUnit : function (measure) {
+            var result = "";
 
-                if (attribute) {
-                    var result = "";
-                    if (attribute.UNIT_MULT !== undefined && attribute.UNIT_MULT.value.__default__ !== "Unidades") {
-                        result = result + attribute.UNIT_MULT.value.__default__ + " de ";
+            if (this.metadata) {
+                var measureRepresentation = _.find(this.metadata.dimension.MEASURE.representation, function (representation) {return representation.code === measure;});
+                if (measureRepresentation) {
+                    var quantity = measureRepresentation.quantity;
+
+                    if (!_.isUndefined(quantity.unitMultiplier)) {
+                        var unitMultiplierTitle = quantity.unitMultiplier.__default__;
+                        if (unitMultiplierTitle !== "Unidades") {
+                            result = result + unitMultiplierTitle + " de ";
+                        }
                     }
 
-                    if(attribute.UNIT_MEASURE) {
-                        result = result + attribute.UNIT_MEASURE.value.__default__;
+                    if (quantity.unitSymbol) {
+                        result = result + quantity.unitSymbol;
                     } else {
-                        result = result + attribute.UNIT_MEAS_DETAIL.value.__default__;
+                        result = result + quantity.unit.__default__;
                     }
-
-                    return result;
                 }
             }
-            return "";
+            return result;
+        },
+
+        _isValidObservation : function (observation) {
+            var result = (!_.isUndefined(observation) && !_.isNull(observation) && observation !== ".");
+            return result;
         },
 
         getObservationStr : function (geo, time, measure) {
@@ -88,20 +95,13 @@
             if (this.data.observation) {
                 var index = this.getObservationIndex(geo, time, measure);
                 var observation = this.data.observation[index];
-                var attributes = this.data.attribute[index];
 
-                if (attributes) {
-	                if (!_.isUndefined(observation) && !_.isNull(observation)) {
-	                    res = observation;
-	                    // No need to be fixed anymore, the api return the correct value
-	                    //res = parseFloat(observation).toFixed(decimalPlaces);
-	
-	                    res = res.replace("\.", ",");
-	                    res = Istac.widget.helper.addThousandSeparator(res);
-	                }
+                if (this._isValidObservation(observation)) {
+                    res = observation;
+                    res = res.replace("\.", ",");
+                    res = Istac.widget.helper.addThousandSeparator(res);
                 }
             }
-
             return res;
         },
 
@@ -135,14 +135,14 @@
         getTimeValues : function () {
             var timeValues = [];
             if (this.data.dimension.TIME.representation.index) {
-            	timeValues = _.chain(this.data.dimension.TIME.representation.index)
-	            	.map(function (value, key) {
-	            		return {key : key, value : value};
-	            	}).sortBy(function (dimension) {
-	            		return dimension.value;
-	            	}).map(function (dimension) {
-	            		return dimension.key;
-	            	}).value().reverse();            
+                timeValues = _.chain(this.data.dimension.TIME.representation.index)
+                    .map(function (value, key) {
+                        return {key : key, value : value};
+                    }).sortBy(function (dimension) {
+                        return dimension.value;
+                    }).map(function (dimension) {
+                        return dimension.key;
+                    }).value().reverse();
             }
             return timeValues;
         },

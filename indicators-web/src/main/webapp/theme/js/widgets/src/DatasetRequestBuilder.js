@@ -7,7 +7,7 @@
     DatasetRequestBuilder.prototype = {
 
         _toInParameters : function (list) {
-            var stringItems = _.map(list, function (item) {
+            var stringItems = _.map(list,function (item) {
                 return '"' + item + '"';
             }).join(", ");
             return "(" + stringItems + ")";
@@ -44,6 +44,12 @@
             return "&fields=%2Bdata,%2Bmetadata";
         },
 
+        _representation : function (options) {
+            this._validateOneOrMore(options.geographicalValues);
+            var geographicalRepresentation = options.geographicalValues.join("|");
+            return "&representation=GEOGRAPHICAL[" + geographicalRepresentation + "]";
+        },
+
         _selectedInstancesRequest : function (options) {
             this._validateDefined(options.indicatorSystem);
             this._validateOneOrMore(options.instances);
@@ -51,16 +57,19 @@
             return this.apiUrl + "/indicatorsSystems/" +
                 options.indicatorSystem +
                 "/indicatorsInstances/?q=id "
-                + this._eqOrIn(options.instances) +
-                this._fieldsParameter();
+                + this._eqOrIn(options.instances)
+                + this._fieldsParameter()
+                + this._representation(options);
+
         },
 
         _selectedIndicatorsRequest : function (options) {
             this._validateOneOrMore(options.indicators);
 
-            return this.apiUrl + "/indicators/?q=id " +
-                this._eqOrIn(options.indicators) +
-                this._fieldsParameter();
+            return this.apiUrl + "/indicators/?q=id "
+                + this._eqOrIn(options.indicators)
+                + this._fieldsParameter()
+                + this._representation(options);
         },
 
         _recentInstancesRequest : function (options) {
@@ -69,13 +78,14 @@
             this._validateOne(options.geographicalValues);
 
             var geographicalValue = options.geographicalValues[0];
-            return this.apiUrl + "/indicatorsSystems/" +
-                options.indicatorSystem +
-                '/indicatorsInstances/?q=geographicalValue EQ "' +
-                geographicalValue +
-                '"&order=update DESC, id DESC&limit=' +
-                options.nrecent +
-                this._fieldsParameter();
+            return this.apiUrl + "/indicatorsSystems/"
+                + options.indicatorSystem
+                + '/indicatorsInstances/?q=geographicalValue EQ "'
+                + geographicalValue
+                + '"&order=update DESC, id DESC&limit='
+                + options.nrecent
+                + this._fieldsParameter()
+                + this._representation(options);
         },
 
         _recentIndicatorsRequest : function (options) {
@@ -84,25 +94,27 @@
             this._validateOne(options.geographicalValues);
 
             var geographicalValue = options.geographicalValues[0];
-            return this.apiUrl + '/indicators/?q=subjectCode EQ "' +
-                options.subjectCode +
-                '" AND geographicalValue EQ "' +
-                geographicalValue +
-                '"&order=update DESC, id DESC&limit='
-                + options.nrecent +
-                this._fieldsParameter();
+            return this.apiUrl + '/indicators/?q=subjectCode EQ "'
+                + options.subjectCode
+                + '" AND geographicalValue EQ "'
+                + geographicalValue
+                + '"&order=update DESC, id DESC&limit='
+                + options.nrecent
+                + this._fieldsParameter()
+                + this._representation(options);
         },
 
         _temporalRequest : function (options) {
             this._validateDefined(options.indicatorSystem);
             this._validateOne(options.instances);
 
-            return this.apiUrl + "/indicatorsSystems/" +
-                options.indicatorSystem +
-                '/indicatorsInstances/?q=id EQ "' +
-                options.instances[0] +
-                '"' +
-                this._fieldsParameter();
+            return this.apiUrl + "/indicatorsSystems/"
+                + options.indicatorSystem
+                + '/indicatorsInstances/?q=id EQ "'
+                + options.instances[0]
+                + '"'
+                + this._fieldsParameter()
+                + this._representation(options);
         },
 
         request : function (options) {

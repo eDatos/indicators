@@ -30,8 +30,7 @@
                     var timeValue = timeValues[j];
                     var value = dataset.getObservation(geoValue, timeValue, measureValue);
                     var valueStr = dataset.getObservationStr(geoValue, timeValue, measureValue);
-
-                    var unit = dataset.getUnit(geoValue, timeValue, measureValue);
+                    var unit = dataset.getUnit(measureValue);
 
                     data.push(value);
                     tooltip.push('<div><strong>' + valueStr + ' ' + unit + '</strong></div><div>' + geoValueTitle + '</div><div>' + timeValuesTitles[timeValue] + '</div>');
