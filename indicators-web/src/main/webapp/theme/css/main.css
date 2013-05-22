@@ -58,7 +58,7 @@ strong{font-weight:bold;}
 #widget-creator .nav-tabs>.active a,.nav-tabs>.active>a:hover{color:#555;cursor:default;background-color:white;border:1px solid #B9C5D3;border-bottom-color:transparent;}
 #widget-creator .nav-tabs>li>a{padding-top:8px;padding-bottom:8px;line-height:18px;border:1px solid transparent;-webkit-border-radius:4px 4px 0 0;-moz-border-radius:4px 4px 0 0;border-radius:4px 4px 0 0;}
 #widget-creator .nav-tabs>li>a,.nav-pills>li>a{padding-right:12px;padding-left:12px;margin-right:2px;line-height:14px;}
-#widget-creator label{width:170px;display:inline-block;}
+#widget-creator label{width:180px;display:inline-block;}
 .clearfix:after{content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0;}
 .clearfix{display:inline-block;}
 html[xmlns] .clearfix{display:block;}

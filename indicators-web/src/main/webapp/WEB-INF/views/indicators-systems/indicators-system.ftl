@@ -59,7 +59,7 @@
 		<li>		
 	  		<div style="clear: both;">
 				<div class="itemControlInfo">
-					<img id="<%= id %>" style="padding-right:3px" border="0" src="[@spring.url "/theme/images/tabla.gif"/]">
+					<img id="<%= id %>" style="padding-right:3px;cursor:pointer;" border="0" src="[@spring.url "/theme/images/tabla.gif"/]">
 				</div>
 				<div class="itemTabla">
 					<%= numeration %>
@@ -161,7 +161,7 @@ var ElementView = Backbone.View.extend({
 
     showIndicatorInstanceDetail : function () {
         var self = this;
-        console.log("making api call", this.model.get('selfLink'));
+
         $.get(this.model.get('selfLink'))
                 .success(function (indicatorInstance) {
                     //var $detail = $('.indicatorInstanceDetail', self.el);
