@@ -12,7 +12,7 @@
                     "httpMethod" : "GET",
                     "summary" : "Buscar indicadores",
                     "nickname" : "findIndicators",
-                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\"</li><li>q=id IN (\"CODE-1\", \"CODE-2\")</li><li>q=id EQ \"CODE-1\"</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong> y <strong>metadata</strong></p>fields=+data,+metadata",
+                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=subjectCode EQ \"EDUCACION\" AND geographicalValue EQ \"ES\"</li><li>q=id IN (\"CODE-1\", \"CODE-2\")</li><li>q=id EQ \"CODE-1\"</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong>, <strong>metadata</strong> y <strong>observationConf</strong></p>fields=+data,+metadata,+observationsMetadata",
                     "responseClass" : "IndicatorsPagination",
                     "parameters" : [
                         {
@@ -161,7 +161,7 @@
                     "httpMethod" : "GET",
                     "summary" : "Buscar instancias de un sistema de indicadores",
                     "nickname" : "retrieveIndicatorsInstances",
-                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=geographicalValue EQ \"ES\"</li><li>q=id EQ \"IndSys-1-v1-IInstance-1.111-CODE\"</li><li>q=id IN (\"IndSys-1-v1-IInstance-2.112-CODE\", \"IndSys-1-v1-IInstance-1.111-CODE\")</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong> y <strong>metadata</strong></p>fields=+data,+metadata",
+                    "notes" : "<p>El parámetro <strong>q</strong> permite realizar consultas del tipo:</p><ul><li>q=geographicalValue EQ \"ES\"</li><li>q=id EQ \"IndSys-1-v1-IInstance-1.111-CODE\"</li><li>q=id IN (\"IndSys-1-v1-IInstance-2.112-CODE\", \"IndSys-1-v1-IInstance-1.111-CODE\")</li></ul><br><p>El parámetro <strong>order</strong> permite orden por el campo <strong>update</strong>:</p><ul><li>order=update ASC</li></ul><br><p>El parámetro <strong>fields</strong> permite añadir más campos a la respuesta por defecto. Los campos disponibles son <strong>data</strong>, <strong>metadata</strong> y <strong>observationMetadata</strong></p>fields=+data,+metadata,+observationsMetadata",
                     "responseClass" : "InstancesPagination",
                     "parameters" : [
                         {
