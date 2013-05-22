@@ -37,21 +37,21 @@ public class QuantityType implements Serializable {
     private QuantityTypeEnum               type               = null;
     private Map<String, String>            unit               = null;
     private String                         unitSymbol         = null;
-    private QuantityUnitSymbolPositionEnum untiSymbolPosition = null;
-    private Integer                        unitMultiplier     = null;
+    private QuantityUnitSymbolPositionEnum unitSymbolPosition = null;
+    private Map<String, String>            unitMultiplier     = null;
     private Integer                        significantDigits  = null;
     private Integer                        decimalPlaces      = null;
 
     private Integer                        min                = null;
     private Integer                        max                = null;
-    private LinkType                       denominatorLink    = null;
-    private LinkType                       numeratorLink      = null;
+    private TitleLinkType                  denominatorLink    = null;
+    private TitleLinkType                  numeratorLink      = null;
     private Boolean                        isPercentage       = null;
     private Map<String, String>            percentageOf       = null;
     private Integer                        baseValue          = null;
-    private String                         baseTime           = null;
-    private String                         baseLocation       = null;
-    private LinkType                       baseQuantityLink   = null;
+    private MetadataRepresentationType     baseTime           = null;
+    private MetadataRepresentationType     baseLocation       = null;
+    private TitleLinkType                  baseQuantityLink   = null;
 
     public QuantityTypeEnum getType() {
         return type;
@@ -77,19 +77,19 @@ public class QuantityType implements Serializable {
         this.unitSymbol = unitSymbol;
     }
 
-    public QuantityUnitSymbolPositionEnum getUntiSymbolPosition() {
-        return untiSymbolPosition;
+    public QuantityUnitSymbolPositionEnum getUnitSymbolPosition() {
+        return unitSymbolPosition;
     }
 
-    public void setUntiSymbolPosition(QuantityUnitSymbolPositionEnum untiSymbolPosition) {
-        this.untiSymbolPosition = untiSymbolPosition;
+    public void setUnitSymbolPosition(QuantityUnitSymbolPositionEnum untiSymbolPosition) {
+        this.unitSymbolPosition = untiSymbolPosition;
     }
 
-    public Integer getUnitMultiplier() {
+    public Map<String, String> getUnitMultiplier() {
         return unitMultiplier;
     }
 
-    public void setUnitMultiplier(Integer unitMultiplier) {
+    public void setUnitMultiplier(Map<String, String> unitMultiplier) {
         this.unitMultiplier = unitMultiplier;
     }
 
@@ -129,7 +129,7 @@ public class QuantityType implements Serializable {
         return denominatorLink;
     }
 
-    public void setDenominatorLink(LinkType denominatorLink) {
+    public void setDenominatorLink(TitleLinkType denominatorLink) {
         this.denominatorLink = denominatorLink;
     }
 
@@ -137,7 +137,7 @@ public class QuantityType implements Serializable {
         return numeratorLink;
     }
 
-    public void setNumeratorLink(LinkType numeratorLink) {
+    public void setNumeratorLink(TitleLinkType numeratorLink) {
         this.numeratorLink = numeratorLink;
     }
 
@@ -165,19 +165,19 @@ public class QuantityType implements Serializable {
         this.baseValue = baseValue;
     }
 
-    public String getBaseTime() {
+    public MetadataRepresentationType getBaseTime() {
         return baseTime;
     }
 
-    public void setBaseTime(String baseTime) {
+    public void setBaseTime(MetadataRepresentationType baseTime) {
         this.baseTime = baseTime;
     }
-
-    public String getBaseLocation() {
+    
+    public MetadataRepresentationType getBaseLocation() {
         return baseLocation;
     }
-
-    public void setBaseLocation(String baseLocation) {
+    
+    public void setBaseLocation(MetadataRepresentationType baseLocation) {
         this.baseLocation = baseLocation;
     }
 
@@ -185,7 +185,7 @@ public class QuantityType implements Serializable {
         return baseQuantityLink;
     }
 
-    public void setBaseQuantityLink(LinkType baseQuantityLink) {
+    public void setBaseQuantityLink(TitleLinkType baseQuantityLink) {
         this.baseQuantityLink = baseQuantityLink;
     }
 

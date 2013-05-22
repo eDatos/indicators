@@ -46,6 +46,8 @@ public interface IndicatorsApiService {
     /* DATA */
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid) throws MetamacException;
     
+    public GeographicalValue retrieveGeographicalValueByCode(String geoCode) throws MetamacException;
+    
     public List<GeographicalValue> retrieveGeographicalValuesInIndicator(String indicatorUuid) throws MetamacException;
     
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicator(String indicatorUuid) throws MetamacException;
@@ -80,4 +82,6 @@ public interface IndicatorsApiService {
     public  List<IndicatorsSystemHistory> findIndicatorsSystemHistory(String idIndicatorSystem, int maxResults) throws MetamacException;
     
     public List<IndicatorsSystemVersion> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
+
+    public TimeValue retrieveTimeValueByCode(String timeCode) throws MetamacException;
 }

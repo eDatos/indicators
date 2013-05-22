@@ -6,8 +6,10 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.gobcan.istac.indicators.core.domain.DataSource;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemHistory;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.TimeValue;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -46,5 +48,15 @@ public abstract class IndicatorsApiServiceBaseImpl implements IndicatorsApiServi
     @Override
     public UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException {
         return indicatorsService.retrieveUnitMultiplier(RestConstants.SERVICE_CONTEXT, unitMultiplier);
+    }
+    
+    @Override
+    public GeographicalValue retrieveGeographicalValueByCode(String geoCode) throws MetamacException {
+        return indicatorsSystemsService.retrieveGeographicalValueByCode(RestConstants.SERVICE_CONTEXT, geoCode);
+    }
+    
+    @Override
+    public TimeValue retrieveTimeValueByCode(String timeCode) throws MetamacException {
+        return indicatorsSystemsService.retrieveTimeValue(RestConstants.SERVICE_CONTEXT, timeCode);
     }
 }

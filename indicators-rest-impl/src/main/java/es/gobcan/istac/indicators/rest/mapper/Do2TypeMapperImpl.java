@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
@@ -19,9 +17,10 @@ import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -70,6 +69,7 @@ import es.gobcan.istac.indicators.rest.types.MetadataType;
 import es.gobcan.istac.indicators.rest.types.QuantityType;
 import es.gobcan.istac.indicators.rest.types.SubjectBaseType;
 import es.gobcan.istac.indicators.rest.types.SubjectType;
+import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
@@ -534,7 +534,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return requestCacheInstance;
     }
 
-    private QuantityType quantityDoToBaseType(final Quantity source, final String baseURL) {
+    private QuantityType quantityDoToBaseType(final Quantity source, final String baseURL) throws MetamacException {
         Assert.notNull(source);
 
         QuantityType quantityType = new QuantityType();
@@ -542,30 +542,40 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         if (source.getUnit() != null) {
             quantityType.setUnit(MapperUtil.getLocalisedLabel(source.getUnit().getTitle()));
             quantityType.setUnitSymbol(source.getUnit().getSymbol());
-            quantityType.setUntiSymbolPosition(source.getUnit().getSymbolPosition());
+            quantityType.setUnitSymbolPosition(source.getUnit().getSymbolPosition());
         }
-        quantityType.setUnitMultiplier(source.getUnitMultiplier());
+        if (source.getUnitMultiplier() != null) {
+            UnitMultiplier unitMultiplier = indicatorsApiService.retrieveUnitMultiplier(source.getUnitMultiplier());
+            quantityType.setUnitMultiplier(MapperUtil.getLocalisedLabel(unitMultiplier.getTitle()));
+        }
         quantityType.setSignificantDigits(source.getSignificantDigits());
         quantityType.setDecimalPlaces(source.getDecimalPlaces());
         quantityType.setMin(source.getMinimum());
         quantityType.setMax(source.getMaximum());
 
         if (source.getDenominator() != null) {
-            quantityType.setDenominatorLink(_createLinkType(source.getDenominator(), baseURL));
+            IndicatorVersion indVersion = indicatorsApiService.retrieveIndicator(source.getDenominator().getUuid());
+            quantityType.setDenominatorLink(_createTitleLinkType(indVersion, baseURL));
         }
         if (source.getNumerator() != null) {
-            quantityType.setNumeratorLink(_createLinkType(source.getNumerator(), baseURL));
+            IndicatorVersion indVersion = indicatorsApiService.retrieveIndicator(source.getNumerator().getUuid());
+            quantityType.setNumeratorLink(_createTitleLinkType(indVersion, baseURL));
         }
 
         quantityType.setIsPercentage(source.getIsPercentage());
         quantityType.setPercentageOf(MapperUtil.getLocalisedLabel(source.getPercentageOf()));
         quantityType.setBaseValue(source.getBaseValue());
-        quantityType.setBaseTime(source.getBaseTime());
+        if (source.getBaseTime() != null) {
+            TimeValue timeValue = indicatorsApiService.retrieveTimeValueByCode(source.getBaseTime());
+            quantityType.setBaseTime(_timeValueDoToType(timeValue));
+        }
         if (source.getBaseLocation() != null) {
-            quantityType.setBaseLocation(source.getBaseLocation().getCode());
+            GeographicalValue geoValue = indicatorsApiService.retrieveGeographicalValueByCode(source.getBaseLocation().getCode());
+            quantityType.setBaseLocation(_geographicalValueDoToType(geoValue));
         }
         if (source.getBaseQuantity() != null) {
-            quantityType.setBaseQuantityLink(_createLinkType(source.getBaseQuantity(), baseURL));
+            IndicatorVersion indVersion = indicatorsApiService.retrieveIndicator(source.getBaseQuantity().getUuid());
+            quantityType.setBaseQuantityLink(_createTitleLinkType(indVersion, baseURL));
         }
 
         return quantityType;
@@ -804,7 +814,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
     }
 
-    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) {
+    private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) throws MetamacException {
         MetadataDimensionType measureDimension = new MetadataDimensionType();
         measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
         // measureDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
@@ -817,7 +827,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         // geographicaDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
-        geographicaDimension.setRepresentation(_geographicalValueDoToType(geographicalValues));
+        geographicaDimension.setRepresentation(_geographicalValuesDoToType(geographicalValues));
         return geographicaDimension;
     }
 
@@ -826,42 +836,52 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         timeDimension.setCode(IndicatorDataDimensionTypeEnum.TIME.name());
         timeDimension.setGranularity(timeGranularityDoToType(timeGranularities));
         // timeDimension.setTitle(MapperUtil.getLocalisedLabel(internationalString));
-        timeDimension.setRepresentation(_timeValueDoToType(timeValues));
+        timeDimension.setRepresentation(_timeValuesDoToType(timeValues));
         return timeDimension;
     }
 
-    private List<MetadataRepresentationType> _geographicalValueDoToType(List<GeographicalValue> geographicalValues) {
+    private List<MetadataRepresentationType> _geographicalValuesDoToType(List<GeographicalValue> geographicalValues) {
         if (CollectionUtils.isEmpty(geographicalValues)) {
             return null;
         }
         List<MetadataRepresentationType> geographicalValueTypes = new ArrayList<MetadataRepresentationType>(geographicalValues.size());
         for (GeographicalValue geographicalValue : geographicalValues) {
-            MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
-            metadataRepresentationType.setCode(geographicalValue.getCode());
-            metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
-            metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
-            metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
-            metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
+            MetadataRepresentationType metadataRepresentationType = _geographicalValueDoToType(geographicalValue);
             geographicalValueTypes.add(metadataRepresentationType);
         }
         return geographicalValueTypes;
     }
 
-    private List<MetadataRepresentationType> _timeValueDoToType(List<TimeValue> timeValues) {
+    protected MetadataRepresentationType _geographicalValueDoToType(GeographicalValue geographicalValue) {
+        MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+        metadataRepresentationType.setCode(geographicalValue.getCode());
+        metadataRepresentationType.setLatitude(geographicalValue.getLatitude());
+        metadataRepresentationType.setLongitude(geographicalValue.getLongitude());
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(geographicalValue.getTitle()));
+        metadataRepresentationType.setGranularityCode(geographicalValue.getGranularity().getCode());
+        return metadataRepresentationType;
+    }
+
+    private List<MetadataRepresentationType> _timeValuesDoToType(List<TimeValue> timeValues) {
         if (CollectionUtils.isEmpty(timeValues)) {
             return null;
         }
         List<MetadataRepresentationType> timeValueTypes = new ArrayList<MetadataRepresentationType>(timeValues.size());
         for (TimeValue timeValue : timeValues) {
-            MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
-            metadataRepresentationType.setCode(timeValue.getTimeValue());
-            metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
+            MetadataRepresentationType metadataRepresentationType = _timeValueDoToType(timeValue);
             timeValueTypes.add(metadataRepresentationType);
         }
         return timeValueTypes;
     }
 
-    private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) {
+    protected MetadataRepresentationType _timeValueDoToType(TimeValue timeValue) {
+        MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
+        metadataRepresentationType.setCode(timeValue.getTimeValue());
+        metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
+        return metadataRepresentationType;
+    }
+
+    private List<MetadataRepresentationType> _measureValueDoToType(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) throws MetamacException {
         if (CollectionUtils.isEmpty(measureValues)) {
             return null;
         }
@@ -925,6 +945,15 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         LinkType link = new LinkType();
         link.setKind(RestConstants.KIND_INDICATOR);
         link.setHref(href);
+        return link;
+    }
+    
+    private TitleLinkType _createTitleLinkType(final IndicatorVersion indicatorVersion, final String baseURL) {
+        String href = _createUrlIndicators_Indicator(indicatorVersion.getIndicator(), baseURL);
+        TitleLinkType link = new TitleLinkType();
+        link.setKind(RestConstants.KIND_INDICATOR);
+        link.setHref(href);
+        link.setTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getTitle()));
         return link;
     }
 
