@@ -21,6 +21,7 @@ public class TranslationRepositoryImpl extends TranslationRepositoryBase {
     public TranslationRepositoryImpl() {
     }
 
+    @Override
     public Translation findTranslationByCode(String code) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("code", code);
@@ -36,10 +37,11 @@ public class TranslationRepositoryImpl extends TranslationRepositoryBase {
     public Map<String, Translation> findTranslationsByCodes(List<String> translationCodes) {
         List<Translation> translations = new ListBlockIterator<String, Translation>(translationCodes, ServiceUtils.ORACLE_IN_MAX)
                 .iterate(new ListBlockIteratorFn<String, Translation>() {
+                    @Override
                     public List<Translation> apply(List<String> subcodes) {
                         Map<String, Object> parameters = new HashMap<String, Object>();
                         parameters.put("codes", subcodes);
-                        return findByQuery("from Translation t where t.code in (:codes)", parameters, 1);
+                        return findByQuery("from Translation t where t.code in (:codes)", parameters);
                     }
                 });
 
