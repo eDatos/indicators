@@ -5,7 +5,7 @@
     "resourcePath" : "",
     "apis" : [
         {
-            "path" : "/indicators/",
+            "path" : "/indicators",
             "description" : "Indicadores",
             "operations" : [
                 {
@@ -42,6 +42,12 @@
                         {
                             "name" : "fields",
                             "description" : "Permite añadir más campos a la respuesta",
+                            "paramType" : "query",
+                            "dataType" : "string"
+                        },
+                        {
+                            "name" : "representation",
+                            "description" : "Permite filtrar los datos",
                             "paramType" : "query",
                             "dataType" : "string"
                         }
@@ -105,7 +111,7 @@
             ]
         },
         {
-            "path" : "/indicatorsSystems/",
+            "path" : "/indicatorsSystems",
             "description" : "Sistemas de indicadores",
             "operations" : [
                 {
@@ -290,29 +296,7 @@
             ]
         },
         {
-            "path" : "/geographicGranularities/{granularityCode}",
-            "description" : "Operaciones de granularidade geográfica",
-            "operations" : [
-                {
-                    "httpMethod" : "GET",
-                    "summary" : "Granularidad geográfica",
-                    "nickname" : "findGeographicGranularities",
-                    "notes" : "",
-                    "responseClass" : "GeographicalGranularity",
-                    "parameters" : [
-                        {
-                            "name" : "granularityCode",
-                            "description" : "Código de la granularidad",
-                            "paramType" : "path",
-                            "dataType" : "string",
-                            "required" : true
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "path" : "/geographicalValues/",
+            "path" : "/geographicalValues",
             "description" : "Operaciones de valores geográficos",
             "operations" : [
                 {
@@ -348,7 +332,7 @@
             ]
         },
         {
-            "path" : "/subjects/",
+            "path" : "/subjects",
             "description" : "Temas",
             "operations" : [
                 {
@@ -477,9 +461,6 @@
                         "$ref" : "Link"
                     }
                 },
-                "quantity" : {
-                    "type" : "Quantity"
-                },
                 "conceptDescription" : {
                     "type" : "InternationalString"
                 },
@@ -505,6 +486,166 @@
                 }
             }
         },
+        "MetadataRepresentation" : {
+            "id" : "MetadataRepresentation",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                },
+                "latitude" : {
+                    "type" : "double"
+                },
+                "longitude" : {
+                    "type" : "double"
+                }
+            }
+        },
+
+        "Metadata" : {
+            "id" : "Metadata",
+            "properties" : {
+                "dimension" : {
+                    "type" : "MetadataDimensionMap"
+                },
+                "attribute" : {
+                    "type" : "MetadataAttributeMap"
+                }
+            }
+        },
+        "MetadataDimensionMap" : {
+            "id" : "MetadataDimensionMap",
+            "properties" : {
+                "GEOGRAPHICAL" : {
+                    "type" : "GeographicalDimension"
+                },
+                "TIME" : {
+                    "type" : "TimeDimension"
+                },
+                "MEASURE" : {
+                    "type" : "MeasureDimension"
+                }
+            }
+        },
+
+        "GeographicalDimension" : {
+            "id" : "GeographicalDimension",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "granularity" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "Granularity"
+                    }
+                },
+                "representation" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "GeographicalRepresentation"
+                    }
+                }
+            }
+        },
+        "TimeDimension" : {
+                "id" : "TimeDimension",
+                "properties" : {
+                    "code" : {
+                        "type" : "string"
+                    },
+                    "granularity" : {
+                        "type" : "array",
+                        "items" : {
+                            "$ref" : "Granularity"
+                        }
+                    },
+                    "representation" : {
+                        "type" : "array",
+                        "items" : {
+                            "$ref" : "TimeRepresentation"
+                        }
+                    }
+                }
+            },
+        "MeasureDimension" : {
+            "id" : "MeasureDimension",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "representation" : {
+                    "type" : "array",
+                    "items" : {
+                        "$ref" : "MeasureRepresentation"
+                    }
+                }
+            }
+        },
+
+        "Granularity" : {
+            "id" : "Granularity",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "InternationalString"
+                }
+            }
+        },
+
+        "GeographicalRepresentation" : {
+            "id" : "Representation",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "string"
+                },
+                "latitude" : {
+                    "type" : "double"
+                },
+                "longitude" : {
+                    "type" : "double"
+                },
+                "granularityCode" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "TimeRepresentation" : {
+            "id" : "Representation",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "string"
+                },
+                "granularityCode" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "MeasureRepresentation" : {
+            "id" : "Representation",
+            "properties" : {
+                "code" : {
+                    "type" : "string"
+                },
+                "title" : {
+                    "type" : "string"
+                },
+                "quantity" : {
+                    "type" : "Quantity"
+                }
+            }
+        },
+
         "Quantity" : {
             "id" : "Quantity",
             "properties" : {
@@ -524,6 +665,9 @@
                         ]
                     }
                 },
+                "unit" : {
+                    "type" : "InternationalString"
+                },
                 "unitSymbol" : {
                     "type" : "string"
                 },
@@ -538,7 +682,7 @@
                     }
                 },
                 "unitMultiplier" : {
-                    "type" : "int"
+                    "type" : "InternationalString"
                 },
                 "significantDigits" : {
                     "type" : "int"
@@ -562,107 +706,27 @@
                     "type" : "boolean"
                 },
                 "percentageOf" : {
-                    "type" : "string"
+                    "type" : "InternationalString"
                 },
                 "baseValue" : {
                     "type" : "int"
                 },
                 "baseTime" : {
-                    "type" : "string"
+                    "type" : "MetadataRepresentation"
                 },
                 "baseLocation" : {
-                    "type" : "string"
+                    "type" : "MetadataRepresentation"
                 },
                 "baseQuantityLink" : {
                     "type" : "Link"
                 }
+
             }
         },
-        "Metadata" : {
-            "id" : "Metadata",
-            "properties" : {
-                "dimension" : {
-                    "type" : "MetadataDimensionMap"
-                },
-                "attribute" : {
-                    "type" : "MetadataAttributeMap"
-                }
-            }
-        },
-        "MetadataDimensionMap" : {
-            "id" : "MetadataDimensionMap",
-            "properties" : {
-                "GEOGRAPHICAL" : {
-                    "type" : "Dimension"
-                },
-                "TIME" : {
-                    "type" : "Dimension"
-                },
-                "MEASURE" : {
-                    "type" : "Dimension"
-                }
-            }
-        },
-        "Dimension" : {
-            "id" : "Dimension",
-            "properties" : {
-                "code" : {
-                    "type" : "string"
-                },
-                "title" : {
-                    "type" : "InternationalString"
-                },
-                "granularity" : {
-                    "type" : "array",
-                    "items" : {
-                        "$ref" : "Granularity"
-                    }
-                },
-                "representation" : {
-                    "type" : "array",
-                    "items" : {
-                        "$ref" : "Representation"
-                    }
-                }
-            }
-        },
-        "Granularity" : {
-            "id" : "Granularity",
-            "properties" : {
-                "code" : {
-                    "type" : "string"
-                },
-                "title" : {
-                    "type" : "InternationalString"
-                }
-            }
-        },
-        "Representation" : {
-            "id" : "Representation",
-            "properties" : {
-                "code" : {
-                    "type" : "string"
-                },
-                "title" : {
-                    "type" : "string"
-                },
-                "latitude" : {
-                    "type" : "double"
-                },
-                "longitude" : {
-                    "type" : "double"
-                },
-                "granularityCode" : {
-                    "type" : "string"
-                }
-            }
-        },
+
         "MetadataAttributeMap" :{
             "id" : "MetadataAttributeMap",
             "properties" : {
-                "UNIT_MEAS_DETAIL" : {
-                    "type" : "Attribute"
-                },
                 "{attribute}" : {
                     "type" : "Attribute"
                 }
@@ -690,6 +754,8 @@
                 }
             }
         },
+
+
         "Data" : {
             "id" : "Data",
             "properties" : {
@@ -734,14 +800,14 @@
         },
         "DataDimensionRepresentation" : {
             "id" : "DataDimensionRepresentation",
-             "properties" : {
-                 "size" : {
-                     "type" : "int"
-                 },
-                 "index" : {
-                     "type" : "DataDimensionRepresentationIndexMap"
-                 }
-             }
+            "properties" : {
+                "size" : {
+                    "type" : "int"
+                },
+                "index" : {
+                    "type" : "DataDimensionRepresentationIndexMap"
+                }
+            }
         },
         "DataDimensionRepresentationIndexMap" : {
             "id" : "DataDimensionRepresentationIndexMap",
@@ -770,6 +836,7 @@
                 }
             }
         },
+
         "Indicator": {
             "id" : "Indicator",
             "properties" : {
@@ -806,9 +873,6 @@
                         "$ref" : "Link"
                     }
                 },
-                "quantity" : {
-                    "type" : "Quantity"
-                },
                 "conceptDescription" : {
                     "type" : "InternationalString"
                 },
@@ -826,6 +890,7 @@
                 }
             }
         },
+
         "IndicatorsSystemsPagination" : {
             "id" : "IndicatorsSystemsPagination",
             "properties" : {
@@ -934,6 +999,7 @@
                 }
             }
         },
+
         "ElementLevel" : {
             "id" : "ElementLevel",
             "properties" : {
