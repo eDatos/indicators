@@ -507,6 +507,8 @@ Application Indicators {
 	    	@DataStructureDto retrieveDataStructure(String uuid) throws MetamacException;
 	    	"Populates a given indicator data"
 	    	populateIndicatorData(String indicatorUuid) throws MetamacException;
+	    	"Update indicators data"
+	    	updateIndicatorsData() throws MetamacException;
 	    	//Data finders
 	    	"Find Published Indicator's Observations by dimensions"
 	    	Map<String,ObservationDto> findObservationsByDimensionsInIndicatorPublished(String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException;
@@ -784,12 +786,8 @@ Application Indicators {
        		- @InternationalString conceptDescription cascade="all" nullable databaseColumn="CONCEPT_DESCRIPTION_FK";
 			"Comments"
        		- @InternationalString comments cascade="all" nullable databaseColumn="COMMENTS_FK";
-			"Comments url"
-       		String commentsUrl nullable length="4000";
 			"Notes"
        		- @InternationalString notes cascade="all" nullable databaseColumn="NOTES_FK";
-       		"Notes url"
-       		String notesUrl nullable length="4000";
        		"True if this version is the last"
        		Boolean isLastVersion not nullable;
        		"Identifier in repository of observations"
@@ -1341,12 +1339,8 @@ Application Indicators {
        		- @InternationalStringDto conceptDescription;
 			"Comments"
        		- @InternationalStringDto comments;
-			"Comments url"
-       		String commentsUrl;
 			"Notes"
        		- @InternationalStringDto notes;
-       		"Notes url"
-       		String notesUrl;
        		"Quantity"
        		- @QuantityDto quantity;
        		

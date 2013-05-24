@@ -236,10 +236,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setTitle(internationalStringToDo(ctx, source.getTitle(), target.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE));
         target.setAcronym(internationalStringToDo(ctx, source.getAcronym(), target.getAcronym(), ServiceExceptionParameters.INDICATOR_ACRONYM));
         target.setComments(internationalStringToDo(ctx, source.getComments(), target.getComments(), ServiceExceptionParameters.INDICATOR_COMMENTS));
-        target.setCommentsUrl(source.getCommentsUrl());
         target.setConceptDescription(internationalStringToDo(ctx, source.getConceptDescription(), target.getConceptDescription(), ServiceExceptionParameters.INDICATOR_CONCEPT_DESCRIPTION));
         target.setNotes(internationalStringToDo(ctx, source.getNotes(), target.getNotes(), ServiceExceptionParameters.INDICATOR_NOTES));
-        target.setNotesUrl(source.getNotesUrl());
 
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided

@@ -40,11 +40,9 @@ public class DoCopyUtils {
         target.setAcronym(copy(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());
         target.setSubjectTitle(copy(source.getSubjectTitle()));
-        target.setNotesUrl(source.getNotesUrl());
         target.setNotes(copy(source.getNotes()));
         target.setConceptDescription(copy(source.getConceptDescription()));
         target.setComments(copy(source.getComments()));
-        target.setCommentsUrl(source.getCommentsUrl());
         target.setQuantity(copy(source.getQuantity()));
         target.getDataSources().addAll(copyDataSources(source.getDataSources(), target));
 

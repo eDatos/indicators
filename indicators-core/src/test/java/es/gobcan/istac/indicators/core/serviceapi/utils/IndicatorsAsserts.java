@@ -51,9 +51,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getAcronym(), actual.getAcronym());
         assertEqualsInternationalString(expected.getNotes(), actual.getNotes());
-        assertEquals(expected.getNotesUrl(), actual.getNotesUrl());
         assertEqualsInternationalString(expected.getComments(), actual.getComments());
-        assertEquals(expected.getCommentsUrl(), actual.getCommentsUrl());
         assertEqualsInternationalString(expected.getConceptDescription(), actual.getConceptDescription());
         assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
     }
