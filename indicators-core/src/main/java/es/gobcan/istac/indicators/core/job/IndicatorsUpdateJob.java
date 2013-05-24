@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
-import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsServiceFacade;
 
 @PersistJobDataAfterExecution
