@@ -824,6 +824,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     protected MetadataRepresentationType _timeValueDoToType(TimeValue timeValue) {
         MetadataRepresentationType metadataRepresentationType = new MetadataRepresentationType();
         metadataRepresentationType.setCode(timeValue.getTimeValue());
+        metadataRepresentationType.setGranularityCode(timeValue.getGranularity().getName());
         metadataRepresentationType.setTitle(MapperUtil.getLocalisedLabel(timeValue.getTitle()));
         return metadataRepresentationType;
     }
