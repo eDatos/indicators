@@ -10,6 +10,8 @@ import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.smartgwt.client.widgets.form.fields.HiddenItem;
+
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
@@ -47,10 +49,11 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem numeratorUuid = new ViewTextItem(IndicatorDS.QUANTITY_NUMERATOR_INDICATOR_TEXT, getConstants().indicQuantityNumeratorIndicator());
         numeratorUuid.setShowIfCondition(getNumeratorIfFunction());
 
-        ViewTextItem isPercentange = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
-        isPercentange.setShowIfCondition(getIsPercentageIfFunction());
+        ViewTextItem isPercentangeText = new ViewTextItem(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, getConstants().indicQuantityIsPercentage());
+        isPercentangeText.setShowIfCondition(getIsPercentageIfFunction());
+        HiddenItem isPercentange = new HiddenItem(IndicatorDS.QUANTITY_IS_PERCENTAGE);
 
-        ViewTextItem percentageOf = new ViewTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
+        ViewMultiLanguageTextItem percentageOf = new ViewMultiLanguageTextItem(IndicatorDS.QUANTITY_PERCENTAGE_OF, getConstants().indicQuantityPercentageOf());
         percentageOf.setShowIfCondition(getPercentageOfIfFunction());
 
         ViewTextItem indexBaseType = new ViewTextItem(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getConstants().indicQuantityIndexMetadata());
@@ -70,7 +73,7 @@ public class ViewQuantityForm extends BaseQuantityForm {
         ViewTextItem baseQuantityIndUuid = new ViewTextItem(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_TEXT, getConstants().indicQuantityBaseQuantityIndicator());
         baseQuantityIndUuid.setShowIfCondition(getBaseQuantityIfFunction());
 
-        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue,
+        setFields(type, typeText, unitUuid, unitMultiplier, sigDigits, decPlaces, min, max, denominatorUuid, numeratorUuid, isPercentangeText, isPercentange, percentageOf, indexBaseType, indexBaseTypeText, baseValue,
                 baseTime, baseLocation, baseQuantityIndUuid);
     }
 
@@ -100,7 +103,8 @@ public class ViewQuantityForm extends BaseQuantityForm {
                 }
             }
 
-            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
+            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE, quantityDto.getIsPercentage() != null ? quantityDto.getIsPercentage().booleanValue() : false);
+            setValue(IndicatorDS.QUANTITY_IS_PERCENTAGE_TEXT, quantityDto.getIsPercentage() != null ? (quantityDto.getIsPercentage() ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon
                     .getConstants().no()) : "");
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE, getIndexBaseTypeEnum(quantityDto) != null ? getIndexBaseTypeEnum(quantityDto).toString() : "");
             setValue(IndicatorDS.QUANTITY_INDEX_BASE_TYPE + "-text", getIndexBaseType(quantityDto));
