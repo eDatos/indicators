@@ -15,6 +15,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalViewMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextAreaAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextAndUrlItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
@@ -299,8 +300,8 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Annotations Form
         annotationsForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
-        ViewMultiLanguageTextAndUrlItem notes = new ViewMultiLanguageTextAndUrlItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
-        ViewMultiLanguageTextAndUrlItem comments = new ViewMultiLanguageTextAndUrlItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
+        ViewMultiLanguageTextItem notes = new ViewMultiLanguageTextItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
+        ViewMultiLanguageTextItem comments = new ViewMultiLanguageTextItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
         annotationsForm.setFields(notes, comments);
 
         mainFormLayout.addViewCanvas(identifiersForm);
@@ -384,8 +385,8 @@ public class IndicatorGeneralPanel extends VLayout {
 
         // Annotations Form
         annotationsEditionForm = new GroupDynamicForm(getConstants().indicDetailAnnotations());
-        MultiLanguageTextAreaAndUrlItem notes = new MultiLanguageTextAreaAndUrlItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
-        MultiLanguageTextAreaAndUrlItem comments = new MultiLanguageTextAreaAndUrlItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
+        MultilanguageRichTextEditorItem notes = new MultilanguageRichTextEditorItem(IndicatorDS.NOTES, getConstants().indicDetailNotes());
+        MultilanguageRichTextEditorItem comments = new MultilanguageRichTextEditorItem(IndicatorDS.COMMENTS, getConstants().indicDetailComments());
         annotationsEditionForm.setFields(notes, comments);
 
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
@@ -487,8 +488,8 @@ public class IndicatorGeneralPanel extends VLayout {
         publicationDescriptorsForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 
         // Annotations
-        ((ViewMultiLanguageTextAndUrlItem) annotationsForm.getItem(IndicatorDS.NOTES)).setValue(indicatorDto.getNotes(), indicatorDto.getNotesUrl());
-        ((ViewMultiLanguageTextAndUrlItem) annotationsForm.getItem(IndicatorDS.COMMENTS)).setValue(indicatorDto.getComments(), indicatorDto.getCommentsUrl());
+        ((ViewMultiLanguageTextItem) annotationsForm.getItem(IndicatorDS.NOTES)).setValueInternational(indicatorDto.getNotes());
+        ((ViewMultiLanguageTextItem) annotationsForm.getItem(IndicatorDS.COMMENTS)).setValueInternational(indicatorDto.getComments());
     }
 
     private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
@@ -532,8 +533,8 @@ public class IndicatorGeneralPanel extends VLayout {
         publicationDescriptorsEditionForm.setValue(IndicatorDS.ARCHIVED_USER, indicatorDto.getArchiveUser());
 
         // Annotations
-        ((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.NOTES)).setValue(indicatorDto.getNotes(), indicatorDto.getNotesUrl());
-        ((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).setValue(indicatorDto.getComments(), indicatorDto.getCommentsUrl());
+        ((MultilanguageRichTextEditorItem) annotationsEditionForm.getItem(IndicatorDS.NOTES)).setValueInternational(indicatorDto.getNotes());
+        ((MultilanguageRichTextEditorItem) annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).setValueInternational(indicatorDto.getComments());
 
     }
 
@@ -550,10 +551,8 @@ public class IndicatorGeneralPanel extends VLayout {
             // Quantity
             indicator.setQuantity(quantityEditionForm.getValue());
             // Annotations
-            indicator.setNotes(((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.NOTES)).getTextValue());
-            indicator.setNotesUrl(((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.NOTES)).getUrlValue());
-            indicator.setComments(((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).getTextValue());
-            indicator.setCommentsUrl(((MultiLanguageTextAreaAndUrlItem) annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).getUrlValue());
+            indicator.setNotes(((MultilanguageRichTextEditorItem) annotationsEditionForm.getItem(IndicatorDS.NOTES)).getValue());
+            indicator.setComments(((MultilanguageRichTextEditorItem) annotationsEditionForm.getItem(IndicatorDS.COMMENTS)).getValue());
 
             uiHandlers.saveIndicator(indicator);
         }
