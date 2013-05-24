@@ -90,7 +90,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         String baseURL = uriComponentsBuilder.build().toUriString();
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
-        boolean includeObservationsAttributes = !fields.contains("-observationsMetadata");
+        boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
         DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, includeObservationsAttributes);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
