@@ -135,10 +135,10 @@
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/1"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="111"
@@ -284,10 +284,10 @@
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/2"
+	  			
 	  			INDICATOR_FK="2"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/2"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="211"
@@ -775,10 +775,10 @@
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/3"
+	  			
 	  			INDICATOR_FK="3"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/3"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="311"
@@ -926,10 +926,10 @@
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/4"
+	  			
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/4"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="411"
@@ -1075,10 +1075,10 @@
 				UUID="Indicator-5-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/5"
+	  			
 	  			INDICATOR_FK="5"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/5"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="511"
@@ -1224,10 +1224,10 @@
 				UUID="Indicator-6-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/6"
+	  			
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/6"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="611"
@@ -1372,10 +1372,10 @@
 				UUID="Indicator-7-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/7"
+	  			
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/7"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="711"
@@ -1519,10 +1519,10 @@
 				UUID="Indicator-8-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/8"
+	  			
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/8"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="811"
@@ -1642,10 +1642,10 @@
 				UUID="Indicator-8-v2"
 				VERSION_NUMBER="1.001"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/8"
+	  			
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/8"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="821"
@@ -1790,10 +1790,10 @@
 				UUID="Indicator-9-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/9"
+	  			
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/9"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="911"
@@ -1913,10 +1913,10 @@
 				UUID="Indicator-9-v2"
 				VERSION_NUMBER="1.322"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/9"
+	  			
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/9"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="921"

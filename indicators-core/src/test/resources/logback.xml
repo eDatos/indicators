@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="es.gobcan.istac.indicators" level="DEBUG" />
+    <logger name="es.gobcan.istac.indicators" level="INFO" />
     <logger name="de.hunsicker.jalopy.io" level="WARN" />
 
     <root level="INFO">

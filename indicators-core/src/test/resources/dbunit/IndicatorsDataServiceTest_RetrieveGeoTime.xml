@@ -129,10 +129,10 @@
 				UUID="Indicator-1-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/1"
+				
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="111"
@@ -250,10 +250,10 @@
 				UUID="Indicator-1-v2"
 				VERSION_NUMBER="2.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/1"
+				
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="121"
@@ -395,10 +395,10 @@
 				UUID="Indicator-2-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/2"
+	  			
 	  			INDICATOR_FK="2"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/2"
+				
 				SUBJECT_CODE="2"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="211"
@@ -541,10 +541,10 @@
 				UUID="Indicator-3-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/3"
+	  			
 	  			INDICATOR_FK="3"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/3"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="311"
@@ -685,10 +685,10 @@
 				UUID="Indicator-4-v1"
 				VERSION_NUMBER="1.000"
 				TITLE_FK="3"
-	  			COMMENTS_URL="http://indicators/comments/4"
+	  			
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/4"
+				
 				SUBJECT_CODE="4"
 				SUBJECT_TITLE_FK="2"
 				QUANTITY_FK="411"
@@ -865,10 +865,10 @@
                 UUID="Indicator-5-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="3"
-                COMMENTS_URL="http://indicators/comments/5"
+                
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/5"
+                
                 SUBJECT_CODE="3"
                 SUBJECT_TITLE_FK="2"
                 QUANTITY_FK="511"

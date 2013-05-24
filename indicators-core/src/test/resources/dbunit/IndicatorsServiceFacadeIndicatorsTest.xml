@@ -33,9 +33,9 @@
 				TITLE_FK="1"
 				ACRONYM_FK="2"
 	  			COMMENTS_FK="4"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 	  			NOTES_FK="3"
-				NOTES_URL="http://indicators/1"
+				
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="30"
 				CONCEPT_DESCRIPTION_FK="46"
@@ -212,10 +212,10 @@
 				ACRONYM_FK="6"
 	  			NOTES_FK="7"
 	  			COMMENTS_FK="8"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 	  			INDICATOR_FK="1"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/1"
+				
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="31"
 				QUANTITY_FK="121"
@@ -725,10 +725,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/2"
+	  			
 	  			INDICATOR_FK="2"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/2"
+				
 				SUBJECT_CODE="2"
 				SUBJECT_TITLE_FK="35"
 				QUANTITY_FK="211"
@@ -812,10 +812,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/3"
+	  			
 	  			INDICATOR_FK="3"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/3"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="36"
 				QUANTITY_FK="311"
@@ -1078,10 +1078,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/4"
+	  			
 	  			INDICATOR_FK="4"
 	  			PROC_STATUS="PRODUCTION_VALIDATION"
-				NOTES_URL="http://indicators/4"
+				
 				SUBJECT_CODE="4"
 				SUBJECT_TITLE_FK="37"
 				QUANTITY_FK="411"
@@ -1267,10 +1267,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/5"
+	  			
 	  			INDICATOR_FK="5"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
-				NOTES_URL="http://indicators/5"
+				
 				SUBJECT_CODE="4"
 				SUBJECT_TITLE_FK="38"
 				QUANTITY_FK="511"
@@ -1558,10 +1558,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/6"
+	  			
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/6"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="39"
 				QUANTITY_FK="611"
@@ -1623,10 +1623,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/6"
+	  			
 	  			INDICATOR_FK="6"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
-				NOTES_URL="http://indicators/6"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="45"
 				QUANTITY_FK="621"
@@ -1813,10 +1813,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/7"
+	  			
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="ARCHIVED"
-				NOTES_URL="http://indicators/7"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="40"
 				QUANTITY_FK="711"
@@ -1878,10 +1878,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/7"
+	  			
 	  			INDICATOR_FK="7"
 	  			PROC_STATUS="DIFFUSION_VALIDATION"
-				NOTES_URL="http://indicators/7"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="41"
 				QUANTITY_FK="721"
@@ -2067,10 +2067,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/8"
+	  			
 	  			INDICATOR_FK="8"
 	  			PROC_STATUS="ARCHIVED"
-				NOTES_URL="http://indicators/8"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="42"
 				QUANTITY_FK="811"
@@ -2155,10 +2155,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/9"
+	  			
 	  			INDICATOR_FK="9"
 	  			PROC_STATUS="VALIDATION_REJECTED"
-				NOTES_URL="http://indicators/9"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="47"
 				QUANTITY_FK="911"
@@ -2342,10 +2342,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/10"
+	  			
 	  			INDICATOR_FK="10"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/10"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="44"
 				QUANTITY_FK="1011"
@@ -2429,10 +2429,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/11"
+	  			
 	  			INDICATOR_FK="11"
 	  			PROC_STATUS="PUBLICATION_FAILED"
-				NOTES_URL="http://indicators/11"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="63"
 				QUANTITY_FK="1111"
@@ -2545,10 +2545,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/12"
+	  			
 	  			INDICATOR_FK="12"
 	  			PROC_STATUS="PUBLISHED"
-				NOTES_URL="http://indicators/12"
+				
 				SUBJECT_CODE="3"
 				SUBJECT_TITLE_FK="63"
 				QUANTITY_FK="1121"
@@ -2689,10 +2689,10 @@
                 ACRONYM_FK="[null]"
                 NOTES_FK="[null]"
                 COMMENTS_FK="[null]"
-                COMMENTS_URL="http://indicators/comments/13"
+                
                 INDICATOR_FK="13"
                 PROC_STATUS="DIFFUSION_VALIDATION"
-                NOTES_URL="http://indicators/13"
+                
                 SUBJECT_CODE="5"
                 SUBJECT_TITLE_FK="73"
                 QUANTITY_FK="1311"

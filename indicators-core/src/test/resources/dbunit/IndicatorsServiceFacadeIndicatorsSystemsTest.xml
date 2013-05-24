@@ -1608,9 +1608,9 @@
 				TITLE_FK="39"
 				ACRONYM_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/1"
+	  			
 				NOTES_FK="[null]"
-	  			NOTES_URL="http://indicators/1"
+	  			
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="42"
 				QUANTITY_FK="111"
@@ -1758,10 +1758,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/2"
+	  			
 				INDICATOR_FK="2"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/2"
+				
 				SUBJECT_CODE="2"
 				SUBJECT_TITLE_FK="43"
 				QUANTITY_FK="211"
@@ -1846,10 +1846,10 @@
 				ACRONYM_FK="[null]"
 	  			NOTES_FK="[null]"
 	  			COMMENTS_FK="[null]"
-	  			COMMENTS_URL="http://indicators/comments/3"
+	  			
 				INDICATOR_FK="3"
 	  			PROC_STATUS="DRAFT"
-				NOTES_URL="http://indicators/3"
+				
 				SUBJECT_CODE="1"
 				SUBJECT_TITLE_FK="44"
 				QUANTITY_FK="311"
@@ -1993,10 +1993,10 @@
                 ACRONYM_FK="[null]"
                 NOTES_FK="[null]"
                 COMMENTS_FK="[null]"
-                COMMENTS_URL="http://indicators/comments/4"
+                
                 INDICATOR_FK="4"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/4"
+                
                 SUBJECT_CODE="3"
                 SUBJECT_TITLE_FK="44"
                 QUANTITY_FK="411"
@@ -2140,10 +2140,10 @@
                 ACRONYM_FK="[null]"
                 NOTES_FK="[null]"
                 COMMENTS_FK="[null]"
-                COMMENTS_URL="http://indicators/comments/5"
+                
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/5"
+                
                 SUBJECT_CODE="4"
                 SUBJECT_TITLE_FK="43"
                 QUANTITY_FK="511"

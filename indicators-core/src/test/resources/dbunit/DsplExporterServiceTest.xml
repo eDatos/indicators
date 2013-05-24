@@ -234,10 +234,9 @@
                 UUID="Indicator-1-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="17"
-                COMMENTS_URL="http://indicators/comments/1"
                 INDICATOR_FK="1"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/1"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="111"
@@ -387,10 +386,9 @@
                 UUID="Indicator-2-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="19"
-                COMMENTS_URL="http://indicators/comments/2"
                 INDICATOR_FK="2"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/2"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="211"
@@ -540,10 +538,9 @@
                 UUID="Indicator-3-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="21"
-                COMMENTS_URL="http://indicators/comments/3"
                 INDICATOR_FK="3"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/3"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="311"
@@ -693,10 +690,9 @@
                 UUID="Indicator-4-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="26"
-                COMMENTS_URL="http://indicators/comments/4"
                 INDICATOR_FK="4"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/4"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="411"
@@ -847,10 +843,10 @@
                 UUID="Indicator-5-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="30"
-                COMMENTS_URL="http://indicators/comments/5"
+                
                 INDICATOR_FK="5"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/5"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="511"
@@ -1122,10 +1118,10 @@
                 UUID="Indicator-6-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="50"
-                COMMENTS_URL="http://indicators/comments/6"
+                
                 INDICATOR_FK="6"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/6"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="611"
@@ -1398,10 +1394,10 @@
                 UUID="Indicator-7-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="52"
-                COMMENTS_URL="http://indicators/comments/7"
+                
                 INDICATOR_FK="7"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/7"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="711"
@@ -1551,10 +1547,10 @@
                 UUID="Indicator-8-v1"
                 VERSION_NUMBER="1.000"
                 TITLE_FK="53"
-                COMMENTS_URL="http://indicators/comments/8"
+                
                 INDICATOR_FK="8"
                 PROC_STATUS="PUBLISHED"
-                NOTES_URL="http://indicators/8"
+                
                 SUBJECT_CODE="EDUCACION"
                 SUBJECT_TITLE_FK="1"
                 QUANTITY_FK="811"
