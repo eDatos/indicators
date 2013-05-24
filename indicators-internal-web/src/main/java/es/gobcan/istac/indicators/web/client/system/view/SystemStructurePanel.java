@@ -1145,41 +1145,6 @@ public class SystemStructurePanel extends HLayout {
             validator.setErrorMessage(getMessages().indicatorInconsistentData());
             indicatorUuid.setValidators(validator);
             final SearchViewTextItem indicatorText = getIndicatorTextItem();
-            // indicatorText.setShowIcons(false);
-            //
-            // final RequiredSelectItem indicatorsItem = new RequiredSelectItem(IndicatorInstanceDS.IND_UUID, getConstants().systemStrucIndInstanceIndicator());
-            // indicatorsItem.setShowIcons(false);
-            // indicatorText.addChangedHandler(new ChangedHandler() {
-            //
-            // @Override
-            // public void onChanged(ChangedEvent event) {
-            //
-            // }
-            // });
-            // Warning icon
-            // FormItemIcon infoIcon = new FormItemIcon();
-            // infoIcon.setSrc(GlobalResources.RESOURCE.warn().getURL());
-            // infoIcon.setPrompt(getMessages().indicatorInconsistentData());
-            // // Populate data icon
-            // FormItemIcon populateData = new FormItemIcon();
-            // populateData.setSrc(IndicatorsResources.RESOURCE.populateData().getURL());
-            // populateData.setPrompt(getConstants().indicatorPopulateData());
-            // indicatorText.setIcons(infoIcon, populateData);
-            // populateData.addFormItemClickHandler(new FormItemClickHandler() {
-            //
-            // @Override
-            // public void onFormItemClick(FormItemIconClickEvent event) {
-            // if (event.getItem().getValue() != null) {
-            // String indicatorUuid = event.getItem().getValue().toString();
-            // if (!StringUtils.isBlank(indicatorUuid)) {
-            // IndicatorDto indicatorDto = getIndicatorDtoByUuid(indicatorUuid);
-            // if (indicatorDto != null) {
-            // uiHandlers.populateIndicatorData(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-            // }
-            // }
-            // }
-            // }
-            // });
 
             // TIME
 
@@ -1507,6 +1472,8 @@ public class SystemStructurePanel extends HLayout {
                             creationForm.markForRedraw();
                         }
                     });
+                    
+                    uiHandlers.searchIndicator(indicatorsSearchWindow.getSearchCriteria());
                 }
             });
             CustomValidator validator = new CustomValidator() {
