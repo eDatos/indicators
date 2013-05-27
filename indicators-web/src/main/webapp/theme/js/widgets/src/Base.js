@@ -77,11 +77,11 @@
 
             if (this.options.uwa) {
                 this.el.html(this._uwaContainerTemplate(templateOptions));
-                this.titleLink = $('');
+                //this.titleLink = $('');
                 this.titleContainer = $('');
             } else {
                 this.el.html(this._containerTemplate(templateOptions));
-                this.titleLink = this.el.find('.istac-widget-title-text');
+                //this.titleLink = this.el.find('.istac-widget-title-text');
                 this.titleContainer = this.el.find('.istac-widget-title');
             }
 
@@ -176,7 +176,9 @@
         setHeaderColor : function (color) {
             this.titleContainer.css('background-color', color);
             var contrastColor = this._getContrast50(color);
-            this.titleLink.css('color', contrastColor);
+
+            this.titleContainer.css('color', contrastColor);
+            this.titleContainer.find("a").css('color', contrastColor);
         },
 
         setWidth : function (width) {
@@ -218,7 +220,14 @@
             if (_.isUndefined(title) || title.length === 0) {
                 title = this._getDefaultTitle();
             }
-            this.titleLink.text(title);
+
+            var $link = this.titleContainer.find('a');
+            if ($link.length > 0) {
+                $link.text(title);
+            } else {
+                this.titleContainer.text(title);
+            }
+
         },
 
         setIndicatorSystem : function () {
@@ -236,11 +245,20 @@
             if (hasSystemId) {
                 var systemIdStr = systemId || "";
                 url = this.url + "/indicatorsSystems/" + systemIdStr;
-            } else {
-                url = this.url;
             }
 
-            this.titleLink.attr('href', url);
+
+            if (url) {
+                this.titleContainer.html('<a class="istac-widget-title-text" href="' + url + '" target="_blank"></a>');
+                this.setTitle(this.title);
+                this.setHeaderColor(this.headerColor);
+            } else {
+                this.titleContainer.html('');
+                this.setTitle(this.title);
+                this.setHeaderColor(this.headerColor);
+            }
+
+
             this.allIndicatorsContainer.find('a').attr('href', url);
             this.el.find('.istac-widget-body-allIndicators-text').toggle(hasSystemId);
         },
