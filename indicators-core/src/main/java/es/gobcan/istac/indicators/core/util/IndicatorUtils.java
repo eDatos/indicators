@@ -5,8 +5,8 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 /**
  * Dto for quantity
  * Quantity: Quantity
- * Amount: Quantity
- * Magnitude: Quantity
+ * Amount: extends Quantity
+ * Magnitude: extends Quantity
  * Fraction: extends Magnitude
  * Ratio: extends Fraction
  * Rate: extends Ratio
@@ -16,7 +16,7 @@ import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
 public class IndicatorUtils {
 
     public static Boolean isQuantityOrExtension(QuantityTypeEnum type) {
-        return QuantityTypeEnum.QUANTITY.equals(type);
+        return QuantityTypeEnum.QUANTITY.equals(type) || isAmountOrExtension(type) || isMagnitudeOrExtension(type);
     }
 
     public static Boolean isAmountOrExtension(QuantityTypeEnum type) {
