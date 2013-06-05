@@ -3,6 +3,9 @@ Cuando se cree la RELEASE, añadir estos pasos al manual de instalación:
 1. Parar Tomcat
 
 2. Base de datos:
+	Las BBDD deben volver a crearse.
+
+	DEPRECATED:
 	- Ejecutar el script 03-updates-in-release/01-change-symbol-restrictions.sql
 	- Ejecutar el script 03-updates-in-release/02-update-localised-string.sql
 	- Ejecutar el script 03-updates-in-release/03-update-localised-string.sql
