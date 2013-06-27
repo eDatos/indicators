@@ -368,14 +368,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         indicatorsSystemInProduction.setPublicationDate(new DateTime());
         indicatorsSystemInProduction.setPublicationUser(ctx.getUserId());
         indicatorsSystemInProduction = getIndicatorsSystemVersionRepository().save(indicatorsSystemInProduction);
-        
+
         IndicatorsSystem indicatorsSystem = indicatorsSystemInProduction.getIndicatorsSystem();
         // Remove possible last version in diffusion
         if (indicatorsSystem.getDiffusionVersion() != null) {
             IndicatorsSystemVersion indicatorDiffusionVersion = retrieveIndicatorsSystem(ctx, uuid, indicatorsSystem.getDiffusionVersion().getVersionNumber());
-            
+
             deleteIndicatorInstanceLastValuesCacheInIndicatorsSystem(indicatorDiffusionVersion);
-            
+
             indicatorsSystem.getVersions().remove(indicatorDiffusionVersion);
             getIndicatorsSystemRepository().save(indicatorsSystem);
             getIndicatorsSystemVersionRepository().delete(indicatorDiffusionVersion);
@@ -386,13 +386,14 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Update indicators system
         indicatorsSystem = getIndicatorsSystemRepository().save(indicatorsSystem);
-        
-        //Add new version to history
-        IndicatorsSystemHistory indicatorsSystemHistory = new IndicatorsSystemHistory(indicatorsSystem.getDiffusionVersion().getVersionNumber(), indicatorsSystem, indicatorsSystemInProduction.getPublicationDate());
+
+        // Add new version to history
+        IndicatorsSystemHistory indicatorsSystemHistory = new IndicatorsSystemHistory(indicatorsSystem.getDiffusionVersion().getVersionNumber(), indicatorsSystem,
+                indicatorsSystemInProduction.getPublicationDate());
         getIndicatorsSystemHistoryRepository().save(indicatorsSystemHistory);
 
         createIndicatorInstanceLastValuesCacheInIndicatorsSystem(ctx, indicatorsSystemInProduction);
-        
+
         return indicatorsSystemInProduction;
     }
 
@@ -407,8 +408,8 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         // Validate to archive
         checkIndicatorsSystemToArchive(ctx, uuid, indicatorsSystemInDiffusion);
-        
-        //delete cache table for every indicator instance*/
+
+        // delete cache table for every indicator instance*/
         deleteIndicatorInstanceLastValuesCacheInIndicatorsSystem(indicatorsSystemInDiffusion);
 
         // Update proc status
@@ -637,9 +638,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Delete
         deleteElementLevel(ctx, elementLevel);
     }
-    
+
     @Override
-    public PagedResult<IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystems(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+    public PagedResult<IndicatorInstance> findIndicatorsInstancesInPublishedIndicatorsSystems(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter)
+            throws MetamacException {
 
         // Validation of parameters
         InvocationValidator.checkFindIndicatorsInstancesInPublishedIndicatorsSystems(conditions, pagingParameter, null);
@@ -654,19 +656,20 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         PagedResult<IndicatorInstance> indicatorsInstances = getIndicatorInstanceRepository().findByCondition(conditions, pagingParameter);
         return indicatorsInstances;
     }
-    
+
     @Override
-    public PagedResult<IndicatorInstance> findIndicatorsInstancesInLastVersionIndicatorsSystems(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        
+    public PagedResult<IndicatorInstance> findIndicatorsInstancesInLastVersionIndicatorsSystems(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter)
+            throws MetamacException {
+
         // Validation of parameters
         InvocationValidator.checkFindIndicatorsInstancesInLastVersionIndicatorsSystems(conditions, pagingParameter, null);
-        
+
         // Retrieve published
         if (conditions == null) {
             conditions = new ArrayList<ConditionalCriteria>();
         }
-        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().isLastVersion(),Boolean.TRUE));
-        
+        conditions.add(ConditionalCriteria.equal(IndicatorInstanceProperties.elementLevel().indicatorsSystemVersion().isLastVersion(), Boolean.TRUE));
+
         // Find
         PagedResult<IndicatorInstance> indicatorsInstances = getIndicatorInstanceRepository().findByCondition(conditions, pagingParameter);
         return indicatorsInstances;
@@ -701,18 +704,18 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
         return indicatorsSystemVersion;
     }
-    
+
     @Override
     public List<IndicatorsSystemHistory> findIndicatorsSystemHistory(ServiceContext ctx, String uuid, int maxResults) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkFindIndicatorsSystemHistory(uuid, maxResults, null);
-        
-        List<IndicatorsSystemHistory> indicatorsSystemHistory = getIndicatorsSystemHistoryRepository().findIndicatorsSystemHistory(uuid,maxResults);
-        
+
+        List<IndicatorsSystemHistory> indicatorsSystemHistory = getIndicatorsSystemHistoryRepository().findIndicatorsSystemHistory(uuid, maxResults);
+
         return indicatorsSystemHistory;
     }
-    
+
     @Override
     public PagedResult<IndicatorsSystemHistory> findIndicatorsSystemsHistory(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
         // Validation of parameters
@@ -845,7 +848,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             translationCodes.add(translationCode);
         }
 
-        Map<String,Translation> translations = getTranslationRepository().findTranslationsByCodes(translationCodes);
+        Map<String, Translation> translations = getTranslationRepository().findTranslationsByCodes(translationCodes);
 
         List<TimeValue> timeValuesDo = new ArrayList<TimeValue>();
         for (String timeValue : timeValues) {
@@ -870,7 +873,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
         return timeValuesDo;
     }
-
 
     private String getTimeValueTranslationCode(String timeCode) throws MetamacException {
         TimeValue timeValueDo = TimeVariableUtils.parseTimeValue(timeCode);
@@ -975,7 +977,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             translationCodes.add(translationCode);
         }
 
-        Map<String,Translation> translationMap = getTranslationRepository().findTranslationsByCodes(translationCodes);
+        Map<String, Translation> translationMap = getTranslationRepository().findTranslationsByCodes(translationCodes);
 
         List<MeasureValue> measureValues = new ArrayList<MeasureValue>();
         for (String measureCode : measureCodes) {
@@ -1000,7 +1002,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
             }
         }
     }
-    
+
     private void createIndicatorInstanceLastValuesCacheInIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
         for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
             IndicatorInstance instance = level.getIndicatorInstance();
@@ -1450,8 +1452,13 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
      * We can not move a dimension to its child
      */
     private void checkDimensionIsNotChildren(ServiceContext ctx, Dimension dimension, String parentTargetUuid) throws MetamacException {
-
         Dimension dimensionTarget = retrieveDimension(ctx, parentTargetUuid);
+
+        // Check dimension parent belongs to indicators system provided
+        if (!dimension.getElementLevel().getIndicatorsSystemVersion().getUuid().equals(dimensionTarget.getElementLevel().getIndicatorsSystemVersion().getUuid())) {
+            throw new MetamacException(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM, parentTargetUuid, dimension.getElementLevel().getIndicatorsSystemVersion().getUuid());
+        }
+
         ElementLevel dimensionParent = dimensionTarget.getElementLevel().getParent();
         while (dimensionParent != null) {
             if (dimensionParent.isDimension() && dimensionParent.getElementUuid().equals(dimension.getUuid())) {

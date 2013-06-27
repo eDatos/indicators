@@ -69,99 +69,99 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  * Spring based transactional test with DbUnit support.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml","classpath:spring/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBaseTest {
 
     @Autowired
-    protected IndicatorsServiceFacade indicatorsServiceFacade;
-    
+    protected IndicatorsServiceFacade     indicatorsServiceFacade;
+
     @Autowired
-    protected IndicatorsSystemsService indicatorsSystemService;
-    
+    protected IndicatorsSystemsService    indicatorsSystemService;
+
     @Autowired
-    private IndicatorsDataService indicatorsDataService;
-    
+    private IndicatorsDataService         indicatorsDataService;
+
     @Autowired
     private IndicatorsDataProviderService indicatorsDataProviderService;
 
-    private static String             NOT_EXISTS                                       = "not-exists";
-    
-    //Subject codes
-    private static String             SUBJECT_CODE_1                                   = "1";
-    private static String             SUBJECT_CODE_2                                   = "2";
-    private static String             SUBJECT_CODE_3                                   = "3";
-    private static String             SUBJECT_CODE_4                                   = "4";
-    private static String             SUBJECT_CODE_NOT_EXIST                           = "not-exists";
+    private static String                 NOT_EXISTS                                       = "not-exists";
+
+    // Subject codes
+    private static String                 SUBJECT_CODE_1                                   = "1";
+    private static String                 SUBJECT_CODE_2                                   = "2";
+    private static String                 SUBJECT_CODE_3                                   = "3";
+    private static String                 SUBJECT_CODE_4                                   = "4";
+    private static String                 SUBJECT_CODE_NOT_EXIST                           = "not-exists";
 
     // Indicators systems
-    private static String             INDICATORS_SYSTEM_1                              = "IndSys-1";
-    private static String             INDICATORS_SYSTEM_2                              = "IndSys-2";
-    private static String             INDICATORS_SYSTEM_3                              = "IndSys-3";
-    private static String             INDICATORS_SYSTEM_3_VERSION                      = "11.033";
-    private static String             INDICATORS_SYSTEM_4                              = "IndSys-4";
-    private static String             INDICATORS_SYSTEM_5                              = "IndSys-5";
-    private static String             INDICATORS_SYSTEM_6                              = "IndSys-6";
-    private static String             INDICATORS_SYSTEM_7                              = "IndSys-7";
-    private static String             INDICATORS_SYSTEM_8                              = "IndSys-8";
-    private static String             INDICATORS_SYSTEM_9                              = "IndSys-9";
-    private static String             INDICATORS_SYSTEM_10                              = "IndSys-10";
+    private static String                 INDICATORS_SYSTEM_1                              = "IndSys-1";
+    private static String                 INDICATORS_SYSTEM_1_V2                           = INDICATORS_SYSTEM_1 + "-v2";
+    private static String                 INDICATORS_SYSTEM_2                              = "IndSys-2";
+    private static String                 INDICATORS_SYSTEM_3                              = "IndSys-3";
+    private static String                 INDICATORS_SYSTEM_3_VERSION                      = "11.033";
+    private static String                 INDICATORS_SYSTEM_4                              = "IndSys-4";
+    private static String                 INDICATORS_SYSTEM_5                              = "IndSys-5";
+    private static String                 INDICATORS_SYSTEM_6                              = "IndSys-6";
+    private static String                 INDICATORS_SYSTEM_7                              = "IndSys-7";
+    private static String                 INDICATORS_SYSTEM_8                              = "IndSys-8";
+    private static String                 INDICATORS_SYSTEM_9                              = "IndSys-9";
+    private static String                 INDICATORS_SYSTEM_10                             = "IndSys-10";
 
     // Dimensions
-    private static String             DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V1               = "IndSys-1-v1-Dimension-1";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-1";
-    private static String             DIMENSION_1A_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1A";
-    private static String             DIMENSION_1B_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1B";
-    private static String             DIMENSION_1BA_INDICATORS_SYSTEM_1_V2             = "IndSys-1-v2-Dimension-1BA";
-    private static String             DIMENSION_2_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-2";
-    private static String             DIMENSION_1_INDICATORS_SYSTEM_3                  = "IndSys-3-v1-Dimension-1";
+    private static String                 DIMENSION_NOT_EXISTS                             = "Dim-not-exists";
+    private static String                 DIMENSION_1_INDICATORS_SYSTEM_1_V1               = "IndSys-1-v1-Dimension-1";
+    private static String                 DIMENSION_1_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-1";
+    private static String                 DIMENSION_1A_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1A";
+    private static String                 DIMENSION_1B_INDICATORS_SYSTEM_1_V2              = "IndSys-1-v2-Dimension-1B";
+    private static String                 DIMENSION_1BA_INDICATORS_SYSTEM_1_V2             = "IndSys-1-v2-Dimension-1BA";
+    private static String                 DIMENSION_2_INDICATORS_SYSTEM_1_V2               = "IndSys-1-v2-Dimension-2";
+    private static String                 DIMENSION_1_INDICATORS_SYSTEM_3                  = "IndSys-3-v1-Dimension-1";
 
     // Indicator instances
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1      = "IndSys-1-v1-IInstance-1";
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-1";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-2";
-    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-3";
-    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE = "IndSys-1-v2-IInstance-3-code";
-    private static String             INDICATOR_INSTANCE_1A_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-1A";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-2";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_6_V1      = "IndSys-2-v1-IInstance-2";
-    private static String             INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-1";
-    private static String             INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-2";
-    private static String             INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1      = "IndSys-10-v1-IInstance-3";
+    private static String                 INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V1      = "IndSys-1-v1-IInstance-1";
+    private static String                 INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-1";
+    private static String                 INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-2";
+    private static String                 INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2      = "IndSys-1-v2-IInstance-3";
+    private static String                 INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_1_V2_CODE = "IndSys-1-v2-IInstance-3-code";
+    private static String                 INDICATOR_INSTANCE_1A_INDICATORS_SYSTEM_3_V1     = "IndSys-3-v1-IInstance-1A";
+    private static String                 INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_3_V1      = "IndSys-3-v1-IInstance-2";
+    private static String                 INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_6_V1      = "IndSys-2-v1-IInstance-2";
+    private static String                 INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1     = "IndSys-10-v1-IInstance-1";
+    private static String                 INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1     = "IndSys-10-v1-IInstance-2";
+    private static String                 INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1     = "IndSys-10-v1-IInstance-3";
 
     // Geographical values
-    private static String             GEOGRAPHICAL_VALUE_1                             = "1";
-    private static String             GEOGRAPHICAL_VALUE_2                             = "2";
-    private static String             GEOGRAPHICAL_VALUE_3                             = "3";
-    private static String             GEOGRAPHICAL_VALUE_4                             = "4";
-    private static String             GEOGRAPHICAL_VALUE_5                             = "5";
-    private static String             GEOGRAPHICAL_VALUE_6                             = "6";
-    private static String             GEOGRAPHICAL_VALUE_7                             = "7";
-    private static String             GEOGRAPHICAL_VALUE_8                             = "8";
-    private static String             GEOGRAPHICAL_VALUE_9                             = "9";
+    private static String                 GEOGRAPHICAL_VALUE_1                             = "1";
+    private static String                 GEOGRAPHICAL_VALUE_2                             = "2";
+    private static String                 GEOGRAPHICAL_VALUE_3                             = "3";
+    private static String                 GEOGRAPHICAL_VALUE_4                             = "4";
+    private static String                 GEOGRAPHICAL_VALUE_5                             = "5";
+    private static String                 GEOGRAPHICAL_VALUE_6                             = "6";
+    private static String                 GEOGRAPHICAL_VALUE_7                             = "7";
+    private static String                 GEOGRAPHICAL_VALUE_8                             = "8";
+    private static String                 GEOGRAPHICAL_VALUE_9                             = "9";
 
     // Geographical granularities
-    private static String             GEOGRAPHICAL_GRANULARITY_1                       = "1";
-    private static String             GEOGRAPHICAL_GRANULARITY_2                       = "2";
-    private static String             GEOGRAPHICAL_GRANULARITY_3                       = "3";
-    private static String             GEOGRAPHICAL_GRANULARITY_4                       = "4";
+    private static String                 GEOGRAPHICAL_GRANULARITY_1                       = "1";
+    private static String                 GEOGRAPHICAL_GRANULARITY_2                       = "2";
+    private static String                 GEOGRAPHICAL_GRANULARITY_3                       = "3";
+    private static String                 GEOGRAPHICAL_GRANULARITY_4                       = "4";
 
     // Indicators
-    private static String             INDICATOR_1                                      = "Indicator-1";
-    private static String             INDICATOR_1_DS_GPE_UUID                          = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
-    private static String             INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
-    private static String             INDICATOR_2                                      = "Indicator-2";
-    private static String             INDICATOR_3                                      = "Indicator-3";
-    private static String             INDICATOR_3_DS_GPE_UUID                          = "Indicator-3-v1-DataSource-1-GPE-GEO-TIME";
-    private static String             INDICATOR_3_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
-    private static String             INDICATOR_4                                      = "Indicator-4";
-    private static String             INDICATOR_4_DS_GPE_UUID                          = "Indicator-4-v1-DataSource-1-GPE-GEO-TIME";
-    private static String             INDICATOR_4_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
-    private static String             INDICATOR_5                                      = "Indicator-5";
-    private static String             INDICATOR_5_DS_GPE_UUID                          = "Indicator-5-v1-DataSource-1-GPE-GEO-TIME";
-    private static String             INDICATOR_5_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
-    
+    private static String                 INDICATOR_1                                      = "Indicator-1";
+    private static String                 INDICATOR_1_DS_GPE_UUID                          = "Indicator-1-v1-DataSource-1-GPE-GEO-TIME";
+    private static String                 INDICATOR_1_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    private static String                 INDICATOR_2                                      = "Indicator-2";
+    private static String                 INDICATOR_3                                      = "Indicator-3";
+    private static String                 INDICATOR_3_DS_GPE_UUID                          = "Indicator-3-v1-DataSource-1-GPE-GEO-TIME";
+    private static String                 INDICATOR_3_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    private static String                 INDICATOR_4                                      = "Indicator-4";
+    private static String                 INDICATOR_4_DS_GPE_UUID                          = "Indicator-4-v1-DataSource-1-GPE-GEO-TIME";
+    private static String                 INDICATOR_4_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
+    private static String                 INDICATOR_5                                      = "Indicator-5";
+    private static String                 INDICATOR_5_DS_GPE_UUID                          = "Indicator-5-v1-DataSource-1-GPE-GEO-TIME";
+    private static String                 INDICATOR_5_GPE_JSON_DATA                        = readFile("json/data_temporal_spatials.json");
 
     @Test
     @Transactional
@@ -1217,9 +1217,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testPublishIndicatorsSystem() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-        
+
         String uuid = INDICATORS_SYSTEM_5;
         String versionNumber = "1.000";
 
@@ -1229,11 +1229,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
-            
-            //Check empty history
+
+            // Check empty history
             List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
             assertNotNull(history);
-            assertEquals(0,history.size());
+            assertEquals(0, history.size());
         }
 
         // Publish
@@ -1255,11 +1255,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto1Updated.getArchiveUser());
         }
         {
-            //Check history
+            // Check history
             List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
             assertNotNull(history);
-            assertEquals(1,history.size());
-            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(),history.get(0).getVersionNumber());
+            assertEquals(1, history.size());
+            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(), history.get(0).getVersionNumber());
         }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
@@ -1278,37 +1278,37 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto.getArchiveUser());
         }
     }
-    
+
     @Test
     @Transactional
     public void testPublishIndicatorsSystemExistingHistory() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-        
+
         String uuid = INDICATORS_SYSTEM_6;
         String previousPublishedversionNumber = "1.500";
         String versionNumber = "2.000";
-        
+
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
             assertEquals(versionNumber, indicatorsSystemDto.getProductionVersion());
             assertNotNull(indicatorsSystemDto.getPublishedVersion());
             assertNull(indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemDto.getProcStatus());
-            
-            //Check not empty history
+
+            // Check not empty history
             List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
             assertNotNull(history);
-            assertEquals(3,history.size());
-            
-            assertEquals(uuid,history.get(0).getIndicatorsSystem().getUuid());
-            assertEquals(previousPublishedversionNumber,history.get(0).getVersionNumber());
+            assertEquals(3, history.size());
+
+            assertEquals(uuid, history.get(0).getIndicatorsSystem().getUuid());
+            assertEquals(previousPublishedversionNumber, history.get(0).getVersionNumber());
         }
-        
+
         // Publish
         IndicatorsSystemDto indicatorsSystemDto1Updated = indicatorsServiceFacade.publishIndicatorsSystem(getServiceContextAdministrador(), uuid);
-        
+
         // Validation
         {
             assertEquals(null, indicatorsSystemDto1Updated.getProductionVersion());
@@ -1325,16 +1325,16 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertNull(indicatorsSystemDto1Updated.getArchiveUser());
         }
         {
-            //Check history
+            // Check history
             List<IndicatorsSystemHistory> history = indicatorsSystemService.findIndicatorsSystemHistory(getServiceContextAdministrador(), uuid, Integer.MAX_VALUE);
             assertNotNull(history);
-            assertEquals(4,history.size());
-            
-            assertEquals(indicatorsSystemDto1Updated.getUuid(),history.get(0).getIndicatorsSystem().getUuid());
-            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(),history.get(0).getVersionNumber());
-            
-            assertEquals(indicatorsSystemDto1Updated.getUuid(),history.get(1).getIndicatorsSystem().getUuid());
-            assertEquals(previousPublishedversionNumber,history.get(1).getVersionNumber());
+            assertEquals(4, history.size());
+
+            assertEquals(indicatorsSystemDto1Updated.getUuid(), history.get(0).getIndicatorsSystem().getUuid());
+            assertEquals(indicatorsSystemDto1Updated.getPublishedVersion(), history.get(0).getVersionNumber());
+
+            assertEquals(indicatorsSystemDto1Updated.getUuid(), history.get(1).getIndicatorsSystem().getUuid());
+            assertEquals(previousPublishedversionNumber, history.get(1).getVersionNumber());
         }
         {
             IndicatorsSystemDto indicatorsSystemDto = indicatorsServiceFacade.retrieveIndicatorsSystem(getServiceContextAdministrador(), uuid, versionNumber);
@@ -1342,7 +1342,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(versionNumber, indicatorsSystemDto.getPublishedVersion());
             assertEquals(null, indicatorsSystemDto.getArchivedVersion());
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemDto.getProcStatus());
-            
+
             IndicatorsAsserts.assertEqualsDate("2011-06-06 01:02:04", indicatorsSystemDto.getProductionValidationDate());
             assertEquals("user1", indicatorsSystemDto.getProductionValidationUser());
             IndicatorsAsserts.assertEqualsDate("2011-07-07 03:02:04", indicatorsSystemDto.getDiffusionValidationDate());
@@ -1359,7 +1359,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testPublishIndicatorsSystemWithPublishedVersion() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_3_DS_GPE_UUID))).thenReturn(INDICATOR_3_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_3);
 
@@ -1407,9 +1407,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     @Transactional
     public void testPublishIndicatorsSystemWithArchivedVersion() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR_1_DS_GPE_UUID))).thenReturn(INDICATOR_1_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR_1);
-        
+
         String uuid = INDICATORS_SYSTEM_7;
         String archivedVersionBefore = "1.000"; // will be deleted when publish current version in diffusion validation
         String productionVersionBefore = "2.000"; // will be published
@@ -1525,13 +1525,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String uuid = INDICATORS_SYSTEM_5;
         String indicatorUuid2 = INDICATOR_2;
         String indicatorUuid3 = INDICATOR_3;
-        
+
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
 
         // Create indicators instances with indicator not published
         {
-            
+
             // Indicator 2
             IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
             indicatorInstanceDto.setIndicatorUuid(indicatorUuid2);
@@ -1986,7 +1986,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = indicatorsSystemsDto.get(9);
             assertEquals(INDICATORS_SYSTEM_10, indicatorsSystemSummaryDto.getUuid());
             assertEquals("CODE-10", indicatorsSystemSummaryDto.getCode());
-            
+
             assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemSummaryDto.getDiffusionVersion().getProcStatus());
             assertEquals("1.000", indicatorsSystemSummaryDto.getDiffusionVersion().getVersionNumber());
 
@@ -2095,7 +2095,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(INDICATORS_SYSTEM_6, indicatorsSystemsDto.get(2).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(2).getDiffusionVersion().getProcStatus());
         assertEquals(IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION, indicatorsSystemsDto.get(2).getProductionVersion().getProcStatus());
-        
+
         assertEquals(INDICATORS_SYSTEM_10, indicatorsSystemsDto.get(3).getUuid());
         assertEquals(IndicatorsSystemProcStatusEnum.PUBLISHED, indicatorsSystemsDto.get(3).getDiffusionVersion().getProcStatus());
         assertEquals(IndicatorsSystemProcStatusEnum.DRAFT, indicatorsSystemsDto.get(3).getProductionVersion().getProcStatus());
@@ -3040,6 +3040,43 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     @Transactional
+    public void testUpdateDimensionLocationErrorParentNotExists() throws Exception {
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = NOT_EXISTS;
+
+        // Validation
+        try {
+            indicatorsServiceFacade.updateDimensionLocation(getServiceContextAdministrador(), uuid, parentTargetUuid, Long.valueOf(1));
+            fail("Dimension not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(parentTargetUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+    
+    @Test
+    @Transactional
+    public void testUpdateDimensionLocationErrorParentNotExistsInIndicatorSystemVersion() throws Exception {
+        String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
+        String parentTargetUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V1;
+
+        // Validation
+        try {
+            indicatorsServiceFacade.updateDimensionLocation(getServiceContextAdministrador(), uuid, parentTargetUuid, Long.valueOf(1));
+            fail("Dimension not exists in indicator system version");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DIMENSION_NOT_FOUND_IN_INDICATORS_SYSTEM.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(2, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(parentTargetUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(INDICATORS_SYSTEM_1_V2, e.getExceptionItems().get(0).getMessageParameters()[1]);
+        }
+    }
+
+    @Test
+    @Transactional
     public void testUpdateDimensionLocationErrorOrderIncorrect() throws Exception {
 
         try {
@@ -3066,9 +3103,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsInternationalString(indicatorInstanceDto.getTitle(), "es", "Título IndSys-1-v2-IInstance-3", "en", "Title IndSys-1-v2-IInstance-3");
         assertEquals(DIMENSION_1B_INDICATORS_SYSTEM_1_V2, indicatorInstanceDto.getParentUuid());
         assertEquals(TimeGranularityEnum.YEARLY, indicatorInstanceDto.getTimeGranularity());
-        assertEquals(0,indicatorInstanceDto.getTimeValues().size());
+        assertEquals(0, indicatorInstanceDto.getTimeValues().size());
         assertEquals(GEOGRAPHICAL_GRANULARITY_1, indicatorInstanceDto.getGeographicalGranularityUuid());
-        assertEquals(0,indicatorInstanceDto.getGeographicalValues().size());
+        assertEquals(0, indicatorInstanceDto.getGeographicalValues().size());
         IndicatorsAsserts.assertEqualsDate("2011-05-05 01:02:04", indicatorInstanceDto.getCreatedDate());
         assertEquals("user1", indicatorInstanceDto.getCreatedBy());
         IndicatorsAsserts.assertEqualsDate("2011-06-06 05:06:07", indicatorInstanceDto.getLastUpdated());
@@ -3125,7 +3162,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstance() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
@@ -3158,34 +3195,34 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
     }
-    
+
     @Test
     @Transactional
     public void testCreateIndicatorInstanceMultiGeo() throws Exception {
         GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
         geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         GeographicalValueBaseDto geoValue2 = new GeographicalValueBaseDto();
         geoValue2.setUuid(GEOGRAPHICAL_VALUE_2);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1,geoValue2));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1, geoValue2));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
-        
+
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
         assertNotNull(indicatorInstanceDtoCreated.getUuid());
         assertNotNull(indicatorInstanceDtoCreated.getCode());
-        
+
         // Retrieve indicator instance
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
-        
+
         // Validate new structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
@@ -3201,13 +3238,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
     }
-    
+
     @Test
     @Transactional
     public void testCreateIndicatorInstanceMultiTimeValues() throws Exception {
         GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
         geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
@@ -3215,17 +3252,17 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1));
-        indicatorInstanceDto.setTimeValues(Arrays.asList("2012","2011","2010"));
-        
+        indicatorInstanceDto.setTimeValues(Arrays.asList("2012", "2011", "2010"));
+
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
         assertNotNull(indicatorInstanceDtoCreated.getUuid());
         assertNotNull(indicatorInstanceDtoCreated.getCode());
-        
+
         // Retrieve indicator instance
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
-        
+
         // Validate new structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
@@ -3241,35 +3278,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), indicatorsSystemStructureDto.getElements().get(4).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(5), indicatorsSystemStructureDto.getElements().get(4).getOrderInLevel());
     }
-    
+
     @Test
     @Transactional
     public void testCreateIndicatorInstanceMultiGeoDuplicated() throws Exception {
         GeographicalValueBaseDto geoValue1 = new GeographicalValueBaseDto();
         geoValue1.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         GeographicalValueBaseDto geoValue2 = new GeographicalValueBaseDto();
         geoValue2.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
-        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1,geoValue2));
+        indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1, geoValue2));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
-        
+
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), uuidIndicatorsSystem, indicatorInstanceDto);
         assertNotNull(indicatorInstanceDtoCreated.getUuid());
         assertNotNull(indicatorInstanceDtoCreated.getCode());
-        
+
         // Retrieve indicator instance
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
-        assertEquals(1,indicatorInstanceDtoRetrieved.getGeographicalValues().size());
-        
+        assertEquals(1, indicatorInstanceDtoRetrieved.getGeographicalValues().size());
+
         // Validate new structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
@@ -3328,7 +3365,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceInDimension() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         String parentUuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
 
         // Create indicator instance
@@ -3363,14 +3400,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(indicatorInstanceDtoCreated.getUuid(), elementLevelDto.getSubelements().get(2).getIndicatorInstance().getUuid());
         assertEquals(Long.valueOf(3), elementLevelDto.getSubelements().get(2).getOrderInLevel());
     }
-    
 
     @Test
     @DirtyDatabase
     public void testCreateIndicatorInstanceIndicatorDuplicatedInSameRootLevel() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
@@ -3388,18 +3424,18 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
         assertNull(indicatorInstanceDtoRetrieved.getParentUuid());
-        
+
         // Validate new structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(5, indicatorsSystemStructureDto.getElements().size());
-        
+
         {
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(0);
             assertNull(elementLevelDto.getParentUuid());
             assertNotNull(elementLevelDto.getIndicatorInstance());
             assertEquals(INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2, elementLevelDto.getIndicatorInstance().getUuid());
             assertEquals(Long.valueOf(1), elementLevelDto.getOrderInLevel());
-            
+
         }
         {
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(1);
@@ -3430,13 +3466,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(Long.valueOf(5), elementLevelDto.getOrderInLevel());
         }
     }
-    
+
     @Test
     @DirtyDatabase
     public void testCreateIndicatorInstanceIndicatorDuplicatedInSameDimensionLevel() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
@@ -3445,29 +3481,29 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
-        
+
         // Root level
         IndicatorInstanceDto indicatorInstanceDtoCreated = indicatorsServiceFacade.createIndicatorInstance(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, indicatorInstanceDto);
         assertNotNull(indicatorInstanceDtoCreated.getUuid());
-        
+
         // Retrieve indicatorInstance
         IndicatorInstanceDto indicatorInstanceDtoRetrieved = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoCreated.getUuid());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDto, indicatorInstanceDtoRetrieved);
-        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2,indicatorInstanceDtoRetrieved.getParentUuid());
-        
+        assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorInstanceDtoRetrieved.getParentUuid());
+
         // Validate new structure
         IndicatorsSystemStructureDto indicatorsSystemStructureDto = indicatorsServiceFacade.retrieveIndicatorsSystemStructure(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, "2.000");
         assertEquals(4, indicatorsSystemStructureDto.getElements().size());
-        
+
         {
             ElementLevelDto elementLevelDto = indicatorsSystemStructureDto.getElements().get(3);
             assertNull(elementLevelDto.getParentUuid());
             assertNotNull(elementLevelDto.getDimension());
             assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, elementLevelDto.getDimension().getUuid());
-            
-            assertEquals(1,elementLevelDto.getSubelements().size());
+
+            assertEquals(1, elementLevelDto.getSubelements().size());
             ElementLevelDto subElementLevelDto = elementLevelDto.getSubelements().get(0);
-            assertEquals(elementLevelDto.getDimension().getUuid(),subElementLevelDto.getParentUuid());
+            assertEquals(elementLevelDto.getDimension().getUuid(), subElementLevelDto.getParentUuid());
             assertNotNull(subElementLevelDto.getIndicatorInstance());
             assertEquals(indicatorInstanceDtoCreated.getUuid(), subElementLevelDto.getIndicatorInstance().getUuid());
         }
@@ -3587,7 +3623,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorOrderIncorrect() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
@@ -3613,7 +3649,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorOrderIncorrectNegative() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
@@ -3639,7 +3675,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorTimeValueIncorrect() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
@@ -3666,7 +3702,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorGeographicValueNotExists() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(NOT_EXISTS);
-        
+
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
@@ -3692,7 +3728,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorIndicatorNotExists() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(NOT_EXISTS);
@@ -3719,7 +3755,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorIndicatorsSystemNotExists() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -3743,7 +3779,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorIndicatorsSystemHasNotVersionInProduction() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
@@ -3769,7 +3805,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorDimensionNotExists() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -3794,7 +3830,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateIndicatorInstanceErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -3852,6 +3888,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(DIMENSION_2_INDICATORS_SYSTEM_1_V2, indicatorsSystemStructureDto.getElements().get(2).getDimension().getUuid());
         assertEquals(Long.valueOf(3), indicatorsSystemStructureDto.getElements().get(2).getOrderInLevel());
     }
+
     @Test
     @Transactional
     public void testDeleteIndicatorInstanceErrorIndicatorsSystemVersionPublished() throws Exception {
@@ -4308,35 +4345,35 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             assertEquals(ServiceExceptionParameters.INDICATOR_INSTANCE_ORDER_IN_LEVEL, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
-//    @Test
-//    @Transactional
-//    public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCodeNotExist() throws Exception {
-//        List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_NOT_EXIST);
-//        assertNotNull(instances);
-//        assertEquals(0,instances.size());
-//    }
-    
-//    @Test
-//    @Transactional
-//    public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode() throws Exception {
-//        {
-//            List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
-//            assertNotNull(instances);
-//            String[] expected = new String[] {INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1, INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1};
-//            assertEquals(expected.length,instances.size());
-//            
-//            checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
-//        }
-//        {
-//            List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_4);
-//            assertNotNull(instances);
-//            String[] expected = new String[] {INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1};
-//            assertEquals(expected.length,instances.size());
-//            
-//            checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
-//        }
-//    }
+
+    // @Test
+    // @Transactional
+    // public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCodeNotExist() throws Exception {
+    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_NOT_EXIST);
+    // assertNotNull(instances);
+    // assertEquals(0,instances.size());
+    // }
+
+    // @Test
+    // @Transactional
+    // public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode() throws Exception {
+    // {
+    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
+    // assertNotNull(instances);
+    // String[] expected = new String[] {INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1, INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1};
+    // assertEquals(expected.length,instances.size());
+    //
+    // checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
+    // }
+    // {
+    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_4);
+    // assertNotNull(instances);
+    // String[] expected = new String[] {INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1};
+    // assertEquals(expected.length,instances.size());
+    //
+    // checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
+    // }
+    // }
 
     @Test
     @Transactional
@@ -4450,14 +4487,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011M12") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "2011W52") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011", "20111231") > 0);
-        
+
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H1", "2011Q2") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H1", "2011M06") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011") < 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011Q4") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011M12") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011H2", "2011W52") > 0);
-        
+
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q1", "2011M03") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q1", "20110331") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q2", "2011H1") < 0);
@@ -4469,7 +4506,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "2011M12") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "2011W52") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011Q4", "20111231") > 0);
-        
+
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M01", "20110131") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M02", "20110228") > 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011M03", "20110331") > 0);
@@ -4492,8 +4529,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011Q4") < 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "2011M12") < 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("2011W52", "20120101") > 0);
-        
-        
+
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110131", "2011M01") < 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110228", "2011M02") < 0);
         assertTrue(TimeVariableUtils.compareToMostRecentFirstLowestGranularityMostRecent("20110331", "2011Q1") < 0);
@@ -4996,8 +5032,8 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_2, "COMMUNITIES");
         granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_3, "PROVINCES");
         granularitiesExpected.put(GEOGRAPHICAL_GRANULARITY_4, "MUNICIPALITIES");
-        
-        checkGranularitiesInCollection(granularitiesExpected,geographicalGranularities);
+
+        checkGranularitiesInCollection(granularitiesExpected, geographicalGranularities);
     }
 
     @Test
@@ -5181,13 +5217,13 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012H2", "es", "2012H2");
         IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012H2", "es", "2012H2");
     }
-    
+
     private void checkGranularitiesInCollection(Map<String, String> granularitiesExpected, Collection<GeographicalGranularityDto> geographicalGranularities) {
-        assertEquals(granularitiesExpected.size(),geographicalGranularities.size());
-        
+        assertEquals(granularitiesExpected.size(), geographicalGranularities.size());
+
         for (GeographicalGranularityDto granularity : geographicalGranularities) {
             String code = granularitiesExpected.get(granularity.getUuid());
-            assertEquals(code,granularity.getCode());
+            assertEquals(code, granularity.getCode());
         }
     }
 
