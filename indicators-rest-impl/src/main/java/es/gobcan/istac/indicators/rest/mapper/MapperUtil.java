@@ -93,7 +93,7 @@ public class MapperUtil {
     public static OperationIndicators getOperationIndicators(Operation operation) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
-        target.setTitle(getLocalisedLabel(operation.getTitle()));
+        target.setTitle(getLocalisedLabel(operation.getName()));
         target.setAcronym(getLocalisedLabel(operation.getAcronym()));
         target.setDescription(getLocalisedLabel(operation.getDescription()));
         target.setObjective(getLocalisedLabel(operation.getObjective()));
@@ -104,7 +104,7 @@ public class MapperUtil {
     public static OperationIndicators getOperationIndicators(org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation operation) {
         OperationIndicators target = new OperationIndicators();
         target.setId(operation.getId());
-        target.setTitle(getLocalisedLabel(operation.getTitle()));
+        target.setTitle(getLocalisedLabel(operation.getName()));
         target.setAcronym(getLocalisedLabel(operation.getAcronym()));
         target.setDescription(getLocalisedLabel(operation.getDescription()));
         target.setObjective(getLocalisedLabel(operation.getObjective()));
