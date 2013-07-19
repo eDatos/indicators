@@ -18,21 +18,21 @@
 	<div class="h2roundbox">
 		<div class="h2top"></div>
 		<div class="h2content" style="min-height: 15px; margin-top: 3px;">
-			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(title) %>
-            <a href="<%= context %>/api/indicators/v1.0/indicatorsSystems/<%=code%>" style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
+			[@apph.messageEscape 'menu.indicators-systems'/]: <%= getLabel(indicatorSystem.title) %>
+            <a href="<%= context %>/api/indicators/v1.0/indicatorsSystems/<%= indicatorSystem.code %>" style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
                 <img height="16" width="16" style="margin-right:5px; vertical-align: text-bottom; float: none; margin-top: -2px" src="[@spring.url "/theme/images/json_metadata.gif"/]" title="Metadatos en JSON" alt="Metadatos en JSON" />
             </a>
 		</div>
 	</div>
 
-	<% if (description) { %>
+	<% if (indicatorSystem.description) { %>
 		<div>
-			<p><%= getLabel(description) %></p>
+			<p><%= getLabel(indicatorSystem.description) %></p>
 		</div>
 	<% } %>
 
-    <% if (objective) { %>
-        <p><%= getLabel(objective) %></p>
+    <% if (indicatorSystem.objective) { %>
+        <p><%= getLabel(indicatorSystem.objective) %></p>
     <% } %>
 
 </script>
@@ -137,8 +137,10 @@ var IndicatorsSystemView = Backbone.View.extend({
 
     render : function () {
         // render is called by fetch method of IndicatorsSystemModel
-        var json = this.model.toJSON();
-        $(this.el).html(this.template(json));
+        var context = {
+        	indicatorSystem : this.model.toJSON()
+        };
+        $(this.el).html(this.template(context));
         return this;
     }
 });
