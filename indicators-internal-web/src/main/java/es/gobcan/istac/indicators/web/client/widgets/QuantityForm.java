@@ -3,13 +3,10 @@ package es.gobcan.istac.indicators.web.client.widgets;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.utils.TimeVariableWebUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
@@ -20,8 +17,6 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTex
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchViewTextItem;
 
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -103,6 +98,7 @@ public class QuantityForm extends BaseQuantityForm {
         CustomCheckboxItem isPercentange = new CustomCheckboxItem(IndicatorDS.QUANTITY_IS_PERCENTAGE, getConstants().indicQuantityIsPercentage());
         isPercentange.setShowIfCondition(getIsPercentageIfFunction());
         isPercentange.addChangedHandler(new ChangedHandler() {
+
             @Override
             public void onChanged(ChangedEvent event) {
                 event.getForm().markForRedraw();
@@ -218,7 +214,7 @@ public class QuantityForm extends BaseQuantityForm {
     public QuantityDto getValue() {
         quantityDto.setType((getValueAsString(IndicatorDS.QUANTITY_TYPE) != null && !getValueAsString(IndicatorDS.QUANTITY_TYPE).isEmpty()) ? QuantityTypeEnum
                 .valueOf(getValueAsString(IndicatorDS.QUANTITY_TYPE)) : null);
-        
+
         quantityDto.setUnitUuid(CommonUtils.getUuidString(getValueAsString(IndicatorDS.QUANTITY_UNIT_UUID)));
         quantityDto.setUnitMultiplier(getStringValueAsInteger(IndicatorDS.QUANTITY_UNIT_MULTIPLIER));
         quantityDto.setSignificantDigits(getValueAsInteger(IndicatorDS.QUANTITY_SIGNIFICANT_DIGITS));
@@ -243,14 +239,14 @@ public class QuantityForm extends BaseQuantityForm {
                 .getUuidString(getValueAsString(IndicatorDS.QUANTITY_BASE_QUANTITY_INDICATOR_UUID)) : null);
         return quantityDto;
     }
-    
+
     private Integer getStringValueAsInteger(String fieldName) {
         if (getItem(fieldName).isVisible() && !StringUtils.isEmpty(getValueAsString(fieldName))) {
             return Integer.parseInt(getValueAsString(fieldName));
         }
         return null;
     }
-    
+
     private Integer getValueAsInteger(String fieldName) {
         if (getValue(fieldName) != null) {
             return (Integer) getValue(fieldName);
@@ -282,8 +278,6 @@ public class QuantityForm extends BaseQuantityForm {
         LinkedHashMap<String, String> valueMap = CommonUtils.getQuantityUnitsValueMap(units);
         ((SelectItem) getItem(IndicatorDS.QUANTITY_UNIT_UUID)).setValueMap(valueMap);
     }
-    
-
 
     public void setIndicator(IndicatorDto indicatorDto) {
         this.indicatorDto = indicatorDto;
@@ -470,5 +464,5 @@ public class QuantityForm extends BaseQuantityForm {
 
         return searchIndicatorBaseText;
     }
-    
+
 }
