@@ -18,5 +18,5 @@
     <entry key="indicators.querytools.url">http://FILL_ME_WITH_URL</entry>
     <entry key="indicators.widgets.sparkline.max">20</entry>
 
-    <entry key="metamac.endpoints.statistical.operations.rest.external">http://FILL_ME_WITH_HOST/metamac-statistical-operations-external-web/apis/operations</entry>
+    <entry key="metamac.statistical_operations.rest.external">http://FILL_ME_WITH_HOST/metamac-statistical-operations-external-web/apis/operations</entry>
 </properties>

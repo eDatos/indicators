@@ -10,6 +10,6 @@
     
     <!--  ONLY IN TESTS this should go in datasources.xml -->
     <entry key="indicators.subjects.db.table">TV_AREAS_TEMATICAS</entry>
-    <entry key="indicators.subjects.db.column.code">ID_AREA_TEMATICA</entry>
-    <entry key="indicators.subjects.db.column.title">DESCRIPCION</entry>
+    <entry key="indicators.subjects.db.column_code">ID_AREA_TEMATICA</entry>
+    <entry key="indicators.subjects.db.column_title">DESCRIPCION</entry>
 </properties>
