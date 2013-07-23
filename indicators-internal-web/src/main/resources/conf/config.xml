@@ -9,7 +9,8 @@
     
     <!-- STATIC configurations -->
     <properties fileName="${environment.metamac.data}/common/conf/static/resources.xml"  basePath="" config-optional="false" />
-    <properties fileName="${environment.indicators.data}/conf/dynamic/security.xml" basePath="" config-optional="false" />
+    <properties fileName="${environment.metamac.data}/common/conf/dynamic/security.xml"  basePath="" config-optional="false" />
+    <properties fileName="${environment.metamac.data}/common/conf/static/api-endpoints.xml"  basePath="" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/resources.xml" basePath="" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/quartz.properties"  basePath="" config-optional="false" />
     <properties fileName="${environment.indicators.data}/conf/static/datasources.xml"  basePath="" config-optional="false" />
