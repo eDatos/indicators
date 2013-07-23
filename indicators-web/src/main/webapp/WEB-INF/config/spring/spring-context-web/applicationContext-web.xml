@@ -16,11 +16,6 @@
         </property>
     </bean>
     
-    <!-- Configure Externalized Logging configuration file -->
-	<bean id="loggingSetup" class="org.siemac.metamac.core.common.logging.LoggingSetup">
-		<property name="logConfigurationFile" value="${environment.indicators.data}/conf/dynamic/logback-indicators-web.xml"/>
-	</bean>
-
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="classpath:i18n/messages" />

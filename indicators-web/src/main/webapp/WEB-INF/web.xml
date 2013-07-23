@@ -23,6 +23,9 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+    <listener>
+        <listener-class>es.gobcan.istac.indicators.web.diffusion.ApplicationStartup</listener-class>
+    </listener>
     
     <!-- FILTER -->
     <filter>
