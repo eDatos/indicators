@@ -4,6 +4,6 @@
 
 
   <!-- import additional spring configuration files -->  
-  <import resource="classpath:/spring/include/indicators-datasources-external.xml"/>  
   <import resource="classpath:/spring/include/indicators-applicationContext-base.xml"/>  
+  <import resource="classpath:/spring/include/indicators-datasources-external.xml"/>  
 </beans>

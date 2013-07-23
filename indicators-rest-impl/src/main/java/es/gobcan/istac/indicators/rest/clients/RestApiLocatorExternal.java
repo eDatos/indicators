@@ -7,7 +7,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.statistical_operations.rest.external.v1_0.service.StatisticalOperationsV1_0;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 
 public class RestApiLocatorExternal {
 
@@ -18,7 +19,7 @@ public class RestApiLocatorExternal {
 
     @PostConstruct
     public void initService() throws Exception {
-        String baseApi = configurationService.getProperty(RestApiConstants.STATISTICAL_OPERATIONS_REST_EXTERNAL);
+        String baseApi = configurationService.getProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(baseApi, StatisticalOperationsV1_0.class, null, true); // true to do thread safe
     }
 

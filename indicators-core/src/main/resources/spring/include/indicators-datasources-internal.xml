@@ -5,7 +5,7 @@
     <import resource="classpath:/spring/include/indicators-datasources-external.xml"/>
       
     <bean id="dataSourceSubjects" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName"    value="${indicators.subjects.db.driverName}"/>
+        <property name="driverClassName"    value="${indicators.subjects.db.driver_name}"/>
         <property name="url"                value="${indicators.subjects.db.url}"/>
         <property name="username"           value="${indicators.subjects.db.username}"/>
         <property name="password"           value="${indicators.subjects.db.password}"/>

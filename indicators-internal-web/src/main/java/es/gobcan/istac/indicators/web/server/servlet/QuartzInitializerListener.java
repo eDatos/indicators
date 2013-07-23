@@ -20,6 +20,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 
 /**
@@ -91,7 +92,6 @@ import es.gobcan.istac.indicators.core.job.IndicatorsUpdateJob;
 public class QuartzInitializerListener implements ServletContextListener {
 
     public static final String   QUARTZ_FACTORY_KEY          = "org.quartz.impl.StdSchedulerFactory.KEY";
-    private static final String  QUARTZ_CRON_EXPRESSION_PROP = "indicators.update.quartz.expression";
 
     private boolean              performShutdown             = true;
     private boolean              waitOnShutdown              = false;
@@ -107,6 +107,7 @@ public class QuartzInitializerListener implements ServletContextListener {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
 
         log.info("Quartz Initializer Servlet loaded, initializing Scheduler...");
@@ -206,7 +207,7 @@ public class QuartzInitializerListener implements ServletContextListener {
     private void scheduleRegularJob() throws SchedulerException {
         JobDetail job = JobBuilder.newJob(IndicatorsUpdateJob.class).withIdentity("update_indicators_job", "cron_jobs").build();
 
-        String cronExpr = configurationService.getConfig().getString(QUARTZ_CRON_EXPRESSION_PROP);
+        String cronExpr = configurationService.getConfig().getString(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
 
         CronTrigger trigger = newTrigger().withIdentity("triger_update_indicators", "cron_jobs").withSchedule(CronScheduleBuilder.cronSchedule(cronExpr)).build();
 
@@ -215,6 +216,7 @@ public class QuartzInitializerListener implements ServletContextListener {
         log.info("Job has been planned using cron expression: " + trigger.getCronExpression());
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent sce) {
 
         if (!performShutdown) {

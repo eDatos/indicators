@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.server.utils.JaxiConstants;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorInstancePreviewUrlResult;
@@ -25,7 +26,7 @@ public class GetIndicatorInstancePreviewUrlActionHandler extends SecurityActionH
     @Override
     public GetIndicatorInstancePreviewUrlResult executeSecurityAction(GetIndicatorInstancePreviewUrlAction action) throws ActionException {
 
-        String indicatorInstanceUrl = configurationService.getProperty(JaxiConstants.INSTANCE_URL);
+        String indicatorInstanceUrl = configurationService.getProperty(IndicatorsConfigurationConstants.JAXI_URL_INSTANCE);
         // Add the instance code and the system code in the URL
         indicatorInstanceUrl = StringUtils.replace(indicatorInstanceUrl, JaxiConstants.INSTANCE_CODE_PARAM, action.getIndicatorInstanceCode());
         indicatorInstanceUrl = StringUtils.replace(indicatorInstanceUrl, JaxiConstants.SYSTEM_CODE_PARAM, action.getIndicatorsSystemCode());

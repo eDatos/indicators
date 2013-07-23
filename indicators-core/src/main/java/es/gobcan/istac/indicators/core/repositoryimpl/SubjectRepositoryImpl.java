@@ -14,44 +14,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.SubjectRepository;
-import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsServiceImpl;
 
 /**
  * Repository implementation for Subject
  */
 
 public class SubjectRepositoryImpl implements SubjectRepository {
-    
+
     @Autowired
     private ConfigurationService configurationService;
-    
-    private final Logger LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
-    
+
+    private final Logger         LOG = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
+
     @Autowired
     @Qualifier("dataSourceSubjects")
-    private DataSource dataSource;
-    
-    private String codeColumn;
-    private String titleColumn;
-    private String tableName;
-    
+    private DataSource           dataSource;
+
+    private String               codeColumn;
+    private String               titleColumn;
+    private String               tableName;
+
     public SubjectRepositoryImpl() {
     }
 
     @Override
     public Subject retrieveSubject(String code) {
         JdbcTemplate template = new JdbcTemplate(dataSource);
-        List<Subject> result = template.query("select "+getCodeColumnName()+","+getTitleColumnName() +
-        		" from "+getTableName()+
-        		" where "+getCodeColumnName()+" = ?", 
-                new Object[] {code},
+        List<Subject> result = template.query("select " + getCodeColumnName() + "," + getTitleColumnName() + " from " + getTableName() + " where " + getCodeColumnName() + " = ?", new Object[]{code},
                 new SubjectRowMapper());
-        
+
         if (result == null || result.isEmpty()) {
             return null;
         } else {
@@ -62,47 +57,42 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public List<Subject> findSubjects() {
         JdbcTemplate select = new JdbcTemplate(dataSource);
-        return select.query("select "+getCodeColumnName()+","+getTitleColumnName()+
-                            " from "+getTableName()+
-                            " order by "+getCodeColumnName(),
-                            new SubjectRowMapper()); 
+        return select.query("select " + getCodeColumnName() + "," + getTitleColumnName() + " from " + getTableName() + " order by " + getCodeColumnName(), new SubjectRowMapper());
     }
-    
-    
+
     public String getCodeColumnName() {
         if (codeColumn == null) {
-            codeColumn = getRequiredProperty(IndicatorsConstants.SUBJECT_CODE_COLUMN_NAME_PROPERTY);
+            codeColumn = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_CODE);
         }
         return codeColumn;
     }
-    
-    
+
     public String getTitleColumnName() {
         if (titleColumn == null) {
-            titleColumn = getRequiredProperty(IndicatorsConstants.SUBJECT_TITLE_COLUMN_NAME_PROPERTY);
+            titleColumn = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_COLUMN_TITLE);
         }
         return titleColumn;
     }
-    
+
     public String getTableName() {
         if (tableName == null) {
-            tableName = getRequiredProperty(IndicatorsConstants.SUBJECT_TABLE_NAME_PROPERTY);
+            tableName = getRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_TABLE);
         }
         return tableName;
     }
-    
+
     private String getRequiredProperty(String propertyName) {
         String value = configurationService.getProperty(propertyName);
         if (!StringUtils.isEmpty(value)) {
             return value;
         } else {
-            LOG.error("The required DATA property "+propertyName+" has not been set or is empty");
-            throw new IllegalStateException("The required DATA property "+propertyName+" has not been set or is empty");
+            LOG.error("The required DATA property " + propertyName + " has not been set or is empty");
+            throw new IllegalStateException("The required DATA property " + propertyName + " has not been set or is empty");
         }
     }
-    
+
     private class SubjectRowMapper implements RowMapper<Subject> {
-        
+
         @Override
         public Subject mapRow(ResultSet rs, int rowNum) throws SQLException {
             Subject subject = new Subject();
@@ -111,6 +101,5 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             return subject;
         }
     }
-   
-    
+
 }

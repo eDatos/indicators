@@ -9,13 +9,12 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlAction;
 import es.gobcan.istac.indicators.web.shared.GetLoginPageUrlResult;
 
 @Component
 public class GetLoginPageUrlActionHandler extends AbstractActionHandler<GetLoginPageUrlAction, GetLoginPageUrlResult> {
-
-    private static String        PROP_CAS_SERVICE_LOGIN_URL = "indicators.security.casServiceLoginUrl";
 
     @Autowired
     private ConfigurationService configurationService       = null;
@@ -26,7 +25,7 @@ public class GetLoginPageUrlActionHandler extends AbstractActionHandler<GetLogin
 
     @Override
     public GetLoginPageUrlResult execute(GetLoginPageUrlAction action, ExecutionContext context) throws ActionException {
-        String casServiceLoginUrl = configurationService.getConfig().getString(PROP_CAS_SERVICE_LOGIN_URL);
+        String casServiceLoginUrl = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_CAS_SERVICE_LOGIN_URL);
         String serviceParameterName = "service";
         String serviceUrl = action.getServiceUrl();
         boolean renew = false;

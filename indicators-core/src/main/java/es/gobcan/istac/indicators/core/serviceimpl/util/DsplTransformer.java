@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.LogFactory;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -25,6 +24,7 @@ import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
@@ -62,16 +62,11 @@ import es.gobcan.istac.indicators.core.serviceimpl.IndicatorsDataServiceImpl;
 
 public class DsplTransformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DsplTransformer.class);
+    private static final Logger      LOG                               = LoggerFactory.getLogger(DsplTransformer.class);
     private IndicatorsSystemsService indicatorsSystemsService;
     private IndicatorsDataService    indicatorsDataService;
     private IndicatorsService        indicatorsService;
     private ConfigurationService     configurationService;
-
-    private static final String      PROP_PROVIDER_NAME                = "indicators.dspl.provider.name";
-    private static final String      PROP_PROVIDER_DESCRIPTION         = "indicators.dspl.provider.description";
-    private static final String      PROP_PROVIDER_URL                 = "indicators.dspl.provider.url";
-    private static final String      PROP_SYSTEM_URL_TEMPLATE          = "indicators.dspl.indicators.system.url";
 
     private static final String      GEO_CONCEPT_BASE                  = "geo:location";
     private static final String      UNIT_CONCEPT_BASE                 = "unit:unit";
@@ -95,8 +90,8 @@ public class DsplTransformer {
     }
     public List<DsplDataset> transformIndicatorsSystem(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
         try {
-            LOG.info("Building dspl for indicators System "+indicatorsSystemUuid);
-            
+            LOG.info("Building dspl for indicators System " + indicatorsSystemUuid);
+
             IndicatorsSystemVersion indicatorsSystemVersion = indicatorsSystemsService.retrieveIndicatorsSystemPublished(ctx, indicatorsSystemUuid);
             List<ElementLevel> structure = indicatorsSystemsService.retrieveIndicatorsSystemStructure(ctx, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsSystemVersion.getVersionNumber());
@@ -109,27 +104,27 @@ public class DsplTransformer {
 
             List<DsplDataset> datasets = new ArrayList<DsplDataset>();
             for (TimeGranularityEnum timeGranularity : instancesByGranularity.keySet()) {
-                LOG.info("Processing indicators instances with granularity "+timeGranularity+" ...");
-                
+                LOG.info("Processing indicators instances with granularity " + timeGranularity + " ...");
+
                 List<IndicatorInstance> instancesInGranularity = instancesByGranularity.get(timeGranularity);
 
                 // topics
-                LOG.info("Building topics with granularity "+timeGranularity+" ...");
+                LOG.info("Building topics with granularity " + timeGranularity + " ...");
                 Set<DsplTopic> topics = buildTopicsForInstances(instancesInGranularity);
 
                 // concepts
-                LOG.info("Building concepts with granularity "+timeGranularity+" ...");
+                LOG.info("Building concepts with granularity " + timeGranularity + " ...");
                 List<DsplConcept> concepts = new ArrayList<DsplConcept>();
                 concepts.addAll(buildStandardConceptsForGeoDimensions(ctx, instancesInGranularity));
                 List<DsplConcept> metrics = buildMetricsForInstances(ctx, instancesInGranularity);
                 concepts.addAll(metrics);
 
                 // slides
-                LOG.info("Computing slices with granularity "+timeGranularity+" ...");
+                LOG.info("Computing slices with granularity " + timeGranularity + " ...");
                 Set<DsplSlice> slices = createSlicesForInstancesWithTimeGranularity(ctx, instancesInGranularity, timeGranularity);
 
                 if (slices.size() > 0) {
-                    LOG.info("Building slices with granularity "+timeGranularity+" ...");
+                    LOG.info("Building slices with granularity " + timeGranularity + " ...");
                     DsplInfo datasetInfo = buildDatasetInfo(ctx, indicatorsSystemVersion, title, description, timeGranularity);
                     DsplInfo providerInfo = buildProviderInfo();
                     String datasetId = buildDatasetId(indicatorsSystemVersion, timeGranularity);
@@ -140,10 +135,10 @@ public class DsplTransformer {
                     dataset.addSlices(slices);
 
                     datasets.add(dataset);
-                    LOG.info("Dataset with granularity "+timeGranularity+" has been built");
+                    LOG.info("Dataset with granularity " + timeGranularity + " has been built");
                 }
             }
-            LOG.info("Dspl succesfully built for Indicators System: "+indicatorsSystemUuid);
+            LOG.info("Dspl succesfully built for Indicators System: " + indicatorsSystemUuid);
             return datasets;
         } catch (MetamacException e) {
             throw new MetamacException(e, ServiceExceptionType.DSPL_STRUCTURE_CREATE_ERROR, indicatorsSystemUuid);
@@ -200,7 +195,7 @@ public class DsplTransformer {
     }
 
     private String buildLocalisedSystemUrl(IndicatorsSystemVersion systemVersion, String locale) {
-        String systemUrlBase = configurationService.getProperty(PROP_SYSTEM_URL_TEMPLATE);
+        String systemUrlBase = configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
         String url = systemUrlBase.replaceAll("\\[SYSTEM\\]", systemVersion.getIndicatorsSystem().getCode());
         return url + "?language=" + locale;
     }
@@ -868,11 +863,10 @@ public class DsplTransformer {
         }
         return null;
     }
-    
+
     private String getIdForTopic(Dimension dim) {
-        return "topic_"+dim.getUuid();
+        return "topic_" + dim.getUuid();
     }
-    
 
     private String getIdForSlice(GeographicalGranularity geoGranularity, TimeGranularityEnum timeGranularity) {
         return "slice_" + geoGranularity.getCode().toLowerCase() + "_" + timeGranularity.name().toLowerCase();
@@ -891,7 +885,7 @@ public class DsplTransformer {
     }
 
     private String getIdForQuantityIndicatorConcept(Indicator indicatorQuantity) {
-        return "quantity_"+indicatorQuantity.getUuid();
+        return "quantity_" + indicatorQuantity.getUuid();
     }
 
     private String getTableIdForUnitConcept(QuantityUnit unit) {
@@ -903,14 +897,14 @@ public class DsplTransformer {
     }
 
     private String getProviderName() {
-        return configurationService.getProperty(PROP_PROVIDER_NAME);
+        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_NAME);
     }
 
     private String getProviderDescription() {
-        return configurationService.getProperty(PROP_PROVIDER_DESCRIPTION);
+        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_DESCRIPTION);
     }
 
     private String getProviderUrl() {
-        return configurationService.getProperty(PROP_PROVIDER_URL);
+        return configurationService.getProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_URL);
     }
 }

@@ -45,7 +45,7 @@ public class ApplicationStartup implements ServletContextListener {
 
         // Other
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_URL);
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.METAMAC_STATISTICAL_OPERATIONS_EXTERNAL_API);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
 
         // Widgets
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);

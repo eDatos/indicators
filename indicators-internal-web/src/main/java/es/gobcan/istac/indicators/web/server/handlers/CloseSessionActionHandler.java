@@ -9,13 +9,12 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
 import es.gobcan.istac.indicators.web.shared.CloseSessionResult;
 
 @Component
 public class CloseSessionActionHandler extends AbstractActionHandler<CloseSessionAction, CloseSessionResult> {
-
-    private static String        PROP_CAS_SERVICE_LOGOUT_URL = "indicators.security.casServiceLogoutUrl";
 
     @Autowired
     private ConfigurationService configurationService        = null;
@@ -26,7 +25,7 @@ public class CloseSessionActionHandler extends AbstractActionHandler<CloseSessio
 
     @Override
     public CloseSessionResult execute(CloseSessionAction action, ExecutionContext context) throws ActionException {
-        String casServiceLogoutUrl = configurationService.getConfig().getString(PROP_CAS_SERVICE_LOGOUT_URL);
+        String casServiceLogoutUrl = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_CAS_SERVICE_LOGOUT_URL);
         ServiceContextHolder.getCurrentRequest().getSession(false).invalidate();
         return new CloseSessionResult(casServiceLogoutUrl);
     }

@@ -19,6 +19,7 @@ import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.AbstractActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.web.shared.ValidateTicketAction;
 import es.gobcan.istac.indicators.web.shared.ValidateTicketResult;
@@ -27,9 +28,6 @@ import es.gobcan.istac.indicators.web.shared.ValidateTicketResult;
 public class ValidateTicketActionHandler extends AbstractActionHandler<ValidateTicketAction, ValidateTicketResult> {
 
     protected static Logger             log                        = LoggerFactory.getLogger(ValidateTicketActionHandler.class);
-
-    private static String               PROP_CAS_SERVER_URL_PREFIX = "indicators.security.casServerUrlPrefix";
-    private static String               PROP_TOLERANCE             = "indicators.security.tolerance";
 
     protected static final String       TICKET_PARAMETER           = "ticket";
     protected static final String       TICKET_QUERY_STRING        = "&ticket=";
@@ -47,8 +45,8 @@ public class ValidateTicketActionHandler extends AbstractActionHandler<ValidateT
 
     @PostConstruct
     public void initActionHandler() {
-        String casServerUrlPrefix = configurationService.getConfig().getString(PROP_CAS_SERVER_URL_PREFIX);
-        String tolerance = configurationService.getConfig().getString(PROP_TOLERANCE); // ms
+        String casServerUrlPrefix = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_CAS_SERVER_URL_PREFIX);
+        String tolerance = configurationService.getConfig().getString(IndicatorsConfigurationConstants.SECURITY_TOLERANCE); // ms
 
         validateTicket = new ValidateTicket(casServerUrlPrefix);
         validateTicket.setTolerance(Long.valueOf(tolerance));
@@ -68,6 +66,7 @@ public class ValidateTicketActionHandler extends AbstractActionHandler<ValidateT
 
             HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(ServiceContextHolder.getCurrentRequest()) {
 
+                @Override
                 public String getParameter(String name) {
                     if (TICKET_PARAMETER.equals(name)) {
                         return ticket;

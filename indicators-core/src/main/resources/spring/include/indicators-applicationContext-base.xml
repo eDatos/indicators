@@ -9,6 +9,8 @@
   <context:component-scan base-package="es.gobcan.istac.indicators.core,org.siemac.metamac.core.common"> 
     <context:exclude-filter type="regex" expression=".*web.*"/> 
   </context:component-scan>  
+  
+  <bean id="applicationContextProvider" class="org.siemac.metamac.core.common.util.ApplicationContextProvider" />
 
   <!-- import additional spring configuration files -->  
   <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>

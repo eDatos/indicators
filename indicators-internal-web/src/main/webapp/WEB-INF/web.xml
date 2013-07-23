@@ -19,7 +19,9 @@
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-
+    <listener>
+        <listener-class>es.gobcan.istac.indicators.web.server.listener.ApplicationStartup</listener-class>
+    </listener>
 
     <!-- Internal rest api  -->
     <servlet>

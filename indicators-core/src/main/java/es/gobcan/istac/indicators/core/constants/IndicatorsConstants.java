@@ -24,7 +24,4 @@ public class IndicatorsConstants {
     // Other translations
     public static final String TRANSLATION_UNIT_MULTIPLIER        = "UNIT_MULTIPLIER";
 
-    public static final String SUBJECT_TABLE_NAME_PROPERTY        = "indicators.subjects.db.table";
-    public static final String SUBJECT_CODE_COLUMN_NAME_PROPERTY  = "indicators.subjects.db.column.code";
-    public static final String SUBJECT_TITLE_COLUMN_NAME_PROPERTY = "indicators.subjects.db.column.title";
 }

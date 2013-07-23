@@ -8,6 +8,8 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+
 public class RestApiLocatorInternal {
 
     @Autowired
@@ -17,7 +19,7 @@ public class RestApiLocatorInternal {
 
     @PostConstruct
     public void initService() throws Exception {
-        String baseApi = configurationService.getProperty(RestApiConstants.STATISTICAL_OPERATIONS_REST_INTERNAL);
+        String baseApi = configurationService.getProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         statisticalOperationsRestInternalFacadeV10 = JAXRSClientFactory.create(baseApi, StatisticalOperationsRestInternalFacadeV10.class, null, true); // true to do thread safe
     }
 
