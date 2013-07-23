@@ -4,19 +4,19 @@
     <comment>Configuration</comment>
 
     <entry key="indicators.core.db.url">jdbc:oracle:thin:@FILL_ME_WITH_HOST:FILL_ME_WITH_PORT:XE</entry>
-    <entry key="indicators.core.db.driverName">oracle.jdbc.OracleDriver</entry>
+    <entry key="indicators.core.db.driver_name">oracle.jdbc.OracleDriver</entry>
     <entry key="indicators.core.db.username">FILL_ME_WITH_USER</entry>
     <entry key="indicators.core.db.password">FILL_ME_WITH_PASSWORD</entry>
 
     <entry key="indicators.dsrepo.db.url">jdbc:oracle:thin:@FILL_ME_WITH_HOST:FILL_ME_WITH_PORT:XE</entry>
-    <entry key="indicators.dsrepo.db.driverName">oracle.jdbc.OracleDriver</entry>
+    <entry key="indicators.dsrepo.db.driver_name">oracle.jdbc.OracleDriver</entry>
     <entry key="indicators.dsrepo.db.username">FILL_ME_WITH_USER</entry>
     <entry key="indicators.dsrepo.db.password">FILL_ME_WITH_PASSWORD</entry>
 
 	<entry key="indicators.jaxi.url">http://FILL_ME_WITH_HOST/jaxi-web</entry>
-    <entry key="indicators.clients.statistical.operations.rest.external">http://FILL_ME_WITH_HOST/metamac-statistical-operations-external-web/apis/operations</entry>
     <entry key="indicators.widgets.typelist.url">http://FILL_ME_WITH_URL</entry>
     <entry key="indicators.querytools.url">http://FILL_ME_WITH_URL</entry>
     <entry key="indicators.widgets.sparkline.max">20</entry>
 
+    <entry key="metamac.endpoints.statistical.operations.rest.external">http://FILL_ME_WITH_HOST/metamac-statistical-operations-external-web/apis/operations</entry>
 </properties>
