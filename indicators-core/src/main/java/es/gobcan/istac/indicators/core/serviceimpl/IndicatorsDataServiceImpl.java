@@ -349,7 +349,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (DataOperation dataOperation : dataOps) {
                 Data data = dataCache.get(dataOperation.getDataGpeUuid());
                 List<ObservationExtendedDto> observations = createObservationsFromDataOperationData(dataOperation, data, datasetRepoDto.getDatasetId());
-                datasetRepositoriesServiceFacade.createObservationsExtended(datasetRepoDto.getDatasetId(), observations);
+                datasetRepositoriesServiceFacade.createOrUpdateObservationsExtended(datasetRepoDto.getDatasetId(), observations);
             }
             // Replace the whole dataset
             indicatorVersion = setDatasetRepositoryDeleteOldOne(indicatorVersion, datasetRepoDto);

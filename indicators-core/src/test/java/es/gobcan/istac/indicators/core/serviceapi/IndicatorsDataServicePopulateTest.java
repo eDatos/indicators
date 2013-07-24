@@ -253,6 +253,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR28_DS_UUID                      = "Indicator-28-v1-DataSource-1";
     private static final String              INDICATOR28_DS_GPE_UUID                  = "Indicator-28-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR28_GPE_JSON_DATA                = readFile("json/data_temporals.json");
+    
+    /* DRAFT VERSION (major) */
+    private static final String              INDICATOR29_UUID                         = "Indicator-29";
+    private static final String              INDICATOR29_VERSION                      = "1.000";
+    private static final String              INDICATOR29_DS_UUID                      = "Indicator-29-v1-DataSource-1";
+    private static final String              INDICATOR29_DS_GPE_UUID                  = "Indicator-29-v1-DataSource-1-GPE-TIME";
+    private static final String              INDICATOR29_GPE_JSON_DATA                = readFile("json/data_temporals.json");
 
     /* INDICATORS SYSTEM */
 
@@ -343,6 +350,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
             assertEquals(1,e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DECIMAL_PLACES.getCode(),e.getExceptionItems().get(0).getCode());
         }
+    }
+    
+    @Test
+    public void testPopulateIndicatorDataDuplicatedData() throws Exception {
+        when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR29_DS_GPE_UUID))).thenReturn(INDICATOR29_GPE_JSON_DATA);
+        
+        indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR29_UUID);
     }
 
     @Test
@@ -1428,6 +1442,7 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         return "dbunit/IndicatorsDataServiceTest_Populate.xml";
     }
 
+    @Override
     protected String getDataSetDSRepoFile() {
         return "dbunit/IndicatorsDataServiceTest_DataSetRepository.xml";
     }
