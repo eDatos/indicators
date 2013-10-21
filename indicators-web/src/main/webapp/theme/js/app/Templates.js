@@ -29,7 +29,7 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.uwaParameters;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.uwaParameters; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\" class=\"widget-import-netvibes-link\" href=\"#\"><img src=\"";
+  buffer += escapeExpression(stack1) + "&uwaHack=true\" class=\"widget-import-netvibes-link\" href=\"#\"><img src=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -162,7 +162,7 @@ function program10(depth0,data) {
 function program12(depth0,data) {
   
   
-  return "\r\n        <fieldset>\r\n            <legend>Sparklines</legend>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ABSOLUTE\">Dato\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PERCENTAGE_RATE\">Variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PUNTUAL_RATE\">Variación interperiódica\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PERCENTAGE_RATE\">Tasa variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PUNTUAL_RATE\">Tasa variación interperiódica\r\n            </label>\r\n        </fieldset>\r\n    ";}
+  return "\r\n        <fieldset>\r\n            <legend>Sparklines</legend>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ABSOLUTE\">Dato\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PUNTUAL_RATE\">Variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PUNTUAL_RATE\">Variación interperiódica\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_ANNUAL_PERCENTAGE_RATE\">Tasa variación anual\r\n            </label>\r\n            <label class=\"checkbox\">\r\n                <input type=\"checkbox\" name=\"sparkline_INTERPERIOD_PERCENTAGE_RATE\">Tasa variación interperiódica\r\n            </label>\r\n        </fieldset>\r\n    ";}
 
   buffer += "<div>\r\n    <div>\r\n        <label>Título:</label>\r\n        <input type=\"text\" name=\"title\"/>\r\n    </div>\r\n\r\n    <fieldset>\r\n        <legend>Estilo</legend>\r\n\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"style\" value=\"custom\"> Personalizado\r\n        </label>\r\n        <label class=\"radio\">\r\n            <input type=\"radio\" name=\"style\" value=\"gobcan\"> Gobierno de Canarias\r\n        </label>\r\n\r\n        ";
   stack1 = depth0.showCustomStyle;
