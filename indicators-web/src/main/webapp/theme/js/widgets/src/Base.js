@@ -278,11 +278,11 @@
         setGobcanStyleColor : function (color) {
             if (this.options.style === "gobcan") {
                 this.el.toggleClass("blue", color === "blue");
-                this.el.toggleClass("green", color === "green");
+                this.el.toggleClass("lightBlue", color === "lightBlue");
                 if (color === "blue") {
                     this.set('headerColor', "#0F5B95");
-                } else if (color === "green") {
-                    this.set('headerColor', "#457A0E");
+                } else if (color === "lightBlue") {
+                    this.set('headerColor', "#C4D0DC");
                 }
             }
         },

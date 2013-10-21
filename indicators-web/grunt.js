@@ -80,9 +80,9 @@ module.exports = function (grunt) {
                 tasks : 'handlebars:widgets'
             },
             widgets : {
-               files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js'],
-               tasks : ['handlebars:widgets', 'concat:widgets']
-	        }
+                files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js'],
+                tasks : ['handlebars:widgets', 'concat:widgets']
+            }
         }
     });
 

@@ -22,8 +22,8 @@
     color : #ffffff !important;
 }
 
-.gobcan-style.green.istac-widget-lateral .istac-widget-title {
-    background: url("../../images/pestana_peke_verde.gif") no-repeat !important;
+.gobcan-style.lightBlue.istac-widget-lateral .istac-widget-title {
+    background: url("../../images/pestana_peke_lightBlue.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
     color : #ffffff !important;
@@ -37,9 +37,9 @@
     color : #ffffff !important;
 }
 
-.gobcan-style.green.istac-widget-lastData .istac-widget-title,
-.gobcan-style.green.istac-widget-temporal .istac-widget-title {
-    background: url("../../images/pestana_verde.gif") no-repeat !important;
+.gobcan-style.lightBlue.istac-widget-lastData .istac-widget-title,
+.gobcan-style.lightBlue.istac-widget-temporal .istac-widget-title {
+    background: url("../../images/pestana_lightBlue.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
     color : #ffffff !important;
