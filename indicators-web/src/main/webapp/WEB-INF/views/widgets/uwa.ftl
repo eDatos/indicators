@@ -14,10 +14,11 @@
     <meta name="autoRefresh" content="20"/>
     <meta name="debugMode" content="false"/>
 
+
     <link rel="stylesheet" type="text/css"
-          href="http://www.netvibes.com/themes/uwa/style.css"/>
+          href="http://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css"/>
     <script type="text/javascript"
-            src="http://www.netvibes.com/js/UWA/load.js.php?env=Standalone"></script>
+            src="http://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
 
     <title>Istac widget</title>
     <link rel="icon" type="image/png" href="http://www.gobcan.es/gcc/img/favicon.ico"/>
@@ -26,35 +27,19 @@
     <widget:preferences>
     </widget:preferences>
 
-    <style type="text/css">
-        [#include "widgets.css" parse=false]
-    </style>
+    <link rel="stylesheet" type="text/css" href="[@spring.url "/theme/js/widgets/widgets.css"/]"/>
+    <script type="text/javascript" src="[@spring.url "/theme/js/widgets/widget.min.all.js"/]"></script>
 
     <script type="text/javascript">
-        [#include "widget.min.all.js" parse=true];
-    </script>
-
-    <script type="text/javascript">
-        $.noConflict();
-        var loaded = false;
         widget.onLoad = function () {
-            loaded = true;
-
-            widget.addBody("<div id='istac-widget'></div>");
-            jQuery('#istac-widget').addClass('istac-widget-uwa');
-
-            var options = ${options};
-
-            var istacWidget = new IstacWidget(options);
-            widget.setTitle(istacWidget.title);
+            widget.addBody("<div id='istac-widget' class='istac-widget-uwa'></div>");
+            var metamacPortalUrl = "${metamacPortalUrlBase}";
+            $.getJSON(metamacPortalUrl + "/apis/permalinks/v1.0/permalinks/${permalinkId}").done(function (options) {
+                IstacWidget(options, function (istacWidget) {
+                    widget.setTitle(istacWidget.title);
+                });
+            });
         };
-
-        setTimeout(function () {
-            if(!loaded) {
-                widget.onLoad();
-            }
-        }, 2000);
-
     </script>
 
 </head>

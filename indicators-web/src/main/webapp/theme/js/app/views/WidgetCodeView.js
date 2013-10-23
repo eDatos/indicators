@@ -9,6 +9,10 @@
             this.model.on('change', this.render, this);
         },
 
+        events : {
+            "click .widget-import-netvibes-link" : "onClickNetvibes"
+        },
+
         _getUrl : function () {
             return serverURL + context;
         },
@@ -28,17 +32,46 @@
             var code = this._getCode();
 
             var parameters = $.param({options : JSON.stringify(code)});
-            var uwaCode = _.extend({}, code, {uwa : true});
-            var uwaParameters = $.param({options : JSON.stringify(uwaCode)});
             var templateContext = {
                 script : url + '/theme/js/widgets/widget.min.all.js',
                 code : JSON.stringify(code, null, 8),
-                parameters : parameters,
-                uwaParameters : uwaParameters
+                parameters : parameters
             };
 
             this.$el.html(this.template(templateContext));
             return this;
+        },
+
+        onClickNetvibes : function (e) {
+            e.preventDefault();
+
+            var code = this._getCode();
+            var uwaCode = _.extend({}, code, {uwa : true});
+
+            var permalink = {
+                content : JSON.stringify(uwaCode)
+            };
+
+            var ajaxParameters = {
+                url : "http://localhost:8081/apis/permalinks/v1.0/permalinks",
+                type : "POST",
+                data : JSON.stringify(permalink),
+                contentType : "application/json; charset=utf-8",
+                dataType : "json"
+            };
+
+            var captchaOptions = {
+                captchaEl : ".widget-netvibes-captcha",
+                buttonText : "Añadir a Netvibes"
+            };
+
+            var self = this;
+            var request = metamac.authentication.ajax(ajaxParameters, captchaOptions);
+            request.done(function (response) {
+                var url = self._getUrl() + "/widgets/uwa/" + response.id;
+                window.open(url, '_new');
+            });
+
         }
 
 

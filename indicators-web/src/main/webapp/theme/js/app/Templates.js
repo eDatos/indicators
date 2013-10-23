@@ -21,19 +21,11 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.parameters;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.parameters; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "\">Ejemplo de uso</a> | <a target=\"_blank\" href=\"";
+  buffer += escapeExpression(stack1) + "\">Ejemplo de uso</a> | <a class=\"widget-import-netvibes-link\" href=\"#\"><img src=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "/widgets/uwa?";
-  foundHelper = helpers.uwaParameters;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.uwaParameters; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "&uwaHack=true\" class=\"widget-import-netvibes-link\" href=\"#\"><img src=\"";
-  foundHelper = helpers.context;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "/theme/images/netvibes.png\" class=\"netvibes-icon\"> Añadir a Netvibes</a>\r\n    </p>\r\n\r\n</div>\r\n";
+  buffer += escapeExpression(stack1) + "/theme/images/netvibes.png\" class=\"netvibes-icon\"> Añadir a Netvibes</a>\r\n    </p>\r\n\r\n    <div class=\"widget-netvibes-captcha\">\r\n\r\n    </div>\r\n\r\n</div>\r\n";
   return buffer;});
 
 templates['data-options-lastData'] = template(function (Handlebars,depth0,helpers,partials,data) {

@@ -19,4 +19,5 @@
     <entry key="indicators.widgets.sparkline.max">20</entry>
 
     <entry key="metamac.statistical_operations.rest.external">http://FILL_ME_WITH_HOST/metamac-statistical-operations-external-web/apis/operations</entry>
+    <entry key="metamac.metamac-portal.rest.external">http://FILL</entry>
 </properties>

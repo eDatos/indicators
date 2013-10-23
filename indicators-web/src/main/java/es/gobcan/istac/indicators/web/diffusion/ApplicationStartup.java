@@ -1,14 +1,13 @@
 package es.gobcan.istac.indicators.web.diffusion;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 public class ApplicationStartup implements ServletContextListener {
 
@@ -51,6 +50,8 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_TYPE_LIST_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_QUERY_TOOLS_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX);
+
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL);
 
         LOG.info("**********************************************************");
         LOG.info("[indicators-web] Application configuration checked");

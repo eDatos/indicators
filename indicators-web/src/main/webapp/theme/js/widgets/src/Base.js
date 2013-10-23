@@ -227,7 +227,7 @@
             } else {
                 this.titleContainer.text(title);
             }
-
+            this.title = title;
         },
 
         setIndicatorSystem : function () {

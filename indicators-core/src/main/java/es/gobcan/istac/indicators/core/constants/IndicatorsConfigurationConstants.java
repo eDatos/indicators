@@ -53,4 +53,7 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String SECURITY_CAS_SERVICE_LOGOUT_URL              = "metamac.security.cas_service_logout_url";
     public static final String SECURITY_CAS_SERVER_URL_PREFIX               = "metamac.security.cas_server_url_prefix";
     public static final String SECURITY_TOLERANCE                           = "metamac.security.tolerance";
+
+    // METAMAC PORTAL
+    public static final String ENDPOINT_METAMAC_PORTAL = "metamac.metamac-portal.rest.external";
 }

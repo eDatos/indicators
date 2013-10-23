@@ -1,15 +1,13 @@
 package es.gobcan.istac.indicators.web.widgets;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletRequest;
@@ -22,20 +20,26 @@ public class WidgetsController extends BaseController {
 
     @Autowired
     private ConfigurationService configurationService;
-    
+
+    private String removeLastSlashInUrl(String url) {
+        if (url.endsWith("/")) {
+            return StringUtils.removeEnd(url, "/");
+        }
+        return url;
+    }
+
     @RequestMapping(value = "/widgets/creator", method = RequestMethod.GET)
-    public ModelAndView creator(@RequestParam(value="type", defaultValue = "lastData") String type) throws Exception {
+    public ModelAndView creator(@RequestParam(value = "type", defaultValue = "lastData") String type) throws Exception {
         String breadCrumb = getBreadCrumb(type);
 
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
 
-        String jaxiUrlBase = configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY);
-        if (jaxiUrlBase.endsWith("/")) {
-            jaxiUrlBase = StringUtils.removeEnd(jaxiUrlBase, "/");
-        }
+        String jaxiUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY));
+        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL));
 
         modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
+        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
         modelAndView.addObject("breadcrumb", breadCrumb);
 
         return modelAndView;
@@ -48,7 +52,7 @@ public class WidgetsController extends BaseController {
     }
 
     public String getTypeLabel(String type) {
-        if(type.equals("temporal")) {
+        if (type.equals("temporal")) {
             return "Temporal";
         } else if (type.equals("recent")) {
             return "Último dato más reciente";
@@ -68,11 +72,14 @@ public class WidgetsController extends BaseController {
         return properties;
     }
 
-    @RequestMapping(value = "/widgets/uwa", method = RequestMethod.GET)
-    public ModelAndView uwa(ServletRequest request) throws UnsupportedEncodingException {
-        String options = new String(request.getParameter("options").getBytes(), "UTF-8");
+    @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)
+    public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView("widgets/uwa");
-        modelAndView.addObject("options", options);
+        modelAndView.addObject("permalinkId", permalinkId);
+
+        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL));
+        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
+
         return modelAndView;
     }
 
@@ -81,6 +88,7 @@ public class WidgetsController extends BaseController {
         String options = new String(request.getParameter("options").getBytes(), "UTF-8");
         ModelAndView modelAndView = new ModelAndView("widgets/example");
         modelAndView.addObject("options", options);
+
         return modelAndView;
     }
 

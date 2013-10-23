@@ -87,12 +87,14 @@
 <script src="[@spring.url "/theme/js/app/views/WidgetStyleOptionsView.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/views/WidgetView.js"/]"></script>
 
+<script src="${metamacPortalUrlBase}/js/authentication.js"></script>
 
 <script>
 
     var apiBaseUrl = "[@spring.url ""/]";
     var apiContext = apiBaseUrl + "/api/indicators/v1.0";
     var jaxiUrl = "${jaxiUrlBase}";
+    var metamacPortalUrl = "${metamacPortalUrlBase}";
 
     var options = {};
     [#if RequestParameters.type??]
