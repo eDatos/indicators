@@ -1,7 +1,10 @@
 module.exports = function (grunt) {
-    var _ = require('underscore');
     grunt.loadTasks('tasks');
-    grunt.loadNpmTasks('grunt-less');
+
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     var templatesPath = 'src/main/webapp/theme/templates';
     var lessPath = 'src/main/webapp/theme/css/';
@@ -33,7 +36,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         handlebars : {
-            all : {
+            app : {
                 root : templatesPath,
                 src : templatesPath + "/**/*.html",
                 dest : jsPath + '/app/Templates.js'
@@ -45,7 +48,7 @@ module.exports = function (grunt) {
             }
         },
         less : {
-            all : {
+            app : {
                 src : lessPath + '/main.less',
                 dest : lessPath + '/main.css',
                 options : {
@@ -53,7 +56,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        min : {
+        uglify : {
             widgets : {
                 src : widgetsSrc,
                 dest : widgetsPath + '/widget.min.all.js',
@@ -86,9 +89,9 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('widgets', 'handlebars:widgets min:widgets');
-    grunt.registerTask('widgets:dev', 'handlebars:widgets concat:widgets');
-
-    grunt.registerTask('default', 'handlebars less min');
+    grunt.registerTask('widgets', ["handlebars:widgets", "uglify:widgets"]);
+    grunt.registerTask('widgets:dev', ["handlebars:widgets", "concat:widgets"]);
+    grunt.registerTask("app", ["handlebars:app", "less:app"]);
+    grunt.registerTask('default', ["app", "widgets"]);
 
 };

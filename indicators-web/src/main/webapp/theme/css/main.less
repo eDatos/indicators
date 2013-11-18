@@ -55,13 +55,7 @@ input[type="image"] {
  Indicators system: elements
 /****************************************/
 .itemTabla {
-    float: left;
     padding-top: 1px;
-}
-
-.itemSubSubcapitulo {
-    font-weight: bold;
-    padding: 0 0 3px 0;
 }
 
 .itemSubcapitulo {
@@ -71,27 +65,99 @@ input[type="image"] {
 }
 
 .itemControlInfo {
-    float: left;
     margin-right: 5px;
 }
 
-ul.subcaps>li {
-    margin-left: 0;
-    padding-left: 0 !important;
+
+.listadoTablas p {
+    padding: 0;
+    margin: 5px 0;
 }
 
-ul.subcaps, ul.subcaps>li>ul {
-    margin-left: 0;
-}
+.conten {
+    .capitulos {
+        list-style: none;
+        margin: 0;
+        li {
+            background: none;
+            font-weight: normal;
+            margin: 0;
+            padding: 5px 0;
+        }
 
-ul.subcaps li {
-    margin-left: 0;
-    padding-left: 0;
-    margin: 0;
+        .dimension {
+            font-weight: bold;
+        }
+
+        .dimension-title {
+            font: bold 1em Tahoma, geneva, arial, sans-serif;
+        }
+
+        .dimension-depth-1 > .dimension-title {
+            font: bold 1em Tahoma, geneva, arial, sans-serif;
+            padding: 0 0 3px 10px;
+            border-bottom: 1px dotted #a4a4a4;
+            background: url(../images/flecha_menulat.gif) no-repeat left top;
+            display: block;
+        }
+
+        .dimension-depth-1 {
+            .capitulos {
+               margin-left: 10px;
+            }
+        }
+
+        .dimension-depth-2 {
+            .capitulos {
+                margin-left: 15px;
+            }
+        }
+
+        .item-numeration {
+            color: #6B6B6B;
+        }
+
+
+        .dimension-depth-1 { //tree for elements lower than first depth
+
+            .tree-icon {
+                background-repeat: no-repeat;
+                width: 14px;
+                height: 14px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .open {
+                .tree-icon {
+                    background-image: url("../images/tree-open.png");
+                }
+            }
+
+            .close {
+
+                .tree-icon {
+                    background-image: url("../images/tree-close.png");
+                }
+
+                .capitulos {
+                    display: none;
+                }
+            }
+        }
+
+
+    }
 }
 
 .indicatorInstanceDetail {
     padding-left: 10px;
+}
+
+.table-icon {
+    vertical-align: middle;
+    padding-right: 3px;
+    cursor: pointer;
 }
 
 /*****************************************
@@ -302,7 +368,7 @@ strong {
     margin: 0;
     list-style: none;
     display: block;
-    margin-bottom : 20px;
+    margin-bottom: 20px;
 }
 
 #widget-creator .nav-tabs {
@@ -318,10 +384,10 @@ strong {
 
 #widget-creator .nav-tabs > li, .nav-pills > li {
 
-/*float: left;*/
+    /*float: left;*/
 }
 
-#widget-creator .nav-tabs > .active a , .nav-tabs > .active > a:hover {
+#widget-creator .nav-tabs > .active a, .nav-tabs > .active > a:hover {
     color: #555;
     cursor: default;
     background-color: white;
@@ -465,7 +531,7 @@ html[xmlns] .clearfix {
     .ie7-restore-left-whitespace(); // Give IE7 some love
     .box-shadow(inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05));
 
-// Hover state
+    // Hover state
     &:hover {
         color: @grayDark;
         text-decoration: none;
@@ -473,17 +539,17 @@ html[xmlns] .clearfix {
         *background-color: darken(@white, 15%); /* Buttons in IE7 don't get borders, so darken on hover */
         background-position: 0 -15px;
 
-    // transition is only when going to hover, otherwise the background
-    // behind the gradient (there for IE<=9 fallback) gets mismatched
+        // transition is only when going to hover, otherwise the background
+        // behind the gradient (there for IE<=9 fallback) gets mismatched
         .transition(background-position .1s linear);
     }
 
-// Focus state for keyboard and accessibility
+    // Focus state for keyboard and accessibility
     &:focus {
         .tab-focus();
     }
 
-// Active state
+    // Active state
     &.active,
     &:active {
         background-color: darken(@white, 10%);
@@ -493,7 +559,7 @@ html[xmlns] .clearfix {
         .box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
     }
 
-// Disabled state
+    // Disabled state
     &.disabled,
     &[disabled] {
         cursor: default;
@@ -530,7 +596,6 @@ html[xmlns] .clearfix {
     width: 100%;
 }
 
-
 #widget-creator {
 
     fieldset {
@@ -539,7 +604,7 @@ html[xmlns] .clearfix {
         margin-bottom: 10px;
     }
 
-     .checkbox {
+    .checkbox {
         display: block;
         color: #333;
         cursor: default;
@@ -594,22 +659,23 @@ html[xmlns] .clearfix {
 
 .popupInfoDescarga {
     a:hover {
-        text-decoration:underline;
+        text-decoration: underline;
     }
 
     a:link {
-        color:#003366; text-decoration:none;
+        color: #003366;
+        text-decoration: none;
     }
 
-    a:visited{
-        color:#800080; text-decoration:none;
+    a:visited {
+        color: #800080;
+        text-decoration: none;
     }
 
     a.nouline:hover {
-        text-decoration:underline;
+        text-decoration: underline;
     }
 }
-
 
 .popupInfoDescarga td {
     vertical-align: middle;
@@ -631,26 +697,28 @@ html[xmlns] .clearfix {
 #principal_interior {
 
     .conten a:hover {
-        text-decoration:underline;
+        text-decoration: underline;
     }
 
     .conten a:link {
-        color:#003366; text-decoration:none;
+        color: #003366;
+        text-decoration: none;
     }
-    
-    .conten a:visited{
-        color:#800080; text-decoration:none;
+
+    .conten a:visited {
+        color: #800080;
+        text-decoration: none;
     }
 
     .conten a.nouline:hover {
-        text-decoration:underline;
+        text-decoration: underline;
     }
 
 }
 
-a.rounded_button,span.rounded_button-dis {
+a.rounded_button, span.rounded_button-dis {
     line-height: 12px;
-/* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
+    /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
     height: 20px; /* Height of button background height */
     margin-left: 2px;
     margin-right: 2px;
@@ -667,7 +735,7 @@ a.rounded_button {
     cursor: pointer;
 }
 
-a.rounded_button span,span.rounded_button-dis span {
+a.rounded_button span, span.rounded_button-dis span {
     height: 12px;
     display: block;
     display: inline-block;
@@ -677,8 +745,7 @@ a.rounded_button span,span.rounded_button-dis span {
 }
 
 a.rounded_button span {
-    background: transparent url('../images/boton_accion_left.gif')
-    no-repeat left top;
+    background: transparent url('../images/boton_accion_left.gif') no-repeat left top;
 }
 
 #principal_interior .select2-container a:link,

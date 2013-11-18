@@ -13,7 +13,8 @@ templates['code'] = template(function (Handlebars,depth0,helpers,partials,data) 
   foundHelper = helpers.code;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.code; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + ");\r\n</script>\r\n    </textarea>\r\n\r\n    <p class=\"widget-import-netvibes\">\r\n        <a target=\"_blank\" href=\"";
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ");\r\n</script>\r\n    </textarea>\r\n\r\n    <p class=\"widget-import-netvibes\">\r\n        <a target=\"_blank\" href=\"";
   foundHelper = helpers.context;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.context; stack1 = typeof stack1 === functionType ? stack1() : stack1; }

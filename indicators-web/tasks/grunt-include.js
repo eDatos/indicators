@@ -1,5 +1,3 @@
-
-
 module.exports = function (grunt) {
 
     var _ = require('underscore');
@@ -50,11 +48,4 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerHelper('extendModules', function (modules, options) {
-        var result = {};
-        _.each(modules, function (module, moduleName) {
-            result[moduleName] = _.extend({}, module, options);
-        });
-        return result;
-    });
-}
+};
