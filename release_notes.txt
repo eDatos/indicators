@@ -1,0 +1,936 @@
+========================================================================
+Indicators -- Gestión de Sistemas de Indicadores del ISTAC
+========================================================================
+
+El Gestor de Sistemas de indicadores del ISTAC es una herramienta que
+permite llevar a cabo la creación y gestión de indicadores y sistemas
+de indicadores que posteriormente son visualizados en el portal web del
+ISTAC. Además, este proyecto cuenta con los siguientes canales de difusión
+pública:
+- Portal del ISTAC
+- Widgets
+- API
+
+Por favor, consulta nuestro gestor de incidencia para obtener más información
+de las incidencias con el id [INDISTAC-xxx].
+http://jira.arte-consultores.com/browse/INDISTAC
+
+------------------------------------------------------------------------------
+Release 3.1.1
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.1.1
+
+** Defecto
+    * [INDISTAC-757] - Corregir el parpadeo de las pantallas al cargar
+    * [INDISTAC-758] - Quitar carpeta de atoms de la configuración
+    * [INDISTAC-761] - Error al poblar datos de un indicador con fuentes de datos que se solapan
+    
+
+** Tarea
+    * [INDISTAC-756] - Ficheros de configuración en UTF-8
+    * [INDISTAC-759] - Poner la configuración de la aplicación externa dentro del war
+
+
+
+------------------------------------------------------------------------------
+Release 3.1.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.1.0
+
+** Defecto
+    * [INDISTAC-755] - Al cambiar de ubicación a otro padre en el árbol una dimensión o una instancia comprobar que el padre pertenece al mismo sistema de indicadores
+
+
+
+------------------------------------------------------------------------------
+Release 3.0.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.0.0
+
+** Defecto
+    * [INDISTAC-715] - Poner linea inferior únicamente en el widget lateral
+    * [INDISTAC-730] - Los textArea no deben poder expandirse (Chrome)
+    * [INDISTAC-731] - Los botones de interrogación y "+" de añadir en netvibes deben estar un poco más centrados.
+    * [INDISTAC-733] - Cambios de estilo en la app de visualización
+    * [INDISTAC-734] - Revisar /subjects
+    * [INDISTAC-735] - Modificar url de enlace al jaxi para pasar los parámetros seleccionados
+    * [INDISTAC-736] - No se muestra el footer cuando se selecciona un widget por tema
+    * [INDISTAC-738] - Los campos ML y URL separados deben unirse en ML+URL
+    * [INDISTAC-739] - Mejora de rendimiento de las peticiones de los widgets
+    * [INDISTAC-740] - Metadato isPercentageOf no está como un miltilanguage en view mode
+    * [INDISTAC-741] - BaseTime no detecta bien las expresiones regulares
+    * [INDISTAC-743] - Revisar error en el job de actualización de datos
+    * [INDISTAC-744] - Actualizar documentación de la API
+    * [INDISTAC-745] - Al guardar un indicador borrandole información de quantity, no guarda y no dice por qué
+
+
+
+** Mejora
+    * [INDISTAC-689] - Al redimensionar la tabla del widget de últimos datos, las columnas no se distribuyen de manera uniforme. Ver e-mail enviado por Rita para más información.
+    * [INDISTAC-721] - Modificación de la visualización con formato tabla del widget de últimos datos e indicadores al día
+    * [INDISTAC-722] - Mejora del algoritmo de escalamiento natural realizado en el widget de serie temporal
+    * [INDISTAC-723] - En el widget de serie temporal, posibilidad de seleccionar el tipo de escalamiento a realizar
+    * [INDISTAC-724] - Al realizar la redirección desde un widget al JAXI, mantener la selección que el usuario tenía en el widget
+    * [INDISTAC-725] - Reordenar la visualización en JAXI para que sea más idónea
+    * [INDISTAC-726] - Visualización en JAXI de dato y todos los tipos de tasas
+    * [INDISTAC-727] - Aumentar los metadatos que se visualizan en la página de resultados de un indicador
+    * [INDISTAC-746] - Al seleccionar el indicador de una instancia por defector debería listarme todos los indicadores sin necesidad de darle a buscar
+    * [INDISTAC-747] - Adaptar la api interna con la nueva cache de request
+    * [INDISTAC-748] - No se detectan cambios en el quantity del indicador y por lo tanto no se recargan los datos acordemente
+    * [INDISTAC-749] - Mejorar rendimiento del JAXI con indicadores
+
+
+** Reuniones
+    * [INDISTAC-729] - 15/05/2013 - Resolución de dudas
+
+
+** Tarea
+    * [INDISTAC-750] - Preparar paquete de instalación
+    * [INDISTAC-751] - Preparar release
+
+
+
+
+
+------------------------------------------------------------------------------
+Release 2.2.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 2.2.0
+
+** Defecto
+    * [INDISTAC-621] - Documentar API
+    * [INDISTAC-635] - No se puedne visualizar indicadores no publciados en el jaxi
+    * [INDISTAC-636] - Problema en indicadores no completos
+    * [INDISTAC-638] - Los symbol en los units deben ser opcionales, mostrar titulos cuando no haya symbol
+    * [INDISTAC-639] - En los widgets de ult dato, las granularidades que se muestran son todas, deben filtrarse por tema o por sistema según el caso
+    * [INDISTAC-640] - Los temas en los widgets de ultimo dato se muestran todos, debe usarse solo los que tengan indocadores publicados
+    * [INDISTAC-643] - [Interceptores] Modificación de la configuración de update de los interceptores
+    * [INDISTAC-644] - Actualmente la api de indicadores en los sistemas no incluye el link a la operación estadística
+    * [INDISTAC-654] - Probar y mejorar la visualización en IE (en Chrome, Mozilla, Safari y Opera funciona OK)
+    * [INDISTAC-655] - La navegación entre pestañas: Datos <-> Estilos | Estilos <-> Exportar hace bailar las página de izquierda a derecha y viceversa
+    * [INDISTAC-661] - Leyenda de categorías: A partir de cierto número de elementos en la leyenda, éstos dejan de tener color asignado. En el ejemplo el noveno elemento ya aparece sin color.
+    * [INDISTAC-663] - Tab de datos: Cuando se muestra la frase de "--> Todos los indicadores" el estilo no se adapta a la imagen corportativa del Gobierno de Canarias (tipografía, tamaño, flechas previstas)
+    * [INDISTAC-664] - Es un requisito que desde el ISTAC no se vea la fuente pero que sí se vea cuando se le da a ejemplo de uso. Se revisará lo de que sólo se muestre en IE.
+    * [INDISTAC-669] - En instancias de indicadores donde los valores espaciales se eligen manualmente uno a uno, no se están ordenando correctamente
+    * [INDISTAC-673] - Errata de visualización en Chrome en la gráfica. La gráfica se desborda del tamaño del widget.
+    * [INDISTAC-674] - Añadir icono de ayuda indicando que no se visualiza correctamente en algunos navegadores
+    * [INDISTAC-675] - Gráfico: No usar el estilo suavizado de representación gráfica. Aumentar en medio punto el grosor de las líneas.
+    * [INDISTAC-676] - Gráfico: Cuando se pasa el ratón por la serie y se visualiza el globo de información, entonces resaltar el punto de la línea (tal como hace Google)
+    * [INDISTAC-677] - Gráfico: En el globo de información mostrar el dato en negrita y ponerlo el primero de la lista.
+    * [INDISTAC-678] - Cambiar texto a "widget facilitado por ISTAC" y en gris
+    * [INDISTAC-679] - Texto "Instituto Canario de Estadística (ISTAC) que apunte a la lista de widgets
+    * [INDISTAC-694] - No se descarga correctamente el px de un indicador/instancia faltan metadatos
+    * [INDISTAC-695] - Revisar los ficheros XLS
+    * [INDISTAC-701] - Quitar palabra RSS de la vusta de sistema
+    * [INDISTAC-702] - RSS no funciona da un error al generar
+    * [INDISTAC-703] - Error al generar el DSPL
+    * [INDISTAC-704] - Arreglar problema de logs que se crean mal en el Rolling
+    * [INDISTAC-705] - Las migas de pan en el JAXI no son correctas, no pone el nombre del sistema correctamente
+    * [INDISTAC-706] - La Api interna de indicadores sigue intentando acceder a cosas publicadas
+    * [INDISTAC-707] - Ordenar las unidades y subjects alfabeticamente en la web interna
+    * [INDISTAC-710] - Al pasar a estilo de gobierno no se cambia el ancho
+    * [INDISTAC-712] - zebra style in ie8
+    * [INDISTAC-713] - Separar el acceso a temas por otro datasource distinto al de indicadores
+    * [INDISTAC-714] - Preparando cambios del manual de usuario para nueva version 2.2.0
+    * [INDISTAC-719] - Revisión de la incidencias para la release
+    * [INDISTAC-720] - Release version 2.2.0
+
+
+
+** Mejora
+    * [INDISTAC-682] - Estilo del Sparkline
+    * [INDISTAC-683] - Visualizar los symbols y si el unit no lo tiene entonces los labels.
+    * [INDISTAC-684] - [Lateral] Ocultar la fila cuando no tenga dato
+    * [INDISTAC-685] - [Lateral] Widget: Cambiar de color el nombre del indicador (a azul oscuro) y hacer que enlace a los datos del indicador (tal y como ocurren en la visualización en tabla horizontal).
+    * [INDISTAC-686] - [Lateral] Compactar el bloque, reduciendo interlineados. Especialmente cuando el title del indicador se coge varias líneas, su interlineado es muy grande. MIRAR EL NIVEL DE COMPACTACIÓN EN LOS WIDGETS ACTUALES
+    * [INDISTAC-687] - Hay momentos en los que el tooltip no se esconden y se muestran varios tooltips a la vez.
+    * [INDISTAC-688] - [Lateral] Modificar estilos. Ver e-mail enviado por Rita y preguntarle para más información.
+    * [INDISTAC-691] - El nombre de tasa de variación interpeiódica no está correcto en el menú de selección de sparklines a mostrar. ver e-mail.
+    * [INDISTAC-692] - Ver si el sparkline puede limitarse el número de datos a los X últimos y este X es una property del sistema. ¿Qué pasa si se cambia la property y ya hay widgets exportados?
+    * [INDISTAC-693] - Subir enlace de embeber codigo a la linea de todos los indicadores
+    * [INDISTAC-709] - Evaluar puntos pendientes de envair observaciones y redactar documento
+    * [INDISTAC-711] - Adaptar estilo de botón actualizar vista previa a estilo gobcan
+
+** Nueva Funcionalidad
+    * [INDISTAC-650] - [Visualizador] Ordenar alfabéticamente los sistemas
+    * [INDISTAC-653] - Cuando se pincha el icono de una tabla el comportamiento debe ser similar al de JAXI 2, es decir, se debe mostrar un panel con algunos metadatos y las opciones de descarga.
+    * [INDISTAC-656] - Añadir a migas de pan el tipo de widget
+    * [INDISTAC-657] - Mensaje de loading mientras cargan los datos del combo
+    * [INDISTAC-658] - [Serie temporal] Eje de las Y: No se muestran puntos de miles.
+    * [INDISTAC-659] - [Serie temporal] Eje de las Y: Las cifras grandes se solapan con el borde del widget
+    * [INDISTAC-660] - [Serie temporal] Leyenda de categorías: A partir de cierto número de elementos en la leyenda, éstos dejan de tener color asignado. En el ejemplo el noveno elemento ya aparece sin color.
+    * [INDISTAC-671] - Tab de estilos: No se ha realizado la generación automática del título. La propuesta para este widget puede ser: "Nombre del indicador. Medida"
+    * [INDISTAC-672] - Tab de estilos: Dentro del apartado de estilo antes de la opción de azul / verde, añadir la palabra: "Colores:"
+
+** Reuniones
+    * [INDISTAC-645] - 01/03/2013 - Revisión del documento de incidencias de indicadores
+    * [INDISTAC-716] - 03/04/2013 - Valoración mejoras
+
+** Soporte
+    * [INDISTAC-632] - Llamada de Antonio y Noelia con problemas en los widgets
+    * [INDISTAC-633] - Revision de errores de antonio parte de widgets
+
+** Tarea
+    * [INDISTAC-373] - Crear Test para al API REST
+    * [INDISTAC-631] - Habilitar seguridad (CAS) en la web interna
+    * [INDISTAC-642] - Minimizar js con grunt en indicadores antes de enviar
+    * [INDISTAC-647] - Preparando entorno para corrección de errores
+    * [INDISTAC-648] - Estudiar si elycharts permite poner un valor inicial en el eje y que no empiece en 0
+    * [INDISTAC-649] - Estudiar si elycharts permite especificar la distancia del grid
+    * [INDISTAC-651] - Eliminar la opción de selección de idiomas. Que se detecte el del navegador
+    * [INDISTAC-652] - Debajo del título del sistema y antes de comenzar a relacionar las dimensiones e instancias del mismo, añadir la descripción del sistema de indicadores. Debe mostrarse el contenido de los metadatos DESCRIPTION y OBJECTIVE.
+    * [INDISTAC-665] - Tab de Exportar: Eliminar el botón "Aceptar" y sustituirlo por texto en color azul con la palabra "Cerrar".
+    * [INDISTAC-666] - Tab de exportar: Reemplazar el texto de "Copia este código HTML en tu página" por "Selecciona, copia y pega este código en tu página"
+    * [INDISTAC-667] - La frase de ejemplo de uso debe desaparecer. La importación a netvibes debe mostrarse en la misma línea que el texto de Copiar y Cerrar. Quedaría de la siguiente forma: Copiar | Ejemplo de uso | <icono> Añadir a netvibes 
+    * [INDISTAC-668] - Tab de exportar: Cambiar el texto de "Importar a Netvibes" por "Añadir a Netvibes".
+    * [INDISTAC-670] - Tab de exportar: Poner todos los textos de esa línea en azul (enlaces)
+    * [INDISTAC-680] - Ordenar alfabéticamente los combos
+    * [INDISTAC-681] - Incluir tipo de widgets en el breadcrumb
+    * [INDISTAC-696] - Widget para selección de valores temporales al crear una instancia: filtrar valores por granularidad
+    * [INDISTAC-697] - Cambiar nombres de las tasas para que se muestren los mismos que aparecen en los widgets
+    * [INDISTAC-698] - El panel para seleccionar el tipo de versión "tiembla". Hay un problema con el scroll.
+    * [INDISTAC-699] - La búsqueda de indicadores susceptibles de asociarse a una instancia está puesta como case sensitive. 
+    * [INDISTAC-700] - Problema de resolución y tamaño de los componentes
+    * [INDISTAC-717] - Cambios segun decisiones del ISTAC pendientes para entregar versión 2.2.0
+
+
+
+
+
+------------------------------------------------------------------------------
+Release 2.1.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 2.1.0
+
+** Defecto
+    * [INDISTAC-609] - Al crear instancias con valores geográficos repetidos, debe dar error
+    * [INDISTAC-622] - Modificar swagger para mejorar la información de las entidades de respuesta
+    * [INDISTAC-624] - [MANUAL] Explicar nuevas propiedades del data respecto a dspl
+
+
+
+
+** Nueva Funcionalidad
+    * [INDISTAC-599] - Exportación a DSPL
+
+
+
+** Tarea
+    * [INDISTAC-629] - Paquete de indicadores release 2.1.0
+
+
+** Sub-tarea
+    * [INDISTAC-623] - Exportación de sistemas de indicadores desde la WEB
+    * [INDISTAC-625] - Tests de la exportación a DSPL
+    * [INDISTAC-626] - Estudiar mejoras de rendimiento exportación DSPL
+    * [INDISTAC-627] - Manejo de excepciones en exportación dspl
+
+
+
+------------------------------------------------------------------------------
+Release 2.0.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 2.0.0
+
+** Defecto
+    * [INDISTAC-566] - En los tests no se está almacenando el usuario de ServiceContext
+    * [INDISTAC-573] - Controlar que al poblar los datos el decimal places del indicador esta puesto si se ha elegido al menos un datasource con DATA
+    * [INDISTAC-584] - Al pie del widget se le debe quitar el logo.
+    * [INDISTAC-585] - Los títulos de los indicadores deben ser azules, como los links clásicos
+    * [INDISTAC-586] - Link todos los indicadores
+    * [INDISTAC-606] - Adaptar código del widget a los nuevos requisitos
+    * [INDISTAC-613] - Añadir query a indicators e indicators systems
+    * [INDISTAC-616] - Border del widget con estilo gobcan
+    * [INDISTAC-617] - Correciones del widget
+
+
+
+** Mejora
+    * [INDISTAC-545] - Crear sistema de tablas para acceder eficientemente a los últimos datos de indicadores e instancias
+    * [INDISTAC-580] - Anchos por defecto a el tamaño del istac en todos los widgets
+    * [INDISTAC-590] - Añadir la posibilidad de obtener un listado de instancias de indicadores con sistemas publicados y cuyo indicador asociado tenga un subjectCode concreto
+    * [INDISTAC-595] - Añadir nuevos métodos para mejorar las peticiones del widget de ultimos datos
+    * [INDISTAC-601] - Las instancias de indicadores se podrán crear seleccionando múltiples valores espaciales y/o temporales
+    * [INDISTAC-611] - Obtener indicadores por valor geográfico peor utilizando criterias de sculptor
+    * [INDISTAC-614] - Hacer find by condition para las instancias de indicadores
+
+** Nueva Funcionalidad
+    * [INDISTAC-551] - Ampliar interfaz para los nuevos tipos de widgets
+    * [INDISTAC-577] - Ejemplo de integración con chosen
+    * [INDISTAC-579] - Añadir nuevo tipo de widget a las opciones
+    * [INDISTAC-581] - Nuevos parámetros de configuración de estilo del widget
+    * [INDISTAC-582] - En los widgets debe reflejarse la unidad de medida y en el caso de último dato se  debe mostrar qué valor de dimensión temporal se usa
+    * [INDISTAC-583] - Se quiere  añadir  un  icono  al  pie  del  widget  que  abra  un  popup  o  similar  con  el  código  asociado  al  widget,  para facilitar  la  obtención  de  widgets  ya  construidos  al  usuario. 
+    * [INDISTAC-592] - Añadir método en la API para listas las instancias de indicadores según tema
+    * [INDISTAC-596] - Añadir botones para importar en netvibes
+    * [INDISTAC-600] - Generación de ficheros Atom
+    * [INDISTAC-602] - Métodos para devovler los valores geográficos dado tema y sistema
+    * [INDISTAC-619] - Creación de la API interna
+
+** Reuniones
+    * [INDISTAC-546] - Discusión sobre widgets de las mejoras
+    * [INDISTAC-548] - 24/08/2012 - Revisión de las tareas del concurso de mejoras
+    * [INDISTAC-555] - 21/09/2012 - Preparación de la reunión de lanzamiento de la segunda fase del proyecto
+    * [INDISTAC-556] - Reunión Istac 20120924
+    * [INDISTAC-565] - Reunión Istac 05/10/2012 Revisión de requisitos
+    * [INDISTAC-615] - Reunión semanal Indicadores 26/11/2012
+
+** Soporte
+    * [INDISTAC-543] - Repaso de mejoras de Indicadores, parte de Robert
+    * [INDISTAC-544] - Puesta en marcha del proyecto para las mejoras
+    * [INDISTAC-575] - 22/10/2012 - Conversación con Alberto sobre Indicadores
+
+** Tarea
+    * [INDISTAC-422] - Cumplimentar el inicio de las migas de pan de un sistema de indicadores
+    * [INDISTAC-484] - Contemplar multiples valores geográficos en instancias requiere cambiar los retrive Geographicla values de las instancias
+    * [INDISTAC-549] - Cambiar la prioridad del algoritmo que compara distintas granularidades temporales para ultimo dato
+    * [INDISTAC-563] - Realizar análisis del sistema
+    * [INDISTAC-564] - Repaso de requisitos para la reunión de aprobación de requisitos
+    * [INDISTAC-567] - Revisar error de jenkins en un test de indicadores
+    * [INDISTAC-568] - Error en aplicación publica de indicadores 404
+    * [INDISTAC-574] - Crear documento de prototipo de widgets
+    * [INDISTAC-578] - Eliminar la pestaña de tipo añadiendo parámetro de url
+    * [INDISTAC-593] - Mockear api de subjects
+    * [INDISTAC-597] - Actualizar rama con cambios del trunk
+    * [INDISTAC-598] - Cambiar sistema de log de tests para el jenkins para evitar subir por error logs de niveles muy bajos
+    * [INDISTAC-603] - Métodos para filtrar instancias e indicadores por valor geográfico
+    * [INDISTAC-605] - Modificar página de estilo apra añadir vista lateral y estilo de gobierno
+    * [INDISTAC-612] - Revisión de la API de indicadores
+
+
+** Sub-tarea
+    * [INDISTAC-558] - Crear documento de requisitos del proyecto de mejoras de indicadores
+
+
+
+------------------------------------------------------------------------------
+Release 1.4.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 1.4.0
+
+** Defecto
+    * [INDISTAC-517] - Problemas al visualizar instancias de indicadores
+    * [INDISTAC-522] - En IE8 la cabecera del widget de series temporales no llega hasta el final de la pantalla.
+    * [INDISTAC-524] - Para datos de indicadores en el JAXI las cabeceras de las tablas deben cambiar su titulo para measure dimension
+    * [INDISTAC-525] - Problema con ancho de modal para selección de tipo de versión
+    * [INDISTAC-526] - Al poblar los datos da un error "No se ha podido cargar la versión x"
+    * [INDISTAC-527] - Recargar datos del indicador (última versión) tras poblar los datos
+    * [INDISTAC-528] - Al poblar datos de un indicador debe recargarse los datos en la pantalla
+    * [INDISTAC-529] - No se esta marcando como inconsistente cuando se tocan los numeros de deicmales dle quantity del indicador
+    * [INDISTAC-531] - Hay un test que sólo falla en el jenkins, relacionado con mockito
+    * [INDISTAC-539] - Eliminar las url con el .html
+    * [INDISTAC-550] - Añadir grunt
+
+
+
+** Mejora
+    * [INDISTAC-511] - Descarga segura de ficheros
+    * [INDISTAC-518] - En Chrome no aparece el pie de tabla (ISTAC) cuando se está creando el widget
+    * [INDISTAC-519] - El pie de tabla de los widgets debe ser "Instituto Canario de Estadística (ISTAC)"
+    * [INDISTAC-520] - Modificación de cómo se visualizan los periodos temporales en el widget de últimos datos
+    * [INDISTAC-521] - Error al acceder al archivo PX asociado a una instancia de indicador del widget de últimos datos
+    * [INDISTAC-523] - Modificar la tonalidad de gris usada para el paginador de los widgets y para marcar los resultados seleccionados
+    * [INDISTAC-530] - Cambiar formato de los formularios: todos los campos deben el máximo ancho que les permita la columna
+
+** Nueva Funcionalidad
+    * [INDISTAC-552] - Añadir sparklines
+    * [INDISTAC-553] - Añadir configuración de sparklines a estilos
+    * [INDISTAC-554] - Widget compatibles con netvibes
+
+
+** Soporte
+    * [INDISTAC-542] - Revisión de errores del arranque de indicadores en Cibercentro
+    * [INDISTAC-559] - Actualizar el manual de instalación para que contemple los nuevos requerimientos
+    * [INDISTAC-560] - Preparar el paquete de instalación de la versión actual para enviarlo al ISTAC a la mayor brevedad posible
+    * [INDISTAC-591] - Ayuda para instalación de Indicadores a Alfonso
+
+** Tarea
+    * [INDISTAC-490] - Configuración de idiomas de la aplicación
+    * [INDISTAC-505] - Cambiar invocación a webservices de Operaciones Estadísticas por invocación a API Rest
+    * [INDISTAC-514] - RichTextEditor
+    * [INDISTAC-532] - Adaptar al nuevo MetamacBaseTests
+    * [INDISTAC-533] - Actualización de aplicación a nueva versión del core-common (1.1.1-SNAPSHOT)
+    * [INDISTAC-534] - Sustituir WS SOAP por API Rest
+    * [INDISTAC-535] - Añadir el campo "CODE" en los ExternalItem
+    * [INDISTAC-538] - Cambio en cliente de API de operaciones estadísticas
+    * [INDISTAC-540] - Actualización del manual de instalación para especificar configuración del datasource (sólo en aplicaciones de CiberCentro)
+    * [INDISTAC-557] - Modificar la configuración de Base de Datos para evitar errores de arranque en Cibercentro
+    * [INDISTAC-562] - Revisar tests del trunk de indicadores por errores en jenkins
+    * [INDISTAC-569] - Documento de explicacion del ecosistema GPE - INDICADORES
+
+
+** Sub-tarea
+    * [INDISTAC-243] - Invocar al servicio rest externo de statistical operations
+
+
+
+------------------------------------------------------------------------------
+Release 1.3.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 1.3.0
+
+** Defecto
+    * [INDISTAC-443] - Al usar el filtrado en la API con el parámetro granularity o representation sólo devuelve null
+    * [INDISTAC-454] - Cambiar los nombres de las medidas
+    * [INDISTAC-455] - Cambiar el orden en el que se visualizan las medidas (tanto en la selección como en el widget)
+    * [INDISTAC-456] - Por defecto, el título del widget debe ser "Poner aquí el título del widget"
+    * [INDISTAC-457] - Poner el título del widget en negrita
+    * [INDISTAC-458] - El tamaño del letra del widget debe ser el del Gobierno de Canarias
+    * [INDISTAC-459] - Los textos de la cabecera de las medidas deben estar ajustados a la derecha
+    * [INDISTAC-460] - Los datos deben estar alineados a la derecha
+    * [INDISTAC-461] - Se debe usar el "." como separador de los miles para formatear los números
+    * [INDISTAC-462] - Los títulos de los indicadores y del widget deben estar alineados a la izquierda
+    * [INDISTAC-463] - Se debe eliminar "widget facilitado por" y dejar sólo la referencia al ISTAC
+    * [INDISTAC-464] - Cuando se cita al ISTAC se debe poner un enlace a la página del ISTAC que permite la creación de widgets
+    * [INDISTAC-465] - Mostrar unidades y multiplicador para cada unidad
+    * [INDISTAC-466] - El color del marco del widget será, por defecto, #0058b0
+    * [INDISTAC-467] - El color de las bandas del widget será #ebebeb
+    * [INDISTAC-468] - El color de las líneas del widget será #d7dddb
+    * [INDISTAC-469] - El título del widget debe enlazar a la página del Sistema de indicadores asociado al widget
+    * [INDISTAC-470] - Los títulos de los indicadores deben enlazar con la tabla de datos que se visualiza en JAXI
+    * [INDISTAC-471] - Cuando se pasa el ratón por encima de un indicador mostrar un globo con la descripción del indicador
+    * [INDISTAC-472] - No sabemos cómo va a ser el sistema para conocer en qué páginas se utiliza nuestro widget. (Sistema del IDESCAT).
+    * [INDISTAC-494] - Eliminar decimal places, utilizar lo que devuelve la API
+    * [INDISTAC-495] - Limitar el tamaño de la petición de datos
+    * [INDISTAC-497] - Consulta de datos de un indicador, NullPointer cuando se especifican condiciones
+    * [INDISTAC-504] - Corregir problemas de conexiones a base de datos de los tests
+
+
+
+** Mejora
+    * [INDISTAC-453] - El orden de los valores geográficos debe realizarse segun un orden alfanumerico general para distintas granularidades
+    * [INDISTAC-474] - Los datos cargados deben estar formateados según el quantity de la tasa en caso de ser tasa o el del indicador en el caso de ser DATA
+    * [INDISTAC-492] - Menú superior como Singleton (PresenterWidget)
+
+** Nueva Funcionalidad
+    * [INDISTAC-475] - Gatekeeper
+    * [INDISTAC-491] - Añadir chrome frame
+    * [INDISTAC-496] - Permitir que en la consulta de datos de una instancia de indicador se puedan especificar condiciones
+
+
+
+** Tarea
+    * [INDISTAC-444] - Búsqueda para seleccionar los indicadores numerador y denominador en los rates
+    * [INDISTAC-446] - Hacer uso de configuración del CAS externalizada (metamac-web-common)
+    * [INDISTAC-476] - Mejoras especificadas en INDISTAC-473
+    * [INDISTAC-481] - Comprobación de método en datasources y rates
+    * [INDISTAC-482] - Llamada a Ricardo sobre el orden general de valores geográficos
+    * [INDISTAC-483] - Traducción de multiplicadores de unidad
+    * [INDISTAC-485] - Devolver nuevos datos en la api de indicadores
+    * [INDISTAC-487] - Redondeo (rates) y número de decimales (rates y quantity) obligatorios SIEMPRE
+    * [INDISTAC-488] - Redondeo (rates) y número de decimales (rates y quantity) obligatorios SIEMPRE
+    * [INDISTAC-489] - Los rates de tipo AMOUNT (puntuales) tienen que tener el número de decimales por defecto a 0
+    * [INDISTAC-493] - Adaptar aplicaciones web interna y externa tras creación del ws externo de Statistical Operations
+    * [INDISTAC-498] - Integración en Jenkins
+    * [INDISTAC-499] - Modificar la clase de spring que se usa para crear el bean "dataSource"
+    * [INDISTAC-500] - Refactor de las clases *AllTest por *Suite
+    * [INDISTAC-501] - Cambiar configuración de BBDD de tests para que se adapte al Jenkins
+    * [INDISTAC-503] - Revisar el proyecto para que funcione en Jenkins
+    * [INDISTAC-508] - Sección "Ayuda"
+
+
+** Sub-tarea
+    * [INDISTAC-477] - Selector de multiplicador de unidad
+    * [INDISTAC-478] - Ampliar ancho de los campos
+    * [INDISTAC-479] - En las fuentes de datos, la categoría que se ha seleccionado para ser cargada como data no se puede escoger en ninguna tasa
+    * [INDISTAC-480] - Formulario data
+
+
+
+
+------------------------------------------------------------------------------
+Release 1.2.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 1.2.0
+
+** Defecto
+    * [INDISTAC-424] - Error en la carga de la estructura de las consultas (fuentes de datos de un indicador)
+    * [INDISTAC-427] - Orden alfabético de los valores espaciales
+    * [INDISTAC-428] - Revisar cómo se muestra el número de decimales
+    * [INDISTAC-429] - La leyenda corta los textos muy largos
+    * [INDISTAC-430] - Poner el tooltip en varias lineas
+    * [INDISTAC-431] - Probar el widget en IE7
+    * [INDISTAC-434] - Error en los datasources al versionar el indicador
+    * [INDISTAC-437] - Probar los widgets con el cambio del identificador
+    * [INDISTAC-441] - Error a la hora de visualizar la versión en difusión de un indicador
+
+
+
+** Mejora
+    * [INDISTAC-436] - Al publicar un indicador debería poblarse sólo la version a publicar, es decir produccion
+
+** Nueva Funcionalidad
+    * [INDISTAC-440] - REST: Realizar las consultas de Indicators Instane por Código
+
+** Reuniones
+    * [INDISTAC-425] - 25/05/2012 - Llamada de Ricardo por incidencias varias
+
+
+** Tarea
+    * [INDISTAC-426] - Revisión de indicadores para el curso
+    * [INDISTAC-432] - Log out
+    * [INDISTAC-433] - Crear presentación de control de CAS para el curso de formación
+    * [INDISTAC-435] - Añadir identificador a las instancias de indicadores
+    * [INDISTAC-439] - Permitir Single Sing OUT
+    * [INDISTAC-442] - Al archivar un indicador, comprobar que no está asociado a ningún sistema de indicadores publicado
+
+
+
+
+
+
+------------------------------------------------------------------------------
+Release 1.1.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 1.1.0
+
+** Defecto
+    * [INDISTAC-348] - Problema con select muy anchos con un único valor en firefox
+    * [INDISTAC-389] - Despues de actualizar un indicador, se actualizan sus versiones de diffusion y produccion, y faltó actualizar la updateDate de la versión de produccion
+    * [INDISTAC-407] - En los widgets temporales se muestra el código y no el literal para las variables temporales y geográficas
+    * [INDISTAC-408] - Separar un poco los valores del eje x de los del eje y
+    * [INDISTAC-412] - Mostrar label de valor temporal
+    * [INDISTAC-413] - La primera y última linea del widget temporal no se muestra
+    * [INDISTAC-414] - Mostrar o no la leyenda en el label
+    * [INDISTAC-415] - Modificar layout de la parte de los datos
+
+** Épica
+    * [INDISTAC-273] - ASUNTOS PENDIENTES
+
+
+** Mejora
+    * [INDISTAC-335] - Añadir filtrado a las consultas al crear fuentes de datos
+    * [INDISTAC-392] - Al actualizar un conjunto de indicadores deben despues actualizarse las versiones de los sistemas asociados a dichos indicadores
+    * [INDISTAC-411] - El listado de operaciones que devuelve el DataGpeRepository debe ordenarse los códigos que se devuelven
+
+
+** Reuniones
+    * [INDISTAC-396] - Decidir con Alberto cómo visualizar la información de las versiones de un indicador
+    * [INDISTAC-405] - 21/05/2012 - Revisión de las observaciones remitidas por Rubén el 18/05/2012
+
+
+** Tarea
+    * [INDISTAC-181] - Cambios en la interfaz (ver Descripción)
+    * [INDISTAC-230] - La aplicación deberá llamarse "Gestor de Indicadores"
+    * [INDISTAC-245] - Cuando Indicadores se conecte con METAMAC, tener en cuenta el mapeo entre DataStructureDto (que viene del jaxi) y DataSourceDto
+    * [INDISTAC-332] - Generar versión 1.0 para la entrega
+    * [INDISTAC-398] - Revisión incidencias enviadas por ISTAC el 18/05/2012
+    * [INDISTAC-399] - Sistemas de indicadores e indicadores: Devolver en un DtoBasic alguna información básica de las versiones en producción y difusión
+    * [INDISTAC-400] - Scroll a nivel de formulario, no de pestaña
+    * [INDISTAC-401] - Mostrar en formulario los datos del entorno de difusión y del entorno de producción
+    * [INDISTAC-403] - Mostrar campo "needsUpdate" en formulario de indicador
+    * [INDISTAC-406] - Revisión de errores (ver descripción)
+    * [INDISTAC-409] - No permitir la edición y creación de data sources cuando el indicador está publicado
+    * [INDISTAC-410] - Problemas a la hora de conectar desde el CAS a un LDAP usando SSL
+    * [INDISTAC-416] - Corregir error con listados de indicadores en componente de búsqueda
+    * [INDISTAC-417] - Mostrar en entorno de producción (y difusioón)  los indicadores/sistemas que estén en entorno de difusión y que no estén versionados aun (en los listados iniciales)
+    * [INDISTAC-418] - Mostrar entorno de producción y de difusión en la página principal de indicadores y sistemas
+    * [INDISTAC-419] - Entrega de versión 1.1.0
+    * [INDISTAC-420] - Revisar las tareas en JIRA del sistema de indicadores y llevar a cabo el versionado del proyecto
+
+
+
+
+
+
+------------------------------------------------------------------------------
+Release 1.0.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 1.0.0
+
+** Defecto
+    * [INDISTAC-50] - Error con constraints de InternationalString
+    * [INDISTAC-76] - Smart no está detectando correctamente los cambios de idioma, siempre coge inglés
+    * [INDISTAC-92] - Añadir la excepción MetamacException como causa de rollback en interceptores
+    * [INDISTAC-113] - Dar error si el InternationalString no viene completo
+    * [INDISTAC-298] - NeedsUpdate se ha colocado en Indicator pero debe ir en Indicator Version
+    * [INDISTAC-299] - Cuando falla la obtención del json en el jaxi no se transforma la excepcion
+    * [INDISTAC-301] - Al actualizar un datasource no se esta marcando el indicador como inconsistente
+    * [INDISTAC-310] - En el facade se estan usando entidades de geographicalvalue y granularities deben pasarse a dtos
+    * [INDISTAC-311] - Errores de visualización en IE8
+    * [INDISTAC-343] - Si un indicador se intenta poblar y no tiene data sources asociados debe dar error
+    * [INDISTAC-346] - Al cargar los datos de una cierta consulta, los rates calculados exceden el tamaño máximo de la columna primary measure
+    * [INDISTAC-356] - Al estar en la edición de un data source de un indicador el botón guardar no tiene ningún efecto
+    * [INDISTAC-357] - Los rates de una fuente de datos deberían poder estar vacíos, siempre y cuando haya un absoluteMethod
+    * [INDISTAC-358] - Problema de optimisticLocking en indicadores y datasources
+    * [INDISTAC-366] - En modo edición sencilla (sin consulta) de una fuente de datos, cuando el método de algun rate es la observación aparece ##OBS_VALUE##
+    * [INDISTAC-375] - Al publicar un indicador se debe comprobar si ya hay una versión publicada anterior y eliminar su dataset repository
+    * [INDISTAC-376] - Al actualizar una entidad con un campo requerido en bbdd a null da error de transacción
+
+
+
+** Mejora
+    * [INDISTAC-68] - Cambiar las urls de acceso a recursos, en lugar de por uuid debe ser por code
+    * [INDISTAC-83] - Cambiar la creación/edición de sistemas según lo acordado
+    * [INDISTAC-100] - Al realizar acciones sobre el arbol, este se recarga y se cierran los nodos, es muy incómodo para trabajar con el
+    * [INDISTAC-103] - Cambiar la configuración de la web para usar spring en lugar de guice siempre que se pueda
+    * [INDISTAC-108] - Cambiar las clases en las que se apoya el arbol por los cambios hechos por San
+    * [INDISTAC-121] - Crear sistema de logging para los ActionHandler
+    * [INDISTAC-139] - ¿Hacer una tabla de InternationalString y LocalisedString para las LIS (tablas de valores)?
+    * [INDISTAC-205] - Mover servicio gpe a la fachada comun del core
+    * [INDISTAC-211] - Al añadir los datos al repository se deben interpretar los códigos por puntos
+    * [INDISTAC-212] - Al añadir datos al repository se deben tener en cuenta la measure_dimension (absoluta, variación anual, interperiodica ...)
+    * [INDISTAC-228] - Esperar decisión de Alberto sobre el ROUNDING
+    * [INDISTAC-229] - Esperar por respuesta de Alberto para saber como calcular tasa de variacion porcentual anual para el 29 de febrero
+    * [INDISTAC-271] - Cambiar consultas de DataGpeRepository que usen criterias de hibernate por los de sculptor o en su defecto HQL
+    * [INDISTAC-278] - Comprobación de consultas, todos los valores de variables geográficas deben estar en la tabla de valores normalizados
+    * [INDISTAC-288] - Crear metodos que calculen granularidades y values espaciales y temporales de un indicador e instancias
+    * [INDISTAC-300] - No se han incluido las validaciones en el servicio IndicatorsDataService 
+    * [INDISTAC-326] - Cambiar la representación interna de los datos en el Dataset repository
+    * [INDISTAC-330] - Contemplar el caso del código "-" en la carga de datos del json del jaxi
+    * [INDISTAC-334] - Los metodos de retrieve Valores geograficos y temporales basados en los datos, sdeben incluir traducciones
+    * [INDISTAC-347] - Cambiar la web para que use PublicationResult en el Action de publish
+    * [INDISTAC-365] - En las instancias de indicadores debe permitirse editar al menos el título y dejar el resto no editable
+    * [INDISTAC-393] - Contemplar el orden de los valores geográficos y temporales al devolverlos
+    * [INDISTAC-397] - Al poblar un indicador bajo demanda se debe proporcionar la posibilidad de poblar todas las versiones en lugar de solo una
+
+** Nueva Funcionalidad
+    * [INDISTAC-51] - Utilizar clases del proyecto core
+    * [INDISTAC-77] - La creacion de sistemas se debe realizar en un panel inferior al listado de sistemas, no en un popup
+    * [INDISTAC-78] - Permitir borrar indicadores y sistemas de indicadores en las tablas correspondientes
+    * [INDISTAC-80] - Permitir creación y edición de estructuras de un sistema de indicadores
+    * [INDISTAC-82] - En la web se debe crear un servicio Proxy para las llamadas a servicio de Sistemas de indicadores
+    * [INDISTAC-87] - Contemplar la traducción de excepciones a Excepciones Web
+    * [INDISTAC-95] - Poner un select para elegir el idioma de la aplicación
+    * [INDISTAC-96] - Añadir logging a indicators-web
+    * [INDISTAC-134] - Añadir metadato COMMENTS_URL
+    * [INDISTAC-165] - Crear servicio para tareas con el gpe
+    * [INDISTAC-182] - Crear la configuración para poder utilizar un data en la aplicación
+    * [INDISTAC-221] - Nueva operación: obtener un valor anterior a un Time value
+    * [INDISTAC-237] - Actualización de indicadores por lotes
+    * [INDISTAC-264] - Crear interfaz para personalizar los widgets
+    * [INDISTAC-265] - Dejar preparado el quartz para que sólo se tenga que 
+    * [INDISTAC-268] - Código para exportar los widgets
+    * [INDISTAC-272] - Añadir metodos de consultas de datos para indicadores e instancias de indicador
+    * [INDISTAC-297] - Contemplar que cualquier cambio en los datasources de un indicador hace los datos inconsistentes
+    * [INDISTAC-325] - Permitir obtener la granularidad y valor geográfico por código
+    * [INDISTAC-364] - Deben traducirse los parámetros en la web
+    * [INDISTAC-380] - Permitir obtener el listado de operaciones de las consultas del Gpe
+    * [INDISTAC-381] - Permitir obtener el listado de consultas filtradas por una operación
+
+** Reuniones
+    * [INDISTAC-1] - 25/11/2011 - Lanzamiento interno del proyecto
+    * [INDISTAC-4] - Revisión de la oferta del sistema de indicadores
+    * [INDISTAC-5] - Revisión del documento de requisitos funcionales
+    * [INDISTAC-6] - 20111209 - Revisión del acta de la reunión del 07/12/2011
+    * [INDISTAC-8] - 20/11/2011 - Revisión del acta de la reunión del 07/12/2011
+    * [INDISTAC-11] - Revisión de dudas granularidades y Widgets
+    * [INDISTAC-12] - 10/01/2012 - Resolución de dudas referentes a la propuesta de personalización de los widgets
+    * [INDISTAC-17] - 16/01/2012 - Llamada de Alberto para tratar requisitos del sistema
+    * [INDISTAC-18] - Revisión del documento de análisis
+    * [INDISTAC-20] - 20/01/2012 - Lanzamiento del desarrollo
+    * [INDISTAC-34] - 23/01/2012 - LLamada de Alberto para tratar los metadatos
+    * [INDISTAC-36] - 20120123 - LLamada de Alberto para tratar el versionado de indicadores
+    * [INDISTAC-37] - 27/01/2012 - Metadatos de derivación de tasas (conversación telefónica con Alberto).
+    * [INDISTAC-39] - 06/02/2012 - Seguimiento interno
+    * [INDISTAC-63] - 13/02/2012 - Seguimiento semanal
+    * [INDISTAC-102] - 22/02/2012 - Seguimiento semanal
+    * [INDISTAC-112] - 27/02/2012 - Conversación telefónica con Alberto
+    * [INDISTAC-115] - 27/02/2012 - Seguimiento semanal
+    * [INDISTAC-123] - 28/02/2012 - Conversación telefónica resolución de dudas de metadatos de indicadores
+    * [INDISTAC-132] - 06/03/2012 - Conversación telefónica con Alberto sobre APIS y otros
+    * [INDISTAC-133] - 06/03/2012 Reunión de seguimiento
+    * [INDISTAC-140] - 08/03/2012 - Conversación con Alberto sobre asuntos pendientes
+    * [INDISTAC-153] - 13/03/2012 - Reunión de seguimiento semanal
+    * [INDISTAC-168] - 15/03/2012 - Seguimiento semanal
+    * [INDISTAC-179] - Reunión 19/03/2012: Interacción con sistemas externos
+    * [INDISTAC-180] - 20/03/2012 - Conversación con Alberto de la interfaz de indicadores
+    * [INDISTAC-199] - 26/03/2012 - Seguimiento semanal
+    * [INDISTAC-208] - 27/03/2012 - Resolución de dudas de observaciones.
+    * [INDISTAC-210] - Gestión de Datasources en la web
+    * [INDISTAC-217] - 27/03/2012 - Conversación telefónica con Alberto y Noelia para la gestión de roles y permisos
+    * [INDISTAC-218] - Reunión con Alberto y Noelia para tratar el tema de permisos por roles 
+    * [INDISTAC-236] - 09/04/2012 - Reunión de seguimiento
+    * [INDISTAC-238] - Hablar con Alberto de qué información debe visualizarse en la aplicación pública y cómo.
+    * [INDISTAC-239] - 09/04/2012 - Reunión lanzamiento API INDICADORES
+    * [INDISTAC-249] - Hablar con Alberto del layout de las aplicaciones.
+    * [INDISTAC-251] - 11/04/2012 - Conversación telefónica con Alberto sobre aplicativo web de indicadores
+    * [INDISTAC-258] - 12/04/2012 - Lanzamiento de widgets
+    * [INDISTAC-328] - 23/04/2012 - Reunión de seguimiento
+    * [INDISTAC-367] - 04/05/2012: Reunión de seguimiento
+    * [INDISTAC-395] - 18/05/2012 - Revisión de las pantallas de indicadores (visualización de información de múltiples versiones)
+
+
+** Tarea
+    * [INDISTAC-2] - Documento de requisitos funcionales y no funcionales
+    * [INDISTAC-3] - Crear espacio privado para el proyecto
+    * [INDISTAC-7] - Toma de contacto con GWT/SMART
+    * [INDISTAC-9] - Actualizar documento de requisitos
+    * [INDISTAC-10] - Preparar CD Certificación Anualidad 2011
+    * [INDISTAC-14] - Crear documento explicando el nivel de personalización que se admitirá en los widgets.
+    * [INDISTAC-15] - Modificar los requisitos RF-41 y RF-42 para especificar que lo que no puede modificarse es la versión.
+    * [INDISTAC-16] - Análisis del sistema
+    * [INDISTAC-21] - Configuración inicial del proyecto
+    * [INDISTAC-22] - Crear servicio Gestión de Indicadores
+    * [INDISTAC-24] - Toma de contacto del proyecto
+    * [INDISTAC-25] - ¿Sculptor 2.1.0?
+    * [INDISTAC-26] - Pendientes
+    * [INDISTAC-27] - Servicio de gestión de sistemas de indicadores
+    * [INDISTAC-35] - Elaborar un documento de respuesta al documento enviado por Informática relativo a los requisitos
+    * [INDISTAC-38] - Revisar el documento enviado por Molina
+    * [INDISTAC-40] - Gestión de indicadores
+    * [INDISTAC-46] - Actualizar datos de indicador
+    * [INDISTAC-53] - Gestión de dimensiones
+    * [INDISTAC-64] - Resolución de dudas del análisis
+    * [INDISTAC-69] - Gestión de instancias de indicadores
+    * [INDISTAC-84] - Tratamiento de excepciones según METAMAC-318
+    * [INDISTAC-86] - Modificar arquitectura ServiceFacade, Service
+    * [INDISTAC-88] - Loguear excepciones en Core
+    * [INDISTAC-93] - Cambiar la forma en que se han establecido las relaciones de clases IndicatorsSystem, Dimension, IndicatorInstance
+    * [INDISTAC-94] - Pasar a Spring 3.1.1
+    * [INDISTAC-97] - Crear operación para obtener todo el árbol de dimensiones e instancias de indicadores de un sistema de indicadores
+    * [INDISTAC-98] - Actualización del análisis
+    * [INDISTAC-105] - Crear tabla de valores geográficos
+    * [INDISTAC-110] - Conectar la web con la capa de servicios del core en lugar de usar el mock
+    * [INDISTAC-111] - Tratamiento de carga de observaciones en px con '.'
+    * [INDISTAC-116] - ¿Tests de ServiceFacade y Service separados?
+    * [INDISTAC-117] - Capturar excepciones en el Interceptor para lanzar sólo MetamacException (excepto Throwable)
+    * [INDISTAC-124] - Valores por defecto de metadatos de indicadores
+    * [INDISTAC-127] - Preparando entorno de indicadores en eclipse de Laura
+    * [INDISTAC-128] - Refactor "state" por "ProcStatus"
+    * [INDISTAC-129] - Refactor de atributos
+    * [INDISTAC-130] - Devolver en fachadas de servicio DTO modificado
+    * [INDISTAC-131] - Mostrar metadatos de indicadores y sistemas de indicadores
+    * [INDISTAC-135] - ¿Permitir realizar vista previa de indicadores en producción?
+    * [INDISTAC-136] - Escribir propuesta de directrices para la construcción de APIs en el ISTAC
+    * [INDISTAC-137] - Algoritmo valores temporales
+    * [INDISTAC-138] - Funcionalidad para comprobar si un valor temporal es mayor que otro
+    * [INDISTAC-141] - Solicitar a la lista de distribución de indicadores el esquema de la vista de clasificaciones temáticas
+    * [INDISTAC-142] - Solicitar a la lista de distribución a) los inserts de la tabla de valores geográficos y de unidades y b) los posibles valores de granularidades geográficas.
+    * [INDISTAC-143] - Modificación formulario de estructura (sistemas de indicadores)
+    * [INDISTAC-144] - Traducción de parámetros en los mensajes de error
+    * [INDISTAC-145] - Rellenar metadato baseLocation de Quantity con valores de tabla geográfica
+    * [INDISTAC-146] - Crear validador para valores temporales (ver TimeVariableUtils del core)
+    * [INDISTAC-147] - Revisar manual de instalación
+    * [INDISTAC-148] - Refactor "temporal" por "time"
+    * [INDISTAC-149] - Identificar granularidad de un valor temporal
+    * [INDISTAC-151] - Refactor servicios de la web
+    * [INDISTAC-152] - Quitar parámetro uuid de los mensajes de error del core
+    * [INDISTAC-154] - Creación de indicadores con nuevo formulario
+    * [INDISTAC-155] - Búsqueda de áreas temáticas utilizadas en indicadores publicados
+    * [INDISTAC-156] - En los indicadores, el Quantity sólo es obligatorio al pasar de la fase de borrador
+    * [INDISTAC-157] - Añadir columna "isLastVersion" en Indicadores y Sistemas de indicadores, para indicar cuál es la última versión
+    * [INDISTAC-158] - Obtener área de listado de subjetcs de la vista del ISTAC (no recoger código y título en el formulario)
+    * [INDISTAC-159] - Búsquedas paginadas
+    * [INDISTAC-160] - Criterias
+    * [INDISTAC-161] - Búsqueda de valores geográficos por criteria
+    * [INDISTAC-162] - Las tablas de valores que se gestionarán directamente en bbdd deben tener el número mínimo de campos
+    * [INDISTAC-163] - Agrupar los parámetros de las excepciones como constantes en una clase
+    * [INDISTAC-164] - Actualización a nuevos cambios del core
+    * [INDISTAC-166] - Gestión del ciclo de vida de indicadores y sistemas de indicadores
+    * [INDISTAC-167] - Cambiar validaciones de cambio de estado para que las excepciones se agrupen
+    * [INDISTAC-169] - Quantity no requerida mientras el indicador esté en estado borrador
+    * [INDISTAC-170] - ¿Visualización de versiones anteriores de indicadores o sistemas de indicadores?
+    * [INDISTAC-171] - ¿Añadir atributo "version" a los Dto?
+    * [INDISTAC-172] - Subida a servidor de demos
+    * [INDISTAC-173] - Quitar UUIDs de InternationalString y LocalisedString
+    * [INDISTAC-174] - Aplicar la seguridad de usuarios
+    * [INDISTAC-175] - Decidir cuándo se realiza un versionado mayor y cuándo un versionado menor.
+    * [INDISTAC-176] - Gestión de Datasources
+    * [INDISTAC-177] - Actualización de nueva versión del core
+    * [INDISTAC-178] - Validar formato de los códigos semánticos
+    * [INDISTAC-183] - Nueva operación: obtener sistemas en los que se encuentra un indicador
+    * [INDISTAC-187] - ¿Por qué no se puede desplegar la aplicación con el fichero config.xml en el core? (Ver descripción)
+    * [INDISTAC-188] - Manual de instalación
+    * [INDISTAC-189] - Preparar cliente de web service de Gopestat
+    * [INDISTAC-191] - Comprobar que la aplicación web funciona en un tomcat "limpio"
+    * [INDISTAC-192] - Duda: ¿cuándo es obligatorio el atributo baseQuantity?
+    * [INDISTAC-193] - Refactor atributos de DatasourceDto
+    * [INDISTAC-194] - Refactor operaciones "find" de entidades relacionadas
+    * [INDISTAC-195] - Preparación del paquete de instalación 20120323
+    * [INDISTAC-196] - Preparación de war para la instalación
+    * [INDISTAC-197] - Añadir metadato "datasetRepositoryId" en IndicatorVersion, opcional
+    * [INDISTAC-198] - Datasource: añadir nuevos atributos para "rates"
+    * [INDISTAC-200] - Añadir a Datasource el atributo "absoluteMethod"
+    * [INDISTAC-201] - Quitar atributos de los Sistemas de Indicadores de la base de datos
+    * [INDISTAC-202] - Relacionar la operación con el Sistema de indicadores mediante un ExternalItem
+    * [INDISTAC-203] - Refactor WS Gopestat
+    * [INDISTAC-204] - Web pública
+    * [INDISTAC-206] - Validaciones rates y tipos de quantities
+    * [INDISTAC-207] - Añadir atributos de observación en los datasources
+    * [INDISTAC-209] - Al consultar las observaciones desde statistic-dataset-repository hay que añadir a los atributos de cada observación los atributos de la queryGpe correspondiente
+    * [INDISTAC-213] - Quitar operación "actualizar sistema de indicadores" de la facade
+    * [INDISTAC-214] - Actualización a nuevos cambios en el core
+    * [INDISTAC-215] - Contestar e-mail de Rubén con observaciones sobre la instalación.
+    * [INDISTAC-216] - Al publicar un sistema de indicadores, comprobar que la operación estadística asociada está publicada externamente
+    * [INDISTAC-219] - Modificación de Rates en DataSources (ver Descripción)
+    * [INDISTAC-220] - Renombrar los prefijos de las tablas TBL por TB y LIS_ por TB_LIS_
+    * [INDISTAC-222] - Aplicar arte-formatter a la web
+    * [INDISTAC-223] - Crear API Rest
+    * [INDISTAC-224] - Integrar CAS en el proyecto
+    * [INDISTAC-226] - No perder el root exception
+    * [INDISTAC-227] - Adaptar el cliente del web service a nuevo nombre del proyecto gopestat y los nuevos xsd
+    * [INDISTAC-240] - Adaptar web a cambios en el core (ver descripción)
+    * [INDISTAC-246] - Refactor de paquetes de generación de los DTOs
+    * [INDISTAC-250] - Comprobar si los metadatos de sistemas de indicadores necesitan metadatos de operaciones estadísticas que se obtengan de los metadatos comunes
+    * [INDISTAC-252] - Optimistic Locking manual
+    * [INDISTAC-253] - Revisar servicio comprobando los requerimientos de la API
+    * [INDISTAC-257] - Utilizar criteria genérico de Metamac, transformándolo al de Sculptor
+    * [INDISTAC-260] - Datasources: si el absoluteMethod es nulo, comprobar que algún rate tenga como método Load
+    * [INDISTAC-261] - Crear criteria genérico para Metamac e Indicadores, y transformador
+    * [INDISTAC-262] - Incluir variable de medida en los dataSources
+    * [INDISTAC-263] - Revisar tamaños de campos
+    * [INDISTAC-266] - Crear unas cuantas consultas de prueba en el jaxi para Laura en la web
+    * [INDISTAC-267] - Incluir metadato absolutMethod en DataSources
+    * [INDISTAC-279] - Cambiar validación de Datasources
+    * [INDISTAC-283] - No mostrar selector geográfico en formulario de creación de instancias, si existe una variable geográfica fijada en el indicador
+    * [INDISTAC-284] - ¿Fijar siempre valores/variables temporales/geográficas a una instancia de indicador?
+    * [INDISTAC-287] - Añadir atributo 'uri' a indicador, sistema de indicadores, instancia de indicador, valor geográfico?, granularidad geográfica
+    * [INDISTAC-289] - Actualizar aplicación a cambios en el core y mostrar icono para especificar qué indicadores no están actualizados
+    * [INDISTAC-294] - Logs en daily rolling en aplicaciones web
+    * [INDISTAC-302] - Dividir las operaciones de "reject" de sistemas de indicadores e indicadores para difusión y producción
+    * [INDISTAC-306] - Mejoras en la web
+    * [INDISTAC-307] - Actualización a cambios en el core
+    * [INDISTAC-308] - Cambio en la creación de las instancias de indicador
+    * [INDISTAC-309] - Dto: refactor atributo "diffusionVersion" de Sistemas de Indicadores e Indicadores
+    * [INDISTAC-313] - Al invocar el ws de statistical-operations, indicar el ServiceContext
+    * [INDISTAC-314] - Cambios en las versiones (ver Descripción)
+    * [INDISTAC-315] - Paginación Sistemas de indicadores
+    * [INDISTAC-316] - Preparar paquete de instalación 20/04/2012
+    * [INDISTAC-317] - Traducción de TimeValue y de TimeGranularity
+    * [INDISTAC-318] - Test: Añadir interceptores a nivel de servicio para los tests de servicios
+    * [INDISTAC-320] - Implementar las funciones que faltan para la API
+    * [INDISTAC-321] - Web pública: consumir rest desde página, no en controller
+    * [INDISTAC-322] - Configuración de GWT maven plugin
+    * [INDISTAC-323] - RPC call error
+    * [INDISTAC-327] - Seguridad
+    * [INDISTAC-329] - Modificar los scripts de inserción de datos para no especificar explícitamente los ids
+    * [INDISTAC-333] - Permitir formato de respuesta JSONP para la API REST
+    * [INDISTAC-337] - Montar todos los servicios necesarios en local para probar todo el sistema entero y hacer mejores pruebas con el jaxi
+    * [INDISTAC-338] - Adaptar web a cambios en la interfaz del core
+    * [INDISTAC-339] - Corregir error en en el árbol tras el versionado
+    * [INDISTAC-340] - Quitar campos requeridos incorrectos
+    * [INDISTAC-341] - Revisar configuración de Maven
+    * [INDISTAC-342] - Preparación del paquete de instalación 26/04/2012
+    * [INDISTAC-344] - Cambiar la operación de publicación de un indicador para devolver un IndicatorPublicationResult
+    * [INDISTAC-345] - Página de consulta de indicadores consumiendo api Rest
+    * [INDISTAC-349] - Quantity: controlar que decimalPlaces sea <= 10
+    * [INDISTAC-350] - Permitir modificar un indicador, datasources... en estado "publicationFailed"
+    * [INDISTAC-351] - Los parámetros de las excepciones han de ser siempre constantes
+    * [INDISTAC-352] - Mover environment.xml a la aplicación web, en vez de Tomcat
+    * [INDISTAC-353] - Activar de nuevo el Optimistic Locking
+    * [INDISTAC-354] - Preparación paquete 27/04/2012
+    * [INDISTAC-355] - Mover el PublishIndicadorDto a otro paquete para evitar problemas con gwt
+    * [INDISTAC-359] - Comprobar que al eliminar un datasource se marca el indicador como inconsistente en datos
+    * [INDISTAC-363] - Quitar el sso para indicators-internal-web momentaneamente
+    * [INDISTAC-368] - Paquete del 04/05/2012
+    * [INDISTAC-369] - Actutalización de indicadores a cambios en la última semana
+    * [INDISTAC-370] - Borrado de sistemas de indicadores
+    * [INDISTAC-372] - No cachear la estructura de un sistema de indicadores
+    * [INDISTAC-374] - Gestión de excepciones y parámetros de mensajes de error
+    * [INDISTAC-377] - Configuración de tarea gwt:debug de maven
+    * [INDISTAC-378] - Ir a la última página del listado de indicadores tras la creación de uno nuevo
+    * [INDISTAC-379] - Edición de instancias de indicadores
+    * [INDISTAC-382] - Permitir buscar indicadores por título
+    * [INDISTAC-383] - Crear diagramas de flujo
+    * [INDISTAC-384] - Búsqueda en selectItems
+    * [INDISTAC-385] - Al crear una instancia de indicador, validar si el indicador asociado necesita que sus datos sean poblados
+    * [INDISTAC-386] - Al obtener el listado de sistemas, evitar hacer try/catch para comprobar si existe un sistema (se loggean errores innecesarios)
+    * [INDISTAC-387] - Preparar Release 1.0.0
+    * [INDISTAC-388] - Versionado menor al actualizar datos de un indicador
+    * [INDISTAC-390] - Añadir el atributo "orden" en la tabla normalizada de valores geográficos
+    * [INDISTAC-394] - Preparar paquete de instalación 18/05/2012
+    * [INDISTAC-402] - Crear documento de revisión de requisitos de indicadores y llevar a cabo la revisión de los mismos para la versión 1.0.0.
+    * [INDISTAC-404] - Redactar e-mail de la entrega de la versión 1.0.0
+
+
+** Sub-tarea
+    * [INDISTAC-13] - Revisar los temas tratados con Alberto en la reunión
+    * [INDISTAC-19] - Analizar el comportamiento del sistema cuando se versionan indicadores o sistemas
+    * [INDISTAC-23] - Reunión 24/01/2011
+    * [INDISTAC-28] - Crear sistema
+    * [INDISTAC-29] - Consultar versión de sistema
+    * [INDISTAC-30] - Eliminar versión de sistema
+    * [INDISTAC-31] - Actualizar metadatos de versión de sistema
+    * [INDISTAC-32] - Actualizar estado del ciclo de vida del sistema
+    * [INDISTAC-33] - Versionar sistema
+    * [INDISTAC-41] - Crear indicador
+    * [INDISTAC-42] - Consultar versión de indicador
+    * [INDISTAC-43] - Eliminar versión de indicador
+    * [INDISTAC-44] - Actualizar metadatos de versión de indicador
+    * [INDISTAC-45] - Actualizar estructura de versión de indicador
+    * [INDISTAC-47] - Actualizar estado del ciclo de vida de indicador
+    * [INDISTAC-48] - Versionar indicador
+    * [INDISTAC-49] - Definir tipo de dato IndicatorDto
+    * [INDISTAC-52] - Buscar sistemas de indicadores
+    * [INDISTAC-54] - Crear dimensión
+    * [INDISTAC-55] - Eliminar dimensión
+    * [INDISTAC-56] - Consultar dimensiones de un sistema de indicadores
+    * [INDISTAC-57] - Consultar una dimensión
+    * [INDISTAC-58] - Actualizar dimensión
+    * [INDISTAC-59] - Actualizar ubicación de dimensión
+    * [INDISTAC-60] - Se pueden ordenar conjuntamente instancias de indicadores y subdimensiones dentro de una dimensión
+    * [INDISTAC-61] - Copiar dimensiones cuando se versiona un sistema de indicadores
+    * [INDISTAC-62] - Obtener sistema de indicadores por código
+    * [INDISTAC-65] - Completar metadatos de indicadores
+    * [INDISTAC-66] - Buscar indicadores
+    * [INDISTAC-67] - Buscar indicadores publicados
+    * [INDISTAC-70] - Crear instancia de indicador
+    * [INDISTAC-71] - Eliminar instancia de indicador
+    * [INDISTAC-72] - Actualizar instancia de indicador
+    * [INDISTAC-73] - Vincular origen de datos a un indicador
+    * [INDISTAC-74] - Desvincular origen de datos a un indicador
+    * [INDISTAC-75] - Modificar query del origen de datos
+    * [INDISTAC-79] - Consultar orígenes de datos de un indicador
+    * [INDISTAC-81] - Consultar origen de datos
+    * [INDISTAC-85] - Buscar instancias de indicadores de un sistema de indicadores
+    * [INDISTAC-89] - Buscar instancias de indicadores de una dimensión
+    * [INDISTAC-90] - Actualizar ubicación de instancia de indicador
+    * [INDISTAC-101] - Consultar instancia de indicador
+    * [INDISTAC-104] - Asociar en base de datos la entidad Instancia de indicador con Indicador
+    * [INDISTAC-106] - Atributos granularidad, valor geográfico y localización base son fk a tablas de valores
+    * [INDISTAC-107] - Quitar las subdimensiones de DimensionDto, ya que se obtendrán mediante ElementLevelDto
+    * [INDISTAC-109] - Obtener indicador por código
+    * [INDISTAC-114] - Consulta de operaciones desde Gopestat
+    * [INDISTAC-118] - Buscar indicadores por área temática
+    * [INDISTAC-119] - Consulta de áreas temáticas disponibles para indicadores
+    * [INDISTAC-120] - Completar metadatos de fuentes de datos
+    * [INDISTAC-122] - Consulta de valores de tabla de unidades
+    * [INDISTAC-125] - Al publicar un sistema, comprobar que todos los indicadores tengan alguna versión publicada
+    * [INDISTAC-150] - Asociar las áreas temáticas de la tabla de valores a un indicador
+    * [INDISTAC-231] - Página con listado de sistemas de indicadores
+    * [INDISTAC-232] - Preparación del proyecto web para la parte pública
+    * [INDISTAC-233] - Pendientes en web pública
+    * [INDISTAC-234] - Estilo css como página Istac
+    * [INDISTAC-235] - Página con listado de indicadores clasificados por temáticas
+    * [INDISTAC-241] - Web: Consultar un sistema de indicadores
+    * [INDISTAC-242] - Consultar un indicador
+    * [INDISTAC-244] - Introducción Backbone
+    * [INDISTAC-247] - Página de errores
+    * [INDISTAC-256] - Propuesta de pantallas al Istac
+    * [INDISTAC-259] - Permitir seleccionar el idioma de visualización
+    * [INDISTAC-274] - Previsualización de indicadores y acceso desde JAXI a los datos
+    * [INDISTAC-275] - Cumplimentación de los filtros de instancias de indicadores
+    * [INDISTAC-276] - Cachear listado de granularidades y/o valores para mejor rendimiento de la API
+    * [INDISTAC-277] - Filtrado de datos a nivel de JAXI para que el JSON venga reducido
+    * [INDISTAC-280] - Visualización de los datos en JAXI (filas - geografía / columnas - tiempo)
+    * [INDISTAC-281] - En la consulta de un sistema de indicadores, obtener la url base para Jaxi desde fichero de propiedades
+    * [INDISTAC-282] - Valorar posibilidad de añadir los enlaces de acceso a la API para la consulta de las instancias y del sistema de indicadores
+    * [INDISTAC-285] - ¿Fijar siempre valores/variables temporales/geográficas a una instancia de indicador? ¿O usar los valores fijados en el indicador?
+    * [INDISTAC-286] - ¿Permitir obtener todos los resultados, sin límite de 1000?
+    * [INDISTAC-290] - Web: Consulta de metadatos de una instancia de indicador
+    * [INDISTAC-291] - Numerar instancias de indicadores en la consulta de un sistema de indicadores
+    * [INDISTAC-293] - Web pública: Para obtener los datos, consumir la api rest, no el servicio
+    * [INDISTAC-295] - Aplicar seguridad por rol en cada operación del core
+    * [INDISTAC-296] - Aplicar seguridad por recurso "sistema de indicador" en el core
+    * [INDISTAC-303] - Login de usuarios
+    * [INDISTAC-304] - Ocultar acciones en web según roles de usuario logueado
+    * [INDISTAC-305] - SSO de Metamac
+    * [INDISTAC-312] - Test para validar la seguridad por rol y recurso
+    * [INDISTAC-324] - Al consultar un sistema de indicadores que no existe, mostrar mensaje
+    * [INDISTAC-331] - En la consulta de una instancia de indicador, mostrar los time values y granularities traducidos
+    * [INDISTAC-361] - Demostración a Noelia de las funcionalidades de la aplicación
+    * [INDISTAC-362] - Demostración a Ricardo de las funcionalidades de la aplicación
+
+
