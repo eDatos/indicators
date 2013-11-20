@@ -17,26 +17,23 @@
 
     [#macro renderElement element]
         [#if element.kind == "indicators#dimension"]
-            [#if depth <= 3]
+            [#if depth <= 2]
                 [#assign openCssClass="open"/]
             [#else]
                 [#assign openCssClass="close"/]
             [/#if]
         <li class="dimension dimension-depth-${depth} ${openCssClass}">
-            [#if depth > 2]<a href="#" class="tree-icon"></a>[/#if]
-            <span class="dimension-title">[@localizeTitle element.title/]</span>
+            <span class="dimension-title">
+                [#if depth > 2]<a href="#" class="tree-icon"></a>[/#if]
+                [@localizeTitle element.title/]
+            </span>
             [@renderElementChildren element /]
         </li>
         [#elseif element.kind == "indicators#indicatorInstance"]
         <li>
-            <div class="itemTabla">
-                <img class="table-icon" id="${element.id}" border="0" src="[@spring.url "/theme/images/tabla.gif"/]"
-                     data-self-link="${element.selfLink}">
-                <span class="item-numeration">${idx?string?left_pad(2, "0")}</span>
-                <a class="nouline"
-                   href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
-            </div>
-            <div class="indicatorInstanceDetail"></div>
+            <img class="table-icon" id="${element.id}" border="0" src="[@spring.url "/theme/images/icon-table.png"/]" data-self-link="${element.selfLink}">
+            <span class="item-numeration">${idx?string?left_pad(2, "0")}</span>
+            <a class="nouline" href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
         </li>
             [#global idx = idx + 1]
         [/#if]
@@ -80,7 +77,7 @@
     [/#if]
 
     <div>
-        <ul class="capitulos" style="margin: 0px; padding-left: 4px;">
+        <ul class="capitulos">
             [@renderElementList indicator.elements/]
         </ul>
     </div>
@@ -92,7 +89,7 @@
     $(".tree-icon").click(function (e) {
         e.preventDefault();
         var $icon = $(this);
-        var $parentDimension = $icon.parent(".dimension");
+        var $parentDimension = $icon.closest(".dimension");
         $parentDimension.toggleClass("open");
         $parentDimension.toggleClass("close");
     });

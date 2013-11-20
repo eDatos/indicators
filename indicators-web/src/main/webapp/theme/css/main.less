@@ -54,10 +54,6 @@ input[type="image"] {
 /*****************************************
  Indicators system: elements
 /****************************************/
-.itemTabla {
-    padding-top: 1px;
-}
-
 .itemSubcapitulo {
     font-weight: bold;
     margin-left: 0;
@@ -78,11 +74,13 @@ input[type="image"] {
     .capitulos {
         list-style: none;
         margin: 0;
+
         li {
             background: none;
             font-weight: normal;
             margin: 0;
-            padding: 5px 0;
+            padding: 0;
+            margin-bottom: 5px;
         }
 
         .dimension {
@@ -91,6 +89,8 @@ input[type="image"] {
 
         .dimension-title {
             font: bold 1em Tahoma, geneva, arial, sans-serif;
+            display: block;
+            margin: 10px 0;
         }
 
         .dimension-depth-1 > .dimension-title {
@@ -98,18 +98,17 @@ input[type="image"] {
             padding: 0 0 3px 10px;
             border-bottom: 1px dotted #a4a4a4;
             background: url(../images/flecha_menulat.gif) no-repeat left top;
-            display: block;
         }
 
-        .dimension-depth-1 {
+        .dimension-depth-1, .dimension-depth-2 {
             .capitulos {
                margin-left: 10px;
             }
         }
 
-        .dimension-depth-2 {
+        .dimension-depth-3 {
             .capitulos {
-                margin-left: 15px;
+                margin-left: 18px;
             }
         }
 
@@ -124,20 +123,21 @@ input[type="image"] {
                 background-repeat: no-repeat;
                 width: 14px;
                 height: 14px;
-                display: inline-block;
                 vertical-align: middle;
+                padding-right: 3px;
+                float: left;
             }
 
             .open {
                 .tree-icon {
-                    background-image: url("../images/tree-open.png");
+                    background-image: url("../images/icon-tree-open.png");
                 }
             }
 
             .close {
 
                 .tree-icon {
-                    background-image: url("../images/tree-close.png");
+                    background-image: url("../images/icon-tree-close.png");
                 }
 
                 .capitulos {
