@@ -1,6 +1,9 @@
 package es.gobcan.istac.indicators.rest.mapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,29 +77,35 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
-    private static String PROP_ATTRIBUTE_UNIT_MEAS_DETAIL = "UNIT_MEAS_DETAIL";
-    private static String PROP_ATTRIBUTE_UNIT_MEASURE = "UNIT_MEASURE";
-    private static String PROP_ATTRIBUTE_UNIT_MULT = "UNIT_MULT";
-    private static String PROP_ATTRIBUTE_OBS_CONF = "OBS_CONF";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL  = "UNIT_MEAS_DETAIL";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE      = "UNIT_MEASURE";
+    private static String                                        PROP_ATTRIBUTE_UNIT_MULT         = "UNIT_MULT";
+    private static String                                        PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
 
-    private static String REQUEST_CACHE_DATASOURCE = "REQUEST_CACHE_DATASOURCE";
-    private static String REQUEST_CACHE_UNITMULTIPLIER = "REQUEST_CACHE_UNITMULTIPLIER";
-    private static String REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static String                                        REQUEST_CACHE_DATASOURCE         = "REQUEST_CACHE_DATASOURCE";
+    private static String                                        REQUEST_CACHE_UNITMULTIPLIER     = "REQUEST_CACHE_UNITMULTIPLIER";
+    private static String                                        REQUEST_CACHE_INDICATIOR_VERSION = "REQUEST_CACHE_INDICATIOR_VERSION";
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-        @Override
-        protected java.util.Map<String, Map<String, Object>> initialValue() {
-            return new HashMap<String, Map<String, Object>>();
-        }
+                                                                                                      @Override
+                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                          return new HashMap<String, Map<String, Object>>();
+                                                                                                      }
 
-        ;
-    };
-
-    @Autowired
-    private IndicatorsApiService indicatorsApiService = null;
+                                                                                                      ;
+                                                                                                  };
 
     @Autowired
-    private StatisticalOperationsRestInternalFacade statisticalOperations = null;
+    private IndicatorsApiService                                 indicatorsApiService             = null;
+
+    @Autowired
+    private StatisticalOperationsRestInternalFacade              statisticalOperations            = null;
+
+    private static final List<String>                            measuresOrder                    = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -367,8 +376,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                         observations.add(observationDto.getPrimaryMeasure());
 
                         // ATTRIBUTES
-                        if(includeObservationMetadata) {
-                            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto)observationDto;
+                        if (includeObservationMetadata) {
+                            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) observationDto;
                             attributes.add(setObservationAttributes(observationExtendedDto));
                         }
 
@@ -406,7 +415,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         observationDto.getCodesDimension().add(measureCodeDimDto);
         return observationDto;
     }
-
 
     private Map<String, AttributeType> setObservationAttributes(ObservationExtendedDto observationDto) throws MetamacException {
         for (AttributeBasicDto codeAttributeBasicDto : observationDto.getAttributes()) {
@@ -616,7 +624,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // MEASURE
         List<MeasureValue> measureValues = indicatorsApiService.retrieveMeasureValuesInIndicator(source.getIndicator().getUuid());
 
-        MetadataDimensionType measureDimension = createMeasureDimension(measureValues,source, baseURL);
+        MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
         // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
@@ -658,7 +666,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _indicatorsInstanceDoToType(final IndicatorInstance sourceIndicatorInstance, final IndicatorVersion sourceIndicatorVersion, final IndicatorInstanceBaseType target,
-                                             final String baseURL) {
+            final String baseURL) {
         Assert.notNull(sourceIndicatorInstance);
         Assert.notNull(baseURL);
 
@@ -685,7 +693,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     public void indicatorsInstanceDoToMetadataType(final IndicatorInstance source, final MetadataType target, final String baseURL) {
         try {
             IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid());
-            
+
             target.setDimension(new LinkedHashMap<String, MetadataDimensionType>());
 
             // GEOGRAPHICAL
@@ -711,7 +719,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
     }
-
 
     private void _indicatorsInstanceDoToType(final IndicatorInstance source, final IndicatorInstanceType target, final String baseURL) {
         try {
@@ -744,10 +751,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
             // DECIMAL PLACES
             target.setDecimalPlaces(indicatorVersion.getQuantity().getDecimalPlaces());
-            
+
             // SUBJECT CODE
             target.setSubjectCode(indicatorVersion.getSubjectCode());
-            
+
             // SUBJECT TITLE
             target.setSubjectTitle(MapperUtil.getLocalisedLabel(indicatorVersion.getSubjectTitle()));
 
@@ -844,9 +851,28 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
             measureValueTypes.add(metadataRepresentationType);
         }
+
+        sortMeasureValuesTypes(measureValueTypes);
         return measureValueTypes;
     }
 
+    private void sortMeasureValuesTypes(List<MetadataRepresentationType> measureValueTypes) {
+        Collections.sort(measureValueTypes, new Comparator<MetadataRepresentationType>() {
+
+            @Override
+            public int compare(MetadataRepresentationType o1, MetadataRepresentationType o2) {
+                int indexO1 = measuresOrder.indexOf(o1.getCode());
+                int indexO2 = measuresOrder.indexOf(o2.getCode());
+                if (indexO1 == indexO2) {
+                    return 0;
+                } else if (indexO1 < indexO2) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+    }
     private Quantity getQuantityForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
         switch (measure) {
             case ABSOLUTE:
@@ -859,7 +885,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         }
         return null;
     }
-    
+
     private RateDerivation getRateDerivationForMeasure(MeasureDimensionTypeEnum measure, IndicatorVersion indicatorVersion) {
         for (DataSource datasource : indicatorVersion.getDataSources()) {
             switch (measure) {
@@ -895,7 +921,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         link.setHref(href);
         return link;
     }
-    
+
     private TitleLinkType _createTitleLinkType(final IndicatorVersion indicatorVersion, final String baseURL) {
         String href = _createUrlIndicators_Indicator(indicatorVersion.getIndicator(), baseURL);
         TitleLinkType link = new TitleLinkType();
@@ -1001,10 +1027,10 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         target.setAcronym(sourceOperation.getAcronym());
         target.setDescription(sourceOperation.getDescription());
         target.setObjective(sourceOperation.getObjective());
-        
+
         LinkType statisticalOperatioLink = new LinkType();
         statisticalOperatioLink.setKind(RestConstants.KIND_STATISTICAL_OPERATION);
-        statisticalOperatioLink.setHref(sourceOperation.getUri()); 
+        statisticalOperatioLink.setHref(sourceOperation.getUri());
         target.setStatisticalOperationLink(statisticalOperatioLink);
     }
 
@@ -1065,7 +1091,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
-                                                                                final UriComponentsBuilder uriComponentsBuilder) {
+            final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorsSystems_IndicatorsSystem_Instances(indicatorsSystem, uriComponentsBuilder);
 
         uriComponentsBuilder.path(RestConstants.API_SLASH);
@@ -1073,7 +1099,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private void _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance_Data(final IndicatorsSystem indicatorsSystem, final IndicatorInstance indicatorsInstance,
-                                                                                     final UriComponentsBuilder uriComponentsBuilder) {
+            final UriComponentsBuilder uriComponentsBuilder) {
         _createUrlIndicatorSystems_IndicatorsSystem_Instances_Instance(indicatorsSystem, indicatorsInstance, uriComponentsBuilder);
 
         uriComponentsBuilder.path(RestConstants.API_SLASH);
