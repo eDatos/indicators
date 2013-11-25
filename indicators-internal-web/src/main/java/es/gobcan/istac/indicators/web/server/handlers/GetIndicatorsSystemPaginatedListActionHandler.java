@@ -58,15 +58,17 @@ public class GetIndicatorsSystemPaginatedListActionHandler extends SecurityActio
                 MetamacCriteriaPropertyRestriction restriction = new MetamacCriteriaPropertyRestriction(IndicatorsSystemCriteriaPropertyEnum.CODE.name(), resource.getId(), OperationType.EQ);
                 criteria.setRestriction(restriction);
                 try {
+                    IndicatorsSystemSummaryDtoWeb indicatorsSystemSummaryDtoWeb = null;
                     MetamacCriteriaResult<IndicatorsSystemSummaryDto> systems = indicatorsServiceFacade.findIndicatorsSystems(ServiceContextHolder.getCurrentServiceContext(), criteria);
                     if (!CollectionUtils.isEmpty(systems.getResults())) {
                         // If exists, updates indicators system
                         IndicatorsSystemSummaryDto indicatorsSystemSummaryDto = systems.getResults().get(0);
-                        indicatorsSystemSummaryDtoWebs.add(DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource));
+                        indicatorsSystemSummaryDtoWeb = DtoUtils.updateIndicatorsSystemSummaryDtoWeb(new IndicatorsSystemSummaryDtoWeb(), indicatorsSystemSummaryDto, resource);
                     } else {
                         // If not, create a new indicators system
-                        indicatorsSystemSummaryDtoWebs.add(DtoUtils.createIndicatorsSystemSummaryDtoWeb(resource));
+                        indicatorsSystemSummaryDtoWeb = DtoUtils.createIndicatorsSystemSummaryDtoWeb(resource);
                     }
+                    indicatorsSystemSummaryDtoWebs.add(indicatorsSystemSummaryDtoWeb);
                 } catch (MetamacException e) {
                     throw WebExceptionUtils.createMetamacWebException(e);
                 }

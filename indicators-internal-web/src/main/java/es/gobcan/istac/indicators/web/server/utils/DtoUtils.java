@@ -83,7 +83,7 @@ public class DtoUtils {
         }
         if (operation != null) {
             indicatorsSystemDtoWeb.setCode(operation.getId());
-            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getTitle()));
+            indicatorsSystemDtoWeb.setTitle(org.siemac.metamac.web.common.server.utils.DtoUtils.getInternationalStringDtoFromInternationalString(operation.getName()));
         }
         return indicatorsSystemDtoWeb;
     }
