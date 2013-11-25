@@ -745,14 +745,14 @@ public class InvocationValidator {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-    
+
     public static void checkRetrieveSubjectsInLastVersionIndicators(List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
-        
+
         // nothing
-        
+
         ExceptionUtils.throwIfException(exceptions);
     }
 
@@ -1683,7 +1683,7 @@ public class InvocationValidator {
                     ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID));
         }
         if (!ValidationUtils.isEmpty(dataSource.getGeographicalVariable())) {
-            ValidationUtils.checkMetadataEmpty(dataSource.getTimeValue(), ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, exceptions);
+            ValidationUtils.checkMetadataEmpty(dataSource.getGeographicalValue(), ServiceExceptionParameters.DATA_SOURCE_GEOGRAPHICAL_VALUE_UUID, exceptions);
         }
 
         // Other variables
