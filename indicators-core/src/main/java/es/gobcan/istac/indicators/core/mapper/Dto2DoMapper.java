@@ -8,15 +8,23 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.Dimension;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
 import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 public interface Dto2DoMapper {
 
@@ -38,6 +46,18 @@ public interface Dto2DoMapper {
     // Data
     public Data dataDtoToDo(ServiceContext ctx, DataDto source);
 
-    // Int string
+    // International string
     public InternationalString internationalStringDtoToDo(ServiceContext ctx, InternationalStringDto source, InternationalString target) throws MetamacException;
+
+    // Quantity Units
+    public QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source) throws MetamacException;
+
+    // Geographical Value
+    public GeographicalValue geographicalValueDtoToDo(ServiceContext ctx, GeographicalValueDto source) throws MetamacException;
+
+    // Geographical Granularity
+    public GeographicalGranularity geographicalGranularityDtoToDo(ServiceContext ctx, GeographicalGranularityDto source) throws MetamacException;
+
+    // Unit Multipliers
+    public UnitMultiplier unitMultiplierDtoToDo(ServiceContext ctx, UnitMultiplierDto source) throws MetamacException;
 }

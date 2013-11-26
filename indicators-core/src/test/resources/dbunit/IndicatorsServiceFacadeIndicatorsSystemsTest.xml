@@ -2266,13 +2266,30 @@
   		SYMBOL="km"
   		TITLE_FK="33"
   		SYMBOL_POSITION="END"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
+    
 	<TB_LIS_QUANTITIES_UNITS
 		ID="2"
  		UUID="2"
   		SYMBOL="[null]"
   		TITLE_FK="34"
   		SYMBOL_POSITION="START"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
   		  
 	<!-- ************************************************************************************ -->
@@ -2287,6 +2304,14 @@
   		TITLE_FK="47"
         GLOBAL_ORDER="ES"
   		GRANULARITY_FK="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -2298,6 +2323,14 @@
   		TITLE_FK="48"
         GLOBAL_ORDER="ES010101"
   		GRANULARITY_FK="4"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -2309,6 +2342,14 @@
   		TITLE_FK="[null]"
         GLOBAL_ORDER="FR"
   		GRANULARITY_FK="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -2320,6 +2361,14 @@
   		TITLE_FK="[null]"
         GLOBAL_ORDER="ES020101"
   		GRANULARITY_FK="4"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
     
     <TB_LIS_GEOGR_VALUES 
@@ -2331,6 +2380,14 @@
         TITLE_FK="[null]"
         GLOBAL_ORDER="ES01" 
         GRANULARITY_FK="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
     <TB_LIS_GEOGR_VALUES 
         ID="6" 
@@ -2341,6 +2398,14 @@
         TITLE_FK="[null]" 
         GLOBAL_ORDER="ES0101"
         GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
     <TB_LIS_GEOGR_VALUES 
         ID="7" 
@@ -2351,6 +2416,14 @@
         TITLE_FK="[null]" 
         GLOBAL_ORDER="ES0102"
         GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
     <TB_LIS_GEOGR_VALUES 
         ID="8" 
@@ -2361,6 +2434,14 @@
         TITLE_FK="[null]" 
         GLOBAL_ORDER="ES0103"
         GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
     <TB_LIS_GEOGR_VALUES 
         ID="9" 
@@ -2371,6 +2452,14 @@
         TITLE_FK="[null]"
         GLOBAL_ORDER="ES0104" 
         GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
 	
 	<!-- ************************************************************************************ -->
@@ -2381,6 +2470,14 @@
  		UUID="1"
  		CODE="COUNTRIES"
   		TITLE_FK="45"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
     
     <TB_LIS_GEOGR_GRANULARITIES 
@@ -2388,6 +2485,14 @@
         CODE="COMMUNITIES"
         UUID="2"
         TITLE_FK="86"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
     
     <TB_LIS_GEOGR_GRANULARITIES 
@@ -2395,6 +2500,14 @@
         CODE="PROVINCES"
         UUID="3"
         TITLE_FK="87"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
     />
 
 	<TB_LIS_GEOGR_GRANULARITIES
@@ -2402,7 +2515,29 @@
  		UUID="4"
  		CODE="MUNICIPALITIES"
   		TITLE_FK="46"
-	/>  		  
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+	/> 
+    
+    <TB_LIS_GEOGR_GRANULARITIES
+        ID="5"
+        UUID="5"
+        CODE="ISLANDS"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />  		  
 	
 	<!-- ************************************************************************************ -->
 	<!--                                 SUBJECTS				                              -->

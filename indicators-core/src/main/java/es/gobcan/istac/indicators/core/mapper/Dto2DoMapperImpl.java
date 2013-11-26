@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -27,6 +28,7 @@ import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.Indicator;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
@@ -34,6 +36,7 @@ import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
 import es.gobcan.istac.indicators.core.domain.Quantity;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.RateDerivation;
 import es.gobcan.istac.indicators.core.domain.RateDerivationRepository;
 import es.gobcan.istac.indicators.core.domain.Subject;
@@ -42,12 +45,16 @@ import es.gobcan.istac.indicators.core.dto.DataDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsService;
@@ -242,13 +249,13 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         if (source.getSubjectCode() != null) {
             // Although subject is not saved as a relation to table view, it is necessary validate it exists and same title is provided
             Subject subject = indicatorsService.retrieveSubject(ctx, source.getSubjectCode());
-            
+
             InternationalStringDto subjectTitleIntDto = new InternationalStringDto();
             LocalisedStringDto localised = new LocalisedStringDto();
             localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
             localised.setLabel(subject.getTitle());
             subjectTitleIntDto.addText(localised);
-            
+
             target.setSubjectCode(source.getSubjectCode());
             target.setSubjectTitle(internationalStringToDo(ctx, subjectTitleIntDto, target.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE));
         } else {
@@ -526,5 +533,128 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             return !newDecimalPlaces.equals(oldDecimalPlaces);
         }
         return false;
+    }
+
+    @Override
+    public QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        QuantityUnit target = new QuantityUnit();
+        if (source.getUuid() != null) {
+            target = indicatorsService.retrieveQuantityUnit(ctx, source.getUuid());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+        }
+
+        quantityUnitDtoToDo(ctx, source, target);
+        return target;
+    }
+
+    private QuantityUnit quantityUnitDtoToDo(ServiceContext ctx, QuantityUnitDto source, QuantityUnit target) throws MetamacException {
+        if (target == null) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.QUANTITY_UNIT);
+        }
+
+        target.setSymbol(source.getSymbol());
+        target.setSymbolPosition(source.getSymbolPosition());
+        target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
+
+        return target;
+    }
+
+    @Override
+    public GeographicalValue geographicalValueDtoToDo(ServiceContext ctx, GeographicalValueDto source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        GeographicalValue target = new GeographicalValue();
+        if (source.getUuid() != null) {
+            target = indicatorsSystemsService.retrieveGeographicalValue(ctx, source.getUuid());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+        }
+
+        geographicalValueDtoToDo(ctx, source, target);
+        return target;
+    }
+
+    private GeographicalValue geographicalValueDtoToDo(ServiceContext ctx, GeographicalValueDto source, GeographicalValue target) throws MetamacException {
+        if (target == null) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.GEOGRAPHICAL_VALUE);
+        }
+
+        target.setCode(source.getCode());
+        target.setLatitude(source.getLatitude());
+        target.setLongitude(source.getLongitude());
+        target.setOrder(source.getOrder());
+        target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
+
+        if (StringUtils.isNotEmpty(source.getGranularityUuid())) {
+            target.setGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGranularityUuid()));
+        } else {
+            target.setGranularity(null);
+        }
+
+        return target;
+    }
+
+    @Override
+    public GeographicalGranularity geographicalGranularityDtoToDo(ServiceContext ctx, GeographicalGranularityDto source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        GeographicalGranularity target = new GeographicalGranularity();
+        if (source.getUuid() != null) {
+            target = indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getUuid());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+        }
+
+        geographicalGranularityDtoToDo(ctx, source, target);
+        return target;
+    }
+
+    private GeographicalGranularity geographicalGranularityDtoToDo(ServiceContext ctx, GeographicalGranularityDto source, GeographicalGranularity target) throws MetamacException {
+        if (target == null) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.GEOGRAPHICAL_GRANULARITY);
+        }
+
+        target.setCode(source.getCode());
+        target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
+
+        return target;
+    }
+
+    @Override
+    public UnitMultiplier unitMultiplierDtoToDo(ServiceContext ctx, UnitMultiplierDto source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // If exists, retrieves existing entity. Otherwise, creates new entity
+        UnitMultiplier target = new UnitMultiplier();
+        if (source.getUuid() != null) {
+            target = indicatorsService.retrieveUnitMultiplier(ctx, source.getUuid());
+            OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+        }
+
+        unitMultiplierDtoToDo(ctx, source, target);
+        return target;
+    }
+
+    private UnitMultiplier unitMultiplierDtoToDo(ServiceContext ctx, UnitMultiplierDto source, UnitMultiplier target) throws MetamacException {
+        if (target == null) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.UNIT_MULTIPLIER);
+        }
+
+        target.setUnitMultiplier(source.getUnitMultiplier());
+        target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
+
+        return target;
+
     }
 }

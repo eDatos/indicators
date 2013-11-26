@@ -20,19 +20,23 @@ import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.dto.QuantityDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
 import es.gobcan.istac.indicators.core.dto.RateDerivationDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
 
 /**
  * Asserts to tests
  */
 public class IndicatorsAsserts extends MetamacAsserts {
-    
+
     public static void assertEqualsIndicatorsSystem(IndicatorsSystemDto expected, IndicatorsSystemDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
     }
@@ -42,7 +46,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getParentUuid(), actual.getParentUuid());
         assertEquals(expected.getOrderInLevel(), actual.getOrderInLevel());
     }
-    
+
     public static void assertEqualsIndicator(IndicatorDto expected, IndicatorDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
@@ -54,7 +58,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEqualsInternationalString(expected.getConceptDescription(), actual.getConceptDescription());
         assertEqualsQuantity(expected.getQuantity(), actual.getQuantity());
     }
-    
+
     public static void assertEqualsQuantity(QuantityDto expected, QuantityDto actual) {
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getUnitUuid(), actual.getUnitUuid());
@@ -72,7 +76,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getBaseLocationUuid(), actual.getBaseLocationUuid());
         assertEquals(expected.getBaseQuantityIndicatorUuid(), actual.getBaseQuantityIndicatorUuid());
     }
-    
+
     public static void assertEqualsDataSource(DataSourceDto expected, DataSourceDto actual) {
         assertEquals(expected.getDataGpeUuid(), actual.getDataGpeUuid());
         assertEquals(expected.getPxUri(), actual.getPxUri());
@@ -95,7 +99,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getPublishers().size(), actual.getPublishers().size());
         assertEquals(ServiceUtils.dtoList2DtoString(expected.getPublishers()), ServiceUtils.dtoList2DtoString(actual.getPublishers()));
     }
-    
+
     private static void assertEqualsRateDerivation(RateDerivationDto expected, RateDerivationDto actual) {
         if (expected == null && actual == null) {
             return;
@@ -112,11 +116,11 @@ public class IndicatorsAsserts extends MetamacAsserts {
     public static void assertEqualsInternationalString(InternationalStringDto expected, InternationalStringDto actual) {
         assertEqualsInternationalStringDto(expected, actual);
     }
-    
+
     public static void assertEqualsInternationalString(InternationalStringDto internationalStringDto, String locale1, String label1, String locale2, String label2) {
         assertEqualsInternationalStringDto(internationalStringDto, locale1, label1, locale2, label2);
     }
-    
+
     public static void assertEqualsDate(String expected, Date actual) {
         assertEquals(expected, (new DateTime(actual)).toString("yyyy-MM-dd HH:mm:ss"));
     }
@@ -129,37 +133,90 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getTimeGranularity(), actual.getTimeGranularity());
         assertStringCollectionEquals(expected.getTimeValues(), actual.getTimeValues());
     }
-    
+
+    public static void assertEqualsCreatedGeographicalValueDto(GeographicalValueDto expected, GeographicalValueDto actual) {
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getOrder(), actual.getOrder());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getGranularityUuid(), actual.getGranularityUuid());
+        assertEquals(expected.getLatitude(), actual.getLatitude());
+        assertEquals(expected.getLongitude(), actual.getLongitude());
+    }
+
+    public static void assertEqualsGeographicalValueDto(GeographicalValueDto expected, GeographicalValueDto actual) {
+        assertEqualsCreatedGeographicalValueDto(expected, actual);
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+    }
+
+    public static void assertEqualsCreatedQuantityUnitDto(QuantityUnitDto expected, QuantityUnitDto actual) {
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getSymbol(), actual.getSymbol());
+        assertEquals(expected.getSymbolPosition(), actual.getSymbolPosition());
+    }
+
+    public static void assertEqualsQuantityUnitDto(QuantityUnitDto expected, QuantityUnitDto actual) {
+        assertEqualsCreatedQuantityUnitDto(expected, actual);
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+    }
+
+    public static void assertEqualsCreatedUnitMultiplierDto(UnitMultiplierDto expected, UnitMultiplierDto actual) {
+        assertEquals(expected.getUnitMultiplier(), actual.getUnitMultiplier());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+    }
+
+    public static void assertEqualsUnitMultiplierDto(UnitMultiplierDto expected, UnitMultiplierDto actual) {
+        assertEqualsCreatedUnitMultiplierDto(expected, actual);
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+    }
+
+    public static void assertEqualsCreatedGeographicalGranularityDto(GeographicalGranularityDto expected, GeographicalGranularityDto actual) {
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+    }
+
+    public static void assertEqualsGeographicalGranularityDto(GeographicalGranularityDto expected, GeographicalGranularityDto actual) {
+        assertEqualsCreatedGeographicalGranularityDto(expected, actual);
+        assertEquals(expected.getUuid(), actual.getUuid());
+        assertEquals(expected.getCreatedDate(), actual.getCreatedDate());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+    }
+
     public static void assertEqualsAttributeBasic(AttributeBasicDto expected, AttributeBasicDto actual) {
         if (expected == actual) {
             return;
         }
         if (expected == null) {
-            fail("Expected is null, actual isn't:"+actual.getValue());
+            fail("Expected is null, actual isn't:" + actual.getValue());
         } else if (actual == null) {
             fail("Expected is not null, actual is");
         }
-        assertEquals(expected.getAttributeId(),actual.getAttributeId());
+        assertEquals(expected.getAttributeId(), actual.getAttributeId());
         DatasetRepositoryAsserts.assertEqualsInternationalString(expected.getValue(), actual.getValue());
     }
-    
+
     private static void assertEqualsGeographicalValuesBase(Collection<GeographicalValueBaseDto> expected, Collection<GeographicalValueBaseDto> actual) {
         if (expected == null) {
             if (actual == null) {
                 assertNull(actual);
             } else {
-                assertEquals(0,actual.size());
+                assertEquals(0, actual.size());
             }
         } else {
             assertNotNull(actual);
-            
-            Set<String> uuidsExpected =  getGeographicalValueBaseDtoUuids(expected);
-            Set<String> uuidsActual =  getGeographicalValueBaseDtoUuids(actual);
-            
+
+            Set<String> uuidsExpected = getGeographicalValueBaseDtoUuids(expected);
+            Set<String> uuidsActual = getGeographicalValueBaseDtoUuids(actual);
+
             assertStringCollectionEquals(uuidsExpected, uuidsActual);
         }
     }
-    
+
     private static Set<String> getGeographicalValueBaseDtoUuids(Collection<GeographicalValueBaseDto> collection) {
         Set<String> uuids = new HashSet<String>();
         if (collection != null) {
@@ -169,14 +226,14 @@ public class IndicatorsAsserts extends MetamacAsserts {
         }
         return uuids;
     }
-    
+
     private static void assertStringCollectionEquals(Collection<String> expected, Collection<String> actual) {
         if (expected == null) {
             assertNull(actual);
         } else {
             assertNotNull(actual);
             assertEquals(expected.size(), actual.size());
-            
+
             for (String str : expected) {
                 assertTrue(actual.contains(str));
             }
@@ -184,4 +241,3 @@ public class IndicatorsAsserts extends MetamacAsserts {
     }
 
 }
-

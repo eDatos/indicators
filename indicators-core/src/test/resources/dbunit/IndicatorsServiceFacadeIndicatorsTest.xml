@@ -3038,14 +3038,47 @@
   		SYMBOL="km"
   		TITLE_FK="33"
   		SYMBOL_POSITION="END"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
+    
 	<TB_LIS_QUANTITIES_UNITS
 		ID="2"
  		UUID="2"
   		SYMBOL="kg"
   		TITLE_FK="34"
   		SYMBOL_POSITION="START"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
+    
+    <TB_LIS_QUANTITIES_UNITS
+        ID="3"
+        UUID="3"
+        SYMBOL="m"
+        TITLE_FK="76"
+        SYMBOL_POSITION="END"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
+    />
   		  
 	<!-- ************************************************************************************ -->
 	<!--                                 GEOGRAPHICAL VALUES	                              -->
@@ -3059,6 +3092,14 @@
   		TITLE_FK="47"
         GLOBAL_ORDER="ES"
   		GRANULARITY_FK="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -3070,6 +3111,14 @@
   		TITLE_FK="48"
         GLOBAL_ORDER="ES01"
   		GRANULARITY_FK="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -3081,6 +3130,14 @@
   		TITLE_FK="[null]"
         GLOBAL_ORDER="FR"
   		GRANULARITY_FK="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_VALUES
@@ -3092,6 +3149,14 @@
   		TITLE_FK="[null]"
         GLOBAL_ORDER="ES02"
   		GRANULARITY_FK="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 	
 	<!-- ************************************************************************************ -->
@@ -3102,6 +3167,14 @@
  		UUID="1"
  		CODE="COUNTRIES"
   		TITLE_FK="45"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>
 
 	<TB_LIS_GEOGR_GRANULARITIES
@@ -3109,6 +3182,14 @@
  		UUID="2"
  		CODE="MUNICIPALITIES"
   		TITLE_FK="46"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
 	/>  		  
 	
 	<!-- ************************************************************************************ -->
@@ -3147,6 +3228,14 @@
         UNIT_MULTIPLIER="1"
         TITLE_FK="66"
         UUID="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
     
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3154,6 +3243,14 @@
         UNIT_MULTIPLIER="10"
         TITLE_FK="67"
         UUID="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
 
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3161,6 +3258,14 @@
         UNIT_MULTIPLIER="100"
         TITLE_FK="68"
         UUID="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
 
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3168,6 +3273,14 @@
         UNIT_MULTIPLIER="1000"
         TITLE_FK="69"
         UUID="4"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
 
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3175,6 +3288,14 @@
         UNIT_MULTIPLIER="10000"
         TITLE_FK="70"
         UUID="5"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
 
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3182,6 +3303,14 @@
         UNIT_MULTIPLIER="100000"
         TITLE_FK="71"
         UUID="6"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
 
     <TB_LIS_UNITS_MULTIPLIERS
@@ -3189,6 +3318,14 @@
         UNIT_MULTIPLIER="1000000"
         TITLE_FK="72"
         UUID="7"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-05-05 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-06-06 05:06:07"
+        LAST_UPDATED_TZ="Europe/London"        
     />
     
   		  		  
@@ -4401,5 +4538,18 @@
         LOCALE="es"
         VERSION="1"
         INTERNATIONAL_STRING_FK="75"
+    />
+    
+    <TB_INTERNATIONAL_STRINGS
+        ID="76"
+        VERSION="1"
+    />
+    
+    <TB_LOCALISED_STRINGS
+        ID="106"
+        LABEL="Metros"
+        LOCALE="es"
+        VERSION="1"
+        INTERNATIONAL_STRING_FK="76"
     />
 </dataset>

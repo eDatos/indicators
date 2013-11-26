@@ -295,6 +295,13 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSymbolPosition(source.getSymbolPosition());
         target.setTitle(internationalStringToDto(source.getTitle()));
 
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setCreatedBy(source.getCreatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+
+        target.setOptimisticLockingVersion(source.getVersion());
+
         return target;
     }
 
@@ -334,6 +341,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setLatitude(source.getLatitude());
         target.setLongitude(source.getLongitude());
         target.setOrder(source.getOrder());
+
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setCreatedBy(source.getCreatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+
+        target.setOptimisticLockingVersion(source.getVersion());
+
         return target;
     }
 
@@ -343,6 +358,14 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
+
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setCreatedBy(source.getCreatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+
+        target.setOptimisticLockingVersion(source.getVersion());
+
         return target;
     }
 
@@ -353,6 +376,13 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getUuid());
         target.setCode(source.getCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
+
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setCreatedBy(source.getCreatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+
+        target.setOptimisticLockingVersion(source.getVersion());
 
         return target;
     }
@@ -419,8 +449,17 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
     @Override
     public UnitMultiplierDto unitMultiplierDoToDto(UnitMultiplier source) {
         UnitMultiplierDto target = new UnitMultiplierDto();
+        target.setUuid(source.getUuid());
         target.setUnitMultiplier(source.getUnitMultiplier());
         target.setTitle(internationalStringToDto(source.getTitle()));
+
+        target.setCreatedDate(dateDoToDto(source.getCreatedDate()));
+        target.setCreatedBy(source.getCreatedBy());
+        target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
+        target.setLastUpdatedBy(source.getLastUpdatedBy());
+
+        target.setOptimisticLockingVersion(source.getVersion());
+
         return target;
     }
 
@@ -529,6 +568,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
 
         return target;
     }
+
     private RateDerivationDto rateDerivationDoToDto(RateDerivation source) {
         if (source == null) {
             return null;

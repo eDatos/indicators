@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
@@ -34,6 +37,7 @@ import es.gobcan.istac.indicators.core.domain.QuantityUnit;
 import es.gobcan.istac.indicators.core.domain.Subject;
 import es.gobcan.istac.indicators.core.domain.SubjectRepository;
 import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplierProperties;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionParameters;
@@ -50,11 +54,11 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.ServiceUtils;
  */
 @Service("indicatorsService")
 public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
-    
-    @Autowired(required=false)
+
+    @Autowired(required = false)
     private SubjectRepository subjectRepository;
 
-    private final Logger LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
+    private final Logger      LOG = LoggerFactory.getLogger(IndicatorsServiceImpl.class);
 
     public IndicatorsServiceImpl() {
     }
@@ -409,7 +413,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         }
 
         tryRefreshSubjectTitle(indicatorInProduction);
-        
+
         // Update proc status
         indicatorInProduction.setProcStatus(IndicatorProcStatusEnum.PUBLISHED);
         indicatorInProduction.setPublicationDate(new DateTime());
@@ -443,7 +447,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         publishIndicatorResult.setIndicatorVersion(indicatorInProduction);
         return publishIndicatorResult;
     }
-    
+
     private void tryRefreshSubjectTitle(IndicatorVersion indicatorVersion) {
         try {
             Subject subject = subjectRepository.retrieveSubject(indicatorVersion.getSubjectCode());
@@ -453,12 +457,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
             localised.setLocale(IndicatorsConstants.LOCALE_SPANISH);
             title.addText(localised);
             indicatorVersion.setSubjectTitle(title);
-            LOG.info("Subject title successfully refreshed for indicator: "+indicatorVersion.getUuid()+" version: "+indicatorVersion.getVersionNumber());
+            LOG.info("Subject title successfully refreshed for indicator: " + indicatorVersion.getUuid() + " version: " + indicatorVersion.getVersionNumber());
         } catch (Exception e) {
-            LOG.warn("Can not update the subject title for subject code: "+indicatorVersion.getSubjectCode()+" for indicator: "+indicatorVersion.getUuid()+" version "+indicatorVersion.getVersionNumber());
+            LOG.warn("Can not update the subject title for subject code: " + indicatorVersion.getSubjectCode() + " for indicator: " + indicatorVersion.getUuid() + " version "
+                    + indicatorVersion.getVersionNumber());
         }
     }
-    
+
     @Override
     public IndicatorVersion archiveIndicator(ServiceContext ctx, String uuid) throws MetamacException {
 
@@ -480,13 +485,13 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorInDiffusion.setArchiveDate(new DateTime());
         indicatorInDiffusion.setArchiveUser(ctx.getUserId());
         indicatorInDiffusion = getIndicatorVersionRepository().save(indicatorInDiffusion);
-        
+
         try {
             getIndicatorsDataService().deleteIndicatorVersionData(ctx, indicator.getUuid(), indicatorInDiffusion.getVersionNumber());
         } catch (MetamacException e) {
-            LOG.warn("Data could not be deleted for indicator version just archived uuid:"+indicator.getUuid()+" version:"+indicatorInDiffusion.getVersionNumber(), e);
+            LOG.warn("Data could not be deleted for indicator version just archived uuid:" + indicator.getUuid() + " version:" + indicatorInDiffusion.getVersionNumber(), e);
         }
-        
+
         return indicatorInDiffusion;
     }
 
@@ -612,31 +617,6 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         return indicatorVersion.getDataSources();
     }
 
-    @Override
-    public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
-
-        // Retrieve
-        QuantityUnit quantityUnit = getQuantityUnitRepository().retrieveQuantityUnit(uuid);
-        if (quantityUnit == null) {
-            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND, uuid);
-        }
-        return quantityUnit;
-    }
-
-    @Override
-    public List<QuantityUnit> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveQuantityUnits(null);
-
-        // Find
-        List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
-        return quantityUnits;
-    }
-
     /**
      * This operation retrieve subject from table view. Won't be accesible in public web application.
      */
@@ -681,24 +661,82 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInPublishedIndicators();
         return subjects;
     }
-    
+
     /**
      * This operation retrieves subjects from indicators table
      */
     @Override
     public List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators(ServiceContext ctx) throws MetamacException {
-        
+
         // Validation of parameters
         InvocationValidator.checkRetrieveSubjectsInLastVersionIndicators(null);
-        
+
         // Find
         List<SubjectIndicatorResult> subjects = getIndicatorVersionRepository().findSubjectsInLastVersionIndicators();
         return subjects;
     }
 
+    // --------------------------------------------------------------------------------------------
+    // QUANTITY UNITS
+    // --------------------------------------------------------------------------------------------
+
+    @Override
+    public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
+
+        // Retrieve
+        QuantityUnit quantityUnit = getQuantityUnitRepository().retrieveQuantityUnit(uuid);
+        if (quantityUnit == null) {
+            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND, uuid);
+        }
+        return quantityUnit;
+    }
+
+    @Override
+    public List<QuantityUnit> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveQuantityUnits(null);
+
+        // Find
+        List<QuantityUnit> quantityUnits = getQuantityUnitRepository().findAll();
+        return quantityUnits;
+    }
+
+    @Override
+    public QuantityUnit createQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkCreateQuantityUnit(null, quantityUnit);
+
+        // Repository operation
+        return getQuantityUnitRepository().save(quantityUnit);
+    }
+
+    @Override
+    public QuantityUnit updateQuantityUnit(ServiceContext ctx, QuantityUnit quantityUnit) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkUpdateQuantityUnit(null, quantityUnit);
+
+        // Repository operation
+        return getQuantityUnitRepository().save(quantityUnit);
+    }
+
+    @Override
+    public void deleteQuantityUnit(ServiceContext ctx, String quantityUnitUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkDeleteQuantityUnit(null, quantityUnitUuid);
+
+        // Repository operation
+        QuantityUnit quantityUnit = retrieveQuantityUnit(ctx, quantityUnitUuid);
+        getQuantityUnitRepository().delete(quantityUnit);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // UNIT MULTIPLIER
+    // --------------------------------------------------------------------------------------------
+
     @Override
     public UnitMultiplier retrieveUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
-
         // Validation of parameters
         InvocationValidator.checkRetrieveUnitMultiplier(unitMultiplierValue, null);
 
@@ -711,8 +749,21 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public List<UnitMultiplier> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
+    public UnitMultiplier retrieveUnitMultiplier(ServiceContext ctx, String unitMultiplierUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkRetrieveUnitMultiplier(unitMultiplierUuid, null);
 
+        // Retrieve
+        UnitMultiplier unitMultiplier = getUnitMultiplierRepository().retrieveUnitMultiplier(unitMultiplierUuid);
+        if (unitMultiplier == null) {
+            throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND_UUID, unitMultiplierUuid);
+        }
+        return unitMultiplier;
+
+    }
+
+    @Override
+    public List<UnitMultiplier> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkRetrieveUnitsMultipliers(null);
 
@@ -720,8 +771,63 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         List<UnitMultiplier> unitsMultipliers = getUnitMultiplierRepository().findAllOrdered();
         return unitsMultipliers;
     }
-    
-    
+
+    @Override
+    public UnitMultiplier createUnitMultiplier(ServiceContext ctx, UnitMultiplier unitMultiplier) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkCreateUnitMultiplier(null, unitMultiplier);
+        validateUnitMultiplierValueUnique(ctx, unitMultiplier);
+
+        // Repository operation
+        return getUnitMultiplierRepository().save(unitMultiplier);
+    }
+
+    @Override
+    public UnitMultiplier updateUnitMultiplier(ServiceContext ctx, UnitMultiplier unitMultiplier) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkUpdateUnitMultiplier(null, unitMultiplier);
+        validateUnitMultiplierValueUnique(ctx, unitMultiplier);
+
+        // Repository operation
+        return getUnitMultiplierRepository().save(unitMultiplier);
+    }
+
+    @Override
+    public void deleteUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkDeleteUnitMultiplier(null, unitMultiplierValue);
+
+        // Repository operation
+        UnitMultiplier unitMultiplier = retrieveUnitMultiplier(ctx, unitMultiplierValue);
+        getUnitMultiplierRepository().delete(unitMultiplier);
+
+    }
+
+    private void validateUnitMultiplierValueUnique(ServiceContext ctx, UnitMultiplier unitMultiplier) throws MetamacException {
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+
+        List<ConditionalCriteria> conditions = criteriaFor(UnitMultiplier.class).withProperty(UnitMultiplierProperties.unitMultiplier()).eq(unitMultiplier.getUnitMultiplier()).build();
+
+        if (unitMultiplier.getId() != null) {
+            conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(UnitMultiplierProperties.id(), unitMultiplier.getId())));
+        }
+
+        // Find
+        try {
+            PagedResult<UnitMultiplier> result = getUnitMultiplierRepository().findByCondition(conditions, pagingParameter);
+            if (result.getValues().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED, unitMultiplier.getUnitMultiplier());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new MetamacException(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED, unitMultiplier.getUnitMultiplier());
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // OTHER PRIVATE METHODS
+    // --------------------------------------------------------------------------------------------
+
     /**
      * Checks not exists another indicator with same code
      */
@@ -928,7 +1034,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
                     ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_PRODUCTION_VALIDATION, ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION}));
         }
     }
-    
+
     /**
      * Checks linked indicators are published:
      * a) Checks numerator and denominator are published (for indicator and all datasources)

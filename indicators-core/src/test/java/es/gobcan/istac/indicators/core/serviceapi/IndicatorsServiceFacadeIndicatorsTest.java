@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;
@@ -99,6 +100,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     // Quantity units
     private static String             QUANTITY_UNIT_1              = "1";
     private static String             QUANTITY_UNIT_2              = "2";
+    private static String             QUANTITY_UNIT_3              = "3";
+
+    // Unit multiplier
+    private static String             UNIT_MULTIPLIER_1            = "1";
 
     // Geographical values
     private static String             GEOGRAPHICAL_VALUE_1         = "1";
@@ -940,7 +945,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
 
         IndicatorDto indicatorCreated = indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
-        assertEquals("Área temática 1",indicatorCreated.getSubjectTitle().getLocalised(IndicatorsConstants.LOCALE_SPANISH).getLabel());
+        assertEquals("Área temática 1", indicatorCreated.getSubjectTitle().getLocalised(IndicatorsConstants.LOCALE_SPANISH).getLabel());
     }
 
     @Test
@@ -2437,10 +2442,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDto.getProcStatus());
         }
     }
-    
+
     @Test
     public void testArchiveIndicatorInIndicatorsSystemArchived() throws Exception {
-        
+
         String uuid = INDICATOR_12;
         String diffusionVersion = "1.000";
 
@@ -2450,9 +2455,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(null, indicatorDtoV1.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDtoV1.getProcStatus());
         }
-        
+
         indicatorsServiceFacade.archiveIndicator(getServiceContextAdministrador(), uuid);
-        
+
         // Validation
         {
             IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, diffusionVersion);
@@ -2460,7 +2465,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(diffusionVersion, indicatorDto.getArchivedVersion());
             assertEquals(IndicatorProcStatusEnum.ARCHIVED, indicatorDto.getProcStatus());
         }
-        
+
     }
 
     @Test
@@ -2545,8 +2550,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionParameters.INDICATORS_SYSTEM_PROC_STATUS_DIFFUSION_VALIDATION, ((String[]) e.getExceptionItems().get(0).getMessageParameters()[1])[3]);
         }
     }
-    
-    
 
     @Test
     public void testVersioningIndicator() throws Exception {
@@ -2850,10 +2853,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             IndicatorSummaryDto indicatorSummaryDto = indicatorsDto.get(11);
             assertEquals(INDICATOR_12, indicatorSummaryDto.getUuid());
             assertEquals("CODE-12", indicatorSummaryDto.getCode());
-            
+
             assertNull(indicatorSummaryDto.getProductionVersion());
             assertNotNull(indicatorSummaryDto.getDiffusionVersion());
-            
+
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorSummaryDto.getDiffusionVersion().getProcStatus());
             assertEquals("1.000", indicatorSummaryDto.getDiffusionVersion().getVersionNumber());
         }
@@ -2908,7 +2911,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(INDICATOR_11, indicatorsDto.get(6).getUuid());
             assertNull(indicatorsDto.get(6).getDiffusionVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(6).getProductionVersion().getProcStatus());
-            
+
             assertEquals(INDICATOR_12, indicatorsDto.get(7).getUuid());
             assertNull(indicatorsDto.get(7).getProductionVersion());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(7).getDiffusionVersion().getProcStatus());
@@ -3101,7 +3104,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
                 assertEquals(INDICATOR_11, indicatorsDto.get(2).getUuid());
                 assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorsDto.get(2).getProductionVersion().getProcStatus());
-                
+
                 assertEquals(INDICATOR_12, indicatorsDto.get(3).getUuid());
                 assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(3).getDiffusionVersion().getProcStatus());
             }
@@ -3183,7 +3186,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(INDICATOR_6, indicatorsDto.get(2).getUuid());
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
         assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorsDto.get(2).getProductionVersion().getProcStatus());
-        
+
         assertEquals(INDICATOR_12, indicatorsDto.get(3).getUuid());
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(3).getDiffusionVersion().getProcStatus());
         assertNull(indicatorsDto.get(3).getProductionVersion());
@@ -3208,7 +3211,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(INDICATOR_6, indicatorsDto.get(1).getUuid());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(1).getDiffusionVersion().getProcStatus());
-            
+
             assertEquals(INDICATOR_12, indicatorsDto.get(2).getUuid());
             assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorsDto.get(2).getDiffusionVersion().getProcStatus());
         }
@@ -4175,7 +4178,6 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Test
     public void testRetrieveQuantityUnit() throws Exception {
-
         String uuid = QUANTITY_UNIT_1;
         QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
 
@@ -4184,12 +4186,10 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("km", quantityUnitDto.getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnitDto.getSymbolPosition());
         IndicatorsAsserts.assertEqualsInternationalString(quantityUnitDto.getTitle(), "es", "Kilómetros", "en", "Kilometers");
-
     }
 
     @Test
     public void testRetrieveQuantityUnitErrorParameterRequired() throws Exception {
-
         String uuid = null;
 
         try {
@@ -4223,20 +4223,208 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     public void testRetrieveQuantityUnits() throws Exception {
 
         List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextAdministrador());
-        assertEquals(2, quantityUnits.size());
+        assertEquals(3, quantityUnits.size());
 
-        assertEquals(QUANTITY_UNIT_1, quantityUnits.get(0).getUuid());
-        assertEquals("km", quantityUnits.get(0).getSymbol());
+        assertEquals(QUANTITY_UNIT_3, quantityUnits.get(0).getUuid());
+        assertEquals("m", quantityUnits.get(0).getSymbol());
         assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnits.get(0).getSymbolPosition());
 
-        assertEquals(QUANTITY_UNIT_2, quantityUnits.get(1).getUuid());
-        assertEquals("kg", quantityUnits.get(1).getSymbol());
-        assertEquals(QuantityUnitSymbolPositionEnum.START, quantityUnits.get(1).getSymbolPosition());
+        assertEquals(QUANTITY_UNIT_1, quantityUnits.get(1).getUuid());
+        assertEquals("km", quantityUnits.get(1).getSymbol());
+        assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnits.get(1).getSymbolPosition());
+
+        assertEquals(QUANTITY_UNIT_2, quantityUnits.get(2).getUuid());
+        assertEquals("kg", quantityUnits.get(2).getSymbol());
+        assertEquals(QuantityUnitSymbolPositionEnum.START, quantityUnits.get(2).getSymbolPosition());
+    }
+
+    @Test
+    public void testCreateQuantityUnit() throws Exception {
+        QuantityUnitDto quantityUnitDto = IndicatorsMocks.mockQuantityUnit("es", "personas");
+
+        // Create
+        QuantityUnitDto quantityUnitDtoCreated = indicatorsServiceFacade.createQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
+
+        // Validate
+        assertNotNull(quantityUnitDtoCreated);
+        assertNotNull(quantityUnitDtoCreated.getUuid());
+        assertNotNull(quantityUnitDtoCreated.getOptimisticLockingVersion());
+
+        IndicatorsAsserts.assertEqualsCreatedQuantityUnitDto(quantityUnitDto, quantityUnitDtoCreated);
+
+        // Audit validations
+        assertNotNull(quantityUnitDtoCreated.getCreatedBy());
+        assertNotNull(quantityUnitDtoCreated.getCreatedDate());
+        assertNotNull(quantityUnitDtoCreated.getLastUpdated());
+        assertNotNull(quantityUnitDtoCreated.getLastUpdatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), quantityUnitDtoCreated.getCreatedBy());
+        assertTrue(DateUtils.isSameDay(new Date(), quantityUnitDtoCreated.getCreatedDate()));
+        assertTrue(DateUtils.isSameDay(new Date(), quantityUnitDtoCreated.getLastUpdated()));
+        assertEquals(getServiceContextAdministrador().getUserId(), quantityUnitDtoCreated.getLastUpdatedBy());
+    }
+
+    @Test
+    public void testCreateQuantityUnitErrorQuantityUnitRequired() throws Exception {
+        try {
+            indicatorsServiceFacade.createQuantityUnit(getServiceContextAdministrador(), null);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.QUANTITY_UNIT, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateQuantityUnitErrorTitleRequired() throws Exception {
+        QuantityUnitDto quantityUnitDto = IndicatorsMocks.mockQuantityUnit(null, null);
+        try {
+            indicatorsServiceFacade.createQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
+            fail("metadata required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.QUANTITY_UNIT_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateQuantityUnitErrorTitleRequiredEmpty() throws Exception {
+        QuantityUnitDto quantityUnitDto = IndicatorsMocks.mockQuantityUnit("es", StringUtils.EMPTY);
+        try {
+            indicatorsServiceFacade.createQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
+            fail("metadata required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.QUANTITY_UNIT_TITLE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateQuantityUnit() throws Exception {
+        String uuid = QUANTITY_UNIT_1;
+
+        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+
+        quantityUnitDto.setTitle(IndicatorsMocks.mockInternationalString());
+        quantityUnitDto.setSymbol(IndicatorsMocks.mockString(3));
+        quantityUnitDto.setSymbolPosition(QuantityUnitSymbolPositionEnum.START);
+
+        // Update
+        QuantityUnitDto quantityUnitDtoUpdated = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
+
+        // Validations
+        IndicatorsAsserts.assertEqualsQuantityUnitDto(quantityUnitDto, quantityUnitDtoUpdated);
+        assertTrue(quantityUnitDtoUpdated.getLastUpdated().after(quantityUnitDtoUpdated.getCreatedDate()));
+        assertTrue(quantityUnitDtoUpdated.getLastUpdated().after(quantityUnitDto.getLastUpdated()));
+    }
+
+    @Test
+    public void testUpdateQuantityUnitNotExists() throws Exception {
+        QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), QUANTITY_UNIT_1);
+        quantityUnitDto.setUuid(NOT_EXISTS);
+        try {
+            indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDto);
+            fail("quantity unit not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateQuantityUnitErrorOptimisticLocking() throws Exception {
+
+        String uuid = QUANTITY_UNIT_1;
+
+        QuantityUnitDto quantityUnitDtoSession1 = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), quantityUnitDtoSession1.getOptimisticLockingVersion());
+
+        QuantityUnitDto quantityUnitDtoSession2 = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), quantityUnitDtoSession2.getOptimisticLockingVersion());
+
+        // Update by session 1
+        quantityUnitDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        QuantityUnitDto quantityUnitDtoSession1AfterUpdate = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDtoSession1);
+        IndicatorsAsserts.assertEqualsQuantityUnitDto(quantityUnitDtoSession1, quantityUnitDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(2), quantityUnitDtoSession1AfterUpdate.getOptimisticLockingVersion());
+
+        // Fails when is updated by session 2
+        try {
+            indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDtoSession2);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }
+
+        // Session 1 can modify because has last version
+        quantityUnitDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        QuantityUnitDto quantityUnitDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(3), quantityUnitDtoSession1AfterUpdate2.getOptimisticLockingVersion());
+        IndicatorsAsserts.assertEqualsQuantityUnitDto(quantityUnitDtoSession1AfterUpdate, quantityUnitDtoSession1AfterUpdate2);
+    }
+
+    @Test
+    public void testDeleteQuantityUnit() throws Exception {
+        String uuid = QUANTITY_UNIT_3;
+
+        // Delete
+        indicatorsServiceFacade.deleteQuantityUnit(getServiceContextAdministrador(), uuid);
+
+        // Validation
+        try {
+            indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
+            fail("Quantity unit deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testDeleteQuantityUnitNotExists() throws Exception {
+        String uuid = NOT_EXISTS;
+
+        // Delete
+        try {
+            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextAdministrador(), uuid);
+            fail("Quantity unit not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.QUANTITY_UNIT_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testDeleteQuantityUnitBeingUsed() throws Exception {
+        String uuid = QUANTITY_UNIT_1;
+
+        // Delete
+        try {
+            indicatorsServiceFacade.deleteQuantityUnit(getServiceContextAdministrador(), uuid);
+            fail("Quantity unit being used");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.QUANTITY_UNIT_CAN_NOT_BE_REMOVED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(uuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Test
     public void testRetrieveSubject() throws Exception {
-
         String code = SUBJECT_1;
         SubjectDto subjectDto = indicatorsServiceFacade.retrieveSubject(getServiceContextAdministrador(), code);
 
@@ -4308,6 +4496,17 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testRetrieveUnitMultiplier() throws Exception {
+        String uuid = UNIT_MULTIPLIER_1;
+        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+
+        assertNotNull(unitMultiplierDto);
+        assertEquals(uuid, unitMultiplierDto.getUuid());
+        assertEquals(Integer.valueOf(1), unitMultiplierDto.getUnitMultiplier());
+        IndicatorsAsserts.assertEqualsInternationalString(unitMultiplierDto.getTitle(), "es", "Unidades", null, null);
+    }
+
+    @Test
     public void testRetrieveUnitsMultipliers() throws Exception {
 
         List<UnitMultiplierDto> unitsMultipliers = indicatorsServiceFacade.retrieveUnitsMultipliers(getServiceContextAdministrador());
@@ -4333,6 +4532,191 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         assertEquals(Integer.valueOf(1000000), unitsMultipliers.get(6).getUnitMultiplier());
         IndicatorsAsserts.assertEqualsInternationalString(unitsMultipliers.get(6).getTitle(), "es", "Millones", null, null);
+    }
+
+    @Test
+    public void testCreateUnitMultiplier() throws Exception {
+        UnitMultiplierDto unitMultiplierDto = IndicatorsMocks.mockUnitMultiplier(2);
+
+        // Create
+        UnitMultiplierDto unitMultiplierDtoCreated = indicatorsServiceFacade.createUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+
+        // Validate
+        assertNotNull(unitMultiplierDtoCreated);
+        assertNotNull(unitMultiplierDtoCreated.getUuid());
+        assertNotNull(unitMultiplierDtoCreated.getOptimisticLockingVersion());
+
+        IndicatorsAsserts.assertEqualsCreatedUnitMultiplierDto(unitMultiplierDto, unitMultiplierDtoCreated);
+
+        // Audit validations
+        assertNotNull(unitMultiplierDtoCreated.getCreatedBy());
+        assertNotNull(unitMultiplierDtoCreated.getCreatedDate());
+        assertNotNull(unitMultiplierDtoCreated.getLastUpdated());
+        assertNotNull(unitMultiplierDtoCreated.getLastUpdatedBy());
+        assertEquals(getServiceContextAdministrador().getUserId(), unitMultiplierDtoCreated.getCreatedBy());
+        assertTrue(DateUtils.isSameDay(new Date(), unitMultiplierDtoCreated.getCreatedDate()));
+        assertTrue(DateUtils.isSameDay(new Date(), unitMultiplierDtoCreated.getLastUpdated()));
+        assertEquals(getServiceContextAdministrador().getUserId(), unitMultiplierDtoCreated.getLastUpdatedBy());
+    }
+
+    @Test
+    public void testCreateUnitMultiplierErrorUnitMultiplierRequired() throws Exception {
+        try {
+            indicatorsServiceFacade.createUnitMultiplier(getServiceContextAdministrador(), null);
+            fail("parameter required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.PARAMETER_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.UNIT_MULTIPLIER, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateUnitMultiplierErrorValueRequired() throws Exception {
+        UnitMultiplierDto unitMultiplierDto = IndicatorsMocks.mockUnitMultiplier(null);
+        try {
+            indicatorsServiceFacade.createUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+            fail("metadata required");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.UNIT_MULTIPLIER_VALUE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateUnitMultiplierErrorValueDuplicated() throws Exception {
+        Integer value = 1;
+        UnitMultiplierDto unitMultiplierDto = IndicatorsMocks.mockUnitMultiplier(value);
+        try {
+            indicatorsServiceFacade.createUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+            fail("value duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(value, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateUnitMultiplier() throws Exception {
+        String uuid = UNIT_MULTIPLIER_1;
+
+        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+
+        unitMultiplierDto.setTitle(IndicatorsMocks.mockInternationalString());
+        unitMultiplierDto.setUnitMultiplier(2);
+
+        // Update
+        UnitMultiplierDto unitMultiplierDtoUpdated = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+
+        // Validations
+        IndicatorsAsserts.assertEqualsUnitMultiplierDto(unitMultiplierDto, unitMultiplierDtoUpdated);
+        assertTrue(unitMultiplierDtoUpdated.getLastUpdated().after(unitMultiplierDtoUpdated.getCreatedDate()));
+        assertTrue(unitMultiplierDtoUpdated.getLastUpdated().after(unitMultiplierDto.getLastUpdated()));
+    }
+
+    @Test
+    public void testUpdateUnitMultiplierNotExists() throws Exception {
+        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        unitMultiplierDto.setUuid(NOT_EXISTS);
+        try {
+            indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+            fail("unit multiplier not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND_UUID.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(NOT_EXISTS, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateUnitMultiplierValueDuplicated() throws Exception {
+        Integer value = 10;
+        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        unitMultiplierDto.setUnitMultiplier(value);
+        try {
+            indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
+            fail("unit multiplier value duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(value, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateUnitMultiplierErrorOptimisticLocking() throws Exception {
+
+        String uuid = UNIT_MULTIPLIER_1;
+
+        UnitMultiplierDto unitMultiplierDtoSession1 = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), unitMultiplierDtoSession1.getOptimisticLockingVersion());
+
+        UnitMultiplierDto unitMultiplierDtoSession2 = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
+        assertEquals(Long.valueOf(1), unitMultiplierDtoSession2.getOptimisticLockingVersion());
+
+        // Update by session 1
+        unitMultiplierDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        UnitMultiplierDto unitMultiplierDtoSession1AfterUpdate = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDtoSession1);
+        IndicatorsAsserts.assertEqualsUnitMultiplierDto(unitMultiplierDtoSession1, unitMultiplierDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(2), unitMultiplierDtoSession1AfterUpdate.getOptimisticLockingVersion());
+
+        // Fails when is updated by session 2
+        try {
+            indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDtoSession2);
+            fail("Optimistic locking");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.OPTIMISTIC_LOCKING.getCode(), e.getExceptionItems().get(0).getCode());
+            assertNull(e.getExceptionItems().get(0).getMessageParameters());
+        }
+
+        // Session 1 can modify because has last version
+        unitMultiplierDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        UnitMultiplierDto unitMultiplierDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDtoSession1AfterUpdate);
+        assertEquals(Long.valueOf(3), unitMultiplierDtoSession1AfterUpdate2.getOptimisticLockingVersion());
+        IndicatorsAsserts.assertEqualsUnitMultiplierDto(unitMultiplierDtoSession1AfterUpdate, unitMultiplierDtoSession1AfterUpdate2);
+    }
+
+    @Test
+    public void testDeleteUnitMultiplier() throws Exception {
+        Integer unitMultiplierValue = 1;
+
+        // Delete
+        indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+
+        // Validation
+        try {
+            indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+            fail("Unit multiplier deleted");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(unitMultiplierValue, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testDeleteUnitMultiplierNotExists() throws Exception {
+        Integer unitMultiplierValue = 2;
+
+        // Delete
+        try {
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+            fail("Unit multiplier not exists");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(unitMultiplierValue, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
     }
 
     @Override

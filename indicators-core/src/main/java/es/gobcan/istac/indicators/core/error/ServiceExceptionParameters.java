@@ -65,7 +65,6 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_QUANTITY_TYPE                                                       = "indicator.quantity.type";
     public static final String INDICATOR_QUANTITY_UNIT_UUID                                                  = "indicator.quantity.unit_uuid";
     public static final String INDICATOR_QUANTITY_UNIT_MULTIPLIER                                            = "indicator.quantity.unit_multiplier";
-    public static final String UNIT_MULTIPLIER                                                               = "unitMultiplier";
     public static final String INDICATOR_QUANTITY_DECIMAL_PLACES                                             = "indicator.quantity.decimal_places";
     public static final String INDICATOR_QUANTITY_IS_PERCENTAGE                                              = "indicator.quantity.is_percentage";
     public static final String INDICATOR_QUANTITY_PERCENTAGE_OF                                              = "indicator.quantity.percentage_of";
@@ -182,7 +181,24 @@ public class ServiceExceptionParameters {
     public static final String DATA_SOURCE_INTERPERIOD_PERCENTAGE_RATE_QUANTITY_DENOMINATOR_INDICATOR_UUID   = "data_source.interperiod_percentage_rate.quantity.denominator_indicator_uuid";
 
     // Granularities and values
+    public static final String GEOGRAPHICAL_VALUE                                                            = "geographical_value";
+    public static final String GEOGRAPHICAL_VALUE_UUID                                                       = "geographical_value_uuid";
+    public static final String GEOGRAPHICAL_VALUE_CODE                                                       = "geographical_value_code";
+    public static final String GEOGRAPHICAL_VALUE_ORDER                                                      = "geographical_value_order";
+    public static final String GEOGRAPHICAL_VALUE_GRANULARITY                                                = "geographical_value_granularity";
+
+    public static final String GEOGRAPHICAL_GRANULARITY                                                      = "geographical_granularity";
     public static final String GEOGRAPHICAL_GRANULARITY_UUID                                                 = "geographical_granularity.uuid";
+    public static final String GEOGRAPHICAL_GRANULARITY_CODE                                                 = "geographical_granularity.code";
+
+    public static final String UNIT_MULTIPLIER                                                               = "unitMultiplier";
+    public static final String UNIT_MULTIPLIER_VALUE                                                         = "unitMultiplier.value";
+    public static final String UNIT_MULTIPLIER_UUID                                                          = "unitMultiplier.uuid";
+
+    public static final String QUANTITY_UNIT                                                                 = "quantityUnit";
+    public static final String QUANTITY_UNIT_UUID                                                            = "quantityUnit.uuid";
+    public static final String QUANTITY_UNIT_TITLE                                                           = "quantityUnit.title";
+
     public static final String TIME_VALUE                                                                    = "time_value";
     public static final String TIME_GRANULARITY                                                              = "time_granularity";
     public static final String MEASURE_VALUE                                                                 = "measure_value";
@@ -195,4 +211,5 @@ public class ServiceExceptionParameters {
     public static final String MEASURE_VALUES                                                                = "measure_values";
     public static final String NUM_RESULTS                                                                   = "num_results";
     public static final String DSPL_DATASET_TITLE                                                            = "dataset_title";
+
 }

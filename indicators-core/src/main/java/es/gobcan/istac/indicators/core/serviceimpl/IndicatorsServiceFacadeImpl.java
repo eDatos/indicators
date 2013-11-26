@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -60,6 +62,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
+import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.mapper.Do2DtoMapper;
 import es.gobcan.istac.indicators.core.mapper.Dto2DoMapper;
 import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
@@ -572,68 +575,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public GeographicalValueDto retrieveGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValue(ctx, uuid);
-
-        // Transform
-        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-        return geographicalValueDto;
-    }
-
-    @Override
-    public GeographicalValueDto retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, code);
-
-        // Transform
-        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
-        return geographicalValueDto;
-    }
-
-    @Override
-    public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Transform
-        if (metamacCriteria == null) {
-            metamacCriteria = new MetamacCriteria();
-        }
-        if (CollectionUtils.isEmpty(metamacCriteria.getOrdersBy())) {
-            // Default order
-            // Granularity
-            MetamacCriteriaOrder orderGranularity = new MetamacCriteriaOrder();
-            orderGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.GEOGRAPHICAL_GRANULARITY_UUID.name());
-            orderGranularity.setType(OrderTypeEnum.ASC);
-            metamacCriteria.getOrdersBy().add(orderGranularity);
-            // Order in granularity
-            MetamacCriteriaOrder orderOrderInGranularity = new MetamacCriteriaOrder();
-            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
-            orderOrderInGranularity.setType(OrderTypeEnum.ASC);
-            metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
-        }
-        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
-
-        // Find
-        PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
-
-        // Transform
-        MetamacCriteriaResult<GeographicalValueDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result,
-                sculptorCriteria.getPageSize());
-        return metamacCriteriaResult;
-    }
-
-    @Override
     public List<GeographicalValueDto> retrieveGeographicalValuesByGranularityInIndicator(ServiceContext ctx, String indicatorUuid, String indicatorVersionNumber, String granularityUuid)
             throws MetamacException {
 
@@ -698,52 +639,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
             geographicalValueDtos.add(do2DtoMapper.geographicalValueDoToDto(geoValue));
         }
         return geographicalValueDtos;
-    }
-
-    @Override
-    public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularity(ctx, uuid);
-
-        // Transform
-        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-        return geographicalGranularityDto;
-    }
-
-    @Override
-    public GeographicalGranularityDto retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularityByCode(ctx, code);
-
-        // Transform
-        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
-        return geographicalGranularityDto;
-    }
-
-    @Override
-    public List<GeographicalGranularityDto> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        List<GeographicalGranularity> geographicalGranularitys = getIndicatorsSystemsService().retrieveGeographicalGranularities(ctx);
-
-        // Transform
-        List<GeographicalGranularityDto> geographicalGranularitysDto = new ArrayList<GeographicalGranularityDto>();
-        for (GeographicalGranularity geographicalGranularity : geographicalGranularitys) {
-            geographicalGranularitysDto.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
-        }
-
-        return geographicalGranularitysDto;
     }
 
     @Override
@@ -1227,38 +1122,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve
-        QuantityUnit quantityUnit = getIndicatorsService().retrieveQuantityUnit(ctx, uuid);
-
-        // Transform
-        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
-        return quantityUnitDto;
-    }
-
-    @Override
-    public List<QuantityUnitDto> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
-
-        // Security
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-
-        // Retrieve quantityUnits
-        List<QuantityUnit> quantityUnits = getIndicatorsService().retrieveQuantityUnits(ctx);
-
-        // Transform
-        List<QuantityUnitDto> quantityUnitsDto = new ArrayList<QuantityUnitDto>();
-        for (QuantityUnit quantityUnit : quantityUnits) {
-            quantityUnitsDto.add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
-        }
-
-        return quantityUnitsDto;
-    }
-
-    @Override
     public SubjectDto retrieveSubject(ServiceContext ctx, String code) throws MetamacException {
 
         // Security
@@ -1386,10 +1249,10 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     public void updateIndicatorsData(ServiceContext ctx) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
-        
+
         getIndicatorsDataService().updateIndicatorsData(ctx);
     }
-    
+
     @Override
     public void populateIndicatorData(ServiceContext ctx, String indicatorUuid) throws MetamacException {
 
@@ -1438,17 +1301,320 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
-            throws MetamacException {
+    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid,
+            List<ConditionDimensionDto> conditions) throws MetamacException {
 
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
         // Retrieve
-        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstanceUuid, conditions);
+        Map<String, ObservationExtendedDto> observations = getIndicatorsDataService().findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ctx, indicatorInstanceUuid,
+                conditions);
 
         return observations;
     }
+
+    // -------------------------------------------------------------------------------------------
+    // GEOGRAPHICAL VALUES
+    // -------------------------------------------------------------------------------------------
+
+    @Override
+    public GeographicalValueDto retrieveGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValue(ctx, uuid);
+
+        // Transform
+        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
+        return geographicalValueDto;
+    }
+
+    @Override
+    public GeographicalValueDto retrieveGeographicalValueByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalValue geographicalValue = getIndicatorsSystemsService().retrieveGeographicalValueByCode(ctx, code);
+
+        // Transform
+        GeographicalValueDto geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
+        return geographicalValueDto;
+    }
+
+    @Override
+    public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Transform
+        if (metamacCriteria == null) {
+            metamacCriteria = new MetamacCriteria();
+        }
+        if (CollectionUtils.isEmpty(metamacCriteria.getOrdersBy())) {
+            // Default order
+            // Granularity
+            MetamacCriteriaOrder orderGranularity = new MetamacCriteriaOrder();
+            orderGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.GEOGRAPHICAL_GRANULARITY_UUID.name());
+            orderGranularity.setType(OrderTypeEnum.ASC);
+            metamacCriteria.getOrdersBy().add(orderGranularity);
+            // Order in granularity
+            MetamacCriteriaOrder orderOrderInGranularity = new MetamacCriteriaOrder();
+            orderOrderInGranularity.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
+            orderOrderInGranularity.setType(OrderTypeEnum.ASC);
+            metamacCriteria.getOrdersBy().add(orderOrderInGranularity);
+        }
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
+
+        // Find
+        PagedResult<GeographicalValue> result = getIndicatorsSystemsService().findGeographicalValues(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<GeographicalValueDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalValue(result,
+                sculptorCriteria.getPageSize());
+        return metamacCriteriaResult;
+    }
+
+    @Override
+    public GeographicalValueDto createGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
+
+        // Service call
+        geographicalValue = getIndicatorsSystemsService().createGeographicalValue(ctx, geographicalValue);
+
+        // Transform to Dto
+        geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
+
+        // Return
+        return geographicalValueDto;
+    }
+
+    @Override
+    public GeographicalValueDto updateGeographicalValue(ServiceContext ctx, GeographicalValueDto geographicalValueDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        GeographicalValue geographicalValue = dto2DoMapper.geographicalValueDtoToDo(ctx, geographicalValueDto);
+
+        // Service call
+        geographicalValue = getIndicatorsSystemsService().updateGeographicalValue(ctx, geographicalValue);
+
+        // Transform to Dto
+        geographicalValueDto = do2DtoMapper.geographicalValueDoToDto(geographicalValue);
+
+        // Return
+        return geographicalValueDto;
+    }
+
+    @Override
+    public void deleteGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Service call
+        try {
+            getIndicatorsSystemsService().deleteGeographicalValue(ctx, uuid);
+        } catch (PersistenceException e) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED, uuid);
+        }
+
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // GEOGRAPHICAL GRANULARITIES
+    // -------------------------------------------------------------------------------------------
+
+    @Override
+    public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularity(ctx, uuid);
+
+        // Transform
+        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
+        return geographicalGranularityDto;
+    }
+
+    @Override
+    public GeographicalGranularityDto retrieveGeographicalGranularityByCode(ServiceContext ctx, String code) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        GeographicalGranularity geographicalGranularity = getIndicatorsSystemsService().retrieveGeographicalGranularityByCode(ctx, code);
+
+        // Transform
+        GeographicalGranularityDto geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
+        return geographicalGranularityDto;
+    }
+
+    @Override
+    public List<GeographicalGranularityDto> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
+
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        List<GeographicalGranularity> geographicalGranularitys = getIndicatorsSystemsService().retrieveGeographicalGranularities(ctx);
+
+        // Transform
+        List<GeographicalGranularityDto> geographicalGranularitysDto = new ArrayList<GeographicalGranularityDto>();
+        for (GeographicalGranularity geographicalGranularity : geographicalGranularitys) {
+            geographicalGranularitysDto.add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
+        }
+
+        return geographicalGranularitysDto;
+    }
+
+    @Override
+    public GeographicalGranularityDto createGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
+
+        // Service call
+        geographicalGranularity = getIndicatorsSystemsService().createGeographicalGranularity(ctx, geographicalGranularity);
+
+        // Transform to Dto
+        geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
+
+        // Return
+        return geographicalGranularityDto;
+    }
+
+    @Override
+    public GeographicalGranularityDto updateGeographicalGranularity(ServiceContext ctx, GeographicalGranularityDto geographicalGranularityDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        GeographicalGranularity geographicalGranularity = dto2DoMapper.geographicalGranularityDtoToDo(ctx, geographicalGranularityDto);
+
+        // Service call
+        geographicalGranularity = getIndicatorsSystemsService().updateGeographicalGranularity(ctx, geographicalGranularity);
+
+        // Transform to Dto
+        geographicalGranularityDto = do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity);
+
+        // Return
+        return geographicalGranularityDto;
+    }
+
+    @Override
+    public void deleteGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Service call
+        try {
+            getIndicatorsSystemsService().deleteGeographicalGranularity(ctx, uuid);
+        } catch (PersistenceException e) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED, uuid);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // QUANTITY UNITS
+    // -------------------------------------------------------------------------------------------
+
+    @Override
+    public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        QuantityUnit quantityUnit = getIndicatorsService().retrieveQuantityUnit(ctx, uuid);
+
+        // Transform
+        QuantityUnitDto quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
+        return quantityUnitDto;
+    }
+
+    @Override
+    public List<QuantityUnitDto> retrieveQuantityUnits(ServiceContext ctx) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve quantityUnits
+        List<QuantityUnit> quantityUnits = getIndicatorsService().retrieveQuantityUnits(ctx);
+
+        // Transform
+        List<QuantityUnitDto> quantityUnitsDto = new ArrayList<QuantityUnitDto>();
+        for (QuantityUnit quantityUnit : quantityUnits) {
+            quantityUnitsDto.add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
+        }
+
+        return quantityUnitsDto;
+    }
+
+    @Override
+    public QuantityUnitDto createQuantityUnit(ServiceContext ctx, QuantityUnitDto quantityUnitDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        QuantityUnit quantityUnit = dto2DoMapper.quantityUnitDtoToDo(ctx, quantityUnitDto);
+
+        // Service call
+        quantityUnit = getIndicatorsService().createQuantityUnit(ctx, quantityUnit);
+
+        // Transform to Dto
+        quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
+
+        // Return
+        return quantityUnitDto;
+    }
+
+    @Override
+    public QuantityUnitDto updateQuantityUnit(ServiceContext ctx, QuantityUnitDto quantityUnitDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        QuantityUnit quantityUnit = dto2DoMapper.quantityUnitDtoToDo(ctx, quantityUnitDto);
+
+        // Service call
+        quantityUnit = getIndicatorsService().updateQuantityUnit(ctx, quantityUnit);
+
+        // Transform to Dto
+        quantityUnitDto = do2DtoMapper.quantityUnitDoToDto(quantityUnit);
+
+        // Return
+        return quantityUnitDto;
+    }
+
+    @Override
+    public void deleteQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Service call
+        try {
+            getIndicatorsService().deleteQuantityUnit(ctx, uuid);
+        } catch (PersistenceException e) {
+            throw new MetamacException(ServiceExceptionType.QUANTITY_UNIT_CAN_NOT_BE_REMOVED, uuid);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // UNIT MULTIPLIERS
+    // -------------------------------------------------------------------------------------------
 
     @Override
     public List<UnitMultiplierDto> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {
@@ -1467,6 +1633,81 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
         return unitsMultipliersDto;
     }
+
+    @Override
+    public UnitMultiplierDto retrieveUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        UnitMultiplier unitMultiplier = getIndicatorsService().retrieveUnitMultiplier(ctx, unitMultiplierValue);
+
+        // Transform
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
+        return unitMultiplierDto;
+    }
+
+    @Override
+    public UnitMultiplierDto retrieveUnitMultiplier(ServiceContext ctx, String unitMultiplierUuid) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Retrieve
+        UnitMultiplier unitMultiplier = getIndicatorsService().retrieveUnitMultiplier(ctx, unitMultiplierUuid);
+
+        // Transform
+        UnitMultiplierDto unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
+        return unitMultiplierDto;
+    }
+
+    @Override
+    public UnitMultiplierDto createUnitMultiplier(ServiceContext ctx, UnitMultiplierDto unitMultiplierDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        UnitMultiplier unitMultiplier = dto2DoMapper.unitMultiplierDtoToDo(ctx, unitMultiplierDto);
+
+        // Service call
+        unitMultiplier = getIndicatorsService().createUnitMultiplier(ctx, unitMultiplier);
+
+        // Transform to Dto
+        unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
+
+        // Return
+        return unitMultiplierDto;
+    }
+
+    @Override
+    public UnitMultiplierDto updateUnitMultiplier(ServiceContext ctx, UnitMultiplierDto unitMultiplierDto) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Transform to entity
+        UnitMultiplier unitMultiplier = dto2DoMapper.unitMultiplierDtoToDo(ctx, unitMultiplierDto);
+
+        // Service call
+        unitMultiplier = getIndicatorsService().updateUnitMultiplier(ctx, unitMultiplier);
+
+        // Transform to Dto
+        unitMultiplierDto = do2DtoMapper.unitMultiplierDoToDto(unitMultiplier);
+
+        // Return
+        return unitMultiplierDto;
+    }
+
+    @Override
+    public void deleteUnitMultiplier(ServiceContext ctx, Integer unitMultiplierId) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
+
+        // Service call
+        getIndicatorsService().deleteUnitMultiplier(ctx, unitMultiplierId);
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // OTHER PRIVATE METHODS
+    // -------------------------------------------------------------------------------------------
 
     /**
      * Checks user has access to indicators system by code

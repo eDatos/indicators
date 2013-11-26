@@ -1,6 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
-import java.util.*;
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -15,13 +21,16 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Dimension;
 import es.gobcan.istac.indicators.core.domain.ElementLevel;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularityProperties;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.domain.GeographicalValueProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorInstanceProperties;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystem;
@@ -53,6 +62,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     public IndicatorsSystemsServiceImpl() {
     }
+
+    // --------------------------------------------------------------------------------------------
+    // INDICATOR SYSTEM
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public IndicatorsSystemVersion createIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
@@ -461,6 +474,60 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     }
 
     @Override
+    public IndicatorsSystemVersion retrieveIndicatorsSystemByDimension(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemByDimension(ctx, uuid, null);
+
+        // Retrieve indicators system version
+        Dimension dimension = retrieveDimension(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
+        return indicatorsSystemVersion;
+    }
+
+    @Override
+    public IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkRetrieveIndicatorsSystemByIndicatorInstance(ctx, uuid, null);
+
+        // Retrieve indicators system version
+        IndicatorInstance indicatorInstance = retrieveIndicatorInstance(ctx, uuid);
+        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
+        return indicatorsSystemVersion;
+    }
+
+    @Override
+    public List<IndicatorsSystemHistory> findIndicatorsSystemHistory(ServiceContext ctx, String uuid, int maxResults) throws MetamacException {
+
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystemHistory(uuid, maxResults, null);
+
+        List<IndicatorsSystemHistory> indicatorsSystemHistory = getIndicatorsSystemHistoryRepository().findIndicatorsSystemHistory(uuid, maxResults);
+
+        return indicatorsSystemHistory;
+    }
+
+    @Override
+    public PagedResult<IndicatorsSystemHistory> findIndicatorsSystemsHistory(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkFindIndicatorsSystemsHistory(conditions, pagingParameter, null);
+
+        // Retrieve last versions
+        if (conditions == null) {
+            conditions = new ArrayList<ConditionalCriteria>();
+        }
+
+        // Find
+        PagedResult<IndicatorsSystemHistory> indicatorsSystemsHistories = getIndicatorsSystemHistoryRepository().findByCondition(conditions, pagingParameter);
+        return indicatorsSystemsHistories;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // DIMENSION
+    // --------------------------------------------------------------------------------------------
+
+    @Override
     public Dimension createDimension(ServiceContext ctx, String indicatorsSystemUuid, Dimension dimension) throws MetamacException {
 
         // Validation of parameters
@@ -514,6 +581,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return elementLevel.getDimension();
     }
 
+    @Override
     public void deleteDimension(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters
@@ -545,17 +613,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return dimensions;
     }
 
-    @Override
-    public IndicatorsSystemVersion retrieveIndicatorsSystemByDimension(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystemByDimension(ctx, uuid, null);
-
-        // Retrieve indicators system version
-        Dimension dimension = retrieveDimension(ctx, uuid);
-        IndicatorsSystemVersion indicatorsSystemVersion = dimension.getElementLevel().getIndicatorsSystemVersion();
-        return indicatorsSystemVersion;
-    }
+    // --------------------------------------------------------------------------------------------
+    // INDICATOR INSTANCE
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public IndicatorInstance createIndicatorInstance(ServiceContext ctx, String indicatorsSystemUuid, IndicatorInstance indicatorInstance) throws MetamacException {
@@ -693,43 +753,27 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return indicatorsInstances;
     }
 
-    @Override
-    public IndicatorsSystemVersion retrieveIndicatorsSystemByIndicatorInstance(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkRetrieveIndicatorsSystemByIndicatorInstance(ctx, uuid, null);
-
-        // Retrieve indicators system version
-        IndicatorInstance indicatorInstance = retrieveIndicatorInstance(ctx, uuid);
-        IndicatorsSystemVersion indicatorsSystemVersion = indicatorInstance.getElementLevel().getIndicatorsSystemVersion();
-        return indicatorsSystemVersion;
-    }
-
-    @Override
-    public List<IndicatorsSystemHistory> findIndicatorsSystemHistory(ServiceContext ctx, String uuid, int maxResults) throws MetamacException {
-
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystemHistory(uuid, maxResults, null);
-
-        List<IndicatorsSystemHistory> indicatorsSystemHistory = getIndicatorsSystemHistoryRepository().findIndicatorsSystemHistory(uuid, maxResults);
-
-        return indicatorsSystemHistory;
-    }
-
-    @Override
-    public PagedResult<IndicatorsSystemHistory> findIndicatorsSystemsHistory(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-        // Validation of parameters
-        InvocationValidator.checkFindIndicatorsSystemsHistory(conditions, pagingParameter, null);
-
-        // Retrieve last versions
-        if (conditions == null) {
-            conditions = new ArrayList<ConditionalCriteria>();
+    private void deleteIndicatorInstanceLastValuesCacheInIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion) {
+        for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
+            IndicatorInstance instance = level.getIndicatorInstance();
+            if (instance != null) {
+                getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(instance.getUuid());
+            }
         }
-
-        // Find
-        PagedResult<IndicatorsSystemHistory> indicatorsSystemsHistories = getIndicatorsSystemHistoryRepository().findByCondition(conditions, pagingParameter);
-        return indicatorsSystemsHistories;
     }
+
+    private void createIndicatorInstanceLastValuesCacheInIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
+        for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
+            IndicatorInstance instance = level.getIndicatorInstance();
+            if (instance != null) {
+                getIndicatorsDataService().buildIndicatorInstanceLatestValuesCache(ctx, instance);
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // GEOGRAPHICAL VALUE
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public GeographicalValue retrieveGeographicalValue(ServiceContext ctx, String uuid) throws MetamacException {
@@ -761,7 +805,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public PagedResult<GeographicalValue> findGeographicalValues(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
-
         // Validation of parameters
         InvocationValidator.checkFindGeographicalValues(null, conditions, pagingParameter);
 
@@ -769,6 +812,84 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         PagedResult<GeographicalValue> result = getGeographicalValueRepository().findByCondition(conditions, pagingParameter);
         return result;
     }
+
+    @Override
+    public GeographicalValue createGeographicalValue(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkCreateGeographicalValue(null, geographicalValue);
+        validateGeographicalValueCodeUnique(ctx, geographicalValue);
+        validateGeographicalValueOrderUnique(ctx, geographicalValue);
+
+        // Repository operation
+        return getGeographicalValueRepository().save(geographicalValue);
+    }
+
+    @Override
+    public void deleteGeographicalValue(ServiceContext ctx, String geographicalValueUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkDeleteGeographicalValue(null, geographicalValueUuid);
+
+        // Repository operation
+        GeographicalValue geographicalValue = retrieveGeographicalValue(ctx, geographicalValueUuid);
+        getGeographicalValueRepository().delete(geographicalValue);
+    }
+
+    @Override
+    public GeographicalValue updateGeographicalValue(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkUpdateGeographicalValue(null, geographicalValue);
+        validateGeographicalValueCodeUnique(ctx, geographicalValue);
+        validateGeographicalValueOrderUnique(ctx, geographicalValue);
+
+        // Repository operation
+        return getGeographicalValueRepository().save(geographicalValue);
+    }
+
+    private void validateGeographicalValueCodeUnique(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+
+        List<ConditionalCriteria> conditions = criteriaFor(GeographicalValue.class).withProperty(GeographicalValueProperties.code()).ignoreCaseEq(geographicalValue.getCode()).build();
+
+        if (geographicalValue.getId() != null) {
+            conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(GeographicalValueProperties.id(), geographicalValue.getId())));
+        }
+
+        // Find
+        try {
+            PagedResult<GeographicalValue> result = getGeographicalValueRepository().findByCondition(conditions, pagingParameter);
+            if (result.getValues().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
+        }
+    }
+
+    private void validateGeographicalValueOrderUnique(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+
+        List<ConditionalCriteria> conditions = criteriaFor(GeographicalValue.class).withProperty(GeographicalValueProperties.order()).ignoreCaseEq(geographicalValue.getOrder()).build();
+
+        if (geographicalValue.getId() != null) {
+            conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(GeographicalValueProperties.id(), geographicalValue.getId())));
+        }
+
+        // Find
+        try {
+            PagedResult<GeographicalValue> result = getGeographicalValueRepository().findByCondition(conditions, pagingParameter);
+            if (result.getValues().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // GEOGRAPHICAL GRANULARITY
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public GeographicalGranularity retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
@@ -800,7 +921,6 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
 
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularities(ServiceContext ctx) throws MetamacException {
-
         // Validation of parameters
         InvocationValidator.checkRetrieveGeographicalGranularities(null);
 
@@ -808,6 +928,63 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<GeographicalGranularity> geographicalGranularitys = getGeographicalGranularityRepository().findAll();
         return geographicalGranularitys;
     }
+
+    @Override
+    public GeographicalGranularity createGeographicalGranularity(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkCreateGeographicalGranularity(null, geographicalGranularity);
+        validateGeographicalGranularityCodeUnique(ctx, geographicalGranularity);
+
+        // Repository operation
+        return getGeographicalGranularityRepository().save(geographicalGranularity);
+    }
+
+    @Override
+    public GeographicalGranularity updateGeographicalGranularity(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkUpdateGeographicalGranularity(null, geographicalGranularity);
+        validateGeographicalGranularityCodeUnique(ctx, geographicalGranularity);
+
+        // Repository operation
+        return getGeographicalGranularityRepository().save(geographicalGranularity);
+    }
+
+    @Override
+    public void deleteGeographicalGranularity(ServiceContext ctx, String geographicalGranularityUuid) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkDeleteGeographicalGranularity(null, geographicalGranularityUuid);
+
+        // Repository operation
+        GeographicalGranularity geographicalGranularity = retrieveGeographicalGranularity(ctx, geographicalGranularityUuid);
+        getGeographicalGranularityRepository().delete(geographicalGranularity);
+
+    }
+
+    private void validateGeographicalGranularityCodeUnique(ServiceContext ctx, GeographicalGranularity geographicalGranularity) throws MetamacException {
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+
+        List<ConditionalCriteria> conditions = criteriaFor(GeographicalGranularity.class).withProperty(GeographicalGranularityProperties.code()).ignoreCaseEq(geographicalGranularity.getCode())
+                .build();
+
+        if (geographicalGranularity.getId() != null) {
+            conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(GeographicalGranularityProperties.id(), geographicalGranularity.getId())));
+        }
+
+        // Find
+        try {
+            PagedResult<GeographicalGranularity> result = getGeographicalGranularityRepository().findByCondition(conditions, pagingParameter);
+            if (result.getValues().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED, geographicalGranularity.getCode());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED, geographicalGranularity.getCode());
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // TIME VALUE
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public TimeValue retrieveTimeValue(ServiceContext ctx, String timeValue) throws MetamacException {
@@ -837,6 +1014,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return timeValueDo;
     }
 
+    @Override
     public List<TimeValue> retrieveTimeValues(ServiceContext ctx, List<String> timeValues) throws MetamacException {
 
         // Validation of parameters
@@ -900,6 +1078,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return translationCode;
     }
 
+    // --------------------------------------------------------------------------------------------
+    // TIME GRANULARTIE
+    // --------------------------------------------------------------------------------------------
+
     @Override
     public TimeGranularity retrieveTimeGranularity(ServiceContext ctx, TimeGranularityEnum timeGranularity) throws MetamacException {
 
@@ -928,6 +1110,10 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         }
         return timeGranularityDo;
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MEASURE VALUE
+    // --------------------------------------------------------------------------------------------
 
     @Override
     public MeasureValue retrieveMeasureValue(ServiceContext ctx, MeasureDimensionTypeEnum measureValue) throws MetamacException {
@@ -994,23 +1180,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         return measureValues;
     }
 
-    private void deleteIndicatorInstanceLastValuesCacheInIndicatorsSystem(IndicatorsSystemVersion indicatorsSystemVersion) {
-        for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
-            IndicatorInstance instance = level.getIndicatorInstance();
-            if (instance != null) {
-                getIndicatorInstanceLastValueCacheRepository().deleteWithIndicatorInstance(instance.getUuid());
-            }
-        }
-    }
-
-    private void createIndicatorInstanceLastValuesCacheInIndicatorsSystem(ServiceContext ctx, IndicatorsSystemVersion indicatorsSystemVersion) throws MetamacException {
-        for (ElementLevel level : indicatorsSystemVersion.getChildrenAllLevels()) {
-            IndicatorInstance instance = level.getIndicatorInstance();
-            if (instance != null) {
-                getIndicatorsDataService().buildIndicatorInstanceLatestValuesCache(ctx, instance);
-            }
-        }
-    }
+    // --------------------------------------------------------------------------------------------
+    // OTHER PRIVATE METHODS
+    // --------------------------------------------------------------------------------------------
 
     /**
      * Checks not exists another indicators system with same code
@@ -1218,7 +1390,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         List<String> indicatorsUuid = getIndicatorInstanceRepository().findIndicatorsLinkedWithIndicatorsSystemVersion(indicatorsSystemVersion.getId());
         List<String> indicatorsNotPublishedUuid = getIndicatorRepository().filterIndicatorsNotPublished(indicatorsUuid);
         if (indicatorsNotPublishedUuid.size() != 0) {
-            String[] indicatorsNotPublishedUuidArray = (String[]) indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
+            String[] indicatorsNotPublishedUuidArray = indicatorsNotPublishedUuid.toArray(new String[indicatorsNotPublishedUuid.size()]);
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.INDICATORS_SYSTEM_MUST_HAVE_ALL_INDICATORS_PUBLISHED, indicatorsSystemVersion.getIndicatorsSystem().getUuid(),
                     indicatorsNotPublishedUuidArray));
         }

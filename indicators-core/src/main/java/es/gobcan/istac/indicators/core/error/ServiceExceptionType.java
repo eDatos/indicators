@@ -30,10 +30,24 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Geographical values
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_NOT_FOUND                             = create("exception.indicators.geographical_value.not_found");
     public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_NOT_FOUND_WITH_CODE                   = create("exception.indicators.geographical_value.not_found_code");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED        = create("exception.indicators.geographical_value.already_exists.code_duplicated");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED       = create("exception.indicators.geographical_value.already_exists.order_duplicated");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_VALUE_CAN_NOT_BE_REMOVED                    = create("exception.indicators.geographical_value.can_not_be_removed");
 
     // Geographical granularities
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND                       = create("exception.indicators.geographical_granularity.not_found");
     public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_NOT_FOUND_WITH_CODE             = create("exception.indicators.geographical_granularity.not_found_code");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_ALREADY_EXISTS_CODE_DUPLICATED  = create("exception.indicators.geographical_granularity.already_exists.order_duplicated");
+    public static final CommonServiceExceptionType GEOGRAPHICAL_GRANULARITY_CAN_NOT_BE_REMOVED              = create("exception.indicators.geographical_granularity.can_not_be_removed");
+
+    // Quantity units
+    public static final CommonServiceExceptionType QUANTITY_UNIT_NOT_FOUND                                  = create("exception.indicators.quantity_unit.not_found");
+    public static final CommonServiceExceptionType QUANTITY_UNIT_CAN_NOT_BE_REMOVED                         = create("exception.indicators.quantity_unit.can_not_be_removed");
+
+    // Units multipliers
+    public static final CommonServiceExceptionType UNIT_MULTIPLIER_NOT_FOUND                                = create("exception.indicators.unit_multiplier.not_found");
+    public static final CommonServiceExceptionType UNIT_MULTIPLIER_NOT_FOUND_UUID                           = create("exception.indicators.unit_multiplier.not_found_uuid");
+    public static final CommonServiceExceptionType UNIT_MULTIPLIER_ALREADY_EXISTS_VALUE_DUPLICATED          = create("exception.indicators.unit_multiplier.already_exists.value");
 
     // Indicators
     public static final CommonServiceExceptionType INDICATOR_NOT_FOUND                                      = create("exception.indicators.indicator.not_found");
@@ -55,14 +69,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Datasources
     public static final CommonServiceExceptionType DATA_SOURCE_NOT_FOUND                                    = create("exception.indicators.data_source.not_found");
 
-    // Quantity units
-    public static final CommonServiceExceptionType QUANTITY_UNIT_NOT_FOUND                                  = create("exception.indicators.quantity_unit.not_found");
-
     // Subjects
     public static final CommonServiceExceptionType SUBJECT_NOT_FOUND                                        = create("exception.indicators.subject.not_found");
-
-    // Units multipliers
-    public static final CommonServiceExceptionType UNIT_MULTIPLIER_NOT_FOUND                                = create("exception.indicators.unit_multiplier.not_found");
 
     // Data
     public static final CommonServiceExceptionType DATA_DEFINITION_RETRIEVE_ERROR                           = create("exception.indicators.data.definition.error");
@@ -117,5 +125,4 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType DSPL_STRUCTURE_CREATE_ERROR                              = create("exception.indicators.dspl.structure.create_error");
     public static final CommonServiceExceptionType DSPL_FILES_CREATE_ERROR                                  = create("exception.indicators.dspl.files.create_error");
-
 }

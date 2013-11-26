@@ -20,7 +20,10 @@ import org.junit.runners.Suite.SuiteClasses;
     DsplExporterServiceTest.class,
     DsplTransformerTest.class,
     SecurityIndicatorsServiceFacadeIndicatorsSystemsTest.class,
-    SecurityIndicatorsServiceFacadeIndicatorsTest.class
+    SecurityIndicatorsServiceFacadeIndicatorsTest.class,
+    FillData.class,
+    IndicatorsConfigurationServiceTest.class,
+    TimeVariableUtilsTest.class
                 })
 public class IndicatorsSuite {
     

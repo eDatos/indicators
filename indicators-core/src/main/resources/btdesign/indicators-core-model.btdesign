@@ -74,11 +74,17 @@ Application Indicators {
 	    	@GeographicalValue retrieveGeographicalValue(String uuid) throws MetamacException;
 	    	@GeographicalValue retrieveGeographicalValueByCode(String code) throws MetamacException;
 	    	PagedResult<@GeographicalValue> findGeographicalValues(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+	    	@GeographicalValue createGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
+	    	@GeographicalValue updateGeographicalValue(@GeographicalValue geographicalValue) throws MetamacException;
+	    	deleteGeographicalValue(String geographicalValueUuid) throws MetamacException;
 
 	    	// Geographical granularities
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	@GeographicalGranularity retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularities() throws MetamacException;
+	    	@GeographicalGranularity createGeographicalGranularity(@GeographicalGranularity geographicalGranularity) throws MetamacException;
+	    	@GeographicalGranularity updateGeographicalGranularity(@GeographicalGranularity geographicalGranularity) throws MetamacException;
+	    	deleteGeographicalGranularity(String geographicalGranularityUuid) throws MetamacException;
 	    	
 			// Time values
 	    	TimeValue retrieveTimeValue(String timeValue) throws MetamacException;
@@ -134,6 +140,9 @@ Application Indicators {
 	    	// Quantity units
 	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
+	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
+	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
+	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
 	    	
 	    	// Subjects
 	    	Subject retrieveSubject(String code) throws MetamacException;
@@ -142,8 +151,12 @@ Application Indicators {
 	    	List<SubjectIndicatorResult> retrieveSubjectsInLastVersionIndicators() throws MetamacException;
 	    	
 	    	// Units multipliers
-	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier) throws MetamacException;
+	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
 	    	List<@UnitMultiplier> retrieveUnitsMultipliers() throws MetamacException;
+	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
+	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
+	    	deleteUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
     	}
     	
     	"Provides access to indicators data"
@@ -401,6 +414,12 @@ Application Indicators {
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves geographic values in the indicator instance"
 	    	List<@GeographicalValueDto> retrieveGeographicalValuesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	"Create a geographical value"
+	    	@GeographicalValueDto createGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
+	    	"Update a geographical value"
+	    	@GeographicalValueDto updateGeographicalValue(@GeographicalValueDto geographicalValueDto) throws MetamacException;
+	    	"Delete a geographical value"
+	    	deleteGeographicalValue(String uuid) throws MetamacException;
 	    	
 	    	// GEOGRAPHICAL GRANULARITIES
 	    	"Retrieves geographical granularity"
@@ -413,6 +432,12 @@ Application Indicators {
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersionNumber) throws MetamacException;
 	    	"Retrieves geographic granularities in the published indicator"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularitiesInIndicatorPublished(String indicatorUuid) throws MetamacException;
+	    	"Create a geographical granularity"
+	    	@GeographicalGranularityDto createGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
+	    	"Update a geographical granularity"
+	    	@GeographicalGranularityDto updateGeographicalGranularity(@GeographicalGranularityDto geographicalGranularityDto) throws MetamacException;
+	    	"Delete a geographical granularity"
+	    	deleteGeographicalGranularity(String uuid) throws MetamacException;
 	    	
 	    	// TIME GRANULARITIES
 	    	"Retrieves time granularity"
@@ -485,6 +510,12 @@ Application Indicators {
 	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	"Retrieve all quantity units"
 	    	List<@QuantityUnitDto> retrieveQuantityUnits() throws MetamacException;
+	    	"Create a quantity unit"
+	    	@QuantityUnitDto createQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
+	    	"Update a quantity unit"
+	    	@QuantityUnitDto updateQuantityUnit(@QuantityUnitDto quantityUnitDto) throws MetamacException;
+	    	"Delete a quantity unit"
+	    	deleteQuantityUnit(String uuid) throws MetamacException;
 	    	
 			// SUBJECTS
 			"Retrieves subject. Important! Do not invoke this operation from public web application"
@@ -522,6 +553,16 @@ Application Indicators {
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"
 	    	List<@UnitMultiplierDto> retrieveUnitsMultipliers() throws MetamacException;
+	    	"Retrieves unit multiplier using uuid"
+	    	@UnitMultiplierDto retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
+	    	"Retrieves unit multiplier"
+	    	@UnitMultiplierDto retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
+	    	"Create a unit multiplier"
+	    	@UnitMultiplierDto createUnitMultiplier(@UnitMultiplierDto unitMultiplierDto) throws MetamacException;
+	    	"Update a unit multiplier"
+	    	@UnitMultiplierDto updateUnitMultiplier(@UnitMultiplierDto unitMultiplierDto) throws MetamacException;
+	    	"Delete a unit multiplier"
+	    	deleteUnitMultiplier(Integer unitMultiplierId) throws MetamacException;
 	    	
 	    }
 
@@ -1000,8 +1041,6 @@ Application Indicators {
 	    Entity QuantityUnit {
         	databaseTable = "TB_LIS_QUANTITIES_UNITS"
         	hint="idSequence=QUANTITIES_UNITS"
-			!auditable
-			!optimisticLocking
 			
 			"Symbol of unit (example: km)"
 			String symbol nullable;
@@ -1010,11 +1049,17 @@ Application Indicators {
        		"Title of unit"
        		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
        		
+       		"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
+       		
        		Repository QuantityUnitRepository {
        			findAll;
             	protected List<@QuantityUnit> findByQuery;
             	protected List<@QuantityUnit> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@QuantityUnit retrieveQuantityUnit(String uuid);
+            	findByCondition(PagingParameter pagingParameter);
+            	save;
+            	delete;
 			}
         }
         
@@ -1022,8 +1067,6 @@ Application Indicators {
 	    Entity GeographicalValue {
         	databaseTable = "TB_LIS_GEOGR_VALUES"
         	hint="idSequence=GEOGR_VALUES"
-			!auditable
-			!optimisticLocking
 			gap
 			
 			"Code"
@@ -1039,6 +1082,9 @@ Application Indicators {
        		"Order"
        		String order not nullable databaseColumn="GLOBAL_ORDER";
        		
+       		"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
+       		
        		Repository GeographicalValueRepository {
        			findAll;
             	protected List<@GeographicalValue> findByQuery;
@@ -1048,6 +1094,8 @@ Application Indicators {
             	List<@GeographicalValue> findGeographicalValuesByCodes(List<String> codes);
             	List<@GeographicalValue> findGeographicalValuesByGranularity(String granularityCode);
             	findByCondition(PagingParameter pagingParameter);
+            	save;
+            	delete;
 			}
         }
         
@@ -1055,14 +1103,14 @@ Application Indicators {
 	    Entity GeographicalGranularity {
         	databaseTable = "TB_LIS_GEOGR_GRANULARITIES"
         	hint="idSequence=GEOGR_GRANULARITIES"
-			!auditable
-			!optimisticLocking
 			gap
 			
 			"Code"
 			String code not nullable;
        		"Title"
        		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
        		
        		Repository GeographicalGranularityRepository {
        			findAll;
@@ -1070,6 +1118,9 @@ Application Indicators {
             	protected List<@GeographicalGranularity> findByQuery(String query, Map<String, Object> parameters, int maxResult);
             	@GeographicalGranularity findGeographicalGranularityByCode(String code);
             	@GeographicalGranularity retrieveGeographicalGranularity(String uuid);
+            	findByCondition(PagingParameter pagingParameter);
+            	save;
+            	delete;
 			}
         }
         
@@ -1077,20 +1128,24 @@ Application Indicators {
 	    Entity UnitMultiplier {
         	databaseTable = "TB_LIS_UNITS_MULTIPLIERS"
         	hint="idSequence=UNITS_MULTIPLIERS"
-			!auditable
-			!optimisticLocking
 			
 			"Multiplier of percentage"
 			Integer unitMultiplier nullable;
        		"Title of unit multiplier"
        		- @InternationalString title cascade="all" nullable databaseColumn="TITLE_FK";
+       		"Last update to optimistic locking"
+			DateTimeTZ updateDate nullable;
        		
        		Repository UnitMultiplierRepository {
        			findAll;
             	protected List<@UnitMultiplier> findByQuery;
             	protected List<@UnitMultiplier> findByQuery(String query, Map<String, Object> parameters, int maxResult);
-            	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplier);
+            	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue);
+            	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid);
             	List<@UnitMultiplier> findAllOrdered;
+            	findByCondition(PagingParameter pagingParameter);
+            	save;
+            	delete;
 			}
         }
         
@@ -1588,7 +1643,7 @@ Application Indicators {
 	    }
 	    
 	   	"Dto for units of quantities"
-    	DataTransferObject QuantityUnitDto {
+    	DataTransferObject QuantityUnitDto extends @AuditDto {
 	   		"Uuid"
 	   		String uuid;
 			"Symbol of unit (example: km)"
@@ -1597,16 +1652,20 @@ Application Indicators {
 			- @QuantityUnitSymbolPositionEnum symbolPosition;
        		"Title of unit"
        		- @InternationalStringDto title;
+       		
+       		Long optimisticLockingVersion;	
     	}
     	
     	"Base Dto for geographical values"
-    	DataTransferObject GeographicalValueBaseDto {
+    	DataTransferObject GeographicalValueBaseDto extends @AuditDto {
 	   		"Code"
 			String code;
 	   		"Uuid"
 	   		String uuid;
        		"Title"
        		- @InternationalStringDto title;
+       		
+       		Long optimisticLockingVersion;	
     	}
     	
     	"Dto for geographical values"
@@ -1622,13 +1681,15 @@ Application Indicators {
     	}
 
     	"Dto for geographical granularities"
-    	DataTransferObject GeographicalGranularityDto {
+    	DataTransferObject GeographicalGranularityDto extends @AuditDto {
 	   		"Uuid"
 	   		String uuid;
 	   		"Code"
 			String code;
        		"Title"
        		- @InternationalStringDto title;
+       		
+       		Long optimisticLockingVersion;	
     	}
     	
     	"Dto for time values"
@@ -1714,11 +1775,15 @@ Application Indicators {
     	}
     	
 		"Dto for units multipliers"
-    	DataTransferObject UnitMultiplierDto {
+    	DataTransferObject UnitMultiplierDto extends @AuditDto {
+    		"Uuid"
+    		String uuid;
 			"Multiplier of percentage"
 			Integer unitMultiplier;
        		"Title"
        		- @InternationalStringDto title;
+       		
+       		Long optimisticLockingVersion;	
     	}
 	}
 	
