@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.ent.domain.LocalisedString;
@@ -817,8 +819,7 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public GeographicalValue createGeographicalValue(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkCreateGeographicalValue(null, geographicalValue);
-        validateGeographicalValueCodeUnique(ctx, geographicalValue);
-        validateGeographicalValueOrderUnique(ctx, geographicalValue);
+        validateGeographicalValueUniqueFields(ctx, geographicalValue);
 
         // Repository operation
         return getGeographicalValueRepository().save(geographicalValue);
@@ -838,19 +839,23 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     public GeographicalValue updateGeographicalValue(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkUpdateGeographicalValue(null, geographicalValue);
-        validateGeographicalValueCodeUnique(ctx, geographicalValue);
-        validateGeographicalValueOrderUnique(ctx, geographicalValue);
+        validateGeographicalValueUniqueFields(ctx, geographicalValue);
 
         // Repository operation
         return getGeographicalValueRepository().save(geographicalValue);
     }
 
-    private void validateGeographicalValueCodeUnique(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
+    private void validateGeographicalValueUniqueFields(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
         // Prepare criteria
         PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
 
-        List<ConditionalCriteria> conditions = criteriaFor(GeographicalValue.class).withProperty(GeographicalValueProperties.code()).ignoreCaseEq(geographicalValue.getCode()).build();
+        List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
 
+        // Order and code
+        conditions.add(ConditionalCriteria.or(ConditionalCriteria.ignoreCaseEqual(GeographicalValueProperties.code(), geographicalValue.getCode()),
+                ConditionalCriteria.ignoreCaseEqual(GeographicalValueProperties.order(), geographicalValue.getOrder())));
+
+        // ID: if necessary if we are updating the entity
         if (geographicalValue.getId() != null) {
             conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(GeographicalValueProperties.id(), geographicalValue.getId())));
         }
@@ -858,32 +863,26 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         // Find
         try {
             PagedResult<GeographicalValue> result = getGeographicalValueRepository().findByCondition(conditions, pagingParameter);
-            if (result.getValues().size() != 0) {
+            if (result.getValues().size() != 0 && result.getValues().get(0).getCode().equalsIgnoreCase(geographicalValue.getCode())) {
                 throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
-            }
-        } catch (DataIntegrityViolationException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
-        }
-    }
-
-    private void validateGeographicalValueOrderUnique(ServiceContext ctx, GeographicalValue geographicalValue) throws MetamacException {
-        // Prepare criteria
-        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
-
-        List<ConditionalCriteria> conditions = criteriaFor(GeographicalValue.class).withProperty(GeographicalValueProperties.order()).ignoreCaseEq(geographicalValue.getOrder()).build();
-
-        if (geographicalValue.getId() != null) {
-            conditions.add(ConditionalCriteria.not(ConditionalCriteria.equal(GeographicalValueProperties.id(), geographicalValue.getId())));
-        }
-
-        // Find
-        try {
-            PagedResult<GeographicalValue> result = getGeographicalValueRepository().findByCondition(conditions, pagingParameter);
-            if (result.getValues().size() != 0) {
+            } else if (result.getValues().size() != 0 && result.getValues().get(0).getOrder().equalsIgnoreCase(geographicalValue.getOrder())) {
                 throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
+            } else if (result.getValues().size() != 0) {
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
             }
         } catch (DataIntegrityViolationException e) {
-            throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
+            if (e.getCause() instanceof ConstraintViolationException) {
+                String specificException = ((SQLException) e.getCause().getCause()).getMessage();
+                if (specificException.contains("JENKINS_INDICATORS.GEOGR_VALUES_ORDER")) {
+                    throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
+                } else if (specificException.contains("JENKINS_INDICATORS.GEOGR_VALUES_CODE")) {
+                    throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
+                } else {
+                    throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
+                }
+            } else {
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
+            }
         }
     }
 
