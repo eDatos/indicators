@@ -561,6 +561,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setSymbolPosition(source.getSymbolPosition());
         target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
 
+        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
+        target.setUpdateDate(new DateTime());
+
         return target;
     }
 
@@ -598,6 +601,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.setGranularity(null);
         }
 
+        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
+        target.setUpdateDate(new DateTime());
+
         return target;
     }
 
@@ -626,6 +632,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setCode(source.getCode());
         target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
 
+        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
+        target.setUpdateDate(new DateTime());
+
         return target;
     }
 
@@ -653,6 +662,9 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
 
         target.setUnitMultiplier(source.getUnitMultiplier());
         target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
+
+        // Optimistic locking: Update "update date" attribute to force update of the root entity in order to increase attribute "version"
+        target.setUpdateDate(new DateTime());
 
         return target;
 
