@@ -873,9 +873,9 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
                 String specificException = ((SQLException) e.getCause().getCause()).getMessage();
-                if (specificException.contains("JENKINS_INDICATORS.GEOGR_VALUES_ORDER")) {
+                if (specificException.contains("GEOGR_VALUES_ORDER")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_ORDER_DUPLICATED, geographicalValue.getOrder());
-                } else if (specificException.contains("JENKINS_INDICATORS.GEOGR_VALUES_CODE")) {
+                } else if (specificException.contains("GEOGR_VALUES_CODE")) {
                     throw new MetamacException(ServiceExceptionType.GEOGRAPHICAL_VALUE_ALREADY_EXISTS_CODE_DUPLICATED, geographicalValue.getCode());
                 } else {
                     throw new MetamacException(ServiceExceptionType.UNKNOWN, "validations of unique fields failed for an unknown reason");
