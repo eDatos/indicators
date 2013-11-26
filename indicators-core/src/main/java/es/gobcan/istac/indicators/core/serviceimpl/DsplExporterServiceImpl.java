@@ -1,11 +1,12 @@
 package es.gobcan.istac.indicators.core.serviceimpl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -145,7 +146,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private String generateFile(File file, String templateName, Map<String, Object> parameters) throws Exception {
         String filename = file.getAbsolutePath();
-        Writer writer = new FileWriter(file);
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
         try {
             Template template = getTemplateFreemarker(templateName);
             template.process(parameters, writer);
@@ -159,6 +160,7 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
 
     private Template getTemplateFreemarker(String templateName) throws Exception {
         Configuration cfg = new Configuration();
+        cfg.setDefaultEncoding("UTF-8");
         URL url = Thread.currentThread().getContextClassLoader().getResource("templates/" + templateName + ".ftl");
         String path = URLDecoder.decode(url.getPath(), "UTF-8");
         return new Template(templateName, new FileReader(path), cfg);

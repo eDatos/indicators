@@ -27,9 +27,9 @@ import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
 public abstract class IndicatorsBaseTest extends MetamacBaseTests {
-    
+
     @Value("${indicators.db.provider}")
-    private String databaseProvider;
+    private String                        databaseProvider;
 
     private HashMap<String, List<String>> tablePrimaryKeys = null;
 
@@ -170,7 +170,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
 
     public static String readFile(String filename) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(IndicatorsBaseTest.class.getClassLoader().getResourceAsStream(filename)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(IndicatorsBaseTest.class.getClassLoader().getResourceAsStream(filename), "UTF-8"));
             StringBuffer strbuf = new StringBuffer();
             String line = reader.readLine();
             while (line != null) {
@@ -197,34 +197,33 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
             tablePrimaryKeys = new HashMap<String, List<String>>();
             tablePrimaryKeys.put("TV_AREAS_TEMATICAS", Arrays.asList("ID_AREA_TEMATICA"));
             tablePrimaryKeys.put("TV_CONSULTA", Arrays.asList("ID_CONSULTA"));
-            tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE_FK","INDICATOR_INSTANCE_FK"));
+            tablePrimaryKeys.put("TB_INDIC_INST_GEO_VALUES", Arrays.asList("GEOGRAPHICAL_VALUE_FK", "INDICATOR_INSTANCE_FK"));
         }
         return tablePrimaryKeys;
     }
-    
-    
+
     protected List<String> getIndicatorsInstancesUUIDs(List<IndicatorInstance> indicatorsInstances) {
         if (indicatorsInstances == null) {
             return null;
         }
         List<String> uuids = new ArrayList<String>();
-        for (IndicatorInstance indicatorInstance: indicatorsInstances) {
+        for (IndicatorInstance indicatorInstance : indicatorsInstances) {
             uuids.add(indicatorInstance.getUuid());
         }
         return uuids;
     }
-    
+
     protected List<String> getIndicatorsInstancesDtosUUIDs(List<IndicatorInstanceDto> indicatorsInstances) {
         if (indicatorsInstances == null) {
             return null;
         }
         List<String> uuids = new ArrayList<String>();
-        for (IndicatorInstanceDto indicatorInstance: indicatorsInstances) {
+        for (IndicatorInstanceDto indicatorInstance : indicatorsInstances) {
             uuids.add(indicatorInstance.getUuid());
         }
         return uuids;
     }
-    
+
     protected void checkElementsInCollection(String[] expected, Collection<List<String>> collection) {
         List<String> values = new ArrayList<String>();
         for (List<String> vals : collection) {
@@ -234,15 +233,15 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
     protected void checkElementsInCollection(String[] expected, List<String> collection) {
         for (String elem : expected) {
-            assertTrue("Element "+elem+" not in collection",collection.contains(elem));
+            assertTrue("Element " + elem + " not in collection", collection.contains(elem));
         }
-        assertEquals("Size does not match",expected.length, collection.size());
+        assertEquals("Size does not match", expected.length, collection.size());
     }
-    
+
     protected void checkElementsOrder(String[] expected, List<String> collection) {
         assertEquals(expected.length, collection.size());
         for (int i = 0; i < expected.length; i++) {
-            assertEquals("Element "+expected[i]+" not in collection",collection.get(i),expected[i]);
+            assertEquals("Element " + expected[i] + " not in collection", collection.get(i), expected[i]);
         }
     }
 
