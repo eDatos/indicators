@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.client.widgets;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -23,13 +24,15 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 public class VariableCanvasItem extends CustomCanvasItem {
 
     // private final static Integer SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH - 64;
-    private final static String SELECT_ITEM_WIDTH = FormItemUtils.FORM_ITEM_WIDTH;
+    private final static String SELECT_ITEM_WIDTH  = FormItemUtils.FORM_ITEM_WIDTH;
 
-    private Logger              logger            = Logger.getLogger(VariableCanvasItem.class.getName());
+    private Logger              logger             = Logger.getLogger(VariableCanvasItem.class.getName());
 
     private CustomDynamicForm   form;
 
     protected boolean           required;
+
+    private Map<String, String> variablesItemNames = new HashMap<String, String>();
 
     public VariableCanvasItem(String name, String title) {
         super(name, title);
@@ -68,7 +71,8 @@ public class VariableCanvasItem extends CustomCanvasItem {
         return form.validate(false);
     }
 
-    public void setVariablesAndCategories(DataStructureDto dataStructureDto) {
+    public void setVariablesAndCategories(DataStructureDto dataStructureDto, String... excludeVars) {
+        variablesItemNames.clear();
         List<String> variables = dataStructureDto.getVariables();
         Map<String, List<String>> categoryCodes = dataStructureDto.getValueCodes();
         Map<String, List<String>> categoryLabels = dataStructureDto.getValueLabels();
@@ -83,6 +87,7 @@ public class VariableCanvasItem extends CustomCanvasItem {
                         selectItem.setWidth(SELECT_ITEM_WIDTH);
                         selectItem.setValueMap(CommonUtils.getVariableCategoriesValueMap(categoryCodes.get(var), categoryLabels.get(var)));
                         formItems.add(selectItem);
+                        variablesItemNames.put(var, selectItem.getName());
                     } else {
                         logger.log(Level.SEVERE, "Something wrong with variables and its category labels and codes");
                     }
@@ -95,12 +100,26 @@ public class VariableCanvasItem extends CustomCanvasItem {
         }
     }
 
+    public void restartVisibility(String... hiddenVars) {
+        for (FormItem item : form.getFields()) {
+            if (!item.isVisible()) {
+                item.show();
+            }
+        }
+        for (String var : hiddenVars) {
+            String name = variablesItemNames.get(var);
+            if (name != null) {
+                form.getItem(name).hide();
+            }
+        }
+    }
+
     @Override
     public List<DataSourceVariableDto> getValue() {
         List<DataSourceVariableDto> dataSourceVariableDtos = new ArrayList<DataSourceVariableDto>();
         FormItem[] formItems = form.getFields();
         for (int i = 0; i < formItems.length; i++) {
-            if (formItems[i] != null) {
+            if (formItems[i] != null && formItems[i].isVisible()) {
                 String name = formItems[i].getTitle();
                 String category = formItems[i].getValue() != null ? (String) formItems[i].getValue() : null;
                 if (!StringUtils.isBlank(name) && !StringUtils.isBlank(category)) {
@@ -123,9 +142,10 @@ public class VariableCanvasItem extends CustomCanvasItem {
      */
     private boolean includeVariable(DataStructureDto dataStructureDto, String var) {
         String temporalVariable = dataStructureDto.getTemporalVariable();
-        String geographicalVariable = dataStructureDto.getSpatialVariable();
+        // String geographicalVariable = dataStructureDto.getSpatialVariables();
+        // FIXME:
         String measureVariable = dataStructureDto.getContVariable();
-        if (var.equals(temporalVariable) || var.equals(geographicalVariable) || var.equals(measureVariable)) {
+        if (var.equals(temporalVariable) || /* var.equals(geographicalVariable) || */var.equals(measureVariable)) {
             return false;
         }
         return true;

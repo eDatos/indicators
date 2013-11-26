@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -74,7 +76,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         List<DataDefinition> dataDefs = indicatorsDataService.retrieveDataDefinitions(getServiceContextAdministrador());
 
         String[] expected = {CONSULTA1_UUID, CONSULTA4_UUID, CONSULTA5_UUID};
-        checkElementsInCollection(expected,getDataDefinitionsUuids(dataDefs));
+        checkElementsInCollection(expected, getDataDefinitionsUuids(dataDefs));
     }
 
     @Test
@@ -185,8 +187,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         String temporalVar = "Periodos";
         assertEquals(temporalVar, dataStruc.getTemporalVariable());
 
-        String spatialVar = null;
-        assertEquals(spatialVar, dataStruc.getSpatialVariable());
+        assertTrue(dataStruc.getSpatialVariables().isEmpty());
 
         String[] notes = new String[]{"(p) Dato provisional#(..) Dato no disponible#En Otras sociedades se incluyen:#Desde 2003 las Sociedades Comanditarias y Sociedades Colectivas.#Hasta 2002 las Sociedades de Responsabilidad Limitada y Sociedades Colectivas.#Hasta 1998 el capital suscrito se mide en millones de pesetas."};
         checkElementsInCollection(notes, dataStruc.getNotes());
@@ -231,13 +232,13 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
             assertEquals(CONSULTA4_UUID, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
-    
+
     private List<String> getDataDefinitionsUuids(Collection<DataDefinition> dataDefinitions) {
-    	List<String> uuids = new ArrayList<String>();
-    	for (DataDefinition dataDef : dataDefinitions) {
-    		uuids.add(dataDef.getUuid());
-    	}
-    	return uuids;
+        List<String> uuids = new ArrayList<String>();
+        for (DataDefinition dataDef : dataDefinitions) {
+            uuids.add(dataDef.getUuid());
+        }
+        return uuids;
     }
 
     @Override
@@ -245,6 +246,7 @@ public class IndicatorsDataServiceDataGpeTest extends IndicatorsDataBaseTest {
         return "dbunit/IndicatorsDataServiceTest_DataGpe.xml";
     }
 
+    @Override
     protected String getDataSetDSRepoFile() {
         return "dbunit/IndicatorsDataServiceTest_DataSetRepository.xml";
     }

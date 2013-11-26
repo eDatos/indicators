@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.ListUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -35,7 +36,7 @@ public class DataStructure {
     @JsonProperty
     private String                    temporalVariable;
 
-    private String                    spatialVariable;
+    private List<String>              spatialVariables;
 
     @JsonProperty
     private String                    contVariable;
@@ -71,9 +72,9 @@ public class DataStructure {
     @JsonProperty("spatials")
     public void processSpatials(List<String> spatials) {
         if (spatials == null || spatials.size() == 0) {
-            spatialVariable = null;
+            spatialVariables = new ArrayList<String>();
         } else {
-            spatialVariable = spatials.get(0);
+            spatialVariables = new ArrayList<String>(spatials);
         }
     }
 
@@ -154,12 +155,12 @@ public class DataStructure {
         this.temporalVariable = temporalVariable;
     }
 
-    public String getSpatialVariable() {
-        return spatialVariable;
+    public List<String> getSpatialVariables() {
+        return spatialVariables;
     }
 
-    public void setSpatialVariable(String spatialVariable) {
-        this.spatialVariable = spatialVariable;
+    public void setSpatialVariables(List<String> spatialVariable) {
+        this.spatialVariables = spatialVariable != null ? spatialVariable : new ArrayList<String>();
     }
 
     public String getContVariable() {

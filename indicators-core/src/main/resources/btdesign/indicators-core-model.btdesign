@@ -1751,7 +1751,7 @@ Application Indicators {
     		"Temporal variable"
     		String temporalVariable; 
     		"Spatial variable"
-    		String spatialVariable;
+    		List<String> spatialVariables;
     		"Contvariable"
     		String contVariable;
     		"Labels for every value in every variable"

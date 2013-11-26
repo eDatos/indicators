@@ -242,18 +242,18 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR26_GPE_JSON_DATA                = readFile("json/data_temporals.json");
     private static final String              INDICATOR26_DIFFUSION_VERSION            = "1.000";
     private static final String              INDICATOR26_PRODUCTION_VERSION           = "2.000";
-    
+
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR27_UUID                         = "Indicator-27";
     private static final String              INDICATOR27_VERSION                      = "1.000";
-    
+
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR28_UUID                         = "Indicator-28";
     private static final String              INDICATOR28_VERSION                      = "1.000";
     private static final String              INDICATOR28_DS_UUID                      = "Indicator-28-v1-DataSource-1";
     private static final String              INDICATOR28_DS_GPE_UUID                  = "Indicator-28-v1-DataSource-1-GPE-TIME";
     private static final String              INDICATOR28_GPE_JSON_DATA                = readFile("json/data_temporals.json");
-    
+
     /* DRAFT VERSION (major) */
     private static final String              INDICATOR29_UUID                         = "Indicator-29";
     private static final String              INDICATOR29_VERSION                      = "1.000";
@@ -330,32 +330,32 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
                 "46", "26", "2156", "321", "41", "29", "19");
         checkDataObservations(dimensionCodes, INDICATOR1_UUID, INDICATOR1_VERSION, data);
     }
-    
+
     @Test
     public void testPopulateIndicatorDataDraftNoDatasources() throws Exception {
         try {
             indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR27_UUID);
         } catch (MetamacException e) {
-            assertEquals(1,e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(),e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DATASOURCES_ERROR.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
-    
+
     @Test
     public void testPopulateIndicatorDataDraftNoDecimalPlaces() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR28_DS_GPE_UUID))).thenReturn(INDICATOR28_GPE_JSON_DATA);
         try {
             indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR28_UUID);
         } catch (MetamacException e) {
-            assertEquals(1,e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DECIMAL_PLACES.getCode(),e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_POPULATE_NO_DECIMAL_PLACES.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
-    
+
     @Test
     public void testPopulateIndicatorDataDuplicatedData() throws Exception {
         when(indicatorsDataProviderService.retrieveDataJson(Matchers.any(ServiceContext.class), Matchers.eq(INDICATOR29_DS_GPE_UUID))).thenReturn(INDICATOR29_GPE_JSON_DATA);
-        
+
         indicatorsDataService.populateIndicatorData(getServiceContextAdministrador(), INDICATOR29_UUID);
     }
 
@@ -1063,14 +1063,13 @@ public class IndicatorsDataServicePopulateTest extends IndicatorsDataBaseTest {
         } catch (MetamacException e) {
             assertIndicatorEmptyData(INDICATOR21_UUID, INDICATOR21_VERSION);
             assertNotNull(e.getExceptionItems());
-            assertEquals(5, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_GEOGRAPHIC_INCLUDED.getCode(), e.getExceptionItems().get(0).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED.getCode(), e.getExceptionItems().get(1).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED.getCode(), e.getExceptionItems().get(2).getCode());
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), e.getExceptionItems().get(3).getCode());
-            assertEquals("Naturaleza jurídica", e.getExceptionItems().get(3).getMessageParameters()[1]);
-            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES.getCode(), e.getExceptionItems().get(4).getCode());
-            assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(4).getMessageParameters()[1]);
+            assertEquals(4, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_TEMPORAL_INCLUDED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_CONTVARIABLE_INCLUDED.getCode(), e.getExceptionItems().get(1).getCode());
+            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNSPECIFIED_VARIABLES.getCode(), e.getExceptionItems().get(2).getCode());
+            assertEquals("Naturaleza jurídica", e.getExceptionItems().get(2).getMessageParameters()[1]);
+            assertEquals(ServiceExceptionType.DATA_COMPATIBILITY_OTHER_VARIABLES_UNKNOWN_VARIABLES.getCode(), e.getExceptionItems().get(3).getCode());
+            assertEquals("NOT REAL VARIABLE", e.getExceptionItems().get(3).getMessageParameters()[1]);
         }
     }
 

@@ -115,7 +115,7 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
         assertEquals(dbo.getValueLabels(), dto.getValueLabels());
         List<String> variables = new ArrayList<String>(dbo.getValueCodes().keySet());
         assertEquals(variables, dto.getVariables());
-        assertEquals(dbo.getSpatialVariable(), dto.getSpatialVariable());
+        assertEquals(dbo.getSpatialVariables(), dto.getSpatialVariables());
         assertEquals(dbo.getTemporalVariable(), dto.getTemporalVariable());
         assertEquals(dbo.getContVariable(), dto.getContVariable());
 
@@ -143,7 +143,7 @@ public class IndicatorsServiceFacadeDataTest extends IndicatorsBaseTest {
         dataStructure1.setHeading(getList("var1", "var2"));
         dataStructure1.setStub(getList("var3"));
         dataStructure1.setTemporalVariable("var1");
-        dataStructure1.setSpatialVariable("var2");
+        dataStructure1.setSpatialVariables(Arrays.asList("var2"));
         dataStructure1.setSurveyCode("SCODE");
         dataStructure1.setSurveyTitle("Survey title");
         dataStructure1.setPublishers(getList("pub1", "pub2"));

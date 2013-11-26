@@ -425,7 +425,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setSurveyTitle(source.getSurveyTitle());
         target.setPublishers(source.getPublishers());
         target.setTemporalVariable(source.getTemporalVariable());
-        target.setSpatialVariable(source.getSpatialVariable());
+        target.setSpatialVariables(source.getSpatialVariables());
 
         if (source.getValueCodes() != null) {
             target.setVariables(new ArrayList<String>(source.getValueCodes().keySet()));
