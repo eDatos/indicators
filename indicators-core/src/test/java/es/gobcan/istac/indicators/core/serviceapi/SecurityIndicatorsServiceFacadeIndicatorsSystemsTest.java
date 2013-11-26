@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.dto.DimensionDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueBaseDto;
+import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
@@ -63,9 +65,12 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     // Geographical values
     private static String             GEOGRAPHICAL_VALUE_1                        = "1";
+    private static String             GEOGRAPHICAL_VALUE_2                        = "2";
 
     // Geographical granularities
+    private static String             GEOGRAPHICAL_GRANULARITY_1                  = "1";
     private static String             GEOGRAPHICAL_GRANULARITY_2                  = "2";
+    private static String             GEOGRAPHICAL_GRANULARITY_5                  = "5";
 
     @Test
     public void testErrorPrincipalNotFound() throws Exception {
@@ -296,10 +301,12 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testSendIndicatorsSystemToProductionValidation() throws Exception {
         indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextAdministrador(), INDICATORS_SYSTEM_1);
     }
+
     @Test
     public void testSendIndicatorsSystemToProductionValidationTecnicoSistemaIndicadores() throws Exception {
         indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_1);
     }
+
     @Test
     public void testSendIndicatorsSystemToProductionValidationWithAccessOnlyToIndicatorSystem1() throws Exception {
         indicatorsServiceFacade.sendIndicatorsSystemToProductionValidation(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), INDICATORS_SYSTEM_1);
@@ -917,7 +924,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateIndicatorInstance() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -965,7 +972,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateIndicatorInstanceOnlyAccessToIndicatorsSystem1() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -983,7 +990,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateIndicatorInstanceErrorOnlyWithoutAccessToIndicatorsSystem1() throws Exception {
         GeographicalValueBaseDto geoValue = new GeographicalValueBaseDto();
         geoValue.setUuid(GEOGRAPHICAL_VALUE_1);
-        
+
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
         indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
@@ -1211,6 +1218,153 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     }
 
     @Test
+    public void testCreateGeographicalValue() throws Exception {
+        GeographicalValueDto geographicalValueDto = IndicatorsMocks.mockGeographicalValue(IndicatorsMocks.mockString(5), IndicatorsMocks.mockString(5), GEOGRAPHICAL_GRANULARITY_1);
+
+        // With access
+        geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsServiceFacade.createGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
+
+        // Without access
+        try {
+            geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalValue(getServiceContextTecnicoSistemaIndicadores(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalValue(getServiceContextTecnicoProduccion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalValue(getServiceContextTecnicoApoyoProduccion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalValue(getServiceContextTecnicoDifusion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalValueDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalValue(getServiceContextTecnicoApoyoDifusion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testUpdateGeographicalValue() throws Exception {
+        GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), GEOGRAPHICAL_VALUE_1);
+
+        // With access
+        geographicalValueDto = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDto);
+
+        // Without access
+        try {
+            indicatorsServiceFacade.updateGeographicalValue(getServiceContextTecnicoSistemaIndicadores(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalValue(getServiceContextTecnicoProduccion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalValue(getServiceContextTecnicoApoyoProduccion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalValue(getServiceContextTecnicoDifusion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalValue(getServiceContextTecnicoApoyoDifusion(), geographicalValueDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testDeleteGeographicalValue() throws Exception {
+        indicatorsServiceFacade.deleteGeographicalValue(getServiceContextAdministrador(), GEOGRAPHICAL_VALUE_2);
+    }
+
+    @Test
+    public void testDeleteGeographicalValueErrorWithoutRole() throws Exception {
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoSistemaIndicadores(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoProduccion(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoApoyoProduccion(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoDifusion(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalValue(getServiceContextTecnicoApoyoDifusion(), GEOGRAPHICAL_VALUE_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
     public void testRetrieveGeographicalGranularity() throws Exception {
         indicatorsServiceFacade.retrieveGeographicalGranularity(getServiceContextAdministrador(), GEOGRAPHICAL_GRANULARITY_2);
         indicatorsServiceFacade.retrieveGeographicalGranularity(getServiceContextTecnicoSistemaIndicadores(), GEOGRAPHICAL_GRANULARITY_2);
@@ -1228,6 +1382,153 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
         indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContextTecnicoApoyoProduccion());
         indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContextTecnicoDifusion());
         indicatorsServiceFacade.retrieveGeographicalGranularities(getServiceContextTecnicoApoyoDifusion());
+    }
+
+    @Test
+    public void testCreateGeographicalGranularity() throws Exception {
+        GeographicalGranularityDto geographicalGranularityDto = IndicatorsMocks.mockGeographicalGranularity(IndicatorsMocks.mockString(10));
+
+        // With access
+        geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+        indicatorsServiceFacade.createGeographicalGranularity(getServiceContextAdministrador(), geographicalGranularityDto);
+
+        // Without access
+        try {
+            geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalGranularity(getServiceContextTecnicoSistemaIndicadores(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalGranularity(getServiceContextTecnicoProduccion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalGranularity(getServiceContextTecnicoApoyoProduccion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalGranularity(getServiceContextTecnicoDifusion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            geographicalGranularityDto.setCode(IndicatorsMocks.mockString(10));
+            indicatorsServiceFacade.createGeographicalGranularity(getServiceContextTecnicoApoyoDifusion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testUpdateGeographicalGranularity() throws Exception {
+        GeographicalGranularityDto geographicalGranularityDto = indicatorsServiceFacade.retrieveGeographicalGranularity(getServiceContextAdministrador(), GEOGRAPHICAL_GRANULARITY_1);
+
+        // With access
+        geographicalGranularityDto = indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextAdministrador(), geographicalGranularityDto);
+
+        // Without access
+        try {
+            indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextTecnicoSistemaIndicadores(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextTecnicoProduccion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextTecnicoApoyoProduccion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextTecnicoDifusion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextTecnicoApoyoDifusion(), geographicalGranularityDto);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+    }
+
+    @Test
+    public void testDeleteGeographicalGranularity() throws Exception {
+        indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextAdministrador(), GEOGRAPHICAL_GRANULARITY_5);
+    }
+
+    @Test
+    public void testDeleteGeographicalGranularityErrorWithoutRole() throws Exception {
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoSistemaIndicadores(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoProduccion(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoApoyoProduccion(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoDifusion(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+        try {
+            indicatorsServiceFacade.deleteGeographicalGranularity(getServiceContextTecnicoApoyoDifusion(), GEOGRAPHICAL_GRANULARITY_1);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
     }
 
     @Override
