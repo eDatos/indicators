@@ -15,50 +15,51 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class DataStructure {
 
     @JsonProperty
-    private String uuid;
+    private String                    uuid;
 
     @JsonProperty
-    private String title;
+    private String                    title;
 
     @JsonProperty("uriPx")
-    private String pxUri;
+    private String                    pxUri;
 
     @JsonProperty
-    private List<String> stub;
+    private List<String>              stub;
 
     @JsonProperty
-    private List<String> heading;
+    private List<String>              heading;
 
     private Map<String, List<String>> valueLabels;
     private Map<String, List<String>> valueCodes;
 
     @JsonProperty
-    private String temporalVariable;
+    private String                    temporalVariable;
 
-    private String spatialVariable;
-
-    @JsonProperty
-    private String contVariable;
+    private String                    spatialVariable;
 
     @JsonProperty
-    private List<String> notes;
+    private String                    contVariable;
 
     @JsonProperty
-    private String source;
-    
-    @JsonProperty
-    private String surveyCode;
-    
-    @JsonProperty
-    private String surveyTitle;
-    
-    @JsonProperty
-    private List<String> publishers;
+    private List<String>              notes;
 
+    @JsonProperty
+    private String                    source;
+
+    @JsonProperty
+    private String                    surveyCode;
+
+    @JsonProperty
+    private String                    surveyTitle;
+
+    @JsonProperty
+    private List<String>              publishers;
+
+    @SuppressWarnings("unchecked")
     @JsonProperty("categories")
     public void processCategories(List<Object> categories) {
         for (Object varDef : categories) {
-            Map<String, Object> mapa = (Map<String,Object>) varDef;
+            Map<String, Object> mapa = (Map<String, Object>) varDef;
             String var = (String) mapa.get("variable");
             List<String> labels = (List<String>) mapa.get("labels");
             List<String> codes = (List<String>) mapa.get("codes");
@@ -66,7 +67,7 @@ public class DataStructure {
             addValueCodes(var, codes);
         }
     }
-    
+
     @JsonProperty("spatials")
     public void processSpatials(List<String> spatials) {
         if (spatials == null || spatials.size() == 0) {
@@ -75,7 +76,7 @@ public class DataStructure {
             spatialVariable = spatials.get(0);
         }
     }
-    
+
     @JsonProperty("temporals")
     public void processTemporals(List<String> temporals) {
         if (temporals == null || temporals.size() == 0) {
@@ -145,22 +146,18 @@ public class DataStructure {
         this.valueCodes = valueCodes;
     }
 
-    
     public String getTemporalVariable() {
         return temporalVariable;
     }
 
-    
     public void setTemporalVariable(String temporalVariable) {
         this.temporalVariable = temporalVariable;
     }
 
-    
     public String getSpatialVariable() {
         return spatialVariable;
     }
 
-    
     public void setSpatialVariable(String spatialVariable) {
         this.spatialVariable = spatialVariable;
     }
@@ -188,7 +185,7 @@ public class DataStructure {
     public void setSource(String source) {
         this.source = source;
     }
-    
+
     public String getSurveyCode() {
         return surveyCode;
     }
@@ -197,21 +194,18 @@ public class DataStructure {
         this.surveyCode = surveyCode;
     }
 
-    
     public String getSurveyTitle() {
         return surveyTitle;
     }
 
-    
     public void setSurveyTitle(String surveyTitle) {
         this.surveyTitle = surveyTitle;
     }
 
-    
     public List<String> getPublishers() {
         return publishers;
     }
-    
+
     public void setPublishers(List<String> publishers) {
         this.publishers = publishers;
     }
