@@ -31,7 +31,7 @@
         </li>
         [#elseif element.kind == "indicators#indicatorInstance"]
         <li>
-            <img class="table-icon" id="${element.id}" border="0" src="[@spring.url "/theme/images/icon-table.png"/]" data-self-link="${element.selfLink}">
+            <i class="icon-table" data-self-link="${element.selfLink}"></i>
             <span class="item-numeration">${idx?string?left_pad(2, "0")}</span>
             <a class="nouline" href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
         </li>
@@ -95,7 +95,7 @@
     });
 
     // Tooltips for table icons
-    _.each($(".table-icon"), function (icon) {
+    _.each($(".icon-table"), function (icon) {
         var $icon = $(icon);
 
         var $tooltip = $icon.qtip({
@@ -181,7 +181,7 @@
                     Metadatos
                 </a> |
                 <a href="<%= selfLink %>/data" target="_blank" title="Datos">
-                <imgsrc="[@spring.url "/theme/images/tabla.gif"/]" class="middle"> Datos</a>
+                <img src="[@spring.url "/theme/images/tabla.gif"/]" class="middle"> Datos</a>
             </td>
         </tr>
         </tbody>

@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-webfont');
 
     var templatesPath = 'src/main/webapp/theme/templates';
     var lessPath = 'src/main/webapp/theme/css/';
@@ -85,6 +86,20 @@ module.exports = function (grunt) {
             widgets : {
                 files : [widgetsPath + '/templates/*.html', widgetsPath + '/src/*.js'],
                 tasks : ['handlebars:widgets', 'concat:widgets']
+            }
+        },
+        webfont: {
+            icons: {
+                src: 'src/main/webapp/theme/icons/*.svg',
+                dest: 'src/main/webapp/theme/fonts',
+                destCss: 'src/main/webapp/theme/css',
+                options: {
+                    relativeFontPath: "../fonts/",
+                    destHtml: 'src/main/webapp/theme/fonts',
+                    stylesheet : "less",
+                    hashes: false,
+                    syntax: "bootstrap"
+                }
             }
         }
     });

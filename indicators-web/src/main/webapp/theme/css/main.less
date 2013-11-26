@@ -1,6 +1,7 @@
 //@import "reset.less";
 @import "variables.less";
 @import "mixins.less";
+@import "icons.less";
 
 html {
     overflow-y: scroll;
@@ -116,28 +117,76 @@ input[type="image"] {
             color: #6B6B6B;
         }
 
-
         .dimension-depth-1 { //tree for elements lower than first depth
 
             .tree-icon {
-                background-repeat: no-repeat;
                 width: 14px;
                 height: 14px;
                 vertical-align: middle;
-                padding-right: 3px;
+                margin-right: 3px;
                 float: left;
+                background-repeat: no-repeat;
+                background-position: center center;
             }
 
             .open {
                 .tree-icon {
-                    background-image: url("../images/icon-tree-open.png");
+                    &:before {
+                        font-family:"icons";
+                        display:inline-block;
+                        font-weight:normal;
+                        font-style:normal;
+                        speak:none;
+                        text-decoration:inherit;
+                        text-transform:none;
+                        text-rendering:optimizeLegibility;
+                        -webkit-font-smoothing:antialiased;
+                        -moz-osx-font-smoothing:grayscale;
+                        font-family:"icons";
+                        display:inline-block;
+                        font-weight:normal;
+                        font-style:normal;
+                        text-decoration:inherit;
+                        content:"\f102"; //plus
+                        font-size: 13px;
+                        color: #808080;
+                        cursor: pointer;
+                    }
+
+                    &:hover:before {
+                        color: #003366;
+                    }
                 }
             }
 
             .close {
 
                 .tree-icon {
-                    background-image: url("../images/icon-tree-close.png");
+                    &:before {
+                        font-family:"icons";
+                        display:inline-block;
+                        font-weight:normal;
+                        font-style:normal;
+                        speak:none;
+                        text-decoration:inherit;
+                        text-transform:none;
+                        text-rendering:optimizeLegibility;
+                        -webkit-font-smoothing:antialiased;
+                        -moz-osx-font-smoothing:grayscale;
+                        font-family:"icons";
+                        display:inline-block;
+                        font-weight:normal;
+                        font-style:normal;
+                        text-decoration:inherit;
+                        content:"\f103"; //plus
+                        font-size: 13px;
+                        color: #808080;
+                        cursor: pointer;
+                    }
+
+                    &:hover:before {
+                        color: #003366;
+                    }
                 }
 
                 .capitulos {
@@ -146,6 +195,14 @@ input[type="image"] {
             }
         }
 
+        .icon-table {
+            font-size: 13px;
+            color: #808080;
+            cursor: pointer;
+            &:hover {
+                color: #003366;
+            }
+        }
 
     }
 }
@@ -155,9 +212,15 @@ input[type="image"] {
 }
 
 .table-icon {
-    vertical-align: middle;
-    padding-right: 3px;
-    cursor: pointer;
+//    vertical-align: middle;
+//    margin-right: 3px;
+//    cursor: pointer;
+//    background-image: url("../images/sized-icons/tabla_14.png");
+//    width: 14px;
+//    height: 15px;
+//    float: left;
+//    background-repeat: no-repeat;
+//    background-position: center center;
 }
 
 /*****************************************
