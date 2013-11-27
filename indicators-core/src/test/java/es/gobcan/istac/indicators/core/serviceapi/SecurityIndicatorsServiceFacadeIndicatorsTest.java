@@ -102,13 +102,13 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -544,8 +544,8 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
-        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
+        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.setSourceSurveyUrl("sourceSurveyUrl");
         dataSourceDto.setAbsoluteMethod("method");
         dataSourceDto.getPublishers().add("IBESTAT");

@@ -1536,7 +1536,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Indicator 2
             IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
             indicatorInstanceDto.setIndicatorUuid(indicatorUuid2);
-            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
             indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -1547,7 +1547,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             // Indicator 3
             IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
             indicatorInstanceDto.setIndicatorUuid(indicatorUuid3);
-            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+            indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
             indicatorInstanceDto.setParentUuid(null);
             indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
             indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -2210,7 +2210,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(5));
 
@@ -2244,7 +2244,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(2));
 
@@ -2280,7 +2280,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(3));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2313,7 +2313,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(2));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2346,7 +2346,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create subdimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(parentUuid);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -2396,7 +2396,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setOrderInLevel(Long.MAX_VALUE);
 
         try {
@@ -2416,7 +2416,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         // Create dimension
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setOrderInLevel(Long.MIN_VALUE);
 
         try {
@@ -2435,7 +2435,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateDimensionErrorIndicatorsSystemNotExists() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         try {
             indicatorsServiceFacade.createDimension(getServiceContextAdministrador(), NOT_EXISTS, dimensionDto);
@@ -2454,7 +2454,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
         try {
@@ -2473,7 +2473,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateDimensionSubdimensionErrorDimensionNotExists() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(DIMENSION_NOT_EXISTS);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2493,7 +2493,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
     public void testCreateDimensionSubdimensionErrorDimensionNotExistsInIndicatorsSystem() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
 
@@ -2681,7 +2681,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = DIMENSION_1_INDICATORS_SYSTEM_1_V2;
         DimensionDto dimensionDto = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         // Update
         DimensionDto dimensionDtoUpdated = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDto);
@@ -2759,7 +2759,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         DimensionDto dimensionDto = new DimensionDto();
         dimensionDto.setUuid(NOT_EXISTS);
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         try {
             indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDto);
@@ -2780,11 +2780,11 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         DimensionDto dimensionDtoSession1 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dimensionDtoSession1.getVersionOptimisticLocking());
-        dimensionDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         DimensionDto dimensionDtoSession2 = indicatorsServiceFacade.retrieveDimension(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dimensionDtoSession2.getVersionOptimisticLocking());
-        dimensionDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDtoSession2.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         // Update by session 1
         DimensionDto dimensionDtoSession1AfterUpdate = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1);
@@ -2802,7 +2802,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Session 1 can modify because has last version
-        dimensionDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         DimensionDto dimensionDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateDimension(getServiceContextAdministrador(), dimensionDtoSession1AfterUpdate);
         assertTrue(dimensionDtoSession1AfterUpdate2.getVersionOptimisticLocking() > dimensionDtoSession1AfterUpdate.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsDimension(dimensionDtoSession1AfterUpdate, dimensionDtoSession1AfterUpdate2);
@@ -3167,7 +3167,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -3209,7 +3209,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1, geoValue2));
@@ -3249,7 +3249,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1));
@@ -3292,7 +3292,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue1, geoValue2));
@@ -3331,7 +3331,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
@@ -3372,7 +3372,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -3411,7 +3411,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(3));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -3477,7 +3477,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(DIMENSION_2_INDICATORS_SYSTEM_1_V2);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -3519,7 +3519,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
@@ -3558,7 +3558,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(parentUuid);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(2));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
@@ -3628,7 +3628,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
@@ -3654,7 +3654,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
@@ -3680,7 +3680,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
@@ -3707,7 +3707,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicatorInstance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setParentUuid(null);
@@ -3733,7 +3733,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         // Create indicator instance
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(NOT_EXISTS);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(1));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -3759,7 +3759,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
@@ -3784,7 +3784,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         String indicatorsSystemUuid = INDICATORS_SYSTEM_3;
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(null);
@@ -3809,7 +3809,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(DIMENSION_NOT_EXISTS);
@@ -3834,7 +3834,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid("Indicator-1");
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
         indicatorInstanceDto.setTimeValues(Arrays.asList("2012"));
         indicatorInstanceDto.setParentUuid(DIMENSION_1_INDICATORS_SYSTEM_1_V2);
@@ -3976,7 +3976,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         String uuid = INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_1_V2;
         IndicatorInstanceDto indicatorInstanceDto = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setGeographicalGranularityUuid(GEOGRAPHICAL_GRANULARITY_1);
         indicatorInstanceDto.setGeographicalValues(null);
 
@@ -4069,7 +4069,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setUuid(NOT_EXISTS);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         try {
             indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDto);
@@ -4094,7 +4094,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         IndicatorInstanceDto indicatorInstanceDtoSession2 = indicatorsServiceFacade.retrieveIndicatorInstance(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), indicatorInstanceDtoSession2.getVersionOptimisticLocking());
-        indicatorInstanceDtoSession2.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDtoSession2.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         // Update by session 1
         IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1);
@@ -4112,7 +4112,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Session 1 can modify because has last version
-        indicatorInstanceDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         IndicatorInstanceDto indicatorInstanceDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateIndicatorInstance(getServiceContextAdministrador(), indicatorInstanceDtoSession1AfterUpdate);
         assertTrue(indicatorInstanceDtoSession1AfterUpdate2.getVersionOptimisticLocking() > indicatorInstanceDtoSession1AfterUpdate.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsIndicatorInstance(indicatorInstanceDtoSession1AfterUpdate, indicatorInstanceDtoSession1AfterUpdate2);
@@ -5130,7 +5130,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         GeographicalValueDto geographicalValueDto = indicatorsServiceFacade.retrieveGeographicalValue(getServiceContextAdministrador(), uuid);
 
-        geographicalValueDto.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalValueDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         geographicalValueDto.setCode(IndicatorsMocks.mockString(5));
         geographicalValueDto.setGranularityUuid(GEOGRAPHICAL_GRANULARITY_4);
         geographicalValueDto.setLatitude(22.232511);
@@ -5208,7 +5208,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(1), geographicalValueDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
-        geographicalValueDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalValueDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
         GeographicalValueDto geographicalValueDtoSession1AfterUpdate = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDtoSession1);
         IndicatorsAsserts.assertEqualsGeographicalValueDto(geographicalValueDtoSession1, geographicalValueDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(2), geographicalValueDtoSession1AfterUpdate.getOptimisticLockingVersion());
@@ -5224,7 +5224,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Session 1 can modify because has last version
-        geographicalValueDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalValueDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         GeographicalValueDto geographicalValueDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateGeographicalValue(getServiceContextAdministrador(), geographicalValueDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(3), geographicalValueDtoSession1AfterUpdate2.getOptimisticLockingVersion());
         IndicatorsAsserts.assertEqualsGeographicalValueDto(geographicalValueDtoSession1AfterUpdate, geographicalValueDtoSession1AfterUpdate2);
@@ -5391,7 +5391,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         GeographicalGranularityDto geographicalGranularityDto = indicatorsServiceFacade.retrieveGeographicalGranularity(getServiceContextAdministrador(), uuid);
 
-        geographicalGranularityDto.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalGranularityDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         geographicalGranularityDto.setCode(IndicatorsMocks.mockString(5));
 
         // Update
@@ -5448,7 +5448,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertEquals(Long.valueOf(1), geographicalGranularityDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
-        geographicalGranularityDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalGranularityDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
         GeographicalGranularityDto geographicalGranularityDtoSession1AfterUpdate = indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextAdministrador(),
                 geographicalGranularityDtoSession1);
         IndicatorsAsserts.assertEqualsGeographicalGranularityDto(geographicalGranularityDtoSession1, geographicalGranularityDtoSession1AfterUpdate);
@@ -5465,7 +5465,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
 
         // Session 1 can modify because has last version
-        geographicalGranularityDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        geographicalGranularityDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         GeographicalGranularityDto geographicalGranularityDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateGeographicalGranularity(getServiceContextAdministrador(),
                 geographicalGranularityDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(3), geographicalGranularityDtoSession1AfterUpdate2.getOptimisticLockingVersion());

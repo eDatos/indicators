@@ -674,7 +674,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateDimension() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -718,7 +718,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateDimensionOnlyAccessToIndicatorsSystem1() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -731,7 +731,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testCreateDimensionErrorOnlyAccessToIndicatorsSystem2() throws Exception {
 
         DimensionDto dimensionDto = new DimensionDto();
-        dimensionDto.setTitle(IndicatorsMocks.mockInternationalString());
+        dimensionDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         dimensionDto.setParentUuid(null);
         dimensionDto.setOrderInLevel(Long.valueOf(1));
         String uuidIndicatorsSystem = INDICATORS_SYSTEM_1;
@@ -927,7 +927,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -975,7 +975,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
@@ -993,7 +993,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
         IndicatorInstanceDto indicatorInstanceDto = new IndicatorInstanceDto();
         indicatorInstanceDto.setIndicatorUuid(INDICATOR_2);
-        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorInstanceDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorInstanceDto.setParentUuid(null);
         indicatorInstanceDto.setOrderInLevel(Long.valueOf(5));
         indicatorInstanceDto.setGeographicalValues(Arrays.asList(geoValue));
