@@ -6,8 +6,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -426,13 +429,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -475,13 +478,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.MAGNITUDE);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -503,13 +506,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -533,13 +536,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.RATIO);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -549,7 +552,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
-        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         assertTrue(indicatorDto.getQuantity().isRatioOrExtension());
 
         // Create
@@ -565,13 +568,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -581,7 +584,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
-        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseTime("2011");
         assertTrue(indicatorDto.getQuantity().isIndexOrExtension());
 
@@ -598,13 +601,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -614,7 +617,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
-        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseQuantityIndicatorUuid(INDICATOR_10);
         assertTrue(indicatorDto.getQuantity().isChangeRateOrExtension());
 
@@ -631,13 +634,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
 
@@ -657,13 +660,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.CHANGE_RATE);
 
@@ -718,13 +721,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -734,7 +737,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
-        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
         indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
@@ -760,13 +763,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.AMOUNT);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -776,7 +779,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorDto.getQuantity().setDenominatorIndicatorUuid(INDICATOR_3);
         indicatorDto.getQuantity().setIsPercentage(Boolean.FALSE);
-        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalString());
+        indicatorDto.getQuantity().setPercentageOf(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setBaseValue(Integer.valueOf(1));
         indicatorDto.getQuantity().setBaseTime("2011");
         indicatorDto.getQuantity().setBaseLocationUuid(GEOGRAPHICAL_VALUE_1);
@@ -835,13 +838,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(NOT_EXISTS);
@@ -864,9 +867,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -888,9 +891,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -912,9 +915,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(NOT_EXISTS);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -936,9 +939,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -953,13 +956,13 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("A*b-?");
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setComments(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setNotes(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -982,11 +985,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
-        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setQuantity(new QuantityDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.INDEX);
         indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
@@ -1242,8 +1245,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.DRAFT, indicatorDto.getProcStatus());
 
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
-        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
 
         // Update
         IndicatorDto indicatorDtoUpdated = indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1264,7 +1267,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.VALIDATION_REJECTED, indicatorDto.getProcStatus());
 
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1284,9 +1287,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.PRODUCTION_VALIDATION, indicatorDto.getProcStatus());
 
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1306,9 +1309,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.DIFFUSION_VALIDATION, indicatorDto.getProcStatus());
 
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1328,9 +1331,9 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         assertEquals(IndicatorProcStatusEnum.PUBLICATION_FAILED, indicatorDto.getProcStatus());
 
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
 
         // Update
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1405,7 +1408,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
         indicatorDto.setSubjectCode(SUBJECT_1);
-        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalString(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
 
         try {
             indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -1545,7 +1548,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Session 1 can modify because has last version
-        indicatorDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         IndicatorDto indicatorDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(3), indicatorDtoSession1AfterUpdate2.getVersionOptimisticLocking());
         IndicatorsAsserts.assertEqualsIndicator(indicatorDtoSession1AfterUpdate, indicatorDtoSession1AfterUpdate2);
@@ -2242,7 +2245,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         // Change indicator to fraction with numerator in draft
         IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, null);
-        indicatorDto.setTitle(IndicatorsMocks.mockInternationalString());
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.getQuantity().setType(QuantityTypeEnum.FRACTION);
         indicatorDto.getQuantity().setNumeratorIndicatorUuid(INDICATOR_2);
         indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
@@ -3371,8 +3374,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
-        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
+        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.setSourceSurveyUrl("sourceSurveyUrl");
         dataSourceDto.getPublishers().add("ISTAC");
         dataSourceDto.getPublishers().add("INE");
@@ -3460,8 +3463,8 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeValue("2010");
         dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
-        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
+        dataSourceDto.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.setSourceSurveyUrl("sourceSurveyUrl");
         dataSourceDto.getPublishers().add("ISTAC");
         dataSourceDto.getPublishers().add("INE");
@@ -3589,7 +3592,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto1.setCategory("category1");
         dataSourceDto.addOtherVariable(dataSourceVariableDto1);
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
@@ -3678,7 +3681,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceVariableDto2.setCategory("category2");
         dataSourceDto.addOtherVariable(dataSourceVariableDto2);
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         dataSourceDto.setInterperiodPuntualRate(new RateDerivationDto());
@@ -3720,7 +3723,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setGeographicalVariable("geographicalVariable");
         dataSourceDto.setGeographicalValueUuid(GEOGRAPHICAL_VALUE_1);
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -3760,7 +3763,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         try {
@@ -3786,7 +3789,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         try {
@@ -3813,7 +3816,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -3860,7 +3863,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -3906,7 +3909,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         dataSourceDto.setTimeVariable("timeVariable1");
         dataSourceDto.setGeographicalVariable("geographicalVariable1");
         dataSourceDto.setSourceSurveyCode("sourceSurveyCode");
-        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalString());
+        dataSourceDto.setSourceSurveyTitle(IndicatorsMocks.mockInternationalStringDto());
         dataSourceDto.getPublishers().add("ISTAC");
 
         DataSourceVariableDto dataSourceVariableDto1 = new DataSourceVariableDto();
@@ -4152,7 +4155,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         DataSourceDto dataSourceDtoSession2 = indicatorsServiceFacade.retrieveDataSource(getServiceContextAdministrador(), uuid);
         assertEquals(Long.valueOf(1), dataSourceDtoSession2.getVersionOptimisticLocking());
-        dataSourceDtoSession2.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalString());
+        dataSourceDtoSession2.setSourceSurveyAcronym(IndicatorsMocks.mockInternationalStringDto());
 
         // Update by session 2
         DataSourceDto dataSourceDtoSession2AfterUpdate = indicatorsServiceFacade.updateDataSource(getServiceContextAdministrador(), dataSourceDtoSession2);
@@ -4225,17 +4228,11 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         List<QuantityUnitDto> quantityUnits = indicatorsServiceFacade.retrieveQuantityUnits(getServiceContextAdministrador());
         assertEquals(3, quantityUnits.size());
 
-        assertEquals(QUANTITY_UNIT_3, quantityUnits.get(0).getUuid());
-        assertEquals("m", quantityUnits.get(0).getSymbol());
-        assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnits.get(0).getSymbolPosition());
-
-        assertEquals(QUANTITY_UNIT_1, quantityUnits.get(1).getUuid());
-        assertEquals("km", quantityUnits.get(1).getSymbol());
-        assertEquals(QuantityUnitSymbolPositionEnum.END, quantityUnits.get(1).getSymbolPosition());
-
-        assertEquals(QUANTITY_UNIT_2, quantityUnits.get(2).getUuid());
-        assertEquals("kg", quantityUnits.get(2).getSymbol());
-        assertEquals(QuantityUnitSymbolPositionEnum.START, quantityUnits.get(2).getSymbolPosition());
+        Map<String, String> quantityUnitsExpected = new HashMap<String, String>();
+        quantityUnitsExpected.put(QUANTITY_UNIT_1, "km");
+        quantityUnitsExpected.put(QUANTITY_UNIT_2, "kg");
+        quantityUnitsExpected.put(QUANTITY_UNIT_3, "m");
+        checkQuantityUnitsInCollection(quantityUnitsExpected, quantityUnits);
     }
 
     @Test
@@ -4310,7 +4307,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
 
-        quantityUnitDto.setTitle(IndicatorsMocks.mockInternationalString());
+        quantityUnitDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         quantityUnitDto.setSymbol(IndicatorsMocks.mockString(3));
         quantityUnitDto.setSymbolPosition(QuantityUnitSymbolPositionEnum.START);
 
@@ -4350,7 +4347,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(Long.valueOf(1), quantityUnitDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
-        quantityUnitDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        quantityUnitDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
         QuantityUnitDto quantityUnitDtoSession1AfterUpdate = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDtoSession1);
         IndicatorsAsserts.assertEqualsQuantityUnitDto(quantityUnitDtoSession1, quantityUnitDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(2), quantityUnitDtoSession1AfterUpdate.getOptimisticLockingVersion());
@@ -4366,7 +4363,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Session 1 can modify because has last version
-        quantityUnitDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        quantityUnitDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         QuantityUnitDto quantityUnitDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateQuantityUnit(getServiceContextAdministrador(), quantityUnitDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(3), quantityUnitDtoSession1AfterUpdate2.getOptimisticLockingVersion());
         IndicatorsAsserts.assertEqualsQuantityUnitDto(quantityUnitDtoSession1AfterUpdate, quantityUnitDtoSession1AfterUpdate2);
@@ -4607,7 +4604,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), uuid);
 
-        unitMultiplierDto.setTitle(IndicatorsMocks.mockInternationalString());
+        unitMultiplierDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         unitMultiplierDto.setUnitMultiplier(2);
 
         // Update
@@ -4662,7 +4659,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals(Long.valueOf(1), unitMultiplierDtoSession2.getOptimisticLockingVersion());
 
         // Update by session 1
-        unitMultiplierDtoSession1.setTitle(IndicatorsMocks.mockInternationalString());
+        unitMultiplierDtoSession1.setTitle(IndicatorsMocks.mockInternationalStringDto());
         UnitMultiplierDto unitMultiplierDtoSession1AfterUpdate = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDtoSession1);
         IndicatorsAsserts.assertEqualsUnitMultiplierDto(unitMultiplierDtoSession1, unitMultiplierDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(2), unitMultiplierDtoSession1AfterUpdate.getOptimisticLockingVersion());
@@ -4678,7 +4675,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         }
 
         // Session 1 can modify because has last version
-        unitMultiplierDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalString());
+        unitMultiplierDtoSession1AfterUpdate.setTitle(IndicatorsMocks.mockInternationalStringDto());
         UnitMultiplierDto unitMultiplierDtoSession1AfterUpdate2 = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDtoSession1AfterUpdate);
         assertEquals(Long.valueOf(3), unitMultiplierDtoSession1AfterUpdate2.getOptimisticLockingVersion());
         IndicatorsAsserts.assertEqualsUnitMultiplierDto(unitMultiplierDtoSession1AfterUpdate, unitMultiplierDtoSession1AfterUpdate2);
@@ -4716,6 +4713,15 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(unitMultiplierValue, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    private void checkQuantityUnitsInCollection(Map<String, String> quantityUnitsExpected, Collection<QuantityUnitDto> quantityUnitsActual) {
+        assertEquals(quantityUnitsExpected.size(), quantityUnitsActual.size());
+
+        for (QuantityUnitDto quantityUnit : quantityUnitsActual) {
+            String code = quantityUnitsExpected.get(quantityUnit.getUuid());
+            assertEquals(code, quantityUnit.getSymbol());
         }
     }
 
