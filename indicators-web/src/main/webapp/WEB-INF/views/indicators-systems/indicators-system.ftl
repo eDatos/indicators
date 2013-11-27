@@ -53,7 +53,7 @@
     <div class="h2roundbox">
         <div class="h2top"></div>
         <div class="h2content" style="min-height: 15px; margin-top: 3px;">
-            [@apph.messageEscape 'menu.indicators-systems'/]: [@localizeTitle indicator.title/]
+            [@localizeTitle indicator.title/]
             <a href="[@spring.url "/"/]/api/indicators/v1.0/indicatorsSystems/${indicator.code}"
                style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
                 <img height="16" width="16"
