@@ -1081,12 +1081,12 @@ public class InvocationValidator {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public static void checkDeleteUnitMultiplier(List<MetamacExceptionItem> exceptions, Integer unitMultiplierValue) throws MetamacException {
+    public static void checkDeleteUnitMultiplier(List<MetamacExceptionItem> exceptions, String unitMultiplierUuid) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
         }
 
-        IndicatorsValidationUtils.checkParameterRequired(unitMultiplierValue, ServiceExceptionParameters.UNIT_MULTIPLIER_VALUE, exceptions);
+        IndicatorsValidationUtils.checkParameterRequired(unitMultiplierUuid, ServiceExceptionParameters.UNIT_MULTIPLIER_UUID, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }

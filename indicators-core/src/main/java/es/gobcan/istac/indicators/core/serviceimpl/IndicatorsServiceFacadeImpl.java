@@ -1745,12 +1745,12 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     }
 
     @Override
-    public void deleteUnitMultiplier(ServiceContext ctx, Integer unitMultiplierId) throws MetamacException {
+    public void deleteUnitMultiplier(ServiceContext ctx, String unitMultiplierUuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
 
         // Service call
-        getIndicatorsService().deleteUnitMultiplier(ctx, unitMultiplierId);
+        getIndicatorsService().deleteUnitMultiplier(ctx, unitMultiplierUuid);
     }
 
     // -------------------------------------------------------------------------------------------

@@ -4795,36 +4795,36 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     @Test
     public void testDeleteUnitMultiplier() throws Exception {
-        Integer unitMultiplierValue = 1;
+        String unitMultiplierUuid = UNIT_MULTIPLIER_1;
 
         // Delete
-        indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+        indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierUuid);
 
         // Validation
         try {
-            indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+            indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), unitMultiplierUuid);
             fail("Unit multiplier deleted");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND_UUID.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(unitMultiplierValue, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(unitMultiplierUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
     @Test
     public void testDeleteUnitMultiplierNotExists() throws Exception {
-        Integer unitMultiplierValue = 2;
+        String unitMultiplierUuid = NOT_EXISTS;
 
         // Delete
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierValue);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), unitMultiplierUuid);
             fail("Unit multiplier not exists");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.UNIT_MULTIPLIER_NOT_FOUND_UUID.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
-            assertEquals(unitMultiplierValue, e.getExceptionItems().get(0).getMessageParameters()[0]);
+            assertEquals(unitMultiplierUuid, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 

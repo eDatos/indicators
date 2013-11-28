@@ -159,7 +159,7 @@ Application Indicators {
 	    	PagedResult<@UnitMultiplier> findUnitMultipliers(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
-	    	deleteUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
+	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
     	}
     	
     	"Provides access to indicators data"
@@ -571,7 +571,7 @@ Application Indicators {
 	    	"Update a unit multiplier"
 	    	@UnitMultiplierDto updateUnitMultiplier(@UnitMultiplierDto unitMultiplierDto) throws MetamacException;
 	    	"Delete a unit multiplier"
-	    	deleteUnitMultiplier(Integer unitMultiplierId) throws MetamacException;
+	    	deleteUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	
 	    }
 

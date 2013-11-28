@@ -60,8 +60,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
     private static String             QUANTITY_UNIT_3              = "3";
 
     // Unit multipliers
-    private static String             UNIT_MULTIPLIER_UUID_1       = "1";
-    private static Integer            UNIT_MULTIPLIER_VALUE_1      = 1;
+    private static String             UNIT_MULTIPLIER_1            = "1";
 
     // Subjects
     private static String             SUBJECT_1                    = "1";
@@ -860,12 +859,12 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testRetrieveUnitMultiplier() throws Exception {
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_UUID_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoSistemaIndicadores(), UNIT_MULTIPLIER_UUID_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoProduccion(), UNIT_MULTIPLIER_UUID_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoProduccion(), UNIT_MULTIPLIER_UUID_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoDifusion(), UNIT_MULTIPLIER_UUID_1);
-        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoDifusion(), UNIT_MULTIPLIER_UUID_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoSistemaIndicadores(), UNIT_MULTIPLIER_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoProduccion(), UNIT_MULTIPLIER_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoProduccion(), UNIT_MULTIPLIER_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoDifusion(), UNIT_MULTIPLIER_1);
+        indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextTecnicoApoyoDifusion(), UNIT_MULTIPLIER_1);
     }
 
     @Test
@@ -925,7 +924,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testUpdateUnitMultiplier() throws Exception {
-        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_UUID_1);
+        UnitMultiplierDto unitMultiplierDto = indicatorsServiceFacade.retrieveUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
 
         // With access
         unitMultiplierDto = indicatorsServiceFacade.updateUnitMultiplier(getServiceContextAdministrador(), unitMultiplierDto);
@@ -970,48 +969,48 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
     @Test
     public void testDeleteUnitMultiplier() throws Exception {
-        indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_VALUE_1);
+        indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextAdministrador(), UNIT_MULTIPLIER_1);
     }
 
     @Test
     public void testDeleteUnitMultiplierErrorWithoutRole() throws Exception {
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoSistemaIndicadores(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoSistemaIndicadores(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoProduccion(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoProduccion(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoApoyoProduccion(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoApoyoProduccion(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoDifusion(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoDifusion(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
             assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
         try {
-            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoApoyoDifusion(), UNIT_MULTIPLIER_VALUE_1);
+            indicatorsServiceFacade.deleteUnitMultiplier(getServiceContextTecnicoApoyoDifusion(), UNIT_MULTIPLIER_1);
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());

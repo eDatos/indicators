@@ -813,12 +813,12 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     }
 
     @Override
-    public void deleteUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
+    public void deleteUnitMultiplier(ServiceContext ctx, String unitMultiplierUuid) throws MetamacException {
         // Validation of parameters
-        InvocationValidator.checkDeleteUnitMultiplier(null, unitMultiplierValue);
+        InvocationValidator.checkDeleteUnitMultiplier(null, unitMultiplierUuid);
 
         // Repository operation
-        UnitMultiplier unitMultiplier = retrieveUnitMultiplier(ctx, unitMultiplierValue);
+        UnitMultiplier unitMultiplier = retrieveUnitMultiplier(ctx, unitMultiplierUuid);
         getUnitMultiplierRepository().delete(unitMultiplier);
 
     }
