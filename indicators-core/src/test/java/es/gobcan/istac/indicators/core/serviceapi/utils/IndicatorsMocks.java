@@ -96,9 +96,13 @@ public class IndicatorsMocks extends MetamacMocks {
         geographicalValueDto.setCode(code);
         geographicalValueDto.setOrder(order);
         geographicalValueDto.setTitle(mockInternationalStringDto());
-        geographicalValueDto.setGranularityUuid(granularityUuid);
         geographicalValueDto.setLatitude(20.0656233);
         geographicalValueDto.setLongitude(-25.454564645);
+
+        GeographicalGranularityDto granularity = new GeographicalGranularityDto();
+        granularity.setUuid(granularityUuid);
+        geographicalValueDto.setGranularity(granularity);
+
         return geographicalValueDto;
     }
 

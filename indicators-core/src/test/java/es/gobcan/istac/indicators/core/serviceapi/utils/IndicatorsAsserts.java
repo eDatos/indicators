@@ -138,9 +138,9 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getOrder(), actual.getOrder());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getGranularityUuid(), actual.getGranularityUuid());
         assertEquals(expected.getLatitude(), actual.getLatitude());
         assertEquals(expected.getLongitude(), actual.getLongitude());
+        assertEquals(expected.getGranularity().getUuid(), actual.getGranularity().getUuid());
     }
 
     public static void assertEqualsGeographicalValueDto(GeographicalValueDto expected, GeographicalValueDto actual) {

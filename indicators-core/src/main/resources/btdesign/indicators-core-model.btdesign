@@ -1680,7 +1680,7 @@ Application Indicators {
     	"Dto for geographical values"
     	DataTransferObject GeographicalValueDto extends GeographicalValueBaseDto {
        		"Granularity"
-			String granularityUuid;
+			- @GeographicalGranularityDto granularity;
        		"Latitude"
        		Double latitude;
        		"Longitude"

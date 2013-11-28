@@ -595,8 +595,8 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
         target.setOrder(source.getOrder());
         target.setTitle(internationalStringDtoToDo(ctx, source.getTitle(), target.getTitle()));
 
-        if (StringUtils.isNotEmpty(source.getGranularityUuid())) {
-            target.setGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGranularityUuid()));
+        if (StringUtils.isNotEmpty(source.getGranularity().getUuid())) {
+            target.setGranularity(indicatorsSystemsService.retrieveGeographicalGranularity(ctx, source.getGranularity().getUuid()));
         } else {
             target.setGranularity(null);
         }

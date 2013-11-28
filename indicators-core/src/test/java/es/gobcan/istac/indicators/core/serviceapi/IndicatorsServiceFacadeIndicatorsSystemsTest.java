@@ -4677,7 +4677,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNotNull(geographicalValueDto);
         assertEquals(uuid, geographicalValueDto.getUuid());
         assertEquals("ES", geographicalValueDto.getCode());
-        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularityUuid());
+        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularity().getUuid());
         assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
@@ -4730,7 +4730,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertNotNull(geographicalValueDto);
         assertEquals(GEOGRAPHICAL_VALUE_1, geographicalValueDto.getUuid());
         assertEquals(code, geographicalValueDto.getCode());
-        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularityUuid());
+        assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalValueDto.getGranularity().getUuid());
         assertEquals(Double.valueOf(-40.689061), geographicalValueDto.getLatitude());
         assertEquals("-40.689061", geographicalValueDto.getLatitude().toString());
         assertEquals(Double.valueOf(368987.22), geographicalValueDto.getLongitude());
@@ -5132,7 +5132,9 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
         geographicalValueDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         geographicalValueDto.setCode(IndicatorsMocks.mockString(5));
-        geographicalValueDto.setGranularityUuid(GEOGRAPHICAL_GRANULARITY_4);
+        GeographicalGranularityDto geographicalGranularityDto = new GeographicalGranularityDto();
+        geographicalGranularityDto.setUuid(GEOGRAPHICAL_GRANULARITY_4);
+        geographicalValueDto.setGranularity(geographicalGranularityDto);
         geographicalValueDto.setLatitude(22.232511);
         geographicalValueDto.setLongitude(41232.254112);
         geographicalValueDto.setOrder(IndicatorsMocks.mockString(5));
