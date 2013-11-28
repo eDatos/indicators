@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client.utils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
@@ -242,6 +244,27 @@ public class ClientSecurityUtils {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public static boolean canCreateQuantityUnit() {
+        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean canDeleteQuantityUnit() {
+        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean canEditQuantityUnit() {
+        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
+            return true;
         }
         return false;
     }

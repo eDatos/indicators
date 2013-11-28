@@ -7,6 +7,10 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import es.gobcan.istac.indicators.web.client.IndicatorsPlaceManager;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.view.AdminQuantityUnitsTabViewImpl;
+import es.gobcan.istac.indicators.web.client.admin.view.AdminViewImpl;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.view.IndicatorListViewImpl;
@@ -35,6 +39,10 @@ public class ClientModule extends AbstractPresenterModule {
 
         // Main presenters
         bindPresenter(MainPagePresenter.class, MainPagePresenter.MainView.class, MainPageViewImpl.class, MainPagePresenter.MainProxy.class);
+
+        bindPresenter(AdminPresenter.class, AdminPresenter.AdminView.class, AdminViewImpl.class, AdminPresenter.AdminProxy.class);
+        bindPresenter(AdminQuantityUnitsTabPresenter.class, AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabView.class, AdminQuantityUnitsTabViewImpl.class,
+                AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabProxy.class);
         bindPresenter(SystemListPresenter.class, SystemListPresenter.SystemListView.class, SystemListViewImpl.class, SystemListPresenter.SystemListProxy.class);
         bindPresenter(SystemPresenter.class, SystemPresenter.SystemView.class, SystemViewImpl.class, SystemPresenter.SystemProxy.class);
         bindPresenter(IndicatorListPresenter.class, IndicatorListPresenter.IndicatorListView.class, IndicatorListViewImpl.class, IndicatorListPresenter.IndicatorListProxy.class);

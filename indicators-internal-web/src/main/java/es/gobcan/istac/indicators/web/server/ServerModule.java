@@ -19,6 +19,7 @@ import es.gobcan.istac.indicators.web.server.handlers.DeleteDimensionActionHandl
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorInstanceActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.DeleteIndicatorsSystemsActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.DeleteQuantityUnitsActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.ExportSystemInDsplActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.FindDataDefinitionsByOperationCodeActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.FindIndicatorsActionHandler;
@@ -62,6 +63,7 @@ import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorProductionV
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.RejectIndicatorsSystemProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SaveDataSourceActionHandler;
+import es.gobcan.istac.indicators.web.server.handlers.SaveQuantityUnitActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToDiffusionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorToProductionValidationActionHandler;
 import es.gobcan.istac.indicators.web.server.handlers.SendIndicatorsSystemToDiffusionValidationActionHandler;
@@ -83,6 +85,7 @@ import es.gobcan.istac.indicators.web.shared.DeleteDimensionAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorInstanceAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
+import es.gobcan.istac.indicators.web.shared.DeleteQuantityUnitsAction;
 import es.gobcan.istac.indicators.web.shared.ExportSystemInDsplAction;
 import es.gobcan.istac.indicators.web.shared.FindDataDefinitionsByOperationCodeAction;
 import es.gobcan.istac.indicators.web.shared.FindIndicatorsAction;
@@ -126,6 +129,7 @@ import es.gobcan.istac.indicators.web.shared.RejectIndicatorProductionValidation
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.RejectIndicatorsSystemProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SaveDataSourceAction;
+import es.gobcan.istac.indicators.web.shared.SaveQuantityUnitAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToDiffusionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorToProductionValidationAction;
 import es.gobcan.istac.indicators.web.shared.SendIndicatorsSystemToDiffusionValidationAction;
@@ -145,6 +149,11 @@ public class ServerModule extends HandlerModule {
 
     @Override
     protected void configureHandlers() {
+
+        // Admin
+        bindHandler(SaveQuantityUnitAction.class, SaveQuantityUnitActionHandler.class);
+        bindHandler(DeleteQuantityUnitsAction.class, DeleteQuantityUnitsActionHandler.class);
+        bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
 
         // Indicators System
         bindHandler(GetIndicatorsSystemPaginatedListAction.class, GetIndicatorsSystemPaginatedListActionHandler.class);
@@ -198,7 +207,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetDataSourceAction.class, GetDataSourceActionHandler.class);
         bindHandler(DeleteDataSourcesAction.class, DeleteDataSourcesActionHandler.class);
 
-        bindHandler(GetQuantityUnitsListAction.class, GetQuantityUnitsListActionHandler.class);
         bindHandler(GetGeographicalGranularitiesAction.class, GetGeographicalGranularitiesActionHandler.class);
         bindHandler(GetGeographicalValuesAction.class, GetGeographicalValuesActionHandler.class);
         bindHandler(GetGeographicalValueAction.class, GetGeographicalValueActionHandler.class);

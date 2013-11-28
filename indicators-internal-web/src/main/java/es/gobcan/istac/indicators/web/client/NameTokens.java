@@ -3,6 +3,8 @@ package es.gobcan.istac.indicators.web.client;
 public class NameTokens {
 
     public static final String mainPage               = "!MainPage";
+    public static final String adminPage              = "!AdminPage";
+    public static final String adminQuantityUnitsPage = "!Units";
     public static final String systemListPage         = "!SystemListPage";
     public static final String systemPage             = "!SystemPage";
     public static final String systemGeneralPage      = "!SystemGeneralPage";

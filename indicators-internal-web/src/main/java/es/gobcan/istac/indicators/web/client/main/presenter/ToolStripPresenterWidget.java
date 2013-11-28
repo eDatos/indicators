@@ -23,6 +23,7 @@ public class ToolStripPresenterWidget extends PresenterWidget<ToolStripPresenter
 
         HasClickHandlers getIndicatorsSystemsButton();
         HasClickHandlers getIndicatorsButton();
+        HasClickHandlers getAdminButton();
     }
 
     @Inject
@@ -51,6 +52,17 @@ public class ToolStripPresenterWidget extends PresenterWidget<ToolStripPresenter
             @Override
             public void onClick(ClickEvent event) {
                 PlaceRequest request = new PlaceRequest(NameTokens.indicatorListPage);
+                List<PlaceRequest> placeRequestHierarchy = new ArrayList<PlaceRequest>();
+                placeRequestHierarchy.add(request);
+                placeManager.revealPlaceHierarchy(placeRequestHierarchy);
+            }
+        }));
+
+        registerHandler(getView().getAdminButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                PlaceRequest request = new PlaceRequest(NameTokens.adminPage);
                 List<PlaceRequest> placeRequestHierarchy = new ArrayList<PlaceRequest>();
                 placeRequestHierarchy.add(request);
                 placeManager.revealPlaceHierarchy(placeRequestHierarchy);

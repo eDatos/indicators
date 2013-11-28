@@ -18,6 +18,7 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
 
     private ToolStripButton systemListButton;
     private ToolStripButton indicatorListButton;
+    private ToolStripButton adminButton;
 
     @Inject
     public ToolStripViewImpl() {
@@ -28,11 +29,14 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
 
         systemListButton = new ToolStripButton(getConstants().appLinksSystemList());
         indicatorListButton = new ToolStripButton(getConstants().appLinksIndList());
+        adminButton = new ToolStripButton(getConstants().appLinksAdmin());
 
         // Add buttons to toolStrip
         toolStrip.addButton(systemListButton);
         toolStrip.addMember(new ToolStripSeparator());
         toolStrip.addButton(indicatorListButton);
+        toolStrip.addMember(new ToolStripSeparator());
+        toolStrip.addButton(adminButton);
     }
 
     @Override
@@ -63,6 +67,11 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
     @Override
     public HasClickHandlers getIndicatorsButton() {
         return indicatorListButton;
+    }
+
+    @Override
+    public HasClickHandlers getAdminButton() {
+        return adminButton;
     }
 
 }

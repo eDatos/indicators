@@ -2,6 +2,8 @@ package es.gobcan.istac.indicators.web.client.utils;
 
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -30,6 +32,7 @@ import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.core.enume.domain.QuantityTypeEnum;
+import es.gobcan.istac.indicators.core.enume.domain.QuantityUnitSymbolPositionEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationMethodTypeEnum;
 import es.gobcan.istac.indicators.core.enume.domain.RateDerivationRoundingEnum;
 import es.gobcan.istac.indicators.core.enume.domain.TimeGranularityEnum;
@@ -149,13 +152,22 @@ public class CommonUtils {
         }
         return valueMap;
     }
-    
+
     public static LinkedHashMap<String, String> getQuantityUnitsValueMap(List<QuantityUnitDto> units) {
         LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
         valueMap.put(new String(), new String());
         sortQuantityUnitsList(units);
         for (QuantityUnitDto unit : units) {
             valueMap.put(unit.getUuid(), InternationalStringUtils.getLocalisedString(unit.getTitle()));
+        }
+        return valueMap;
+    }
+
+    public static LinkedHashMap<String, String> getQuantityUnitsSymbolPositionValueMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(new String(), new String());
+        for (QuantityUnitSymbolPositionEnum position : QuantityUnitSymbolPositionEnum.values()) {
+            valueMap.put(position.getName(), getCoreMessages().getString(getCoreMessages().quantityUnitSymbolPositionEnum() + position.getName()));
         }
         return valueMap;
     }
@@ -315,10 +327,10 @@ public class CommonUtils {
             }
         });
     }
-    
+
     private static void sortQuantityUnitsList(List<QuantityUnitDto> units) {
         Collections.sort(units, new Comparator<QuantityUnitDto>() {
-            
+
             @Override
             public int compare(QuantityUnitDto first, QuantityUnitDto second) {
                 String firstText = InternationalStringUtils.getLocalisedString(first.getTitle());

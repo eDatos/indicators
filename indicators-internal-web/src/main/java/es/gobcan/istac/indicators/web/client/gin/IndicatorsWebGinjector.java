@@ -10,6 +10,8 @@ import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ErrorPagePresenter;
@@ -28,6 +30,10 @@ public interface IndicatorsWebGinjector extends Ginjector {
     LoggedInGatekeeper getLoggedInGatekeeper();
 
     Provider<MainPagePresenter> getMainPagePresenter();
+
+    AsyncProvider<AdminPresenter> getAdminPresenter();
+    AsyncProvider<AdminQuantityUnitsTabPresenter> getAdminQuantityUnitsTabPresenter();
+
     AsyncProvider<SystemListPresenter> getSystemListPresenter();
     AsyncProvider<SystemPresenter> getSystemPresenter();
     AsyncProvider<IndicatorListPresenter> getIndicatorListPresenter();
