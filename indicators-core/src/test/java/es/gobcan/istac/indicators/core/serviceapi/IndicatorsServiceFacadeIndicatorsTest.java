@@ -107,6 +107,12 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
     // Unit multiplier
     private static String             UNIT_MULTIPLIER_1            = "1";
+    private static String             UNIT_MULTIPLIER_2            = "2";
+    private static String             UNIT_MULTIPLIER_3            = "3";
+    private static String             UNIT_MULTIPLIER_4            = "4";
+    private static String             UNIT_MULTIPLIER_5            = "5";
+    private static String             UNIT_MULTIPLIER_6            = "6";
+    private static String             UNIT_MULTIPLIER_7            = "7";
 
     // Geographical values
     private static String             GEOGRAPHICAL_VALUE_1         = "1";
@@ -4180,6 +4186,57 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    @Transactional
+    public void testFindQuantityUnits() throws Exception {
+        // All
+        {
+            MetamacCriteriaResult<QuantityUnitDto> quantityUnitsResult = indicatorsServiceFacade.findQuantityUnits(getServiceContextAdministrador(), null);
+            assertEquals(Integer.valueOf(0), quantityUnitsResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(25), quantityUnitsResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(3), quantityUnitsResult.getPaginatorResult().getTotalResults());
+            assertEquals(3, quantityUnitsResult.getResults().size());
+
+            List<QuantityUnitDto> quantityUnits = quantityUnitsResult.getResults();
+            assertEquals(QUANTITY_UNIT_1, quantityUnits.get(0).getUuid());
+            assertEquals(QUANTITY_UNIT_2, quantityUnits.get(1).getUuid());
+            assertEquals(QUANTITY_UNIT_3, quantityUnits.get(2).getUuid());
+        }
+
+        // All, only 1 results
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(1));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<QuantityUnitDto> quantityUnitsResult = indicatorsServiceFacade.findQuantityUnits(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(0), quantityUnitsResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(1), quantityUnitsResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(3), quantityUnitsResult.getPaginatorResult().getTotalResults());
+            assertEquals(1, quantityUnitsResult.getResults().size());
+
+            List<QuantityUnitDto> quantityUnits = quantityUnitsResult.getResults();
+            assertEquals(QUANTITY_UNIT_1, quantityUnits.get(0).getUuid());
+        }
+
+        // All, only 1 results second page
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
+            criteria.getPaginator().setFirstResult(Integer.valueOf(2));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<QuantityUnitDto> quantityUnitsResult = indicatorsServiceFacade.findQuantityUnits(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(2), quantityUnitsResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(2), quantityUnitsResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(3), quantityUnitsResult.getPaginatorResult().getTotalResults());
+            assertEquals(1, quantityUnitsResult.getResults().size());
+
+            List<QuantityUnitDto> quantityUnits = quantityUnitsResult.getResults();
+            assertEquals(QUANTITY_UNIT_3, quantityUnits.get(0).getUuid());
+        }
+    }
+
+    @Test
     public void testRetrieveQuantityUnit() throws Exception {
         String uuid = QUANTITY_UNIT_1;
         QuantityUnitDto quantityUnitDto = indicatorsServiceFacade.retrieveQuantityUnit(getServiceContextAdministrador(), uuid);
@@ -4490,6 +4547,61 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(0).getTitle(), "es", "Área temática 1", null, null);
         assertEquals(SUBJECT_3, subjects.get(1).getCode());
         IndicatorsAsserts.assertEqualsInternationalString(subjects.get(1).getTitle(), "es", "Área temática 3", null, null);
+    }
+
+    @Test
+    @Transactional
+    public void testFindUnitMultipliers() throws Exception {
+        // All
+        {
+            MetamacCriteriaResult<UnitMultiplierDto> unitMultipliersResult = indicatorsServiceFacade.findUnitMultipliers(getServiceContextAdministrador(), null);
+            assertEquals(Integer.valueOf(0), unitMultipliersResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(25), unitMultipliersResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(7), unitMultipliersResult.getPaginatorResult().getTotalResults());
+            assertEquals(7, unitMultipliersResult.getResults().size());
+
+            List<UnitMultiplierDto> unitMultipliers = unitMultipliersResult.getResults();
+            assertEquals(UNIT_MULTIPLIER_1, unitMultipliers.get(0).getUuid());
+            assertEquals(UNIT_MULTIPLIER_2, unitMultipliers.get(1).getUuid());
+            assertEquals(UNIT_MULTIPLIER_3, unitMultipliers.get(2).getUuid());
+            assertEquals(UNIT_MULTIPLIER_4, unitMultipliers.get(3).getUuid());
+            assertEquals(UNIT_MULTIPLIER_5, unitMultipliers.get(4).getUuid());
+            assertEquals(UNIT_MULTIPLIER_6, unitMultipliers.get(5).getUuid());
+            assertEquals(UNIT_MULTIPLIER_7, unitMultipliers.get(6).getUuid());
+        }
+
+        // All, only 1 results
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(1));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<UnitMultiplierDto> unitMultipliersResult = indicatorsServiceFacade.findUnitMultipliers(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(0), unitMultipliersResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(1), unitMultipliersResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(7), unitMultipliersResult.getPaginatorResult().getTotalResults());
+            assertEquals(1, unitMultipliersResult.getResults().size());
+
+            List<UnitMultiplierDto> unitMultipliers = unitMultipliersResult.getResults();
+            assertEquals(UNIT_MULTIPLIER_1, unitMultipliers.get(0).getUuid());
+        }
+
+        // All, only 2 results second page
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(2));
+            criteria.getPaginator().setFirstResult(Integer.valueOf(2));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<UnitMultiplierDto> unitMultipliersResult = indicatorsServiceFacade.findUnitMultipliers(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(2), unitMultipliersResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(2), unitMultipliersResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(7), unitMultipliersResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, unitMultipliersResult.getResults().size());
+
+            List<UnitMultiplierDto> unitMultipliers = unitMultipliersResult.getResults();
+            assertEquals(UNIT_MULTIPLIER_3, unitMultipliers.get(0).getUuid());
+        }
     }
 
     @Test

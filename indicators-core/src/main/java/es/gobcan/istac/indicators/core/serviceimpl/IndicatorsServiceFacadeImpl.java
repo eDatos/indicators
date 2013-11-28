@@ -1348,7 +1348,6 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public MetamacCriteriaResult<GeographicalValueDto> findGeographicalValues(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
-
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
 
@@ -1433,6 +1432,23 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // -------------------------------------------------------------------------------------------
     // GEOGRAPHICAL GRANULARITIES
     // -------------------------------------------------------------------------------------------
+
+    @Override
+    public MetamacCriteriaResult<GeographicalGranularityDto> findGeographicalGranularities(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalGranularityCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
+
+        // Find
+        PagedResult<GeographicalGranularity> result = getIndicatorsSystemsService().findGeographicalGranularities(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<GeographicalGranularityDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultGeographicalGranularity(result,
+                sculptorCriteria.getPageSize());
+        return metamacCriteriaResult;
+    }
 
     @Override
     public GeographicalGranularityDto retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
@@ -1534,6 +1550,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // -------------------------------------------------------------------------------------------
 
     @Override
+    public MetamacCriteriaResult<QuantityUnitDto> findQuantityUnits(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getQuantityUnitCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
+
+        // Find
+        PagedResult<QuantityUnit> result = getIndicatorsService().findQuantityUnits(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<QuantityUnitDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuantiyUnit(result, sculptorCriteria.getPageSize());
+        return metamacCriteriaResult;
+    }
+
+    @Override
     public QuantityUnitDto retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
         // Security
         SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
@@ -1615,6 +1647,22 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
     // -------------------------------------------------------------------------------------------
     // UNIT MULTIPLIERS
     // -------------------------------------------------------------------------------------------
+
+    @Override
+    public MetamacCriteriaResult<UnitMultiplierDto> findUnitMultipliers(ServiceContext ctx, MetamacCriteria metamacCriteria) throws MetamacException {
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ANY_ROLE_ALLOWED);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getUnitMultiplierCriteriaMapper().metamacCriteria2SculptorCriteria(metamacCriteria);
+
+        // Find
+        PagedResult<UnitMultiplier> result = getIndicatorsService().findUnitMultipliers(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<UnitMultiplierDto> metamacCriteriaResult = sculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultUnitMultiplier(result, sculptorCriteria.getPageSize());
+        return metamacCriteriaResult;
+    }
 
     @Override
     public List<UnitMultiplierDto> retrieveUnitsMultipliers(ServiceContext ctx) throws MetamacException {

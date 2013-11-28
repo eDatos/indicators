@@ -945,6 +945,16 @@ public class InvocationValidator {
     // GEOGRAPHICAL GRANULARITY
     // --------------------------------------------------------------------------------------------
 
+    public static void checkFindGeographicalGranularities(List<MetamacExceptionItem> exceptions, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
+
     public static void checkRetrieveGeographicalGranularity(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
 
         if (exceptions == null) {
@@ -1019,6 +1029,17 @@ public class InvocationValidator {
     // UNIT MULTIPLIERS
     // --------------------------------------------------------------------------------------------
 
+    public static void checkFindUnitMultipliers(List<MetamacExceptionItem> exceptions, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+
+        ExceptionUtils.throwIfException(exceptions);
+
+    }
+
     public static void checkRetrieveUnitMultiplier(String unitMultiplierUuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
             exceptions = new ArrayList<MetamacExceptionItem>();
@@ -1091,6 +1112,17 @@ public class InvocationValidator {
     // --------------------------------------------------------------------------------------------
     // QUANTITY UNITS
     // --------------------------------------------------------------------------------------------
+
+    public static void checkFindQuantityUnits(List<MetamacExceptionItem> exceptions, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        if (exceptions == null) {
+            exceptions = new ArrayList<MetamacExceptionItem>();
+        }
+
+        // Note: properties names of criteria restrictions are checked in MetamacCriteria2SculptorCriteriaMapper
+
+        ExceptionUtils.throwIfException(exceptions);
+
+    }
 
     public static void checkRetrieveQuantityUnit(String uuid, List<MetamacExceptionItem> exceptions) throws MetamacException {
         if (exceptions == null) {
@@ -1950,5 +1982,4 @@ public class InvocationValidator {
             checkQuantity(rateDerivation.getQuantity(), parameterName, true, exceptions);
         }
     }
-
 }

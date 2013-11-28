@@ -2,8 +2,7 @@ package es.gobcan.istac.indicators.core.criteria;
 
 public enum GeographicalValueCriteriaOrderEnum {
 
-    GEOGRAPHICAL_GRANULARITY_UUID,
-    ORDER;
+    CODE, TITLE, GEOGRAPHICAL_GRANULARITY_UUID, ORDER;
 
     public String value() {
         return name();

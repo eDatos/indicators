@@ -5526,6 +5526,72 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
 
     @Test
     @Transactional
+    public void testFindGeographicalGranularities() throws Exception {
+        // All
+        {
+            MetamacCriteriaResult<GeographicalGranularityDto> geographicalGranularitiesResult = indicatorsServiceFacade.findGeographicalGranularities(getServiceContextAdministrador(), null);
+            assertEquals(Integer.valueOf(0), geographicalGranularitiesResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(25), geographicalGranularitiesResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(5), geographicalGranularitiesResult.getPaginatorResult().getTotalResults());
+            assertEquals(5, geographicalGranularitiesResult.getResults().size());
+
+            List<GeographicalGranularityDto> geographicalGranularities = geographicalGranularitiesResult.getResults();
+            assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalGranularities.get(0).getUuid());
+            assertEquals("COUNTRIES", geographicalGranularities.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularities.get(1).getUuid());
+            assertEquals("COMMUNITIES", geographicalGranularities.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_3, geographicalGranularities.get(2).getUuid());
+            assertEquals("PROVINCES", geographicalGranularities.get(2).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_4, geographicalGranularities.get(3).getUuid());
+            assertEquals("MUNICIPALITIES", geographicalGranularities.get(3).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_5, geographicalGranularities.get(4).getUuid());
+            assertEquals("ISLANDS", geographicalGranularities.get(4).getCode());
+        }
+
+        // All, only 3 results
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(3));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<GeographicalGranularityDto> geographicalGranularitiesResult = indicatorsServiceFacade.findGeographicalGranularities(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(0), geographicalGranularitiesResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(3), geographicalGranularitiesResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(5), geographicalGranularitiesResult.getPaginatorResult().getTotalResults());
+            assertEquals(3, geographicalGranularitiesResult.getResults().size());
+
+            List<GeographicalGranularityDto> geographicalGranularities = geographicalGranularitiesResult.getResults();
+            assertEquals(GEOGRAPHICAL_GRANULARITY_1, geographicalGranularities.get(0).getUuid());
+            assertEquals("COUNTRIES", geographicalGranularities.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_2, geographicalGranularities.get(1).getUuid());
+            assertEquals("COMMUNITIES", geographicalGranularities.get(1).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_3, geographicalGranularities.get(2).getUuid());
+            assertEquals("PROVINCES", geographicalGranularities.get(2).getCode());
+        }
+
+        // All, only 2 results second page
+        {
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setMaximumResultSize(Integer.valueOf(3));
+            criteria.getPaginator().setFirstResult(Integer.valueOf(3));
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            MetamacCriteriaResult<GeographicalGranularityDto> geographicalGranularitiesResult = indicatorsServiceFacade.findGeographicalGranularities(getServiceContextAdministrador(), criteria);
+            assertEquals(Integer.valueOf(3), geographicalGranularitiesResult.getPaginatorResult().getFirstResult());
+            assertEquals(Integer.valueOf(3), geographicalGranularitiesResult.getPaginatorResult().getMaximumResultSize());
+            assertEquals(Integer.valueOf(5), geographicalGranularitiesResult.getPaginatorResult().getTotalResults());
+            assertEquals(2, geographicalGranularitiesResult.getResults().size());
+
+            List<GeographicalGranularityDto> geographicalGranularities = geographicalGranularitiesResult.getResults();
+            assertEquals(GEOGRAPHICAL_GRANULARITY_4, geographicalGranularities.get(0).getUuid());
+            assertEquals("MUNICIPALITIES", geographicalGranularities.get(0).getCode());
+            assertEquals(GEOGRAPHICAL_GRANULARITY_5, geographicalGranularities.get(1).getUuid());
+            assertEquals("ISLANDS", geographicalGranularities.get(1).getCode());
+        }
+    }
+
+    @Test
+    @Transactional
     public void testRetrieveGeographicalGranularity() throws Exception {
 
         String uuid = GEOGRAPHICAL_GRANULARITY_2;

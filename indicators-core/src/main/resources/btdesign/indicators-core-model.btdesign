@@ -82,6 +82,7 @@ Application Indicators {
 	    	@GeographicalGranularity retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	@GeographicalGranularity retrieveGeographicalGranularityByCode(String code) throws MetamacException;
 	    	List<@GeographicalGranularity> retrieveGeographicalGranularities() throws MetamacException;
+	    	PagedResult<@GeographicalGranularity> findGeographicalGranularities(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@GeographicalGranularity createGeographicalGranularity(@GeographicalGranularity geographicalGranularity) throws MetamacException;
 	    	@GeographicalGranularity updateGeographicalGranularity(@GeographicalGranularity geographicalGranularity) throws MetamacException;
 	    	deleteGeographicalGranularity(String geographicalGranularityUuid) throws MetamacException;
@@ -140,6 +141,7 @@ Application Indicators {
 	    	// Quantity units
 	    	@QuantityUnit retrieveQuantityUnit(String uuid) throws MetamacException;
 	    	List<@QuantityUnit> retrieveQuantityUnits() throws MetamacException;
+	    	PagedResult<@QuantityUnit> findQuantityUnits(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@QuantityUnit createQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	@QuantityUnit updateQuantityUnit(@QuantityUnit quantityUnit) throws MetamacException;
 	    	deleteQuantityUnit(String quantityUnitUuid) throws MetamacException;
@@ -154,6 +156,7 @@ Application Indicators {
 	    	@UnitMultiplier retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	@UnitMultiplier retrieveUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
 	    	List<@UnitMultiplier> retrieveUnitsMultipliers() throws MetamacException;
+	    	PagedResult<@UnitMultiplier> findUnitMultipliers(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 	    	@UnitMultiplier createUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	@UnitMultiplier updateUnitMultiplier(@UnitMultiplier unitMultiplier) throws MetamacException;
 	    	deleteUnitMultiplier(Integer unitMultiplierValue) throws MetamacException;
@@ -426,6 +429,8 @@ Application Indicators {
 	    	@GeographicalGranularityDto retrieveGeographicalGranularity(String uuid) throws MetamacException;
 	    	"Retrieves geographical granularity by code"
 	    	@GeographicalGranularityDto retrieveGeographicalGranularityByCode(String code) throws MetamacException;
+	    	"Find geographical granularities by criteria"
+	    	MetamacCriteriaResult<@GeographicalGranularityDto> findGeographicalGranularities(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves all geographical granularities"
 	    	List<@GeographicalGranularityDto> retrieveGeographicalGranularities() throws MetamacException;
 	    	"Retrieves geographic granularities in the indicator"
@@ -508,6 +513,8 @@ Application Indicators {
 	    	// QUANTITY UNITS
 	    	"Retrieves quantity unit"
 	    	@QuantityUnitDto retrieveQuantityUnit(String uuid) throws MetamacException;
+	    	"Find quantity units by criteria"
+	    	MetamacCriteriaResult<@QuantityUnitDto> findQuantityUnits(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieve all quantity units"
 	    	List<@QuantityUnitDto> retrieveQuantityUnits() throws MetamacException;
 	    	"Create a quantity unit"
@@ -553,6 +560,8 @@ Application Indicators {
 	    	// UNITS MULTIPLIERS
 	    	"Retrieves all units multipliers"
 	    	List<@UnitMultiplierDto> retrieveUnitsMultipliers() throws MetamacException;
+	    	"Find unit multipliers by criteria"
+	    	MetamacCriteriaResult<@UnitMultiplierDto> findUnitMultipliers(MetamacCriteria criteria) throws MetamacException;
 	    	"Retrieves unit multiplier using uuid"
 	    	@UnitMultiplierDto retrieveUnitMultiplier(String unitMultiplierUuid) throws MetamacException;
 	    	"Retrieves unit multiplier"

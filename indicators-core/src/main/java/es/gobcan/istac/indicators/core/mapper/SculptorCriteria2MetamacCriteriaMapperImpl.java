@@ -8,12 +8,18 @@ import org.siemac.metamac.core.common.criteria.mapper.SculptorCriteria2MetamacCr
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.IndicatorsSystemVersion;
+import es.gobcan.istac.indicators.core.domain.QuantityUnit;
+import es.gobcan.istac.indicators.core.domain.UnitMultiplier;
+import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorSummaryDto;
 import es.gobcan.istac.indicators.core.dto.IndicatorsSystemSummaryDto;
+import es.gobcan.istac.indicators.core.dto.QuantityUnitDto;
+import es.gobcan.istac.indicators.core.dto.UnitMultiplierDto;
 
 @Component
 public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCriteria2MetamacCriteriaMapper {
@@ -33,7 +39,7 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
         }
         return target;
     }
-    
+
     @Override
     public MetamacCriteriaResult<IndicatorSummaryDto> pageResultToMetamacCriteriaResultIndicatorSummary(PagedResult<IndicatorVersion> source, Integer pageSize) {
         MetamacCriteriaResult<IndicatorSummaryDto> target = new MetamacCriteriaResult<IndicatorSummaryDto>();
@@ -46,7 +52,7 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
         }
         return target;
     }
-    
+
     @Override
     public MetamacCriteriaResult<GeographicalValueDto> pageResultToMetamacCriteriaResultGeographicalValue(PagedResult<GeographicalValue> source, Integer pageSize) {
         MetamacCriteriaResult<GeographicalValueDto> target = new MetamacCriteriaResult<GeographicalValueDto>();
@@ -55,6 +61,45 @@ public class SculptorCriteria2MetamacCriteriaMapperImpl implements SculptorCrite
             target.setResults(new ArrayList<GeographicalValueDto>());
             for (GeographicalValue geographicalValue : source.getValues()) {
                 target.getResults().add(do2DtoMapper.geographicalValueDoToDto(geographicalValue));
+            }
+        }
+        return target;
+    }
+
+    @Override
+    public MetamacCriteriaResult<GeographicalGranularityDto> pageResultToMetamacCriteriaResultGeographicalGranularity(PagedResult<GeographicalGranularity> source, Integer pageSize) {
+        MetamacCriteriaResult<GeographicalGranularityDto> target = new MetamacCriteriaResult<GeographicalGranularityDto>();
+        target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
+        if (source.getValues() != null) {
+            target.setResults(new ArrayList<GeographicalGranularityDto>());
+            for (GeographicalGranularity geographicalGranularity : source.getValues()) {
+                target.getResults().add(do2DtoMapper.geographicalGranularityDoToDto(geographicalGranularity));
+            }
+        }
+        return target;
+    }
+
+    @Override
+    public MetamacCriteriaResult<QuantityUnitDto> pageResultToMetamacCriteriaResultQuantiyUnit(PagedResult<QuantityUnit> source, Integer pageSize) {
+        MetamacCriteriaResult<QuantityUnitDto> target = new MetamacCriteriaResult<QuantityUnitDto>();
+        target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
+        if (source.getValues() != null) {
+            target.setResults(new ArrayList<QuantityUnitDto>());
+            for (QuantityUnit quantityUnit : source.getValues()) {
+                target.getResults().add(do2DtoMapper.quantityUnitDoToDto(quantityUnit));
+            }
+        }
+        return target;
+    }
+
+    @Override
+    public MetamacCriteriaResult<UnitMultiplierDto> pageResultToMetamacCriteriaResultUnitMultiplier(PagedResult<UnitMultiplier> source, Integer pageSize) {
+        MetamacCriteriaResult<UnitMultiplierDto> target = new MetamacCriteriaResult<UnitMultiplierDto>();
+        target.setPaginatorResult(SculptorCriteria2MetamacCriteria.sculptorResultToMetamacCriteriaResult(source, pageSize));
+        if (source.getValues() != null) {
+            target.setResults(new ArrayList<UnitMultiplierDto>());
+            for (UnitMultiplier unitMultiplier : source.getValues()) {
+                target.getResults().add(do2DtoMapper.unitMultiplierDoToDto(unitMultiplier));
             }
         }
         return target;

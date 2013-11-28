@@ -891,6 +891,16 @@ public class IndicatorsSystemsServiceImpl extends IndicatorsSystemsServiceImplBa
     // --------------------------------------------------------------------------------------------
 
     @Override
+    public PagedResult<GeographicalGranularity> findGeographicalGranularities(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkFindGeographicalGranularities(null, conditions, pagingParameter);
+
+        // Find
+        PagedResult<GeographicalGranularity> result = getGeographicalGranularityRepository().findByCondition(conditions, pagingParameter);
+        return result;
+    }
+
+    @Override
     public GeographicalGranularity retrieveGeographicalGranularity(ServiceContext ctx, String uuid) throws MetamacException {
 
         // Validation of parameters

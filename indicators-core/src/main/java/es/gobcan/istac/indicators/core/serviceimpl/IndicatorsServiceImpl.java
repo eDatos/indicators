@@ -681,6 +681,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     // --------------------------------------------------------------------------------------------
 
     @Override
+    public PagedResult<QuantityUnit> findQuantityUnits(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkFindQuantityUnits(null, conditions, pagingParameter);
+
+        // Find
+        PagedResult<QuantityUnit> result = getQuantityUnitRepository().findByCondition(conditions, pagingParameter);
+        return result;
+    }
+
+    @Override
     public QuantityUnit retrieveQuantityUnit(ServiceContext ctx, String uuid) throws MetamacException {
         // Validation of parameters
         InvocationValidator.checkRetrieveQuantityUnit(uuid, null);
@@ -734,6 +744,16 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
     // --------------------------------------------------------------------------------------------
     // UNIT MULTIPLIER
     // --------------------------------------------------------------------------------------------
+
+    @Override
+    public PagedResult<UnitMultiplier> findUnitMultipliers(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validation of parameters
+        InvocationValidator.checkFindUnitMultipliers(null, conditions, pagingParameter);
+
+        // Find
+        PagedResult<UnitMultiplier> result = getUnitMultiplierRepository().findByCondition(conditions, pagingParameter);
+        return result;
+    }
 
     @Override
     public UnitMultiplier retrieveUnitMultiplier(ServiceContext ctx, Integer unitMultiplierValue) throws MetamacException {
