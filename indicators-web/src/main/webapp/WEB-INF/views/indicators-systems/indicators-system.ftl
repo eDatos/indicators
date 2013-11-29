@@ -32,7 +32,7 @@
         [#elseif element.kind == "indicators#indicatorInstance"]
         <li>
             <i class="icon-table" data-self-link="${element.selfLink}"></i>
-            <span class="item-numeration">${idx?string?left_pad(2, "0")}</span>
+            <span class="item-numeration">${idx?string?left_pad(numberOfFixedDigitsInNumeration, "0")}</span>
             <a class="nouline" href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
         </li>
             [#global idx = idx + 1]
