@@ -74,9 +74,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             GeographicalGranularityCriteriaPropertyEnum propertyNameCriteria = GeographicalGranularityCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
-                    return new SculptorPropertyCriteria(GeographicalGranularityProperties.code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(GeographicalGranularityProperties.code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case TITLE:
-                    return new SculptorPropertyCriteria(GeographicalGranularityProperties.title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(GeographicalGranularityProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -117,7 +117,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             GeographicalValueCriteriaPropertyEnum propertyNameCriteria = GeographicalValueCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case GEOGRAPHICAL_GRANULARITY_UUID:
-                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().uuid(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(GeographicalValueProperties.granularity().uuid(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -158,9 +158,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             UnitMultiplierCriteriaPropertyEnum propertyNameCriteria = UnitMultiplierCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case UNIT_MULTIPLIER:
-                    return new SculptorPropertyCriteria(UnitMultiplierProperties.unitMultiplier(), propertyRestriction.getIntegerValue());
+                    return new SculptorPropertyCriteria(UnitMultiplierProperties.unitMultiplier(), propertyRestriction.getIntegerValue(), propertyRestriction.getOperationType());
                 case TITLE:
-                    return new SculptorPropertyCriteria(UnitMultiplierProperties.title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(UnitMultiplierProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -201,9 +201,9 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             QuantityUnitCriteriaPropertyEnum propertyNameCriteria = QuantityUnitCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case SYMBOL_POSITION:
-                    return new SculptorPropertyCriteria(QuantityUnitProperties.symbolPosition(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QuantityUnitProperties.symbolPosition(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case TITLE:
-                    return new SculptorPropertyCriteria(QuantityUnitProperties.title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QuantityUnitProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -242,7 +242,7 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             IndicatorsSystemCriteriaPropertyEnum propertyNameCriteria = IndicatorsSystemCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
-                    return new SculptorPropertyCriteria(IndicatorsSystemVersionProperties.indicatorsSystem().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(IndicatorsSystemVersionProperties.indicatorsSystem().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
@@ -275,11 +275,11 @@ public class MetamacCriteria2SculptorCriteriaMapperImpl implements MetamacCriter
             IndicatorCriteriaPropertyEnum propertyNameCriteria = IndicatorCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyNameCriteria) {
                 case CODE:
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.indicator().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case SUBJECT_CODE:
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.subjectCode(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case TITLE:
-                    return new SculptorPropertyCriteria(IndicatorVersionProperties.title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(IndicatorVersionProperties.title().texts().label(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }

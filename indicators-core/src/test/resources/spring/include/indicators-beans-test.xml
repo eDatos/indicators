@@ -4,6 +4,7 @@
 	<!-- Import more custom beans for test -->
 	<!-- Metamac environment configuration -->
 	<bean id="configurationService" class="org.siemac.metamac.core.common.conf.ConfigurationServiceImpl">
+        
 		<property name="systemConfigurationFile"><value>classpath:data/indicators/environment.xml</value></property>
 	</bean>
 	
