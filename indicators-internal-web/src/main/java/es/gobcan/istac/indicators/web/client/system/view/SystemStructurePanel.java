@@ -1446,7 +1446,7 @@ public class SystemStructurePanel extends HLayout {
                             uiHandlers.searchIndicator(indicatorsSearchWindow.getSearchCriteria());
                         }
                     });
-                    indicatorsSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                    indicatorsSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                         @Override
                         public void onClick(ClickEvent event) {
@@ -1472,7 +1472,7 @@ public class SystemStructurePanel extends HLayout {
                             creationForm.markForRedraw();
                         }
                     });
-                    
+
                     uiHandlers.searchIndicator(indicatorsSearchWindow.getSearchCriteria());
                 }
             });

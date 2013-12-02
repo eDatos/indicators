@@ -4,15 +4,12 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
@@ -52,7 +49,7 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorsSystemResult;
 import es.gobcan.istac.indicators.web.shared.CreateDimensionAction;
@@ -208,13 +205,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveIndSystem(final String indSystemCode) {
-        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, null), new WaitingAsyncCallback<GetIndicatorsSystemByCodeResult>() {
+        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemByCodeResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading indicator system with code = " + indSystemCode);
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
                 indSystem = result.getIndicatorsSystem();
@@ -227,13 +219,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveDiffusionIndSystem(final String indSystemCode, final String versionNumber) {
-        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, versionNumber), new WaitingAsyncCallback<GetIndicatorsSystemByCodeResult>() {
+        dispatcher.execute(new GetIndicatorsSystemByCodeAction(indSystemCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemByCodeResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading indicator system with code = " + indSystemCode + " and version number = " + versionNumber);
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemByCodeResult result) {
                 getView().setDiffusionIndicatorsSystem(result.getIndicatorsSystem());
@@ -243,13 +230,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveSystemStructure() {
-        dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new WaitingAsyncCallback<GetIndicatorsSystemStructureResult>() {
+        dispatcher.execute(new GetIndicatorsSystemStructureAction(indSystem.getCode()), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemStructureResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading system structure of indicator system  with code = " + indSystem.getCode());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemStructureResult result) {
                 getView().setIndicatorsSystemStructure(indSystem, result.getStructure());
@@ -259,13 +241,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveIndicator(final String uuid) {
-        dispatcher.execute(new GetIndicatorAction(uuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+        dispatcher.execute(new GetIndicatorAction(uuid), new WaitingAsyncCallbackHandlingError<GetIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving indicador with uuid = " + uuid);
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorFromInstance()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorResult result) {
                 getView().setIndicatorFromIndicatorInstance(result.getIndicator());
@@ -275,16 +252,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void createDimension(IndicatorsSystemDtoWeb system, DimensionDto dimension) {
-        dispatcher.execute(new CreateDimensionAction(system, dimension), new WaitingAsyncCallback<CreateDimensionResult>() {
+        dispatcher.execute(new CreateDimensionAction(system, dimension), new WaitingAsyncCallbackHandlingError<CreateDimensionResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorCreate()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(CreateDimensionResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimCreated()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucDimCreated());
                 getView().onDimensionSaved(result.getCreatedDimension());
             }
         });
@@ -292,16 +265,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void updateDimension(DimensionDto dimension) {
-        dispatcher.execute(new UpdateDimensionAction(dimension), new WaitingAsyncCallback<UpdateDimensionResult>() {
+        dispatcher.execute(new UpdateDimensionAction(dimension), new WaitingAsyncCallbackHandlingError<UpdateDimensionResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorSave()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(UpdateDimensionResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimSaved()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucDimSaved());
                 getView().onDimensionSaved(result.getDimension());
             }
         });
@@ -309,32 +278,24 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void deleteDimension(DimensionDto dimension) {
-        dispatcher.execute(new DeleteDimensionAction(dimension.getUuid()), new WaitingAsyncCallback<DeleteDimensionResult>() {
+        dispatcher.execute(new DeleteDimensionAction(dimension.getUuid()), new WaitingAsyncCallbackHandlingError<DeleteDimensionResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucDimErrorDelete()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(DeleteDimensionResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucDimDeleted()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucDimDeleted());
             }
         });
     }
 
     @Override
     public void createIndicatorInstance(IndicatorsSystemDtoWeb system, IndicatorInstanceDto instance) {
-        dispatcher.execute(new CreateIndicatorInstanceAction(system, instance), new WaitingAsyncCallback<CreateIndicatorInstanceResult>() {
+        dispatcher.execute(new CreateIndicatorInstanceAction(system, instance), new WaitingAsyncCallbackHandlingError<CreateIndicatorInstanceResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorCreate()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(CreateIndicatorInstanceResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceCreated()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucIndInstanceCreated());
                 getView().onIndicatorInstanceSaved(result.getCreatedIndicatorInstance());
             }
         });
@@ -343,16 +304,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void updateIndicatorInstance(IndicatorInstanceDto indicatorInstance) {
         final IndicatorInstanceDto instance = indicatorInstance;
-        dispatcher.execute(new UpdateIndicatorInstanceAction(instance), new WaitingAsyncCallback<UpdateIndicatorInstanceResult>() {
+        dispatcher.execute(new UpdateIndicatorInstanceAction(instance), new WaitingAsyncCallbackHandlingError<UpdateIndicatorInstanceResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorSave()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(UpdateIndicatorInstanceResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceSaved()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucIndInstanceSaved());
                 getView().onIndicatorInstanceSaved(result.getIndicatorInstance());
             }
         });
@@ -360,12 +317,12 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void moveSystemStructureNodes(String systemUuid, String targetUuid, ElementLevelDto level, Long newOrder) {
-        dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, level), new WaitingAsyncCallback<MoveSystemStructureContentResult>() {
+        dispatcher.execute(new MoveSystemStructureContentAction(systemUuid, targetUuid, newOrder, level), new WaitingAsyncCallbackHandlingError<MoveSystemStructureContentResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucNodesErrorMove()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onWaitSuccess(MoveSystemStructureContentResult result) {
@@ -376,28 +333,20 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void deleteIndicatorInstance(IndicatorInstanceDto instance) {
-        dispatcher.execute(new DeleteIndicatorInstanceAction(instance.getUuid()), new WaitingAsyncCallback<DeleteIndicatorInstanceResult>() {
+        dispatcher.execute(new DeleteIndicatorInstanceAction(instance.getUuid()), new WaitingAsyncCallbackHandlingError<DeleteIndicatorInstanceResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemStrucIndInstanceErrorDelete()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(DeleteIndicatorInstanceResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemStrucIndInstanceDeleted()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemStrucIndInstanceDeleted());
             }
         });
     }
 
     @Override
     public void retrieveGeographicalValue(String geographicalValueUuid) {
-        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallback<GetGeographicalValueResult>() {
+        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalValueResult result) {
                 getView().setGeographicalValue(result.getGeographicalValueDto());
@@ -407,16 +356,11 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void sendToProductionValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(indicatorsSystemDto), new WaitingAsyncCallback<SendIndicatorsSystemToProductionValidationResult>() {
+        dispatcher.execute(new SendIndicatorsSystemToProductionValidationAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<SendIndicatorsSystemToProductionValidationResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sendind to production validation indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToProductionValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(SendIndicatorsSystemToProductionValidationResult result) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemSentToProductionValidation());
                 indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
@@ -425,16 +369,11 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void sendToDiffusionValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new SendIndicatorsSystemToDiffusionValidationAction(indicatorsSystemDto), new WaitingAsyncCallback<SendIndicatorsSystemToDiffusionValidationResult>() {
+        dispatcher.execute(new SendIndicatorsSystemToDiffusionValidationAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<SendIndicatorsSystemToDiffusionValidationResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sendind to diffusion validation indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingSystemToDiffusionValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(SendIndicatorsSystemToDiffusionValidationResult result) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemSentToDiffusionValidation());
                 indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
@@ -444,31 +383,22 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void rejectValidation(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
         if (IndicatorsSystemProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorsSystemDto.getProcStatus())) {
-            dispatcher.execute(new RejectIndicatorsSystemProductionValidationAction(indicatorsSystemDto), new WaitingAsyncCallback<RejectIndicatorsSystemProductionValidationResult>() {
+            dispatcher.execute(new RejectIndicatorsSystemProductionValidationAction(indicatorsSystemDto),
+                    new WaitingAsyncCallbackHandlingError<RejectIndicatorsSystemProductionValidationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
-                }
-                @Override
-                public void onWaitSuccess(RejectIndicatorsSystemProductionValidationResult result) {
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
-                    indSystem = result.getIndicatorsSystemDto();
-                    setIndicatorsSystem(result.getIndicatorsSystemDto());
-                }
-            });
+                        @Override
+                        public void onWaitSuccess(RejectIndicatorsSystemProductionValidationResult result) {
+                            fireSuccessMessage(getMessages().systemValidationRejected());
+                            indSystem = result.getIndicatorsSystemDto();
+                            setIndicatorsSystem(result.getIndicatorsSystemDto());
+                        }
+                    });
         } else if (IndicatorsSystemProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorsSystemDto.getProcStatus())) {
-            dispatcher.execute(new RejectIndicatorsSystemDiffusionValidationAction(indicatorsSystemDto), new WaitingAsyncCallback<RejectIndicatorsSystemDiffusionValidationResult>() {
+            dispatcher.execute(new RejectIndicatorsSystemDiffusionValidationAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<RejectIndicatorsSystemDiffusionValidationResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error rejecting validation of indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingSystemValidation()), MessageTypeEnum.ERROR);
-                }
                 @Override
                 public void onWaitSuccess(RejectIndicatorsSystemDiffusionValidationResult result) {
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemValidationRejected()), MessageTypeEnum.SUCCESS);
+                    fireSuccessMessage(getMessages().systemValidationRejected());
                     indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
@@ -479,37 +409,27 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void publish(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
         if (indicatorsSystemDto.isOperationExternallyPublished()) {
-            dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallback<PublishIndicatorsSystemResult>() {
+            dispatcher.execute(new PublishIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<PublishIndicatorsSystemResult>(this) {
 
                 @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error publishing indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingSystem()), MessageTypeEnum.ERROR);
-                }
-                @Override
                 public void onWaitSuccess(PublishIndicatorsSystemResult result) {
-                    ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemPublished()), MessageTypeEnum.SUCCESS);
+                    fireSuccessMessage(getMessages().systemPublished());
                     indSystem = result.getIndicatorsSystemDto();
                     setIndicatorsSystem(result.getIndicatorsSystemDto());
                 }
             });
         } else {
-            ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(null, getMessages().errorPublishingSystemOperationNotPublished()), MessageTypeEnum.ERROR);
+            ShowMessageEvent.fireErrorMessage(SystemPresenter.this, getMessages().errorPublishingSystemOperationNotPublished());
         }
     }
 
     @Override
     public void archive(final IndicatorsSystemDtoWeb indicatorsSystemDto) {
-        dispatcher.execute(new ArchiveIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallback<ArchiveIndicatorsSystemResult>() {
+        dispatcher.execute(new ArchiveIndicatorsSystemAction(indicatorsSystemDto), new WaitingAsyncCallbackHandlingError<ArchiveIndicatorsSystemResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error archiving indicators system with uuid = " + indicatorsSystemDto.getUuid());
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorArchivingSystem()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(ArchiveIndicatorsSystemResult result) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemArchived()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemArchived());
                 indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
@@ -518,46 +438,22 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersioningIndicatorsSystemAction(indicatorsSystemDto, versionType), new WaitingAsyncCallback<VersioningIndicatorsSystemResult>() {
+        dispatcher.execute(new VersioningIndicatorsSystemAction(indicatorsSystemDto, versionType), new WaitingAsyncCallbackHandlingError<VersioningIndicatorsSystemResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorVersioningIndicatorsSystem()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(VersioningIndicatorsSystemResult result) {
                 retrieveSystemStructure(); // Reload system structure
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().systemVersioned()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemVersioned());
                 indSystem = result.getIndicatorsSystemDtoWeb();
                 setIndicatorsSystem(result.getIndicatorsSystemDtoWeb());
             }
         });
     }
 
-    // @Override
-    // public void populateIndicatorData(String uuid, String version) {
-    // dispatcher.execute(new PopulateIndicatorDataAction(uuid, version), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
-    //
-    // @Override
-    // public void onWaitFailure(Throwable caught) {
-    // ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
-    // }
-    // @Override
-    // public void onWaitSuccess(PopulateIndicatorDataResult result) {
-    // getView().onIndicatorDataPopulated(result.getIndicatorDto());
-    // ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
-    // }
-    // });
-    // }
-
     @Override
     public void retrieveTimeGranularitiesInIndicator(String indicatorUuid, String indicatorVersion) {
-        dispatcher.execute(new GetTimeGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetTimeGranularitiesInIndicatorResult>() {
+        dispatcher.execute(new GetTimeGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallbackHandlingError<GetTimeGranularitiesInIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorTimeGranularities()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetTimeGranularitiesInIndicatorResult result) {
                 getView().setTemporalGranularitiesForIndicator(result.getTimeGranularityDtos());
@@ -568,27 +464,21 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveTimeValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, TimeGranularityEnum timeGranularity) {
-        dispatcher.execute(new GetTimeValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, timeGranularity), new WaitingAsyncCallback<GetTimeValuesByGranularityInIndicatorResult>() {
+        dispatcher.execute(new GetTimeValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, timeGranularity),
+                new WaitingAsyncCallbackHandlingError<GetTimeValuesByGranularityInIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorTimeValues()), MessageTypeEnum.ERROR);
-            }
-            @Override
-            public void onWaitSuccess(GetTimeValuesByGranularityInIndicatorResult result) {
-                getView().setTemporalValuesFormIndicator(result.getTimeValueDtos());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetTimeValuesByGranularityInIndicatorResult result) {
+                        getView().setTemporalValuesFormIndicator(result.getTimeValueDtos());
+                    }
+                });
     }
 
     @Override
     public void retrieveGeographicalGranularitiesInIndicator(String indicatorUuid, String indicatorVersion) {
-        dispatcher.execute(new GetGeographicalGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetGeographicalGranularitiesInIndicatorResult>() {
+        dispatcher.execute(new GetGeographicalGranularitiesInIndicatorAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesInIndicatorResult>(
+                this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorGeographicalGranularities()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalGranularitiesInIndicatorResult result) {
                 getView().setGeographicalGranularitiesForIndicator(result.getGeographicalGranularities());
@@ -599,12 +489,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
     @Override
     public void retrieveGeographicalValuesWithGranularityInIndicator(String indicatorUuid, String indicatorVersion, String geographicalGranularityUuid) {
         dispatcher.execute(new GetGeographicalValuesByGranularityInIndicatorAction(indicatorUuid, indicatorVersion, geographicalGranularityUuid),
-                new WaitingAsyncCallback<GetGeographicalValuesByGranularityInIndicatorResult>() {
+                new WaitingAsyncCallbackHandlingError<GetGeographicalValuesByGranularityInIndicatorResult>(this) {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicatorGeographicalValues()), MessageTypeEnum.ERROR);
-                    }
                     @Override
                     public void onWaitSuccess(GetGeographicalValuesByGranularityInIndicatorResult result) {
                         getView().setGeographicalValuesForIndicator(result.getGeographicalValueDtos());
@@ -614,12 +500,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void searchIndicator(IndicatorCriteria criteria) {
-        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<FindIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setIndicators(result.getIndicatorDtos());
@@ -629,12 +511,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void retrieveGeographicalGranularity(String geographicalGranularityUuid) {
-        dispatcher.execute(new GetGeographicalGranularityAction(geographicalGranularityUuid), new WaitingAsyncCallback<GetGeographicalGranularityResult>() {
+        dispatcher.execute(new GetGeographicalGranularityAction(geographicalGranularityUuid), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularityResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularity()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalGranularityResult result) {
                 getView().setGeographicalGranularity(result.getGeographicalGranularityDto());
@@ -644,12 +522,8 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
     @Override
     public void previewData(String instanceCode, String systemCode) {
-        dispatcher.execute(new GetIndicatorInstancePreviewUrlAction(instanceCode, systemCode), new WaitingAsyncCallback<GetIndicatorInstancePreviewUrlResult>() {
+        dispatcher.execute(new GetIndicatorInstancePreviewUrlAction(instanceCode, systemCode), new WaitingAsyncCallbackHandlingError<GetIndicatorInstancePreviewUrlResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorBuildingIndicatorInstanceJaxiUrl()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorInstancePreviewUrlResult result) {
                 Window.open(result.getUrl(), "_blank", "");
@@ -664,8 +538,9 @@ public class SystemPresenter extends Presenter<SystemPresenter.SystemView, Syste
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        ShowMessageEvent.fire(SystemPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorExportingSystemsInDspl()), MessageTypeEnum.ERROR);
+                        ShowMessageEvent.fireErrorMessage(SystemPresenter.this, caught);
                     }
+
                     @Override
                     public void onSuccess(ExportSystemInDsplResult result) {
                         if (result.getFiles() != null) {

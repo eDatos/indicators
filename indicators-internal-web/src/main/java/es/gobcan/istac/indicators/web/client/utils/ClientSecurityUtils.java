@@ -249,24 +249,55 @@ public class ClientSecurityUtils {
     }
 
     public static boolean canCreateQuantityUnit() {
-        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
     public static boolean canDeleteQuantityUnit() {
-        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
     public static boolean canEditQuantityUnit() {
-        if (isRoleAllowed(RoleEnum.ADMINISTRADOR)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canAdministrate() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canCreateGeographicalGranularity() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDeleteGeoGranularity() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canEditGeographicalGranularity() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canCreateUnitMultiplier() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canEditUnitMultiplier() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDeleteUnitMultiplier() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canCreateGeographicalValue() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canEditGeographicalValue() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
+    }
+
+    public static boolean canDeleteGeoValue() {
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
 }

@@ -33,7 +33,7 @@ public class PublishIndicatorActionHandler extends SecurityActionHandler<Publish
             if (publishResult.getPublicationFailedReason() == null) {
                 return new PublishIndicatorResult(publishResult.getIndicator());
             } else {
-                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItems(publishResult.getPublicationFailedReason().getExceptionItems()));
+                throw new MetamacWebException(WebExceptionUtils.getMetamacWebExceptionItems(null, publishResult.getPublicationFailedReason().getExceptionItems()));
             }
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

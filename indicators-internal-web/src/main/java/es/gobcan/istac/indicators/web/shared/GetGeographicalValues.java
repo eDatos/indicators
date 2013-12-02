@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
+import com.gwtplatform.dispatch.annotation.Optional;
 import com.gwtplatform.dispatch.annotation.Out;
 
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
@@ -12,6 +13,7 @@ import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 public class GetGeographicalValues {
 
     @In(1)
+    @Optional
     String                     geographicalGranularityUuid;
 
     @Out(1)

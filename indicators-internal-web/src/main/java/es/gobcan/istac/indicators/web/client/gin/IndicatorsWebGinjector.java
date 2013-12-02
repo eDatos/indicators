@@ -1,6 +1,8 @@
 package es.gobcan.istac.indicators.web.client.gin;
 
-import com.google.gwt.event.shared.EventBus;
+import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
+
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
@@ -10,8 +12,11 @@ import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ErrorPagePresenter;
@@ -21,11 +26,7 @@ import es.gobcan.istac.indicators.web.client.system.presenter.SystemListPresente
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemPresenter;
 
 @GinModules({DispatchAsyncModule.class, ClientModule.class})
-public interface IndicatorsWebGinjector extends Ginjector {
-
-    PlaceManager getPlaceManager();
-    EventBus getEventBus();
-    DispatchAsync getDispatcher();
+public interface IndicatorsWebGinjector extends MetamacWebGinjector {
 
     LoggedInGatekeeper getLoggedInGatekeeper();
 
@@ -33,6 +34,9 @@ public interface IndicatorsWebGinjector extends Ginjector {
 
     AsyncProvider<AdminPresenter> getAdminPresenter();
     AsyncProvider<AdminQuantityUnitsTabPresenter> getAdminQuantityUnitsTabPresenter();
+    AsyncProvider<AdminGeoGranularitiesTabPresenter> getAdminGeoGranularitiesTabPresenter();
+    AsyncProvider<AdminUnitMultipliersTabPresenter> getAdminUnitMultipliersTabPresenter();
+    AsyncProvider<AdminGeoValuesTabPresenter> getAdminGeoValuesTabPresenter();
 
     AsyncProvider<SystemListPresenter> getSystemListPresenter();
     AsyncProvider<SystemPresenter> getSystemPresenter();

@@ -11,6 +11,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.toolbar.ToolStripSeparator;
 
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
+import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 
 public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView {
 
@@ -30,6 +31,9 @@ public class ToolStripViewImpl implements ToolStripPresenterWidget.ToolStripView
         systemListButton = new ToolStripButton(getConstants().appLinksSystemList());
         indicatorListButton = new ToolStripButton(getConstants().appLinksIndList());
         adminButton = new ToolStripButton(getConstants().appLinksAdmin());
+        if (!ClientSecurityUtils.canAdministrate()) {
+            adminButton.hide();
+        }
 
         // Add buttons to toolStrip
         toolStrip.addButton(systemListButton);

@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -38,7 +35,7 @@ import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.CreateIndicatorResult;
@@ -112,12 +109,7 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
 
     @Override
     public void retrieveResultSet() {
-        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallback<GetIndicatorPaginatedListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieveList()), MessageTypeEnum.ERROR);
-            }
+        dispatcher.execute(new GetIndicatorPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallbackHandlingError<GetIndicatorPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorPaginatedListResult result) {
@@ -167,17 +159,12 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
 
     @Override
     public void createIndicator(IndicatorDto indicator) {
-        dispatcher.execute(new CreateIndicatorAction(indicator), new WaitingAsyncCallback<CreateIndicatorResult>() {
+        dispatcher.execute(new CreateIndicatorAction(indicator), new WaitingAsyncCallbackHandlingError<CreateIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error creating indicator");
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorCreate()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(CreateIndicatorResult result) {
                 logger.log(Level.INFO, "Indicator created successfully");
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicCreated()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicCreated());
                 // Go to the last page to view the indicator created
                 totalResults++;
                 resultSetLastButtonClicked();
@@ -192,28 +179,20 @@ public class IndicatorListPresenter extends PaginationPresenter<IndicatorListPre
 
     @Override
     public void deleteIndicators(List<String> uuids) {
-        dispatcher.execute(new DeleteIndicatorsAction(uuids), new WaitingAsyncCallback<DeleteIndicatorsResult>() {
+        dispatcher.execute(new DeleteIndicatorsAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorDelete()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(DeleteIndicatorsResult result) {
                 retrieveResultSet();
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getMessageList(getMessages().indicDeleted()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicDeleted());
             }
         });
     }
 
     @Override
     public void retrieveSubjectsList() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallback<GetSubjectsListResult>() {
+        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingSubjects()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetSubjectsListResult result) {
                 getView().setSubjects(result.getSubjectDtos());

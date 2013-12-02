@@ -309,10 +309,11 @@ public class QuantityForm extends BaseQuantityForm {
 
     public void setGeographicalValue(GeographicalValueDto geographicalValueDto) {
         if (geographicalValueDto != null) {
-            ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(geographicalValueDto.getGranularityUuid());
+            GeographicalGranularityDto granularityDto = geographicalValueDto.getGranularity();
+            ((GeographicalSelectItem) getItem(IndicatorDS.QUANTITY_BASE_LOCATION)).setGeoGranularity(granularityDto != null ? granularityDto.getUuid() : null);
             // Make sure value map is set properly
             if (uiHandlers instanceof IndicatorUiHandler) {
-                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(geographicalValueDto.getGranularityUuid());
+                ((IndicatorUiHandler) uiHandlers).retrieveGeographicalValues(granularityDto != null ? granularityDto.getUuid() : null);
             }
         }
     }
@@ -347,7 +348,7 @@ public class QuantityForm extends BaseQuantityForm {
                     }
                 });
 
-                indicatorDenominatorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                indicatorDenominatorSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -392,7 +393,7 @@ public class QuantityForm extends BaseQuantityForm {
                     }
                 });
 
-                indicatorNumeratorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                indicatorNumeratorSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -438,7 +439,7 @@ public class QuantityForm extends BaseQuantityForm {
                     }
                 });
 
-                indicatorBaseSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                indicatorBaseSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {

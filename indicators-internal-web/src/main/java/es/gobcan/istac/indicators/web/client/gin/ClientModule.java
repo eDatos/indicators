@@ -7,9 +7,15 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import es.gobcan.istac.indicators.web.client.IndicatorsPlaceManager;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoValuesTabPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminPresenter;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.presenter.AdminUnitMultipliersTabPresenter;
+import es.gobcan.istac.indicators.web.client.admin.view.AdminGeoGranularitiesTabViewImpl;
+import es.gobcan.istac.indicators.web.client.admin.view.AdminGeoValuesTabViewImpl;
 import es.gobcan.istac.indicators.web.client.admin.view.AdminQuantityUnitsTabViewImpl;
+import es.gobcan.istac.indicators.web.client.admin.view.AdminUnitMultipliersTabViewImpl;
 import es.gobcan.istac.indicators.web.client.admin.view.AdminViewImpl;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorPresenter;
@@ -43,6 +49,13 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(AdminPresenter.class, AdminPresenter.AdminView.class, AdminViewImpl.class, AdminPresenter.AdminProxy.class);
         bindPresenter(AdminQuantityUnitsTabPresenter.class, AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabView.class, AdminQuantityUnitsTabViewImpl.class,
                 AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabProxy.class);
+        bindPresenter(AdminGeoGranularitiesTabPresenter.class, AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabView.class, AdminGeoGranularitiesTabViewImpl.class,
+                AdminGeoGranularitiesTabPresenter.AdminGeoGranularitiesTabProxy.class);
+        bindPresenter(AdminUnitMultipliersTabPresenter.class, AdminUnitMultipliersTabPresenter.AdminUnitMultipliersTabView.class, AdminUnitMultipliersTabViewImpl.class,
+                AdminUnitMultipliersTabPresenter.AdminUnitMultipliersTabProxy.class);
+        bindPresenter(AdminGeoValuesTabPresenter.class, AdminGeoValuesTabPresenter.AdminGeoValuesTabView.class, AdminGeoValuesTabViewImpl.class,
+                AdminGeoValuesTabPresenter.AdminGeoValuesTabProxy.class);
+
         bindPresenter(SystemListPresenter.class, SystemListPresenter.SystemListView.class, SystemListViewImpl.class, SystemListPresenter.SystemListProxy.class);
         bindPresenter(SystemPresenter.class, SystemPresenter.SystemView.class, SystemViewImpl.class, SystemPresenter.SystemProxy.class);
         bindPresenter(IndicatorListPresenter.class, IndicatorListPresenter.IndicatorListView.class, IndicatorListViewImpl.class, IndicatorListPresenter.IndicatorListProxy.class);

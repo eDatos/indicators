@@ -5,12 +5,9 @@ import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -33,7 +30,7 @@ import es.gobcan.istac.indicators.web.client.PlaceRequestParams;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.presenter.PaginationPresenter;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.client.widgets.StatusBar;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsAction;
 import es.gobcan.istac.indicators.web.shared.DeleteIndicatorsSystemsResult;
@@ -112,12 +109,8 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
     @Override
     public void retrieveResultSet() {
-        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallback<GetIndicatorsSystemPaginatedListResult>() {
+        dispatcher.execute(new GetIndicatorsSystemPaginatedListAction(getMaxResults(), getFirstResult()), new WaitingAsyncCallbackHandlingError<GetIndicatorsSystemPaginatedListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorRetrieveList()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorsSystemPaginatedListResult result) {
                 SystemListPresenter.this.totalResults = result.getTotalResults();
@@ -159,15 +152,11 @@ public class SystemListPresenter extends PaginationPresenter<SystemListPresenter
 
     @Override
     public void deleteIndicatorsSystems(List<String> uuids) {
-        dispatcher.execute(new DeleteIndicatorsSystemsAction(uuids), new WaitingAsyncCallback<DeleteIndicatorsSystemsResult>() {
+        dispatcher.execute(new DeleteIndicatorsSystemsAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteIndicatorsSystemsResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().systemErrorDelete()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(DeleteIndicatorsSystemsResult result) {
-                ShowMessageEvent.fire(SystemListPresenter.this, ErrorUtils.getMessageList(getMessages().systemDeleted()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().systemDeleted());
                 getView().onIndicatorsSystemsDeleted();
                 retrieveResultSet();
             }

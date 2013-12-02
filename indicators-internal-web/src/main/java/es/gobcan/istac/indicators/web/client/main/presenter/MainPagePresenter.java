@@ -1,8 +1,5 @@
 package es.gobcan.istac.indicators.web.client.main.presenter;
 
-import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
-
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +12,7 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
@@ -40,7 +37,7 @@ import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.events.UpdateGeographicalGranularitiesEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.main.view.handlers.MainPageUiHandlers;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.shared.CloseSessionAction;
 import es.gobcan.istac.indicators.web.shared.CloseSessionResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalGranularitiesAction;
@@ -62,7 +59,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
 
     public interface MainView extends View, HasUiHandlers<MainPageUiHandlers> {
 
-        void showMessage(List<String> messages, MessageTypeEnum type);
+        void showMessage(Throwable throwable, String message, MessageTypeEnum type);
         void hideMessages();
         void setTitle(String title);
     }
@@ -94,15 +91,10 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
         loadGeographicalGranularities();
     }
 
-    @Override
-    protected void onReset() {
-        super.onReset();
-        hideMessages();
-    }
-
+    @ProxyEvent
     @Override
     public void onShowMessage(ShowMessageEvent event) {
-        getView().showMessage(event.getMessages(), event.getMessageType());
+        getView().showMessage(event.getThrowable(), event.getMessage(), event.getMessageType());
     }
 
     @ProxyEvent
@@ -111,17 +103,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
         hideMessages();
     }
 
-    private void hideMessages() {
-        getView().hideMessages();
-    }
-
     private void loadQuantityUnits() {
-        dispatcher.execute(new GetQuantityUnitsListAction(), new WaitingAsyncCallback<GetQuantityUnitsListResult>() {
+        dispatcher.execute(new GetQuantityUnitsListAction(), new WaitingAsyncCallbackHandlingError<GetQuantityUnitsListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingQuantityUnits()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetQuantityUnitsListResult result) {
                 UpdateQuantityUnitsEvent.fire(MainPagePresenter.this, result.getQuantityUnits());
@@ -130,12 +114,8 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
     }
 
     private void loadGeographicalGranularities() {
-        dispatcher.execute(new GetGeographicalGranularitiesAction(), new WaitingAsyncCallback<GetGeographicalGranularitiesResult>() {
+        dispatcher.execute(new GetGeographicalGranularitiesAction(), new WaitingAsyncCallbackHandlingError<GetGeographicalGranularitiesResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalGranularities()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalGranularitiesResult result) {
                 UpdateGeographicalGranularitiesEvent.fire(MainPagePresenter.this, result.getGeographicalGranularityDtos());
@@ -156,6 +136,7 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             @Override
             public void onFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error closing session");
+                ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
             }
             @Override
             public void onSuccess(CloseSessionResult result) {
@@ -164,13 +145,17 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
         });
     }
 
+    private void hideMessages() {
+        getView().hideMessages();
+    }
+
     @Override
     public void downloadUserGuide() {
         dispatcher.execute(new GetUserGuideUrlAction(), new WaitingAsyncCallback<GetUserGuideUrlResult>() {
 
             @Override
             public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(MainPagePresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorLoadingUserGuide()), MessageTypeEnum.ERROR);
+                ShowMessageEvent.fireErrorMessage(MainPagePresenter.this, caught);
             }
             @Override
             public void onWaitSuccess(GetUserGuideUrlResult result) {
@@ -181,5 +166,4 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainView, Mai
             }
         });
     }
-
 }

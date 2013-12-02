@@ -10,5 +10,7 @@ public interface AdminQuantityUnitsUiHandlers extends UiHandlers {
 
     void deleteQuantityUnits(List<String> quantityUnitsUuids);
 
-    void saveQuantityUnit(QuantityUnitDto quantityUnitDto);
+    void saveQuantityUnit(int currentPage, QuantityUnitDto quantityUnitDto);
+
+    void retrieveQuantityUnits(final int firstResult, final int maxResults);
 }

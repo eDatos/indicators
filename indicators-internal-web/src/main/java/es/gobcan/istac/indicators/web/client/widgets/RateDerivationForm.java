@@ -464,7 +464,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                     }
                 });
 
-                indicatorDenominatorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                indicatorDenominatorSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
@@ -510,7 +510,7 @@ public class RateDerivationForm extends BaseRateDerivationForm {
                     }
                 });
 
-                indicatorNumeratorSearchWindow.getAceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+                indicatorNumeratorSearchWindow.getAcceptButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {

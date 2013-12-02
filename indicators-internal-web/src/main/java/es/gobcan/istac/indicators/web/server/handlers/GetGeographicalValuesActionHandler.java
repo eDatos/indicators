@@ -39,12 +39,12 @@ public class GetGeographicalValuesActionHandler extends SecurityActionHandler<Ge
     @Override
     public GetGeographicalValuesResult executeSecurityAction(GetGeographicalValuesAction action) throws ActionException {
         try {
-            MetamacCriteria criteria = null;
+            MetamacCriteria criteria = new MetamacCriteria();
+            criteria.setPaginator(new MetamacCriteriaPaginator());
+            criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+            criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
+
             if (action.getGeographicalGranularityUuid() != null) {
-                criteria = new MetamacCriteria();
-                criteria.setPaginator(new MetamacCriteriaPaginator());
-                criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
-                criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
                 criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), action.getGeographicalGranularityUuid(),
                         OperationType.EQ));
             }
@@ -61,11 +61,6 @@ public class GetGeographicalValuesActionHandler extends SecurityActionHandler<Ge
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
-    }
-
-    @Override
-    public void undo(GetGeographicalValuesAction action, GetGeographicalValuesResult result, ExecutionContext context) throws ActionException {
-
     }
 
 }

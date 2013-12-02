@@ -3,13 +3,15 @@ package es.gobcan.istac.indicators.web.client.admin.view;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getConstants;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getCoreMessages;
 import static es.gobcan.istac.indicators.web.client.IndicatorsWeb.getMessages;
+import static es.gobcan.istac.indicators.web.client.admin.presenter.AdminGeoGranularitiesTabPresenter.MAX_RESULTS;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.ListGridToolStrip;
+import org.siemac.metamac.web.common.client.widgets.PaginatedCheckListGrid;
+import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
@@ -42,7 +44,6 @@ import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
 import es.gobcan.istac.indicators.web.client.admin.presenter.AdminQuantityUnitsTabPresenter.AdminQuantityUnitsTabView;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminQuantityUnitsUiHandlers;
 import es.gobcan.istac.indicators.web.client.model.QuantityUnitRecord;
-import es.gobcan.istac.indicators.web.client.model.ds.IndicatorDS;
 import es.gobcan.istac.indicators.web.client.model.ds.QuantityUnitDS;
 import es.gobcan.istac.indicators.web.client.utils.ClientSecurityUtils;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
@@ -50,13 +51,13 @@ import es.gobcan.istac.indicators.web.client.utils.RecordUtils;
 
 public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuantityUnitsUiHandlers> implements AdminQuantityUnitsTabView {
 
-    private VLayout           panel;
+    private VLayout                panel;
 
-    private CustomListGrid    listGrid;
+    private PaginatedCheckListGrid listGrid;
 
-    private ListGridToolStrip toolStrip;
+    private ListGridToolStrip      toolStrip;
 
-    private QuantityUnitPanel quantityUnitPanel;
+    private QuantityUnitPanel      quantityUnitPanel;
 
     public AdminQuantityUnitsTabViewImpl() {
         super();
@@ -94,24 +95,30 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
 
         // ListGrid
 
-        listGrid = new CustomListGrid();
+        listGrid = new PaginatedCheckListGrid(MAX_RESULTS, new PaginatedAction() {
+
+            @Override
+            public void retrieveResultSet(int firstResult, int maxResults) {
+                getUiHandlers().retrieveQuantityUnits(firstResult, maxResults);
+            }
+        });
         listGrid.setHeight(150);
         ListGridField uuidField = new ListGridField(QuantityUnitDS.UUID, IndicatorsWeb.getConstants().quantityUnitUuid());
         ListGridField titleField = new ListGridField(QuantityUnitDS.TITLE, IndicatorsWeb.getConstants().quantityUnitTitle());
-        listGrid.setFields(uuidField, titleField);
+        listGrid.getListGrid().setFields(uuidField, titleField);
         // Show data source details when record clicked
-        listGrid.addSelectionChangedHandler(new SelectionChangedHandler() {
+        listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
             @Override
             public void onSelectionChanged(SelectionEvent event) {
-                if (listGrid.getSelectedRecords() != null && listGrid.getSelectedRecords().length == 1) {
-                    QuantityUnitRecord record = (QuantityUnitRecord) listGrid.getSelectedRecord();
+                if (listGrid.getListGrid().getSelectedRecords() != null && listGrid.getListGrid().getSelectedRecords().length == 1) {
+                    QuantityUnitRecord record = (QuantityUnitRecord) listGrid.getListGrid().getSelectedRecord();
                     QuantityUnitDto selected = record.getDto();
                     selectQuantityUnit(selected);
                 } else {
                     // No record selected
                     deselectQuantityUnit();
-                    if (listGrid.getSelectedRecords().length > 1) {
+                    if (listGrid.getListGrid().getSelectedRecords().length > 1) {
                         // Delete more than one dimension with one click
                         showToolStripDeleteButton();
                     }
@@ -133,7 +140,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
     // UTILS
     private List<String> getSelectedQuantityUnits() {
         List<String> codes = new ArrayList<String>();
-        for (ListGridRecord record : listGrid.getSelectedRecords()) {
+        for (ListGridRecord record : listGrid.getListGrid().getSelectedRecords()) {
             codes.add(record.getAttribute(QuantityUnitDS.UUID));
         }
         return codes;
@@ -150,7 +157,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
             showToolStripDeleteButton();
         } else {
             toolStrip.getDeleteButton().hide();
-            listGrid.deselectAllRecords();
+            listGrid.getListGrid().deselectAllRecords();
         }
 
         quantityUnitPanel.setQuantityUnitDto(dto);
@@ -165,7 +172,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
     // DATA
 
     @Override
-    public void setQuantityUnits(List<QuantityUnitDto> quantityUnits) {
+    public void setQuantityUnits(int firstResult, List<QuantityUnitDto> quantityUnits, int totalResults) {
         quantityUnitPanel.hide();
 
         QuantityUnitRecord[] records = new QuantityUnitRecord[quantityUnits.size()];
@@ -173,17 +180,19 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
         for (QuantityUnitDto ds : quantityUnits) {
             records[index++] = RecordUtils.getQuantityUnitRecord(ds);
         }
-        listGrid.setData(records);
+        listGrid.getListGrid().setData(records);
+        listGrid.refreshPaginationInfo(firstResult, quantityUnits.size(), totalResults);
     }
 
     @Override
-    public void onQuantityUnitSaved(QuantityUnitDto dto) {
+    public void onQuantityUnitCreated(QuantityUnitDto dto) {
+        listGrid.goToLastPage();
         selectQuantityUnit(dto);
+    }
 
-        listGrid.removeSelectedData();
-        QuantityUnitRecord record = RecordUtils.getQuantityUnitRecord(dto);
-        listGrid.addData(record);
-        listGrid.selectRecord(record);
+    @Override
+    public void onQuantityUnitUpdated(QuantityUnitDto dto) {
+        selectQuantityUnit(dto);
     }
 
     @Override
@@ -218,7 +227,7 @@ public class AdminQuantityUnitsTabViewImpl extends ViewWithUiHandlers<AdminQuant
                 @Override
                 public void onClick(ClickEvent event) {
                     if (generalEditionForm.validate(false)) {
-                        getUiHandlers().saveQuantityUnit(getQuantityUnitDto());
+                        getUiHandlers().saveQuantityUnit(listGrid.getPageNumber(), getQuantityUnitDto());
                     }
                 }
             });

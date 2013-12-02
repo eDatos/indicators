@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.web.client.utils;
 
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
@@ -10,16 +9,21 @@ public abstract class WaitingAsyncCallbackHandlingError<T> extends WaitingAsyncC
 
     private HasHandlers source;
 
-    private String      errorMesssage;
-
-    public WaitingAsyncCallbackHandlingError(HasHandlers source, String alternativeErrorMessage) {
+    public WaitingAsyncCallbackHandlingError(HasHandlers source) {
         this.source = source;
-        this.errorMesssage = alternativeErrorMessage;
     }
 
     @Override
     public void onWaitFailure(Throwable caught) {
-        ShowMessageEvent.fire(source, ErrorUtils.getErrorMessages(caught, errorMesssage), MessageTypeEnum.ERROR);
+        ShowMessageEvent.fireErrorMessage(source, caught);
+    }
+
+    protected void fireSuccessMessage(String message) {
+        ShowMessageEvent.fireSuccessMessage(source, message);
+    }
+
+    protected void fireErrorMessage(String message) {
+        ShowMessageEvent.fireErrorMessage(source, message);
     }
 
 }

@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -54,7 +51,7 @@ import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent;
 import es.gobcan.istac.indicators.web.client.events.UpdateQuantityUnitsEvent.UpdateQuantityUnitsHandler;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
-import es.gobcan.istac.indicators.web.client.utils.ErrorUtils;
+import es.gobcan.istac.indicators.web.client.utils.WaitingAsyncCallbackHandlingError;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.ArchiveIndicatorResult;
 import es.gobcan.istac.indicators.web.shared.DeleteDataSourcesAction;
@@ -205,12 +202,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveIndicatorByCode() {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
                 indicatorDto = result.getIndicator();
@@ -222,12 +215,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDiffusionIndicator(String code, String versionNumber) {
-        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, versionNumber), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
+        dispatcher.execute(new GetIndicatorByCodeAction(this.indicatorCode, versionNumber), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
                 getView().setDiffusionIndicator(result.getIndicator());
@@ -235,18 +224,15 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
         });
     }
 
+    @Override
     public void saveIndicator(IndicatorDto indicator) {
-        dispatcher.execute(new UpdateIndicatorAction(indicator), new WaitingAsyncCallback<UpdateIndicatorResult>() {
+        dispatcher.execute(new UpdateIndicatorAction(indicator), new WaitingAsyncCallbackHandlingError<UpdateIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorSave()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(UpdateIndicatorResult result) {
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSaved()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorSaved());
             }
         });
     }
@@ -259,12 +245,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveSubjects() {
-        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallback<GetSubjectsListResult>() {
+        dispatcher.execute(new GetSubjectsListAction(), new WaitingAsyncCallbackHandlingError<GetSubjectsListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingSubjects()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetSubjectsListResult result) {
                 getView().setSubjectsList(result.getSubjectDtos());
@@ -280,13 +262,9 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveGeographicalValues(final String geographicalGranularityUuid) {
-        dispatcher.execute(new GetGeographicalValuesAction(geographicalGranularityUuid), new WaitingAsyncCallback<GetGeographicalValuesResult>() {
+        GetGeographicalValuesAction action = new GetGeographicalValuesAction.Builder().geographicalGranularityUuid(geographicalGranularityUuid).build();
+        dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical values with geographical granularity UUID = " + geographicalGranularityUuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingGeographicalValues()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalValuesResult result) {
                 getView().setGeographicalValues(result.getGeographicalValueDtos());
@@ -296,13 +274,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveGeographicalValue(final String geographicalValueUuid) {
-        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallback<GetGeographicalValueResult>() {
+        dispatcher.execute(new GetGeographicalValueAction(geographicalValueUuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical value with UUID = " + geographicalValueUuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalValueResult result) {
                 getView().setGeographicalValue(result.getGeographicalValueDto());
@@ -312,16 +285,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void sendToProductionValidation(final String uuid) {
-        dispatcher.execute(new SendIndicatorToProductionValidationAction(uuid), new WaitingAsyncCallback<SendIndicatorToProductionValidationResult>() {
+        dispatcher.execute(new SendIndicatorToProductionValidationAction(uuid), new WaitingAsyncCallbackHandlingError<SendIndicatorToProductionValidationResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sending to production validation indicator with uuid  = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingIndicatorToProductionValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(SendIndicatorToProductionValidationResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToProductionValidation()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorSentToProductionValidation());
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
             }
@@ -330,16 +298,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void sendToDiffusionValidation(final String uuid) {
-        dispatcher.execute(new SendIndicatorToDiffusionValidationAction(uuid), new WaitingAsyncCallback<SendIndicatorToDiffusionValidationResult>() {
+        dispatcher.execute(new SendIndicatorToDiffusionValidationAction(uuid), new WaitingAsyncCallbackHandlingError<SendIndicatorToDiffusionValidationResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error sending to diffusion validation indicator with uuid  = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSendingIndicatorToDiffusionValidation()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(SendIndicatorToDiffusionValidationResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorSentToDiffusionValidation()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorSentToDiffusionValidation());
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
             }
@@ -349,31 +312,21 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     @Override
     public void rejectValidation(final IndicatorDto indicatorDto) {
         if (IndicatorProcStatusEnum.PRODUCTION_VALIDATION.equals(indicatorDto.getProcStatus())) {
-            dispatcher.execute(new RejectIndicatorProductionValidationAction(indicatorDto.getUuid()), new WaitingAsyncCallback<RejectIndicatorProductionValidationResult>() {
+            dispatcher.execute(new RejectIndicatorProductionValidationAction(indicatorDto.getUuid()), new WaitingAsyncCallbackHandlingError<RejectIndicatorProductionValidationResult>(this) {
 
                 @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + indicatorDto.getUuid());
-                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
-                }
-                @Override
                 public void onWaitSuccess(RejectIndicatorProductionValidationResult result) {
-                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    fireSuccessMessage(getMessages().indicatorValidationRejected());
                     IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                     getView().setIndicator(result.getIndicatorDto());
                 }
             });
         } else if (IndicatorProcStatusEnum.DIFFUSION_VALIDATION.equals(indicatorDto.getProcStatus())) {
-            dispatcher.execute(new RejectIndicatorDiffusionValidationAction(indicatorDto.getUuid()), new WaitingAsyncCallback<RejectIndicatorDiffusionValidationResult>() {
+            dispatcher.execute(new RejectIndicatorDiffusionValidationAction(indicatorDto.getUuid()), new WaitingAsyncCallbackHandlingError<RejectIndicatorDiffusionValidationResult>(this) {
 
                 @Override
-                public void onWaitFailure(Throwable caught) {
-                    logger.log(Level.SEVERE, "Error rejecting validation of indicator with uuid  = " + indicatorDto.getUuid());
-                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRejectingIndicatorValidation()), MessageTypeEnum.ERROR);
-                }
-                @Override
                 public void onWaitSuccess(RejectIndicatorDiffusionValidationResult result) {
-                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorValidationRejected()), MessageTypeEnum.SUCCESS);
+                    fireSuccessMessage(getMessages().indicatorValidationRejected());
                     IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                     getView().setIndicator(result.getIndicatorDto());
                 }
@@ -383,17 +336,17 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void publish(final String uuid) {
-        dispatcher.execute(new PublishIndicatorAction(uuid), new WaitingAsyncCallback<PublishIndicatorResult>() {
+        dispatcher.execute(new PublishIndicatorAction(uuid), new WaitingAsyncCallbackHandlingError<PublishIndicatorResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
                 logger.log(Level.SEVERE, "Error publishing indicator with uuid  = " + uuid);
                 retrieveIndicatorByCode();
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPublishingIndicator()), MessageTypeEnum.ERROR);
             }
             @Override
             public void onWaitSuccess(PublishIndicatorResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorPublished()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorPublished());
                 IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
@@ -402,16 +355,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void archive(final String uuid) {
-        dispatcher.execute(new ArchiveIndicatorAction(uuid), new WaitingAsyncCallback<ArchiveIndicatorResult>() {
+        dispatcher.execute(new ArchiveIndicatorAction(uuid), new WaitingAsyncCallbackHandlingError<ArchiveIndicatorResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error arhiving indicator with uuid  = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorArchivingIndicator()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(ArchiveIndicatorResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorArchived()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorArchived());
                 IndicatorPresenter.this.indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(result.getIndicatorDto());
             }
@@ -420,15 +368,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void versioningIndicator(String uuid, VersionTypeEnum versionType) {
-        dispatcher.execute(new VersioningIndicatorAction(uuid, versionType), new WaitingAsyncCallback<VersioningIndicatorResult>() {
+        dispatcher.execute(new VersioningIndicatorAction(uuid, versionType), new WaitingAsyncCallbackHandlingError<VersioningIndicatorResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorVersioningIndicator()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(VersioningIndicatorResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorVersioned()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorVersioned());
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber()); // Reload data sources
@@ -437,13 +381,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveDataSources(final String indicatorUuid, final String indicatorVersion) {
-        dispatcher.execute(new GetDataSourcesListAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallback<GetDataSourcesListResult>() {
+        dispatcher.execute(new GetDataSourcesListAction(indicatorUuid, indicatorVersion), new WaitingAsyncCallbackHandlingError<GetDataSourcesListResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving data sources of indicator with uuid = " + indicatorUuid + " and version =" + indicatorVersion);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataSources()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetDataSourcesListResult result) {
                 getView().setIndicatorDataSources(result.getDataSourceDtos());
@@ -453,13 +392,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataDefinitionsByOperationCode(final String operationCode) {
-        dispatcher.execute(new FindDataDefinitionsByOperationCodeAction(operationCode), new WaitingAsyncCallback<FindDataDefinitionsByOperationCodeResult>() {
+        dispatcher.execute(new FindDataDefinitionsByOperationCodeAction(operationCode), new WaitingAsyncCallbackHandlingError<FindDataDefinitionsByOperationCodeResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving data definitions");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorFindingDataDefinitions(operationCode)), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindDataDefinitionsByOperationCodeResult result) {
                 getView().setDataDefinitions(result.getDataDefinitionDtos());
@@ -469,14 +403,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataStructureView(String uuid) {
-        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallback<GetDataStructureResult>() {
+        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallbackHandlingError<GetDataStructureResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving data structure");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataStructure()), MessageTypeEnum.ERROR);
-
-            }
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
                 getView().setDataStructureView(result.getDataStructureDto());
@@ -486,14 +414,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataStructureEdition(String uuid) {
-        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallback<GetDataStructureResult>() {
+        dispatcher.execute(new GetDataStructureAction(uuid), new WaitingAsyncCallbackHandlingError<GetDataStructureResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving data structure");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataStructure()), MessageTypeEnum.ERROR);
-
-            }
             @Override
             public void onWaitSuccess(GetDataStructureResult result) {
                 getView().setDataStructureEdition(result.getDataStructureDto());
@@ -503,13 +425,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataDefinition(final String uuid) {
-        dispatcher.execute(new GetDataDefinitionAction(uuid), new WaitingAsyncCallback<GetDataDefinitionResult>() {
+        dispatcher.execute(new GetDataDefinitionAction(uuid), new WaitingAsyncCallbackHandlingError<GetDataDefinitionResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error retrieving data definition with uuid = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataDefinition()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetDataDefinitionResult result) {
                 getView().setDataDefinition(result.getDataDefinitionDto());
@@ -519,13 +436,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveGeographicalValueDS(final String uuid) {
-        dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallback<GetGeographicalValueResult>() {
+        dispatcher.execute(new GetGeographicalValueAction(uuid), new WaitingAsyncCallbackHandlingError<GetGeographicalValueResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error loading geographical value with UUID = " + uuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorGeographicalValueNotFound()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetGeographicalValueResult result) {
                 getView().setGeographicalValueDS(result.getGeographicalValueDto());
@@ -535,16 +447,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void saveDataSource(final String indicatorUuid, final DataSourceDto dataSourceDto) {
-        dispatcher.execute(new SaveDataSourceAction(indicatorUuid, dataSourceDto), new WaitingAsyncCallback<SaveDataSourceResult>() {
+        dispatcher.execute(new SaveDataSourceAction(indicatorUuid, dataSourceDto), new WaitingAsyncCallbackHandlingError<SaveDataSourceResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error saving datasource with uuid = " + dataSourceDto.getUuid() + " in indicator with uuid = " + indicatorUuid);
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSavingDataSource()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(SaveDataSourceResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourceSaved()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().dataSourceSaved());
                 getView().onDataSourceSaved(result.getDataSourceDto());
 
                 // Update indicator every time data sources are modified
@@ -555,17 +462,12 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void deleteDataSource(List<String> uuids) {
-        dispatcher.execute(new DeleteDataSourcesAction(uuids), new WaitingAsyncCallback<DeleteDataSourcesResult>() {
+        dispatcher.execute(new DeleteDataSourcesAction(uuids), new WaitingAsyncCallbackHandlingError<DeleteDataSourcesResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                logger.log(Level.SEVERE, "Error deleting datasources");
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().dataSourcesErrorDelete()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(DeleteDataSourcesResult result) {
                 retrieveDataSources(indicatorDto.getUuid(), indicatorDto.getVersionNumber());
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().dataSourcesDeleted()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().dataSourcesDeleted());
 
                 // Update indicator every time data sources are modified
                 retrieveUpdatedIndicador();
@@ -574,12 +476,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     }
 
     private void retrieveUpdatedIndicador() {
-        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, null), new WaitingAsyncCallback<GetIndicatorByCodeResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().indicErrorRetrieve()), MessageTypeEnum.ERROR);
-            }
+        dispatcher.execute(new GetIndicatorByCodeAction(indicatorCode, null), new WaitingAsyncCallbackHandlingError<GetIndicatorByCodeResult>(this) {
 
             @Override
             public void onWaitSuccess(GetIndicatorByCodeResult result) {
@@ -591,15 +488,11 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void populateData(String uuid) {
-        dispatcher.execute(new PopulateIndicatorDataAction(uuid), new WaitingAsyncCallback<PopulateIndicatorDataResult>() {
+        dispatcher.execute(new PopulateIndicatorDataAction(uuid), new WaitingAsyncCallbackHandlingError<PopulateIndicatorDataResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorPopulatingIndicatorData()), MessageTypeEnum.ERROR);
-            }
-            @Override
             public void onWaitSuccess(PopulateIndicatorDataResult result) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getMessageList(getMessages().indicatorDataPopulated()), MessageTypeEnum.SUCCESS);
+                fireSuccessMessage(getMessages().indicatorDataPopulated());
                 // Indicator and its data sources must be reloaded (after populating data, indicator version changes)
                 indicatorDto = result.getIndicatorDto();
                 getView().setIndicator(indicatorDto);
@@ -610,12 +503,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void searchIndicatorsQuantityDenominator(IndicatorCriteria criteria) {
-        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<FindIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setIndicatorListQuantityDenominator(result.getIndicatorDtos());
@@ -625,12 +514,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void searchIndicatorsQuantityNumerator(IndicatorCriteria criteria) {
-        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<FindIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setIndicatorListQuantityNumerator(result.getIndicatorDtos());
@@ -640,12 +525,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void searchIndicatorsQuantityIndicatorBase(IndicatorCriteria criteria) {
-        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<FindIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setIndicatorListQuantityIndicatorBase(result.getIndicatorDtos());
@@ -655,12 +536,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveQuantityDenominatorIndicator(String indicatorUuid) {
-        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallbackHandlingError<GetIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorResult result) {
                 getView().setIndicatorQuantityDenominator(result.getIndicator());
@@ -670,12 +547,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveQuantityNumeratorIndicator(String indicatorUuid) {
-        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallbackHandlingError<GetIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorResult result) {
                 getView().setIndicatorQuantityNumerator(result.getIndicator());
@@ -685,12 +558,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveQuantityIndicatorBase(String indicatorUuid) {
-        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallbackHandlingError<GetIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorResult result) {
                 getView().setIndicatorQuantityIndicatorBase(result.getIndicator());
@@ -700,12 +569,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveDataDefinitionsOperationsCodes() {
-        dispatcher.execute(new GetDataDefinitionsOperationsCodesAction(), new WaitingAsyncCallback<GetDataDefinitionsOperationsCodesResult>() {
+        dispatcher.execute(new GetDataDefinitionsOperationsCodesAction(), new WaitingAsyncCallbackHandlingError<GetDataDefinitionsOperationsCodesResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingDataDefinitionsOperationCodes()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetDataDefinitionsOperationsCodesResult result) {
                 getView().setDataDefinitionsOperationCodes(result.getOperationCodes());
@@ -715,12 +580,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void searchRateIndicators(IndicatorCriteria criteria, final RateDerivationTypeEnum rateDerivationTypeEnum, final IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
-        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallback<FindIndicatorsResult>() {
+        dispatcher.execute(new FindIndicatorsAction(criteria), new WaitingAsyncCallbackHandlingError<FindIndicatorsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorSearchingIndicators()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(FindIndicatorsResult result) {
                 getView().setRateIndicators(result.getIndicatorDtos(), rateDerivationTypeEnum, indicatorCalculationTypeEnum);
@@ -730,12 +591,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveRateIndicator(String indicatorUuid, final RateDerivationTypeEnum rateDerivationTypeEnum, final IndicatorCalculationTypeEnum indicatorCalculationTypeEnum) {
-        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallback<GetIndicatorResult>() {
+        dispatcher.execute(new GetIndicatorAction(indicatorUuid), new WaitingAsyncCallbackHandlingError<GetIndicatorResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingIndicator()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorResult result) {
                 getView().setRateIndicator(result.getIndicator(), rateDerivationTypeEnum, indicatorCalculationTypeEnum);
@@ -746,12 +603,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
     @Override
     public void retrieveUnitMultipliers() {
         if (unitMultiplierDtos == null) {
-            dispatcher.execute(new GetUnitMultipliersAction(), new WaitingAsyncCallback<GetUnitMultipliersResult>() {
+            dispatcher.execute(new GetUnitMultipliersAction(), new WaitingAsyncCallbackHandlingError<GetUnitMultipliersResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorRetrievingUnitMultipliers()), MessageTypeEnum.ERROR);
-                }
                 @Override
                 public void onWaitSuccess(GetUnitMultipliersResult result) {
                     IndicatorPresenter.this.unitMultiplierDtos = result.getUnitMultiplierDtos();
@@ -765,12 +618,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void previewData(String code) {
-        dispatcher.execute(new GetIndicatorPreviewUrlAction(code), new WaitingAsyncCallback<GetIndicatorPreviewUrlResult>() {
+        dispatcher.execute(new GetIndicatorPreviewUrlAction(code), new WaitingAsyncCallbackHandlingError<GetIndicatorPreviewUrlResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fire(IndicatorPresenter.this, ErrorUtils.getErrorMessages(caught, getMessages().errorBuildingIndicatorJaxiUrl()), MessageTypeEnum.ERROR);
-            }
             @Override
             public void onWaitSuccess(GetIndicatorPreviewUrlResult result) {
                 Window.open(result.getUrl(), "_blank", "");

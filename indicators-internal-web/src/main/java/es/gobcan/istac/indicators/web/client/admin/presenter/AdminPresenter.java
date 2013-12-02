@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -28,7 +28,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
 import es.gobcan.istac.indicators.web.client.NameTokens;
 import es.gobcan.istac.indicators.web.client.admin.view.handlers.AdminUiHandlers;
-import es.gobcan.istac.indicators.web.client.indicator.presenter.IndicatorListPresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.MainPagePresenter;
 import es.gobcan.istac.indicators.web.client.main.presenter.ToolStripPresenterWidget;
 import es.gobcan.istac.indicators.web.client.utils.PlaceRequestUtils;
@@ -98,9 +97,34 @@ public class AdminPresenter extends Presenter<AdminPresenter.AdminView, AdminPre
     }
 
     // NAVIGATION
+    @Override
     public void goToQuantityUnitsTab() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
         hierarchy.add(new PlaceRequest(NameTokens.adminQuantityUnitsPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    // NAVIGATION
+    @Override
+    public void goToGeoGranularitiesTab() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
+        hierarchy.add(new PlaceRequest(NameTokens.adminGeoGranularitiesPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    // NAVIGATION
+    @Override
+    public void goToGeoValuesTab() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
+        hierarchy.add(new PlaceRequest(NameTokens.adminGeoValuesPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    // NAVIGATION
+    @Override
+    public void goToUnitMultipliersTab() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.adminPage);
+        hierarchy.add(new PlaceRequest(NameTokens.adminUnitMultipliersPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 }

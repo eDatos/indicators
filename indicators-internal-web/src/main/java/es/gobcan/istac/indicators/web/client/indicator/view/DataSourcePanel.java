@@ -746,7 +746,7 @@ public class DataSourcePanel extends VLayout {
                         }
                     }
                 });
-                DataSourcePanel.this.dataDefinitionsSearchWindow.getAceptButton().addClickHandler(new ClickHandler() {
+                DataSourcePanel.this.dataDefinitionsSearchWindow.getAcceptButton().addClickHandler(new ClickHandler() {
 
                     @Override
                     public void onClick(ClickEvent event) {

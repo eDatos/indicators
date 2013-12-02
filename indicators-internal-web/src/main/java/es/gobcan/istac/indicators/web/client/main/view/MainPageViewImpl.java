@@ -134,11 +134,11 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
      ***************************************************/
 
     @Override
-    public void showMessage(List<String> messages, MessageTypeEnum type) {
+    public void showMessage(Throwable throwable, String message, MessageTypeEnum type) {
         // Hide messages before showing the new ones
         hideMessages();
         if (MessageTypeEnum.SUCCESS.equals(type)) {
-            successMessagePanel.showMessage(messages);
+            successMessagePanel.showMessage(message);
             Timer timer = new Timer() {
 
                 @Override
@@ -146,9 +146,13 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
                     successMessagePanel.animateHide(AnimationEffect.FADE);
                 }
             };
-            timer.schedule(6000);
+            timer.schedule(12000);
         } else if (MessageTypeEnum.ERROR.equals(type)) {
-            errorMessagePanel.showMessage(messages);
+            if (throwable != null) {
+                errorMessagePanel.showMessage(throwable);
+            } else {
+                errorMessagePanel.showMessage(message);
+            }
         }
     }
 
@@ -159,13 +163,13 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     }
 
     @Override
-    public void setTitle(String title) {
-        masterHead.setTitleLabel(title);
+    public void setUiHandlers(MainPageUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
     }
 
     @Override
-    public void setUiHandlers(MainPageUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
+    public void setTitle(String title) {
+        masterHead.setTitleLabel(title);
     }
 
     private String getUserName() {
@@ -175,5 +179,4 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         }
         return new String();
     }
-
 }
