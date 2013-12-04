@@ -16,29 +16,32 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 import es.gobcan.istac.indicators.core.enume.domain.IndicatorsSystemProcStatusEnum;
 import es.gobcan.istac.indicators.web.client.indicator.widgets.AskVersionWindow;
+import es.gobcan.istac.indicators.web.client.indicator.widgets.ExportDsplWindow;
 import es.gobcan.istac.indicators.web.client.model.ds.IndicatorsSystemsDS;
 import es.gobcan.istac.indicators.web.client.system.presenter.SystemUiHandler;
 import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
+import es.gobcan.istac.indicators.web.client.widgets.SystemDiffusionMainFormLayout;
 import es.gobcan.istac.indicators.web.client.widgets.SystemMainFormLayout;
 import es.gobcan.istac.indicators.web.shared.dto.IndicatorsSystemDtoWeb;
 
 public class SystemGeneralPanel extends VLayout {
 
-    private SystemUiHandler                 uiHandlers;
+    private SystemUiHandler               uiHandlers;
 
-    private SystemMainFormLayout            mainFormLayout;
+    private SystemMainFormLayout          mainFormLayout;
 
-    private InternationalViewMainFormLayout diffusionMainFormLayout;
-    private GroupDynamicForm                diffusionIdentifiersForm;
+    private SystemDiffusionMainFormLayout diffusionMainFormLayout;
+    private GroupDynamicForm              diffusionIdentifiersForm;
 
     /* VIEW FORM */
-    private GroupDynamicForm                identifiersForm;
-    private GroupDynamicForm                productionForm;
-    private GroupDynamicForm                diffusionForm;
-    private GroupDynamicForm                contentForm;
-    private GroupDynamicForm                publicationForm;
+    private GroupDynamicForm              identifiersForm;
+    private GroupDynamicForm              productionForm;
+    private GroupDynamicForm              diffusionForm;
+    private GroupDynamicForm              contentForm;
+    private GroupDynamicForm              publicationForm;
 
-    private IndicatorsSystemDtoWeb          indicatorsSystemDto;
+    private IndicatorsSystemDtoWeb        indicatorsSystemDto;
+    private IndicatorsSystemDtoWeb        indicatorsSystemDiffusionDto;
 
     public SystemGeneralPanel() {
         super();
@@ -120,7 +123,21 @@ public class SystemGeneralPanel extends VLayout {
 
             @Override
             public void onClick(ClickEvent event) {
-                uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDto);
+                final ExportDsplWindow window = new ExportDsplWindow(getConstants().indicatorVersionType()) {
+
+                    @Override
+                    public void exportMerging() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDto, true);
+                        hide();
+                    }
+
+                    @Override
+                    public void exportSimple() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDto, false);
+                        hide();
+                    }
+                };
+                window.show();
             }
         });
 
@@ -131,7 +148,7 @@ public class SystemGeneralPanel extends VLayout {
         // DIFFUSION ENVIRONMENT
         // ......................
 
-        diffusionMainFormLayout = new InternationalViewMainFormLayout();
+        diffusionMainFormLayout = new SystemDiffusionMainFormLayout();
         diffusionMainFormLayout.setTitleLabelContents(getConstants().systemDiffusionEnvironment());
         diffusionMainFormLayout.setVisibility(Visibility.HIDDEN);
         diffusionMainFormLayout.getTranslateToolStripButton().addClickHandler(new ClickHandler() {
@@ -140,6 +157,28 @@ public class SystemGeneralPanel extends VLayout {
             public void onClick(ClickEvent event) {
                 boolean translationsShowed = diffusionMainFormLayout.getTranslateToolStripButton().isSelected();
                 diffusionIdentifiersForm.setTranslationsShowed(translationsShowed);
+            }
+        });
+
+        diffusionMainFormLayout.getExportDspl().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final ExportDsplWindow window = new ExportDsplWindow(getConstants().indicatorVersionType()) {
+
+                    @Override
+                    public void exportMerging() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, true);
+                        hide();
+                    }
+
+                    @Override
+                    public void exportSimple() {
+                        uiHandlers.exportIndicatorsSystemInDspl(indicatorsSystemDiffusionDto, false);
+                        hide();
+                    }
+                };
+                window.show();
             }
         });
 
@@ -259,6 +298,7 @@ public class SystemGeneralPanel extends VLayout {
     }
 
     public void setDiffusionIndicatorsSystem(IndicatorsSystemDtoWeb indicatorSystemDto) {
+        indicatorsSystemDiffusionDto = indicatorSystemDto;
         // Identifiers
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.VERSION, indicatorSystemDto.getVersionNumber());
         diffusionIdentifiersForm.setValue(IndicatorsSystemsDS.CODE, indicatorSystemDto.getCode());

@@ -20,6 +20,9 @@ public class ExportSystemInDspl {
     @In(3)
     InternationalStringDto systemDescription;
 
+    @In(4)
+    boolean                mergeTimeGranularities;
+
     @Out(1)
     List<String>           files;
 }

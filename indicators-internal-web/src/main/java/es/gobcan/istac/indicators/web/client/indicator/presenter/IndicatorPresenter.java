@@ -262,7 +262,8 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveGeographicalValues(final String geographicalGranularityUuid) {
-        GetGeographicalValuesAction action = new GetGeographicalValuesAction.Builder().geographicalGranularityUuid(geographicalGranularityUuid).build();
+        GetGeographicalValuesAction.Builder builder = new GetGeographicalValuesAction.Builder();
+        GetGeographicalValuesAction action = builder.geographicalGranularityUuid(geographicalGranularityUuid).build();
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
 
             @Override

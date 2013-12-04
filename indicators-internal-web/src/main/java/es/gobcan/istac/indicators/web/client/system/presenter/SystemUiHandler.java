@@ -40,7 +40,7 @@ public interface SystemUiHandler extends UiHandlers {
 
     void versioningIndicatorsSystem(IndicatorsSystemDtoWeb indicatorsSystemDto, VersionTypeEnum versionType);
 
-    void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto);
+    void exportIndicatorsSystemInDspl(IndicatorsSystemDtoWeb indicatorsSystemDto, boolean mergingTimeGranularities);
 
     // void populateIndicatorData(String uuid, String version);
 
