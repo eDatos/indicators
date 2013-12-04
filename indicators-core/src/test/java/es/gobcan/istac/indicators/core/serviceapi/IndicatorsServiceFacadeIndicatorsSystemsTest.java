@@ -4428,7 +4428,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         assertFalse(TimeVariableUtils.isTimeValue("2012w1"));
         assertFalse(TimeVariableUtils.isTimeValue("2012W111"));
         assertFalse(TimeVariableUtils.isTimeValue("2012W1"));
-        assertFalse(TimeVariableUtils.isTimeValue("2012W53"));
+        assertFalse(TimeVariableUtils.isTimeValue("2012W54"));
         assertFalse(TimeVariableUtils.isTimeValue("2012W60"));
         assertFalse(TimeVariableUtils.isTimeValue("20121"));
         assertFalse(TimeVariableUtils.isTimeValue("201212"));
