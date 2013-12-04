@@ -228,13 +228,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                     buildLastValuesCache(ctx, indicatorVersion);
                 }
-
-                // TODO - Crear vista + asignar rol a vista
-                // // After update data, create or replace view with semantic name
-                // if (!indicatorVersionNumber.equals(diffusionVersion)) {
-                // indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
-                // datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryTableName(), viewName);
-                // }
             } else {
                 LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
             }
@@ -363,6 +356,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
             // No more inconsistent data, no more needs update
             markIndicatorVersionAsDataUpdated(indicatorVersion);
+
+            // Update view if it's necessary
+            createOrReplaceLastVersionView(indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
             if (e instanceof MetamacException) {
@@ -370,6 +366,19 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             } else {
                 throw new MetamacException(e, ServiceExceptionType.DATA_POPULATE_ERROR, indicatorUuid, indicatorVersionNumber);
             }
+        }
+    }
+
+    private void createOrReplaceLastVersionView(IndicatorVersion indicatorVersion) {
+        if (indicatorVersion.getIsLastVersion()) {
+            try {
+                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
+            } catch (ApplicationException e) {
+                // TODO
+                // throw new MetamacException(ServiceExceptionType.DATA_CREATE_OR_REPLACE_VIEW_ERROR, indicatorVersion.getIndicator().getViewCode(), indicatorVersion.getIndicator().getCode(),
+                // indicatorVersion.getDataRepositoryId());
+            }
+
         }
     }
 

@@ -43,6 +43,7 @@ public class ServiceExceptionParameters {
     public static final String INDICATOR_VERSION_NUMBER                                                      = "indicator.version_number";
     public static final String INDICATOR_VERSION_TYPE                                                        = "indicator.version_type";
     public static final String INDICATOR_CODE                                                                = "indicator.code";
+    public static final String INDICATOR_VIEW_CODE                                                           = "indicator.view_code";
     public static final String INDICATOR_SUBJECT_CODE                                                        = "indicator.subject_code";
     public static final String INDICATOR_SUBJECT_TITLE                                                       = "indicator.subject_title";
     public static final String INDICATOR_TITLE                                                               = "indicator.title";

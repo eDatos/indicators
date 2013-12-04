@@ -56,6 +56,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType INDICATOR_VERSION_LAST_ARCHIVED                          = create("exception.indicators.indicator.version_last_archived");
     public static final CommonServiceExceptionType INDICATOR_VERSION_NO_DATA                                = create("exception.indicators.indicator.version_no_data");
     public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_CODE_DUPLICATED                  = create("exception.indicators.indicator.already_exists.code_duplicated");
+    public static final CommonServiceExceptionType INDICATOR_ALREADY_EXIST_VIEW_CODE_DUPLICATED             = create("exception.indicators.indicator.already_exists.view_code_duplicated");
     public static final CommonServiceExceptionType INDICATOR_IN_PRODUCTION_NOT_FOUND                        = create("exception.indicators.indicator.production_not_found");
     public static final CommonServiceExceptionType INDICATOR_IN_DIFFUSION_NOT_FOUND                         = create("exception.indicators.indicator.diffusion_not_found");
     public static final CommonServiceExceptionType INDICATOR_WRONG_PROC_STATUS                              = create("exception.indicators.indicator.wrong_proc_status");
@@ -92,6 +93,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATA_POPULATE_WRONG_OBSERVATION_VALUE_LENGTH             = create("exception.indicators.data.populate.wrong.observation_value_length.error");
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_GEOGRAPHIC_VALUE                   = create("exception.indicators.data.populate.unknown_geographic_value");
     public static final CommonServiceExceptionType DATA_POPULATE_UNKNOWN_TIME_VALUE                         = create("exception.indicators.data.populate.unknown_time_value");
+    public static final CommonServiceExceptionType DATA_CREATE_OR_REPLACE_VIEW_ERROR                        = create("exception.indicators.data.create_or_replace_view.error");
 
     public static final CommonServiceExceptionType DATA_UPDATE_INDICATORS_GPE_CHECK_ERROR                   = create("exception.indicators.data.update.indicators.gpe.check.error");
 

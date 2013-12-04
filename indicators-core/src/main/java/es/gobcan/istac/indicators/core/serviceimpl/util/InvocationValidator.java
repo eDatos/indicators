@@ -12,6 +12,8 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 
+import com.arte.statistic.dataset.repository.util.ValidationUtils;
+
 import es.gobcan.istac.indicators.core.domain.DataSource;
 import es.gobcan.istac.indicators.core.domain.DataSourceVariable;
 import es.gobcan.istac.indicators.core.domain.Dimension;
@@ -1803,11 +1805,15 @@ public class InvocationValidator {
         }
         IndicatorsValidationUtils.checkParameterRequired(indicatorVersion.getIndicator(), ServiceExceptionParameters.INDICATOR, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
+        IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getIndicator().getViewCode(), ServiceExceptionParameters.INDICATOR_VIEW_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getTitle(), ServiceExceptionParameters.INDICATOR_TITLE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectCode(), ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, exceptions);
         IndicatorsValidationUtils.checkMetadataRequired(indicatorVersion.getSubjectTitle(), ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, exceptions);
         if (indicatorVersion.getIndicator().getCode() != null && !CoreCommonUtil.matchMetamacID(indicatorVersion.getIndicator().getCode())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_CODE));
+        }
+        if (indicatorVersion.getIndicator().getViewCode() != null && !ValidationUtils.matchOracleObjectName(indicatorVersion.getIndicator().getViewCode())) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.INDICATOR_VIEW_CODE));
         }
 
         // Quantity: do not validate required attributes of quantity, only when send to production validation

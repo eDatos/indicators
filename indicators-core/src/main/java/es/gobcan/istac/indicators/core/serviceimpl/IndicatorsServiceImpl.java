@@ -71,6 +71,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         // Validation of parameters
         InvocationValidator.checkCreateIndicator(indicatorVersion, null);
         checkIndicatorCodeUnique(ctx, indicator.getCode());
+        checkIndicatorViewCodeUnique(ctx, indicator.getViewCode());
 
         // Save indicator
         indicator.setDiffusionVersion(null);
@@ -863,6 +864,24 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         PagedResult<Indicator> result = getIndicatorRepository().findByCondition(conditions, pagingParameter);
         if (result.getValues().size() != 0) {
             throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED, code);
+        }
+    }
+
+    /**
+     * Checks not exists another indicator with same view code
+     */
+    private void checkIndicatorViewCodeUnique(ServiceContext ctx, String viewCode) throws MetamacException {
+
+        // Prepare criteria
+        PagingParameter pagingParameter = PagingParameter.pageAccess(1, 1);
+        ConditionRoot<Indicator> conditionRoot = ConditionalCriteriaBuilder.criteriaFor(Indicator.class);
+        conditionRoot.withProperty(IndicatorProperties.viewCode()).ignoreCaseEq(viewCode);
+        List<ConditionalCriteria> conditions = conditionRoot.distinctRoot().build();
+
+        // Find
+        PagedResult<Indicator> result = getIndicatorRepository().findByCondition(conditions, pagingParameter);
+        if (result.getValues().size() != 0) {
+            throw new MetamacException(ServiceExceptionType.INDICATOR_ALREADY_EXIST_VIEW_CODE_DUPLICATED, viewCode);
         }
     }
 

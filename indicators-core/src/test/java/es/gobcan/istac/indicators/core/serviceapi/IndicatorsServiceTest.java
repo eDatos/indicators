@@ -63,6 +63,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
         indicatorVersion.getIndicator().setCode("MYCODE");
+        indicatorVersion.getIndicator().setViewCode("MYVIEWCODE");
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());
@@ -90,6 +91,7 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         IndicatorVersion indicatorVersion = new IndicatorVersion();
         indicatorVersion.setIndicator(new Indicator());
         indicatorVersion.getIndicator().setCode(("code" + (new Date()).getTime()));
+        indicatorVersion.getIndicator().setViewCode(("viewCode" + (new Date()).getTime()));
         indicatorVersion.setTitle(IndicatorsMocks.mockInternationalString());
         indicatorVersion.setSubjectCode(IndicatorsMocks.mockString(10));
         indicatorVersion.setSubjectTitle(IndicatorsMocks.mockInternationalString());

@@ -101,6 +101,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -116,6 +117,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsTest extends IndicatorsBas
         // With access
         indicatorsServiceFacade.createIndicator(getServiceContextTecnicoProduccion(), indicatorDto);
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorsServiceFacade.createIndicator(getServiceContextTecnicoApoyoProduccion(), indicatorDto);
 
         // Without access

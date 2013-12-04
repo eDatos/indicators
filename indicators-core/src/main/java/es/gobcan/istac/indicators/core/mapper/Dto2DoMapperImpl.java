@@ -221,6 +221,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             target.setIndicator(new Indicator());
             // non modifiable after creation
             target.getIndicator().setCode(source.getCode());
+            target.getIndicator().setViewCode(source.getViewCode());
         } else {
             target = indicatorsService.retrieveIndicator(ctx, source.getUuid(), source.getVersionNumber());
             OptimisticLockingUtils.checkVersion(target.getVersion(), source.getVersionOptimisticLocking());
@@ -228,6 +229,7 @@ public class Dto2DoMapperImpl implements Dto2DoMapper {
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getCode(), source.getCode(), ServiceExceptionParameters.INDICATOR_CODE, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(target.getIndicator().getViewCode(), source.getViewCode(), ServiceExceptionParameters.INDICATOR_VIEW_CODE, exceptions);
             // These attributes are modified by service, not by user
             ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryId(), source.getDataRepositoryId(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_ID, exceptions);
             ValidationUtils.checkMetadataUnmodifiable(target.getDataRepositoryTableName(), source.getDataRepositoryTableName(), ServiceExceptionParameters.INDICATOR_DATA_REPOSITORY_TABLE_NAME,

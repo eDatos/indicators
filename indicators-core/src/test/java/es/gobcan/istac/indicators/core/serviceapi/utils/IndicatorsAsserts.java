@@ -49,6 +49,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
 
     public static void assertEqualsIndicator(IndicatorDto expected, IndicatorDto actual) {
         assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getViewCode(), actual.getViewCode());
         assertEquals(expected.getSubjectCode(), actual.getSubjectCode());
         assertEqualsInternationalString(expected.getSubjectTitle(), actual.getSubjectTitle());
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());

@@ -791,6 +791,8 @@ Application Indicators {
 
 			"Code. Non modifiable"
 			String code not nullable;
+			"Code for dataset Oracle view"
+			String viewCode not nullable length="30";
 			
 			// Can not do an OneToOne relation with IndicatorVersion because this produces a CyclicDependency with Indicator
 			"Version in production"
@@ -1389,6 +1391,8 @@ Application Indicators {
 			String versionNumber;
 			"Code"
 			String code;
+			"View code"
+			String viewCode;
 			"Processing status"
 			- @IndicatorProcStatusEnum procStatus;
        		"Title"

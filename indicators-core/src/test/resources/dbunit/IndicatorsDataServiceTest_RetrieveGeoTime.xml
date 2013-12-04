@@ -11,6 +11,7 @@
 		SYMBOL="km"
 		SYMBOL_POSITION="END" 
 		TITLE_FK="1"
+        VERSION="0"
 	/>
   
   	<!-- ************************************************************************************ -->
@@ -22,18 +23,21 @@
 		CODE="COUNTRIES"
 		UUID="1"
 		TITLE_FK="4"
+        VERSION="0"
 	/>
   	<TB_LIS_GEOGR_GRANULARITIES 
 		ID="2"
 		CODE="COMMUNITIES"
 		UUID="2"
 		TITLE_FK="4"
+        VERSION="0"
 	/>
   	<TB_LIS_GEOGR_GRANULARITIES 
 		ID="3"
 		CODE="PROVINCES"
 		UUID="3"
 		TITLE_FK="4"
+        VERSION="0"
 	/>
   
   	<!-- ************************************************************************************ -->
@@ -48,6 +52,14 @@
   		TITLE_FK="5" 
         GLOBAL_ORDER="ES"
   		GRANULARITY_FK="1"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="2" 
@@ -58,6 +70,14 @@
   		TITLE_FK="5"
         GLOBAL_ORDER="ES01" 
   		GRANULARITY_FK="2"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="3" 
@@ -68,6 +88,14 @@
   		TITLE_FK="5" 
         GLOBAL_ORDER="ES0101"
   		GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="4" 
@@ -78,6 +106,14 @@
   		TITLE_FK="5" 
         GLOBAL_ORDER="ES0102"
   		GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="5" 
@@ -88,6 +124,14 @@
   		TITLE_FK="5" 
         GLOBAL_ORDER="ES0103"
   		GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   	<TB_LIS_GEOGR_VALUES 
   		ID="6" 
@@ -98,6 +142,14 @@
   		TITLE_FK="5"
         GLOBAL_ORDER="ES0104" 
   		GRANULARITY_FK="3"
+        
+        VERSION="1"
+        CREATED_BY="user1"
+        CREATED_DATE="2011-01-01 01:02:04"
+        CREATED_DATE_TZ="Europe/London"
+        LAST_UPDATED_BY="user2"
+        LAST_UPDATED="2011-01-22 01:02:04"
+        LAST_UPDATED_TZ="Europe/London"
   	/>
   
     <!-- **************************************************************************************	-->
@@ -109,6 +161,7 @@
 		ID="1"
 		UUID="Indicator-1"
 		CODE="CODE-1"
+        VIEW_CODE="VIEWCODE_1"
 		PRODUCTION_ID="12"
 		PRODUCTION_VERSION_NUMBER="2.000"
 		DIFFUSION_ID="11"
@@ -375,6 +428,7 @@
 		ID="2"
 		UUID="Indicator-2"
 		CODE="CODE-2"
+        VIEW_CODE="VIEWCODE_2"
 		PRODUCTION_ID="[null]"
 		PRODUCTION_VERSION_NUMBER="[null]"
 		DIFFUSION_ID="21"
@@ -521,6 +575,7 @@
 		ID="3"
 		UUID="Indicator-3"
 		CODE="CODE-3"
+        VIEW_CODE="VIEWCODE_3"
 		PRODUCTION_ID="[null]"
 		PRODUCTION_VERSION_NUMBER="[null]"
 		DIFFUSION_ID="31"
@@ -665,6 +720,7 @@
 		ID="4"
 		UUID="Indicator-4"
 		CODE="CODE-4"
+        VIEW_CODE="VIEWCODE_4"
 		PRODUCTION_ID="41"
 		PRODUCTION_VERSION_NUMBER="1.000"
 		DIFFUSION_ID="[null]"
@@ -845,6 +901,7 @@
         ID="5"
         UUID="Indicator-5"
         CODE="CODE-5"
+        VIEW_CODE="VIEWCODE_5"
         PRODUCTION_ID="[null]"
         PRODUCTION_VERSION_NUMBER="[null]"
         DIFFUSION_ID="51"

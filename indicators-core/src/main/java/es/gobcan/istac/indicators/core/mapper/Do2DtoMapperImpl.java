@@ -182,6 +182,7 @@ public class Do2DtoMapperImpl implements Do2DtoMapper {
         target.setUuid(source.getIndicator().getUuid());
         target.setVersionNumber(source.getVersionNumber());
         target.setCode(source.getIndicator().getCode());
+        target.setViewCode(source.getIndicator().getViewCode());
         target.setTitle(internationalStringToDto(source.getTitle()));
         target.setAcronym(internationalStringToDto(source.getAcronym()));
         target.setSubjectCode(source.getSubjectCode());

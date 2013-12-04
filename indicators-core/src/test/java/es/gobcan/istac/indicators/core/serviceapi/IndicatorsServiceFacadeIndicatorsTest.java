@@ -138,6 +138,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
         assertEquals("1.000", indicatorDto.getPublishedVersion());
         assertNull(indicatorDto.getArchivedVersion());
         assertEquals("CODE-1", indicatorDto.getCode());
+        assertEquals("VIEWCODE_1", indicatorDto.getViewCode());
         assertEquals(SUBJECT_1, indicatorDto.getSubjectCode());
         IndicatorsAsserts.assertEqualsInternationalString(indicatorDto.getSubjectTitle(), "es", "Área temática 1", null, null);
         assertEquals(IndicatorProcStatusEnum.PUBLISHED, indicatorDto.getProcStatus());
@@ -435,6 +436,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -484,6 +486,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -512,6 +515,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -542,6 +546,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -574,6 +579,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -607,6 +613,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -640,6 +647,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -666,6 +674,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -693,6 +702,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(null);
+        indicatorDto.setViewCode(null);
         indicatorDto.setTitle(null);
         indicatorDto.setSubjectCode(null);
         indicatorDto.setSubjectTitle(null);
@@ -702,7 +712,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
             fail("parameters required");
         } catch (MetamacException e) {
-            assertEquals(4, e.getExceptionItems().size());
+            assertEquals(5, e.getExceptionItems().size());
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
@@ -710,15 +720,19 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(1).getCode());
             assertEquals(1, e.getExceptionItems().get(1).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_TITLE, e.getExceptionItems().get(1).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_VIEW_CODE, e.getExceptionItems().get(1).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(2).getCode());
             assertEquals(1, e.getExceptionItems().get(2).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, e.getExceptionItems().get(2).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_TITLE, e.getExceptionItems().get(2).getMessageParameters()[0]);
 
             assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(3).getCode());
             assertEquals(1, e.getExceptionItems().get(3).getMessageParameters().length);
-            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, e.getExceptionItems().get(3).getMessageParameters()[0]);
+            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_CODE, e.getExceptionItems().get(3).getMessageParameters()[0]);
+
+            assertEquals(ServiceExceptionType.METADATA_REQUIRED.getCode(), e.getExceptionItems().get(4).getCode());
+            assertEquals(1, e.getExceptionItems().get(4).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATOR_SUBJECT_TITLE, e.getExceptionItems().get(4).getMessageParameters()[0]);
         }
     }
 
@@ -727,6 +741,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -769,6 +784,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -844,6 +860,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -873,6 +890,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
+        indicatorDto.setViewCode("ViewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
@@ -889,6 +907,31 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.INDICATOR_ALREADY_EXIST_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(indicatorDto.getCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testCreateIndicatorErrorViewCodeDuplicated() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("CoDe");
+        indicatorDto.setViewCode("ViewCode_1");
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
+
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
+            fail("code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_ALREADY_EXIST_VIEW_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorDto.getViewCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
@@ -897,6 +940,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("CoDe-1");
+        indicatorDto.setViewCode("ViewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
@@ -917,10 +961,35 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testCreateIndicatorViewCodeErrorDuplicatedInsensitive() throws Exception {
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("CoDe");
+        indicatorDto.setViewCode("ViewCode_1");
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
+
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
+            fail("view code duplicated");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.INDICATOR_ALREADY_EXIST_VIEW_CODE_DUPLICATED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(indicatorDto.getViewCode(), e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testCreateIndicatorErrorSubjectCodeNotExits() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(NOT_EXISTS);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto());
@@ -945,6 +1014,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
         indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto());
@@ -962,6 +1032,7 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("A*b-?");
+        indicatorDto.setViewCode("viewCode");
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -987,10 +1058,41 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
     }
 
     @Test
+    public void testCreateIndicatorErrorViewCodeIncorrect() throws Exception {
+
+        IndicatorDto indicatorDto = new IndicatorDto();
+        indicatorDto.setCode("code");
+        indicatorDto.setViewCode("$viewCode");
+        indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setSubjectCode(SUBJECT_1);
+        indicatorDto.setSubjectTitle(IndicatorsMocks.mockInternationalStringDto(IndicatorsConstants.LOCALE_SPANISH, "Área temática 1"));
+        indicatorDto.setComments(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setNotes(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setConceptDescription(IndicatorsMocks.mockInternationalStringDto());
+        indicatorDto.setQuantity(new QuantityDto());
+        indicatorDto.getQuantity().setType(QuantityTypeEnum.QUANTITY);
+        indicatorDto.getQuantity().setUnitUuid(QUANTITY_UNIT_1);
+        indicatorDto.getQuantity().setUnitMultiplier(Integer.valueOf(1000));
+
+        // Create
+        try {
+            indicatorsServiceFacade.createIndicator(getServiceContextAdministrador(), indicatorDto);
+            fail("view code incorrect");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_INCORRECT.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATOR_VIEW_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
     public void testCreateIndicatorErrorBaseTimeIncorrect() throws Exception {
 
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode("code" + (new Date()).getTime());
+        indicatorDto.setViewCode("viewcode" + (new Date()).getTime());
         indicatorDto.setTitle(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setAcronym(IndicatorsMocks.mockInternationalStringDto());
         indicatorDto.setSubjectCode(SUBJECT_1);
@@ -1474,6 +1576,27 @@ public class IndicatorsServiceFacadeIndicatorsTest extends IndicatorsBaseTest {
             assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
             assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
             assertEquals(ServiceExceptionParameters.INDICATOR_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
+        }
+    }
+
+    @Test
+    public void testUpdateIndicatorsErrorViewCodeNonModifiable() throws Exception {
+
+        String uuid = INDICATOR_1;
+        String versionNumber = "2.000";
+
+        IndicatorDto indicatorDto = indicatorsServiceFacade.retrieveIndicator(getServiceContextAdministrador(), uuid, versionNumber);
+        indicatorDto.setViewCode("newViewCode");
+
+        // Update
+        try {
+            indicatorsServiceFacade.updateIndicator(getServiceContextAdministrador(), indicatorDto);
+            fail("View Code is unmodifiable");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.METADATA_UNMODIFIABLE.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(1, e.getExceptionItems().get(0).getMessageParameters().length);
+            assertEquals(ServiceExceptionParameters.INDICATOR_VIEW_CODE, e.getExceptionItems().get(0).getMessageParameters()[0]);
         }
     }
 
