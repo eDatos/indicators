@@ -42,6 +42,7 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
@@ -358,7 +359,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             markIndicatorVersionAsDataUpdated(indicatorVersion);
 
             // Update view if it's necessary
-            createOrReplaceLastVersionView(indicatorVersion);
+            manageDatabaseViewForLastVersion(indicatorVersion);
         } catch (Exception e) {
             deleteDatasetRepositoryIfExists(datasetRepoDto);
             if (e instanceof MetamacException) {
@@ -369,16 +370,27 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
     }
 
-    private void createOrReplaceLastVersionView(IndicatorVersion indicatorVersion) {
+    private void manageDatabaseViewForLastVersion(IndicatorVersion indicatorVersion) {
         if (indicatorVersion.getIsLastVersion()) {
-            try {
-                datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
-            } catch (ApplicationException e) {
-                // TODO
-                // throw new MetamacException(ServiceExceptionType.DATA_CREATE_OR_REPLACE_VIEW_ERROR, indicatorVersion.getIndicator().getViewCode(), indicatorVersion.getIndicator().getCode(),
-                // indicatorVersion.getDataRepositoryId());
-            }
+            createOrReplaceLastVersionDatabaseView(indicatorVersion);
+            assignIndicatorDataOracleRolePermissionsToView(indicatorVersion.getIndicator().getViewCode());
+        }
+    }
 
+    private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) {
+        try {
+            datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(IndicatorsConstants.INDICATORS_DATA_DATABASE_ROLE, viewCode);
+        } catch (ApplicationException e) {
+            LOG.error("Error assigning SELECT permission to " + IndicatorsConstants.INDICATORS_DATA_DATABASE_ROLE + " over " + viewCode);
+        }
+    }
+
+    private void createOrReplaceLastVersionDatabaseView(IndicatorVersion indicatorVersion) {
+        try {
+            datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
+        } catch (ApplicationException e) {
+            LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
+                    + " related with indicatorVersionUuid " + indicatorVersion.getUuid());
         }
     }
 

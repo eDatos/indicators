@@ -515,7 +515,7 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicatorNewVersion.setProcStatus(IndicatorProcStatusEnum.DRAFT);
         indicatorNewVersion.setVersionNumber(ServiceUtils.generateVersionNumber(indicatorVersionDiffusion.getVersionNumber(), versionType));
         indicatorNewVersion.setIsLastVersion(Boolean.TRUE);
-        indicatorNewVersion.setNeedsUpdate(Boolean.FALSE);
+        indicatorNewVersion.setNeedsUpdate(Boolean.TRUE);
         indicatorNewVersion.setInconsistentData(Boolean.FALSE);
 
         // Update diffusion version
@@ -530,6 +530,10 @@ public class IndicatorsServiceImpl extends IndicatorsServiceImplBase {
         indicator.setProductionVersion(new IndicatorVersionInformation(indicatorNewVersion.getId(), indicatorNewVersion.getVersionNumber()));
         indicator.getVersions().add(indicatorNewVersion);
         getIndicatorRepository().save(indicator);
+
+        // Populate indicator data
+        getIndicatorsDataService().populateIndicatorVersionData(ctx, indicatorNewVersion.getIndicator().getUuid(), indicatorNewVersion.getVersionNumber());
+        indicatorNewVersion = retrieveIndicator(ctx, indicatorNewVersion.getIndicator().getUuid(), indicatorNewVersion.getVersionNumber());
 
         return indicatorNewVersion;
     }

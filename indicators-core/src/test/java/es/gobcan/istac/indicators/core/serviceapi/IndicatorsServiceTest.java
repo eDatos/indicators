@@ -2,6 +2,7 @@ package es.gobcan.istac.indicators.core.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -14,6 +15,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -150,6 +152,9 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         {
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_3_VERSION);
             assertTrue(indicatorVersion1.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
+            assertFalse(indicatorVersion1.getNeedsUpdate());
+            assertFalse(indicatorVersion1.getInconsistentData());
         }
 
         // Versioning
@@ -159,8 +164,17 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         {
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_3_VERSION);
             assertFalse(indicatorVersion1.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
+            assertFalse(indicatorVersion1.getNeedsUpdate());
+            assertFalse(indicatorVersion1.getInconsistentData());
+
             IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorVersion2.getIsLastVersion());
+            assertTrue(StringUtils.isNotEmpty(indicatorVersion2.getDataRepositoryId()));
+            assertFalse(indicatorVersion2.getNeedsUpdate());
+            assertFalse(indicatorVersion2.getInconsistentData());
+
+            assertNotSame(indicatorVersion1.getDataRepositoryId(), indicatorVersion2.getDataRepositoryId());
         }
     }
 
