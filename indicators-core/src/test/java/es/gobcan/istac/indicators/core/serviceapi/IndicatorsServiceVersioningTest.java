@@ -29,7 +29,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
-public class IndicatorsServiceWithoutMockitoTest extends IndicatorsBaseTest {
+public class IndicatorsServiceVersioningTest extends IndicatorsBaseTest {
 
     @Autowired
     protected IndicatorsService           indicatorService;

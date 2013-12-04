@@ -23,7 +23,8 @@ import org.junit.runners.Suite.SuiteClasses;
     SecurityIndicatorsServiceFacadeIndicatorsTest.class,
     FillData.class,
     IndicatorsConfigurationServiceTest.class,
-    TimeVariableUtilsTest.class
+    TimeVariableUtilsTest.class,
+    IndicatorsServiceVersioningTest.class
                 })
 public class IndicatorsSuite {
     
