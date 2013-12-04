@@ -29,10 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -86,20 +87,19 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
 @Service("indicatorsDataService")
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
-    private final Logger                     LOG                = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
+    private final Logger                     LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
-    public static final String               GEO_DIM            = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
-    public static final String               TIME_DIM           = IndicatorDataDimensionTypeEnum.TIME.name();
-    public static final String               MEASURE_DIM        = IndicatorDataDimensionTypeEnum.MEASURE.name();
-    public static final String               CODE_ATTR          = IndicatorDataAttributeTypeEnum.CODE.name();
-    public static final String               CODE_ATTR_LOC      = "es";
-    public static final String               OBS_CONF_ATTR      = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
-    public static final String               OBS_CONF_LOC       = "es";
+    public static final String               GEO_DIMENSION             = IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name();
+    public static final String               TIME_DIMENSION            = IndicatorDataDimensionTypeEnum.TIME.name();
+    public static final String               MEASURE_DIMENSION         = IndicatorDataDimensionTypeEnum.MEASURE.name();
+    public static final String               CODE_ATTRIBUTE            = IndicatorDataAttributeTypeEnum.CODE.name();
+    public static final String               OBS_CONF_ATTRIBUTE        = IndicatorDataAttributeTypeEnum.OBS_CONF.name();
+    public static final String               DATASET_REPOSITORY_LOCALE = "es";
 
-    public static final String               DOT_NOT_APPLICABLE = ".";
-    public static final String               DOT_UNAVAILABLE    = "..";
-    public static final Double               ZERO_RANGE         = 1E-6;
-    public static final int                  MAX_MEASURE_LENGTH = 50;
+    public static final String               DOT_NOT_APPLICABLE        = ".";
+    public static final String               DOT_UNAVAILABLE           = "..";
+    public static final Double               ZERO_RANGE                = 1E-6;
+    public static final int                  MAX_MEASURE_LENGTH        = 50;
 
     private static final Map<String, String> SPECIAL_STRING_MAPPING;
 
@@ -117,7 +117,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
-    private ObjectMapper                     mapper             = new ObjectMapper();
+    private final ObjectMapper               mapper                    = new ObjectMapper();
 
     public IndicatorsDataServiceImpl() {
     }
@@ -228,6 +228,13 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                     buildLastValuesCache(ctx, indicatorVersion);
                 }
+
+                // TODO - Crear vista + asignar rol a vista
+                // // After update data, create or replace view with semantic name
+                // if (!indicatorVersionNumber.equals(diffusionVersion)) {
+                // indicatorVersion = getIndicatorVersionRepository().retrieveIndicatorVersion(indicatorUuid, indicatorVersionNumber);
+                // datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryTableName(), viewName);
+                // }
             } else {
                 LOG.info("Skipping unnecesary data populate for indicator uuid:" + indicatorUuid + " version " + indicatorVersionNumber);
             }
@@ -448,7 +455,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
                 List<GeographicalValue> geographicalValues = getGeographicalValueRepository().findGeographicalValuesByCodes(geoCodesInIndicator);
 
-                for (GeographicalValue geographicalValue  : geographicalValues) {
+                for (GeographicalValue geographicalValue : geographicalValues) {
                     geoGranularitiesInIndicator.add(geographicalValue.getGranularity());
                 }
                 return new ArrayList<GeographicalGranularity>(geoGranularitiesInIndicator);
@@ -468,22 +475,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
-        
+
         return calculateGeographicalGranularitiesInIndicatorInstanceLinkedToIndicatorVersion(ctx, indInstance, indicatorVersion);
     }
-    
+
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
-        
+
         return calculateGeographicalGranularitiesInIndicatorInstanceLinkedToIndicatorVersion(ctx, indInstance, indicatorVersion);
     }
-    
-    private List<GeographicalGranularity> calculateGeographicalGranularitiesInIndicatorInstanceLinkedToIndicatorVersion(ServiceContext ctx, IndicatorInstance indInstance, IndicatorVersion indicatorVersion) throws MetamacException {
+
+    private List<GeographicalGranularity> calculateGeographicalGranularitiesInIndicatorInstanceLinkedToIndicatorVersion(ServiceContext ctx, IndicatorInstance indInstance,
+            IndicatorVersion indicatorVersion) throws MetamacException {
         if (indicatorVersion.getDataRepositoryId() != null) {
             if (indInstance.getGeographicalValues() != null && indInstance.getGeographicalValues().size() > 0) {
                 Set<GeographicalGranularity> granularities = new HashSet<GeographicalGranularity>();
@@ -624,12 +632,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
         return calculateGeographicalValuesInIndicatorInstance(indInstance, indicatorVersion);
     }
-    
+
     @Override
     public List<GeographicalValue> retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveGeographicalValuesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
         return calculateGeographicalValuesInIndicatorInstance(indInstance, indicatorVersion);
@@ -705,24 +713,24 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
 
-        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = getFixedTimeGranularitiesInIndicatorInstance(ctx,indInstance);
-        
+        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = getFixedTimeGranularitiesInIndicatorInstance(ctx, indInstance);
+
         if (timeGranularitiesFixedInIndicatorInstance == null) {
             return retrieveTimeGranularitiesInIndicatorPublished(ctx, indInstance.getIndicator().getUuid());
         } else {
             return timeGranularitiesFixedInIndicatorInstance;
         }
     }
-    
+
     @Override
     public List<TimeGranularity> retrieveTimeGranularitiesInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeGranularitiesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
-        
-        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = getFixedTimeGranularitiesInIndicatorInstance(ctx,indInstance);
-        
+
+        List<TimeGranularity> timeGranularitiesFixedInIndicatorInstance = getFixedTimeGranularitiesInIndicatorInstance(ctx, indInstance);
+
         if (timeGranularitiesFixedInIndicatorInstance == null) {
             IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
             return retrieveTimeGranularitiesInIndicator(ctx, indInstance.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
@@ -730,7 +738,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return timeGranularitiesFixedInIndicatorInstance;
         }
     }
-    
+
     private List<TimeGranularity> getFixedTimeGranularitiesInIndicatorInstance(ServiceContext ctx, IndicatorInstance indInstance) throws MetamacException {
         if (!StringUtils.isEmpty(indInstance.getTimeValues())) {
             Set<TimeGranularity> timeGranularities = new HashSet<TimeGranularity>();
@@ -978,11 +986,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
         return calculateTimeValuesInIndicatorInstance(ctx, indInstance, indicatorVersion);
     }
+
     @Override
     public List<TimeValue> retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
         InvocationValidator.checkRetrieveTimeValuesInIndicatorInstance(indicatorInstanceUuid, null);
-        
+
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
         return calculateTimeValuesInIndicatorInstance(ctx, indInstance, indicatorVersion);
@@ -1026,7 +1035,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
         return calculateMeasureValuesInIndicatorVersion(ctx, indicatorVersion);
     }
-    
+
     @Override
     public List<MeasureValue> retrieveMeasureValuesInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid) throws MetamacException {
         // Validation
@@ -1063,7 +1072,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_ERROR, indicatorUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorLastVersion(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions) throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indicatorUuid);
@@ -1084,10 +1093,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_FIND_OBSERVATIONS_EXTENDED_ERROR, indicatorUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorLastVersion(ServiceContext ctx, String indicatorUuid, List<ConditionDimensionDto> conditions)
-    throws MetamacException {
+            throws MetamacException {
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indicatorUuid);
         try {
             return findObservationsExtendedByDimensions(ctx, indicatorVersion, conditions);
@@ -1112,16 +1121,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_ERROR, indicatorInstanceUuid);
         }
     }
-    
+
     @Override
     public Map<String, ObservationDto> findObservationsByDimensionsInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
-    throws MetamacException {
+            throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
-        
+
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(ctx, indicatorInstanceUuid);
         List<TimeValue> timeValues = retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(ctx, indicatorInstanceUuid);
-        
+
         List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
             return findObservationsByDimensions(ctx, indicatorVersion, newConditions);
@@ -1131,8 +1140,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     }
 
     @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
-            throws MetamacException {
+    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithPublishedIndicator(ServiceContext ctx, String indicatorInstanceUuid,
+            List<ConditionDimensionDto> conditions) throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorPublishedVersion(indInstance.getIndicator().getUuid());
 
@@ -1146,16 +1155,16 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_EXTENDED_ERROR, indicatorInstanceUuid);
         }
     }
-    
+
     @Override
-    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid, List<ConditionDimensionDto> conditions)
-    throws MetamacException {
+    public Map<String, ObservationExtendedDto> findObservationsExtendedByDimensionsInIndicatorInstanceWithLastVersionIndicator(ServiceContext ctx, String indicatorInstanceUuid,
+            List<ConditionDimensionDto> conditions) throws MetamacException {
         IndicatorInstance indInstance = getIndicatorInstance(indicatorInstanceUuid);
         IndicatorVersion indicatorVersion = getIndicatorLastVersion(indInstance.getIndicator().getUuid());
-        
+
         List<GeographicalValue> geoValues = retrieveGeographicalValuesInIndicatorInstanceWithLastVersionIndicator(ctx, indicatorInstanceUuid);
         List<TimeValue> timeValues = retrieveTimeValuesInIndicatorInstanceWithLastVersionIndicator(ctx, indicatorInstanceUuid);
-        
+
         List<ConditionDimensionDto> newConditions = filterConditionsByValues(conditions, geoValues, timeValues);
         try {
             return findObservationsExtendedByDimensions(ctx, indicatorVersion, newConditions);
@@ -1163,7 +1172,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(e, ServiceExceptionType.DATA_INSTANCES_FIND_OBSERVATIONS_EXTENDED_ERROR, indicatorInstanceUuid);
         }
     }
-
 
     @Override
     public List<IndicatorVersion> findIndicatorsVersionsPublishedWithSubjectCodeAndGeoCodeOrderedByLastUpdate(ServiceContext ctx, String subjectCode, String geoCode) throws MetamacException {
@@ -1415,12 +1423,12 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             geoCodes.add(geoValue.getCode());
         }
         ConditionDimensionDto geoCondition = new ConditionDimensionDto();
-        geoCondition.setDimensionId(GEO_DIM);
+        geoCondition.setDimensionId(GEO_DIMENSION);
         geoCondition.setCodesDimension(geoCodes);
         conditions.add(geoCondition);
 
         ConditionDimensionDto timeCondition = new ConditionDimensionDto();
-        timeCondition.setDimensionId(TIME_DIM);
+        timeCondition.setDimensionId(TIME_DIMENSION);
         timeCondition.setCodesDimension(Arrays.asList(timeValue));
         conditions.add(timeCondition);
 
@@ -1432,7 +1440,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (ObservationDto obs : observations.values()) {
                 String geoCode = null;
                 for (CodeDimensionDto codeDim : obs.getCodesDimension()) {
-                    if (GEO_DIM.equals(codeDim.getDimensionId())) {
+                    if (GEO_DIMENSION.equals(codeDim.getDimensionId())) {
                         geoCode = codeDim.getCodeDimensionId();
                     }
                 }
@@ -1458,15 +1466,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
 
         ConditionDimensionDto geoCondition = new ConditionDimensionDto();
-        geoCondition.setDimensionId(GEO_DIM);
+        geoCondition.setDimensionId(GEO_DIMENSION);
         geoCondition.setCodesDimension(Arrays.asList(geoValue.getCode()));
 
         ConditionDimensionDto timeCondition = new ConditionDimensionDto();
-        timeCondition.setDimensionId(TIME_DIM);
+        timeCondition.setDimensionId(TIME_DIMENSION);
         timeCondition.setCodesDimension(Arrays.asList(timeValue.getTimeValue()));
 
         ConditionDimensionDto measureCondition = new ConditionDimensionDto();
-        measureCondition.setDimensionId(MEASURE_DIM);
+        measureCondition.setDimensionId(MEASURE_DIMENSION);
         measureCondition.setCodesDimension(Arrays.asList(measureDimension.getName()));
 
         conditions.add(geoCondition);
@@ -1553,18 +1561,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /* Private methods */
 
     private List<String> findCodesForDimensionInIndicator(IndicatorVersion indicatorVersion, IndicatorDataDimensionTypeEnum dimension) throws ApplicationException {
-        List<String> codes = new ArrayList<String>();
-        List<ConditionObservationDto> conditions = datasetRepositoriesServiceFacade.findCodeDimensions(indicatorVersion.getDataRepositoryId());
-        for (ConditionObservationDto condition : conditions) {
-            if (condition.getCodesDimension().size() > 0) {
-                if (dimension.name().equals(condition.getCodesDimension().get(0).getDimensionId())) {
-                    for (CodeDimensionDto codeDim : condition.getCodesDimension()) {
-                        codes.add(codeDim.getCodeDimensionId());
-                    }
-                }
-            }
-        }
-        return codes;
+        Map<String, List<String>> conditions = datasetRepositoriesServiceFacade.findCodeDimensions(indicatorVersion.getDataRepositoryId());
+        return conditions.get(dimension.name());
     }
 
     private Map<String, ObservationDto> findObservationsByDimensions(ServiceContext ctx, IndicatorVersion indicatorVersion, List<ConditionDimensionDto> conditions) throws MetamacException,
@@ -1586,9 +1584,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_NOT_POPULATED, indicatorVersion.getIndicator().getUuid(), indicatorVersion.getVersionNumber());
         }
     }
-    
-    
-    private Map<String,ObservationDto> fillEmptyDataCross(Map<String,ObservationDto> observations) {
+
+    private Map<String, ObservationDto> fillEmptyDataCross(Map<String, ObservationDto> observations) {
         if (observations != null) {
             Set<String> keys = observations.keySet();
             Set<String> geoCodes = new HashSet<String>();
@@ -1603,53 +1600,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             for (String geoCode : geoCodes) {
                 for (String timeCode : timeCodes) {
                     for (String measureCode : measureCodes) {
-                        String uniqueKey = geoCode+"#"+timeCode+"#"+measureCode;
+                        String uniqueKey = geoCode + "#" + timeCode + "#" + measureCode;
                         ObservationDto obs = observations.get(uniqueKey);
                         if (obs == null) {
                             ObservationDto newObs = new ObservationDto();
                             newObs.setPrimaryMeasure(null);
-                            CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(GEO_DIM, geoCode);
-                            CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(TIME_DIM, timeCode);
-                            CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(MEASURE_DIM, measureCode);
+                            CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(GEO_DIMENSION, geoCode);
+                            CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(TIME_DIMENSION, timeCode);
+                            CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(MEASURE_DIMENSION, measureCode);
                             newObs.getCodesDimension().add(geoCodeDimDto);
                             newObs.getCodesDimension().add(timeCodeDimDto);
                             newObs.getCodesDimension().add(measureCodeDimDto);
-                            observations.put(uniqueKey,newObs);
-                        }
-                    }
-                }
-            }
-        }
-        return observations;
-    }
-    
-    private Map<String,ObservationExtendedDto> fillEmptyDataCrossExtended(Map<String,ObservationExtendedDto> observations) {
-        if (observations != null) {
-            Set<String> keys = observations.keySet();
-            Set<String> geoCodes = new HashSet<String>();
-            Set<String> timeCodes = new HashSet<String>();
-            Set<String> measureCodes = new HashSet<String>();
-            for (String key : keys) {
-                String[] codes = key.split("#");
-                geoCodes.add(codes[0]);
-                timeCodes.add(codes[1]);
-                measureCodes.add(codes[2]);
-            }
-            for (String geoCode : geoCodes) {
-                for (String timeCode : timeCodes) {
-                    for (String measureCode : measureCodes) {
-                        String uniqueKey = geoCode+"#"+timeCode+"#"+measureCode;
-                        ObservationExtendedDto obs = observations.get(uniqueKey);
-                        if (obs == null) {
-                            ObservationExtendedDto newObs = new ObservationExtendedDto();
-                            newObs.setPrimaryMeasure(null);
-                            CodeDimensionDto geoCodeDimDto = new CodeDimensionDto(GEO_DIM, geoCode);
-                            CodeDimensionDto timeCodeDimDto = new CodeDimensionDto(TIME_DIM, timeCode);
-                            CodeDimensionDto measureCodeDimDto = new CodeDimensionDto(MEASURE_DIM, measureCode);
-                            newObs.getCodesDimension().add(geoCodeDimDto);
-                            newObs.getCodesDimension().add(timeCodeDimDto);
-                            newObs.getCodesDimension().add(measureCodeDimDto);
-                            observations.put(uniqueKey,newObs);
+                            observations.put(uniqueKey, newObs);
                         }
                     }
                 }
@@ -1666,10 +1628,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             throw new MetamacException(ServiceExceptionType.INDICATOR_IN_DIFFUSION_NOT_FOUND, indicatorUuid);
         }
     }
-    
+
     private IndicatorVersion getIndicatorLastVersion(String indicatorUuid) throws MetamacException {
         Indicator indicator = getIndicatorRepository().retrieveIndicator(indicatorUuid);
-        
+
         if (indicator.getProductionVersion() != null) {
             return getIndicatorVersion(indicatorUuid, indicator.getProductionVersion().getVersionNumber());
         } else {
@@ -1924,13 +1886,23 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private DatasetRepositoryDto createDatasetRepositoryDefinition(String indicatorUuid, String indicatorVersion) throws MetamacException {
         DatasetRepositoryDto datasetRepoDto = new DatasetRepositoryDto();
         datasetRepoDto.setDatasetId("dataset:" + UUID.randomUUID().toString());
-        datasetRepoDto.setMaxAttributesObservation(2);
-        datasetRepoDto.getDimensions().add(GEO_DIM);
-        datasetRepoDto.getDimensions().add(TIME_DIM);
-        datasetRepoDto.getDimensions().add(MEASURE_DIM);
+        datasetRepoDto.getDimensions().add(GEO_DIMENSION);
+        datasetRepoDto.getDimensions().add(TIME_DIMENSION);
+        datasetRepoDto.getDimensions().add(MEASURE_DIMENSION);
+
+        AttributeDto obsConf = new AttributeDto();
+        obsConf.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        obsConf.setAttributeId(OBS_CONF_ATTRIBUTE);
+
+        AttributeDto code = new AttributeDto();
+        code.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+        code.setAttributeId(CODE_ATTRIBUTE);
+
+        datasetRepoDto.getAttributes().add(obsConf);
+        datasetRepoDto.getAttributes().add(code);
 
         List<String> languages = new ArrayList<String>();
-        languages.add("es");
+        languages.add(DATASET_REPOSITORY_LOCALE);
         datasetRepoDto.setLanguages(languages);
 
         try {
@@ -1946,17 +1918,17 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         String value = content.getValue();
 
         ObservationExtendedDto observation = new ObservationExtendedDto();
-        observation.addCodesDimension(new CodeDimensionDto(GEO_DIM, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIM, timeValue));
-        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIM, dataOperation.getMeasureDimension().name()));
-        observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
+        observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
+        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
+        observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
         // Check for dotted notation
         if (isSpecialString(value)) {
             String text = getSpecialStringMeaning(value);
             // Some Special Strings may not need to create an attribute
             if (!StringUtils.isEmpty(text)) {
-                observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(value)));
+                observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(value)));
             }
             observation.setPrimaryMeasure(null);
         } else {
@@ -1972,6 +1944,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
         return observation;
     }
+
     /*
      * Get value has to take a look to method type and methd
      * For LOAD method type method can be OBS_VALUE or A category name for ContVariable
@@ -2006,10 +1979,10 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private ObservationExtendedDto getCalculatedValue(DataOperation dataOperation, String datasetId, String geoValue, String timeValue) throws MetamacException {
         // Create base for observation
         ObservationExtendedDto observation = new ObservationExtendedDto();
-        observation.addCodesDimension(new CodeDimensionDto(GEO_DIM, geoValue));
-        observation.addCodesDimension(new CodeDimensionDto(TIME_DIM, timeValue));
-        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIM, dataOperation.getMeasureDimension().name()));
-        observation.addAttribute(createAttribute(CODE_ATTR, CODE_ATTR_LOC, dataOperation.getDataSourceUuid()));
+        observation.addCodesDimension(new CodeDimensionDto(GEO_DIMENSION, geoValue));
+        observation.addCodesDimension(new CodeDimensionDto(TIME_DIMENSION, timeValue));
+        observation.addCodesDimension(new CodeDimensionDto(MEASURE_DIMENSION, dataOperation.getMeasureDimension().name()));
+        observation.addAttribute(createAttribute(CODE_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, dataOperation.getDataSourceUuid()));
 
         String previousTimeValue = null;
         if (dataOperation.isAnnualMethod()) {
@@ -2021,14 +1994,14 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         }
 
         if (previousTimeValue == null) {
-            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_NOT_APPLICABLE)));
             observation.setPrimaryMeasure(null);
             return observation;
         }
 
-        ConditionDimensionDto geoConditionDto = createCondition(GEO_DIM, geoValue);
-        ConditionDimensionDto timeConditionDto = createCondition(TIME_DIM, previousTimeValue, timeValue);
-        ConditionDimensionDto measureConditionDto = createCondition(MEASURE_DIM, MeasureDimensionTypeEnum.ABSOLUTE.name());
+        ConditionDimensionDto geoConditionDto = createCondition(GEO_DIMENSION, geoValue);
+        ConditionDimensionDto timeConditionDto = createCondition(TIME_DIMENSION, previousTimeValue, timeValue);
+        ConditionDimensionDto measureConditionDto = createCondition(MEASURE_DIMENSION, MeasureDimensionTypeEnum.ABSOLUTE.name());
         List<ConditionDimensionDto> conditions = Arrays.asList(geoConditionDto, timeConditionDto, measureConditionDto);
         Map<String, ObservationExtendedDto> observationsMap = null;
         try {
@@ -2043,7 +2016,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         /* Some observations were not found */
         if (currentObs == null || previousObs == null) {
             observation.setPrimaryMeasure(null);
-            observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_UNAVAILABLE)));
+            observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_UNAVAILABLE)));
             return observation;
         }
 
@@ -2067,7 +2040,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             if (dataOperation.isPercentageMethod()) {
                 if (Math.abs(previousValue) < ZERO_RANGE) {
                     observation.setPrimaryMeasure(null);
-                    observation.addAttribute(createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, getSpecialStringMeaning(DOT_UNAVAILABLE)));
+                    observation.addAttribute(createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, getSpecialStringMeaning(DOT_UNAVAILABLE)));
                     return observation;
                 }
                 Quantity quantity = dataOperation.getQuantity();
@@ -2164,8 +2137,8 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Helper for attributes
      */
-    private AttributeBasicDto createAttribute(String id, String locale, String value) {
-        AttributeBasicDto attributeBasicDto = new AttributeBasicDto();
+    private AttributeInstanceObservationDto createAttribute(String id, String locale, String value) {
+        AttributeInstanceObservationDto attributeBasicDto = new AttributeInstanceObservationDto();
         attributeBasicDto.setAttributeId(id);
         InternationalStringDto intStr = new InternationalStringDto();
         LocalisedStringDto locStr = new LocalisedStringDto();
@@ -2179,25 +2152,26 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     /*
      * Helper for merge Two OBS_CONF attributes into one
      */
-    private AttributeBasicDto mergeObsConfAttribute(ObservationExtendedDto obs1, ObservationExtendedDto obs2) {
-        AttributeBasicDto attribute1 = null;
-        AttributeBasicDto attribute2 = null;
+    private AttributeInstanceObservationDto mergeObsConfAttribute(ObservationExtendedDto obs1, ObservationExtendedDto obs2) {
+        AttributeInstanceObservationDto attribute1 = null;
+        AttributeInstanceObservationDto attribute2 = null;
 
         if (obs1.getPrimaryMeasure() == null) {
-            attribute1 = getAttribute(OBS_CONF_ATTR, obs1);
+            attribute1 = getAttribute(OBS_CONF_ATTRIBUTE, obs1);
         }
         if (obs2.getPrimaryMeasure() == null) {
-            attribute2 = getAttribute(OBS_CONF_ATTR, obs2);
+            attribute2 = getAttribute(OBS_CONF_ATTRIBUTE, obs2);
         }
 
         if (attribute1 != null && attribute2 != null) {
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC) + ", " + attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
+            return createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE,
+                    attribute1.getValue().getLocalisedLabel(DATASET_REPOSITORY_LOCALE) + ", " + attribute2.getValue().getLocalisedLabel(DATASET_REPOSITORY_LOCALE));
         }
         if (attribute1 != null) {
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute1.getValue().getLocalisedLabel(OBS_CONF_LOC));
+            return createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attribute1.getValue().getLocalisedLabel(DATASET_REPOSITORY_LOCALE));
         }
         if (attribute2 != null) {
-            return createAttribute(OBS_CONF_ATTR, OBS_CONF_LOC, attribute2.getValue().getLocalisedLabel(OBS_CONF_LOC));
+            return createAttribute(OBS_CONF_ATTRIBUTE, DATASET_REPOSITORY_LOCALE, attribute2.getValue().getLocalisedLabel(DATASET_REPOSITORY_LOCALE));
         }
         return null;
     }
@@ -2216,18 +2190,18 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
      * Helper for generate id for observation maps
      */
     private String generateObservationUniqueKey(String geoValue, String timeValue, String measureValue) {
-        CodeDimensionDto geoDimCode = new CodeDimensionDto(GEO_DIM, geoValue);
-        CodeDimensionDto timeDimCode = new CodeDimensionDto(TIME_DIM, timeValue);
-        CodeDimensionDto measureDimCode = new CodeDimensionDto(MEASURE_DIM, measureValue);
+        CodeDimensionDto geoDimCode = new CodeDimensionDto(GEO_DIMENSION, geoValue);
+        CodeDimensionDto timeDimCode = new CodeDimensionDto(TIME_DIMENSION, timeValue);
+        CodeDimensionDto measureDimCode = new CodeDimensionDto(MEASURE_DIMENSION, measureValue);
         return DtoUtils.generateUniqueKey(Arrays.asList(geoDimCode, timeDimCode, measureDimCode));
     }
 
     /*
      * Helper to get certain attribute from an observation
      */
-    private AttributeBasicDto getAttribute(String attributeId, ObservationExtendedDto observation) {
-        for (AttributeBasicDto attr : observation.getAttributes()) {
-            if (OBS_CONF_ATTR.equals(attr.getAttributeId())) {
+    private AttributeInstanceObservationDto getAttribute(String attributeId, ObservationExtendedDto observation) {
+        for (AttributeInstanceObservationDto attr : observation.getAttributes()) {
+            if (OBS_CONF_ATTRIBUTE.equals(attr.getAttributeId())) {
                 return attr;
             }
         }

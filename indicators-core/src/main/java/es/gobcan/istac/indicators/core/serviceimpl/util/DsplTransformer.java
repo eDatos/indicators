@@ -777,17 +777,17 @@ public class DsplTransformer {
         List<ConditionDimensionDto> conditions = new ArrayList<ConditionDimensionDto>();
 
         ConditionDimensionDto geoCondition = new ConditionDimensionDto();
-        geoCondition.setDimensionId(IndicatorsDataServiceImpl.GEO_DIM);
+        geoCondition.setDimensionId(IndicatorsDataServiceImpl.GEO_DIMENSION);
         geoCondition.setCodesDimension(geoCodes);
         conditions.add(geoCondition);
 
         ConditionDimensionDto timeCondition = new ConditionDimensionDto();
-        timeCondition.setDimensionId(IndicatorsDataServiceImpl.TIME_DIM);
+        timeCondition.setDimensionId(IndicatorsDataServiceImpl.TIME_DIMENSION);
         timeCondition.setCodesDimension(timeCodes);
         conditions.add(timeCondition);
 
         ConditionDimensionDto measureCondition = new ConditionDimensionDto();
-        measureCondition.setDimensionId(IndicatorsDataServiceImpl.MEASURE_DIM);
+        measureCondition.setDimensionId(IndicatorsDataServiceImpl.MEASURE_DIMENSION);
         measureCondition.setCodesDimension(Arrays.asList(measureCode));
         conditions.add(measureCondition);
 

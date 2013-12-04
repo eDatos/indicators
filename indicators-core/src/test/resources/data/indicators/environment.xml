@@ -3,4 +3,5 @@
 <properties>
   <comment>Metamac environment definition</comment>
   <entry key="environment.indicators.data">./data</entry>
+  <entry key="environment.metamac.data">./DATA_NOT_USED</entry>
 </properties>

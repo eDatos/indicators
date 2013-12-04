@@ -15,7 +15,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 
 import es.gobcan.istac.indicators.core.dto.DataSourceDto;
 import es.gobcan.istac.indicators.core.dto.DataSourceVariableDto;
@@ -187,7 +187,7 @@ public class IndicatorsAsserts extends MetamacAsserts {
         assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
     }
 
-    public static void assertEqualsAttributeBasic(AttributeBasicDto expected, AttributeBasicDto actual) {
+    public static void assertEqualsAttributeBasic(AttributeInstanceObservationDto expected, AttributeInstanceObservationDto actual) {
         if (expected == actual) {
             return;
         }

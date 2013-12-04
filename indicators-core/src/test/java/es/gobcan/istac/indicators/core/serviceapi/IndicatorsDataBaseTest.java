@@ -3,16 +3,13 @@ package es.gobcan.istac.indicators.core.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
@@ -46,7 +43,6 @@ import com.arte.statistic.dataset.repository.util.DtoUtils;
 
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
-import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.MeasureValue;
 import es.gobcan.istac.indicators.core.domain.TimeGranularity;
@@ -55,8 +51,9 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
-    
+
     protected abstract IndicatorsService getIndicatorsService();
+
     protected abstract DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade();
 
     protected static Date createDate(int year, int month, int day) {
@@ -77,19 +74,10 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
         assertNotNull(indicator.getDataRepositoryId());
-        List<ConditionObservationDto> conditionObservationsList = getDatasetRepositoriesServiceFacade().findCodeDimensions(indicator.getDataRepositoryId());
+
         // Retrieve all dataset's code dimensions
-        Map<String, List<String>> repoDimCodes = new HashMap<String, List<String>>();
-        for (ConditionObservationDto condObs : conditionObservationsList) {
-            for (CodeDimensionDto codeDim : condObs.getCodesDimension()) {
-                List<String> codes = repoDimCodes.get(codeDim.getDimensionId());
-                if (codes == null) {
-                    codes = new ArrayList<String>();
-                }
-                codes.add(codeDim.getCodeDimensionId());
-                repoDimCodes.put(codeDim.getDimensionId(), codes);
-            }
-        }
+        Map<String, List<String>> repoDimCodes = getDatasetRepositoriesServiceFacade().findCodeDimensions(indicator.getDataRepositoryId());
+
         // Compare with expected code dimensions
         for (String dimension : dimCodes.keySet()) {
             List<String> dataSetCodes = repoDimCodes.get(dimension);
@@ -120,14 +108,14 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
                     assertNotNull(observations);
                     assertEquals(1, observations.keySet().size());
                     List<ObservationDto> observationsList = new ArrayList<ObservationDto>(observations.values());
-                    assertEquals("Index: "+index,plainData.get(index), observationsList.get(0).getPrimaryMeasure());
+                    assertEquals("Index: " + index, plainData.get(index), observationsList.get(0).getPrimaryMeasure());
                     index++;
                 }
             }
         }
     }
 
-    protected void checkDataAttributes(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, String attrId, Map<String, AttributeBasicDto> expectedAttributes)
+    protected void checkDataAttributes(Map<String, List<String>> dimCodes, String indicatorUuid, String indicatorVersion, String attrId, Map<String, AttributeInstanceObservationDto> expectedAttributes)
             throws Exception {
         IndicatorVersion indicator = getIndicatorsService().retrieveIndicator(getServiceContextAdministrador(), indicatorUuid, indicatorVersion);
         assertNotNull(indicator);
@@ -144,15 +132,15 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             String key = entry.getKey();
             ObservationExtendedDto obs = entry.getValue();
 
-            AttributeBasicDto expectedAttr = expectedAttributes.get(key);
-            AttributeBasicDto actualAttr = findAttribute(obs, attrId);
+            AttributeInstanceObservationDto expectedAttr = expectedAttributes.get(key);
+            AttributeInstanceObservationDto actualAttr = findAttribute(obs, attrId);
 
             IndicatorsAsserts.assertEqualsAttributeBasic(expectedAttr, actualAttr);
         }
     }
 
-    protected AttributeBasicDto findAttribute(ObservationExtendedDto observation, String attrId) {
-        for (AttributeBasicDto attr : observation.getAttributes()) {
+    protected AttributeInstanceObservationDto findAttribute(ObservationExtendedDto observation, String attrId) {
+        for (AttributeInstanceObservationDto attr : observation.getAttributes()) {
             if (attrId.equals(attr.getAttributeId())) {
                 return attr;
             }
@@ -173,8 +161,8 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     /*
      * Helper for attributes
      */
-    protected AttributeBasicDto createAttribute(String id, String locale, String value) {
-        AttributeBasicDto attributeBasicDto = new AttributeBasicDto();
+    protected AttributeInstanceObservationDto createAttribute(String id, String locale, String value) {
+        AttributeInstanceObservationDto attributeBasicDto = new AttributeInstanceObservationDto();
         attributeBasicDto.setAttributeId(id);
         InternationalStringDto intStr = new InternationalStringDto();
         LocalisedStringDto locStr = new LocalisedStringDto();
@@ -194,7 +182,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         condition.setCodesDimension(codeDimensions);
         return condition;
     }
-    
+
     protected List<String> getGeographicalGranularitiesCodes(List<GeographicalGranularity> granularities) {
         if (granularities == null) {
             return null;
@@ -205,7 +193,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         return codes;
     }
-    
+
     protected List<String> getTimeGranularitiesNames(List<TimeGranularity> granularities) {
         if (granularities == null) {
             return null;
@@ -216,7 +204,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         return codes;
     }
-    
+
     protected List<String> getTimeValuesCodes(List<TimeValue> timeValues) {
         if (timeValues == null) {
             return null;
@@ -227,7 +215,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         return codes;
     }
-    
+
     protected List<String> getMeasureNames(List<MeasureValue> measures) {
         if (measures == null) {
             return null;
@@ -238,38 +226,35 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         }
         return codes;
     }
-    
+
     protected List<String> getGeographicalValuesCodes(List<GeographicalValue> geoValues) {
         if (geoValues == null) {
             return null;
         }
         List<String> codes = new ArrayList<String>();
-        for (GeographicalValue geoValue: geoValues) {
+        for (GeographicalValue geoValue : geoValues) {
             codes.add(geoValue.getCode());
         }
         return codes;
     }
-    
+
     protected List<String> getIndicatorsVersionsUUIDs(List<IndicatorVersion> indicatorsVersions) {
         if (indicatorsVersions == null) {
             return null;
         }
         List<String> uuids = new ArrayList<String>();
-        for (IndicatorVersion indicatorVersion: indicatorsVersions) {
+        for (IndicatorVersion indicatorVersion : indicatorsVersions) {
             uuids.add(indicatorVersion.getUuid());
         }
         return uuids;
     }
-    
 
-
-    
     /*
      * DBUnit methods and helpers
      */
-    
+
     protected abstract String getDataSetDSRepoFile();
-    
+
     private JdbcTemplate             jdbcTemplate;
     private DataSourceDatabaseTester databaseTester = null;
 
@@ -279,7 +264,6 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    
     @Override
     public void specificSetUpDatabaseTester() throws Exception {
         setUpDatabaseTester(getClass(), jdbcTemplate.getDataSource(), getDataSetDSRepoFile());
@@ -303,20 +287,21 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             dataSetReplacement.addReplacementObject("[NULL]", null);
             dataSetReplacement.addReplacementObject("[null]", null);
             dataSetReplacement.addReplacementObject("[UNIQUE_SEQUENCE]", (new Date()).getTime());
-    
-            // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys constraint
+
+            // DbUnit inserts and updates rows in the order they are found in your dataset. You must therefore order your tables and rows appropriately in your datasets to prevent foreign keys
+            // constraint
             // violation.
             // Since version 2.0, the DatabaseSequenceFilter can now be used to automatically determine the tables order using foreign/exported keys information.
             /*
              * ITableFilter filter = new DatabaseSequenceFilter(dbUnitConnection);
              * IDataSet dataset = new (filter, dataSetReplacement);
              */
-    
+
             // Delete all data (dbunit not delete TBL_LOCALISED_STRINGS...)
             initializeDatabase(dbUnitConnection);
-    
+
             databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-            databaseTester.setTearDownOperation(DatabaseOperation.NONE); 
+            databaseTester.setTearDownOperation(DatabaseOperation.NONE);
             databaseTester.setDataSet(dataSetReplacement);
             databaseTester.onSetup();
         } finally {
@@ -336,7 +321,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             try {
                 dbUnitConnection.getConnection().prepareStatement("DROP SEQUENCE " + sequenceNameToDrop).execute();
             } catch (SQLException e) {
-                //Sequence already dropped
+                // Sequence already dropped
             }
         }
 
@@ -345,7 +330,7 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
             try {
                 dbUnitConnection.getConnection().prepareStatement("DROP TABLE " + tableNameToDrop).execute();
             } catch (SQLException e) {
-                //table already dropped
+                // table already dropped
             }
         }
 
@@ -405,7 +390,6 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
         sequences.add("SEQ_L10NSTRS");
         return sequences;
     }
-
 
     /**
      * DatasourceTester with support for Oracle data types.

@@ -4347,35 +4347,6 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
         }
     }
 
-    // @Test
-    // @Transactional
-    // public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCodeNotExist() throws Exception {
-    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_NOT_EXIST);
-    // assertNotNull(instances);
-    // assertEquals(0,instances.size());
-    // }
-
-    // @Test
-    // @Transactional
-    // public void testFindIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode() throws Exception {
-    // {
-    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_3);
-    // assertNotNull(instances);
-    // String[] expected = new String[] {INDICATOR_INSTANCE_1_INDICATORS_SYSTEM_10_V1, INDICATOR_INSTANCE_3_INDICATORS_SYSTEM_10_V1};
-    // assertEquals(expected.length,instances.size());
-    //
-    // checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
-    // }
-    // {
-    // List<IndicatorInstanceDto> instances = indicatorsServiceFacade.findIndicatorsInstancesInPublishedIndicatorSystemWithSubjectCode(getServiceContextAdministrador(), SUBJECT_CODE_4);
-    // assertNotNull(instances);
-    // String[] expected = new String[] {INDICATOR_INSTANCE_2_INDICATORS_SYSTEM_10_V1};
-    // assertEquals(expected.length,instances.size());
-    //
-    // checkElementsInCollection(expected, getIndicatorsInstancesDtosUUIDs(instances));
-    // }
-    // }
-
     @Test
     @Transactional
     public void testValidateTimeGranularities() throws Exception {
@@ -5774,14 +5745,14 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
             IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2011 1S", "es", "2011 1Sem");
         }
         // Test without translation
-        // {
-        // String biyearly = "2012H2";
-        // TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
-        // assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
-        // assertEquals(biyearly, timeValueDto.getTimeValue());
-        // IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
-        // IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012 Second semester", "es", "2012 Segundo semestre");
-        // }
+        {
+            String biyearly = "2012H2";
+            TimeValueDto timeValueDto = indicatorsServiceFacade.retrieveTimeValue(getServiceContextAdministrador(), biyearly);
+            assertEquals(TimeGranularityEnum.BIYEARLY, timeValueDto.getGranularity());
+            assertEquals(biyearly, timeValueDto.getTimeValue());
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitle(), "en", "2012H2", "es", "2012H2");
+            IndicatorsAsserts.assertEqualsInternationalString(timeValueDto.getTitleSummary(), "en", "2012H2", "es", "2012H2");
+        }
         // Quaterly
         {
             String quaterly = "1999Q1";
