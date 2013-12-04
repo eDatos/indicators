@@ -1,6 +1,5 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -25,8 +24,7 @@ public class GeographicalValuesRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/geographicalValues", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<GeographicalValueType>> findGeographicalValues(@RequestParam(value = "subjectCode", required = false) String subjectCode,
-                                                                              @RequestParam(value = "systemCode", required = false) String systemCode,
-                                                                              @RequestParam(value = "geographicalGranularityCode", required = true) String geographicalGranularityCode)
+            @RequestParam(value = "systemCode", required = false) String systemCode, @RequestParam(value = "geographicalGranularityCode", required = true) String geographicalGranularityCode)
             throws MetamacException {
 
         List<GeographicalValueType> items = null;
@@ -35,11 +33,10 @@ public class GeographicalValuesRestController extends AbstractRestController {
         } else if (systemCode != null) {
             items = geographicalValuesRestFacade.findGeographicalValuesByIndicatorsSystemCode(systemCode, geographicalGranularityCode);
         } else {
-            items = new ArrayList<GeographicalValueType>();
+            items = geographicalValuesRestFacade.findGeographicalValuesByGranularity(geographicalGranularityCode);
         }
         ResponseEntity<List<GeographicalValueType>> response = new ResponseEntity<List<GeographicalValueType>>(items, HttpStatus.OK);
         return response;
     }
-
 
 }

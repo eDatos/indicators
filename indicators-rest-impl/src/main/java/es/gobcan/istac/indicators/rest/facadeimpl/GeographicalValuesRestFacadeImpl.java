@@ -1,30 +1,45 @@
 package es.gobcan.istac.indicators.rest.facadeimpl;
 
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
+import org.siemac.metamac.core.common.criteria.SculptorCriteria;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaOrderEnum;
+import es.gobcan.istac.indicators.core.criteria.GeographicalValueCriteriaPropertyEnum;
 import es.gobcan.istac.indicators.core.domain.GeographicalGranularity;
 import es.gobcan.istac.indicators.core.domain.GeographicalValue;
+import es.gobcan.istac.indicators.core.mapper.MetamacCriteria2SculptorCriteriaMapper;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataService;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsSystemsService;
 import es.gobcan.istac.indicators.rest.RestConstants;
 import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
 import es.gobcan.istac.indicators.rest.mapper.Do2TypeMapper;
 import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service("geographicalValuesRestFacade")
 public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestFacade {
 
     @Autowired
-    private IndicatorsDataService indicatorsDataService;
+    private IndicatorsDataService                  indicatorsDataService;
 
     @Autowired
-    private IndicatorsSystemsService indicatorsSystemsService;
+    private IndicatorsSystemsService               indicatorsSystemsService;
 
     @Autowired
-    private Do2TypeMapper mapper;
+    private Do2TypeMapper                          mapper;
+
+    @Autowired
+    private MetamacCriteria2SculptorCriteriaMapper metamacCriteria2SculptorCriteriaMapper;
 
     private String getGranularityUuidByCode(String granularityCode) throws MetamacException {
         GeographicalGranularity granularity = indicatorsSystemsService.retrieveGeographicalGranularityByCode(RestConstants.SERVICE_CONTEXT, granularityCode);
@@ -34,7 +49,40 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(RestConstants.SERVICE_CONTEXT, indicatorsSystemCode, granularityUuid);
+        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorsInstancesInPublishedIndicatorsSystem(RestConstants.SERVICE_CONTEXT,
+                indicatorsSystemCode, granularityUuid);
+        List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
+        return types;
+    }
+
+    @Override
+    public List<GeographicalValueType> findGeographicalValuesByGranularity(String granularityCode) throws MetamacException {
+        String granularityUuid = null;
+        if (granularityCode != null) {
+            granularityUuid = getGranularityUuidByCode(granularityCode);
+        }
+
+        MetamacCriteria criteria = new MetamacCriteria();
+        criteria.setPaginator(new MetamacCriteriaPaginator());
+        criteria.getPaginator().setCountTotalResults(Boolean.TRUE);
+        criteria.getPaginator().setMaximumResultSize(Integer.MAX_VALUE);
+
+        if (granularityUuid != null) {
+            criteria.setRestriction(new MetamacCriteriaPropertyRestriction(GeographicalValueCriteriaPropertyEnum.GEOGRAPHICAL_GRANULARITY_UUID.name(), granularityUuid, OperationType.EQ));
+        }
+
+        // order
+        MetamacCriteriaOrder globalOrder = new MetamacCriteriaOrder();
+        globalOrder.setPropertyName(GeographicalValueCriteriaOrderEnum.ORDER.name());
+        globalOrder.setType(OrderTypeEnum.ASC);
+        criteria.getOrdersBy().add(globalOrder);
+
+        SculptorCriteria sculptorCriteria = metamacCriteria2SculptorCriteriaMapper.getGeographicalValueCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<GeographicalValue> result = indicatorsSystemsService.findGeographicalValues(RestConstants.SERVICE_CONTEXT, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        List<GeographicalValue> geographicalValues = result.getValues();
         List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
         return types;
     }
@@ -42,7 +90,8 @@ public class GeographicalValuesRestFacadeImpl implements GeographicalValuesRestF
     @Override
     public List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException {
         String granularityUuid = getGranularityUuidByCode(granularityCode);
-        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT, subjectCode, granularityUuid);
+        List<GeographicalValue> geographicalValues = indicatorsDataService.retrieveGeographicalValuesByGranularityInIndicatorPublishedWithSubjectCode(RestConstants.SERVICE_CONTEXT, subjectCode,
+                granularityUuid);
         List<GeographicalValueType> types = mapper.geographicalValuesDoToType(geographicalValues);
         return types;
     }

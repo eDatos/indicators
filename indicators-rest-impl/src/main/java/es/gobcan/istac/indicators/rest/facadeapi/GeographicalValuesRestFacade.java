@@ -9,5 +9,6 @@ public interface GeographicalValuesRestFacade {
 
     public List<GeographicalValueType> findGeographicalValuesByIndicatorsSystemCode(String indicatorsSystemCode, String granularityCode) throws MetamacException;
     public List<GeographicalValueType> findGeographicalValuesBySubjectCode(String subjectCode, String granularityCode) throws MetamacException;
+    public List<GeographicalValueType> findGeographicalValuesByGranularity(String granularityCode) throws MetamacException;
 
 }
