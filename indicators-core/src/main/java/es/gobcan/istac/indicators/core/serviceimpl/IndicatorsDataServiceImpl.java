@@ -21,6 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
 
-import es.gobcan.istac.indicators.core.constants.IndicatorsConstants;
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.domain.Data;
 import es.gobcan.istac.indicators.core.domain.DataContent;
 import es.gobcan.istac.indicators.core.domain.DataDefinition;
@@ -87,6 +88,9 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.TimeVariableUtils;
  */
 @Service("indicatorsDataService")
 public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
+
+    @Autowired
+    ConfigurationService                     configurationService;
 
     private final Logger                     LOG                       = LoggerFactory.getLogger(IndicatorsDataServiceImpl.class);
 
@@ -379,9 +383,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) {
         try {
-            datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(IndicatorsConstants.INDICATORS_DATA_DATABASE_ROLE, viewCode);
+            datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
         } catch (ApplicationException e) {
-            LOG.error("Error assigning SELECT permission to " + IndicatorsConstants.INDICATORS_DATA_DATABASE_ROLE + " over " + viewCode);
+            LOG.error("Error assigning SELECT permission to " + getDataViewsRole() + " over " + viewCode);
         }
     }
 
@@ -2246,4 +2250,9 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
         target = mapper.readValue(json, Data.class);
         return target;
     }
+
+    private String getDataViewsRole() {
+        return configurationService.getProperty(IndicatorsConfigurationConstants.DB_DATA_VIEWS_ROLE);
+    }
+
 }

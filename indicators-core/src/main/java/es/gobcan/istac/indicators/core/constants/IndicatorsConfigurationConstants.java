@@ -24,6 +24,9 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DB_SUBJECTS_COLUMN_CODE                      = "indicators.subjects.db.column_code";
     public static final String DB_SUBJECTS_COLUMN_TITLE                     = "indicators.subjects.db.column_title";
 
+    // DB
+    public static final String DB_DATA_VIEWS_ROLE                           = "indicators.bbbd.data_views_role";
+
     // JAXI
     public static final String JAXI_URL                                     = "indicators.jaxi.url";
     public static final String JAXI_URL_INDICATOR                           = "indicators.jaxi.url.indicator";
@@ -55,5 +58,5 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String SECURITY_TOLERANCE                           = "metamac.security.tolerance";
 
     // METAMAC PORTAL
-    public static final String ENDPOINT_METAMAC_PORTAL = "metamac.metamac-portal.rest.external";
+    public static final String ENDPOINT_METAMAC_PORTAL                      = "metamac.metamac-portal.rest.external";
 }

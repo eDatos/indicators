@@ -23,7 +23,4 @@ public class IndicatorsConstants {
     public static final String TRANSLATION_MEASURE_DIMENSION    = "MEASURE_DIMENSION";
     // Other translations
     public static final String TRANSLATION_UNIT_MULTIPLIER      = "UNIT_MULTIPLIER";
-
-    public static final String INDICATORS_DATA_DATABASE_ROLE      = "INDICATORS_DATA";
-
 }

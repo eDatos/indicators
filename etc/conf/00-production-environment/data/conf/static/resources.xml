@@ -12,4 +12,5 @@
     <entry key="indicators.dspl.indicators.system.url">http://FILL_ME_WITH_INDICATORS_EXTERNAL_WEB_HOST/indicators-web/indicatorsSystems/[SYSTEM]/</entry>
     <entry key="indicators.user.guide.file.name">INDICADORES_ManualUsuario.pdf</entry>
     <entry key="indicators.internal.edition.languages">es,pt,en,ca,gl,eu,de,fr,it,ru,zh</entry>
+    <entry key="indicators.bbbd.data_views_role">FILL_ME_WITH_THE_CORRECT_ROLE</entry>
 </properties>
