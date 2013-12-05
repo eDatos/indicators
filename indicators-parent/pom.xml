@@ -116,7 +116,6 @@
 
         <!-- METAMAC -->
         <metamac-core-common.version>1.7.1-SNAPSHOT</metamac-core-common.version>
-        <metamac-common-test.version>1.4.0</metamac-common-test.version>
         <metamac-web-common.version>1.8.1-SNAPSHOT</metamac-web-common.version>
         <metamac-statistical-operations-rest-internal-api.version>1.5.0</metamac-statistical-operations-rest-internal-api.version>
         <metamac-statistical-operations-rest-external-api.version>1.5.0</metamac-statistical-operations-rest-external-api.version>
@@ -499,6 +498,13 @@
             <dependency>
                 <groupId>org.siemac.metamac</groupId>
                 <artifactId>metamac-core-common</artifactId>
+                <type>test-jar</type>
+                <scope>test</scope>
+                <version>${metamac-core-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.siemac.metamac</groupId>
+                <artifactId>metamac-core-common</artifactId>
                 <classifier>client</classifier>
                 <version>${metamac-core-common.version}</version>
                 <exclusions>
@@ -603,12 +609,6 @@
                         <artifactId>dozer</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.siemac.metamac</groupId>
-                <artifactId>metamac-common-test</artifactId>
-                <version>${metamac-common-test.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
@@ -1023,8 +1023,8 @@
             </plugins>
         </pluginManagement>
     </build>
-    
-	<profiles>
+
+    <profiles>
         <profile>
             <id>indicators-perform-release</id>
             <build>
@@ -1039,5 +1039,5 @@
             </build>
         </profile>
     </profiles>
-    
+
 </project>

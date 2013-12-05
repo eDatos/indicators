@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 import es.gobcan.istac.indicators.core.domain.IndicatorVersion;
 import es.gobcan.istac.indicators.core.domain.QuantityUnitRepository;
 import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
@@ -29,7 +31,7 @@ import es.gobcan.istac.indicators.core.enume.domain.VersionTypeEnum;
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-batchupdate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
-public class IndicatorsServiceVersioningTest extends IndicatorsBaseTest {
+public class IndicatorsServiceVersioningTest extends IndicatorsDataBaseTest {
 
     @Autowired
     protected IndicatorsService           indicatorService;
@@ -92,7 +94,18 @@ public class IndicatorsServiceVersioningTest extends IndicatorsBaseTest {
         return "dbunit/IndicatorsDataServiceTest_BatchUpdate.xml";
     }
 
+    @Override
     protected String getDataSetDSRepoFile() {
         return "dbunit/IndicatorsDataServiceTest_DataSetRepository.xml";
+    }
+
+    @Override
+    protected IndicatorsService getIndicatorsService() {
+        return null;
+    }
+
+    @Override
+    protected DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade() {
+        return null;
     }
 }

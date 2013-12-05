@@ -164,17 +164,8 @@ public class IndicatorsServiceTest extends IndicatorsBaseTest {
         {
             IndicatorVersion indicatorVersion1 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, INDICATOR_3_VERSION);
             assertFalse(indicatorVersion1.getIsLastVersion());
-            assertTrue(StringUtils.isNotEmpty(indicatorVersion1.getDataRepositoryId()));
-            assertFalse(indicatorVersion1.getNeedsUpdate());
-            assertFalse(indicatorVersion1.getInconsistentData());
-
             IndicatorVersion indicatorVersion2 = indicatorService.retrieveIndicator(getServiceContextAdministrador(), uuid, newVersion.getVersionNumber());
             assertTrue(indicatorVersion2.getIsLastVersion());
-            assertTrue(StringUtils.isNotEmpty(indicatorVersion2.getDataRepositoryId()));
-            assertFalse(indicatorVersion2.getNeedsUpdate());
-            assertFalse(indicatorVersion2.getInconsistentData());
-
-            assertNotSame(indicatorVersion1.getDataRepositoryId(), indicatorVersion2.getDataRepositoryId());
         }
     }
 

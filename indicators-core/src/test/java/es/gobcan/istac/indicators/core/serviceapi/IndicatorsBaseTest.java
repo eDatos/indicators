@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Assert;
-import org.siemac.metamac.common.test.MetamacBaseTests;
+import org.siemac.metamac.common.test.dbunit.MetamacDBUnitBaseTests;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
@@ -26,16 +26,19 @@ import es.gobcan.istac.indicators.core.domain.IndicatorInstance;
 import es.gobcan.istac.indicators.core.dto.IndicatorInstanceDto;
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 
-public abstract class IndicatorsBaseTest extends MetamacBaseTests {
+public abstract class IndicatorsBaseTest extends MetamacDBUnitBaseTests {
 
     @Value("${indicators.db.provider}")
     private String                        databaseProvider;
 
     private HashMap<String, List<String>> tablePrimaryKeys = null;
 
-    @Override
+    protected ServiceContext getServiceContextWithoutPrincipal() {
+        return mockServiceContextWithoutPrincipal();
+    }
+
     protected ServiceContext getServiceContextAdministrador() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.ADMINISTRADOR);
         return serviceContext;
     }
@@ -47,36 +50,37 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
 
     protected ServiceContext getServiceContextTecnicoProduccion() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_PRODUCCION);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoApoyoProduccion() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_PRODUCCION);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoDifusion() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_DIFUSION);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoApoyoDifusion() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_APOYO_DIFUSION);
         return serviceContext;
     }
+
     protected ServiceContext getServiceContextTecnicoSistemaIndicadores() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         putMetamacPrincipalInServiceContext(serviceContext, RoleEnum.TECNICO_SISTEMA_INDICADORES);
         return serviceContext;
     }
 
     protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem1() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-1"));
@@ -85,7 +89,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
     }
 
     protected ServiceContext getServiceContextTecnicoSistemaIndicadoresOnlyAccessToIndicatorsSystem2() {
-        ServiceContext serviceContext = super.getServiceContextWithoutPrincipal();
+        ServiceContext serviceContext = getServiceContextWithoutPrincipal();
         MetamacPrincipal metamacPrincipal = new MetamacPrincipal();
         metamacPrincipal.setUserId(serviceContext.getUserId());
         metamacPrincipal.getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_SISTEMA_INDICADORES.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-2"));
@@ -231,6 +235,7 @@ public abstract class IndicatorsBaseTest extends MetamacBaseTests {
         }
         checkElementsInCollection(expected, values);
     }
+
     protected void checkElementsInCollection(String[] expected, List<String> collection) {
         for (String elem : expected) {
             assertTrue("Element " + elem + " not in collection", collection.contains(elem));

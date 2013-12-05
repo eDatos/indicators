@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +26,13 @@ import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.junit.Before;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
@@ -52,9 +56,61 @@ import es.gobcan.istac.indicators.core.serviceapi.utils.IndicatorsAsserts;
 
 public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
 
+    @Before
+    public void onBefore() throws Exception {
+        clearDatabase();
+    }
+
     protected abstract IndicatorsService getIndicatorsService();
 
     protected abstract DatasetRepositoriesServiceFacade getDatasetRepositoriesServiceFacade();
+
+    private class DatabaseObjectNameRowMapper implements RowMapper<String> {
+
+        @Override
+        public String mapRow(ResultSet rs, int line) throws SQLException {
+            ResultSetExtractor<String> extractor = new ResultSetExtractor<String>() {
+
+                @Override
+                public String extractData(ResultSet rs) throws SQLException {
+                    return rs.getString(1);
+                }
+            };
+            return extractor.extractData(rs);
+        }
+    }
+
+    protected void clearDatabase() {
+        // Drop dynamic tables
+        List<String> tableNames = getDatasourceDSRepository().query("SELECT TABLE_NAME FROM TB_DATASETS", new DatabaseObjectNameRowMapper());
+        for (String tableName : tableNames) {
+            try {
+                getDatasourceDSRepository().update("DROP VIEW " + tableName);
+            } catch (Exception e) {
+                // ignore error
+            }
+        }
+
+        // Drop views
+        List<String> viewNames = getDatasourceDSRepository().query("SELECT VIEW_NAME FROM USER_VIEWS", new DatabaseObjectNameRowMapper());
+        for (String objectName : viewNames) {
+            try {
+                getDatasourceDSRepository().update("DROP VIEW " + objectName);
+            } catch (Exception e) {
+                // ignore error
+            }
+        }
+
+        // Truncate tables
+        getDatasourceDSRepository().update("truncate table TB_LOCALISED_STRINGS");
+        getDatasourceDSRepository().update("truncate table TB_DATASET_DIMENSIONS");
+        getDatasourceDSRepository().update("truncate table TB_DATASET_ATTRIBUTES");
+        getDatasourceDSRepository().update("truncate table TB_ATTRIBUTE_DIMENSIONS");
+        getDatasourceDSRepository().update("delete from TB_ATTRIBUTES"); // delete instead of truncate due to constraint
+        getDatasourceDSRepository().update("delete from TB_DATASETS");
+        getDatasourceDSRepository().update("delete from TB_INTERNATIONAL_STRINGS");
+
+    }
 
     protected static Date createDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
@@ -262,6 +318,10 @@ public abstract class IndicatorsDataBaseTest extends IndicatorsBaseTest {
     @Qualifier("dataSourceDatasetRepository")
     public void setDatasourceDSRepository(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
+    }
+
+    public JdbcTemplate getDatasourceDSRepository() {
+        return this.jdbcTemplate;
     }
 
     @Override
