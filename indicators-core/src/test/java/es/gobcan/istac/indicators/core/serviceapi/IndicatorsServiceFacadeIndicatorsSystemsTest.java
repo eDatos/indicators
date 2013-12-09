@@ -4379,7 +4379,7 @@ public class IndicatorsServiceFacadeIndicatorsSystemsTest extends IndicatorsBase
                 }
             }
             // Weekly
-            for (int j = 1; j <= 52; j++) {
+            for (int j = 1; j <= 53; j++) {
                 String week = year + "W" + StringUtils.leftPad(String.valueOf(j), 2, "0");
                 assertTrue(week, TimeVariableUtils.isTimeValue(week));
             }

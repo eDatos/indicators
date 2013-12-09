@@ -57,22 +57,18 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR1_UUID           = "Indicator-1";
     private static final String              INDICATOR1_DS_GPE_UUID    = "Indicator-1-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR1_GPE_JSON_DATA  = readFile("json/data_temporal_spatials.json");
-    private static final String              INDICATOR1_VERSION        = "1.000";
 
     private static final String              INDICATOR2_UUID           = "Indicator-2";
     private static final String              INDICATOR2_DS_GPE_UUID    = "Indicator-2-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR2_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_countries.json");
-    private static final String              INDICATOR2_VERSION        = "1.000";
 
     private static final String              INDICATOR3_UUID           = "Indicator-3";
     private static final String              INDICATOR3_DS_GPE_UUID    = "Indicator-3-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR3_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String              INDICATOR3_VERSION        = "1.000";
 
     private static final String              INDICATOR4_UUID           = "Indicator-4";
     private static final String              INDICATOR4_DS_GPE_UUID    = "Indicator-4-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR4_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String              INDICATOR4_VERSION        = "1.000";
 
     private static final String              INDICATOR5_UUID           = "Indicator-5";
     private static final String              INDICATOR5_DS1_GPE_UUID   = "Indicator-5-v1-DataSource-1-GPE-TIME-GEO";
@@ -81,7 +77,6 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR5_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
     private static final String              INDICATOR5_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
     private static final String              INDICATOR5_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String              INDICATOR5_VERSION        = "1.000";
 
     private static final String              INDICATOR6_UUID           = "Indicator-6";
     private static final String              INDICATOR6_DS1_GPE_UUID   = "Indicator-6-v1-DataSource-1-GPE-TIME-GEO";
@@ -90,17 +85,14 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
     private static final String              INDICATOR6_GPE1_JSON_DATA = readFile("json/data_temporal_spatials_countries.json");
     private static final String              INDICATOR6_GPE2_JSON_DATA = readFile("json/data_temporal_spatials_communities.json");
     private static final String              INDICATOR6_GPE3_JSON_DATA = readFile("json/data_temporal_spatials_provinces.json");
-    private static final String              INDICATOR6_VERSION        = "1.000";
 
     private static final String              INDICATOR7_UUID           = "Indicator-7";
     private static final String              INDICATOR7_DS_GPE_UUID    = "Indicator-7-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR7_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String              INDICATOR7_VERSION        = "1.000";
 
     private static final String              INDICATOR8_UUID           = "Indicator-8";
     private static final String              INDICATOR8_DS_GPE_UUID    = "Indicator-8-v1-DataSource-1-GPE-TIME-GEO";
     private static final String              INDICATOR8_GPE_JSON_DATA  = readFile("json/data_temporal_spatials_communities.json");
-    private static final String              INDICATOR8_VERSION        = "1.000";
 
     @Test
     public void testExportEmptyDescription() throws Exception {
@@ -109,7 +101,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = null;
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc, false);
         assertNotNull(files);
         assertTrue(files.size() > 0);
     }
@@ -121,7 +113,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = null;
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc, false);
             fail("Should not allow empty title");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -140,7 +132,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), null, title, desc);
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), null, title, desc, false);
             fail("Should not allow empty indicators system uuid");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -158,7 +150,7 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         try {
-            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+            dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc, false);
             fail("Should not allow exports with not populated instances");
         } catch (MetamacException e) {
             assertNotNull(e.getExceptionItems());
@@ -176,7 +168,18 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
         InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc);
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc, false);
+        assertNotNull(files);
+        assertEquals(1, files.size());
+    }
+
+    @Test
+    public void testExportIndicatorsSystemPublishedMergingTimeGranularitiesSimple() throws Exception {
+        populateForIndicatorsSystem2();
+        InternationalString title = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+        InternationalString desc = createInternationalString("Sistema de indicadores 2", "Indicators System 2");
+
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_2, title, desc, true);
         assertNotNull(files);
         assertEquals(1, files.size());
     }
@@ -187,9 +190,19 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
         InternationalString desc = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc, false);
         assertNotNull(files);
         assertEquals(3, files.size());
+    }
+    @Test
+    public void testExportInstancesMergingTimeGranularitiesDifferentQuantities() throws Exception {
+        populateForIndicatorsSystem3();
+        InternationalString title = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
+        InternationalString desc = createInternationalString("Sistema de indicadores 3", "Indicators System 3");
+
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc, true);
+        assertNotNull(files);
+        assertEquals(1, files.size());
     }
 
     @Test
@@ -199,9 +212,20 @@ public class DsplExporterServiceTest extends IndicatorsDataBaseTest {
         InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
         InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
 
-        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc, false);
         assertNotNull(files);
         assertEquals(4, files.size());
+    }
+    @Test
+    public void testExportIndicatorsSystemPublishedMergingTimeGranularitiesComplex() throws Exception {
+        populateForIndicatorsSystem1();
+
+        InternationalString title = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
+        InternationalString desc = createInternationalString("Sistema de indicadores 1", "Indicators System 1");
+
+        List<String> files = dsplExporterService.exportIndicatorsSystemPublishedToDsplFiles(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc, true);
+        assertNotNull(files);
+        assertEquals(1, files.size());
     }
 
     private void populateForIndicatorsSystem1() throws MetamacException {

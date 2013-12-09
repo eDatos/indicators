@@ -324,7 +324,7 @@ Application Indicators {
     		> @IndicatorsService
     		
     		"Export Indicators System as a DSPL zip file"
-		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description) throws MetamacException;
+		    List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalString title, @InternationalString description, boolean mergeTimeGranularities) throws MetamacException;
     	}
 			    
     	"Provides access to indicators, indicators systems..."
@@ -371,6 +371,8 @@ Application Indicators {
 	    	List<@IndicatorsSystemDto> retrieveIndicatorsSystemPublishedForIndicator(String indicatorUuid) throws MetamacException;
 	    	"Export a published Indicators System as a set of dspl zip files"
 	    	List<String> exportIndicatorsSystemPublishedToDsplFiles(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
+	    	"Export a published Indicators System as a dspl zip file"
+	    	String exportIndicatorsSystemPublishedToDsplFilesMergeTimeGranularities(String indicatorsSystemUuid, @InternationalStringDto title, @InternationalStringDto description) throws MetamacException;
 	    	
 	    	// DIMENSIONS
 	    	"Creates a dimension"

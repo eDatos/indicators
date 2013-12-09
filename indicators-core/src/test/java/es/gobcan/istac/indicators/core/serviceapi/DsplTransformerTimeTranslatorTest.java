@@ -27,6 +27,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
+import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
@@ -38,7 +39,7 @@ import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTrans
 @ContextConfiguration(locations = {"classpath:spring/include/indicators-data-service-populate-mockito.xml", "classpath:spring/applicationContext-test.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "txManager")
 @Transactional
-public class DsplTransformerTest extends IndicatorsDataBaseTest {
+public class DsplTransformerTimeTranslatorTest extends IndicatorsDataBaseTest {
 
     @Autowired
     private IndicatorsService                indicatorsService;
@@ -58,7 +59,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
     @Autowired
     private ConfigurationService             configurationService;
 
-    private DsplTransformer                  dsplTransformer;
+    private DsplTransformerTimeTranslator    dsplTransformer;
 
     private static final String              INDICATORS_SYSTEM_1       = "IndSys-1";
     private static final String              INDICATORS_SYSTEM_2       = "IndSys-2";
@@ -114,7 +115,7 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
     @Before
     public void createTransformer() {
-        dsplTransformer = new DsplTransformer(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
+        dsplTransformer = new DsplTransformerTimeTranslator(indicatorsSystemsService, indicatorsDataService, indicatorsService, configurationService);
     }
 
     @Test
@@ -180,7 +181,12 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
         List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_3, title, desc);
         assertNotNull(datasets);
-        assertEquals(3, datasets.size());
+        assertEquals(1, datasets.size());
+
+        List<DsplTable> tables = datasets.get(0).getTables();
+        assertNotNull(findNode(getSliceTableId("provinces", "monthly"), tables));
+        assertNotNull(findNode(getSliceTableId("communities", "monthly"), tables));
+        assertNotNull(findNode(getSliceTableId("countries", "monthly"), tables));
     }
 
     @Test
@@ -192,7 +198,11 @@ public class DsplTransformerTest extends IndicatorsDataBaseTest {
 
         List<DsplDataset> datasets = dsplTransformer.transformIndicatorsSystem(getServiceContextAdministrador(), INDICATORS_SYSTEM_1, title, desc);
         assertNotNull(datasets);
-        assertEquals(4, datasets.size());
+        assertEquals(1, datasets.size());
+        List<DsplTable> tables = datasets.get(0).getTables();
+        assertNotNull(findNode(getSliceTableId("provinces", "daily"), tables));
+        assertNotNull(findNode(getSliceTableId("communities", "daily"), tables));
+        assertNotNull(findNode(getSliceTableId("countries", "daily"), tables));
     }
 
     private void populateForIndicatorsSystem1() throws MetamacException {
