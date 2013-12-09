@@ -1,10 +1,11 @@
 package es.gobcan.istac.indicators.core.serviceapi;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.when;
-import static junit.framework.Assert.*;
 
 import java.util.List;
-import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Test;

@@ -6,7 +6,7 @@
   <entry key="environment.metamac.data">./DATA_NOT_USED</entry>
     
    <entry key="environment.metamac.configuration.db.driver_name">oracle.jdbc.OracleDriver</entry>
-   <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@oracle-dev:1521:XE</entry>
-   <entry key="environment.metamac.configuration.db.username">jenkins_indicators</entry>
-   <entry key="environment.metamac.configuration.db.password">jenkins_indicators</entry>
+   <entry key="environment.metamac.configuration.db.url">jdbc:oracle:thin:@localhost:1521:XE</entry>
+   <entry key="environment.metamac.configuration.db.username">rcorrod_indicators_test</entry>
+   <entry key="environment.metamac.configuration.db.password">rcorrod_indicators_test</entry>
 </properties>

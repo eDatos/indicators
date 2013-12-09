@@ -29,7 +29,6 @@ import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplNode;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
-import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
 
 /**
  * Spring based transactional test with DbUnit support.
