@@ -26,7 +26,7 @@ public class GetIndicatorPreviewUrlActionHandler extends SecurityActionHandler<G
     @Override
     public GetIndicatorPreviewUrlResult executeSecurityAction(GetIndicatorPreviewUrlAction action) throws ActionException {
 
-        String indicatorUrl = configurationService.getProperty(IndicatorsConfigurationConstants.JAXI_URL_INDICATOR);
+        String indicatorUrl = configurationService.getProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INDICATOR);
         // Add the indicator code in the URL
         indicatorUrl = StringUtils.replace(indicatorUrl, JaxiConstants.INDICATOR_CODE_PARAM, action.getIndicatorCode());
 

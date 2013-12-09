@@ -42,7 +42,7 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_DRIVER_NAME);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_USERNAME);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
-        
+
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_DRIVER_NAME);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_SUBJECTS_USERNAME);
@@ -56,19 +56,18 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.SECURITY_CAS_SERVICE_LOGIN_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.SECURITY_CAS_SERVICE_LOGOUT_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.SECURITY_TOLERANCE);
-        
+
         // JAXI
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_URL);
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_URL_INDICATOR);
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_URL_INSTANCE);
-        
-        
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INDICATOR);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL_INSTANCE);
+
         // DSPL
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_NAME);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_DESCRIPTION);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DSPL_PROVIDER_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DSPL_INDICATORS_SYSTEM_URL);
-        
+
         // OTHERS
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.EDITION_LANGUAGES);
