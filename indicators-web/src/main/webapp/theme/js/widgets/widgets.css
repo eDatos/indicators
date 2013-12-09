@@ -98,10 +98,15 @@
 }
 
 .istac-widget-title {
-    line-height: 20px;
+    line-height: 1.3em;
     font-weight: bold;
-    padding-left: 10px;
+    padding: 0 7px;
     font-size: 11px;
+}
+
+.istac-widget-title-text {
+    padding: 3px 0;
+    display: block;
 }
 
 .istac-widget-body {
