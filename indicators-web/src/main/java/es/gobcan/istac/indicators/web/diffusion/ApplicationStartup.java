@@ -43,7 +43,7 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
 
         // Other
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_URL);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
 
         // Widgets
