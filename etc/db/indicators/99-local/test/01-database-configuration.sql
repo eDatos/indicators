@@ -8,7 +8,7 @@ insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.jaxi
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.dspl.provider.name','Instituto Canario de Estadística');
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.dspl.provider.description','El Instituto Canario de Estadística (ISTAC), es el órgano central del sistema estadístico autonómico y centro oficial de investigación del Gobierno de Canarias, creado y regulado por la Ley 1/1991, de 28 de enero, de Estadística de la Comunidad Autónoma de Canarias (CAC)');
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.dspl.provider.url','http://www.gobiernodecanarias.org/istac/');
-insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.dspl.indicators.system.url','http://url');
+insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.dspl.indicators.system.url','http://BASE_URL/[SYSTEM]');
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.subjects.db.table','TV_AREAS_TEMATICAS');
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.subjects.db.column_code','ID_AREA_TEMATICA');
 insert into TB_DATA_CONFIGURATIONS (CONF_KEY,CONF_VALUE) values('indicators.subjects.db.column_title','DESCRIPCION');
