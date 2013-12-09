@@ -17,17 +17,16 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceapi.IndicatorsDataProviderService;
 
 @Service("indicatorsDataProviderService")
 public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProviderService {
 
-    private final String JAXI_URL = "indicators.jaxi.url";
-
     @Autowired
     private ConfigurationService configurationService;
-    
+
     public IndicatorsDataProviderServiceImpl() {
     }
 
@@ -37,24 +36,24 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
             Map<String, String> params = new HashMap<String, String>();
             params.put("uuidConsulta", uuid);
             params.put("type", "structure");
-            return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+            return requestForJson(getJaxiUrl() + "/tabla.do", uuid);
         } catch (Exception e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR,uuid);
+            throw new MetamacException(e, ServiceExceptionType.DATA_STRUCTURE_RETRIEVE_ERROR, uuid);
         }
     }
-    
+
     @Override
     public String retrieveDataJson(ServiceContext ctx, String uuid) throws MetamacException {
         try {
             Map<String, String> params = new HashMap<String, String>();
             params.put("uuidConsulta", uuid);
             params.put("type", "data");
-            return requestForJson(getJaxiUrl()+"/tabla.do", uuid);
+            return requestForJson(getJaxiUrl() + "/tabla.do", uuid);
         } catch (Exception e) {
-            throw new MetamacException(e,ServiceExceptionType.DATA_RETRIEVE_ERROR, uuid);
+            throw new MetamacException(e, ServiceExceptionType.DATA_RETRIEVE_ERROR, uuid);
         }
     }
-   
+
     // retrieve from jaxi
     private String requestForJson(String url, String param) {
         Client client = new Client();
@@ -62,7 +61,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         WebResource wresource = client.resource(url);
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (param != null) {
-            params.add("uuidConsulta",param);
+            params.add("uuidConsulta", param);
         }
         // Overrides accion
         params.put("accion", Arrays.asList("jsonMtd"));
@@ -70,8 +69,7 @@ public class IndicatorsDataProviderServiceImpl implements IndicatorsDataProvider
         return result;
     }
 
-
     private String getJaxiUrl() {
-        return configurationService.getConfig().getString(JAXI_URL);
+        return configurationService.getConfig().getString(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
     }
 }
