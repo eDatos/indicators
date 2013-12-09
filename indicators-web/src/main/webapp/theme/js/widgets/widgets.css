@@ -19,14 +19,14 @@
     background: url("../../images/pestana_peke_azul.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
-    color : #ffffff !important;
+    color: #ffffff !important;
 }
 
 .gobcan-style.lightBlue.istac-widget-lateral .istac-widget-title {
     background: url("../../images/pestana_peke_lightBlue.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
-    color : #ffffff !important;
+    color: #ffffff !important;
 }
 
 .gobcan-style.blue.istac-widget-lastData .istac-widget-title,
@@ -34,7 +34,7 @@
     background: url("../../images/pestana_azul.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
-    color : #ffffff !important;
+    color: #ffffff !important;
 }
 
 .gobcan-style.lightBlue.istac-widget-lastData .istac-widget-title,
@@ -42,7 +42,7 @@
     background: url("../../images/pestana_lightBlue.gif") no-repeat !important;
     height: 20px;
     overflow: hidden;
-    color : #ffffff !important;
+    color: #ffffff !important;
 }
 
 .gobcan-style.istac-widget-lateral .istac-widget-footer {
@@ -78,8 +78,6 @@
     padding: 10px;
 }
 
-
-
 .istac-widget {
     font: 10px Arial, Helvetica, sans-serif;
     line-height: 18px;
@@ -87,10 +85,10 @@
     background-color: #fff;
 }
 
-.istac-widget a:link, .istac-widget a:visited,  .istac-widget a:active, .istac-widget a:hover{
+.istac-widget a:link, .istac-widget a:visited, .istac-widget a:active, .istac-widget a:hover {
     color: #0058B0;
     text-decoration: none;
-    border:0;
+    border: 0;
 }
 
 .istac-widget a:hover {
@@ -127,21 +125,21 @@
 }
 
 .istac-widget-lastData table {
-	width: 100%;
+    width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     font-size: 11px;
 }
 
 .istac-widget-lastData th, .istac-widget-lastData table td {
-	padding: 3px;
-	line-height: 13px;
-	text-align: right;
-	vertical-align: top;
+    padding: 3px;
+    line-height: 13px;
+    text-align: right;
+    vertical-align: top;
 }
 
 .istac-widget-lastData th {
-	font-weight:  bold;
+    font-weight: bold;
     text-align: right;
     border: 0;
     border-bottom: 2px #EBEBEB solid;
@@ -191,28 +189,27 @@
 }
 
 .istact-widget-tooltip {
-    position:absolute;
-    border:1px solid #333;
-    background:#fff;
-    padding:2px 5px;
-    color:#333;
-    display:none;
+    position: absolute;
+    border: 1px solid #333;
+    background: #fff;
+    padding: 2px 5px;
+    color: #333;
+    display: none;
     font: 11px Arial, Helvetica, sans-serif;
 }
 
 .istac-widget p.istact-widget-unit {
-    margin-bottom : 0;
-    margin-top : 0;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 .istac-widget p.istact-widget-observation {
-    margin-bottom : 0;
+    margin-bottom: 0;
 }
 
 .istac-widget-lastData .istac-widget-last-data-indicator-column {
-    text-align : left;
+    text-align: left;
 }
-
 
 /* lateral widget */
 .istac-widget-lateral {
@@ -226,7 +223,7 @@
 }
 
 .istac-widget-lateral-subtitle {
-    color : #AFAFAF;
+    color: #AFAFAF;
     line-height: 14px;
     border-top: dotted 1px #C4D0DC;
     border-bottom: dotted 1px #C4D0DC;
@@ -250,7 +247,7 @@
 }
 
 .istac-widget.istac-widget-uwa {
-    border : none;
+    border: none;
 }
 
 .istac-widget-body-embed {
@@ -258,28 +255,31 @@
 }
 
 .istac-widget-body-embed textarea {
-    display:block;
-    float:none;
+    display: block;
+    float: none;
     width: 100%;
     box-sizing: border-box;
-    margin:0;
+    margin: 0;
 }
 
 .istac-widget-lastData .istac-widget-body-allIndicators {
-    border-top:  0;
+    border-top: 0;
 }
 
 .istac-widget-body-allIndicators {
     text-align: right;
     padding-right: 5px;
     padding-left: 5px;
-    border-top:  solid 1px #EBEBEB;
+    border-top: solid 1px #EBEBEB;
 }
 
-.istac-widget-body-allIndicators img{
+.istac-widget-body-allIndicators img {
     vertical-align: middle;
     margin-right: 3px;
 }
 
+.inlinesparkline canvas {
+    vertical-align: middle !important;
+}
 
 
