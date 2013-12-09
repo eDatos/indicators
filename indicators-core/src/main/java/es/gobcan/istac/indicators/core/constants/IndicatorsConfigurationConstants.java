@@ -28,9 +28,9 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DB_DATA_VIEWS_ROLE                           = "indicators.bbbd.data_views_role";
 
     // JAXI
-    public static final String JAXI_URL                                     = "indicators.jaxi.url";
-    public static final String JAXI_URL_INDICATOR                           = "indicators.jaxi.url.indicator";
-    public static final String JAXI_URL_INSTANCE                            = "indicators.jaxi.url.instance";
+    public static final String JAXI_LOCAL_URL                               = "indicators.jaxi.local.url";
+    public static final String JAXI_LOCAL_URL_INDICATOR                     = "indicators.jaxi.local.url.indicator";
+    public static final String JAXI_LOCAL_URL_INSTANCE                      = "indicators.jaxi.local.url.instance";
 
     // WIDGETS
     public static final String WIDGETS_TYPE_LIST_URL                        = "indicators.widgets.typelist.url";
