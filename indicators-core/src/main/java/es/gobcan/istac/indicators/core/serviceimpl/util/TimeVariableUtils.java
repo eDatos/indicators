@@ -31,6 +31,9 @@ import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
  */
 public class TimeVariableUtils extends TimeUtils {
 
+    private static final List<TimeGranularityEnum> GRANULARITY_ORDER = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY,
+                                                                             TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
+
     public static TimeValue convertToLastMonth(TimeValue timeValue) throws MetamacException {
         Date date = timeValueToLastPossibleDate(timeValue);
 
@@ -61,15 +64,16 @@ public class TimeVariableUtils extends TimeUtils {
         return parseTimeValue(yearStr + monthStr + dayStr);
     }
 
-    private static int getTimeGranularityOrder(TimeValue timeValue) {
-        List<TimeGranularityEnum> granularityOrder = Arrays.asList(TimeGranularityEnum.DAILY, TimeGranularityEnum.WEEKLY, TimeGranularityEnum.MONTHLY, TimeGranularityEnum.QUARTERLY,
-                TimeGranularityEnum.BIYEARLY, TimeGranularityEnum.YEARLY);
-        Assert.isTrue(granularityOrder.size() == TimeGranularityEnum.values().length, "Se debe especificar un orden para cada valor de granularidad");
-        return granularityOrder.indexOf(timeValue.getGranularity()) + 1;
+    public static int getTimeValueOrderByGranularity(TimeValue timeValue) {
+        return GRANULARITY_ORDER.indexOf(timeValue.getGranularity()) + 1;
+    }
+
+    public static int getTimeGranularityOrder(TimeGranularityEnum timeGranularity) {
+        return GRANULARITY_ORDER.indexOf(timeGranularity) + 1;
     }
 
     /* Returns a Date representation for time value, it chooses the last time instant represented by the TimeValue */
-    private static Date timeValueToLastPossibleDate(TimeValue timeValue) {
+    public static Date timeValueToLastPossibleDate(TimeValue timeValue) {
         MutableDateTime dt = new MutableDateTime();
         switch (timeValue.getGranularity()) {
             case BIYEARLY: {
@@ -136,10 +140,10 @@ public class TimeVariableUtils extends TimeUtils {
             }
         });
     }
-    
+
     public static void sortTimeValuesMostRecentFirstLastValue(List<TimeValue> values) {
         Collections.sort(values, new Comparator<TimeValue>() {
-            
+
             @Override
             public int compare(TimeValue o1, TimeValue o2) {
                 return compareToLowestGranularityFirst(o1, o2);
@@ -170,9 +174,9 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) { // least the granularity is latest the value will be
+            if (getTimeValueOrderByGranularity(timeValue1) < getTimeValueOrderByGranularity(timeValue2)) { // least the granularity is latest the value will be
                 return -1;
-            } else if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) {
+            } else if (getTimeValueOrderByGranularity(timeValue1) > getTimeValueOrderByGranularity(timeValue2)) {
                 return 1;
             } else {
                 return 0;
@@ -193,9 +197,9 @@ public class TimeVariableUtils extends TimeUtils {
         } else if (date1.before(date2)) {
             return 1;
         } else {
-            if (getTimeGranularityOrder(timeValue1) > getTimeGranularityOrder(timeValue2)) { // highest the granularity is latest the value will be
+            if (getTimeValueOrderByGranularity(timeValue1) > getTimeValueOrderByGranularity(timeValue2)) { // highest the granularity is latest the value will be
                 return -1;
-            } else if (getTimeGranularityOrder(timeValue1) < getTimeGranularityOrder(timeValue2)) {
+            } else if (getTimeValueOrderByGranularity(timeValue1) < getTimeValueOrderByGranularity(timeValue2)) {
                 return 1;
             } else {
                 return 0;

@@ -31,6 +31,7 @@ import es.gobcan.istac.indicators.core.dspl.DsplDataset;
 import es.gobcan.istac.indicators.core.dspl.DsplTable;
 import es.gobcan.istac.indicators.core.error.ServiceExceptionType;
 import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformer;
+import es.gobcan.istac.indicators.core.serviceimpl.util.DsplTransformerTimeTranslator;
 import es.gobcan.istac.indicators.core.serviceimpl.util.InvocationValidator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -45,12 +46,19 @@ public class DsplExporterServiceImpl extends DsplExporterServiceImplBase {
     private ConfigurationService configurationService;
 
     @Override
-    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description) throws MetamacException {
+    public List<String> exportIndicatorsSystemPublishedToDsplFiles(ServiceContext ctx, String indicatorsSystemUuid, InternationalString title, InternationalString description,
+            boolean mergeTimeGranularities) throws MetamacException {
 
         // Validator
         InvocationValidator.checkExportIndicatorsSystemPublishedToDsplFiles(indicatorsSystemUuid, title, description, null);
 
-        DsplTransformer transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
+        DsplTransformer transformer = null;
+        if (mergeTimeGranularities) {
+            transformer = new DsplTransformerTimeTranslator(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
+        } else {
+            transformer = new DsplTransformer(getIndicatorsSystemsService(), getIndicatorsDataService(), getIndicatorsService(), configurationService);
+        }
+
         List<DsplDataset> datasets = transformer.transformIndicatorsSystem(ctx, indicatorsSystemUuid, title, description);
 
         List<String> datasetArchives = new ArrayList<String>();

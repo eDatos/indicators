@@ -46,7 +46,7 @@ public class DataSourceCompatibilityChecker {
             // Must be an existent variable and must be marked as spatial variable
             if (data.getVariables().contains(geographicVar)) {
                 // Must be marked as spatial variable
-                if (data.getSpatialVariables().contains(geographicVar)) {
+                if (data.getSpatialVariables() != null && data.getSpatialVariables().contains(geographicVar)) {
                     // Checking every value is valid
                     List<String> geoCodesProvided = data.getValueCodes().get(geographicVar);
                     List<String> unknownCodes = detectInvalidGeographicalCodes(geoCodesProvided);
@@ -63,7 +63,7 @@ public class DataSourceCompatibilityChecker {
         }
         // Has geographic value
         else {
-            if (!data.getSpatialVariables().isEmpty()) { // Data has spatial variable, should have been specified as gepgraphic variable
+            if (data.getSpatialVariables() != null && !data.getSpatialVariables().isEmpty()) { // Data has spatial variable, should have been specified as gepgraphic variable
                 String geoVars = StringUtils.join(data.getSpatialVariables(), ", ");
                 items.add(new MetamacExceptionItem(ServiceExceptionType.DATA_COMPATIBILITY_GEOGRAPHIC_VALUE_ILLEGAL, dataSource.getUuid(), geoVars));
             }
@@ -188,7 +188,7 @@ public class DataSourceCompatibilityChecker {
         List<String> otherVariablesExpected = data.getVariables();
 
         // Geographic, time and cont variable are not expected to be in other variables
-        if (!data.getSpatialVariables().isEmpty()) {
+        if (data.getSpatialVariables() != null && !data.getSpatialVariables().isEmpty()) {
             if (data.getSpatialVariables().contains(dataSource.getGeographicalVariable())) {
                 otherVariablesExpected.remove(dataSource.getGeographicalVariable());
             } else {

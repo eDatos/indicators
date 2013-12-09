@@ -384,7 +384,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void assignIndicatorDataOracleRolePermissionsToView(String viewCode) {
         try {
             datasetRepositoriesServiceFacade.assignRolePermissionsToSelectDatasetView(getDataViewsRole(), viewCode);
-        } catch (ApplicationException e) {
+        } catch (Exception e) {
             LOG.error("Error assigning SELECT permission to " + getDataViewsRole() + " over " + viewCode);
         }
     }
@@ -392,7 +392,7 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
     private void createOrReplaceLastVersionDatabaseView(IndicatorVersion indicatorVersion) {
         try {
             datasetRepositoriesServiceFacade.createOrReplaceDatasetRepositoryView(indicatorVersion.getDataRepositoryId(), indicatorVersion.getIndicator().getViewCode());
-        } catch (ApplicationException e) {
+        } catch (Exception e) {
             LOG.error("Error creating or replacing view " + indicatorVersion.getIndicator().getViewCode() + " for datasetRepositoryTableName " + indicatorVersion.getDataRepositoryTableName()
                     + " related with indicatorVersionUuid " + indicatorVersion.getUuid());
         }
