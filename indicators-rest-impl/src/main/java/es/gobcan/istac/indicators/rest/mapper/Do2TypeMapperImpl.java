@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
@@ -417,7 +417,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     }
 
     private Map<String, AttributeType> setObservationAttributes(ObservationExtendedDto observationDto) throws MetamacException {
-        for (AttributeBasicDto codeAttributeBasicDto : observationDto.getAttributes()) {
+        for (AttributeInstanceObservationDto codeAttributeBasicDto : observationDto.getAttributes()) {
             if (codeAttributeBasicDto.getAttributeId().equals(IndicatorDataAttributeTypeEnum.OBS_CONF.getName())) {
                 AttributeType unitMultiplierAttribute = new AttributeType();
                 unitMultiplierAttribute.setCode(PROP_ATTRIBUTE_OBS_CONF);
