@@ -36,24 +36,24 @@ function program1(depth0,data) {
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</a></div>\r\n            ";
   stack1 = depth0.observations;
-  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(2, program2, data)});
+  stack1 = helpers.each.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program2, data, depth0)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n        </div>\r\n    ";
   return buffer;}
-function program2(depth0,data) {
+function program2(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\r\n                ";
   stack1 = depth0.hasValue;
-  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program3, data, depth0)});
+  stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(program3, data, depth1)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n            ";
   return buffer;}
-function program3(depth0,data,depth1) {
+function program3(depth0,data,depth2) {
   
   var buffer = "", stack1, foundHelper;
   buffer += "\r\n                    <div class=\"istac-widget-lateral-subtitle\">";
-  stack1 = depth1.temporalLabel;
+  stack1 = depth2.temporalLabel;
   stack1 = typeof stack1 === functionType ? stack1() : stack1;
   buffer += escapeExpression(stack1) + " - ";
   foundHelper = helpers.measure;

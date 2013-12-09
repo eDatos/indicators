@@ -4,7 +4,7 @@
             <div class="istac-widget-lateral-title"><a href="{{jaxiUrl}}">{{title}}</a></div>
             {{#each observations}}
                 {{#if hasValue}}
-                    <div class="istac-widget-lateral-subtitle">{{../temporalLabel}} - {{ measure }} ({{unit}})</div>
+                    <div class="istac-widget-lateral-subtitle">{{../../temporalLabel}} - {{ measure }} ({{unit}})</div>
                     <div class="istac-widget-lateral-value">{{#if showSparkline }}<span class="inlinesparkline" data-time="{{timeTitles}}" data-unit="{{unit}}">{{ values }}</span>{{/if}} {{ value }}</div>
                 {{/if}}
             {{/each}}
