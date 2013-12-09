@@ -13,7 +13,7 @@
     <entry key="indicators.dsrepo.db.username">FILL_ME_WITH_USER</entry>
     <entry key="indicators.dsrepo.db.password">FILL_ME_WITH_PASSWORD</entry>
 
-	<entry key="indicators.jaxi.url">http://FILL_ME_WITH_HOST/jaxi-web</entry>
+	<entry key="indicators.jaxi.remote.url">http://FILL_ME_WITH_HOST/jaxi-web</entry>
     <entry key="indicators.widgets.typelist.url">http://FILL_ME_WITH_URL</entry>
     <entry key="indicators.querytools.url">http://FILL_ME_WITH_URL</entry>
     <entry key="indicators.widgets.sparkline.max">20</entry>

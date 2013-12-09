@@ -66,7 +66,7 @@
 
                 var temporalLabel = dataset.getTimeValuesTitles(this.locale)[lastTimeValue];
 
-                var jaxiBaseUrl = Istac.widget.configuration['indicators.jaxi.url'];
+                var jaxiBaseUrl = Istac.widget.configuration['indicators.jaxi.remote.url'];
 
                 var jaxiUrl = jaxiBaseUrl;
                 if (this.options.groupType === 'system') {
