@@ -248,6 +248,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // Identifiers Form
         identifiersForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
         ViewTextItem code = new ViewTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+        ViewTextItem viewCode = new ViewTextItem(IndicatorDS.VIEW_CODE, getConstants().indicDetailViewIdentifier());
         ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
         ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
         ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
@@ -255,7 +256,7 @@ public class IndicatorGeneralPanel extends VLayout {
         ViewMultiLanguageTextItem acronym = new ViewMultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
-        identifiersForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+        identifiersForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
 
         // Content Classifiers Form
         contentClassifiersForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -332,6 +333,7 @@ public class IndicatorGeneralPanel extends VLayout {
         // Identifiers Form
         identifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailIdentifiers());
         ViewTextItem code = new ViewTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
+        ViewTextItem viewCode = new ViewTextItem(IndicatorDS.VIEW_CODE, getConstants().indicDetailViewIdentifier());
         ViewTextItem uuid = new ViewTextItem(IndicatorDS.UUID, getConstants().indicDetailUuid());
         ViewTextItem version = new ViewTextItem(IndicatorDS.VERSION_NUMBER, getConstants().indicDetailVersion());
         ViewTextItem procStatus = new ViewTextItem(IndicatorDS.PROC_STATUS, getConstants().indicDetailProcStatus());
@@ -340,7 +342,7 @@ public class IndicatorGeneralPanel extends VLayout {
         MultiLanguageTextItem acronym = new MultiLanguageTextItem(IndicatorDS.ACRONYM, getConstants().indicDetailAcronym());
         ViewTextItem dataRepositoryTableName = new ViewTextItem(IndicatorDS.DATA_REPOSITORY_TABLE_NAME, getConstants().indicatorDataTableName());
         ViewTextItem needsUpdate = new ViewTextItem(IndicatorDS.NEEDS_UPDATE, getConstants().indicatorUpdateStatus());
-        identifiersEditionForm.setFields(code, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
+        identifiersEditionForm.setFields(code, viewCode, uuid, version, procStatus, title, acronym, dataRepositoryTableName, needsUpdate);
 
         // Status Form
         contentClassifiersEditionForm = new GroupDynamicForm(getConstants().indicDetailContentClassifiers());
@@ -448,6 +450,7 @@ public class IndicatorGeneralPanel extends VLayout {
     private void setIndicatorViewMode(IndicatorDto indicatorDto) {
         // Identifiers Form
         identifiersForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
+        identifiersForm.setValue(IndicatorDS.VIEW_CODE, indicatorDto.getViewCode());
         identifiersForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
         identifiersForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));
@@ -493,6 +496,7 @@ public class IndicatorGeneralPanel extends VLayout {
     private void setIndicatorEditionMode(IndicatorDto indicatorDto) {
         // Identifiers Form
         identifiersEditionForm.setValue(IndicatorDS.CODE, indicatorDto.getCode());
+        identifiersEditionForm.setValue(IndicatorDS.VIEW_CODE, indicatorDto.getViewCode());
         identifiersEditionForm.setValue(IndicatorDS.UUID, indicatorDto.getUuid());
         identifiersEditionForm.setValue(IndicatorDS.VERSION_NUMBER, indicatorDto.getVersionNumber());
         identifiersEditionForm.setValue(IndicatorDS.PROC_STATUS, CommonUtils.getIndicatorProcStatus(indicatorDto));

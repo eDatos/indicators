@@ -11,6 +11,7 @@ public class IndicatorDS extends DataSource {
     // IDENTIFIERS
     public static String UUID                                  = "ind-uuid";
     public static String CODE                                  = "ind-code";
+    public static String VIEW_CODE                             = "ind-view-code";
     public static String TITLE                                 = "ind-title";
     public static String ACRONYM                               = "ind-acron";
 

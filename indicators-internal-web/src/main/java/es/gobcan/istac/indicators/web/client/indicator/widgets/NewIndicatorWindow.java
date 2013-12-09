@@ -27,8 +27,9 @@ import es.gobcan.istac.indicators.web.client.utils.CommonUtils;
 
 public class NewIndicatorWindow extends CustomWindow {
 
-    private static final String FIELD_SAVE      = "save-ind";
-    private static final int    FORM_ITEM_WIDTH = 300;
+    private static final String VIEW_IDENTIFIER_PREFIX = "DV_";
+    private static final String FIELD_SAVE             = "save-ind";
+    private static final int    FORM_ITEM_WIDTH        = 300;
 
     private CustomDynamicForm   form;
 
@@ -36,12 +37,16 @@ public class NewIndicatorWindow extends CustomWindow {
 
     public NewIndicatorWindow(String title) {
         super(title);
-        setHeight(160);
+        setHeight(200);
         setWidth(450);
 
         RequiredTextItem codeItem = new RequiredTextItem(IndicatorDS.CODE, getConstants().indicDetailIdentifier());
         codeItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
         codeItem.setWidth(FORM_ITEM_WIDTH);
+        RequiredTextItem viewItem = new RequiredTextItem(IndicatorDS.VIEW_CODE, getConstants().indicDetailViewIdentifier());
+        viewItem.setLength(27);
+        viewItem.setValidators(CommonWebUtils.getSemanticIdentifierCustomValidator());
+        viewItem.setWidth(FORM_ITEM_WIDTH);
         RequiredTextItem titleItem = new RequiredTextItem(IndicatorDS.TITLE, getConstants().indicDetailTitle());
         titleItem.setWidth(FORM_ITEM_WIDTH);
         RequiredSelectItem subjectItem = new RequiredSelectItem(IndicatorDS.SUBJECT, getConstants().indicDetailSubject());
@@ -51,7 +56,7 @@ public class NewIndicatorWindow extends CustomWindow {
         saveItem.setAlign(Alignment.CENTER);
 
         form = new CustomDynamicForm();
-        form.setFields(codeItem, titleItem, subjectItem, saveItem);
+        form.setFields(codeItem, viewItem, titleItem, subjectItem, saveItem);
 
         addItem(form);
         show();
@@ -64,6 +69,7 @@ public class NewIndicatorWindow extends CustomWindow {
     public IndicatorDto getNewIndicatorDto() {
         IndicatorDto indicatorDto = new IndicatorDto();
         indicatorDto.setCode(form.getValueAsString(IndicatorDS.CODE));
+        indicatorDto.setViewCode(VIEW_IDENTIFIER_PREFIX + form.getValueAsString(IndicatorDS.VIEW_CODE));
         indicatorDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(IndicatorDS.TITLE)));
         indicatorDto.setSubjectCode(form.getValueAsString(IndicatorDS.SUBJECT));
         indicatorDto.setSubjectTitle(CommonUtils.getSubjectTitleFromCode(subjectDtos, form.getValueAsString(IndicatorDS.SUBJECT)));
