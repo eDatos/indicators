@@ -1,0 +1,19 @@
+Las configuraciones pasan a estar en base de datos:
+
+Todos los ficheros se pasan a base de datos menos el de logback.
+
+${environment.metamac.data}/common/conf/static/resources.xml
+${environment.metamac.data}/common/conf/dynamic/security.xml
+${environment.metamac.data}/common/conf/static/api-endpoints.xml
+
+${environment.indicators.data}/conf/static/resources.xml
+${environment.indicators.data}/conf/static/quartz.properties
+${environment.indicators.data}/conf/static/datasources.xml
+
+
+En la app interna:
+	La configuración de logs irá en data/indicators/conf/ 
+	Los logs se conservan en data/indicators/logs/
+	
+En la app externa
+	Los logs se conservan en data/indicators/logs/
