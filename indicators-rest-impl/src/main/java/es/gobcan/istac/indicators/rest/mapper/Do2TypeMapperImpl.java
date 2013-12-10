@@ -905,8 +905,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
                     }
                     break;
                 case INTERPERIOD_PUNTUAL_RATE:
-                    if (datasource.getInterperiodPercentageRate() != null) {
-                        return datasource.getInterperiodPercentageRate();
+                    if (datasource.getInterperiodPuntualRate() != null) {
+                        return datasource.getInterperiodPuntualRate();
                     }
                     break;
             }
