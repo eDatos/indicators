@@ -60,6 +60,7 @@ describe("DatasetRequestBuilder", function () {
             indicatorSystem : 'System1',
             subjectCode : '',
             nrecent : 0,
+            timeGranularities : ["MONTHLY"],
             geographicalValues : ['ES', 'EN', 'RU']
         };
 
@@ -154,13 +155,13 @@ describe("DatasetRequestBuilder", function () {
 
     it("should prepare request for temporal", function () {
         var request = datasetRequestBuilder.request(options.temporal);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS1"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]&granularity=TIME[MONTHLY]');
     });
 
     it("should prepare request for temporal with different instances", function () {
         options.temporal.instances = ['INS2'];
         var request = datasetRequestBuilder.request(options.temporal);
-        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS2"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]');
+        expect(request).toEqual(apiUrl + '/indicatorsSystems/System1/indicatorsInstances/?q=id EQ "INS2"&fields=%2Bdata,%2Bmetadata&representation=GEOGRAPHICAL[ES|EN|RU]&granularity=TIME[MONTHLY]');
     });
 
     describe("invalid parameters", function () {

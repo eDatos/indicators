@@ -25494,6 +25494,12 @@ window.Istac = {
             return "&representation=GEOGRAPHICAL[" + geographicalRepresentation + "]";
         },
 
+        _granularity : function (options) {
+            this._validateOne(options.timeGranularities);
+            var timeGranularities = options.timeGranularities.join("|");
+            return "&granularity=TIME[" + timeGranularities + "]";
+        },
+
         _selectedInstancesRequest : function (options) {
             this._validateDefined(options.indicatorSystem);
             this._validateOneOrMore(options.instances);
@@ -25551,7 +25557,6 @@ window.Istac = {
         _temporalRequest : function (options) {
             this._validateDefined(options.indicatorSystem);
             this._validateOne(options.instances);
-            this._validateOne(options.timeGranularities);
 
             return this.apiUrl + "/indicatorsSystems/"
                 + options.indicatorSystem
@@ -25559,7 +25564,8 @@ window.Istac = {
                 + options.instances[0]
                 + '"'
                 + this._fieldsParameter()
-                + this._representation(options);
+                + this._representation(options)
+                + this._granularity(options);
         },
 
         request : function (options) {
