@@ -59,8 +59,9 @@
 <!-- Widget -->
 <script src="[@spring.url "/theme/js/widgets/libs/Class.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/libs/raphael-min.js"/]"></script>
-<script src="[@spring.url "/theme/js/widgets/libs/elycharts.min.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/libs/highcharts.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/libs/jquery.sparkline.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/libs/moment.js"/]"></script>
 
 
 <script src="[@spring.url "/theme/js/widgets/src/Templates.js"/]"></script>
@@ -74,6 +75,7 @@
 <script src="[@spring.url "/theme/js/widgets/src/Temporal.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Loader.js"/]"></script>
 <script src="[@spring.url "/theme/js/widgets/src/Factory.js"/]"></script>
+<script src="[@spring.url "/theme/js/widgets/src/DateParser.js"/]"></script>
 
 <!-- Vistas -->
 <script src="[@spring.url "/theme/js/app/views/TabView.js"/]"></script>
