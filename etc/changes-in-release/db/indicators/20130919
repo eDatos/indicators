@@ -1,4 +1,6 @@
-INDISTAC-765: Corregir locale de las traducciones de tipo BIYEARLY
+-- ----------------------------------------------------------------------
+-- INDISTAC-765: Corregir locale de las traducciones de tipo BIYEARLY
+-- ----------------------------------------------------------------------
 
 En el script 07-indicators-inserts-translations.sql se había insertado un locale como 'em' en lugar de 'en' para los siguientes códigos:
 	- TIME_VALUE.BIYEARLY.H1
