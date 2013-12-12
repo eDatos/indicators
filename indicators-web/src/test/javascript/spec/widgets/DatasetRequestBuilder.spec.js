@@ -242,6 +242,12 @@ describe("DatasetRequestBuilder", function () {
             expect(request).toBeUndefined();
         });
 
+        it('should return undefined if type=temporal and no timeGranularities', function () {
+            options.temporal.timeGranularities = [];
+            var request = datasetRequestBuilder.request(options.temporal);
+            expect(request).toBeUndefined();
+        });
+
     })
 
 });

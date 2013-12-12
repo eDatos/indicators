@@ -36,7 +36,7 @@
             this.model.on('change:groupType', this._fetchGeographicalGranularities, this);
             this.model.on('change:subjectCode', this._fetchGeographicalGranularities, this);
             this.model.on('change:indicatorSystem', this._fetchGeographicalGranularities, this);
-            this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValues, this);
+            this.model.on('change:geographicalGranularityCode', this._fetchGeographicalValuesAndTimeGranularities, this);
         },
 
         _fetchGeographicalGranularities : function () {
@@ -54,7 +54,7 @@
             }
         },
 
-        _fetchGeographicalValues : function () {
+        _fetchGeographicalValuesAndTimeGranularities : function () {
             this.geographicalValues.reset([]);
 
             var geographicalGranularityCode = this.model.get('geographicalGranularityCode');

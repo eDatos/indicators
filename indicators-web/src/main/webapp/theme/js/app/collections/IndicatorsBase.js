@@ -32,6 +32,17 @@
             });
             all = _.compact(all);
             return all;
+        },
+
+        getTimeGranularities : function () {
+            var timeGranularities = this.map(function (model) {
+                return model.getTimeGranularities();
+            });
+            timeGranularities = _.flatten(timeGranularities);
+            timeGranularities = _.unique(timeGranularities, function (timeGranularity) {
+                return timeGranularity.code;
+            });
+            return timeGranularities;
         }
 
     });

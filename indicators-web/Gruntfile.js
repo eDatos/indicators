@@ -79,7 +79,7 @@ module.exports = function (grunt) {
             },
             handlebarsWeb : {
                 files : templatesPath + "/**/*.html",
-                tasks : 'handlebars:all'
+                tasks : 'handlebars:app'
             },
             handlebarsWidgets : {
                 files : widgetsPath + '/templates/*.html',

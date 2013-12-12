@@ -44,6 +44,7 @@
 <script src="[@spring.url "/theme/js/app/models/IndicatorBase.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/models/Indicator.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/models/IndicatorInstance.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/models/TimeGranularity.js"/]"></script>
 
 <script src="[@spring.url "/theme/js/app/collections/Measures.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/collections/IndicatorsBase.js"/]"></script>
@@ -54,6 +55,7 @@
 <script src="[@spring.url "/theme/js/app/collections/Indicators.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/collections/GeographicalGranularities.js"/]"></script>
 <script src="[@spring.url "/theme/js/app/collections/GeographicalValues.js"/]"></script>
+<script src="[@spring.url "/theme/js/app/collections/TimeGranularities.js"/]"></script>
 
 
 <!-- Widget -->

@@ -38,7 +38,13 @@
 
                 return result;
             }
+        },
+
+        getTimeGranularities : function () {
+            var dimension = this.get("dimension");
+            return dimension.TIME.granularity;
         }
+
     });
 
     _.extend(App.models.IndicatorBase.prototype, App.mixins.JsonpSync);

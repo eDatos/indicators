@@ -107,6 +107,7 @@
         _temporalRequest : function (options) {
             this._validateDefined(options.indicatorSystem);
             this._validateOne(options.instances);
+            this._validateOne(options.timeGranularities);
 
             return this.apiUrl + "/indicatorsSystems/"
                 + options.indicatorSystem

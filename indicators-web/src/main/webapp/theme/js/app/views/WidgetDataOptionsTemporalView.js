@@ -21,9 +21,10 @@
             this.systems = new App.collections.IndicatorSystems();
             this.instances = new App.collections.IndicatorsInstances();
             this.geographicalValues = new App.collections.GeographicalValues();
+            this.timeGranularities = new App.collections.TimeGranularities();
 
             this.model.on('change:indicatorSystem', this._fetchIndicatorInstances, this);
-            this.model.on('change:instances', this._fetchGeographicalValues, this);
+            this.model.on('change:instances', this._fetchGeographicalValuesAndTimeGranularities, this);
 
             this.measures.resetDefaults();
             this.systems.fetch();
@@ -38,10 +39,11 @@
             }
         },
 
-        _fetchGeographicalValues : function () {
+        _fetchGeographicalValuesAndTimeGranularities : function () {
             var self = this;
 
             this.geographicalValues.reset([]);
+            this.timeGranularities.reset([]);
 
             var instances = this.model.get('instances');
             if (instances.length > 0) {
@@ -49,8 +51,10 @@
                 var instanceModel = this.instances.get(instanceId);
                 var req = instanceModel.fetch();
                 this.geographicalValues.trigger('syncStart', this.geographicalValues);
+                this.timeGranularities.trigger("syncStart", this.getTimeGranularities);
                 req.success(function () {
                     self.geographicalValues.reset(instanceModel.getGeographicalValues());
+                    self.timeGranularities.reset(instanceModel.getTimeGranularities(), {parse : true});
                 });
             }
         },
@@ -122,6 +126,22 @@
             }, this);
         },
 
+        _renderTimeGranularities : function () {
+            var timeGranularitiesView = new App.views.Select2View({
+                el : this.$(".widget-data-timeGranularities"),
+                collection : this.timeGranularities,
+                idAttribute : 'code',
+                textAttribute : 'title',
+                multiple : false,
+                width : "600px"
+            });
+
+            timeGranularitiesView.on('change', function (timeGranularities) {
+                var value = timeGranularities ? [timeGranularities.code] : [];
+                this.model.set('timeGranularities', value);
+            }, this);
+        },
+
         render : function () {
             this.$el.html(this.template());
 
@@ -130,6 +150,7 @@
             this._renderSystems();
             this._renderInstances();
             this._renderGeographicalValues();
+            this._renderTimeGranularities();
 
             return this;
         }
