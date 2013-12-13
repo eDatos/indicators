@@ -65,7 +65,6 @@ input[type="image"] {
     margin-right: 5px;
 }
 
-
 .listadoTablas p {
     padding: 0;
     margin: 5px 0;
@@ -104,7 +103,7 @@ input[type="image"] {
 
         .dimension-depth-1, .dimension-depth-2 {
             .capitulos {
-               margin-left: 10px;
+                margin-left: 10px;
             }
         }
 
@@ -122,7 +121,8 @@ input[type="image"] {
             color: #6B6B6B;
         }
 
-        .dimension-depth-1 { //tree for elements lower than first depth
+        .dimension-depth-1 {
+            //tree for elements lower than first depth
 
             .tree-icon {
                 width: 14px;
@@ -141,6 +141,7 @@ input[type="image"] {
                     &:before {
                         color: #808080;
                         cursor: pointer;
+                        font-size: 14px;
                     }
 
                     &:hover:before {
@@ -157,6 +158,7 @@ input[type="image"] {
                     &:before {
                         color: #808080;
                         cursor: pointer;
+                        font-size: 14px;
                     }
 
                     &:hover:before {
@@ -187,15 +189,15 @@ input[type="image"] {
 }
 
 .table-icon {
-//    vertical-align: middle;
-//    margin-right: 3px;
-//    cursor: pointer;
-//    background-image: url("../images/sized-icons/tabla_14.png");
-//    width: 14px;
-//    height: 15px;
-//    float: left;
-//    background-repeat: no-repeat;
-//    background-position: center center;
+    //    vertical-align: middle;
+    //    margin-right: 3px;
+    //    cursor: pointer;
+    //    background-image: url("../images/sized-icons/tabla_14.png");
+    //    width: 14px;
+    //    height: 15px;
+    //    float: left;
+    //    background-repeat: no-repeat;
+    //    background-position: center center;
 }
 
 /*****************************************
@@ -562,12 +564,12 @@ html[xmlns] .clearfix {
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
-    .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
+    .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255, 255, 255, .75));
     border: 1px solid @btnBorder;
     *border: 0; // Remove the border to prevent IE7's black border on input:focus
     border-bottom-color: darken(@btnBorder, 10%);
     .ie7-restore-left-whitespace(); // Give IE7 some love
-    .box-shadow(inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05));
+    .box-shadow(inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05));
 
     // Hover state
     &:hover {
@@ -594,7 +596,7 @@ html[xmlns] .clearfix {
         background-color: darken(@white, 15%) e("\9");
         background-image: none;
         outline: 0;
-        .box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+        .box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05));
     }
 
     // Disabled state
@@ -802,11 +804,53 @@ a.rounded_button span {
     }
 }
 
-
 .middle {
     margin-bottom: -2px;
 }
 
 .netvibes-icon {
     margin-bottom: -4px;
+}
+
+#principal_interior .conten .listadoTablas {
+    .metadata {
+        float: right;
+        margin-right: 5px;
+        margin-top: -2px;
+
+        &:hover {
+            .icon-metadata:before {
+                color: #003366;
+            }
+        }
+
+        .icon-metadata {
+            &:before {
+                font-size: 16px;
+                color: #808080;
+            }
+        }
+    }
+}
+
+.popupInfoDescarga {
+
+    .popup-metadata, .popup-data {
+        .icon-table, .icon-metadata {
+            &:before {
+                color: #808080;
+                font-size: 13px;
+            }
+
+        }
+
+        &:hover {
+            .icon-table, .icon-metadata {
+                &:before {
+                    color: #003366;
+                }
+            }
+        }
+    }
+
 }

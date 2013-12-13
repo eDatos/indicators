@@ -33,7 +33,8 @@
         <li>
             <i class="icon-table" data-self-link="${element.selfLink}"></i>
             <span class="item-numeration">${idx?string?left_pad(numberOfFixedDigitsInNumeration, "0")}</span>
-            <a class="nouline" href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
+            <a class="nouline"
+               href="${jaxiUrlBase}/tabla.do?instanciaIndicador=${element.id}&sistemaIndicadores=${indicatorsSystemCode}&accion=html">[@localizeTitle element.title/]</a>
         </li>
             [#global idx = idx + 1]
         [/#if]
@@ -54,12 +55,9 @@
         <div class="h2top"></div>
         <div class="h2content" style="min-height: 15px; margin-top: 3px;">
             [@localizeTitle indicator.title/]
-            <a href="[@spring.url "/"/]/api/indicators/v1.0/indicatorsSystems/${indicator.code}"
-               style="float: right; font-weight: normal; margin-right: 5px;" target="_blank">
-                <img height="16" width="16"
-                     style="margin-right:5px; vertical-align: text-bottom; float: none; margin-top: -2px"
-                     src="[@spring.url "/theme/images/json_metadata.gif"/]" title="Metadatos en JSON"
-                     alt="Metadatos en JSON"/>
+            <a href="[@spring.url "/"/]/api/indicators/v1.0/indicatorsSystems/${indicator.code}" target="_blank"
+               class="metadata" title="Metadatos en JSON">
+                <i class="icon-metadata"></i>
             </a>
         </div>
     </div>
@@ -176,12 +174,24 @@
         <tr>
             <td><strong>Descarga: </strong></td>
             <td>
-                <a href="<%= selfLink %>" target="_blank" title="Metadatos">
-                    <img src="[@spring.url "/theme/images/json_metadata.gif"/]" width="16" height="16" class="middle">
+                <a href="<%= selfLink %>" target="_blank" title="Metadatos" class="popup-metadata">
+                    <i class="icon-metadata"></i>
                     Metadatos
-                </a> |
-                <a href="<%= selfLink %>/data" target="_blank" title="Datos">
-                <img src="[@spring.url "/theme/images/tabla.gif"/]" class="middle"> Datos</a>
+                </a>
+                |
+                <a href="<%= selfLink %>/data" target="_blank" title="Datos" class="popup-data">
+                    <i class="icon-table"></i>
+                    Datos
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <strong>
+                    <a href="${jaxiUrlBase}/tabla.do?instanciaIndicador=<%= id %>&sistemaIndicadores=<%= systemCode %>&accion=html">
+                        Consultar datos
+                    </a>
+                </strong>
             </td>
         </tr>
         </tbody>
