@@ -13,11 +13,11 @@ import es.gobcan.istac.indicators.core.enume.domain.IndicatorDataDimensionTypeEn
 
 public class ConditionUtil {
 
-    
     private ConditionUtil() {
     }
-    
-    public static void filterTimeValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<TimeValue> timeValues, List<ConditionDimensionDto> conditionDimensionDtos) {
+
+    public static List<TimeValue> filterTimeValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<TimeValue> timeValues,
+            List<ConditionDimensionDto> conditionDimensionDtos) {
         List<String> timeSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.TIME.name());
         List<String> timeSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.TIME.name());
 
@@ -46,14 +46,13 @@ public class ConditionUtil {
             }
 
             conditionDimensionDtos.add(timeConditionDimensionDto);
-            if (timeValuesNew.size() > 0) {
-                timeValues.clear();
-                timeValues.addAll(timeValuesNew);
-            }
+            return timeValuesNew;
         }
+        return timeValues;
     }
 
-    public static void filterGeographicalValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<GeographicalValue> geographicalValues, List<ConditionDimensionDto> conditionDimensionDtos) {
+    public static List<GeographicalValue> filterGeographicalValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities,
+            List<GeographicalValue> geographicalValues, List<ConditionDimensionDto> conditionDimensionDtos) {
         // GEOGRAPHICAL
         List<String> geographicalSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
         List<String> geographicalSelectedGranularities = selectedGranularities.get(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
@@ -84,14 +83,12 @@ public class ConditionUtil {
             }
 
             conditionDimensionDtos.add(geographicalConditionDimensionDto);
-            if (geographicalValuesNew.size() > 0) {
-                geographicalValues.clear();
-                geographicalValues.addAll(geographicalValuesNew);
-            }
+            return geographicalValuesNew;
         }
+        return geographicalValues;
     }
-    
-    public static void filterMeasureValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<MeasureValue> measureValues, List<ConditionDimensionDto> conditionDimensionDtos) {
+    public static List<MeasureValue> filterMeasureValues(Map<String, List<String>> selectedRepresentations, Map<String, List<String>> selectedGranularities, List<MeasureValue> measureValues,
+            List<ConditionDimensionDto> conditionDimensionDtos) {
         // GEOGRAPHICAL
         List<String> measureSelectedValues = selectedRepresentations.get(IndicatorDataDimensionTypeEnum.MEASURE.name());
 
@@ -99,7 +96,7 @@ public class ConditionUtil {
             List<MeasureValue> measureValuesNew = new ArrayList<MeasureValue>();
             ConditionDimensionDto measureConditionDimensionDto = new ConditionDimensionDto();
             measureConditionDimensionDto.setDimensionId(IndicatorDataDimensionTypeEnum.MEASURE.name());
-            
+
             for (MeasureValue measureValue : measureValues) {
                 // Value
                 if (measureSelectedValues != null && measureSelectedValues.size() != 0) {
@@ -107,17 +104,15 @@ public class ConditionUtil {
                         continue;
                     }
                 }
-                
+
                 measureConditionDimensionDto.getCodesDimension().add(measureValue.getMeasureValue().getName());
                 measureValuesNew.add(measureValue);
             }
-            
+
             conditionDimensionDtos.add(measureConditionDimensionDto);
-            if (measureValuesNew.size() > 0) {
-                measureValues.clear();
-                measureValues.addAll(measureValuesNew);
-            }            
-        }        
+            return measureValuesNew;
+        }
+        return measureValues;
     }
-        
+
 }

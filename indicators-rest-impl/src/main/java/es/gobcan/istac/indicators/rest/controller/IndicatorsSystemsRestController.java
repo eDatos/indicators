@@ -25,8 +25,7 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<PagedResultType<IndicatorsSystemBaseType>> findIndicatorsSystems(final UriComponentsBuilder uriComponentsBuilder,
-                                                                                           @RequestParam(required = false, value = "limit") final Integer limit,
-                                                                                           @RequestParam(required = false, value = "offset") final Integer offset) throws Exception {
+            @RequestParam(required = false, value = "limit") final Integer limit, @RequestParam(required = false, value = "offset") final Integer offset) throws Exception {
 
         String baseURL = uriComponentsBuilder.build().toUriString();
         RestCriteriaPaginator paginator = new RestCriteriaPaginator(limit, offset);
@@ -40,8 +39,8 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<IndicatorsSystemType> retrieveIndicatorsSystem(final UriComponentsBuilder uriComponentsBuilder,
-                                                                         @PathVariable("idIndicatorSystem") final String idIndicatorSystem) throws Exception {
+    public ResponseEntity<IndicatorsSystemType> retrieveIndicatorsSystem(final UriComponentsBuilder uriComponentsBuilder, @PathVariable("idIndicatorSystem") final String idIndicatorSystem)
+            throws Exception {
 
         String baseURL = uriComponentsBuilder.build().toUriString();
         IndicatorsSystemType indicatorsSystemBaseType = indicatorSystemRestFacade.retrieveIndicatorsSystem(baseURL, idIndicatorSystem);
@@ -49,30 +48,26 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
         return response;
     }
 
-
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
-                                                                                                  @PathVariable("idIndicatorSystem") String idIndicatorSystem,
-                                                                                                  @RequestParam(required = false, value = "q") String q,
-                                                                                                  @RequestParam(required = false, value = "order") String order,
-                                                                                                  @RequestParam(required = false, value = "limit") Integer limit,
-                                                                                                  @RequestParam(required = false, value = "offset") Integer offset,
-                                                                                                  @RequestParam(required = false, value = "fields") String fields,
-                                                                                                  @RequestParam(required = false, value = "representation") String representation) throws Exception {
+    public ResponseEntity<ListResultType<IndicatorInstanceBaseType>> retrieveIndicatorsInstances(final UriComponentsBuilder uriComponentsBuilder,
+            @PathVariable("idIndicatorSystem") String idIndicatorSystem, @RequestParam(required = false, value = "q") String q, @RequestParam(required = false, value = "order") String order,
+            @RequestParam(required = false, value = "fields") String fields, @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
-        PagedResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem, q, order, limit, offset, fields, selectedRepresentations);
-        ResponseEntity<PagedResultType<IndicatorInstanceBaseType>> response = new ResponseEntity<PagedResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
+        Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
+        ListResultType<IndicatorInstanceBaseType> indicatorInstanceTypes = indicatorSystemRestFacade.retrieveIndicatorsInstances(baseURL, idIndicatorSystem, q, order, fields, selectedRepresentations,
+                selectedGranularities);
+        ResponseEntity<ListResultType<IndicatorInstanceBaseType>> response = new ResponseEntity<ListResultType<IndicatorInstanceBaseType>>(indicatorInstanceTypes, HttpStatus.OK);
 
         return response;
     }
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<IndicatorInstanceType> retrieveIndicatorsInstance(final UriComponentsBuilder uriComponentsBuilder,
-                                                                            @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
-                                                                            @PathVariable("idIndicatorInstance") final String idIndicatorInstance) throws Exception {
+    public ResponseEntity<IndicatorInstanceType> retrieveIndicatorsInstance(final UriComponentsBuilder uriComponentsBuilder, @PathVariable("idIndicatorSystem") final String idIndicatorSystem,
+            @PathVariable("idIndicatorInstance") final String idIndicatorInstance) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         IndicatorInstanceType indicatorInstanceType = indicatorSystemRestFacade.retrieveIndicatorInstanceByCode(baseURL, idIndicatorSystem, idIndicatorInstance);
         ResponseEntity<IndicatorInstanceType> response = new ResponseEntity<IndicatorInstanceType>(indicatorInstanceType, HttpStatus.OK);
@@ -81,17 +76,15 @@ public class IndicatorsSystemsRestController extends AbstractRestController {
 
     @RequestMapping(value = "/api/indicators/v1.0/indicatorsSystems/{idIndicatorSystem}/indicatorsInstances/{idIndicatorInstance}/data", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder,
-                                                                   @PathVariable("idIndicatorSystem") String idIndicatorSystem,
-                                                                   @PathVariable("idIndicatorInstance") String idIndicatorInstance,
-                                                                   @RequestParam(required = false, value = "representation") String representation,
-                                                                   @RequestParam(required = false, value = "granularity") String granularity,
-                                                                   @RequestParam(required = false, value = "fields") String fields) throws Exception {
+    public ResponseEntity<DataType> retrieveIndicatorsInstanceData(final UriComponentsBuilder uriComponentsBuilder, @PathVariable("idIndicatorSystem") String idIndicatorSystem,
+            @PathVariable("idIndicatorInstance") String idIndicatorInstance, @RequestParam(required = false, value = "representation") String representation,
+            @RequestParam(required = false, value = "granularity") String granularity, @RequestParam(required = false, value = "fields") String fields) throws Exception {
         String baseURL = uriComponentsBuilder.build().toUriString();
         Map<String, List<String>> selectedRepresentations = RequestUtil.parseParamExpression(representation);
         Map<String, List<String>> selectedGranularities = RequestUtil.parseParamExpression(granularity);
         boolean includeObservationsAttributes = fields != null ? !fields.contains("-observationsMetadata") : true;
-        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities, includeObservationsAttributes);
+        DataType dataType = indicatorSystemRestFacade.retrieveIndicatorInstanceDataByCode(baseURL, idIndicatorSystem, idIndicatorInstance, selectedRepresentations, selectedGranularities,
+                includeObservationsAttributes);
         ResponseEntity<DataType> response = new ResponseEntity<DataType>(dataType, HttpStatus.OK);
         return response;
     }

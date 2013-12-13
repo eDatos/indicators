@@ -431,23 +431,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         return null;
     }
 
-    private IndicatorVersion retrieveIndicatorFromCacheIfPossible(String uuid) {
-        try {
-            Assert.notNull(uuid, "UUID is required");
-
-            Map<String, Object> indicatorVersionCache = getRequestCache(REQUEST_CACHE_INDICATIOR_VERSION);
-            IndicatorVersion indicatorVersion = (IndicatorVersion) indicatorVersionCache.get(uuid);
-            if (indicatorVersion == null) {
-                indicatorVersion = indicatorsApiService.retrieveIndicator(uuid);
-                indicatorVersionCache.put(uuid, indicatorVersion);
-            }
-            return indicatorVersion;
-        } catch (Exception e) {
-            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-
-    }
-
     private DataSource retrieveDatasource(String uuid) {
         try {
             Assert.notNull(uuid, "UUID is required");
@@ -912,14 +895,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             }
         }
         return null;
-    }
-
-    private LinkType _createLinkType(final Indicator indicator, final String baseURL) {
-        String href = _createUrlIndicators_Indicator(indicator, baseURL);
-        LinkType link = new LinkType();
-        link.setKind(RestConstants.KIND_INDICATOR);
-        link.setHref(href);
-        return link;
     }
 
     private TitleLinkType _createTitleLinkType(final IndicatorVersion indicatorVersion, final String baseURL) {
