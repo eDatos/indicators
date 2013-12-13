@@ -18,7 +18,6 @@ module.exports = function (grunt) {
         widgetsPath + '/libs/jquery.js',
         widgetsPath + '/libs/handlebars.runtime-1.0.0.beta.6.js',
         widgetsPath + '/libs/jquery.sparkline.js',
-        widgetsPath + '/libs/raphael-min.js',
         widgetsPath + '/libs/highcharts.js',
         widgetsPath + '/libs/moment.js',
         widgetsPath + '/src/analytics.js',

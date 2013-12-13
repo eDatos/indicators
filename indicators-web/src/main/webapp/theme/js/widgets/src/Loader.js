@@ -27,9 +27,6 @@
 
         all : function (url) {
             this.css('istac-widget-css', url + '/theme/js/widgets/widgets.css');
-            this.js(!window.jQuery, url + '/theme/js/widgets/libs/jquery-1.7.1.js');
-            this.js(!window.Raphael, url + '/theme/js/widgets/libs/raphael-min.js');
-            this.js(!(window.jQuery && window.jQuery.elycharts), url + '/theme/js/widgets/libs/elycharts.min.js');
         }
     };
 

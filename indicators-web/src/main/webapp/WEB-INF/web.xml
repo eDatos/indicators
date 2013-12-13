@@ -56,6 +56,11 @@
         <filter-name>JsonpCallbackFilter</filter-name>
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>JsonpCallbackFilter</filter-name>
+        <url-pattern>/widgets/external/configuration</url-pattern>
+    </filter-mapping>
     
     <!-- SERVLET -->
     <!-- Handles all requests into the application -->

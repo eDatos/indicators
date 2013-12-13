@@ -8,7 +8,16 @@
         options = options || {};
 
         if (options.hasOwnProperty('url')) {
-            $.getJSON(options.url + "/widgets/external/configuration").success(function (configuration) {
+            var url = options.url + "/widgets/external/configuration";
+
+            var configRequest = $.ajax({
+                method : "GET",
+                dataType : "jsonp",
+                jsonp : '_callback',
+                url : url
+            });
+
+            configRequest.success(function (configuration) {
                 Istac.widget.configuration = configuration;
 
                 if (!options.uwa) {
