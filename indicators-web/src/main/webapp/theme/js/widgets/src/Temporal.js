@@ -45,8 +45,12 @@
                     var date = Istac.widget.DateParser.parse(timeValue);
 
                     data.push([date, value]);
-                    tooltip.push('<strong>' + valueStr + ' ' + unit + '</strong><br/>' + geoValueTitle.trim() + '<br/>' + timeValuesTitles[timeValue]);
                     values.push(value);
+
+                    if (_.isString(geoValueTitle)) {
+                        geoValueTitle = geoValueTitle.trim();
+                    }
+                    tooltip.push('<strong>' + valueStr + ' ' + unit + '</strong><br/>' + geoValueTitle + '<br/>' + timeValuesTitles[timeValue]);
                 }
 
                 series.push({
