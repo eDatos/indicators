@@ -766,13 +766,15 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
 
     private List<TimeGranularity> getFixedTimeGranularitiesInIndicatorInstance(ServiceContext ctx, IndicatorInstance indInstance) throws MetamacException {
         if (!StringUtils.isEmpty(indInstance.getTimeValues())) {
-            Set<TimeGranularity> timeGranularities = new HashSet<TimeGranularity>();
+            Map<TimeGranularityEnum, TimeGranularity> timeGranularities = new HashMap<TimeGranularityEnum, TimeGranularity>();
             for (String timeValueStr : indInstance.getTimeValuesAsList()) {
                 TimeGranularityEnum guessedGranularity = TimeVariableUtils.guessTimeGranularity(timeValueStr);
-                TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, guessedGranularity);
-                timeGranularities.add(timeGranularity);
+                if (!timeGranularities.containsKey(guessedGranularity)) {
+                    TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, guessedGranularity);
+                    timeGranularities.put(guessedGranularity, timeGranularity);
+                }
             }
-            return new ArrayList<TimeGranularity>(timeGranularities);
+            return new ArrayList<TimeGranularity>(timeGranularities.values());
         } else if (indInstance.getTimeGranularity() != null) {
             TimeGranularity timeGranularity = getIndicatorsSystemsService().retrieveTimeGranularity(ctx, indInstance.getTimeGranularity());
             return Arrays.asList(timeGranularity);
@@ -780,7 +782,6 @@ public class IndicatorsDataServiceImpl extends IndicatorsDataServiceImplBase {
             return null;
         }
     }
-
     @Override
     public List<GeographicalGranularity> retrieveGeographicalGranularitiesInIndicatorsInstanceInPublishedIndicatorsSystem(ServiceContext ctx, String systemCode) throws MetamacException {
         // Validation
