@@ -207,8 +207,8 @@
                 } else if (this.options.scale == "natural") {
                     var scale = Istac.widget.NaturalScale.scale({ymin : chartData.minValue, ymax : chartData.maxValue });
                     highchartsOptions.yAxis.tickPositioner = function () {
-                        var step = (chartData.maxValue - chartData.minValue) / scale.ranges;
-                        return _.range(scale.ydown, scale.ytop, step);
+                        var step = (scale.ytop - scale.ydown) / scale.ranges;
+                        return _.range(scale.ydown, scale.ytop + step, step);
                     };
                 }
             }
