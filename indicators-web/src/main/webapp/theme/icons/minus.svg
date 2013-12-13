@@ -1,8 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
-<path d="M23.969,0C10.73,0,0,10.732,0,23.969c0,13.24,10.73,23.967,23.969,23.967s23.969-10.727,23.969-23.967
-	C47.938,10.732,37.207,0,23.969,0z M36.167,27.564H11.771v-7.191h24.396V27.564z"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   id="Layer_1"
+   xml:space="preserve"><metadata
+   id="metadata3844"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs3842" />
+<path
+   d="M 24,0.2750003 C 10.747765,0.2750003 0,11.021869 0,24.276006 0,37.534163 10.747765,48.275 24,48.275 37.255243,48.275 48,37.533158 48,24.276006 47.998998,11.021869 37.25424,0.2750003 24,0.2750003 z M 36.213552,27.949444 c 0,0 -5.742836,0 -8.614254,0 -2.4002,0 -4.800401,0 -7.200601,0 -2.871418,0 -8.614254,0 -8.614254,0 l 0,-7.220207 c 0,0 5.742836,0 8.614254,0 2.4002,0 4.800401,0 7.200601,0 2.871418,0 8.614254,0 8.614254,0 z"
+   id="path3838" />
 </svg>
