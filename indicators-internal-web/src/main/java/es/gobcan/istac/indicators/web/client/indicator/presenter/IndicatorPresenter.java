@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -71,6 +71,7 @@ import es.gobcan.istac.indicators.web.shared.GetDataStructureResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueAction;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValueResult;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction;
+import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.Builder;
 import es.gobcan.istac.indicators.web.shared.GetGeographicalValuesResult;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorAction;
 import es.gobcan.istac.indicators.web.shared.GetIndicatorByCodeAction;
@@ -262,7 +263,7 @@ public class IndicatorPresenter extends Presenter<IndicatorPresenter.IndicatorVi
 
     @Override
     public void retrieveGeographicalValues(final String geographicalGranularityUuid) {
-        GetGeographicalValuesAction.Builder builder = new GetGeographicalValuesAction.Builder();
+        Builder builder = new Builder();
         GetGeographicalValuesAction action = builder.geographicalGranularityUuid(geographicalGranularityUuid).build();
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
 

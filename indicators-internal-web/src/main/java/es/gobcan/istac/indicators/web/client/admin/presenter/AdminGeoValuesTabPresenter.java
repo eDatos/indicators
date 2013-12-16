@@ -17,6 +17,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 
+import static es.gobcan.istac.indicators.web.shared.GetGeographicalValuesAction.*;
 import es.gobcan.istac.indicators.core.dto.GeographicalGranularityDto;
 import es.gobcan.istac.indicators.core.dto.GeographicalValueDto;
 import es.gobcan.istac.indicators.web.client.LoggedInGatekeeper;
@@ -155,7 +156,7 @@ public class AdminGeoValuesTabPresenter extends Presenter<AdminGeoValuesTabPrese
     }
 
     private void reloadGeoValuesCache() {
-        GetGeographicalValuesAction.Builder builder = new GetGeographicalValuesAction.Builder();
+        Builder builder = new Builder();
         dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<GetGeographicalValuesResult>(this) {
 
             @Override
