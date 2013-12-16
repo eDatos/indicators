@@ -174,7 +174,8 @@
                 idAttribute : 'code',
                 textAttribute : 'title',
                 multiple : false,
-                width : "600px"
+                width : "600px",
+                sort : false
             });
 
             geographicalValuesView.on('change', function (geographicalValue) {

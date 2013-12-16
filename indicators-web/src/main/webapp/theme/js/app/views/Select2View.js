@@ -4,6 +4,10 @@
     App.views.Select2View = Backbone.View.extend({
 
         initialize : function (options) {
+            _.defaults(options, {
+                sort : true
+            });
+
             // Prepare events
             var self = this;
 
@@ -31,14 +35,15 @@
                 value.id = value[this.options.idAttribute];
             }, this);
 
-
-            var sortedData = _.sortBy(data, function (value) {
-                var trimmedLowerCase = _.string.trim(value[this.options.textAttribute].toLocaleLowerCase());
-                return _.string.slugify(trimmedLowerCase);
-            }, this);
-
-
-            return sortedData;
+            if (this.options.sort) {
+                var sortedData = _.sortBy(data, function (value) {
+                    var trimmedLowerCase = _.string.trim(value[this.options.textAttribute].toLocaleLowerCase());
+                    return _.string.slugify(trimmedLowerCase);
+                }, this);
+                return sortedData;
+            } else {
+                return data;
+            }
         },
 
         _format : function (item) {
