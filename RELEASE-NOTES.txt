@@ -16,10 +16,10 @@ de las incidencias con el id [INDISTAC-xxx].
 http://jira.arte-consultores.com/browse/INDISTAC
 
 ------------------------------------------------------------------------------
-Release 3.1.1
+Release 3.2.0
 ------------------------------------------------------------------------------
 
-Notas de publicación - Sistema de indicadores (Istac)  - hito 3.1.1
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.2.0
 
 ** Defecto
     * [INDISTAC-757] - Corregir el parpadeo de las pantallas al cargar
