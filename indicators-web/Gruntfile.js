@@ -101,7 +101,18 @@ module.exports = function (grunt) {
                     hashes: false,
                     syntax: "bootstrap"
                 }
-            }
+            },
+	        css: {
+	        	src: 'src/main/webapp/theme/icons/*.svg',
+	        	dest: 'src/main/webapp/theme/fonts',
+	        	destCss: 'src/main/webapp/theme/css',
+	        	options: {
+	        		relativeFontPath: "../fonts/",
+	        		destHtml: 'src/main/webapp/theme/fonts',
+	        		hashes: false,
+	        		syntax: "bootstrap"
+	        	}
+	        }
         }
     });
 
