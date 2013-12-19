@@ -37,7 +37,7 @@ import es.gobcan.istac.indicators.web.shared.ValidateTicketResult;
  */
 public class IndicatorsWeb extends MetamacEntryPoint {
 
-    private static final boolean             SECURITY_ENABLED = false;
+    private static final boolean             SECURITY_ENABLED = true;
     private static Logger                    logger           = Logger.getLogger(IndicatorsWeb.class.getName());
 
     private static MetamacPrincipal          principal;
