@@ -6,7 +6,7 @@
     <artifactId>indicators-parent</artifactId>
     <name>INDICATORS :: PARENT</name>
     <packaging>pom</packaging>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.3.0</version>
 
     <distributionManagement>
         <!-- Use the following if you're not using a snapshot version. -->
