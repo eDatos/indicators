@@ -7,6 +7,6 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetEditionLanguages {
 
     @Out(1)
-    String[] languages;
+    List<String> languages;
 
 }

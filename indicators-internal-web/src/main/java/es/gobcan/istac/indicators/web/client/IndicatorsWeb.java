@@ -1,5 +1,6 @@
 package es.gobcan.istac.indicators.web.client;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +46,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
     private static IndicatorsWebCoreMessages coreMessages;
     private static IndicatorsWebConstants    constants;
 
-    private IndicatorsWebGinjector           ginjector        = GWT.create(IndicatorsWebGinjector.class);
+    private final IndicatorsWebGinjector     ginjector        = GWT.create(IndicatorsWebGinjector.class);
 
     @Override
     public void onModuleLoad() {
@@ -91,6 +92,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
                 public void onFailure(Throwable arg0) {
                     logger.log(Level.SEVERE, "Error validating ticket");
                 }
+
                 @Override
                 public void onSuccess(ValidateTicketResult result) {
                     setPrincipal(result.getMetamacPrincipal());
@@ -115,6 +117,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             public void onFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error mocking CAS user");
             }
+
             @Override
             public void onSuccess(MockCASUserResult result) {
                 setPrincipal(result.getMetamacPrincipal());
@@ -133,9 +136,10 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             public void onFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error loading edition languages");
                 // If an error occurs while loading edition languages, enable SPANISH, ENGLISH and PORTUGUESE by default
-                ApplicationEditionLanguages.setEditionLanguages(new String[]{ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH, ApplicationEditionLanguages.PORTUGUESE});
+                ApplicationEditionLanguages.setEditionLanguages(Arrays.asList(ApplicationEditionLanguages.SPANISH, ApplicationEditionLanguages.ENGLISH, ApplicationEditionLanguages.PORTUGUESE));
                 loadNavbar();
             }
+
             @Override
             public void onSuccess(GetEditionLanguagesResult result) {
                 ApplicationEditionLanguages.setEditionLanguages(result.getLanguages());
@@ -209,6 +213,7 @@ public class IndicatorsWeb extends MetamacEntryPoint {
             public void onWaitFailure(Throwable caught) {
                 logger.log(Level.SEVERE, "Error getting login page URL");
             }
+
             @Override
             public void onWaitSuccess(GetLoginPageUrlResult result) {
                 Window.Location.replace(result.getLoginPageUrl());
