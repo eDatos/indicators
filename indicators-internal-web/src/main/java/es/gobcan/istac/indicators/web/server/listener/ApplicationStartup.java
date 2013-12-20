@@ -70,7 +70,6 @@ public class ApplicationStartup implements ServletContextListener {
 
         // OTHERS
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.USER_GUIDE_FILENAME);
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.EDITION_LANGUAGES);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.QUARTZ_EXPRESSION_UPDATE_INDICATORS);
 

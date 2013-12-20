@@ -46,7 +46,6 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String DSPL_INDICATORS_SYSTEM_URL                   = "indicators.dspl.indicators.system.url";
 
     public static final String USER_GUIDE_FILENAME                          = "indicators.user.guide.file.name";
-    public static final String EDITION_LANGUAGES                            = "indicators.internal.edition.languages";
 
     public static final String ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API = "metamac.statistical_operations.rest.internal";
     public static final String ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API = "metamac.statistical_operations.rest.external";

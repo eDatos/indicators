@@ -1,5 +1,7 @@
 package es.gobcan.istac.indicators.web.server.handlers;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -17,10 +19,8 @@ import es.gobcan.istac.indicators.web.shared.GetEditionLanguagesResult;
 @Component
 public class GetEditionLanguagesActionHandlers extends AbstractActionHandler<GetEditionLanguagesAction, GetEditionLanguagesResult> {
 
-    private static String        PROP_EDITION_LANGUAGES = "indicators.internal.edition.languages";
-
     @Autowired
-    private ConfigurationService configurationService   = null;
+    private final ConfigurationService configurationService = null;
 
     public GetEditionLanguagesActionHandlers() {
         super(GetEditionLanguagesAction.class);
@@ -29,7 +29,7 @@ public class GetEditionLanguagesActionHandlers extends AbstractActionHandler<Get
     @Override
     public GetEditionLanguagesResult execute(GetEditionLanguagesAction action, ExecutionContext context) throws ActionException {
         try {
-            String[] languages = configurationService.getConfig().getStringArray(PROP_EDITION_LANGUAGES);
+            List<String> languages = configurationService.retrieveLanguages();
             return new GetEditionLanguagesResult(languages);
         } catch (Exception e) {
             throw WebExceptionUtils.createMetamacWebException(new MetamacException(CommonServiceExceptionType.UNKNOWN));
