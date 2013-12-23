@@ -16,6 +16,62 @@ de las incidencias con el id [INDISTAC-xxx].
 http://jira.arte-consultores.com/browse/INDISTAC
 
 ------------------------------------------------------------------------------
+Release 3.3.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.3.0
+
+** Defecto
+    * [INDISTAC-762] - Los sparklines no se muestran en las columnas adecuadas
+    * [INDISTAC-763] - Adaptar los widgets para que soporten UWA2
+    * [INDISTAC-764] - Cambiar el color verde por azul grisaseo
+    * [INDISTAC-765] - Corregir locale de las traducciones de tipo BIYEARLY
+    * [INDISTAC-766] - Errata en label de la tabla de consultas del GPE al crear datasource
+    * [INDISTAC-767] - Problema con escalamiento en natural equilibrado
+    * [INDISTAC-768] - Al crear un datasource sin variable temporal se queda de que le estan mandando un value geografico y no se puede porque tiene variable geográfica.
+    * [INDISTAC-771] - El listado de sistemas no está mostrando el título de los sistemas
+    * [INDISTAC-774] - El DSPL no se está generando en UTF-8 y las tildes salen mal
+    * [INDISTAC-776] - Al reordenar las tasas de un indicador, las columnas no mantienen el orden
+    * [INDISTAC-782] - Se debe comprobar que los InternationalString que son requeridos no pueden tener locales vacíos
+    * [INDISTAC-783] - Modificar las comprobaciones de los tests de tipos listados para que se hagan sin importar el orden
+    * [INDISTAC-784] - [Widgets] En la visualización lateral del widget de últimos datos no se está mostrando la fecha
+    * [INDISTAC-790] - [API] La petición de valores geográficos no está funcionando correctamente
+    * [INDISTAC-793] - [Wiget temporal] Las etiquetas del eje de las X tiene un comportamiento extraño
+    * [INDISTAC-799] - La api deveulve el quantity incorrecto para variacion puntual interperiódica
+    * [INDISTAC-800] - Error en el sistema de caches
+    * [INDISTAC-801] - [API] El contenido del metadato "metadata" respecto a los valores geográficos y/o temporales no es correcto
+    * [INDISTAC-802] - Existen en base de datos instancias de indicadores con valor temporal y granularidad
+
+** Mejora
+    * [INDISTAC-777] - [Web Pública] Modificar la página 1 de visualización de un sistema para que sea igual a la definida en METAMAC
+    * [INDISTAC-778] - [BBDD] Nombre semántico para las tablas generadas y acceso sólo a determinados usuarios
+    * [INDISTAC-779] - [DSPL] Permitir realizar la exportación de un sistema con múltples granularidades temporales en un único fichero
+    * [INDISTAC-780] - [Widgets] Poner en negrita el título de los widgets
+    * [INDISTAC-785] - [Widgets] Modificar el interlineado de los títulos de los widgets
+    * [INDISTAC-786] - [Widgets] En la visualización lateral el sparkline debe mostrarse centrado entre ambas líneas
+    * [INDISTAC-796] - Cambiar configuracion a base de datos
+
+** Nueva Funcionalidad
+    * [INDISTAC-770] - Cambiar el diseño de la página de sistema de indicadores
+    * [INDISTAC-773] - Permitir elegir entre más de una variable espacial al crear datasources
+    * [INDISTAC-775] - Poder llevar a cabo la edición de las tablas de valores desde el propio aplicativo
+    * [INDISTAC-787] - [Widgets] Modificar los iconos de "?" por la nueva iconografía del ISTAC
+    * [INDISTAC-792] - [Widgets] Los valores geográficos deben mostrarse ordenados por GlobalOrder
+
+
+** Soporte
+    * [INDISTAC-772] - Incluir releases notes en el trunk del proyecto
+
+** Tarea
+    * [INDISTAC-788] - [CORE] Modificar los métodos find de los listados para que puedan ser paginados y se puedan realizar búsquedas
+    * [INDISTAC-789] - [CORE] Añadir al Dto del GeographicalValue el Dto del GeographicalGranularity
+    * [INDISTAC-791] - [CORE] Adaptar proyecto a la nueva versión del statistic-dataset-repository
+    * [INDISTAC-794] - [CORE] Eliminar la dependencia al common-test porque la nueva versión del core-common ya lo incluye
+    * [INDISTAC-795] - [TEST] Realizar el borrado de la BBDD del statistic repository antes de realizar los tests
+    * [INDISTAC-798] - Actualización de estadísticas
+    * [INDISTAC-804] - Modificar la estructura changes-in-release de los proyectos
+
+------------------------------------------------------------------------------
 Release 3.2.0
 ------------------------------------------------------------------------------
 
