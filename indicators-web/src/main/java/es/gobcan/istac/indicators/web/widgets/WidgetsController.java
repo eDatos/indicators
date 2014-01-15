@@ -1,10 +1,12 @@
 package es.gobcan.istac.indicators.web.widgets;
 
+import es.gobcan.istac.indicators.core.conf.IndicatorsConfigurationService;
 import es.gobcan.istac.indicators.core.constants.IndicatorsConfigurationConstants;
 import es.gobcan.istac.indicators.web.diffusion.BaseController;
 import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ import java.util.Map;
 public class WidgetsController extends BaseController {
 
     @Autowired
-    private ConfigurationService configurationService;
+    private IndicatorsConfigurationService configurationService;
 
     private String removeLastSlashInUrl(String url) {
         if (url.endsWith("/")) {
@@ -35,9 +37,11 @@ public class WidgetsController extends BaseController {
         // View
         ModelAndView modelAndView = new ModelAndView("widgets/creator");
 
-        String jaxiUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY));
-        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL));
+        String jaxiUrlBase = removeLastSlashInUrl(configurationService.retrieveJaxiRemoteUrl());
+        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.retrievePortalExternalUrlBase());
+        String metamacPortalPermalinksEndpoint = removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
 
+        modelAndView.addObject("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
         modelAndView.addObject("jaxiUrlBase", jaxiUrlBase);
         modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
         modelAndView.addObject("breadcrumb", breadCrumb);
@@ -45,9 +49,9 @@ public class WidgetsController extends BaseController {
         return modelAndView;
     }
 
-    private String getBreadCrumb(String type) {
-        String widgetTypeListUrl = configurationService.getProperty(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY);
-        String queryToolsUrl = configurationService.getProperty(WebConstants.WIDGETS_QUERY_TOOLS_URL_PROPERTY);
+    private String getBreadCrumb(String type) throws Exception {
+        String widgetTypeListUrl = configurationService.retrieveWidgetsTypeListUrl();
+        String queryToolsUrl = configurationService.retrieveWidgetsQueryToolsUrl();
         return "<li><a href='" + queryToolsUrl + "'>Herramientas de consulta</a></li><li><a href='" + widgetTypeListUrl + "'>Widgets</a></li><li><strong>" + getTypeLabel(type) + "</strong></li>";
     }
 
@@ -61,24 +65,23 @@ public class WidgetsController extends BaseController {
         }
     }
 
-
     @RequestMapping(value = "/widgets/external/configuration", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> properties() throws Exception {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(WebConstants.JAXI_URL_PROPERTY, configurationService.getProperties().getProperty(WebConstants.JAXI_URL_PROPERTY));
-        properties.put(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY, configurationService.getProperties().getProperty(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY));
-        properties.put(WebConstants.WIDGETS_SPARKLINE_MAX, configurationService.getProperties().getProperty(WebConstants.WIDGETS_SPARKLINE_MAX));
+        properties.put(WebConstants.JAXI_URL_PROPERTY, configurationService.retrieveJaxiRemoteUrl());
+        properties.put(WebConstants.WIDGETS_TYPE_LIST_URL_PROPERTY, configurationService.retrieveWidgetsTypeListUrl());
+        properties.put(WebConstants.WIDGETS_SPARKLINE_MAX, configurationService.retrieveWidgetsSparklineMax());
         return properties;
     }
 
     @RequestMapping(value = "/widgets/uwa/{permalinkId}", method = RequestMethod.GET)
-    public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException {
+    public ModelAndView uwa(@PathVariable("permalinkId") String permalinkId) throws UnsupportedEncodingException, MetamacException {
         ModelAndView modelAndView = new ModelAndView("widgets/uwa");
         modelAndView.addObject("permalinkId", permalinkId);
 
-        String metamacPortalUrlBase = removeLastSlashInUrl(configurationService.getProperties().getProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL));
-        modelAndView.addObject("metamacPortalUrlBase", metamacPortalUrlBase);
+        String metamacPortalPermalinksEndpoint = removeLastSlashInUrl(configurationService.retrievePortalExternalApisPermalinksUrlBase());
+        modelAndView.addObject("metamacPortalPermalinksEndpoint", metamacPortalPermalinksEndpoint);
 
         return modelAndView;
     }

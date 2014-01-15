@@ -33,8 +33,8 @@
     <script type="text/javascript">
         widget.onLoad = function () {
             widget.addBody("<div id='istac-widget' class='istac-widget-uwa'></div>");
-            var metamacPortalUrl = "${metamacPortalUrlBase}";
-            $.getJSON(metamacPortalUrl + "/apis/permalinks/v1.0/permalinks/${permalinkId}").done(function (options) {
+            var metamacPortalPermalinksApiUrlBase = "${metamacPortalPermalinksEndpoint}";
+            $.getJSON(metamacPortalPermalinksApiUrlBase + "/v1.0/permalinks/${permalinkId}").done(function (options) {
                 IstacWidget(options, function (istacWidget) {
                     widget.setTitle(istacWidget.title);
                 });

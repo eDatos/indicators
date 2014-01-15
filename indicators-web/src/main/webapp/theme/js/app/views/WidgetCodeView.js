@@ -53,7 +53,7 @@
             };
 
             var ajaxParameters = {
-                url : "http://localhost:8081/apis/permalinks/v1.0/permalinks",
+                url : metamacPortalPermalinksEndpoint + "/v1.0/permalinks",
                 type : "POST",
                 data : JSON.stringify(permalink),
                 contentType : "application/json; charset=utf-8",

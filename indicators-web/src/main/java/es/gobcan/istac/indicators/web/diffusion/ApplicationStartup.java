@@ -43,7 +43,7 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.DB_REPO_PASSWORD);
 
         // Other
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_LOCAL_URL);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.JAXI_REMOTE_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
 
         // Widgets
@@ -51,7 +51,8 @@ public class ApplicationStartup implements ServletContextListener {
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_QUERY_TOOLS_URL);
         configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.WIDGETS_SPARKLINE_MAX);
 
-        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_METAMAC_PORTAL);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_PORTAL_EXTERNAL_BASE);
+        configurationService.checkRequiredProperty(IndicatorsConfigurationConstants.ENDPOINT_PORTAL_EXTERNAL_APIS_PERMALINKS);
 
         LOG.info("**********************************************************");
         LOG.info("[indicators-web] Application configuration checked");

@@ -99,6 +99,7 @@
     var apiContext = apiBaseUrl + "/api/indicators/v1.0";
     var jaxiUrl = "${jaxiUrlBase}";
     var metamacPortalUrl = "${metamacPortalUrlBase}";
+    var metamacPortalPermalinksEndpoint = "${metamacPortalPermalinksEndpoint}"
 
     var options = {};
     [#if RequestParameters.type??]
