@@ -31,6 +31,7 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String JAXI_LOCAL_URL                               = "indicators.jaxi.local.url";
     public static final String JAXI_LOCAL_URL_INDICATOR                     = "indicators.jaxi.local.url.indicator";
     public static final String JAXI_LOCAL_URL_INSTANCE                      = "indicators.jaxi.local.url.instance";
+    public static final String JAXI_REMOTE_URL                              = "indicators.jaxi.remote.url";
 
     // WIDGETS
     public static final String WIDGETS_TYPE_LIST_URL                        = "indicators.widgets.typelist.url";
@@ -56,6 +57,4 @@ public class IndicatorsConfigurationConstants extends ConfigurationConstants {
     public static final String SECURITY_CAS_SERVER_URL_PREFIX               = "metamac.security.cas_server_url_prefix";
     public static final String SECURITY_TOLERANCE                           = "metamac.security.tolerance";
 
-    // METAMAC PORTAL
-    public static final String ENDPOINT_METAMAC_PORTAL                      = "metamac.metamac-portal.rest.external";
 }
