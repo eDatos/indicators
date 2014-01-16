@@ -100,7 +100,8 @@ public class DataOperation {
     public RateDerivationRoundingEnum getRateRounding() {
         switch (measureDimension) {
             case ABSOLUTE:
-                return RateDerivationRoundingEnum.UPWARD; //TODO: always up?
+                // Rounding for absolute measure can not be specified in the web application, so we decided upward
+                return RateDerivationRoundingEnum.UPWARD;
             case ANNUAL_PERCENTAGE_RATE:
                 return dataSource.getAnnualPercentageRate().getRounding();
             case ANNUAL_PUNTUAL_RATE:

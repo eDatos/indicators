@@ -18,13 +18,13 @@ public class IndicatorsDataProviderServiceTest extends AbstractDbUnitJpaTests im
     @Test
     @Ignore
     public void testRetrieveDataStructureJson() throws Exception {
-        //TODO: research about mocking HttpRequest -> Zeben has used a LocalHttpServer
+        //IDEA: research about mocking HttpRequest -> Zeben has used a LocalHttpServer
         //in IbestatDroidEmbeddedTest in stat4-you crawler project
     }
 
     @Test
     @Ignore
     public void testRetrieveDataJson() throws Exception {
-        //TODO: research about mocking HttpRequest
+        //IDEA: research about mocking HttpRequest
     }
 }

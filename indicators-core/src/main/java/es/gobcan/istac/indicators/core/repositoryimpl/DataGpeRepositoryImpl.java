@@ -18,7 +18,6 @@ import es.gobcan.istac.indicators.core.domain.DataDefinition;
 
 /**
  * Repository implementation for DataGpe
- * TODO utilizar criteria de sculptor o cambiarla a HQL
  */
 @Repository("dataGpeRepository")
 public class DataGpeRepositoryImpl extends DataGpeRepositoryBase {

@@ -387,7 +387,7 @@ public class DsplTransformer {
         if (!usedIndicators.contains(indicatorVersion)) {
             usedIndicators.add(indicatorVersion);
 
-            // TODO: referenced quantities seem not to work in data explorer. if a concept can link to other quantities in a near future this code should be uncommented
+            // referenced quantities seem not to work in data explorer. if a concept can link to other quantities in a near future this code should be uncommented
 
             /*
              * // For numerator and denominator quantities
@@ -467,8 +467,7 @@ public class DsplTransformer {
     }
 
     private Set<DsplConcept> createConceptsForUsedQuantitiesNotInstances(Set<IndicatorVersion> usedIndicators, List<IndicatorInstance> instances) {
-        // TODO: Referenced quantities seem not to work in data explorer, if they are this method should be
-        // implemented creating concepts associated to used quantities, but those quantities can't be instances quantities.
+        //Referenced quantities seem not to work in data explorer, if they are this method should be implemented creating concepts associated to used quantities, but those quantities can't be instances quantities.
         return new HashSet<DsplConcept>();
     }
 
@@ -559,8 +558,7 @@ public class DsplTransformer {
     private void applyConceptAttributesForFractionQuantity(DsplConcept concept, Quantity quantity) {
         applyConceptAttributesForMagnitudeQuantity(concept, quantity);
 
-        // TODO: Are numerator and numerator really accepted in data explorer?
-        // https://developers.google.com/public-data/forum?place=topic%2Fdspl-discuss%2FQ-seXWg1b0c%2Fdiscussion
+        // Numerator and denominator are not supported in data explorer https://developers.google.com/public-data/forum?place=topic%2Fdspl-discuss%2FQ-seXWg1b0c%2Fdiscussion
         concept.setExtend(QUANTITY_FRACTION_CONCEPT_BASE);
     }
 
@@ -593,7 +591,7 @@ public class DsplTransformer {
     private void applyConceptAttributesForChangeRateQuantity(DsplConcept concept, Quantity quantity) {
         applyConceptAttributesForRateQuantity(concept, quantity);
 
-        // TODO: links to concepts seem not to work in data explorer wait for answer in discussion forum
+        // links to concepts seem not to work in data explorer wait for answer in discussion forum
         // https://developers.google.com/public-data/forum?place=topic%2Fdspl-discuss%2FQ-seXWg1b0c%2Fdiscussion
         concept.setExtend(QUANTITY_CHANGE_RATE_CONCEPT_BASE);
     }
