@@ -144,7 +144,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         try {
             List<IndicatorsSystemBaseType> targets = new ArrayList<IndicatorsSystemBaseType>(sources.size());
             for (IndicatorsSystemVersion source : sources) {
-                OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // TODO Make in only one invocation
+                OperationIndicators sourceOperation = statisticalOperations.retrieveOperationById(source.getIndicatorsSystem().getCode()); // IDEA Make in only one invocation
                 IndicatorsSystemBaseType target = _indicatorsSystemDoToBaseType(source, sourceOperation, baseURL);
                 targets.add(target);
             }
@@ -182,7 +182,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
             List<IndicatorInstanceBaseType> targets = new ArrayList<IndicatorInstanceBaseType>(sources.size());
             for (IndicatorInstance source : sources) {
                 IndicatorInstanceBaseType target = new IndicatorInstanceBaseType();
-                IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid()); // TODO HACER EN UNA CONSULTA
+                IndicatorVersion indicatorVersion = indicatorsApiService.retrieveIndicator(source.getIndicator().getUuid()); // IDEA Make in only one invocation
                 _indicatorsInstanceDoToType(source, indicatorVersion, target, baseURL);
                 targets.add(target);
             }
@@ -571,7 +571,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
-        // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
+        // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
@@ -610,7 +610,7 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataDimensionType measureDimension = createMeasureDimension(measureValues, source, baseURL);
         target.getDimension().put(measureDimension.getCode(), measureDimension);
 
-        // ATTRIBUTES // TODO ESTO TENDRÍA QUE VENIR DE LA BBDD
+        // ATTRIBUTES 
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
         MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
@@ -754,7 +754,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private MetadataDimensionType createMeasureDimension(List<MeasureValue> measureValues, IndicatorVersion indicatorVersion, String baseURL) throws MetamacException {
         MetadataDimensionType measureDimension = new MetadataDimensionType();
         measureDimension.setCode(IndicatorDataDimensionTypeEnum.MEASURE.name());
-        // measureDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
         measureDimension.setRepresentation(_measureValueDoToType(measureValues, indicatorVersion, baseURL));
         return measureDimension;
     }
@@ -762,7 +761,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
     private MetadataDimensionType _createGeographicalDimension(List<GeographicalGranularity> geographicalGranularities, List<GeographicalValue> geographicalValues) {
         MetadataDimensionType geographicaDimension = new MetadataDimensionType();
         geographicaDimension.setCode(IndicatorDataDimensionTypeEnum.GEOGRAPHICAL.name());
-        // geographicaDimension.setTitle(title) // TODO PONER TÍTULO A LA DIMENSION
         geographicaDimension.setGranularity(geographicalGranularityDoToType(geographicalGranularities));
         geographicaDimension.setRepresentation(_geographicalValuesDoToType(geographicalValues));
         return geographicaDimension;
@@ -772,7 +770,6 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         MetadataDimensionType timeDimension = new MetadataDimensionType();
         timeDimension.setCode(IndicatorDataDimensionTypeEnum.TIME.name());
         timeDimension.setGranularity(timeGranularityDoToType(timeGranularities));
-        // timeDimension.setTitle(MapperUtil.getLocalisedLabel(internationalString));
         timeDimension.setRepresentation(_timeValuesDoToType(timeValues));
         return timeDimension;
     }

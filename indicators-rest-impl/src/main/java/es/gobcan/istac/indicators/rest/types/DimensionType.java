@@ -12,8 +12,8 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 })
 public class DimensionType {
 
-    private String              uuid         = null; // TODO UUIDS o URIS??????
-    private String              parentUuid   = null; // TODO UUIDS????
+    private String              uuid         = null;
+    private String              parentUuid   = null;
 
     private Long                orderInLevel = null;
     private Map<String, String> title        = null;
