@@ -22,7 +22,6 @@ public class UpdateQuantityUnitsEvent extends GwtEvent<UpdateQuantityUnitsEvent.
         return TYPE;
     }
 
-    // TODO HasEventBus should be used instead of HasHandlers ¿?
     public static void fire(HasHandlers source, List<QuantityUnitDto> quantityUnits) {
         if (TYPE != null) {
             source.fireEvent(new UpdateQuantityUnitsEvent(quantityUnits));

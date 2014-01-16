@@ -22,7 +22,6 @@ public class UpdateGeographicalGranularitiesEvent extends GwtEvent<UpdateGeograp
         return TYPE;
     }
 
-    // TODO HasEventBus should be used instead of HasHandlers ¿?
     public static void fire(HasHandlers source, List<GeographicalGranularityDto> geoGranularities) {
         if (TYPE != null) {
             source.fireEvent(new UpdateGeographicalGranularitiesEvent(geoGranularities));
