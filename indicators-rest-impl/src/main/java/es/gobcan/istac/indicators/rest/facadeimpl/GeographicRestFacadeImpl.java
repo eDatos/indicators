@@ -28,16 +28,6 @@ public class GeographicRestFacadeImpl implements GeographicRestFacade {
     @Autowired
     private IndicatorsDataService indicatorsDataService = null;
 
-    
-    //TODO: This methods are all used by the widgets, not by JAXI, but they should use IndicatorsApiService so you can provide a complete private API.
-    
-    public MetadataGranularityType retrieveGeographicGranularity(String baseUrl, String granularyCode) throws Exception {
-        //GeographicalGranularity geographicalGranularity = indicatorsSystemsService.retrieveGeographicalGranularity(RestConstants.SERVICE_CONTEXT, null); // TODO
-        //MetadataGranularityType granularityType = dto2TypeMapper.geographicalGranularityDoToType(geographicalGranularity);
-        //return granularityType;
-        return null;
-    }
-    
     @Override
     public List<MetadataGranularityType> findGeographicGranularities() throws Exception {
         List<GeographicalGranularity> geographicalGranularities = indicatorsSystemsService.retrieveGeographicalGranularities(RestConstants.SERVICE_CONTEXT);
