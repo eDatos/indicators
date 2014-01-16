@@ -12,7 +12,7 @@ import es.gobcan.istac.indicators.web.diffusion.WebConstants;
 @Controller
 public class IndicatorsController extends BaseController {
 
-    // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
+    // Esta página no se va mostrar. es solo de prueba
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public ModelAndView indicators(UriComponentsBuilder uriComponentsBuilder) throws Exception {
 

@@ -28,7 +28,7 @@ public class IndicatorsSystemsController extends BaseController {
     @Autowired
     private IndicatorSystemRestFacade indicatorSystemRestFacade = null;
 
-    // TODO Esta página no se va mostrar. Si se muestra, implementar la paginación
+    // Esta página no se va mostrar. Si se muestra, implementar la paginación
     @RequestMapping(value = "/indicatorsSystems", method = RequestMethod.GET)
     public ModelAndView indicatorsSystems(UriComponentsBuilder uriComponentsBuilder) throws Exception {
         // View
