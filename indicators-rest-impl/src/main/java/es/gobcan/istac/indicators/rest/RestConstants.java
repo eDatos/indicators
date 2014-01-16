@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.rest;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 
 public class RestConstants {
 
@@ -16,7 +17,7 @@ public class RestConstants {
     public static String         KIND_INDICATOR_INSTANCE_DATA             = "indicators#indicatorInstanceData";
     public static String         KIND_INDICATOR_DIMENSION                 = "indicators#dimension";
 
-    public static String         KIND_STATISTICAL_OPERATION               = "statisticalOperation#operation";              // TODO
+    public static String         KIND_STATISTICAL_OPERATION               = TypeExternalArtefactsEnum.STATISTICAL_OPERATION.getValue();
 
     public static String         API_SLASH                                = "/";
     public static String         API_INDICATORS_BASE                      = "/api/indicators/v1.0";
@@ -24,8 +25,8 @@ public class RestConstants {
     public static String         API_INDICATORS_GEOGRAPHIC_GRANULARITIES  = "geographicGranularities";
     public static String         API_INDICATORS_SUBJECTS                  = "subjects";
     public static String         API_INDICATORS_INDICATORS_SYSTEMS        = "indicatorsSystems";
-    
-    public static String         API_INDICATORS_INDICATORS_DATA           = "data";    
+
+    public static String         API_INDICATORS_INDICATORS_DATA           = "data";
     public static String         API_INDICATORS_INDICATORS_INSTANCES      = "indicatorsInstances";
     public static String         API_INDICATORS_INDICATORS_INSTANCES_DATA = "data";
 
