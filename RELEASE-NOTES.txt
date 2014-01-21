@@ -149,8 +149,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 3.0.0
 
 
 
-
-
 ------------------------------------------------------------------------------
 Release 2.2.0
 ------------------------------------------------------------------------------
@@ -194,8 +192,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 2.2.0
     * [INDISTAC-714] - Preparando cambios del manual de usuario para nueva version 2.2.0
     * [INDISTAC-719] - Revisión de la incidencias para la release
     * [INDISTAC-720] - Release version 2.2.0
-
-
 
 ** Mejora
     * [INDISTAC-682] - Estilo del Sparkline
@@ -254,9 +250,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 2.2.0
     * [INDISTAC-717] - Cambios segun decisiones del ISTAC pendientes para entregar versión 2.2.0
 
 
-
-
-
 ------------------------------------------------------------------------------
 Release 2.1.0
 ------------------------------------------------------------------------------
@@ -268,13 +261,8 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 2.1.0
     * [INDISTAC-622] - Modificar swagger para mejorar la información de las entidades de respuesta
     * [INDISTAC-624] - [MANUAL] Explicar nuevas propiedades del data respecto a dspl
 
-
-
-
 ** Nueva Funcionalidad
     * [INDISTAC-599] - Exportación a DSPL
-
-
 
 ** Tarea
     * [INDISTAC-629] - Paquete de indicadores release 2.1.0
@@ -304,8 +292,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 2.0.0
     * [INDISTAC-613] - Añadir query a indicators e indicators systems
     * [INDISTAC-616] - Border del widget con estilo gobcan
     * [INDISTAC-617] - Correciones del widget
-
-
 
 ** Mejora
     * [INDISTAC-545] - Crear sistema de tablas para acceder eficientemente a los últimos datos de indicadores e instancias
@@ -359,7 +345,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 2.0.0
     * [INDISTAC-605] - Modificar página de estilo apra añadir vista lateral y estilo de gobierno
     * [INDISTAC-612] - Revisión de la API de indicadores
 
-
 ** Sub-tarea
     * [INDISTAC-558] - Crear documento de requisitos del proyecto de mejoras de indicadores
 
@@ -383,8 +368,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.4.0
     * [INDISTAC-531] - Hay un test que sólo falla en el jenkins, relacionado con mockito
     * [INDISTAC-539] - Eliminar las url con el .html
     * [INDISTAC-550] - Añadir grunt
-
-
 
 ** Mejora
     * [INDISTAC-511] - Descarga segura de ficheros
@@ -420,7 +403,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.4.0
     * [INDISTAC-557] - Modificar la configuración de Base de Datos para evitar errores de arranque en Cibercentro
     * [INDISTAC-562] - Revisar tests del trunk de indicadores por errores en jenkins
     * [INDISTAC-569] - Documento de explicacion del ecosistema GPE - INDICADORES
-
 
 ** Sub-tarea
     * [INDISTAC-243] - Invocar al servicio rest externo de statistical operations
@@ -459,8 +441,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.3.0
     * [INDISTAC-497] - Consulta de datos de un indicador, NullPointer cuando se especifican condiciones
     * [INDISTAC-504] - Corregir problemas de conexiones a base de datos de los tests
 
-
-
 ** Mejora
     * [INDISTAC-453] - El orden de los valores geográficos debe realizarse segun un orden alfanumerico general para distintas granularidades
     * [INDISTAC-474] - Los datos cargados deben estar formateados según el quantity de la tasa en caso de ser tasa o el del indicador en el caso de ser DATA
@@ -470,8 +450,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.3.0
     * [INDISTAC-475] - Gatekeeper
     * [INDISTAC-491] - Añadir chrome frame
     * [INDISTAC-496] - Permitir que en la consulta de datos de una instancia de indicador se puedan especificar condiciones
-
-
 
 ** Tarea
     * [INDISTAC-444] - Búsqueda para seleccionar los indicadores numerador y denominador en los rates
@@ -492,14 +470,11 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.3.0
     * [INDISTAC-503] - Revisar el proyecto para que funcione en Jenkins
     * [INDISTAC-508] - Sección "Ayuda"
 
-
 ** Sub-tarea
     * [INDISTAC-477] - Selector de multiplicador de unidad
     * [INDISTAC-478] - Ampliar ancho de los campos
     * [INDISTAC-479] - En las fuentes de datos, la categoría que se ha seleccionado para ser cargada como data no se puede escoger en ninguna tasa
     * [INDISTAC-480] - Formulario data
-
-
 
 
 ------------------------------------------------------------------------------
@@ -519,8 +494,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.2.0
     * [INDISTAC-437] - Probar los widgets con el cambio del identificador
     * [INDISTAC-441] - Error a la hora de visualizar la versión en difusión de un indicador
 
-
-
 ** Mejora
     * [INDISTAC-436] - Al publicar un indicador debería poblarse sólo la version a publicar, es decir produccion
 
@@ -530,7 +503,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.2.0
 ** Reuniones
     * [INDISTAC-425] - 25/05/2012 - Llamada de Ricardo por incidencias varias
 
-
 ** Tarea
     * [INDISTAC-426] - Revisión de indicadores para el curso
     * [INDISTAC-432] - Log out
@@ -538,10 +510,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.2.0
     * [INDISTAC-435] - Añadir identificador a las instancias de indicadores
     * [INDISTAC-439] - Permitir Single Sing OUT
     * [INDISTAC-442] - Al archivar un indicador, comprobar que no está asociado a ningún sistema de indicadores publicado
-
-
-
-
 
 
 ------------------------------------------------------------------------------
@@ -574,7 +542,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.1.0
     * [INDISTAC-396] - Decidir con Alberto cómo visualizar la información de las versiones de un indicador
     * [INDISTAC-405] - 21/05/2012 - Revisión de las observaciones remitidas por Rubén el 18/05/2012
 
-
 ** Tarea
     * [INDISTAC-181] - Cambios en la interfaz (ver Descripción)
     * [INDISTAC-230] - La aplicación deberá llamarse "Gestor de Indicadores"
@@ -593,10 +560,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.1.0
     * [INDISTAC-418] - Mostrar entorno de producción y de difusión en la página principal de indicadores y sistemas
     * [INDISTAC-419] - Entrega de versión 1.1.0
     * [INDISTAC-420] - Revisar las tareas en JIRA del sistema de indicadores y llevar a cabo el versionado del proyecto
-
-
-
-
 
 
 ------------------------------------------------------------------------------
@@ -623,8 +586,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.0.0
     * [INDISTAC-366] - En modo edición sencilla (sin consulta) de una fuente de datos, cuando el método de algun rate es la observación aparece ##OBS_VALUE##
     * [INDISTAC-375] - Al publicar un indicador se debe comprobar si ya hay una versión publicada anterior y eliminar su dataset repository
     * [INDISTAC-376] - Al actualizar una entidad con un campo requerido en bbdd a null da error de transacción
-
-
 
 ** Mejora
     * [INDISTAC-68] - Cambiar las urls de acceso a recursos, en lugar de por uuid debe ser por code
@@ -716,7 +677,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.0.0
     * [INDISTAC-328] - 23/04/2012 - Reunión de seguimiento
     * [INDISTAC-367] - 04/05/2012: Reunión de seguimiento
     * [INDISTAC-395] - 18/05/2012 - Revisión de las pantallas de indicadores (visualización de información de múltiples versiones)
-
 
 ** Tarea
     * [INDISTAC-2] - Documento de requisitos funcionales y no funcionales
@@ -899,7 +859,6 @@ Notas de publicación - Sistema de indicadores (Istac)  - hito 1.0.0
     * [INDISTAC-394] - Preparar paquete de instalación 18/05/2012
     * [INDISTAC-402] - Crear documento de revisión de requisitos de indicadores y llevar a cabo la revisión de los mismos para la versión 1.0.0.
     * [INDISTAC-404] - Redactar e-mail de la entrega de la versión 1.0.0
-
 
 ** Sub-tarea
     * [INDISTAC-13] - Revisar los temas tratados con Alberto en la reunión
