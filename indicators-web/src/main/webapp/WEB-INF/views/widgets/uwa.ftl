@@ -35,10 +35,7 @@
             widget.addBody("<div id='istac-widget' class='istac-widget-uwa'></div>");
             var metamacPortalPermalinksApiUrlBase = "${metamacPortalPermalinksEndpoint}";
             var req = $.ajax({
-                    url : metamacPortalPermalinksApiUrlBase + "/v1.0/permalinks/${permalinkId}",
-                    headers: {
-                    	Accept: "application/json; charset=utf-8"
-                    },
+                    url : metamacPortalPermalinksApiUrlBase + "/v1.0/permalinks/${permalinkId}.json",
                     dataType : 'jsonp',
                     jsonp : "_callback"
                 });
