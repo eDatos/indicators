@@ -16,6 +16,35 @@ de las incidencias con el id [INDISTAC-xxx].
 http://jira.arte-consultores.com/browse/INDISTAC
 
 ------------------------------------------------------------------------------
+Release 3.3.2
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.3.2 
+
+** Defecto
+    * [INDISTAC-814] - Adaptar la petición de permalinks a jsonp
+    
+    
+------------------------------------------------------------------------------
+Release 3.3.1
+------------------------------------------------------------------------------
+
+Notas de publicación - Sistema de indicadores (Istac)  - hito 3.3.1
+
+** Defecto
+    * [INDISTAC-808] - En la app publica el exportar a netvibes tiene una url como localhost
+    * [INDISTAC-809] - No se ven las tablas de highcharts en netvibes
+    * [INDISTAC-811] - El kind de operaciones estadisticas en la salida de la api de indicadores era erroneo
+    * [INDISTAC-812] - Limpiando el código de TODOs y algunos metodos sin usar
+
+** Soporte
+    * [INDISTAC-805] - Alberto pregunta si el proyecto está configurado con el Google Analytics del ISTAC
+
+** Tarea
+    * [INDISTAC-797] - Cambiar manual de instalación, y añadir manual de actualización
+    * [INDISTAC-813] - Release 16/01/2014
+
+------------------------------------------------------------------------------
 Release 3.3.0
 ------------------------------------------------------------------------------
 
