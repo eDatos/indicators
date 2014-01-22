@@ -34,11 +34,19 @@
         widget.onLoad = function () {
             widget.addBody("<div id='istac-widget' class='istac-widget-uwa'></div>");
             var metamacPortalPermalinksApiUrlBase = "${metamacPortalPermalinksEndpoint}";
-            $.getJSON(metamacPortalPermalinksApiUrlBase + "/v1.0/permalinks/${permalinkId}").done(function (options) {
-                IstacWidget(options, function (istacWidget) {
-                    widget.setTitle(istacWidget.title);
+            var req = $.ajax({
+                    url : metamacPortalPermalinksApiUrlBase + "/v1.0/permalinks/${permalinkId}",
+                    headers: {
+                    	Accept: "application/json; charset=utf-8"
+                    },
+                    dataType : 'jsonp',
+                    jsonp : "_callback"
                 });
-            });
+                req.success(function (options) {
+	                IstacWidget(options, function (istacWidget) {
+	                    widget.setTitle(istacWidget.title);
+	                });
+                });
         };
     </script>
 
