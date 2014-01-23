@@ -70,4 +70,7 @@
             
     </dependencies>
 
+    <build>
+        <finalName>indicators-${project.version}</finalName>
+    </build>
 </project>
