@@ -1,7 +1,7 @@
 package es.gobcan.istac.indicators.rest.controller;
 
-import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
-import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
+import es.gobcan.istac.indicators.rest.facadeapi.GeographicalValuesRestFacade;
+import es.gobcan.istac.indicators.rest.types.GeographicalValueType;
 
 @Controller("geographicalValuesRestController")
 public class GeographicalValuesRestController extends AbstractRestController {

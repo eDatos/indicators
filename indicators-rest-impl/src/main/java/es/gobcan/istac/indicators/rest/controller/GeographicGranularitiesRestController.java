@@ -2,7 +2,6 @@ package es.gobcan.istac.indicators.rest.controller;
 
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +18,13 @@ import es.gobcan.istac.indicators.rest.types.MetadataGranularityType;
 public class GeographicGranularitiesRestController extends AbstractRestController {
 
     @Autowired
-    private GeographicRestFacade geographicRestFacade = null;
+    private final GeographicRestFacade geographicRestFacade = null;
 
     @RequestMapping(value = "/api/indicators/v1.0/geographicGranularities", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<MetadataGranularityType>> findGeographicGranularities(@RequestParam(value = "subjectCode", required = false) String subjectCode,
-                                                                                     @RequestParam(value = "systemCode", required = false) String systemCode) throws Exception {
-        
+            @RequestParam(value = "systemCode", required = false) String systemCode) throws Exception {
+
         List<MetadataGranularityType> items = null;
         if (subjectCode != null) {
             items = geographicRestFacade.findGeographicGranularitiesBySubjectCode(subjectCode);
@@ -34,9 +33,9 @@ public class GeographicGranularitiesRestController extends AbstractRestControlle
         } else {
             items = geographicRestFacade.findGeographicGranularities();
         }
-        
+
         ResponseEntity<List<MetadataGranularityType>> response = new ResponseEntity<List<MetadataGranularityType>>(items, null, HttpStatus.OK);
         return response;
     }
-    
+
 }
