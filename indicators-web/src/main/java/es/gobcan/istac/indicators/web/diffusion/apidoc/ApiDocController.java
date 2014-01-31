@@ -1,6 +1,7 @@
 package es.gobcan.istac.indicators.web.diffusion.apidoc;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.util.UriTemplate;
 
+import es.gobcan.istac.indicators.rest.RestConstants;
+import es.gobcan.istac.indicators.rest.util.RESTURIUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -22,21 +26,37 @@ public class ApiDocController {
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
-    @RequestMapping(value = "/apidocs")
-    public ModelAndView index(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/api/indicators/v1.0")
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // Header: available methods
+        final String rootUri = request.getRequestURL().toString();
+
+        final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
+        final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS);
+        final URI uriGeographicGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
+        final URI uriThemes = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_SUBJECTS);
+
+        final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToIndicators = RESTURIUtil.createLinkHeader(uriIndicators.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToGeographicGranularities = RESTURIUtil.createLinkHeader(uriGeographicGranularities.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+        final String linkToThemes = RESTURIUtil.createLinkHeader(uriThemes.toASCIIString(), RESTURIUtil.REL_COLLECTION);
+
+        response.addHeader(RESTURIUtil.LINK, RESTURIUtil.gatherLinkHeaders(linkToIndicatorsSystems, linkToIndicators, linkToGeographicGranularities, linkToThemes));
+
+        // Body: Documentation
         Map<String, String> viewModel = getViewModel(request);
         ModelAndView mv = new ModelAndView("apidocs/index", viewModel);
         return mv;
     }
 
-    @RequestMapping(value = "/apidocs/apis")
+    @RequestMapping(value = "/api/indicators/v1.0/docs")
     public void apis(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String templateName = "apidocs/apidocs.ftl";
         Map<String, String> viewModel = getViewModel(request);
         renderTemplate(templateName, viewModel, response);
     }
 
-    @RequestMapping(value = "/apidocs/apis/indicators", produces = "application/json")
+    @RequestMapping(value = "/api/indicators/v1.0/docs/indicators", produces = "application/json")
     public void indicatorApi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String templateName = "apidocs/apidocs-indicators.ftl";
         Map<String, String> viewModel = getViewModel(request);
