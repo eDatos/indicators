@@ -2,6 +2,8 @@
 -- METAMAC-1976 - Posibilidad de setear en la WEB los datos por defecto de data
 -- -----------------------------------------------------------------------------------------
 
+SET DEFINE OFF
+
 -- --------------
 -- DB Connection
 -- --------------
@@ -141,3 +143,5 @@ UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQU
 
 insert into TB_DATA_CONFIGURATIONS (ID,VERSION,SYSTEM_PROPERTY,CONF_KEY,CONF_VALUE) values(GET_NEXT_SEQUENCE_VALUE('DATA_CONFIGURATIONS'),1,1,'indicators.widgets.sparkline.max','FILL_ME');
 UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQUENCE_NAME = 'DATA_CONFIGURATIONS';
+
+SET DEFINE ON
