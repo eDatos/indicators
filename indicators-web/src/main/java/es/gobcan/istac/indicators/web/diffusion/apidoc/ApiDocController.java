@@ -39,6 +39,7 @@ public class ApiDocController {
         final URI uriIndicatorsSystems = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS_SYSTEMS);
         final URI uriIndicators = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_INDICATORS);
         final URI uriGeographicGranularities = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHIC_GRANULARITIES);
+        final URI uriGeographicalValues = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_GEOGRAPHICAL_VALUES);
         final URI uriThemes = new UriTemplate("{rootUri}{resource}").expand(rootUri, RestConstants.API_INDICATORS_SUBJECTS);
 
         final String linkToIndicatorsSystems = RESTURIUtil.createLinkHeader(uriIndicatorsSystems.toASCIIString(), RESTURIUtil.REL_COLLECTION);
