@@ -30,7 +30,7 @@ public abstract class AbstractRestController {
             message = ex.getMessage();
         } else if (MetamacException.class.isInstance(ex)) {
             MetamacException metamacException = (MetamacException) ex;
-            MetamacExceptionItem metamacExceptionItem = metamacException.getExceptionItems().get(0); // TODO Contemplate all parameters?
+            MetamacExceptionItem metamacExceptionItem = metamacException.getExceptionItems().get(0);
             message = metamacExceptionItem.getMessage();
             if (ServiceExceptionType.INDICATORS_SYSTEM_NOT_FOUND_WITH_CODE.getCode().equals(metamacExceptionItem.getCode())
                     || ServiceExceptionType.INDICATOR_INSTANCE_NOT_FOUND_WITH_CODE.getCode().equals(metamacExceptionItem.getCode())
