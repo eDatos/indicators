@@ -26,6 +26,11 @@ public class ApiDocController {
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
+    @RequestMapping(value = "/api/indicators/images/*")
+    public void apidocsImages(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.sendRedirect(request.getRequestURI().replace("/api/indicators/images", "/apidocs/images"));
+    }
+
     @RequestMapping(value = "/api/indicators/v1.0")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Header: available methods
