@@ -48,7 +48,7 @@
         <hibernate-entitymanager.version>3.4.0.GA</hibernate-entitymanager.version>
         <hibernate-validator.version>3.1.0.GA</hibernate-validator.version>
         <ehcache.version>2.4.3</ehcache.version>
-        <oracle.version>10.2.0.1.0</oracle.version>
+        <oracle.version>11.2.0.4</oracle.version>
 
         <!-- SCULPTOR -->
         <sculptor.version>2.0.0</sculptor.version>
