@@ -531,8 +531,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
-        // MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
-        // metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
 
         target.setAttribute(metadataAttributes);
     }
@@ -564,10 +564,8 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
 
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
-
-        // MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
-        // metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
-
+        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
         target.setAttribute(metadataAttributes);
 
         // CHILD LINK
