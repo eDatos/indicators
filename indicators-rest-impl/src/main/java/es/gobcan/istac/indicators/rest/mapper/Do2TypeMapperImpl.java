@@ -77,32 +77,33 @@ import es.gobcan.istac.indicators.rest.types.TitleLinkType;
 @Component
 public class Do2TypeMapperImpl implements Do2TypeMapper {
 
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEAS_DETAIL = "UNIT_MEAS_DETAIL";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MEASURE     = "UNIT_MEASURE";
-    private static String                                        PROP_ATTRIBUTE_UNIT_MULT        = "UNIT_MULT";
-    private static String                                        PROP_ATTRIBUTE_OBS_CONF         = "OBS_CONF";
+    private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_EN = "Observation confidenciality";
 
-    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                    = new ThreadLocal<Map<String, Map<String, Object>>>() {
+    private static final String                                  PROP_ATTRIBUTE_OBS_CONF_LABEL_ES = "Confidencialidad de la observación";
 
-                                                                                                     @Override
-                                                                                                     protected java.util.Map<String, Map<String, Object>> initialValue() {
-                                                                                                         return new HashMap<String, Map<String, Object>>();
-                                                                                                     }
+    private static String                                        PROP_ATTRIBUTE_OBS_CONF          = "OBS_CONF";
 
-                                                                                                     ;
-                                                                                                 };
+    private static ThreadLocal<Map<String, Map<String, Object>>> requestCache                     = new ThreadLocal<Map<String, Map<String, Object>>>() {
 
-    @Autowired
-    private final IndicatorsApiService                           indicatorsApiService            = null;
+                                                                                                      @Override
+                                                                                                      protected java.util.Map<String, Map<String, Object>> initialValue() {
+                                                                                                          return new HashMap<String, Map<String, Object>>();
+                                                                                                      }
+
+                                                                                                      ;
+                                                                                                  };
 
     @Autowired
-    private final StatisticalOperationsRestInternalFacade        statisticalOperations           = null;
+    private final IndicatorsApiService                           indicatorsApiService             = null;
 
-    private static final List<String>                            measuresOrder                   = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
-                                                                                                         MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
-                                                                                                         MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
-                                                                                                         MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
-                                                                                                         MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
+    @Autowired
+    private final StatisticalOperationsRestInternalFacade        statisticalOperations            = null;
+
+    private static final List<String>                            measuresOrder                    = Arrays.asList(MeasureDimensionTypeEnum.ABSOLUTE.name(),
+                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PERCENTAGE_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PERCENTAGE_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.ANNUAL_PUNTUAL_RATE.name(),
+                                                                                                          MeasureDimensionTypeEnum.INTERPERIOD_PUNTUAL_RATE.name());
 
     @Override
     public IndicatorsSystemBaseType indicatorsSystemDoToBaseType(IndicatorsSystemVersion source, final String baseURL) {
@@ -530,14 +531,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, metadataAttributeUnit);
+        // MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        // metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
 
-        MetadataAttributeType metadataAttributeUnitMult = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MULT, "Multiplicador de la unidad", "Unit Multiplier");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, metadataAttributeUnitMult);
-
-        MetadataAttributeType metadataAttributeUnitMeasure = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEASURE, "Unidad de medida", "Unit of Measure");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, metadataAttributeUnitMeasure);
         target.setAttribute(metadataAttributes);
     }
 
@@ -569,14 +565,9 @@ public class Do2TypeMapperImpl implements Do2TypeMapper {
         // ATTRIBUTES
         Map<String, MetadataAttributeType> metadataAttributes = new LinkedHashMap<String, MetadataAttributeType>();
 
-        MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, "Detalles de la unidad de medida", "Unit of measure detail");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEAS_DETAIL, metadataAttributeUnit);
+        // MetadataAttributeType metadataAttributeUnit = createMetadataAttributeType(PROP_ATTRIBUTE_OBS_CONF, PROP_ATTRIBUTE_OBS_CONF_LABEL_ES, PROP_ATTRIBUTE_OBS_CONF_LABEL_EN);
+        // metadataAttributes.put(PROP_ATTRIBUTE_OBS_CONF, metadataAttributeUnit);
 
-        MetadataAttributeType metadataAttributeUnitMult = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MULT, "Multiplicador de la unidad", "Unit Multiplier");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MULT, metadataAttributeUnitMult);
-
-        MetadataAttributeType metadataAttributeUnitMeasure = createMetadataAttributeType(PROP_ATTRIBUTE_UNIT_MEASURE, "Unidad de medida", "Unit of Measure");
-        metadataAttributes.put(PROP_ATTRIBUTE_UNIT_MEASURE, metadataAttributeUnitMeasure);
         target.setAttribute(metadataAttributes);
 
         // CHILD LINK
