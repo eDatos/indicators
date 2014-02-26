@@ -3,8 +3,6 @@ package es.gobcan.istac.indicators.web.client.utils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 import es.gobcan.istac.indicators.core.enume.domain.RoleEnum;
 import es.gobcan.istac.indicators.core.util.SharedSecurityUtils;
 import es.gobcan.istac.indicators.web.client.IndicatorsWeb;
@@ -21,17 +19,11 @@ public class ClientSecurityUtils {
     }
 
     public static boolean canSendIndicatorsSystemToDiffusionValidation(String operationCode) {
-        if (isRoleAllowed(RoleEnum.TECNICO_SISTEMA_INDICADORES) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_SISTEMA_INDICADORES)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
     public static boolean canRejectIndicatorsSystemProductionValidation(String operationCode) {
-        if (isRoleAllowed(RoleEnum.TECNICO_PRODUCCION) && isIndicatorsSystemAllowed(operationCode, RoleEnum.TECNICO_PRODUCCION)) {
-            return true;
-        }
-        return false;
+        return isRoleAllowed(RoleEnum.ADMINISTRADOR);
     }
 
     public static boolean canRejectIndicatorsSystemDiffusionValidation(String operationCode) {

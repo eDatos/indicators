@@ -359,21 +359,36 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
 
     @Test
     public void testRejectIndicatorsSystemProductionValidation() throws Exception {
-        indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_4);
+        indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContextAdministrador(), INDICATORS_SYSTEM_4);
     }
 
     @Test
     public void testRejectIndicatorsSystemProductionValidationWithAccessToIndicatorSystem4() throws Exception {
-        ServiceContext ctx = getServiceContextTecnicoDifusion();
-        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
-        SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_PRODUCCION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-4"));
-        indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(ctx, INDICATORS_SYSTEM_4);
+        // Without access
+        try {
+            ServiceContext ctx = getServiceContextTecnicoDifusion();
+            SecurityUtils.getMetamacPrincipal(ctx).getAccesses().clear();
+            SecurityUtils.getMetamacPrincipal(ctx).getAccesses().add(new MetamacPrincipalAccess(RoleEnum.TECNICO_PRODUCCION.getName(), IndicatorsConstants.SECURITY_APPLICATION_ID, "CODE-4"));
+            indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(ctx, INDICATORS_SYSTEM_4);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
     }
 
     @Test
     public void testRejectIndicatorsSystemProductionValidationErrorWithoutRole() throws Exception {
 
         // Without access
+        try {
+            indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_4);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+
         try {
             indicatorsServiceFacade.rejectIndicatorsSystemProductionValidation(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_4);
             fail("without access");
@@ -408,13 +423,21 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
     public void testSendIndicatorsSystemToDiffusionValidation() throws Exception {
 
         // With access
-        indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_4);
+        indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContextAdministrador(), INDICATORS_SYSTEM_4);
     }
 
     @Test
     public void testSendIndicatorsSystemToDiffusionValidationErrorWithoutRole() throws Exception {
 
         // Without access
+        try {
+            indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContextTecnicoSistemaIndicadores(), INDICATORS_SYSTEM_4);
+            fail("without access");
+        } catch (MetamacException e) {
+            assertEquals(1, e.getExceptionItems().size());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+        }
+
         try {
             indicatorsServiceFacade.sendIndicatorsSystemToDiffusionValidation(getServiceContextTecnicoProduccion(), INDICATORS_SYSTEM_4);
             fail("without access");
@@ -452,7 +475,7 @@ public class SecurityIndicatorsServiceFacadeIndicatorsSystemsTest extends Indica
             fail("without access");
         } catch (MetamacException e) {
             assertEquals(1, e.getExceptionItems().size());
-            assertEquals(ServiceExceptionType.SECURITY_ACCESS_INDICATORS_SYSTEM_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
+            assertEquals(ServiceExceptionType.SECURITY_OPERATION_NOT_ALLOWED.getCode(), e.getExceptionItems().get(0).getCode());
         }
     }
 

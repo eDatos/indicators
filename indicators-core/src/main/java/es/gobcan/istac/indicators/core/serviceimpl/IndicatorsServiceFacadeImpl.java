@@ -212,10 +212,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorsSystemDto rejectIndicatorsSystemProductionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security (role and access to this indicators system)
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_PRODUCCION);
-        checkAccessIndicatorsSystemByUuid(ctx, uuid, RoleEnum.TECNICO_PRODUCCION);
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
 
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().rejectIndicatorsSystemProductionValidation(ctx, uuid);
 
@@ -226,10 +224,8 @@ public class IndicatorsServiceFacadeImpl extends IndicatorsServiceFacadeImplBase
 
     @Override
     public IndicatorsSystemDto sendIndicatorsSystemToDiffusionValidation(ServiceContext ctx, String uuid) throws MetamacException {
-
-        // Security (role and access to this indicators system)
-        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.TECNICO_SISTEMA_INDICADORES);
-        checkAccessIndicatorsSystemByUuid(ctx, uuid, RoleEnum.TECNICO_SISTEMA_INDICADORES);
+        // Security
+        SecurityUtils.checkServiceOperationAllowed(ctx, RoleEnum.ADMINISTRADOR);
 
         IndicatorsSystemVersion indicatorsSystemVersion = getIndicatorsSystemsService().sendIndicatorsSystemToDiffusionValidation(ctx, uuid);
 
